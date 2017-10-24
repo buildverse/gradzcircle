@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity CandidateEducation.
+    -->
+    <changeSet id="20171015094629-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="candidate_id"
+                                 baseTableName="candidate_education"
+                                 constraintName="fk_candidate_education_candidate_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="candidate"/>
+
+        <addForeignKeyConstraint baseColumnNames="qualification_id"
+                                 baseTableName="candidate_education"
+                                 constraintName="fk_candidate_education_qualification_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="qualification"/>
+
+        <addForeignKeyConstraint baseColumnNames="course_id"
+                                 baseTableName="candidate_education"
+                                 constraintName="fk_candidate_education_course_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course"/>
+
+        <addForeignKeyConstraint baseColumnNames="college_id"
+                                 baseTableName="candidate_education"
+                                 constraintName="fk_candidate_education_college_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="college"/>
+
+    </changeSet>
+</databaseChangeLog>

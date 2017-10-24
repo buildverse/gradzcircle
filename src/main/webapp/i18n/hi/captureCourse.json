@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureCourse" : {
+            "home": {
+                "title": "CaptureCourses",
+                "createLabel": "नया Capture Course बनाएँ",
+                "createOrEditLabel": "Capture Course बनाएँ या संपादित करें",
+                "search": "Capture Course खोजें"
+            },
+            "created": "एक नया Capture Course [identifier: {{ param }}] तैयार है",
+            "updated": "एक Capture Course [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Capture Course [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Capture Course [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Capture Course"
+            },
+            "courseName": "Course Name",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

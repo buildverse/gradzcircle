@@ -1,0 +1,106 @@
+.profile-mybackground {
+    background: url("../../../content/images/iceland.jpg") no-repeat;
+     background-size: cover;
+}
+
+
+.public-profile-split{
+    margin-top: 55px;
+    padding-top:0px;
+    position: absolute;
+    border-top: 1px dotted rgb(210, 206, 206);
+   
+}
+
+.public-profile-splitter-line{
+    margin-left: 25px;
+    margin-top: 82px;
+    border-top: 1px dotted rgb(210, 206, 206);
+    
+}
+
+
+.public-profile-pic-square {
+position: relative;
+margin-left: 30px;;
+margin-top:30px;
+border-top-style:60px;
+width:200px;
+height:200px;
+border:1px dotted rgb(210, 206, 206);
+
+}
+   
+.public-profile-pic-square .media-object{
+
+display: inline-block;
+width: 90px;
+margin-left: 50px;
+margin-top: -65px;
+} 
+
+.public-profile-resume {
+position: absolute;
+margin-left:30px;
+margin-top:-20px;
+}
+
+.public-profile-header-bio {
+font-size: 12px;
+color: #fff; 
+}
+
+.public-profile-header-user {
+    margin-top: 20px;
+    color: #fff; 
+}
+
+.underline-public-profile-headers{
+    border-bottom: 1px solid;
+    border-bottom-color: #3097D1;
+    margin-left: 10px;
+    width: 100%;
+    display: block;
+}
+
+.public-profile-header .container-inner{
+    max-width: 450px;
+    margin-left: 20px; 
+  }
+  .public-profile-header {
+    position: relative;
+    display: table;
+    width: 100%;
+    height: 300px;
+    padding-bottom: 3.2rem;
+    margin-bottom: 0;
+    background-size: cover;
+    border: 0;
+
+  }
+
+
+
+
+.public-profile-headers{
+   color:#397598;
+   font-size: 14px;
+}
+
+.vertical-delimiter{
+    border-right: 2px solid #397598;
+}
+
+.public-profile-sub-header{
+    font-weight:normal;
+    font-size:14px;
+}
+
+.public-profile-body{
+    font-weight:normal;
+    font-size:12px;
+}
+
+.blockquote{
+    border-left: solid #CCCACA;
+}

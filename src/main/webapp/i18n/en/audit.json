@@ -1,0 +1,25 @@
+{
+    "gradzcircleApp": {
+        "audit" : {
+            "home": {
+                "title": "Audits",
+                "createLabel": "Create a new Audit",
+                "createOrEditLabel": "Create or edit a Audit",
+                "search": "Search for Audit"
+            },
+            "created": "A new Audit is created with identifier {{ param }}",
+            "updated": "A Audit is updated with identifier {{ param }}",
+            "deleted": "A Audit is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Audit {{ id }}?"
+            },
+            "detail": {
+                "title": "Audit"
+            },
+            "createdBy": "Created By",
+            "updatedBy": "Updated By",
+            "createdTime": "Created Time",
+            "updatedTime": "Updated Time"
+        }
+    }
+}

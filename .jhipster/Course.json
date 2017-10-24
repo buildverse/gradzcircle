@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateEducation",
+            "otherEntityName": "candidateEducation",
+            "otherEntityRelationshipName": "course"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "course",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094639",
+    "entityTableName": "course",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

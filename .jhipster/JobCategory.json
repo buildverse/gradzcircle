@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "jobCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "jobCategory",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094647",
+    "entityTableName": "job_category",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

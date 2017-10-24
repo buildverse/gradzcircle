@@ -1,0 +1,29 @@
+{
+    "gradzcircleApp": {
+        "candidateNonAcademicWork" : {
+            "home": {
+                "title": "CandidateNonAcademicWorks",
+                "createLabel": "नया Candidate Non Academic Work बनाएँ",
+                "createOrEditLabel": "Candidate Non Academic Work बनाएँ या संपादित करें",
+                "search": "Candidate Non Academic Work खोजें"
+            },
+            "created": "एक नया Candidate Non Academic Work [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Non Academic Work [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Non Academic Work [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Non Academic Work [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Non Academic Work"
+            },
+            "nonAcademicInitiativeTitle": "Non Academic Initiative Title",
+            "nonAcademicInitiativeDescription": "Non Academic Initiative Description",
+            "duration": "Duration",
+            "isCurrentActivity": "Is Current Activity",
+            "roleInInitiative": "Role In Initiative",
+            "nonAcademicWorkStartDate": "Non Academic Work Start Date",
+            "nonAcademicWorkEndDate": "Non Academic Work End Date",
+            "candidate": "Candidate"
+        }
+    }
+}

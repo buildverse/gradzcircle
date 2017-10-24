@@ -1,0 +1,223 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header modal-header-decorate">
+        <h6 class="modal-title" id="myCandidateProjectLabel" jhiTranslate="gradzcircleApp.candidateProject.home.createOrEditLabel">Create or edit a Candidate Project</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
+
+            <div *ngIf="!isEmploymentProject; else employmentProject" >
+                <div class="form-group row mx-4 my-4">
+                    <div class="col-md-2">
+                        <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectType" for="field_projectType">Project Type</label>
+                    </div>
+                    <div class="col-md-3" [class.has-danger]="projectType.invalid && projectType.touched">
+                        <select class="form-control text-muted" name="projectType" #projectType="ngModel" required [(ngModel)]="candidateProject.projectType" id="field_projectType" >
+                            <option value="ACADEMIC" jhiTranslate="gradzcircleApp.ProjectType.ACADEMIC">Academic</option>
+                            <option value="SELF_INTEREST" jhiTranslate="gradzcircleApp.ProjectType.SELF_INTEREST">Self Interest</option>
+                        </select>
+                        <div *ngIf="projectType.invalid && projectType.touched" class="text-danger">
+                            <small> Please select Project Type</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2 offset-md-1">
+                            <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectTitle" for="field_projectTitle">Project Title</label>
+                    </div>
+                    <div class="col-md-4" [class.has-danger]="projectTitle.invalid && projectTitle.touched">
+                        <input type="text" class="form-control text-muted" required #projectTitle="ngModel" name="projectTitle" id="field_projectTitle"
+                            [(ngModel)]="candidateProject.projectTitle"
+                        />
+                        <div *ngIf="projectTitle.invalid && projectTitle.touched" class="text-danger">
+                            <small> Please add the Project Title.</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <ng-template #employmentProject>
+                <div class="form-group row mx-4 my-4">
+                    <div class="col-md-2">
+                            <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectTitle" for="field_projectTitle">Project Title</label>
+                    </div>
+                    <div class="col-md-10" [class.has-danger]="projectTitle.invalid && projectTitle.touched">
+                        <input type="text" class="form-control text-muted" required #projectTitle="ngModel" name="projectTitle" id="field_projectTitle"
+                            [(ngModel)]="candidateProject.projectTitle"
+                        />
+                        <div *ngIf="projectTitle.invalid && projectTitle.touched" class="text-danger">
+                            <small> Please add the Project Title.</small>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+
+
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription" for="field_projectDescription">Description</label>
+            </div>
+            <div class="col-md-10" [class.has-danger]="projectDescription.invalid && projectDescription.touched">
+                <textarea [froalaEditor]='options' class="form-control text-muted" required #projectDescription="ngModel" name="projectDescription" id="field_projectDescription" rows="10"
+                    [(ngModel)]="candidateProject.projectDescription">
+                </textarea>
+                <div *ngIf="projectDescription.invalid && projectDescription.touched" class="text-danger">
+                    <small> Please add the Project Description.</small>
+                </div>
+                <small class="form-text text-muted text-info">
+                     Employers look for details. Please focus on project details, benefits, impact.
+                </small>
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject" for="field_contributionInProject">Contribution</label>
+            </div>
+            <div class="col-md-10" [class.has-danger]="projectContribution.invalid && projectContribution.touched">
+                <textarea [froalaEditor]='options' class="form-control text-muted" required #projectContribution="ngModel" name="contributionInProject" id="field_contributionInProject" rows="10"
+                    [(ngModel)]="candidateProject.contributionInProject">
+                </textarea>
+                <div *ngIf="projectContribution.invalid && projectContribution.touched" class="text-danger">
+                    <small> Please add details of your contribution.</small>
+                </div>
+                <small class="form-text text-muted text-info">
+                     Add categories like Leadership, Technical and Functional skills, Communication with supporting examples.
+                </small>
+            </div>
+        </div>
+         <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectStartDate" for="field_projectStartDate">Project Start Date</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="fromDate.invalid && fromDate.touched">
+                <div class="input-group">
+                    <input id="field_projectStartDate" #fromDate="ngModel" required type="text" class="form-control text-muted" name="projectStartDate" ngbDatepicker  #projectStartDateDp="ngbDatepicker" [(ngModel)]="candidateProject.projectStartDate"
+                    (ngModelChange)="validateDates()"
+                    />
+                    <span class="input-group-addon " (click)="projectStartDateDp.toggle()">
+                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+                    </span>
+                </div>
+                 <div *ngIf="fromDate.invalid && fromDate.touched" class="text-danger">
+                    <small>Please enter Start Date</small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectEndDate" for="field_projectStartDate">Project Start Date</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="toDate.invalid && toDate.touched" >
+                <div class="input-group">
+                    <input id="field_projectEndDate" #toDate="ngModel" required type="text" class="form-control text-muted" [disabled]="endDateControl" name="field_projectEndDate"
+                        ngbDatepicker  #projectEndDateDp="ngbDatepicker" [(ngModel)]="candidateProject.projectEndDate" (ngModelChange)="validateDates()"
+                    />
+
+                    <button class="input-group-addon " (click)="projectEndDateDp.toggle()" type="button" [disabled]="endDateControl">
+                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+                    </button>
+                </div>
+                <div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+                    <small>Please enter End Date</small>
+                </div>
+                  <div *ngIf="endDateLesser" class="text-danger">
+                    <small>End date cannot be before start date.</small>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-6 form-check font-weight-bold text-muted">
+                <label class="form-check-label" for="field_isCurrentProject">
+                    <input class="form-check-input font-weight-bold text-muted"  type="checkbox" name="isCurrentProject" id="field_isCurrentProject" (change)="manageEndDateControl()"
+                        [(ngModel)]="candidateProject.isCurrentProject"/>
+                    Am still working on this project
+                </label>
+            </div>
+        </div>
+</div>
+
+    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!candidateProject.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="candidateProject.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectTitle" for="field_projectTitle">Project Title</label>
+            <input type="text" class="form-control" name="projectTitle" id="field_projectTitle"
+                [(ngModel)]="candidateProject.projectTitle"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectStartDate" for="field_projectStartDate">Project Start Date</label>
+            <div class="input-group">
+                <input id="field_projectStartDate" type="text" class="form-control" name="projectStartDate" ngbDatepicker  #projectStartDateDp="ngbDatepicker" [(ngModel)]="candidateProject.projectStartDate"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="projectStartDateDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectEndDate" for="field_projectEndDate">Project End Date</label>
+            <div class="input-group">
+                <input id="field_projectEndDate" type="text" class="form-control" name="projectEndDate" ngbDatepicker  #projectEndDateDp="ngbDatepicker" [(ngModel)]="candidateProject.projectEndDate"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="projectEndDateDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectDescription" for="field_projectDescription">Project Description</label>
+            <input type="text" class="form-control" name="projectDescription" id="field_projectDescription"
+                [(ngModel)]="candidateProject.projectDescription"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectDuration" for="field_projectDuration">Project Duration</label>
+            <input type="number" class="form-control" name="projectDuration" id="field_projectDuration"
+                [(ngModel)]="candidateProject.projectDuration"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject" for="field_contributionInProject">Contribution In Project</label>
+            <input type="text" class="form-control" name="contributionInProject" id="field_contributionInProject"
+                [(ngModel)]="candidateProject.contributionInProject"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject" for="field_isCurrentProject">Is Current Project</label>
+            <input type="checkbox" class="form-control" name="isCurrentProject" id="field_isCurrentProject"
+                [(ngModel)]="candidateProject.isCurrentProject"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.projectType" for="field_projectType">Project Type</label>
+            <select class="form-control" name="projectType" [(ngModel)]="candidateProject.projectType" id="field_projectType" >
+                    <option value="ACADEMIC">{{'gradzcircleApp.ProjectType.ACADEMIC' | translate}}</option>
+                    <option value="SELF_INTEREST">{{'gradzcircleApp.ProjectType.SELF_INTEREST' | translate}}</option>
+                    <option value="CORPORATE">{{'gradzcircleApp.ProjectType.CORPORATE' | translate}}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.education" for="field_education">Education</label>
+            <select class="form-control" id="field_education" name="education" [(ngModel)]="candidateProject.education" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="candidateEducationOption.id === candidateProject.education?.id ? candidateProject.education : candidateEducationOption" *ngFor="let candidateEducationOption of candidateeducations; trackBy: trackCandidateEducationById">{{candidateEducationOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateProject.employment" for="field_employment">Employment</label>
+            <select class="form-control" id="field_employment" name="employment" [(ngModel)]="candidateProject.employment" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="candidateEmploymentOption.id === candidateProject.employment?.id ? candidateProject.employment : candidateEmploymentOption" *ngFor="let candidateEmploymentOption of candidateemployments; trackBy: trackCandidateEmploymentById">{{candidateEmploymentOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-pill  btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill  btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

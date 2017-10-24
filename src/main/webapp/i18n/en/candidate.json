@@ -1,0 +1,49 @@
+{
+    "gradzcircleApp": {
+        "candidate" : {
+            "home": {
+                "title": "Candidates",
+                "createLabel": "Create a new Candidate",
+                "createOrEditLabel": "Create or edit a Candidate",
+                "search": "Search for Candidate"
+            },
+            "created": "A new Candidate is created with identifier {{ param }}",
+            "updated": "A Candidate is updated with identifier {{ param }}",
+            "deleted": "A Candidate is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Candidate {{ id }}?"
+            },
+            "detail": {
+                "title": "Candidate"
+            },
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "middleName": "Middle Name",
+            "facebook": "Facebook",
+            "linkedIn": "Linked In",
+            "twitter": "Twitter",
+            "aboutMe": "About Me",
+            "dateOfBirth": "Date Of Birth",
+            "phoneCode": "Phone Code",
+            "phoneNumber": "Phone Number",
+            "differentlyAbled": "Differently Abled",
+            "availableForHiring": "Available For Hiring",
+            "openToRelocate": "Open To Relocate",
+            "login": "Login",
+            "gender": "Gender",
+            "maritalStatus": "Marital Status",
+            "nationality": "Nationality",
+            "address": "Address",
+            "education": "Education",
+            "nonAcademic": "Non Academic",
+            "certification": "Certification",
+            "employment": "Employment",
+            "candidateLanguageProficiency": "Candidate Language Proficiency",
+            "jobCategory": "Job Category",
+            "visaType": "Visa Type",
+            "profilePic" : "Profile Pic",
+            "careerInterests": "Carrer Interests"
+
+        }
+    }
+}

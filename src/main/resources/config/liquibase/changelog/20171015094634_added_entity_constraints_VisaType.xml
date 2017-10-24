@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity VisaType.
+    -->
+    <changeSet id="20171015094634-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="country_id"
+                                 baseTableName="visa_type"
+                                 constraintName="fk_visa_type_country_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="country"/>
+
+    </changeSet>
+</databaseChangeLog>

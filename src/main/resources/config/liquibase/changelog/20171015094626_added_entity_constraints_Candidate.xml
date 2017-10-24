@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Candidate.
+    -->
+    <changeSet id="20171015094626-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="login_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_login_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="gender_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_gender_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="gender"/>
+
+        <addForeignKeyConstraint baseColumnNames="marital_status_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_marital_status_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="marital_status"/>
+
+        <addForeignKeyConstraint baseColumnNames="nationality_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_nationality_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nationality"/>
+
+        <addForeignKeyConstraint baseColumnNames="address_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_address_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="address"/>
+
+        <addForeignKeyConstraint baseColumnNames="candidates_id"
+                                 baseTableName="candidate_job_category"
+                                 constraintName="fk_candidate_job_category_candidates_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="candidate"/>
+        <addForeignKeyConstraint baseColumnNames="job_categories_id"
+                                 baseTableName="candidate_job_category"
+                                 constraintName="fk_candidate_job_category_job_categories_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="job_category"/>
+        
+        <addForeignKeyConstraint baseColumnNames="visa_type_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_visa_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="visa_type"/>
+
+    </changeSet>
+</databaseChangeLog>

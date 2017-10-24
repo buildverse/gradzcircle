@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "country",
+            "otherEntityName": "country",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "college",
+            "otherEntityName": "college",
+            "otherEntityRelationshipName": "university"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "universityName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094646",
+    "entityTableName": "university",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

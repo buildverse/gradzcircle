@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "employableSkillName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "employabilityScore",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "employabilityPercentile",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20171015094650",
+    "entityTableName": "employability",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

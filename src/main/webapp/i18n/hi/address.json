@@ -1,0 +1,27 @@
+{
+    "gradzcircleApp": {
+        "address" : {
+            "home": {
+                "title": "Addresses",
+                "createLabel": "नया Address बनाएँ",
+                "createOrEditLabel": "Address बनाएँ या संपादित करें",
+                "search": "Address खोजें"
+            },
+            "created": "एक नया Address [identifier: {{ param }}] तैयार है",
+            "updated": "एक Address [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Address [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Address [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Address"
+            },
+            "addressLineOne": "Address Line One",
+            "addressLineTwo": "Address Line Two",
+            "city": "City",
+            "state": "State",
+            "zip": "Zip",
+            "country": "Country"
+        }
+    }
+}

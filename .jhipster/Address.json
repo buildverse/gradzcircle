@@ -1,0 +1,38 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "country",
+            "otherEntityName": "country",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "addressLineOne",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "addressLineTwo",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "city",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "state",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "zip",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094627",
+    "entityTableName": "address",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

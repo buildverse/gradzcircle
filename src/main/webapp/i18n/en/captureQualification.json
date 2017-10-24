@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureQualification" : {
+            "home": {
+                "title": "Capture Qualifications",
+                "createLabel": "Create a new Capture Qualification",
+                "createOrEditLabel": "Create or edit a Capture Qualification",
+                "search": "Search for Capture Qualification"
+            },
+            "created": "A new Capture Qualification is created with identifier {{ param }}",
+            "updated": "A Capture Qualification is updated with identifier {{ param }}",
+            "deleted": "A Capture Qualification is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Capture Qualification {{ id }}?"
+            },
+            "detail": {
+                "title": "Capture Qualification"
+            },
+            "qualificationName": "Qualification Name",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

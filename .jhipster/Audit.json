@@ -1,0 +1,27 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "createdBy",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "updatedBy",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "createdTime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "updatedTime",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "changelogDate": "20171015094649",
+    "entityTableName": "audit",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

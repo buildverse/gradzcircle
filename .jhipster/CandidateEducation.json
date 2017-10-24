@@ -1,0 +1,102 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "projects",
+            "otherEntityName": "candidateProject",
+            "otherEntityRelationshipName": "education"
+        },
+        {
+            "relationshipName": "qualification",
+            "otherEntityName": "qualification",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "course",
+            "otherEntityName": "course",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "college",
+            "otherEntityName": "college",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "grade",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "educationFromDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "educationToDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "isPursuingEducation",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "gradeScale",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "highestQualification",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "roundOfGrade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "gradeDecimal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "capturedCourse",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "capturedQualification",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "capturedCollege",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "capturedUniversity",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "percentage",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "scoreType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "educationDuration",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20171015094629",
+    "entityTableName": "candidate_education",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobCategory" : {
+            "home": {
+                "title": "JobCategories",
+                "createLabel": "नया Job Category बनाएँ",
+                "createOrEditLabel": "Job Category बनाएँ या संपादित करें",
+                "search": "Job Category खोजें"
+            },
+            "created": "एक नया Job Category [identifier: {{ param }}] तैयार है",
+            "updated": "एक Job Category [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Job Category [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Job Category [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Job Category"
+            },
+            "jobCategory": "Job Category",
+            "candidate": "Candidate"
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "gradzcircleApp": {
+        "corporate" : {
+            "home": {
+                "title": "Corporates",
+                "createLabel": "Create a new Corporate",
+                "createOrEditLabel": "Edit Profile",
+                "search": "Search for Corporate"
+            },
+            "created": "A new Corporate is created with identifier {{ param }}",
+            "updated": "A Corporate is updated with identifier {{ param }}",
+            "deleted": "A Corporate is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Corporate {{ id }}?"
+            },
+            "detail": {
+                "title": "Corporate"
+            },
+            "corporateName": "Company Name",
+            "uploadLogo":"Upload your Logo",
+            "corporateAddress": "Address",
+            "corporateCity": "City",
+            "establishedSince": "Established Since",
+            "corporateEmail": "Email",
+            "corporateOverview": "About Us",
+            "corporateBenefits": "Employee Benefits",
+            "corporateWebsite": "Website",
+            "corporateFacebook": "Facebook",
+            "corporateTwitter": "Twitter",
+            "corporateInstagram": "Instagram",
+            "corporateLinkedIn": "Linked In",
+            "corporateCulture": "Our Culture",
+            "contactPerson": "Contact Person",
+            "corporatePhone": "Phone",
+            "corporatePhoneCode": "Phone Code",
+            "contactPersonDesignation": "Person Designation",
+            "corporateTagLine": "Tag Line",
+            "country": "Country",
+            "industry": "Industry",
+            "login": "Login"
+        }
+    }
+}

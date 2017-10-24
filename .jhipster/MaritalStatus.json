@@ -1,0 +1,15 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094635",
+    "entityTableName": "marital_status",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "qualification" : {
+            "home": {
+                "title": "Qualifications",
+                "createLabel": "नया Qualification बनाएँ",
+                "createOrEditLabel": "Qualification बनाएँ या संपादित करें",
+                "search": "Qualification खोजें"
+            },
+            "created": "एक नया Qualification [identifier: {{ param }}] तैयार है",
+            "updated": "एक Qualification [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Qualification [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Qualification [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Qualification"
+            },
+            "qualification": "Qualification",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

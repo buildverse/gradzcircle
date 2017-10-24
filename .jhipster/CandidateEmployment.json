@@ -1,0 +1,75 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "projects",
+            "otherEntityName": "candidateProject",
+            "otherEntityRelationshipName": "employment"
+        },
+        {
+            "relationshipName": "employmentType",
+            "otherEntityName": "employmentType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "country",
+            "otherEntityName": "country",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "jobType",
+            "otherEntityName": "jobType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "location",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "jobTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "employerName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "employmentStartDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "employmentEndDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "employmentDuration",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "isCurrentEmployment",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "jobDescription",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094630",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "candidate_employment",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

@@ -1,0 +1,40 @@
+{
+    "gradzcircleApp": {
+        "candidateEducation" : {
+            "home": {
+                "title": "CandidateEducations",
+                "createLabel": "नया Candidate Education बनाएँ",
+                "createOrEditLabel": "Candidate Education बनाएँ या संपादित करें",
+                "search": "Candidate Education खोजें"
+            },
+            "created": "एक नया Candidate Education [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Education [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Education [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Education [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Education"
+            },
+            "grade": "Grade",
+            "educationFromDate": "Education From Date",
+            "educationToDate": "Education To Date",
+            "isPursuingEducation": "Is Pursuing Education",
+            "gradeScale": "Grade Scale",
+            "highestQualification": "Highest Qualification",
+            "roundOfGrade": "Round Of Grade",
+            "gradeDecimal": "Grade Decimal",
+            "capturedCourse": "Captured Course",
+            "capturedQualification": "Captured Qualification",
+            "capturedCollege": "Captured College",
+            "capturedUniversity": "Captured University",
+            "percentage": "Percentage",
+            "scoreType": "Score Type",
+            "candidate": "Candidate",
+            "projects": "Projects",
+            "qualification": "Qualification",
+            "course": "Course",
+            "college": "College"
+        }
+    }
+}

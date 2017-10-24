@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "language" : {
+            "home": {
+                "title": "Languages",
+                "createLabel": "नया Language बनाएँ",
+                "createOrEditLabel": "Language बनाएँ या संपादित करें",
+                "search": "Language खोजें"
+            },
+            "created": "एक नया Language [identifier: {{ param }}] तैयार है",
+            "updated": "एक Language [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Language [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Language [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Language"
+            },
+            "language": "Language",
+            "candidateLanguageProficiency": "Candidate Language Proficiency"
+        }
+    }
+}

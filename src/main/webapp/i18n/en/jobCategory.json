@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobCategory" : {
+            "home": {
+                "title": "Job Categories",
+                "createLabel": "Create a new Job Category",
+                "createOrEditLabel": "Create or edit a Job Category",
+                "search": "Search for Job Category"
+            },
+            "created": "A new Job Category is created with identifier {{ param }}",
+            "updated": "A Job Category is updated with identifier {{ param }}",
+            "deleted": "A Job Category is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Job Category {{ id }}?"
+            },
+            "detail": {
+                "title": "Job Category"
+            },
+            "jobCategory": "Job Category",
+            "candidate": "Candidate"
+        }
+    }
+}

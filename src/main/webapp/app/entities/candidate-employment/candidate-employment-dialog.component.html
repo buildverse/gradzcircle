@@ -1,0 +1,227 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header modal-header-decorate">
+        <h6 class="modal-title" id="myCandidateEmploymentLabel" jhiTranslate="gradzcircleApp.candidateEmployment.home.createOrEditLabel">Create or edit a Candidate Employment</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']"  class="modal-body">
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-3">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle" for="field_jobTitle">Job Title</label>
+            </div>
+            <div class="col-md-9" [class.has-danger]="jobTitle.invalid && jobTitle.touched">
+                <input type="text" class="form-control" #jobTitle="ngModel" required name="jobTitle" id="field_jobTitle"
+                    [(ngModel)]="candidateEmployment.jobTitle"/>
+                <small class="form-text text-muted text-info">
+                    Examples : "Intern", Analyst etc.
+                </small>
+                <div *ngIf="jobTitle.invalid && jobTitle.touched" class="text-danger">
+                    <small> Please enter your Job Title.</small>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-3">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employerName" for="field_employerName">Employer Name</label>
+            </div>
+            <div class="col-md-9" [class.has-danger]="employerName.invalid && employerName.touched">
+                <input type="text" #employerName="ngModel" required class="form-control" name="employerName" id="field_employerName"
+                    [(ngModel)]="candidateEmployment.employerName"
+                />
+                <div *ngIf="employerName.invalid && employerName.touched" class="text-danger">
+                    <small> Please enter Employer Name.</small>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-3">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription" for="field_jobDescription">Job Description</label>
+            </div>
+            <div class="col-md-9" [class.has-danger]="jobDescription.invalid && jobDescription.touched">
+                <textarea [froalaEditor]='options' class="form-control" name="jobDescription" id="field_jobDescription" rows="10" required #jobDescription="ngModel"
+                    [(ngModel)]="candidateEmployment.jobDescription">
+                </textarea>
+                <div *ngIf="jobDescription.invalid && jobDescription.touched" class="text-danger">
+                    <small> Please enter Job Description. </small>
+                </div>
+                <small class="form-text text-muted text-info">
+                    Please ensure the job description is crisp and concise.
+                </small>
+            </div>
+
+
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-3">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employmentType" for="field_employmentType">Employment Type</label>
+            </div>
+            <div class="col-md-3" [class.has-danger]="employmentType.invalid && employmentType.touched">
+                <select class="form-control" id="field_employmentType" name="employmentType" #employmentType="ngModel" required [(ngModel)]="candidateEmployment.employmentType"  >
+                    <option [ngValue]="null"></option>
+                    <option [ngValue]="employmentTypeOption.id === candidateEmployment.employmentType?.id ? candidateEmployment.employmentType : employmentTypeOption" *ngFor="let employmentTypeOption of employmenttypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.employmentType}}</option>
+                </select>
+                <div *ngIf="employmentType.invalid && employmentType.touched" class="text-danger">
+                    <small> Please select employment </small>
+                </div>
+            </div>
+            <div class="col-md-3 text-right" >
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.jobType" for="field_jobType">Job Type</label>
+            </div>
+            <div class="col-md-3" [class.has-danger]="jobType.invalid && jobType.touched">
+                <select class="form-control" id="field_jobType" #jobType="ngModel" required name="jobType" [(ngModel)]="candidateEmployment.jobType" >
+                    <option [ngValue]="null"></option>
+                    <option [ngValue]="jobTypeOption.id === candidateEmployment.jobType?.id ? candidateEmployment.jobType : jobTypeOption" *ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}</option>
+                </select>
+                <div *ngIf="jobType.invalid && jobType.touched" class="text-danger">
+                        <small> Please select job type </small>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-3">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate" for="field_employmentStartDate">Employment Start Date</label>
+            </div>
+            <div class="col-md-3" [class.has-danger]="fromDate.invalid && fromDate.touched">
+                <div class="input-group">
+                    <input id="field_employmentStartDate" #fromDate="ngModel" required type="text" class="form-control text-muted" name="employmentStartDate"
+                        ngbDatepicker  #employmentStartDateDp="ngbDatepicker" [(ngModel)]="candidateEmployment.employmentStartDate" (ngModelChange)="validateDates()"
+                    />
+                    <span class="input-group-addon " (click)="employmentStartDateDp.toggle()">
+                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+                    </span>
+                </div>
+                 <div *ngIf="fromDate.invalid && fromDate.touched" class="text-danger">
+                    <small>Please enter Start Date</small>
+                </div>
+            </div>
+            <div class="col-md-3  text-center">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate" for="field_employmentEndDate">Employment End Date</label>
+            </div>
+            <div class="col-md-3" [class.has-danger]="toDate.invalid && toDate.touched" >
+                <div class="input-group">
+                    <input id="field_employmentEndDate" #toDate="ngModel" required type="text" class="form-control text-muted" [disabled]="endDateControl" name="employmentEndDate"
+                        ngbDatepicker  #employmentEndDateDp="ngbDatepicker" [(ngModel)]="candidateEmployment.employmentEndDate" (ngModelChange)="validateDates()"
+                    />
+                    <button class="input-group-addon " (click)="employmentEndDateDp.toggle()" type="button" [disabled]="endDateControl">
+                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+                    </button>
+                </div>
+                <div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+                    <small>Please enter End Date</small>
+                </div>
+                  <div *ngIf="endDateLesser" class="text-danger">
+                    <small>End date cannot be before start date.</small>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-6 form-check align-items-end">
+                <label class="form-check-label"  for="field_isCurrentEmployment">
+
+                    <input class="form-check-input font-weight-bold text-muted" type="checkbox" name="isCurrentEmployment" id="field_isCurrentEmployment"  (change)="manageEndDateControl()"
+                    [(ngModel)]="candidateEmployment.isCurrentEmployment"/>
+                    I am still working here
+                </label>
+            </div>
+        </div>
+    </div>
+    <div *jhiHasAnyAuthority="['ROLE_ADMIN']"  class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!candidateEmployment.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="candidateEmployment.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.location" for="field_location">Location</label>
+            <input type="number" class="form-control" name="location" id="field_location"
+                [(ngModel)]="candidateEmployment.location"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle" for="field_jobTitle">Job Title</label>
+            <input type="text" class="form-control" name="jobTitle" id="field_jobTitle"
+                [(ngModel)]="candidateEmployment.jobTitle"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.employerName" for="field_employerName">Employer Name</label>
+            <input type="text" class="form-control" name="employerName" id="field_employerName"
+                [(ngModel)]="candidateEmployment.employerName"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate" for="field_employmentStartDate">Employment Start Date</label>
+            <div class="input-group">
+                <input id="field_employmentStartDate" type="text" class="form-control" name="employmentStartDate" ngbDatepicker  #employmentStartDateDp="ngbDatepicker" [(ngModel)]="candidateEmployment.employmentStartDate"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="employmentStartDateDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate" for="field_employmentEndDate">Employment End Date</label>
+            <div class="input-group">
+                <input id="field_employmentEndDate" type="text" class="form-control" name="employmentEndDate" ngbDatepicker  #employmentEndDateDp="ngbDatepicker" [(ngModel)]="candidateEmployment.employmentEndDate"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="employmentEndDateDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.employmentDuration" for="field_employmentDuration">Employment Duration</label>
+            <input type="number" class="form-control" name="employmentDuration" id="field_employmentDuration"
+                [(ngModel)]="candidateEmployment.employmentDuration"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.isCurrentEmployment" for="field_isCurrentEmployment">Is Current Employment</label>
+            <input type="checkbox" class="form-control" name="isCurrentEmployment" id="field_isCurrentEmployment"
+                [(ngModel)]="candidateEmployment.isCurrentEmployment"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription" for="field_jobDescription">Job Description</label>
+            <input type="text" class="form-control" name="jobDescription" id="field_jobDescription"
+                [(ngModel)]="candidateEmployment.jobDescription"  />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.candidate" for="field_candidate">Candidate</label>
+            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateEmployment.candidate" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="candidateOption.id === candidateEmployment.candidate?.id ? candidateEmployment.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.employmentType" for="field_employmentType">Employment Type</label>
+            <select class="form-control" id="field_employmentType" name="employmentType" [(ngModel)]="candidateEmployment.employmentType" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="employmentTypeOption.id === candidateEmployment.employmentType?.id ? candidateEmployment.employmentType : employmentTypeOption" *ngFor="let employmentTypeOption of employmenttypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.country" for="field_country">Country</label>
+            <select class="form-control" id="field_country" name="country" [(ngModel)]="candidateEmployment.country" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="countryOption.id === candidateEmployment.country?.id ? candidateEmployment.country : countryOption" *ngFor="let countryOption of countries; trackBy: trackCountryById">{{countryOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEmployment.jobType" for="field_jobType">Job Type</label>
+            <select class="form-control" id="field_jobType" name="jobType" [(ngModel)]="candidateEmployment.jobType" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="jobTypeOption.id === candidateEmployment.jobType?.id ? candidateEmployment.jobType : jobTypeOption" *ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-pill btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

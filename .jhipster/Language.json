@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateLanguageProficiency",
+            "otherEntityName": "candidateLanguageProficiency",
+            "otherEntityRelationshipName": "language"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "language",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094648",
+    "entityTableName": "language",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

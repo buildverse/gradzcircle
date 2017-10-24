@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "employmentType" : {
+            "home": {
+                "title": "Employment Types",
+                "createLabel": "Create a new Employment Type",
+                "createOrEditLabel": "Create or edit a Employment Type",
+                "search": "Search for Employment Type"
+            },
+            "created": "A new Employment Type is created with identifier {{ param }}",
+            "updated": "A Employment Type is updated with identifier {{ param }}",
+            "deleted": "A Employment Type is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Employment Type {{ id }}?"
+            },
+            "detail": {
+                "title": "Employment Type"
+            },
+            "employmentType": "Employment Type",
+            "candidateEmployment": "Candidate Employment"
+        }
+    }
+}

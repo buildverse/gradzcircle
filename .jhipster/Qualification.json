@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateEducation",
+            "otherEntityName": "candidateEducation",
+            "otherEntityRelationshipName": "qualification"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "qualification",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094637",
+    "entityTableName": "qualification",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

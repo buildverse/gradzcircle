@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "certificationTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "certificationDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "certificationDetails",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094628",
+    "entityTableName": "candidate_certification",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

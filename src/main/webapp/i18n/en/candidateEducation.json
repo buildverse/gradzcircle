@@ -1,0 +1,45 @@
+{
+    "gradzcircleApp": {
+        "candidateEducation": {
+            "home": {
+                "title": "Education",
+                "createLabel": "Create a new Candidate Education",
+                "createOrEditLabel": "Add or Edit Education Details",
+                "search": "Search for Candidate Education",
+                "add": "Add",
+                "addProject": "Add Project",
+                "delete": "Remove Education "
+            },
+            "created": "A new Candidate Education is created with identifier {{ param }}",
+            "updated": "A Candidate Education is updated with identifier {{ param }}",
+            "deleted": "A Candidate Education is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to remove {{education}} ?",
+                "questionExtension" :"This will remove the associated projects as well."
+            },
+            "detail": {
+                "title": "Education"
+            },
+            "grade": "Grade",
+            "educationFromDate": "From Date",
+            "educationToDate": "To Date",
+            "isPursuingEducation": "Am Still Studying",
+            "gradeScale": "Grade Scale",
+            "highestQualification": "Highest Qualification",
+            "roundOfGrade": "Round Of Grade",
+            "gradeDecimal": "Grade Decimal",
+            "capturedCourse": "Course",
+            "capturedQualification": "Qualification",
+            "capturedCollege": "College",
+            "capturedUniversity": "University",
+            "gpa": "GPA Score",
+            "percentage": "Percentage Score",
+            "scoreType": "Score Type",
+            "candidate": "Candidate",
+            "projects": "Projects",
+            "qualification": "Qualification",
+            "course": "Course",
+            "college": "College"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureUniversity" : {
+            "home": {
+                "title": "Capture Universities",
+                "createLabel": "Create a new Capture University",
+                "createOrEditLabel": "Create or edit a Capture University",
+                "search": "Search for Capture University"
+            },
+            "created": "A new Capture University is created with identifier {{ param }}",
+            "updated": "A Capture University is updated with identifier {{ param }}",
+            "deleted": "A Capture University is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Capture University {{ id }}?"
+            },
+            "detail": {
+                "title": "Capture University"
+            },
+            "universityName": "University Name",
+            "capturecollege": "Capturecollege"
+        }
+    }
+}

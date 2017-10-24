@@ -1,0 +1,22 @@
+{
+    "gradzcircleApp": {
+        "maritalStatus" : {
+            "home": {
+                "title": "MaritalStatuses",
+                "createLabel": "नया Marital Status बनाएँ",
+                "createOrEditLabel": "Marital Status बनाएँ या संपादित करें",
+                "search": "Marital Status खोजें"
+            },
+            "created": "एक नया Marital Status [identifier: {{ param }}] तैयार है",
+            "updated": "एक Marital Status [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Marital Status [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Marital Status [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Marital Status"
+            },
+            "status": "Status"
+        }
+    }
+}

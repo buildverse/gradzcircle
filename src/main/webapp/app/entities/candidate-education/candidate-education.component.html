@@ -1,0 +1,580 @@
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+
+                <div class="row mx-4 my-4 justify-content-between">
+                    <div>
+                        <p class="h4 underline-headers" jhiTranslate="gradzcircleApp.candidateEducation.home.title"><span>Education</span></p>
+                    </div>
+                    <div>
+                        <a class="btn btn-sm btn-pill btn-primary float-right create-candidate-education" [routerLink]="['/', { outlets: { popup: 'candidate-education-new/'+ candidateId } }]">
+                            <span  class="icon icon-circle-with-plus" jhiTranslate="gradzcircleApp.candidateEducation.home.add">
+                            Add
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div *ngIf="candidateEducations?.length>0; else showNoEducationMessage">
+                    <div class="timeline">
+                            <div class="line text-muted"></div>
+                            <div *ngFor="let candidateEducation of candidateEducations ;">
+
+
+                                <div class="separator text-muted">
+                                    <time>{{candidateEducation.educationFromDate | date:'mediumDate'}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate| date:'mediumDate'): 'Till Date' }}</time>
+                                </div>
+                                <div class="card card-outline-primary">
+                                    <div class="card-header icon">
+                                        <span class="icon icon-graduation-cap" style="color:white">
+                                    </div>
+                                    <div class="card-header" style="background-color:#3097D1">
+                                                <div class="row mx-2 pb-0 justify-content-end ">
+                                                    <div class="mr-auto">
+                                                        <p style="color:white"><span class="mt-0">{{candidateEducation.college?(candidateEducation.college?.collegeName==='Other'?(candidateEducation.capturedCollege+", "+candidateEducation.capturedUniversity):
+                                                                                    (candidateEducation.college.collegeName+", "+candidateEducation.college.university.universityName)):''}}
+                                                                                </span></p>
+
+                                                    </div>
+                                                    <div class="ml-auto">
+                                                            <p style="color:white"><span>{{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}} in
+                                                                        {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}}
+                                                                        </span>
+                                                            </p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row mx-2 p-lower justify-content-end ">
+                                                    <div  class="mr-auto">
+                                                        <p style="color:white"><span>{{candidateEducation.grade?"GPA "+candidateEducation.grade+"/10":"Percentage "+candidateEducation.percentage+"%"}}</span></p>
+                                                    </div>
+                                                    <div class="pr-2">
+                                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]" replaceUrl="true">
+                                                                                <span class="icon icon-edit " style="color:white" jhiTranslate="entity.action.edit">Edit</span>
+                                                        </a>
+
+                                                    </div>
+                                                    <div >
+                                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/delete'} }]" replaceUrl="true">
+                                                                                <span class="icon icon-trash " style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                                        </a>
+
+                                                    </div>
+
+                                                </div>
+                                    </div>
+                                    <div class="card-block">
+                                                <div *ngIf="candidateEducation.projects?.length>0; else showProjectMessage">
+                                                    <div class="row">
+                                                            <div class="col-md-12 mr-auto"><b>Projects included</b></div>
+                                                    </div>
+                                                    <hr class="seperator">
+                                                    <div *ngFor="let candidateProject of candidateEducation.projects ;let j= index">
+                                                        <div class="row mx-3 justify-content-end">
+                                                            <div class="mr-auto pl-2">
+                                                                <ul class="square font-weight-bold"><li>{{candidateProject.projectTitle}}<span style="color:#3097D1"><i>{{candidateProject.projectType==='ACADEMIC'?' was an academic project ' : ' did it out of self interest' }} </i></span> </li></ul>
+                                                            </div>
+                                                            <div class="p-2">
+                                                                <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/false/edit'} }]" replaceUrl="true">
+                                                                                <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                                                </a>
+                                                            </div>
+
+                                                            <div class="p-2">
+                                                                <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
+                                                                                <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                                                </a>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row mx-5 ">
+                                                            <div class="col-md-2 ">
+                                                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mx-5 my-1">
+                                                            <div class="col-md-10" [innerHtml]="candidateProject.projectDescription">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mx-5 ">
+                                                            <div class="col-md-2 ">
+                                                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mx-5 my-1">
+                                                            <div class="col-md-10 " [innerHtml]="candidateProject.contributionInProject">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mx-4 my-1">
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <ng-template #showProjectMessage>
+                                                    <div class="col-md-12">
+                                                        <p class="profile-text-info mb-0">Please add your associated projects, providing overview of your contribution.</p>
+                                                        <p class="profile-text-info mt-0">Example : Ruchi to come up with one...</p>
+                                                    </div>
+                                                </ng-template>
+                                    </div>
+                                    <div class="card-footer">
+                                            <div class="row pr-2 justify-content-end">
+
+                                                <a [routerLink]="['/', { outlets: { popup: 'candidate-education-project-new/'+ candidateEducation.id} }]" replaceUrl="true">
+                                                    <span class="icon icon-circle-with-plus" jhiTranslate ="gradzcircleApp.candidateEducation.home.addProject" style="color:#3097D1" >Add Project</span>
+                                                </a>
+
+
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <ng-template #showNoEducationMessage>
+                        <div class="col-md-12">
+                                <p class="profile-text-info mb-0">Please add your education details</p>
+                                <p class="profile-text-info mt-0">Example : Ruchi to come up with one...</p>
+                            </div>
+                </ng-template>
+                    <!-- <div style="background-color: #DFE2E4;color:black">
+                            <div class="row mx-4 my-3 justify-content-end ">
+                                 <div class="pt-1">
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]" replaceUrl="true">
+                                                            <span class="icon icon-edit " style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                    </a>
+                                </div>
+
+                                <div class="pt-1 pl-2">
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/delete'} }]" replaceUrl="true">
+                                                            <span class="icon icon-trash " style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row mx-4 justify-content-end ">
+                                <div class="mr-auto">
+                                    <p class="h6 "><span>{{candidateEducation.college?(candidateEducation.college?.collegeName==='Other'?(candidateEducation.capturedCollege+", "+candidateEducation.capturedUniversity):
+                                                            (candidateEducation.college.collegeName+", "+candidateEducation.college.university.universityName)):''}}
+                                                       </span></p>
+                                    <p class="h6 "><span>{{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}} in
+                                                        {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}}
+                                                    </span></p>
+                                </div>
+                                <div class="pb-4" >
+
+                                        <p><span>{{candidateEducation.educationFromDate | date:'mediumDate'}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate | date:'mediumDate'):'Till Date'}}</span></p>
+
+
+                                        <p ><span>{{candidateEducation.grade?"GPA "+candidateEducation.grade+"/10":"Percentage "+candidateEducation.percentage+"%"}}</span></p>
+
+                                </div>
+
+                            </div>
+
+                            <div *ngIf="candidateEducation.projects?.length>0; else showProjectMessage">
+                                <div class="row mx-2">
+                                        <div class="col-md-12 h6">Projects included</div>
+                                </div>
+                                <div *ngFor="let candidateProject of candidateEducation.projects ;let j= index">
+                                    <div class="row mx-3 my-3 justify-content-end">
+                                        <div class="mr-auto pl-2 h6 ">
+                                            <ul class="square"><li>{{candidateProject.projectTitle}} - {{candidateProject.projectType}} Project </li></ul>
+                                        </div>
+                                        <div class="p-2">
+                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]" replaceUrl="true">
+                                                            <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                            </a>
+                                        </div>
+
+                                        <div class="p-2">
+                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
+                                                            <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <div class="row mx-5 my-3">
+                                        <div class="col-md-2 ">
+                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-5 my-3">
+                                        <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.projectDescription">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mx-5 my-3">
+                                        <div class="col-md-2 ">
+                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-5 my-3">
+                                        <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.contributionInProject">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mx-4 my-1">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <ng-template #showProjectMessage>
+                                <div class="col-md-12">
+                                    <p class="text-info">Please add your associated projects, providing overview of your contribution.</p>
+                                    <p class="text-info">Example : Ruchi to come up with one...</p>
+                                </div>
+                            </ng-template>
+                            <div class="row mx-4 my-3 pb-4 justify-content-end">
+
+                                <a [routerLink]="['/', { outlets: { popup: 'candidate-education-project-new/'+ candidateEducation.id} }]" replaceUrl="true">
+                                    <span class="icon icon-circle-with-plus" jhiTranslate ="gradzcircleApp.candidateEducation.home.addProject" style="color:#3097D1" >Add Project</span>
+                                </a>
+
+
+                            </div>
+                    </div>
+                     -->
+
+
+                    <!-- <div class="card card-profile" >
+                        <div class="row mx-4 my-3 justify-content-end">
+                            <div class="mr-auto">
+                                <p class="h6 "><span>{{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}} in
+                                                    {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}}</span></p>
+                            </div>
+                            <div class="p-2">
+                                <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]" replaceUrl="true">
+                                                        <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                </a>
+                            </div>
+
+                            <div class="p-2">
+                                <a [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/delete'} }]" replaceUrl="true">
+                                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="row mx-4 my-4">
+                            <div class="col-md-2">
+                                <span jhiTranslate="gradzcircleApp.candidateEducation.qualification" class="font-weight-bold text-muted">Qualification</span>
+                            </div>
+                            <div *ngIf="candidateEducation.qualification?.qualification!='Other'; else capturedQualification" class="col-md-3">
+                                {{candidateEducation.qualification?.qualification}}
+                            </div>
+                            <ng-template #capturedQualification>
+                                <div class="col-md-3">
+                                    {{candidateEducation.capturedQualification}}
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-2 offset-md-1">
+                                <span jhiTranslate="gradzcircleApp.candidateEducation.course" class="font-weight-bold text-muted">Course</span>
+                            </div>
+
+                            <div *ngIf="candidateEducation.course?.course!='Other'; else capturedCourse" class="col-md-3">
+                                {{candidateEducation.course?.course}}
+                            </div>
+                            <ng-template #capturedCourse>
+                                <div class="col-md-3">
+                                    {{candidateEducation.capturedCourse}}
+                                </div>
+                            </ng-template>
+                        </div>
+
+                        <div class="row mx-4 my-3">
+                            <div class="col-md-2">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.college">College</span>
+                            </div>
+                            <div *ngIf="candidateEducation.college?.collegeName!='Other'; else capturedCollege" class="col-md-3">
+                                {{candidateEducation.college?.collegeName}}
+                            </div>
+
+                            <ng-template #capturedCollege>
+                                <div class="col-md-3">
+                                    {{candidateEducation.capturedCollege}}
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-2 offset-md-1">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.university.detail.title">University</span>
+                            </div>
+                             fix the university name Others to Other to be consistent with college, course nd qulifiction
+                            <div *ngIf="candidateEducation.college?.university?.universityName!='Others'; else capturedUniversity" class="col-md-3">
+                                {{candidateEducation.college?(candidateEducation.college.university?candidateEducation.college.university.universityName:''):''}}
+                            </div>
+                            <ng-template #capturedUniversity>
+                                <div class="col-md-3">
+                                    {{candidateEducation.capturedUniversity}}
+                                </div>
+                            </ng-template>
+                        </div>
+
+                        <div class="row mx-4 my-3">
+                            <div *ngIf="candidateEducation.grade; else percentage" class="col-md-2">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.grade">Grade</span>
+                            </div>
+                            <div *ngIf="candidateEducation.grade" class="col-md-3">
+                                    {{candidateEducation.grade}}
+                            </div>
+                            <ng-template #percentage>
+                                <div  class="col-md-2">
+                                    <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.percentage">Percentage</span>
+                                </div>
+                                <div class="col-md-3">
+                                    {{candidateEducation.percentage}} %
+                                </div>
+                            </ng-template>
+                            <div class="col-md-2 offset-md-1">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.highestQualification">Highest Qualification</span>
+                            </div>
+                            <div class="col-md-3">
+                                {{candidateEducation.highestQualification?"Yes":"No"}}
+                            </div>
+                        </div>
+                        <div class="row mx-4 my-3">
+                            <div class="col-md-2 ">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate">Start Date</span>
+                            </div>
+                            <div class="col-md-3">
+                                {{candidateEducation.educationFromDate | date:'mediumDate'}}
+                            </div>
+
+                            <div class="col-md-2 offset-md-1">
+                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.educationToDate">End Date</span>
+                            </div>
+                            <div *ngIf="candidateEducation.educationToDate; else isCurrent" class="col-md-3">
+                                {{candidateEducation.educationToDate | date:'mediumDate'}}
+                            </div>
+                            <ng-template #isCurrent>
+                                <div class="col-md-3">
+                                    Till Date
+                                </div>
+                            </ng-template>
+
+                        </div>
+                        <div>
+                            <hr/>
+                        </div>
+                        <div *ngIf="candidateEducation.projects?.length>0; else showProjectMessage">
+                            <div *ngFor="let candidateProject of candidateEducation.projects">
+                                <div class="row mx-4 my-3 justify-content-end">
+                                    <div class="mr-auto p-2">
+                                        <p class="h4 underline-headers"><span>{{candidateProject.projectTitle}} </span></p>
+                                    </div>
+                                    <div class="p-2">
+                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]" replaceUrl="true">
+                                                        <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                        </a>
+                                    </div>
+
+                                    <div class="p-2">
+                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
+                                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="row mx-4 my-3">
+                                    <div class="col-md-2 ">
+                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
+                                    </div>
+                                </div>
+                                <div class="row mx-4 my-3">
+                                    <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.projectDescription">
+
+                                    </div>
+                                </div>
+                                <div class="row mx-4 my-3">
+                                    <div class="col-md-2 ">
+                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
+                                    </div>
+                                </div>
+                                 <div class="row mx-4 my-3">
+                                    <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.contributionInProject">
+
+                                    </div>
+                                </div>
+                                <div class="row mx-4 my-3">
+                                    <div class="col-md-3 ">
+                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Start Date</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{candidateProject.projectStartDate}}
+                                    </div>
+                                    <div *ngIf="candidateProject.projectEndDate; else isCurrent" class="col-md-3">
+                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">End Date</span>
+                                    </div>
+                                    <div *ngIf="candidateProject.projectEndDate;" class="col-md-3">
+                                        {{candidateProject.projectEndDate}}
+                                    </div>
+
+                                    <ng-template #isCurrent>
+                                        <div class="align-items-end" class="font-weight-bold text-muted">
+                                            <span  jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject">I am still working on </span> {{candidateProject.projectTitle}}
+                                        </div>
+                                    </ng-template>
+                                </div>
+                                <div>
+                                    <hr/>
+                                </div>
+                            </div>
+
+                            <div>
+                                <hr class="split" />
+                            </div>
+                        </div>
+                        <ng-template #showProjectMessage>
+                                <div class="col-md-12">
+                                    <p class="text-info">Please add your associated projects, providing overview of your contribution.</p>
+                                    <p class="text-info">Example : Ruchi to come up with one...</p>
+                                </div>
+                        </ng-template>
+                        <div class="row mx-4 my-3 justify-content-end">
+
+                                <a [routerLink]="['/', { outlets: { popup: 'candidate-education-project-new/'+ candidateEducation.id} }]" replaceUrl="true">
+                                    <span class="icon icon-circle-with-plus" jhiTranslate ="gradzcircleApp.candidateEducation.home.addProject" style="color:#3097D1" >Add Project</span>
+                                </a>
+
+
+                        </div>
+                    </div> -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div *jhiHasAnyAuthority="['ROLE_ADMIN']">
+    <h2>
+        <span jhiTranslate="gradzcircleApp.candidateEducation.home.title">Candidate Educations</span>
+        <button class="btn btn-primary float-right jh-create-entity create-candidate-education" [routerLink]="['/', { outlets: { popup: ['candidate-education-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.candidateEducation.home.createLabel">
+            Create new Candidate Education
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.candidateEducation.home.search' | translate }}">
+                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="candidateEducations">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.grade">Grade</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate">Education From Date</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.educationToDate">Education To Date</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.isPursuingEducation">Is Pursuing Education</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.gradeScale">Grade Scale</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.highestQualification">Highest Qualification</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.roundOfGrade">Round Of Grade</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.gradeDecimal">Grade Decimal</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse">Captured Course</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification">Captured Qualification</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege">Captured College</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity">Captured University</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.percentage">Percentage</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.scoreType">Score Type</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.educationDuration">Education Duration</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.candidate">Candidate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.qualification">Qualification</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.course">Course</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateEducation.college">College</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let candidateEducation of candidateEducations ;trackBy: trackId">
+                <td><a [routerLink]="['../candidate-education', candidateEducation.id ]">{{candidateEducation.id}}</a></td>
+                <td>{{candidateEducation.grade}}</td>
+                <td>{{candidateEducation.educationFromDate | date:'mediumDate'}}</td>
+                <td>{{candidateEducation.educationToDate | date:'mediumDate'}}</td>
+                <td>{{candidateEducation.isPursuingEducation}}</td>
+                <td>{{candidateEducation.gradeScale}}</td>
+                <td>{{candidateEducation.highestQualification}}</td>
+                <td>{{candidateEducation.roundOfGrade}}</td>
+                <td>{{candidateEducation.gradeDecimal}}</td>
+                <td>{{candidateEducation.capturedCourse}}</td>
+                <td>{{candidateEducation.capturedQualification}}</td>
+                <td>{{candidateEducation.capturedCollege}}</td>
+                <td>{{candidateEducation.capturedUniversity}}</td>
+                <td>{{candidateEducation.percentage}}</td>
+                <td>{{candidateEducation.scoreType}}</td>
+                <td>{{candidateEducation.educationDuration}}</td>
+
+                <td>
+                    <div *ngIf="candidateEducation.candidate">
+                        <a [routerLink]="['../candidate', candidateEducation.candidate?.id ]" >{{candidateEducation.candidate?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="candidateEducation.qualification">
+                        <a [routerLink]="['../qualification', candidateEducation.qualification?.id ]" >{{candidateEducation.qualification?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="candidateEducation.course">
+                        <a [routerLink]="['../course', candidateEducation.course?.id ]" >{{candidateEducation.course?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="candidateEducation.college">
+                        <a [routerLink]="['../college', candidateEducation.college?.id ]" >{{candidateEducation.college?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../candidate-education', candidateEducation.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

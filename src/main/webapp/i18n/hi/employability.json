@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "employability" : {
+            "home": {
+                "title": "Employabilities",
+                "createLabel": "नया Employability बनाएँ",
+                "createOrEditLabel": "Employability बनाएँ या संपादित करें",
+                "search": "Employability खोजें"
+            },
+            "created": "एक नया Employability [identifier: {{ param }}] तैयार है",
+            "updated": "एक Employability [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Employability [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Employability [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Employability"
+            },
+            "employableSkillName": "Employable Skill Name",
+            "employabilityScore": "Employability Score",
+            "employabilityPercentile": "Employability Percentile"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "errorMessages" : {
+            "home": {
+                "title": "ErrorMessages",
+                "createLabel": "नया Error Messages बनाएँ",
+                "createOrEditLabel": "Error Messages बनाएँ या संपादित करें",
+                "search": "Error Messages खोजें"
+            },
+            "created": "एक नया Error Messages [identifier: {{ param }}] तैयार है",
+            "updated": "एक Error Messages [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Error Messages [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Error Messages [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Error Messages"
+            },
+            "componentName": "Component Name",
+            "errorKey": "Error Key",
+            "errorMessage": "Error Message"
+        }
+    }
+}

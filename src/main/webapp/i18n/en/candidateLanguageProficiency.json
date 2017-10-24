@@ -1,0 +1,28 @@
+{
+    "gradzcircleApp": {
+        "candidateLanguageProficiency" : {
+            "home": {
+                "title": "Candidate Language Proficiencies",
+                "createLabel": "Create a new Candidate Language Proficiency",
+                "createOrEditLabel": "Create or edit a Candidate Language Proficiency",
+                "search": "Search for Candidate Language Proficiency"
+            },
+            "created": "A new Candidate Language Proficiency is created with identifier {{ param }}",
+            "updated": "A Candidate Language Proficiency is updated with identifier {{ param }}",
+            "deleted": "A Candidate Language Proficiency is deleted with identifier {{ param }}",
+            "remove" : "Remove Language",
+            "delete": {
+                "question": "Are you sure you want to remove {{ language }} as a Language ?"
+            },
+            "detail": {
+                "title": "Candidate Language Proficiency"
+            },
+            "proficiency": "Proficiency",
+            "candidate": "Candidate",
+            "language": "Language",
+            "beginner": "Beginner",
+            "intermediate": "Intermediate",
+            "expert": "Expert"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobType" : {
+            "home": {
+                "title": "Job Types",
+                "createLabel": "Create a new Job Type",
+                "createOrEditLabel": "Create or edit a Job Type",
+                "search": "Search for Job Type"
+            },
+            "created": "A new Job Type is created with identifier {{ param }}",
+            "updated": "A Job Type is updated with identifier {{ param }}",
+            "deleted": "A Job Type is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Job Type {{ id }}?"
+            },
+            "detail": {
+                "title": "Job Type"
+            },
+            "jobType": "Job Type",
+            "candidateEmployment": "Candidate Employment"
+        }
+    }
+}

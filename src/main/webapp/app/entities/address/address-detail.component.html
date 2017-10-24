@@ -1,0 +1,47 @@
+
+<div *ngIf="address">
+    <h2><span jhiTranslate="gradzcircleApp.address.detail.title">Address</span> {{address.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.address.addressLineOne">Address Line One</span></dt>
+        <dd>
+            <span>{{address.addressLineOne}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.addressLineTwo">Address Line Two</span></dt>
+        <dd>
+            <span>{{address.addressLineTwo}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.city">City</span></dt>
+        <dd>
+            <span>{{address.city}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.state">State</span></dt>
+        <dd>
+            <span>{{address.state}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.zip">Zip</span></dt>
+        <dd>
+            <span>{{address.zip}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.country">Country</span></dt>
+        <dd>
+            <div *ngIf="address.country">
+                <a [routerLink]="['/country', address.country?.id]">{{address.country?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'address/'+ address.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

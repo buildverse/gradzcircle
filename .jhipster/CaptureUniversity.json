@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "capturecollege",
+            "otherEntityName": "captureCollege",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "captureUniversity"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "universityName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094654",
+    "entityTableName": "capture_university",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

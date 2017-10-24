@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "corporate",
+            "otherEntityName": "corporate",
+            "otherEntityRelationshipName": "industry"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "industryName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094642",
+    "entityTableName": "industry",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

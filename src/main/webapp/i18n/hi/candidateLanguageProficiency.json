@@ -1,0 +1,27 @@
+{
+    "gradzcircleApp": {
+        "candidateLanguageProficiency" : {
+            "home": {
+                "title": "CandidateLanguageProficiencies",
+                "createLabel": "नया Candidate Language Proficiency बनाएँ",
+                "createOrEditLabel": "Candidate Language Proficiency बनाएँ या संपादित करें",
+                "search": "Candidate Language Proficiency खोजें"
+            },
+            "created": "एक नया Candidate Language Proficiency [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Language Proficiency [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Language Proficiency [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Language Proficiency [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Language Proficiency"
+            },
+            "proficiency": "Proficiency",
+            "candidate": "Candidate",
+            "language": "Language",
+            "beginner": "Beginner",
+            "intermediate": "Intermediate",
+            "expert": "Expert"
+        }
+    }
+}

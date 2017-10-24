@@ -1,0 +1,27 @@
+{
+    "gradzcircleApp": {
+        "candidateCertification" : {
+            "home": {
+                "title": "My Certifications",
+                "createLabel": "Create a new Candidate Certification",
+                "createOrEditLabel": "Create or edit a Candidate Certification",
+                "search": "Search for Candidate Certification",
+                "add":"Add",
+                "delete": "Remove Certification"
+            },
+            "created": "A new Candidate Certification is created with identifier {{ param }}",
+            "updated": "A Candidate Certification is updated with identifier {{ param }}",
+            "deleted": "A Candidate Certification is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete details for {{ certification }}?"
+            },
+            "detail": {
+                "title": "Candidate Certification"
+            },
+            "certificationTitle": "Certification",
+            "certificationDate": "Certification Date",
+            "certificationDetails": "Details",
+            "candidate": "Candidate"
+        }
+    }
+}

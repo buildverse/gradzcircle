@@ -1,0 +1,22 @@
+{
+    "gradzcircleApp": {
+        "skills" : {
+            "home": {
+                "title": "Skills",
+                "createLabel": "नया Skills बनाएँ",
+                "createOrEditLabel": "Skills बनाएँ या संपादित करें",
+                "search": "Skills खोजें"
+            },
+            "created": "एक नया Skills [identifier: {{ param }}] तैयार है",
+            "updated": "एक Skills [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Skills [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Skills [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Skills"
+            },
+            "skill": "Skill"
+        }
+    }
+}

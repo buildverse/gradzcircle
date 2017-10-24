@@ -1,0 +1,11 @@
+version: '2'
+services:
+    gradzcircle-postgresql:
+        image: postgres:9.6.5
+        # volumes:
+        #     - ~/volumes/jhipster/gradzcircle/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=gradzcircle
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

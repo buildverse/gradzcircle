@@ -1,0 +1,58 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "education",
+            "otherEntityName": "candidateEducation",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "employment",
+            "otherEntityName": "candidateEmployment",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "projectTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "projectStartDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "projectEndDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "projectDescription",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "projectDuration",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "contributionInProject",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "isCurrentProject",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "projectType",
+            "fieldType": "ProjectType",
+            "fieldValues": "ACADEMIC,SELF_INTEREST,CORPORATE"
+        }
+    ],
+    "changelogDate": "20171015094632",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "candidate_project",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

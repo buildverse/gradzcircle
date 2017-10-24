@@ -1,0 +1,9 @@
+{
+    "gradzcircleApp": {
+        "Consent" : {
+            "null": "",
+            "YES": "YES",
+            "NO": "NO"
+        }
+    }
+}

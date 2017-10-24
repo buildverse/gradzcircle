@@ -1,0 +1,26 @@
+{
+    "gradzcircleApp": {
+        "college" : {
+            "home": {
+                "title": "Colleges",
+                "createLabel": "नया College बनाएँ",
+                "createOrEditLabel": "College बनाएँ या संपादित करें",
+                "search": "College खोजें"
+            },
+            "created": "एक नया College [identifier: {{ param }}] तैयार है",
+            "updated": "एक College [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "College [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "College [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "College"
+            },
+            "collegeName": "College Name",
+            "domainName": "Domain Name",
+            "status": "Status",
+            "candidateEducation": "Candidate Education",
+            "university": "University"
+        }
+    }
+}

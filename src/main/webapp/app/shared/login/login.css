@@ -1,0 +1,37 @@
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none;
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events:all;
+}
+
+
+/* misc */
+.app-login-form {
+    max-width: 280px;
+    margin-top: -60px;
+  }
+  .app-new-msg {
+    margin-right: 10px;
+  }
+  .app-brand {
+    width: 40%;
+    display: inline-block;
+  }
+  .app-brand img {
+    width: 100%;
+  }

@@ -1,0 +1,148 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "login",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "gender",
+            "otherEntityName": "gender",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "maritalStatus",
+            "otherEntityName": "maritalStatus",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "nationality",
+            "otherEntityName": "nationality",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "address",
+            "otherEntityName": "address",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "education",
+            "otherEntityName": "candidateEducation",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "nonAcademic",
+            "otherEntityName": "candidateNonAcademicWork",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "certification",
+            "otherEntityName": "candidateCertification",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "employment",
+            "otherEntityName": "candidateEmployment",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateLanguageProficiency",
+            "otherEntityName": "candidateLanguageProficiency",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "candidate",
+            "relationshipName": "jobCategory",
+            "otherEntityName": "jobCategory",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipName": "visaType",
+            "otherEntityName": "visaType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "firstName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "lastName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "middleName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "facebook",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "linkedIn",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "twitter",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "aboutMe",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateOfBirth",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "phoneCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "phoneNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "differentlyAbled",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "availableForHiring",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "openToRelocate",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20171015094626",
+    "entityTableName": "candidate",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

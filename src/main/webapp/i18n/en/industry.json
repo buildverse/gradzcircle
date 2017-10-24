@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "industry" : {
+            "home": {
+                "title": "Industries",
+                "createLabel": "Create a new Industry",
+                "createOrEditLabel": "Create or edit a Industry",
+                "search": "Search for Industry"
+            },
+            "created": "A new Industry is created with identifier {{ param }}",
+            "updated": "A Industry is updated with identifier {{ param }}",
+            "deleted": "A Industry is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Industry {{ id }}?"
+            },
+            "detail": {
+                "title": "Industry"
+            },
+            "industryName": "Industry Name",
+            "corporate": "Corporate"
+        }
+    }
+}

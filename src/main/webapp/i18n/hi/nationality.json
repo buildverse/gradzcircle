@@ -1,0 +1,22 @@
+{
+    "gradzcircleApp": {
+        "nationality" : {
+            "home": {
+                "title": "Nationalities",
+                "createLabel": "नया Nationality बनाएँ",
+                "createOrEditLabel": "Nationality बनाएँ या संपादित करें",
+                "search": "Nationality खोजें"
+            },
+            "created": "एक नया Nationality [identifier: {{ param }}] तैयार है",
+            "updated": "एक Nationality [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Nationality [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Nationality [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Nationality"
+            },
+            "nationality": "Nationality"
+        }
+    }
+}

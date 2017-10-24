@@ -1,0 +1,55 @@
+
+<div *ngIf="candidateNonAcademicWork">
+    <h2><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.detail.title">Candidate Non Academic Work</span> {{candidateNonAcademicWork.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle">Non Academic Initiative Title</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.nonAcademicInitiativeTitle}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription">Non Academic Initiative Description</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.nonAcademicInitiativeDescription}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.duration">Duration</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.duration}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.isCurrentActivity">Is Current Activity</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.isCurrentActivity}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative">Role In Initiative</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.roleInInitiative}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate">Non Academic Work Start Date</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.nonAcademicWorkStartDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate">Non Academic Work End Date</span></dt>
+        <dd>
+            <span>{{candidateNonAcademicWork.nonAcademicWorkEndDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.candidate">Candidate</span></dt>
+        <dd>
+            <div *ngIf="candidateNonAcademicWork.candidate">
+                <a [routerLink]="['/candidate', candidateNonAcademicWork.candidate?.id]">{{candidateNonAcademicWork.candidate?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

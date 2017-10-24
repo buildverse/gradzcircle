@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobType" : {
+            "home": {
+                "title": "JobTypes",
+                "createLabel": "नया Job Type बनाएँ",
+                "createOrEditLabel": "Job Type बनाएँ या संपादित करें",
+                "search": "Job Type खोजें"
+            },
+            "created": "एक नया Job Type [identifier: {{ param }}] तैयार है",
+            "updated": "एक Job Type [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Job Type [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Job Type [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Job Type"
+            },
+            "jobType": "Job Type",
+            "candidateEmployment": "Candidate Employment"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "industry" : {
+            "home": {
+                "title": "Industries",
+                "createLabel": "नया Industry बनाएँ",
+                "createOrEditLabel": "Industry बनाएँ या संपादित करें",
+                "search": "Industry खोजें"
+            },
+            "created": "एक नया Industry [identifier: {{ param }}] तैयार है",
+            "updated": "एक Industry [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Industry [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Industry [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Industry"
+            },
+            "industryName": "Industry Name",
+            "corporate": "Corporate"
+        }
+    }
+}

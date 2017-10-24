@@ -1,0 +1,9 @@
+{
+    "gradzcircleApp": {
+        "ProjectType" : {
+            "null": "",
+            "ACADEMIC": "ACADEMIC",
+            "SELF_INTEREST": "SELF_INTEREST"
+        }
+    }
+}

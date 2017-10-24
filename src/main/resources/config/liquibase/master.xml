@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094626_added_entity_Candidate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094627_added_entity_Address.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094628_added_entity_CandidateCertification.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094629_added_entity_CandidateEducation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094630_added_entity_CandidateEmployment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094631_added_entity_CandidateNonAcademicWork.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094632_added_entity_CandidateProject.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094633_added_entity_CandidateLanguageProficiency.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094634_added_entity_VisaType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094635_added_entity_MaritalStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094636_added_entity_EmploymentType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094637_added_entity_Qualification.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094638_added_entity_Gender.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094639_added_entity_Course.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094640_added_entity_Country.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094641_added_entity_Nationality.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094642_added_entity_Industry.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094643_added_entity_Skills.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094644_added_entity_JobType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094645_added_entity_College.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094646_added_entity_University.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094647_added_entity_JobCategory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094648_added_entity_Language.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094649_added_entity_Audit.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094650_added_entity_Employability.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094651_added_entity_Corporate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094652_added_entity_ErrorMessages.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094653_added_entity_CaptureCourse.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094654_added_entity_CaptureUniversity.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094655_added_entity_CaptureCollege.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094656_added_entity_CaptureQualification.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20171015094626_added_entity_constraints_Candidate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094627_added_entity_constraints_Address.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094628_added_entity_constraints_CandidateCertification.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094629_added_entity_constraints_CandidateEducation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094630_added_entity_constraints_CandidateEmployment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094631_added_entity_constraints_CandidateNonAcademicWork.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094632_added_entity_constraints_CandidateProject.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094633_added_entity_constraints_CandidateLanguageProficiency.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094634_added_entity_constraints_VisaType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094640_added_entity_constraints_Country.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094645_added_entity_constraints_College.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094646_added_entity_constraints_University.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094651_added_entity_constraints_Corporate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094653_added_entity_constraints_CaptureCourse.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094654_added_entity_constraints_CaptureUniversity.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094655_added_entity_constraints_CaptureCollege.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171015094656_added_entity_constraints_CaptureQualification.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+</databaseChangeLog>

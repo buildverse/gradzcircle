@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Candidate.
+    -->
+    <changeSet id="20171015094626-1" author="jhipster">
+        <createTable tableName="candidate">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="middle_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="facebook" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="linked_in" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="twitter" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="about_me" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="date_of_birth" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="phone_code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="differently_abled" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="available_for_hiring" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="open_to_relocate" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="login_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>            <column name="gender_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>            <column name="marital_status_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>            <column name="nationality_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>            <column name="address_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>
+            <column name="visa_type_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        
+        <createTable tableName="candidate_job_category">
+            <column name="job_categories_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidates_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="candidates_id, job_categories_id" tableName="candidate_job_category"/>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

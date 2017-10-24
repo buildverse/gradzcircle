@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "componentName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "errorKey",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "errorMessage",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094652",
+    "entityTableName": "error_messages",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

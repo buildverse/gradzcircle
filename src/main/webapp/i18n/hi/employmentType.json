@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "employmentType" : {
+            "home": {
+                "title": "EmploymentTypes",
+                "createLabel": "नया Employment Type बनाएँ",
+                "createOrEditLabel": "Employment Type बनाएँ या संपादित करें",
+                "search": "Employment Type खोजें"
+            },
+            "created": "एक नया Employment Type [identifier: {{ param }}] तैयार है",
+            "updated": "एक Employment Type [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Employment Type [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Employment Type [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Employment Type"
+            },
+            "employmentType": "Employment Type",
+            "candidateEmployment": "Candidate Employment"
+        }
+    }
+}

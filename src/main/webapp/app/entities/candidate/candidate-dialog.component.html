@@ -1,0 +1,143 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCandidateLabel" jhiTranslate="gradzcircleApp.candidate.home.createOrEditLabel">Create or edit a Candidate</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!candidate.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="candidate.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.firstName" for="field_firstName">First Name</label>
+            <input type="text" class="form-control" name="firstName" id="field_firstName"
+                [(ngModel)]="candidate.firstName"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.lastName" for="field_lastName">Last Name</label>
+            <input type="text" class="form-control" name="lastName" id="field_lastName"
+                [(ngModel)]="candidate.lastName"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.middleName" for="field_middleName">Middle Name</label>
+            <input type="text" class="form-control" name="middleName" id="field_middleName"
+                [(ngModel)]="candidate.middleName"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.facebook" for="field_facebook">Facebook</label>
+            <input type="text" class="form-control" name="facebook" id="field_facebook"
+                [(ngModel)]="candidate.facebook"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.linkedIn" for="field_linkedIn">Linked In</label>
+            <input type="text" class="form-control" name="linkedIn" id="field_linkedIn"
+                [(ngModel)]="candidate.linkedIn"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.twitter" for="field_twitter">Twitter</label>
+            <input type="text" class="form-control" name="twitter" id="field_twitter"
+                [(ngModel)]="candidate.twitter"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.aboutMe" for="field_aboutMe">About Me</label>
+            <input type="text" class="form-control" name="aboutMe" id="field_aboutMe"
+                [(ngModel)]="candidate.aboutMe"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.dateOfBirth" for="field_dateOfBirth">Date Of Birth</label>
+            <div class="input-group">
+                <input id="field_dateOfBirth" type="text" class="form-control" name="dateOfBirth" ngbDatepicker  #dateOfBirthDp="ngbDatepicker" [(ngModel)]="candidate.dateOfBirth"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="dateOfBirthDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.phoneCode" for="field_phoneCode">Phone Code</label>
+            <input type="text" class="form-control" name="phoneCode" id="field_phoneCode"
+                [(ngModel)]="candidate.phoneCode"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.phoneNumber" for="field_phoneNumber">Phone Number</label>
+            <input type="text" class="form-control" name="phoneNumber" id="field_phoneNumber"
+                [(ngModel)]="candidate.phoneNumber"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.differentlyAbled" for="field_differentlyAbled">Differently Abled</label>
+            <input type="checkbox" class="form-control" name="differentlyAbled" id="field_differentlyAbled"
+                [(ngModel)]="candidate.differentlyAbled"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.availableForHiring" for="field_availableForHiring">Available For Hiring</label>
+            <input type="checkbox" class="form-control" name="availableForHiring" id="field_availableForHiring"
+                [(ngModel)]="candidate.availableForHiring"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.openToRelocate" for="field_openToRelocate">Open To Relocate</label>
+            <input type="checkbox" class="form-control" name="openToRelocate" id="field_openToRelocate"
+                [(ngModel)]="candidate.openToRelocate"  />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.login" for="field_login">Login</label>
+            <select class="form-control" id="field_login" name="login" [(ngModel)]="candidate.login" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="userOption.id === candidate.login?.id ? candidate.login : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.gender" for="field_gender">Gender</label>
+            <select class="form-control" id="field_gender" name="gender" [(ngModel)]="candidate.gender">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="genderOption.id === candidate.gender?.id ? candidate.gender : genderOption" *ngFor="let genderOption of genders; trackBy: trackGenderById">{{genderOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.maritalStatus" for="field_maritalStatus">Marital Status</label>
+            <select class="form-control" id="field_maritalStatus" name="maritalStatus" [(ngModel)]="candidate.maritalStatus">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="maritalStatusOption.id === candidate.maritalStatus?.id ? candidate.maritalStatus : maritalStatusOption" *ngFor="let maritalStatusOption of maritalstatuses; trackBy: trackMaritalStatusById">{{maritalStatusOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.nationality" for="field_nationality">Nationality</label>
+            <select class="form-control" id="field_nationality" name="nationality" [(ngModel)]="candidate.nationality">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="nationalityOption.id === candidate.nationality?.id ? candidate.nationality : nationalityOption" *ngFor="let nationalityOption of nationalities; trackBy: trackNationalityById">{{nationalityOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.address" for="field_address">Address</label>
+            <select class="form-control" id="field_address" name="address" [(ngModel)]="candidate.address">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="addressOption.id === candidate.address?.id ? candidate.address : addressOption" *ngFor="let addressOption of addresses; trackBy: trackAddressById">{{addressOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="gradzcircleApp.candidate.jobCategory" for="field_jobCategory">Job Category</label>
+            <select class="form-control" id="field_jobCategory" multiple name="jobCategory" [(ngModel)]="candidate.jobCategories">
+                <option [ngValue]="getSelected(candidate.jobCategories, jobCategoryOption)" *ngFor="let jobCategoryOption of jobcategories; trackBy: trackJobCategoryById">{{jobCategoryOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.visaType" for="field_visaType">Visa Type</label>
+            <select class="form-control" id="field_visaType" name="visaType" [(ngModel)]="candidate.visaType" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="visaTypeOption.id === candidate.visaType?.id ? candidate.visaType : visaTypeOption" *ngFor="let visaTypeOption of visatypes; trackBy: trackVisaTypeById">{{visaTypeOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

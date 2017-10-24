@@ -1,0 +1,32 @@
+{
+    "gradzcircleApp": {
+        "candidateProject" : {
+            "home": {
+                "title": "Candidate Projects",
+                "createLabel": "Create a new Project",
+                "createOrEditLabel": "Create or edit a Project",
+                "search": "Search for Candidate Project",
+                "removeLabel":" Remove Project "
+            },
+            "created": "A new Candidate Project is created with identifier {{ param }}",
+            "updated": "A Candidate Project is updated with identifier {{ param }}",
+            "deleted": "A Candidate Project is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to remove project : {{ project }}?"
+            },
+            "detail": {
+                "title": "Candidate Project"
+            },
+            "projectTitle": "Project Title",
+            "projectStartDate": "Start Date",
+            "projectEndDate": "End Date",
+            "projectDescription": "Description",
+            "projectDuration": "Project Duration",
+            "contributionInProject": "Contribution",
+            "isCurrentProject": "Am still working on ",
+            "projectType": "Project Type",
+            "education": "Education",
+            "employment": "Employment"
+        }
+    }
+}

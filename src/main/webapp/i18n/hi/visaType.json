@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "visaType" : {
+            "home": {
+                "title": "VisaTypes",
+                "createLabel": "नया Visa Type बनाएँ",
+                "createOrEditLabel": "Visa Type बनाएँ या संपादित करें",
+                "search": "Visa Type खोजें"
+            },
+            "created": "एक नया Visa Type [identifier: {{ param }}] तैयार है",
+            "updated": "एक Visa Type [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Visa Type [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Visa Type [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Visa Type"
+            },
+            "visa": "Visa",
+            "candidate": "Candidate",
+            "country": "Country"
+        }
+    }
+}

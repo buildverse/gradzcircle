@@ -1,0 +1,211 @@
+<div class="container my-3 ">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-profile mb-3">
+                <div class="row mx-4 my-4 ">
+                    <div class="col-md-11">
+                        <p class="h2">Languages</p>
+
+                    </div>
+
+                </div>
+                <!--<jhi-alert></jhi-alert>-->
+                <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                    <div class="row">
+                        <div class="col-sm-12 no-padding-right">
+                            <form name="searchForm" class="form-inline">
+                                <div class="input-group w-100 mt-3">
+                                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.candidateLanguageProficiency.home.search' | translate }}" />
+                                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
+                                            <span class="fa fa-search"></span>
+                                        </button>
+                                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                                            <span class="fa fa-trash-o"></span>
+                                        </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--<div *ngIf="candidateLanguageProficiencies?.length===0; else elseBlock" >
+                    <div class="row mb-2 mx-4 justify-content-end">
+                        <a class="btn btn-sm btn-pill btn-primary " [routerLink]="['/', { outlets: { popup: ['candidate-language-proficiency-new'] } }]">
+                                        <span class="icon  icon-circle-with-plus"></span>Add
+                        </a>
+                    </div>
+                </div>-->
+
+                <div class="row mx-4">
+                    <div class="table-responsive" *ngIf="candidateLanguageProficiencies?.length>0">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                                    <th><span jhiTranslate="global.field.id">ID</span></th>
+                                    <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span></th>
+                                    <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.proficiency">Proficiency</span></th>
+                                    <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate">Candidate</span></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                <tr *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+                                        <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span></th>
+                                        <th colspan="3" ><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.proficiency">Proficiency</span></th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let candidateLanguageProficiency of candidateLanguageProficiencies ;trackBy: trackId">
+                                    <td *jhiHasAnyAuthority="['ROLE_ADMIN']"><a [routerLink]="['../candidate-language-proficiency', candidateLanguageProficiency.id ]">{{candidateLanguageProficiency.id}}</a></td>
+                                    <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                                        <div *ngIf="candidateLanguageProficiency.language">
+                                            <a [routerLink]="['../language', candidateLanguageProficiency.language?.id ]">{{candidateLanguageProficiency.language?.language}}</a>
+                                        </div>
+                                    </td>
+                                    <td *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+                                        <div *ngIf="candidateLanguageProficiency.language">
+                                            {{candidateLanguageProficiency.language?.language}}
+                                        </div>
+                                    </td>
+
+                                    <td>{{candidateLanguageProficiency.proficiency}}</td>
+                                    <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                                        <div *ngIf="candidateLanguageProficiency.candidate">
+                                            <a [routerLink]="['../candidate', candidateLanguageProficiency.candidate?.id ]">{{candidateLanguageProficiency.candidate?.id}}</a>
+                                        </div>
+                                    </td>
+
+                                    <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                                        <button type="submit" [routerLink]="['../candidate-language-proficiency', candidateLanguageProficiency.id ]" class="btn btn-info btn-sm">
+                                                        <span class="fa fa-eye"></span>
+                                                        <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
+                                                </button>
+                                    </td>
+
+
+                                    <td>
+                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/edit'} }]" replaceUrl="true">
+                                            <span class="icon icon-edit"></span>
+                                            <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/delete'} }]" replaceUrl="true">
+                                            <span class="icon icon-trash" style="color:maroon"></span>
+                                            <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mb-2 mx-4 justify-content-end">
+                    <a class="btn btn-sm btn-pill btn-primary " [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency-new/'+ candidateId } }]">
+                        <span class="icon  icon-circle-with-plus"></span>Add
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div>
+    <h2>
+        <span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.home.title">Candidate Language Proficiencies</span>
+        <button class="btn btn-primary float-right create-candidate-language-proficiency" [routerLink]="['/', { outlets: { popup: ['candidate-language-proficiency-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.candidateLanguageProficiency.home.createLabel">
+            Create new Candidate Language Proficiency
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.candidateLanguageProficiency.home.search' | translate }}">
+                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="candidateLanguageProficiencies">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th *jhiHasAnyAuthority="['ROLE_ADMIN']"><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.readProficiency">Read Proficiency</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.writeProficiency">Write Proficiency</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.speakProficiency">Speak Proficiency</span></th>
+            <th *jhiHasAnyAuthority="['ROLE_ADMIN']"><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate">Candidate</span></th>
+
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let candidateLanguageProficiency of candidateLanguageProficiencies ;trackBy: trackId">
+                <td *jhiHasAnyAuthority="['ROLE_ADMIN']"><a [routerLink]="['../candidate-language-proficiency', candidateLanguageProficiency.id ]">{{candidateLanguageProficiency.id}}</a></td>
+                 <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                    <div *ngIf="candidateLanguageProficiency.language">
+                        <a [routerLink]="['../language', candidateLanguageProficiency.language?.id ]">{{candidateLanguageProficiency.language?.language}}</a>
+                    </div>
+                </td>
+                 <td *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+                    <div *ngIf="candidateLanguageProficiency.language">
+                      {{candidateLanguageProficiency.language?.language}}
+                    </div>
+                </td>
+
+                <td>{{candidateLanguageProficiency.readProficiency?"Yes":"No"}}</td>
+                <td>{{candidateLanguageProficiency.writeProficiency?"Yes":"No"}}</td>
+                <td>{{candidateLanguageProficiency.speakProficiency?"Yes":"No"}}</td>
+                <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                    <div *ngIf="candidateLanguageProficiency.candidate">
+                        <a [routerLink]="['../candidate', candidateLanguageProficiency.candidate?.id ]">{{candidateLanguageProficiency.candidate?.id}}</a>
+                    </div>
+                </td>
+
+                <td *jhiHasAnyAuthority="['ROLE_ADMIN']">
+                    <button type="submit"
+                                [routerLink]="['../candidate-language-proficiency', candidateLanguageProficiency.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                </td>
+
+
+                <td>
+                        <a
+                                [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/edit'} }]"
+                                replaceUrl="true">
+                            <span class="icon icon-edit"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
+                        </a>
+                </td>
+                <td>
+                        <a type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/delete'} }]"
+                                replaceUrl="true">
+                            <span class="icon icon-trash" style="color:maroon"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
+                        </a>
+
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>-->

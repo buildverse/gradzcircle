@@ -1,0 +1,43 @@
+
+
+
+  <div class="profile-header profile-mybackground" >
+    <div class="container-fluid">
+      <div class="container-inner">
+        
+      
+          <img class="rounded-circle media-object" [src]="noImage ? defaultImage : imageUrl "/> 
+        <h3 class="profile-header-user">{{candidate.firstName}} {{candidate.lastName}}</h3>
+        <p class="profile-header-bio">
+          {{candidate.aboutMe}}
+        </p>
+      </div>
+    </div>
+    
+    <nav class="profile-header-nav">
+      <ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" [routerLink] ="['./']" ><span class="icon icon-user" ></span></a>
+        </li>
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" >
+          <a class="nav-link" [routerLink]="['./education']"><span class="icon icon-graduation-cap" ></span> </a>
+        </li>
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" >
+          <a class="nav-link" [routerLink]="['./employment']"><span class="icon icon-briefcase" ></span></a>
+        </li>
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" >
+          <a class="nav-link" [routerLink]="['./certifications']" ><span class="icon icon-price-ribbon"></span></a>
+        </li>     
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" >
+          <a class="nav-link" [routerLink]="['./beyondAcademics']" ><span class="icon icon-trophy"></span></a>
+        </li>  
+        <li class="nav-item" routerLinkActive="nav-item active" style="color:white" >
+            <a class="nav-link" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id } }]" style="white-space: nowrap;" data-toggle="tooltip" data-placement="top" title="Public Profile"><span class="icon icon-eye"></span></a>
+        </li>      
+      </ul>
+    </nav>
+  </div>
+  <div> 
+    <router-outlet></router-outlet>
+  </div>
+

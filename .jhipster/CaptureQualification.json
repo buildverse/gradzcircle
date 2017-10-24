@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "candidateEducation",
+            "otherEntityName": "candidateEducation",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "captureQualification"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "qualificationName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094656",
+    "entityTableName": "capture_qualification",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

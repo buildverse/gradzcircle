@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "university" : {
+            "home": {
+                "title": "Universities",
+                "createLabel": "Create a new University",
+                "createOrEditLabel": "Create or edit a University",
+                "search": "Search for University"
+            },
+            "created": "A new University is created with identifier {{ param }}",
+            "updated": "A University is updated with identifier {{ param }}",
+            "deleted": "A University is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete University {{ id }}?"
+            },
+            "detail": {
+                "title": "University"
+            },
+            "universityName": "University Name",
+            "country": "Country",
+            "college": "College"
+        }
+    }
+}

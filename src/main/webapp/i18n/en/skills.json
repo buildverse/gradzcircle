@@ -1,0 +1,22 @@
+{
+    "gradzcircleApp": {
+        "skills" : {
+            "home": {
+                "title": "Skills",
+                "createLabel": "Create a new Skills",
+                "createOrEditLabel": "Create or edit a Skills",
+                "search": "Search for Skills"
+            },
+            "created": "A new Skills is created with identifier {{ param }}",
+            "updated": "A Skills is updated with identifier {{ param }}",
+            "deleted": "A Skills is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Skills {{ id }}?"
+            },
+            "detail": {
+                "title": "Skills"
+            },
+            "skill": "Skill"
+        }
+    }
+}

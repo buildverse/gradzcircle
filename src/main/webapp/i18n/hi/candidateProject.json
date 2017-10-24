@@ -1,0 +1,31 @@
+{
+    "gradzcircleApp": {
+        "candidateProject" : {
+            "home": {
+                "title": "CandidateProjects",
+                "createLabel": "नया Candidate Project बनाएँ",
+                "createOrEditLabel": "Candidate Project बनाएँ या संपादित करें",
+                "search": "Candidate Project खोजें"
+            },
+            "created": "एक नया Candidate Project [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Project [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Project [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Project [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Project"
+            },
+            "projectTitle": "Project Title",
+            "projectStartDate": "Project Start Date",
+            "projectEndDate": "Project End Date",
+            "projectDescription": "Project Description",
+            "projectDuration": "Project Duration",
+            "contributionInProject": "Contribution In Project",
+            "isCurrentProject": "Is Current Project",
+            "projectType": "Project Type",
+            "education": "Education",
+            "employment": "Employment"
+        }
+    }
+}

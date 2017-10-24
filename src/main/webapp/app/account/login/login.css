@@ -1,0 +1,15 @@
+/* misc */
+.app-login-form {
+  max-width: 280px;
+  margin-top: -60px;
+}
+.app-new-msg {
+  margin-right: 10px;
+}
+.app-brand {
+  width: 40%;
+  display: inline-block;
+}
+.app-brand img {
+  width: 100%;
+}

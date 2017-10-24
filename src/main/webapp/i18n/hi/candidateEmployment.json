@@ -1,0 +1,34 @@
+{
+    "gradzcircleApp": {
+        "candidateEmployment" : {
+            "home": {
+                "title": "CandidateEmployments",
+                "createLabel": "नया Candidate Employment बनाएँ",
+                "createOrEditLabel": "Candidate Employment बनाएँ या संपादित करें",
+                "search": "Candidate Employment खोजें"
+            },
+            "created": "एक नया Candidate Employment [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Employment [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Employment [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Employment [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Employment"
+            },
+            "location": "Location",
+            "jobTitle": "Job Title",
+            "employerName": "Employer Name",
+            "employmentStartDate": "Employment Start Date",
+            "employmentEndDate": "Employment End Date",
+            "employmentDuration": "Employment Duration",
+            "isCurrentEmployment": "Is Current Employment",
+            "jobDescription": "Job Description",
+            "candidate": "Candidate",
+            "projects": "Projects",
+            "employmentType": "Employment Type",
+            "country": "Country",
+            "jobType": "Job Type"
+        }
+    }
+}

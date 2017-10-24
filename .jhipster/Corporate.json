@@ -1,0 +1,104 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "country",
+            "otherEntityName": "country",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "industry",
+            "otherEntityName": "industry",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "login",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "corporate"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "corporateName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateAddress",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateCity",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "establishedSince",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "corporateEmail",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateOverview",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateBenefits",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateWebsite",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateFacebook",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateTwitter",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateInstagram",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateLinkedIn",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateCulture",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "contactPerson",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporatePhone",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporatePhoneCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "contactPersonDesignation",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "corporateTagLine",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094651",
+    "entityTableName": "corporate",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

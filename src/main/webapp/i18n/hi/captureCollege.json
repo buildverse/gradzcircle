@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureCollege" : {
+            "home": {
+                "title": "CaptureColleges",
+                "createLabel": "नया Capture College बनाएँ",
+                "createOrEditLabel": "Capture College बनाएँ या संपादित करें",
+                "search": "Capture College खोजें"
+            },
+            "created": "एक नया Capture College [identifier: {{ param }}] तैयार है",
+            "updated": "एक Capture College [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Capture College [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Capture College [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Capture College"
+            },
+            "collegeName": "College Name",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "gradzcircleApp": {
+        "corporate" : {
+            "home": {
+                "title": "Corporates",
+                "createLabel": "नया Corporate बनाएँ",
+                "createOrEditLabel": "Corporate बनाएँ या संपादित करें",
+                "search": "Corporate खोजें"
+            },
+            "created": "एक नया Corporate [identifier: {{ param }}] तैयार है",
+            "updated": "एक Corporate [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Corporate [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Corporate [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Corporate"
+            },
+            "corporateName": "Corporate Name",
+            "corporateAddress": "Corporate Address",
+            "corporateCity": "Corporate City",
+            "establishedSince": "Established Since",
+            "corporateEmail": "Corporate Email",
+            "corporateOverview": "Corporate Overview",
+            "corporateBenefits": "Corporate Benefits",
+            "corporateWebsite": "Corporate Website",
+            "corporateFacebook": "Corporate Facebook",
+            "corporateTwitter": "Corporate Twitter",
+            "corporateInstagram": "Corporate Instagram",
+            "corporateLinkedIn": "Corporate Linked In",
+            "corporateCulture": "Corporate Culture",
+            "contactPerson": "Contact Person",
+            "corporatePhone": "Corporate Phone",
+            "corporatePhoneCode": "Corporate Phone Code",
+            "contactPersonDesignation": "Contact Person Designation",
+            "corporateTagLine": "Corporate Tag Line",
+            "country": "Country",
+            "industry": "Industry",
+            "login": "Login"
+        }
+    }
+}

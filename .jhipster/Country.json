@@ -1,0 +1,78 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "nationality",
+            "otherEntityName": "nationality",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "country"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "address",
+            "otherEntityName": "address",
+            "otherEntityRelationshipName": "country"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "university",
+            "otherEntityName": "university",
+            "otherEntityRelationshipName": "country"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateEmployment",
+            "otherEntityName": "candidateEmployment",
+            "otherEntityRelationshipName": "country"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "visa",
+            "otherEntityName": "visaType",
+            "otherEntityRelationshipName": "country"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "corporate",
+            "otherEntityName": "corporate",
+            "otherEntityRelationshipName": "country"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "countryName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "shortCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "shortCodeThreeChar",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "countryNiceName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "numCode",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "phoneCode",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "enabled",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20171015094640",
+    "entityTableName": "country",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

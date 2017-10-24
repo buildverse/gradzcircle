@@ -1,0 +1,33 @@
+{
+    "gradzcircleApp": {
+        "candidateNonAcademicWork" : {
+            "home": {
+                "add" : "Add",
+                "title": "Extra Curriculars",
+                "createLabel": "Create a new Candidate Non Academic Work",
+                "createOrEditLabel": "Add your Extra Curricular Activities",
+                "search": "Search for Candidate Non Academic Work",
+                "delete": "Remove Extra-Curricular "
+            },
+            "created": "A new Candidate Non Academic Work is created with identifier {{ param }}",
+            "updated": "A Candidate Non Academic Work is updated with identifier {{ param }}",
+            "deleted": "A Candidate Non Academic Work is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete your extra-curricular activity {{ activity }}?"
+
+            },
+            "detail": {
+                "title": "Candidate Non Academic Work"
+            },
+            "nonAcademicInitiativeTitle": "Activity Name",
+            "nonAcademicInitiativeDescription": "Description",
+
+            "duration": "Duration",
+            "roleInInitiative": "Your Role",
+            "nonAcademicWorkStartDate": "Start Date",
+            "nonAcademicWorkEndDate": "End Date",
+            "isCurrentActivity": "Is Current Activity",
+            "candidate": "Candidate"
+        }
+    }
+}

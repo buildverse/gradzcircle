@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "university" : {
+            "home": {
+                "title": "Universities",
+                "createLabel": "नया University बनाएँ",
+                "createOrEditLabel": "University बनाएँ या संपादित करें",
+                "search": "University खोजें"
+            },
+            "created": "एक नया University [identifier: {{ param }}] तैयार है",
+            "updated": "एक University [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "University [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "University [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "University"
+            },
+            "universityName": "University Name",
+            "country": "Country",
+            "college": "College"
+        }
+    }
+}

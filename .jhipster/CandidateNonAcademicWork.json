@@ -1,0 +1,46 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nonAcademicInitiativeTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nonAcademicInitiativeDescription",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "duration",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "isCurrentActivity",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "roleInInitiative",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nonAcademicWorkStartDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "nonAcademicWorkEndDate",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20171015094631",
+    "entityTableName": "candidate_non_academic_work",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

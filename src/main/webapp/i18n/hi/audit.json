@@ -1,0 +1,25 @@
+{
+    "gradzcircleApp": {
+        "audit" : {
+            "home": {
+                "title": "Audits",
+                "createLabel": "नया Audit बनाएँ",
+                "createOrEditLabel": "Audit बनाएँ या संपादित करें",
+                "search": "Audit खोजें"
+            },
+            "created": "एक नया Audit [identifier: {{ param }}] तैयार है",
+            "updated": "एक Audit [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Audit [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Audit [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Audit"
+            },
+            "createdBy": "Created By",
+            "updatedBy": "Updated By",
+            "createdTime": "Created Time",
+            "updatedTime": "Updated Time"
+        }
+    }
+}

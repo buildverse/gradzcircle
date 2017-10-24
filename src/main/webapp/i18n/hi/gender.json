@@ -1,0 +1,22 @@
+{
+    "gradzcircleApp": {
+        "gender" : {
+            "home": {
+                "title": "Genders",
+                "createLabel": "नया Gender बनाएँ",
+                "createOrEditLabel": "Gender बनाएँ या संपादित करें",
+                "search": "Gender खोजें"
+            },
+            "created": "एक नया Gender [identifier: {{ param }}] तैयार है",
+            "updated": "एक Gender [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Gender [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Gender [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Gender"
+            },
+            "gender": "Gender"
+        }
+    }
+}

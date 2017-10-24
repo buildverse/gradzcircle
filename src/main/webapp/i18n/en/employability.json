@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "employability" : {
+            "home": {
+                "title": "Employabilities",
+                "createLabel": "Create a new Employability",
+                "createOrEditLabel": "Create or edit a Employability",
+                "search": "Search for Employability"
+            },
+            "created": "A new Employability is created with identifier {{ param }}",
+            "updated": "A Employability is updated with identifier {{ param }}",
+            "deleted": "A Employability is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Employability {{ id }}?"
+            },
+            "detail": {
+                "title": "Employability"
+            },
+            "employableSkillName": "Employable Skill Name",
+            "employabilityScore": "Employability Score",
+            "employabilityPercentile": "Employability Percentile"
+        }
+    }
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Corporate.
+    -->
+    <changeSet id="20171015094651-1" author="jhipster">
+        <createTable tableName="corporate">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="corporate_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_address" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_city" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="established_since" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_overview" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_benefits" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_website" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_facebook" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_twitter" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_instagram" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_linked_in" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_culture" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="contact_person" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_phone" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_phone_code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="contact_person_designation" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_tag_line" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="country_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="industry_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="login_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

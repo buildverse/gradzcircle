@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "language",
+            "otherEntityName": "language",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "proficiency",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20171015094633",
+    "entityTableName": "candidate_language_proficiency",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

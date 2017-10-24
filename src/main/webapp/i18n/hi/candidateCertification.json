@@ -1,0 +1,25 @@
+{
+    "gradzcircleApp": {
+        "candidateCertification" : {
+            "home": {
+                "title": "CandidateCertifications",
+                "createLabel": "नया Candidate Certification बनाएँ",
+                "createOrEditLabel": "Candidate Certification बनाएँ या संपादित करें",
+                "search": "Candidate Certification खोजें"
+            },
+            "created": "एक नया Candidate Certification [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Certification [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Certification [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Certification [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Certification"
+            },
+            "certificationTitle": "Certification Title",
+            "certificationDate": "Certification Date",
+            "certificationDetails": "Certification Details",
+            "candidate": "Candidate"
+        }
+    }
+}

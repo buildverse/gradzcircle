@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureQualification" : {
+            "home": {
+                "title": "CaptureQualifications",
+                "createLabel": "नया Capture Qualification बनाएँ",
+                "createOrEditLabel": "Capture Qualification बनाएँ या संपादित करें",
+                "search": "Capture Qualification खोजें"
+            },
+            "created": "एक नया Capture Qualification [identifier: {{ param }}] तैयार है",
+            "updated": "एक Capture Qualification [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Capture Qualification [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Capture Qualification [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Capture Qualification"
+            },
+            "qualificationName": "Qualification Name",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

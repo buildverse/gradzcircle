@@ -1,0 +1,25 @@
+
+<div *ngIf="maritalStatus">
+    <h2><span jhiTranslate="gradzcircleApp.maritalStatus.detail.title">Marital Status</span> {{maritalStatus.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.maritalStatus.status">Status</span></dt>
+        <dd>
+            <span>{{maritalStatus.status}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'marital-status/'+ maritalStatus.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,37 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateEducation",
+            "otherEntityName": "candidateEducation",
+            "otherEntityRelationshipName": "college"
+        },
+        {
+            "relationshipName": "university",
+            "otherEntityName": "university",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "collegeName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "domainName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "status",
+            "javadoc": "need to make this unique",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20171015094645",
+    "entityTableName": "college",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

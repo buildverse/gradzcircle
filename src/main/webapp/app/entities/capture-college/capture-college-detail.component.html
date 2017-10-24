@@ -1,0 +1,31 @@
+
+<div *ngIf="captureCollege">
+    <h2><span jhiTranslate="gradzcircleApp.captureCollege.detail.title">Capture College</span> {{captureCollege.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.captureCollege.collegeName">College Name</span></dt>
+        <dd>
+            <span>{{captureCollege.collegeName}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.captureCollege.candidateEducation">Candidate Education</span></dt>
+        <dd>
+            <div *ngIf="captureCollege.candidateEducation">
+                <a [routerLink]="['/candidate-education', captureCollege.candidateEducation?.id]">{{captureCollege.candidateEducation?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'capture-college/'+ captureCollege.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "captureCourse" : {
+            "home": {
+                "title": "Capture Courses",
+                "createLabel": "Create a new Capture Course",
+                "createOrEditLabel": "Create or edit a Capture Course",
+                "search": "Search for Capture Course"
+            },
+            "created": "A new Capture Course is created with identifier {{ param }}",
+            "updated": "A Capture Course is updated with identifier {{ param }}",
+            "deleted": "A Capture Course is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Capture Course {{ id }}?"
+            },
+            "detail": {
+                "title": "Capture Course"
+            },
+            "courseName": "Course Name",
+            "candidateEducation": "Candidate Education"
+        }
+    }
+}

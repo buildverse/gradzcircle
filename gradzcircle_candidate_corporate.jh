@@ -1,0 +1,273 @@
+entity Candidate {
+	firstName String,
+	lastName String,
+	middleName String,
+	facebook String,
+	linkedIn String,
+	twitter String,
+	aboutMe String,
+	dateOfBirth LocalDate,
+    phoneCode String,
+	phoneNumber String,
+	differentlyAbled Boolean,
+	availableForHiring Boolean,
+	openToRelocate Boolean,
+}
+
+entity Address {
+    addressLineOne String,
+    addressLineTwo String,
+    city String,
+    state String,
+    zip String
+ 
+}
+
+entity CandidateCertification {
+	certificationTitle String,
+	certificationDate LocalDate,
+	certificationDetails String
+}
+
+entity CandidateEducation {
+	grade Double,
+	educationFromDate LocalDate,
+	educationToDate LocalDate,
+	isPursuingEducation Boolean,
+	gradeScale Integer,
+	highestQualification Boolean,
+	roundOfGrade Integer,
+	gradeDecimal Integer,
+    capturedCourse String,
+    capturedQualification String,
+    capturedCollege String,
+    capturedUniversity String,
+    percentage Double,
+    scoreType String,
+    educationDuration Integer
+}
+
+entity CandidateEmployment {
+    location Integer,
+    jobTitle String,
+    employerName String,
+    employmentStartDate LocalDate,
+    employmentEndDate LocalDate,
+    employmentDuration Integer,
+    isCurrentEmployment Boolean,
+    jobDescription String
+    
+}
+
+entity CandidateNonAcademicWork {
+	nonAcademicInitiativeTitle String,
+    nonAcademicInitiativeDescription String,
+  	duration Integer,
+    isCurrentActivity Boolean,
+    roleInInitiative String,
+    nonAcademicWorkStartDate LocalDate,
+    nonAcademicWorkEndDate LocalDate
+}
+
+
+entity CandidateProject {
+	projectTitle String,
+    projectStartDate LocalDate,
+    projectEndDate LocalDate,
+    projectDescription String,
+    projectDuration Integer,
+    contributionInProject String,
+    isCurrentProject Boolean,
+    projectType ProjectType
+}
+
+entity CandidateLanguageProficiency {
+   proficiency String
+}
+
+entity VisaType {
+    visa String
+}
+	
+entity MaritalStatus {
+	status String
+}
+
+entity EmploymentType {
+	employmentType String
+}
+
+entity Qualification {
+    qualification String
+}
+
+entity Gender {
+	gender String
+}
+
+entity Course {
+	course String
+}
+
+entity Country {
+	countryName String,
+    shortCode String,
+    shortCodeThreeChar String,
+    countryNiceName String,
+    numCode Integer,
+    phoneCode Integer,
+    enabled Boolean
+}
+
+entity Nationality {
+	nationality String
+}
+
+entity Industry {
+    industryName String
+}
+
+
+entity Skills {
+	skill String,
+}
+
+entity JobType {
+jobType String
+}
+
+
+entity College {
+	collegeName String,
+    domainName String,/* need to make this unique */
+    status Integer
+}
+
+entity University{
+	universityName String    
+}
+
+entity JobCategory {
+	jobCategory String    
+}
+
+entity Language {
+	language String
+}
+
+entity Audit {
+	createdBy Integer,
+    updatedBy Integer,
+    createdTime ZonedDateTime,
+    updatedTime ZonedDateTime
+}
+
+enum ProjectType {
+ACADEMIC, SELF_INTEREST,CORPORATE
+}
+
+entity Employability {
+	employableSkillName String,
+    employabilityScore Integer,
+    employabilityPercentile Integer
+}
+
+entity Corporate {
+	corporateName String,
+    corporateAddress String,
+    corporateCity String,
+    establishedSince LocalDate,
+    corporateEmail String,
+    corporateOverview String,
+    corporateBenefits String,
+    corporateWebsite String,
+    corporateFacebook String,
+    corporateTwitter String,
+    corporateInstagram String,
+    corporateLinkedIn String,
+    corporateCulture String,
+    contactPerson String,
+    corporatePhone String,
+    corporatePhoneCode String,
+    contactPersonDesignation String,
+    corporateTagLine String
+}
+
+entity ErrorMessages {
+    componentName String,
+    errorKey String,
+    errorMessage String
+}
+
+entity CaptureCourse {
+	courseName String
+}
+
+entity CaptureUniversity {
+	universityName String
+}
+
+entity CaptureCollege {
+	collegeName String
+}
+
+entity CaptureQualification {
+	qualificationName String
+}
+
+relationship OneToOne {
+	Candidate {login} to User,
+    Corporate {login} to User,
+    Candidate {gender} to Gender,
+    Candidate {maritalStatus} to MaritalStatus,
+    Country { nationality } to Nationality,
+    Candidate {nationality} to Nationality,
+    Candidate { address } to Address,
+    CaptureQualification {candidateEducation} to CandidateEducation,
+    CaptureCollege {candidateEducation} to CandidateEducation,
+    CaptureCourse {candidateEducation} to CandidateEducation,
+    CaptureUniversity {capturecollege} to CaptureCollege
+   
+}
+
+relationship OneToMany {
+    Country {address} to Address,
+	Candidate {education} to CandidateEducation,
+    Candidate {nonAcademic} to CandidateNonAcademicWork,
+	Candidate {certification} to CandidateCertification, 
+    Qualification  {candidateEducation} to CandidateEducation,
+    Course  {candidateEducation} to CandidateEducation,
+    College   {candidateEducation} to CandidateEducation,
+    Candidate {employment} to CandidateEmployment,
+    Candidate {candidateLanguageProficiency} to CandidateLanguageProficiency,
+    Language {candidateLanguageProficiency} to CandidateLanguageProficiency,
+    University {college} to College,
+    Country {university} to University,
+   
+    VisaType {candidate} to Candidate,
+    JobType {candidateEmployment} to CandidateEmployment,
+    EmploymentType {candidateEmployment} to CandidateEmployment,
+    Country {candidateEmployment} to CandidateEmployment,
+    Country {visa} to VisaType,
+    Industry {corporate} to Corporate,
+    Country {corporate} to Corporate
+    
+}
+
+relationship ManyToOne {
+ 	CandidateProject {education} to CandidateEducation {projects} ,
+    CandidateProject {employment} to CandidateEmployment {projects} 
+}
+
+relationship ManyToMany {
+	Candidate {jobCategory} to JobCategory {candidate}
+}
+ 
+
+
+
+
+
+
+
+

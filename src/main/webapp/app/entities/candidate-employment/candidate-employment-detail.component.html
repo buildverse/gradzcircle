@@ -1,0 +1,77 @@
+
+<div *ngIf="candidateEmployment">
+    <h2><span jhiTranslate="gradzcircleApp.candidateEmployment.detail.title">Candidate Employment</span> {{candidateEmployment.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.location">Location</span></dt>
+        <dd>
+            <span>{{candidateEmployment.location}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle">Job Title</span></dt>
+        <dd>
+            <span>{{candidateEmployment.jobTitle}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.employerName">Employer Name</span></dt>
+        <dd>
+            <span>{{candidateEmployment.employerName}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate">Employment Start Date</span></dt>
+        <dd>
+            <span>{{candidateEmployment.employmentStartDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate">Employment End Date</span></dt>
+        <dd>
+            <span>{{candidateEmployment.employmentEndDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentDuration">Employment Duration</span></dt>
+        <dd>
+            <span>{{candidateEmployment.employmentDuration}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.isCurrentEmployment">Is Current Employment</span></dt>
+        <dd>
+            <span>{{candidateEmployment.isCurrentEmployment}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription">Job Description</span></dt>
+        <dd>
+            <span>{{candidateEmployment.jobDescription}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.candidate">Candidate</span></dt>
+        <dd>
+            <div *ngIf="candidateEmployment.candidate">
+                <a [routerLink]="['/candidate', candidateEmployment.candidate?.id]">{{candidateEmployment.candidate?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentType">Employment Type</span></dt>
+        <dd>
+            <div *ngIf="candidateEmployment.employmentType">
+                <a [routerLink]="['/employment-type', candidateEmployment.employmentType?.id]">{{candidateEmployment.employmentType?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.country">Country</span></dt>
+        <dd>
+            <div *ngIf="candidateEmployment.country">
+                <a [routerLink]="['/country', candidateEmployment.country?.id]">{{candidateEmployment.country?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateEmployment.jobType">Job Type</span></dt>
+        <dd>
+            <div *ngIf="candidateEmployment.jobType">
+                <a [routerLink]="['/job-type', candidateEmployment.jobType?.id]">{{candidateEmployment.jobType?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>
