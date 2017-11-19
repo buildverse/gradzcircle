@@ -1,242 +1,218 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header modal-header-decorate">
-        <h4 class="modal-title" id="myCorporateLabel" jhiTranslate="gradzcircleApp.corporate.home.createOrEditLabel">Create or edit a Corporate</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
+        <h6 class="modal-title" id="myCorporateLabel" jhiTranslate="gradzcircleApp.corporate.home.createOrEditLabel">Create or edit a Corporate</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
     </div>
-    <div *jhiHasAnyAuthority="['ROLE_CORPORATE']"  class="modal-body">
-            <jhi-alert-error></jhi-alert-error>
-            <div class="form-group row mx-4 my-4">
-                    <div class="col-md-2">
-                        <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.corporateName" for="field_corporateName">Corporate Name</label>
-                    </div>
-                    <div class="col-md-4" [class.has-danger]="corporateName.invalid && corporateName.touched">
-                        <input type="text" class="form-control" required #corporateName="ngModel" name="corporateName" id="field_corporateName"
-                            [(ngModel)]="corporate.corporateName"  />
-                            <span *ngIf="corporateName.invalid && corporateName.touched" class="text-danger">
+    <div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.corporateName" for="field_corporateName">Corporate Name</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="corporateName.invalid && corporateName.touched">
+                <input type="text" class="form-control" required #corporateName="ngModel" name="corporateName" id="field_corporateName" [(ngModel)]="corporate.corporateName" />
+                <span *ngIf="corporateName.invalid && corporateName.touched" class="text-danger">
                                     <small> Please your company name</small>
                             </span>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.industry" for="field_industry">Industry</label>
-                    </div>
-                    <div class="col-md-4" [class.has-danger]="industry.invalid && industry.touched">
-                        <select class="form-control" #industry="ngModel" required name="industry" id="field_industry" name="industry" [(ngModel)]="corporate.industry" >
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.industry" for="field_industry">Industry</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="industry.invalid && industry.touched">
+                <select class="form-control" #industry="ngModel" required name="industry" id="field_industry" name="industry" [(ngModel)]="corporate.industry">
                             <option [ngValue]="null"></option>
                             <option [ngValue]="industryOption.id === corporate.industry?.id ? corporate.industry : industryOption" *ngFor="let industryOption of industries; trackBy: trackIndustryById">{{industryOption.industryName}}</option>
                         </select>
-                        <span *ngIf="industry.invalid && industry.touched" class="text-danger">
+                <span *ngIf="industry.invalid && industry.touched" class="text-danger">
                                 <small> Please select your Industry</small>
                         </span>
-                    </div>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.corporateEmail" for="field_corporateEmail">Corporate Email</label>
-                </div>
-                <div class="col-md-4" [class.has-danger]="corpEmail.invalid && corpEmail.touched">
-                    <input type="text" class="form-control" name="corporateEmail" id="field_corporateEmail" #corpEmail="ngModel" required
-                        [(ngModel)]="corporate.login.email"  />
-                    <span *ngIf="corpEmail.invalid && corpEmail.touched" class="text-danger">
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.corporateEmail" for="field_corporateEmail">Corporate Email</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="corpEmail.invalid && corpEmail.touched">
+                <input type="text" class="form-control" name="corporateEmail" id="field_corporateEmail" #corpEmail="ngModel" required [(ngModel)]="corporate.login.email" />
+                <span *ngIf="corpEmail.invalid && corpEmail.touched" class="text-danger">
                             <small> Please enter your email </small>
                     </span>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.establishedSince" for="field_establishedSince">Established Since</label>
-                </div>
-                <div class="col-md-4" [class.has-danger]="establishedDate.invalid && establishedDate.touched">
-                    <div class="input-group">
-                        <input id="field_establishedSince" type="text" class="form-control" required #establishedDate="ngModel" name="establishedSince" ngbDatepicker  #establishedSinceDp="ngbDatepicker" [(ngModel)]="corporate.establishedSince"
-                        />
-                        <span class="input-group-addon "  (click)="establishedSinceDp.toggle()">
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted mt-2" jhiTranslate="gradzcircleApp.corporate.establishedSince" for="field_establishedSince">Established Since</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="establishedDate.invalid && establishedDate.touched">
+                <div class="input-group">
+                    <input id="field_establishedSince" type="text" class="form-control" required #establishedDate="ngModel" name="establishedSince" ngbDatepicker #establishedSinceDp="ngbDatepicker" [(ngModel)]="corporate.establishedSince" />
+                    <span class="input-group-addon " (click)="establishedSinceDp.toggle()">
                                 <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
                         </span>
-                    </div>
-                    <span *ngIf="establishedDate.invalid && establishedDate.touched" class="text-danger">
+                </div>
+                <span *ngIf="establishedDate.invalid && establishedDate.touched" class="text-danger">
                             <small> Please add your inception date</small>
                     </span>
-                </div>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2 ">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateTagLine" for="field_corporateTagLine">Tag Line</label>
-                </div>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" name="corporateTagLine" id="field_corporateTagLine"
-                        [(ngModel)]="corporate.corporateTagLine"  />
-                </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2 ">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateTagLine" for="field_corporateTagLine">Tag Line</label>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2 ">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateOverview" for="field_corporateOverview">About Us</label>
-                </div>
-                <div class="col-md-10">
-                        <textarea [froalaEditor]='options' class="form-control" name="corporateOverview" id="field_corporateOverview" rows="10"
-                        [(ngModel)]="corporate.corporateOverview">
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="corporateTagLine" id="field_corporateTagLine" [(ngModel)]="corporate.corporateTagLine" />
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2 ">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateOverview" for="field_corporateOverview">About Us</label>
+            </div>
+            <div class="col-md-10">
+                <textarea [froalaEditor]='options' class="form-control" name="corporateOverview" id="field_corporateOverview" rows="10" [(ngModel)]="corporate.corporateOverview">
                         </textarea>
-                </div>
             </div>
+        </div>
 
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2 ">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateCulture" for="field_corporateCulture">Our Culture</label>
-                </div>
-                <div class="col-md-10">
-                        <textarea [froalaEditor]='options'  class="form-control" name="corporateCulture" id="field_corporateCulture" rows="10"
-                            [(ngModel)]="corporate.corporateCulture">
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2 ">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateCulture" for="field_corporateCulture">Our Culture</label>
+            </div>
+            <div class="col-md-10">
+                <textarea [froalaEditor]='options' class="form-control" name="corporateCulture" id="field_corporateCulture" rows="10" [(ngModel)]="corporate.corporateCulture">
                         </textarea>
-                </div>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2 ">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateBenefits" for="field_corporateBenefits">Employee Benefits</label>
-                </div>
-                <div class="col-md-10">
-                    <textarea [froalaEditor]='options' rows="10"  class="form-control" name="corporateBenefits" id="field_corporateBenefits"
-                        [(ngModel)]="corporate.corporateBenefits">
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2 ">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateBenefits" for="field_corporateBenefits">Employee Benefits</label>
+            </div>
+            <div class="col-md-10">
+                <textarea [froalaEditor]='options' rows="10" class="form-control" name="corporateBenefits" id="field_corporateBenefits" [(ngModel)]="corporate.corporateBenefits">
                     </textarea>
-                </div>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2 ">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateWebsite" for="field_corporateWebsite">Corporate Website</label>
-                </div>
-                <div class="col-md-4">
-                <input type="text" class="form-control" name="corporateWebsite" id="field_corporateWebsite"
-                    [(ngModel)]="corporate.corporateWebsite"  />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateLinkedIn" for="field_corporateLinkedIn">Corporate Linked In</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateLinkedIn" id="field_corporateLinkedIn"
-                        [(ngModel)]="corporate.corporateLinkedIn"  />
-                </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2 ">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateWebsite" for="field_corporateWebsite">Corporate Website</label>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateFacebook" for="field_corporateFacebook">Corporate Facebook</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateFacebook" id="field_corporateFacebook"
-                        [(ngModel)]="corporate.corporateFacebook"  />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateTwitter" for="field_corporateTwitter">Corporate Twitter</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateTwitter" id="field_corporateTwitter"
-                        [(ngModel)]="corporate.corporateTwitter"  />
-                </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateWebsite" id="field_corporateWebsite" [(ngModel)]="corporate.corporateWebsite" />
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateInstagram" for="field_corporateInstagram">Corporate Instagram</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateInstagram" id="field_corporateInstagram"
-                        [(ngModel)]="corporate.corporateInstagram"  />
-                </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateLinkedIn" for="field_corporateLinkedIn">Corporate Linked In</label>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.contactPerson" for="field_contactPerson">Contact Person</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="contactPerson" id="field_contactPerson"
-                        [(ngModel)]="corporate.contactPerson"  />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.contactPersonDesignation" for="field_contactPersonDesignation">Contact Person Designation</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="contactPersonDesignation" id="field_contactPersonDesignation"
-                        [(ngModel)]="corporate.contactPersonDesignation"  />
-                </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateLinkedIn" id="field_corporateLinkedIn" [(ngModel)]="corporate.corporateLinkedIn" />
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateAddress" for="field_corporateAddress">Corporate Address</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateAddress" id="field_corporateAddress"
-                        [(ngModel)]="corporate.corporateAddress"  />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateCity" for="field_corporateCity">Corporate City</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="corporateCity" id="field_corporateCity"
-                        [(ngModel)]="corporate.corporateCity"  />
-                </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateFacebook" for="field_corporateFacebook">Corporate Facebook</label>
             </div>
-            <div class="form-group row mx-4 my-4">
-                <div class="col-md-2">
-                    <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.country" for="field_country">Country</label>
-                </div>
-                <div class="col-md-4" [class.has-danger]="country.invalid && country.touched">
-                    <select class="form-control" id="field_country" name="country" [(ngModel)]="corporate.country" required #country="ngModel" >
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateFacebook" id="field_corporateFacebook" [(ngModel)]="corporate.corporateFacebook" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateTwitter" for="field_corporateTwitter">Corporate Twitter</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateTwitter" id="field_corporateTwitter" [(ngModel)]="corporate.corporateTwitter" />
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateInstagram" for="field_corporateInstagram">Corporate Instagram</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateInstagram" id="field_corporateInstagram" [(ngModel)]="corporate.corporateInstagram" />
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.contactPerson" for="field_contactPerson">Contact Person</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="contactPerson" id="field_contactPerson" [(ngModel)]="corporate.contactPerson" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.contactPersonDesignation" for="field_contactPersonDesignation">Contact Person Designation</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="contactPersonDesignation" id="field_contactPersonDesignation" [(ngModel)]="corporate.contactPersonDesignation" />
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateAddress" for="field_corporateAddress">Corporate Address</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateAddress" id="field_corporateAddress" [(ngModel)]="corporate.corporateAddress" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporateCity" for="field_corporateCity">Corporate City</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="corporateCity" id="field_corporateCity" [(ngModel)]="corporate.corporateCity" />
+            </div>
+        </div>
+        <div class="form-group row mx-4 my-4">
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.country" for="field_country">Country</label>
+            </div>
+            <div class="col-md-4" [class.has-danger]="country.invalid && country.touched">
+                <select class="form-control" id="field_country" name="country" [(ngModel)]="corporate.country" required #country="ngModel">
                         <option [ngValue]="null"></option>
                         <option [ngValue]="countryOption.id === corporate.country?.id ? corporate.country : countryOption" *ngFor="let countryOption of countries; trackBy: trackCountryById">{{countryOption.countryNiceName}}</option>
                     </select>
-                    <span *ngIf="country.invalid && country.touched" class="text-danger">
+                <span *ngIf="country.invalid && country.touched" class="text-danger">
                             <small> Please select Country</small>
                     </span>
-                </div>
-                <div class="col-md-2">
-                        <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporatePhone" for="field_corporatePhone">Corporate Phone</label>
-                    </div>
-                    <div class="col-md-2" [class.has-danger]="phoneCode.invalid && phoneCode.touched">
-                        <input type="text" class="form-control" name="corporatePhoneCode" id="field_corporatePhoneCode" required #phoneCode="ngModel" pattern="[+.0-9]+"
-                            [(ngModel)]="corporate.corporatePhoneCode"  />
-                        <span *ngIf="phoneCode.invalid && phoneCode.touched" class="text-danger">
+            </div>
+            <div class="col-md-2">
+                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.corporatePhone" for="field_corporatePhone">Corporate Phone</label>
+            </div>
+            <div class="col-md-2" [class.has-danger]="phoneCode.invalid && phoneCode.touched">
+                <input type="text" class="form-control" name="corporatePhoneCode" id="field_corporatePhoneCode" required #phoneCode="ngModel" pattern="[+.0-9]+" [(ngModel)]="corporate.corporatePhoneCode" />
+                <span *ngIf="phoneCode.invalid && phoneCode.touched" class="text-danger">
                                 <small>Please enter STD code</small>
                         </span>
-                        <span *ngIf="phoneCode.hasError('pattern')" class="text-danger">
+                <span *ngIf="phoneCode.hasError('pattern')" class="text-danger">
                                 <small>Please enter valid STD code</small>
                         </span>
-                    </div>
-                    <div class="col-md-2" [class.has-danger]="phoneNumber.invalid && phoneNumber.touched">
-                        <input type="text" class="form-control" name="corporatePhone" id="field_corporatePhone" required #phoneNumber="ngModel" pattern="[0-9]+"
-                            [(ngModel)]="corporate.corporatePhone"  />
-                        <span *ngIf="phoneNumber.invalid && phoneNumber.touched" class="text-danger">
+            </div>
+            <div class="col-md-2" [class.has-danger]="phoneNumber.invalid && phoneNumber.touched">
+                <input type="text" class="form-control" name="corporatePhone" id="field_corporatePhone" required #phoneNumber="ngModel" pattern="[0-9]+" [(ngModel)]="corporate.corporatePhone" />
+                <span *ngIf="phoneNumber.invalid && phoneNumber.touched" class="text-danger">
                                 <small>Please enter phone number</small>
                         </span>
-                        <span *ngIf="phoneNumber.hasError('pattern')" class="text-danger">
+                <span *ngIf="phoneNumber.hasError('pattern')" class="text-danger">
                                 <small>Please enter valid number</small>
                         </span>
-                    </div>
             </div>
+        </div>
 
     </div>
-    <div *jhiHasAnyAuthority="['ROLE_ADMIN']"  class="modal-body">
+    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" [hidden]="!corporate.id">
             <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="corporate.id" readonly />
+            <input type="text" class="form-control" id="id" name="id" [(ngModel)]="corporate.id" readonly />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateName" for="field_corporateName">Corporate Name</label>
-            <input type="text" class="form-control" name="corporateName" id="field_corporateName"
-                [(ngModel)]="corporate.corporateName"  />
+            <input type="text" class="form-control" name="corporateName" id="field_corporateName" [(ngModel)]="corporate.corporateName" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateAddress" for="field_corporateAddress">Corporate Address</label>
-            <input type="text" class="form-control" name="corporateAddress" id="field_corporateAddress"
-                [(ngModel)]="corporate.corporateAddress"  />
+            <input type="text" class="form-control" name="corporateAddress" id="field_corporateAddress" [(ngModel)]="corporate.corporateAddress" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateCity" for="field_corporateCity">Corporate City</label>
-            <input type="text" class="form-control" name="corporateCity" id="field_corporateCity"
-                [(ngModel)]="corporate.corporateCity"  />
+            <input type="text" class="form-control" name="corporateCity" id="field_corporateCity" [(ngModel)]="corporate.corporateCity" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.establishedSince" for="field_establishedSince">Established Since</label>
             <div class="input-group">
-                <input id="field_establishedSince" type="text" class="form-control" name="establishedSince" ngbDatepicker  #establishedSinceDp="ngbDatepicker" [(ngModel)]="corporate.establishedSince"
-                />
+                <input id="field_establishedSince" type="text" class="form-control" name="establishedSince" ngbDatepicker #establishedSinceDp="ngbDatepicker" [(ngModel)]="corporate.establishedSince" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-secondary" (click)="establishedSinceDp.toggle()"><i class="fa fa-calendar"></i></button>
                 </span>
@@ -244,102 +220,88 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateEmail" for="field_corporateEmail">Corporate Email</label>
-            <input type="text" class="form-control" name="corporateEmail" id="field_corporateEmail"
-                [(ngModel)]="corporate.corporateEmail"  />
+            <input type="text" class="form-control" name="corporateEmail" id="field_corporateEmail" [(ngModel)]="corporate.corporateEmail" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateOverview" for="field_corporateOverview">Corporate Overview</label>
-            <input type="text" class="form-control" name="corporateOverview" id="field_corporateOverview"
-                [(ngModel)]="corporate.corporateOverview"  />
+            <input type="text" class="form-control" name="corporateOverview" id="field_corporateOverview" [(ngModel)]="corporate.corporateOverview" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateBenefits" for="field_corporateBenefits">Corporate Benefits</label>
-            <input type="text" class="form-control" name="corporateBenefits" id="field_corporateBenefits"
-                [(ngModel)]="corporate.corporateBenefits"  />
+            <input type="text" class="form-control" name="corporateBenefits" id="field_corporateBenefits" [(ngModel)]="corporate.corporateBenefits" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateWebsite" for="field_corporateWebsite">Corporate Website</label>
-            <input type="text" class="form-control" name="corporateWebsite" id="field_corporateWebsite"
-                [(ngModel)]="corporate.corporateWebsite"  />
+            <input type="text" class="form-control" name="corporateWebsite" id="field_corporateWebsite" [(ngModel)]="corporate.corporateWebsite" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateFacebook" for="field_corporateFacebook">Corporate Facebook</label>
-            <input type="text" class="form-control" name="corporateFacebook" id="field_corporateFacebook"
-                [(ngModel)]="corporate.corporateFacebook"  />
+            <input type="text" class="form-control" name="corporateFacebook" id="field_corporateFacebook" [(ngModel)]="corporate.corporateFacebook" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateTwitter" for="field_corporateTwitter">Corporate Twitter</label>
-            <input type="text" class="form-control" name="corporateTwitter" id="field_corporateTwitter"
-                [(ngModel)]="corporate.corporateTwitter"  />
+            <input type="text" class="form-control" name="corporateTwitter" id="field_corporateTwitter" [(ngModel)]="corporate.corporateTwitter" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateInstagram" for="field_corporateInstagram">Corporate Instagram</label>
-            <input type="text" class="form-control" name="corporateInstagram" id="field_corporateInstagram"
-                [(ngModel)]="corporate.corporateInstagram"  />
+            <input type="text" class="form-control" name="corporateInstagram" id="field_corporateInstagram" [(ngModel)]="corporate.corporateInstagram" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateLinkedIn" for="field_corporateLinkedIn">Corporate Linked In</label>
-            <input type="text" class="form-control" name="corporateLinkedIn" id="field_corporateLinkedIn"
-                [(ngModel)]="corporate.corporateLinkedIn"  />
+            <input type="text" class="form-control" name="corporateLinkedIn" id="field_corporateLinkedIn" [(ngModel)]="corporate.corporateLinkedIn" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateCulture" for="field_corporateCulture">Corporate Culture</label>
-            <input type="text" class="form-control" name="corporateCulture" id="field_corporateCulture"
-                [(ngModel)]="corporate.corporateCulture"  />
+            <input type="text" class="form-control" name="corporateCulture" id="field_corporateCulture" [(ngModel)]="corporate.corporateCulture" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.contactPerson" for="field_contactPerson">Contact Person</label>
-            <input type="text" class="form-control" name="contactPerson" id="field_contactPerson"
-                [(ngModel)]="corporate.contactPerson"  />
+            <input type="text" class="form-control" name="contactPerson" id="field_contactPerson" [(ngModel)]="corporate.contactPerson" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporatePhone" for="field_corporatePhone">Corporate Phone</label>
-            <input type="text" class="form-control" name="corporatePhone" id="field_corporatePhone"
-                [(ngModel)]="corporate.corporatePhone"  />
+            <input type="text" class="form-control" name="corporatePhone" id="field_corporatePhone" [(ngModel)]="corporate.corporatePhone" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporatePhoneCode" for="field_corporatePhoneCode">Corporate Phone Code</label>
-            <input type="text" class="form-control" name="corporatePhoneCode" id="field_corporatePhoneCode"
-                [(ngModel)]="corporate.corporatePhoneCode"  />
+            <input type="text" class="form-control" name="corporatePhoneCode" id="field_corporatePhoneCode" [(ngModel)]="corporate.corporatePhoneCode" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.contactPersonDesignation" for="field_contactPersonDesignation">Contact Person Designation</label>
-            <input type="text" class="form-control" name="contactPersonDesignation" id="field_contactPersonDesignation"
-                [(ngModel)]="corporate.contactPersonDesignation"  />
+            <input type="text" class="form-control" name="contactPersonDesignation" id="field_contactPersonDesignation" [(ngModel)]="corporate.contactPersonDesignation" />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.corporateTagLine" for="field_corporateTagLine">Corporate Tag Line</label>
-            <input type="text" class="form-control" name="corporateTagLine" id="field_corporateTagLine"
-                [(ngModel)]="corporate.corporateTagLine"  />
+            <input type="text" class="form-control" name="corporateTagLine" id="field_corporateTagLine" [(ngModel)]="corporate.corporateTagLine" />
         </div>
 
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.country" for="field_country">Country</label>
-            <select class="form-control" id="field_country" name="country" [(ngModel)]="corporate.country" >
+            <select class="form-control" id="field_country" name="country" [(ngModel)]="corporate.country">
                 <option [ngValue]="null"></option>
                 <option [ngValue]="countryOption.id === corporate.country?.id ? corporate.country : countryOption" *ngFor="let countryOption of countries; trackBy: trackCountryById">{{countryOption.id}}</option>
             </select>
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.industry" for="field_industry">Industry</label>
-            <select class="form-control" id="field_industry" name="industry" [(ngModel)]="corporate.industry" >
+            <select class="form-control" id="field_industry" name="industry" [(ngModel)]="corporate.industry">
                 <option [ngValue]="null"></option>
                 <option [ngValue]="industryOption.id === corporate.industry?.id ? corporate.industry : industryOption" *ngFor="let industryOption of industries; trackBy: trackIndustryById">{{industryOption.id}}</option>
             </select>
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.corporate.login" for="field_login">Login</label>
-            <select class="form-control" id="field_login" name="login" [(ngModel)]="corporate.login" >
+            <select class="form-control" id="field_login" name="login" [(ngModel)]="corporate.login">
                 <option [ngValue]="null"></option>
                 <option [ngValue]="userOption.id === corporate.login?.id ? corporate.login : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
             </select>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+    <div class="modal-footer modal-footer-decorate">
+        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill btn-primary">
             <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
         </button>
     </div>

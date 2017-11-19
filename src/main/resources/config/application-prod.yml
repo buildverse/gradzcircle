@@ -36,8 +36,11 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-name: d21850cf4f253174fc46a3c1bbce67d3
+            cluster-nodes: d21850cf4f253174fc46a3c1bbce67d3.us-east-1.aws.found.io:9243 
+            properties:
+                http:
+                    enabled: true
     mail:
         host: localhost
         port: 25

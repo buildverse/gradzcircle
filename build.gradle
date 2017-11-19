@@ -140,6 +140,7 @@ configurations {
 repositories {
     mavenLocal()
     jcenter()
+    maven  { url "https://maven.elasticsearch.org/releases" } 
 }
 
 dependencies {
@@ -184,7 +185,8 @@ dependencies {
     // needed to get around elasticsearch stacktrace about jna not found
     // https://github.com/elastic/elasticsearch/issues/13245
     compile "net.java.dev.jna:jna"
-    compile "com.amazonaws:aws-java-sdk-s3:1.11.216"
+    compile "com.amazonaws:aws-java-sdk-s3:${aws_s3_version}"
+    compile "org.elasticsearch.plugin:shield:${elastic_shield_version}"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile ("org.springframework.boot:spring-boot-starter-web") {
         exclude module: 'spring-boot-starter-tomcat'
