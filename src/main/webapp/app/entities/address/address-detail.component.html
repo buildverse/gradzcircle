@@ -24,6 +24,12 @@
         <dd>
             <span>{{address.zip}}</span>
         </dd>
+        <dt><span jhiTranslate="gradzcircleApp.address.candidate">Candidate</span></dt>
+        <dd>
+            <div *ngIf="address.candidate">
+                <a [routerLink]="['/candidate', address.candidate?.id]">{{address.candidate?.id}}</a>
+            </div>
+        </dd>
         <dt><span jhiTranslate="gradzcircleApp.address.country">Country</span></dt>
         <dd>
             <div *ngIf="address.country">

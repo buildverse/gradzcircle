@@ -9,6 +9,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { Address } from './address.model';
 import { AddressPopupService } from './address-popup.service';
 import { AddressService } from './address.service';
+import { Candidate, CandidateService } from '../candidate';
 import { Country, CountryService } from '../country';
 import { ResponseWrapper } from '../../shared';
 
@@ -21,12 +22,15 @@ export class AddressDialogComponent implements OnInit {
     address: Address;
     isSaving: boolean;
 
+    candidates: Candidate[];
+
     countries: Country[];
 
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private addressService: AddressService,
+        private candidateService: CandidateService,
         private countryService: CountryService,
         private eventManager: JhiEventManager
     ) {
@@ -34,6 +38,8 @@ export class AddressDialogComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
+        this.candidateService.query()
+            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.countryService.query()
             .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
@@ -70,6 +76,10 @@ export class AddressDialogComponent implements OnInit {
 
     private onError(error: any) {
         this.jhiAlertService.error(error.message, null, null);
+    }
+
+    trackCandidateById(index: number, item: Candidate) {
+        return item.id;
     }
 
     trackCountryById(index: number, item: Country) {

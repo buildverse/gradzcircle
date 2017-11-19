@@ -2,93 +2,89 @@
     <!--<div class="modal">
         <div class="modal-dialog modal-md">
             <div class="modal-content">-->
-                <div class="modal-header modal-header-decorate">
-                        <h6 class="modal-title">Add/Edit Language</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                (click)="clear()">&times;</button>
-                    </div>
-                    <div class="modal-body mx-4 my-4">
-                       <!-- <jhi-alert-error></jhi-alert-error>-->
+    <div class="modal-header modal-header-decorate">
+        <h6 class="modal-title">Add/Edit Language</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body mx-4 my-4">
+        <!-- <jhi-alert-error></jhi-alert-error>-->
 
 
-                        <!--div class="form-group row mx-4 my-4" [hidden]="!candidateLanguageProficiency.id">
+        <!--div class="form-group row mx-4 my-4" [hidden]="!candidateLanguageProficiency.id">
                             <label for="id" jhiTranslate="global.field.id">ID</label>
                             <input type="text" class="form-control" id="id" name="id"
                                 [(ngModel)]="candidateLanguageProficiency.id" readonly />
                         </div-->
-                        <div class="form-group row " >
-                            <div class="col-md-1">
-                                 <label jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language" for="field_language" class="form-control-label">Language</label>
-                            </div>
-                            <div class="col-md-3 ml-auto" [class.has-danger]="hasNoLanguageSelectedError">
-                                 <select class="form-control text-muted" [class.form-control-danger]="hasNoLanguageSelectedError" id="field_language" required name="language" [(ngModel)]="candidateLanguageProficiency.language"
-                                        (blur)="validateLanguage()" #language (change)="validateLanguage()" [disabled]="languageLocked" >
+        <div class="form-group row ">
+            <div class="col-md-1">
+                <label jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language" for="field_language" class="form-control-label">Language</label>
+            </div>
+            <div class="col-md-3 ml-auto" [class.has-danger]="hasNoLanguageSelectedError">
+                <select class="form-control text-muted" [class.form-control-danger]="hasNoLanguageSelectedError" id="field_language" required name="language" [(ngModel)]="candidateLanguageProficiency.language" (blur)="validateLanguage()" #language (change)="validateLanguage()"
+                    [disabled]="languageLocked">
                                     <option [ngValue]="default">Select a Language ...</option>
                                     <option [ngValue]="languageOption.id === candidateLanguageProficiency.language?.id ? candidateLanguageProficiency.language : languageOption" *ngFor="let languageOption of languages; trackBy: trackLanguageById">{{languageOption.language}}</option>
                                  </select>
-                                 <span class="text-danger" *ngIf="hasNoLanguageSelectedError">
+                <span class="text-danger" *ngIf="hasNoLanguageSelectedError">
                                      Please select a Language
                                  </span>
-                                 <span class="text-danger" *ngIf="serverSideError">
+                <span class="text-danger" *ngIf="serverSideError">
                                      <b>{{serverSideError}}</b>
                                  </span>
-                            </div>
-                            <div class="col-md-1">
-                                <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.beginner" for="field_beginnerProficiency">Beginner</label>
-                            </div>
-                            <div class="col-md-1 mt-1 ml-auto">
-                                <input type="radio" class="form-control" name="proficiency" value ="Beginner" id="field_beginnerProficiency"
-                                    [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage || languageAlreadyPresentError"
-                                />
-                            </div>
-                            <div class="col-md-1 ">
-                                 <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.intermediate" for="field_intermediateProficiency">Intermediate</label>
-                            </div>
-                            <div class="col-md-1 mt-1 ml-auto">
-                                 <input type="radio" class="form-control" name="proficiency" value="Intermediate" id="field_intermediateProficiency"
-                                [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage ||languageAlreadyPresentError"
-                            />
+            </div>
+            <div class="col-md-1">
+                <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.beginner" for="field_beginnerProficiency">Beginner</label>
+            </div>
+            <div class="col-md-1 mt-1 ml-auto">
+                <input type="radio" class="form-control" name="proficiency" value="Beginner" id="field_beginnerProficiency" [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage || languageAlreadyPresentError"
+                />
+            </div>
+            <div class="col-md-1 ">
+                <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.intermediate" for="field_intermediateProficiency">Intermediate</label>
+            </div>
+            <div class="col-md-1 mt-1 ml-auto">
+                <input type="radio" class="form-control" name="proficiency" value="Intermediate" id="field_intermediateProficiency" [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage ||languageAlreadyPresentError"
+                />
 
-                            </div>
-                            <div class="col-md-1 ">
-                                <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.expert" for="field_expertProficiency">Expert</label>
-                            </div>
-                            <div class="col-md-1 mt-1 ml-auto">
-                                <input type="radio" class="form-control" name="proficiency" value="Expert" id="field_expertProficiency"
-                                [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage || languageAlreadyPresentError"
-                            />
-                            </div>
+            </div>
+            <div class="col-md-1 ">
+                <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.expert" for="field_expertProficiency">Expert</label>
+            </div>
+            <div class="col-md-1 mt-1 ml-auto">
+                <input type="radio" class="form-control" name="proficiency" value="Expert" id="field_expertProficiency" [(ngModel)]="candidateLanguageProficiency.proficiency" (change)="checkSelectLanguageProficiency()" [disabled]="notSelectedLanguage || languageAlreadyPresentError"
+                />
+            </div>
 
-                        </div>
+        </div>
 
-                        <div class="form-group row justify-content-end">
-                            <span class="text-danger" *ngIf="languageAlreadyPresentError">
+        <div class="form-group row justify-content-end">
+            <span class="text-danger" *ngIf="languageAlreadyPresentError">
                                 <b>{{languagePresent}}</b> is already present.
                             </span>
-                        </div>
-                        <div class="form-group row" *jhiHasAnyAuthority= "['ROLE_ADMIN']">
-                                    <label jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate" for="field_candidate">Candidate</label>
-                                    <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateLanguageProficiency.candidate" >
+        </div>
+        <div class="form-group row" *jhiHasAnyAuthority="['ROLE_ADMIN']">
+            <label jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate" for="field_candidate">Candidate</label>
+            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateLanguageProficiency.candidate">
                                         <option [ngValue]="null"></option>
                                         <option [ngValue]="candidateOption.id === candidateLanguageProficiency.candidate?.id ? candidateLanguageProficiency.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
-                                    </select>
-                        </div>
+            </select>
+        </div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+    </div>
+    <div class="modal-footer modal-footer-decorate">
+        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
                             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                         </button>
-                        <button type="submit" [disabled]="editForm.form.invalid || isSaving || languageAlreadyPresentError || !selectLanguageProficiency" class="btn btn-primary">
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving || languageAlreadyPresentError || !selectLanguageProficiency" class="btn btn-sm btn-pill btn-primary">
                             <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                         </button>
 
-                    </div>
+    </div>
 
 
 
-                </div>
-            <!--</div>
+    </div>
+    <!--</div>
         </div>
     </div>-->
 </form>

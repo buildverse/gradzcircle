@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -128,27 +129,23 @@ public class CandidateResource {
         if (candidate.getId() == null) {
             return createCandidate(candidate);
         }
-        Set<Address> addresses = candidateRepository.findOne(candidate.getId()).getAddresses();
-        if (addresses != null) {
-            addresses.forEach(address -> {
-                if (candidate.getAddresses().contains(address)) {
-                    candidate.getAddresses().forEach(candidateAddress -> {
-                        if (!address.equals(candidateAddress)) {
-                            addressRepository.save(candidateAddress);
-                            addressSearchRepository.save(candidateAddress);
-                        }
-                    });
-                } else {
-                    addressRepository.delete(address);
-                    addressSearchRepository.delete(address);
-                }
-            });
-        } else {
-            candidate.getAddresses().forEach(candidateAddress -> {
-                addressRepository.save(candidateAddress);
-                addressSearchRepository.save(candidateAddress);
-            });
-        }
+        //Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
+        //Set<Address> candidateAddresses = candidate.getAddresses();
+        /*log.debug("Incoming address from user is {}",candidateAddresses);
+        if(addresses==null && candidateAddresses!=null){
+            log.debug("no address stored earlier {}",candidateAddresses);
+            candidateAddresses.forEach(candidateAddress-> candidate.addAddress(candidateAddress));
+        }else if (addresses != null && candidateAddresses == null){
+            log.debug("address stored earlier, but no new coming in {}",candidateAddresses);
+            addresses.forEach(address -> candidate.removeAddress(address));
+        }else if(addresses!=null && candidateAddresses != null && !addresses.containsAll(candidateAddresses)) {
+            log.debug("When have both {}",candidateAddresses);
+            candidate.getAddresses().clear();    
+            candidateAddresses.forEach(candidateAddress -> candidate.addAddress(candidateAddress));
+            log.debug("Savig {} with addres {}",candidate,candidate.getAddresses());
+        }*/
+        log.debug("Savig {} with addres {}",candidate,candidate.getAddresses());
+        candidate.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(candidate));
         Candidate result = candidateRepository.save(candidate);
         candidateSearchRepository.save(result);
         return ResponseEntity.ok()
@@ -178,6 +175,9 @@ public class CandidateResource {
     public ResponseEntity<Candidate> getCandidate(@PathVariable Long id) {
         log.debug("REST request to get Candidate : {}", id);
         Candidate candidate = candidateRepository.findOneWithEagerRelationships(id);
+        Set <Address> addresses = addressRepository.findAddressByCandidate(candidate);
+        candidate.setAddresses(addresses);
+        log.debug("Retruning candidate {}",candidate.getAddresses());
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
     }
 
@@ -192,6 +192,9 @@ public class CandidateResource {
     public ResponseEntity<Candidate> getCandidateByLoginId(@PathVariable Long id) {
         log.debug("REST request to get Candidate : {}", id);
         Candidate candidate = candidateRepository.findByLoginId(new Long(id).longValue());
+        Set <Address> addresses = addressRepository.findAddressByCandidate(candidate);
+        candidate.setAddresses(addresses);
+        log.debug("Retruning candidate {}",candidate.getAddresses());
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
     }
 
@@ -231,9 +234,9 @@ public class CandidateResource {
      * @param query the query of the candidate search
      * @return the result of the search
      */
-    @GetMapping("/candidates/public-profile")
+    @GetMapping("/candidates/public-profile-es")
     @Timed
-    public ResponseEntity<Candidate> retrieveCandidatePublicProfile(@RequestParam String query) {
+    public ResponseEntity<Candidate> retrieveCandidatePublicProfileFromElastic(@RequestParam String query) {
         log.debug("REST request to get Candidate public profile for query {}", query);
         Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));
         if (candidate == null)
@@ -284,6 +287,73 @@ public class CandidateResource {
         candidate.setCertifications(candidateCertifications);
         candidate.setNonAcademics(candidateNonAcademicWorks);
         candidate.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
+
+    }
+
+    /**
+     * database query to get public profile details
+     *
+     * @param query the query of the candidate search
+     * @return the result of the search
+     */
+    @GetMapping("/candidates/public-profile")
+    @Timed
+    public ResponseEntity<Candidate> retrieveCandidatePublicProfileFromDatabase(@RequestParam String query) {
+        log.debug("REST request to get Candidate public profile for query {}", query);
+        Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));
+        if (candidate == null)
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
+        Set<CandidateEducation> candidateEducations = StreamSupport
+                .stream(candidateEducationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toSet());
+        Set<CandidateEmployment> candidateEmployments = StreamSupport
+                .stream(candidateEmploymentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toSet());
+        
+        if (candidateEducations != null & candidateEducations.size() > 0) {
+            candidateEducations.forEach(candidateEducation -> {
+                Set<CandidateProject> candidateEducationProjects = StreamSupport
+                        .stream(candidateProjectSearchRepository
+                                .search(queryStringQuery(candidateEducation.getId().toString())).spliterator(), false)
+                        .collect(Collectors.toSet());
+                candidateEducation.setProjects(candidateEducationProjects);
+            });
+        }
+        if (candidateEmployments != null & candidateEmployments.size() > 0) {
+            candidateEmployments.forEach(candidateEmployment -> {
+                Set<CandidateProject> candidateEmploymentProjects = StreamSupport
+                        .stream(candidateProjectSearchRepository
+                                .search(queryStringQuery(candidateEmployment.getId().toString())).spliterator(), false)
+                        .collect(Collectors.toSet());
+                candidateEmployment.setProjects(candidateEmploymentProjects);
+            });
+        }
+
+        Set<CandidateCertification> candidateCertifications = StreamSupport
+                .stream(candidateCertificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toSet());
+        Set<CandidateNonAcademicWork> candidateNonAcademicWorks = StreamSupport
+                .stream(candidateNonAcademicWorkSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toSet());
+        Set<CandidateLanguageProficiency> candidateLanguageProficiencies = StreamSupport
+                .stream(candidateLanguageProficiencySearchRepository.search(queryStringQuery(query)).spliterator(),
+                        false)
+                .collect(Collectors.toSet());
+        //log.debug("Education, employments, Projects, certs and extra are {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
+        trimCandidateAddressData(candidate);
+        trimCandidateEducationData(candidateEducations);
+        trimCandidateEmploymentData(candidateEmployments);
+        trimCandidateCertifications(candidateCertifications);
+        trimCandidateLanguageProficienies(candidateLanguageProficiencies);
+        trimCandidateNonAcademics(candidateNonAcademicWorks);
+        candidate.setEducations(candidateEducations);
+        candidate.setEmployments(candidateEmployments);
+        candidate.setCertifications(candidateCertifications);
+        candidate.setNonAcademics(candidateNonAcademicWorks);
+        candidate.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
+        //log.debug("Education, employments, Projects, certs and extra are {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
+        //log.debug("Candidate details are {}",candidate);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
 
     }

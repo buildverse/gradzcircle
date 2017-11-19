@@ -218,11 +218,7 @@ entity CaptureQualification {
 relationship OneToOne {
 	Candidate {login} to User,
     Corporate {login} to User,
-    Candidate {gender} to Gender,
-    Candidate {maritalStatus} to MaritalStatus,
     Country { nationality } to Nationality,
-    Candidate {nationality} to Nationality,
-    Candidate { address } to Address,
     CaptureQualification {candidateEducation} to CandidateEducation,
     CaptureCollege {candidateEducation} to CandidateEducation,
     CaptureCourse {candidateEducation} to CandidateEducation,
@@ -231,6 +227,7 @@ relationship OneToOne {
 }
 
 relationship OneToMany {
+    Candidate { address } to Address,
     Country {address} to Address,
 	Candidate {education} to CandidateEducation,
     Candidate {nonAcademic} to CandidateNonAcademicWork,
@@ -256,7 +253,11 @@ relationship OneToMany {
 
 relationship ManyToOne {
  	CandidateProject {education} to CandidateEducation {projects} ,
-    CandidateProject {employment} to CandidateEmployment {projects} 
+    CandidateProject {employment} to CandidateEmployment {projects},
+    Candidate {nationality} to Nationality,
+    Candidate {gender} to Gender,
+    Candidate {maritalStatus} to MaritalStatus
+
 }
 
 relationship ManyToMany {

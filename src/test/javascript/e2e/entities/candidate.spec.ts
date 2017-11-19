@@ -83,10 +83,9 @@ describe('Candidate e2e test', () => {
             }
         });
         candidateDialogPage.loginSelectLastOption();
+        candidateDialogPage.nationalitySelectLastOption();
         candidateDialogPage.genderSelectLastOption();
         candidateDialogPage.maritalStatusSelectLastOption();
-        candidateDialogPage.nationalitySelectLastOption();
-        candidateDialogPage.addressSelectLastOption();
         // candidateDialogPage.jobCategorySelectLastOption();
         candidateDialogPage.visaTypeSelectLastOption();
         candidateDialogPage.save();
@@ -129,10 +128,9 @@ export class CandidateDialogPage {
     availableForHiringInput = element(by.css('input#field_availableForHiring'));
     openToRelocateInput = element(by.css('input#field_openToRelocate'));
     loginSelect = element(by.css('select#field_login'));
+    nationalitySelect = element(by.css('select#field_nationality'));
     genderSelect = element(by.css('select#field_gender'));
     maritalStatusSelect = element(by.css('select#field_maritalStatus'));
-    nationalitySelect = element(by.css('select#field_nationality'));
-    addressSelect = element(by.css('select#field_address'));
     jobCategorySelect = element(by.css('select#field_jobCategory'));
     visaTypeSelect = element(by.css('select#field_visaType'));
 
@@ -245,6 +243,22 @@ export class CandidateDialogPage {
         return this.loginSelect.element(by.css('option:checked')).getText();
     }
 
+    nationalitySelectLastOption = function () {
+        this.nationalitySelect.all(by.tagName('option')).last().click();
+    }
+
+    nationalitySelectOption = function (option) {
+        this.nationalitySelect.sendKeys(option);
+    }
+
+    getNationalitySelect = function () {
+        return this.nationalitySelect;
+    }
+
+    getNationalitySelectedOption = function () {
+        return this.nationalitySelect.element(by.css('option:checked')).getText();
+    }
+
     genderSelectLastOption = function () {
         this.genderSelect.all(by.tagName('option')).last().click();
     }
@@ -275,38 +289,6 @@ export class CandidateDialogPage {
 
     getMaritalStatusSelectedOption = function () {
         return this.maritalStatusSelect.element(by.css('option:checked')).getText();
-    }
-
-    nationalitySelectLastOption = function () {
-        this.nationalitySelect.all(by.tagName('option')).last().click();
-    }
-
-    nationalitySelectOption = function (option) {
-        this.nationalitySelect.sendKeys(option);
-    }
-
-    getNationalitySelect = function () {
-        return this.nationalitySelect;
-    }
-
-    getNationalitySelectedOption = function () {
-        return this.nationalitySelect.element(by.css('option:checked')).getText();
-    }
-
-    addressSelectLastOption = function () {
-        this.addressSelect.all(by.tagName('option')).last().click();
-    }
-
-    addressSelectOption = function (option) {
-        this.addressSelect.sendKeys(option);
-    }
-
-    getAddressSelect = function () {
-        return this.addressSelect;
-    }
-
-    getAddressSelectedOption = function () {
-        return this.addressSelect.element(by.css('option:checked')).getText();
     }
 
     jobCategorySelectLastOption = function () {

@@ -39,6 +39,13 @@
         </div>
 
         <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.address.candidate" for="field_candidate">Candidate</label>
+            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="address.candidate" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="candidateOption.id === address.candidate?.id ? address.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.address.country" for="field_country">Country</label>
             <select class="form-control" id="field_country" name="country" [(ngModel)]="address.country" >
                 <option [ngValue]="null"></option>

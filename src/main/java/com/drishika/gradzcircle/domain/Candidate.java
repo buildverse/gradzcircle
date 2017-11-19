@@ -1,5 +1,6 @@
 package com.drishika.gradzcircle.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -71,21 +72,9 @@ public class Candidate implements Serializable {
     @JoinColumn(unique = true)
     private User login;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Gender gender;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private MaritalStatus maritalStatus;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Nationality nationality;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Address address;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Address> addresses = new HashSet<>();
 
     @OneToMany(mappedBy = "candidate")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -106,6 +95,15 @@ public class Candidate implements Serializable {
     @OneToMany(mappedBy = "candidate")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
+
+    @ManyToOne
+    private Nationality nationality;
+
+    @ManyToOne
+    private Gender gender;
+
+    @ManyToOne
+    private MaritalStatus maritalStatus;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -308,56 +306,29 @@ public class Candidate implements Serializable {
         this.login = user;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
-    public Candidate gender(Gender gender) {
-        this.gender = gender;
+    public Candidate addresses(Set<Address> addresses) {
+        this.addresses = addresses;
         return this;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public MaritalStatus getMaritalStatus() {
-        return maritalStatus;
-    }
-
-    public Candidate maritalStatus(MaritalStatus maritalStatus) {
-        this.maritalStatus = maritalStatus;
+    public Candidate addAddress(Address address) {
+        this.addresses.add(address);
+        address.setCandidate(this);
         return this;
     }
 
-    public void setMaritalStatus(MaritalStatus maritalStatus) {
-        this.maritalStatus = maritalStatus;
-    }
-
-    public Nationality getNationality() {
-        return nationality;
-    }
-
-    public Candidate nationality(Nationality nationality) {
-        this.nationality = nationality;
+    public Candidate removeAddress(Address address) {
+        this.addresses.remove(address);
+        address.setCandidate(null);
         return this;
     }
 
-    public void setNationality(Nationality nationality) {
-        this.nationality = nationality;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public Candidate address(Address address) {
-        this.address = address;
-        return this;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public Set<CandidateEducation> getEducations() {
@@ -483,6 +454,45 @@ public class Candidate implements Serializable {
 
     public void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
         this.candidateLanguageProficiencies = candidateLanguageProficiencies;
+    }
+
+    public Nationality getNationality() {
+        return nationality;
+    }
+
+    public Candidate nationality(Nationality nationality) {
+        this.nationality = nationality;
+        return this;
+    }
+
+    public void setNationality(Nationality nationality) {
+        this.nationality = nationality;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public Candidate gender(Gender gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public MaritalStatus getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public Candidate maritalStatus(MaritalStatus maritalStatus) {
+        this.maritalStatus = maritalStatus;
+        return this;
+    }
+
+    public void setMaritalStatus(MaritalStatus maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 
     public Set<JobCategory> getJobCategories() {

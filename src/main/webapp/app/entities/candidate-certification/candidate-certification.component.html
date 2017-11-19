@@ -1,7 +1,7 @@
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card mb-3">
 
                 <div class="row mx-4 my-4 justify-content-between">
                     <div>
@@ -16,59 +16,59 @@
                     </div>
                 </div>
                 <div *ngIf="candidateCertifications?.length>0; else showNoCertificationMessage">
-                        <div class="timeline">
-                            <div class="line text-muted"></div>
+                    <div class="timeline">
+                        <div class="line text-muted"></div>
 
-                            <div *ngFor="let candidateCertification of candidateCertifications ;trackBy: trackId">
-                                    <div class="separator text-muted">
-                                            <time>{{candidateCertification.certificationDate| date:'mediumDate'}}</time>
-                                    </div>
-                                    <div class="card card-outline-primary">
-                                            <div class="card-header icon">
-                                                <span class="icon icon-price-ribbon" style="color:white">
+                        <div *ngFor="let candidateCertification of candidateCertifications ;trackBy: trackId">
+                            <div class="separator text-muted">
+                                <time>{{candidateCertification.certificationDate| date:'mediumDate'}}</time>
+                            </div>
+                            <div class="card card-outline-primary">
+                                <div class="card-header icon">
+                                    <span class="icon icon-price-ribbon" style="color:white">
                                             </div>
                                             <div class="card-header" style="background-color:#3097D1">
                                                     <div class="row mx-2 p-lower justify-content-end ">
                                                                 <div class="mr-auto ">
                                                                     <p style="color:white"><span class="mt-0">{{candidateCertification.certificationTitle}} </span> </p>
 
-                                                                </div>
-                                                                <div class="pr-2 ">
-                                                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]" replaceUrl="true">
-                                                                            <span class="icon icon-edit" style="color:white" jhiTranslate="entity.action.edit">Edit</span>
-                                                                        </a>
-                                                                </div>
+                                </div>
+                                <div class="pr-2 ">
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]" replaceUrl="true">
+                                        <span class="icon icon-edit" style="color:white" jhiTranslate="entity.action.edit">Edit</span>
+                                    </a>
+                                </div>
 
-                                                                <div >
-                                                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]" replaceUrl="true">
-                                                                            <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                                                        </a>
-                                                                </div>
-                                                    </div>
-                                            </div>
-                                            <div class="card-block">
-                                                    <div class="row mx-4">
-                                                            <div class="col-md-3">
-                                                                <span jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails" class="font-weight-bold text-muted">Certification Details</span>
-                                                            </div>
-                                                            <div class="col-md-9" [innerHtml]="candidateCertification.certificationDetails">
-                                                            </div>
-                                                    </div>
-                                            </div>
-                                    </div>
+                                <div>
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]" replaceUrl="true">
+                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                </div>
-                <ng-template #showNoCertificationMessage>
-                    <div class="col-md-12">
-                        <p class="profile-text-info">Please add your Certification Details. </p>
-                        <p class="profile-text-info">Example : Ruchi to come up with one...</p>
+                        <div class="card-block">
+                            <div class="row mx-4">
+                                <div class="col-md-3">
+                                    <span jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails" class="font-weight-bold text-muted">Certification Details</span>
+                                </div>
+                                <div class="col-md-9" [innerHtml]="candidateCertification.certificationDetails">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </ng-template>
-
+                </div>
             </div>
         </div>
+        <ng-template #showNoCertificationMessage>
+            <div class="col-md-12">
+                <p class="profile-text-info">Please add your Certification Details. </p>
+                <p class="profile-text-info">Example : Ruchi to come up with one...</p>
+            </div>
+        </ng-template>
+
     </div>
+</div>
+</div>
 </div>
 
 
@@ -102,51 +102,43 @@
     <div class="table-responsive" *ngIf="candidateCertifications">
         <table class="table table-striped">
             <thead>
-            <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle">Certification Title</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationDate">Certification Date</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails">Certification Details</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateCertification.candidate">Candidate</span></th>
-            <th></th>
-            </tr>
+                <tr>
+                    <th><span jhiTranslate="global.field.id">ID</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle">Certification Title</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationDate">Certification Date</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails">Certification Details</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateCertification.candidate">Candidate</span></th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let candidateCertification of candidateCertifications ;trackBy: trackId">
-                <td><a [routerLink]="['../candidate-certification', candidateCertification.id ]">{{candidateCertification.id}}</a></td>
-                <td>{{candidateCertification.certificationTitle}}</td>
-                <td>{{candidateCertification.certificationDate | date:'mediumDate'}}</td>
-                <td>{{candidateCertification.certificationDetails}}</td>
-                <td>
-                    <div *ngIf="candidateCertification.candidate">
-                        <a [routerLink]="['../candidate', candidateCertification.candidate?.id ]" >{{candidateCertification.candidate?.id}}</a>
-                    </div>
-                </td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['../candidate-certification', candidateCertification.id ]"
-                                class="btn btn-info btn-sm">
+                <tr *ngFor="let candidateCertification of candidateCertifications ;trackBy: trackId">
+                    <td><a [routerLink]="['../candidate-certification', candidateCertification.id ]">{{candidateCertification.id}}</a></td>
+                    <td>{{candidateCertification.certificationTitle}}</td>
+                    <td>{{candidateCertification.certificationDate | date:'mediumDate'}}</td>
+                    <td>{{candidateCertification.certificationDetails}}</td>
+                    <td>
+                        <div *ngIf="candidateCertification.candidate">
+                            <a [routerLink]="['../candidate', candidateCertification.candidate?.id ]">{{candidateCertification.candidate?.id}}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit" [routerLink]="['../candidate-certification', candidateCertification.id ]" class="btn btn-info btn-sm">
                             <span class="fa fa-eye"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]"
-                                replaceUrl="true"
-                                class="btn btn-primary btn-sm">
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
                             <span class="fa fa-pencil"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]"
-                                replaceUrl="true"
-                                class="btn btn-danger btn-sm">
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
                             <span class="fa fa-remove"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -5,6 +5,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -38,6 +40,9 @@ public class Address implements Serializable {
 
     @Column(name = "zip")
     private String zip;
+
+    @ManyToOne
+    private Candidate candidate;
 
     @ManyToOne
     private Country country;
@@ -114,6 +119,20 @@ public class Address implements Serializable {
 
     public void setZip(String zip) {
         this.zip = zip;
+    }
+
+    @JsonBackReference
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public Address candidate(Candidate candidate) {
+        this.candidate = candidate;
+        return this;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
     }
 
     public Country getCountry() {

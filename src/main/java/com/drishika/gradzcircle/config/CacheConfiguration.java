@@ -96,6 +96,7 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.CaptureUniversity.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.CaptureCollege.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.CaptureQualification.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".addresses", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

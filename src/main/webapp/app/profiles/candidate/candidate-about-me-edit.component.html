@@ -4,20 +4,20 @@
             <div class="card card-profile">
                 <div class="form-group row mx-4 my-4 mb-0 pb-0">
                     <label for="profilePic" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.profilePic">Profile Pic></label>
-                   
+
                     <div class="col-md-5">
-                        <input #selectedPicture type="file" ng2FileSelect [uploader]="uploader" [disabled]="uploader.queue?.length==1"/>
+                        <input #selectedPicture type="file" ng2FileSelect [uploader]="uploader" [disabled]="uploader.queue?.length==1" />
                         <p class="text-danger" *ngIf="fileUploadErrorMessage">
-                                {{fileUploadErrorMessage}}
-                        </p>  
-                        <p class="mb-0 profile-text-info small ml-1" >Image size should be 256 x 256 px.</p>
-                        <p class="profile-text-info mt-0 small ml-1">Prefer using white background for your picture</p>   
+                            {{fileUploadErrorMessage}}
+                        </p>
+                        <p class="mb-0 profile-text-info small ml-1">Image size should be 256 x 256 px.</p>
+                        <p class="profile-text-info mt-0 small ml-1">Prefer using white background for your picture</p>
                     </div>
                     <div *ngIf='!imageDataNotAvailable && uploader.queue?.length==0' class="clearfix">
                         <button type="submit" class="btn btn-sm btn-pill btn-danger float-right" (click)="removeImage()">
                                 <span class="icon icon-trash"></span>&nbsp;<span >Remove</span>
                         </button>
-                    </div>  
+                    </div>
                     <div class="col-md-5 justify-content-around" *ngFor="let item  of uploader.queue">
                         <button class="btn btn-sm btn-pill btn-success" (click)="uploadImage(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
                                     <span class="icon icon-arrow-with-circle-up" style="color:white">Upload</span>
@@ -27,11 +27,11 @@
                                 </button> -->
                         <button class="btn btn-sm btn-pill btn-danger" (click)="clearSelectedPicture()">
                                     <span class="icon icon-trash" style="color:white">Remove</span>
-                        </button> 
+                        </button>
                     </div>
                 </div>
-                
-                
+
+
             </div>
         </div>
     </div>
@@ -49,8 +49,7 @@
                             </div>
                             <label for="firstName" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.firstName">First Name</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="firstName" placeholder="{{'gradzcircleApp.candidate.firstName' | translate}}"
-                                    formControlName="firstName">
+                                <input type="text" class="form-control" id="firstName" placeholder="{{'gradzcircleApp.candidate.firstName' | translate}}" formControlName="firstName">
                                 <span class="text-danger" *ngIf="(candidateAboutMeForm.get('firstName').touched || 
                                                             candidateAboutMeForm.get('firstName').dirty) && 
                                                             candidateAboutMeForm.get('firstName').errors">
@@ -69,8 +68,7 @@
                             </div>
                             <label for="middleName" class="col-md-2  col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.middleName">Middle Name</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="middleName" placeholder="{{'gradzcircleApp.candidate.middleName' | translate}}"
-                                    formControlName="middleName">
+                                <input type="text" class="form-control" id="middleName" placeholder="{{'gradzcircleApp.candidate.middleName' | translate}}" formControlName="middleName">
                             </div>
                         </div>
                         <div class="form-group row mx-4 my-4">
@@ -104,7 +102,7 @@
                                     <span *ngIf="candidateAboutMeForm.get('email').errors.required">
                                         Please enter your email.
                                     </span>
-                                                <span *ngIf="candidateAboutMeForm.get('email').errors.pattern">
+                                <span *ngIf="candidateAboutMeForm.get('email').errors.pattern">
                                         Please enter a valid email
                                     </span>
 
@@ -153,9 +151,8 @@
                             </ng-template>
                             <label for="nationality" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="nationality" placeholder="{{'gradzcircleApp.candidate.nationality' | translate}}"
-                                    formControlName="nationality" [ngbTypeahead]="searchNationality" [resultTemplate]="rtNationality"
-                                    [inputFormatter]="nationalityFormatter" [editable]="false">
+                                <input type="text" class="form-control" id="nationality" placeholder="{{'gradzcircleApp.candidate.nationality' | translate}}" formControlName="nationality" [ngbTypeahead]="searchNationality" [resultTemplate]="rtNationality" [inputFormatter]="nationalityFormatter"
+                                    [editable]="false">
                                 <span class="text-danger" *ngIf="(candidateAboutMeForm.get('nationality').touched || 
                                                             candidateAboutMeForm.get('nationality').dirty) && 
                                                             candidateAboutMeForm.get('nationality').errors">
@@ -167,7 +164,7 @@
                                         </span>
                                 </span>
                             </div>
-                            
+
                         </div>
                         <div class="form-group row mx-4">
                             <div [ngClass]="{'has-error': (candidateAboutMeForm.get('dateOfBirth').touched || 
@@ -257,19 +254,18 @@
                                         </option>
                                 </select>
                             </div>
-                        
+
 
                         </div>
 
                         <div class="form-group row mx-4">
                             <label for="twitterUrl" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</label>
                             <div class="col-md-3">
-                                <input class="form-control" type="text" placeholder="{{'gradzcircleApp.candidate.twitter' | translate}}" id="twitterUrl"
-                                    formControlName="twitter">
+                                <input class="form-control" type="text" placeholder="{{'gradzcircleApp.candidate.twitter' | translate}}" id="twitterUrl" formControlName="twitter">
                             </div>
 
                             <div class="col-md-1 invisible"></div>
-                            
+
 
 
                         </div>
@@ -334,22 +330,20 @@
                             <div class="form-group row mx-4">
                                 <label for="addressLineOne" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.detail.title">Address Line 1</label>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" id="ddressLineOne" placeholder="{{'gradzcircleApp.address.detail.title' | translate}}"
-                                        formControlName="addressLineOne">
+                                    <input type="text" class="form-control" id="ddressLineOne" placeholder="{{'gradzcircleApp.address.detail.title' | translate}}" formControlName="addressLineOne">
                                 </div>
                                 <div class="col-md-1 invisible"></div>
                                 <label for="addressLineTwo" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.detail.title">Address Line 2</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" placeholder="{{'gradzcircleApp.address.detail.title' | translate}}" id="addressLineTwo"
-                                        formControlName="addressLineTwo">
+                                    <input class="form-control" type="text" placeholder="{{'gradzcircleApp.address.detail.title' | translate}}" id="addressLineTwo" formControlName="addressLineTwo">
                                 </div>
                             </div>
 
                             <div class="form-group row mx-4">
-                                    <div [ngClass]="{'has-error': (candidateAboutMeForm.get('address.city').touched ||
+                                <div [ngClass]="{'has-error': (candidateAboutMeForm.get('address.city').touched ||
                                                         candidateAboutMeForm.get('address.city').dirty) &&
                                                     !candidateAboutMeForm.get('address.city').valid }">
-                                      </div>
+                                </div>
                                 <label for="city" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.city">City</label>
                                 <div class="col-md-3">
                                     <input type="text" class="form-control" id="city" placeholder="{{'gradzcircleApp.address.city' | translate}}" formControlName="city">
@@ -359,7 +353,7 @@
                                         <span *ngIf="candidateAboutMeForm.get('address.city').errors.required">
                                             Please enter city.
                                         </span>
-                                </span>     
+                                    </span>
 
                                 </div>
                                 <div class="col-md-1 invisible"></div>
@@ -394,9 +388,7 @@
                                 </ng-template>
                                 <label for="country" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.country">Country</label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" required placeholder="{{'gradzcircleApp.address.country' | translate}}" id="country" formControlName="country"
-                                        [ngbTypeahead]="searchCountry" [resultTemplate]="rtCountry" [inputFormatter]="countryFormatter"
-                                        [editable]="false">
+                                    <input class="form-control" type="text" required placeholder="{{'gradzcircleApp.address.country' | translate}}" id="country" formControlName="country" [ngbTypeahead]="searchCountry" [resultTemplate]="rtCountry" [inputFormatter]="countryFormatter" [editable]="false">
                                     <span class="text-danger" *ngIf="(candidateAboutMeForm.get('address.country').touched || 
                                                                     candidateAboutMeForm.get('address.country').dirty) && 
                                                                     candidateAboutMeForm.get('address.country').errors">

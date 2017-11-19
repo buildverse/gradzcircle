@@ -10,10 +10,9 @@ import { Candidate } from './candidate.model';
 import { CandidatePopupService } from './candidate-popup.service';
 import { CandidateService } from './candidate.service';
 import { User, UserService } from '../../shared';
+import { Nationality, NationalityService } from '../nationality';
 import { Gender, GenderService } from '../gender';
 import { MaritalStatus, MaritalStatusService } from '../marital-status';
-import { Nationality, NationalityService } from '../nationality';
-import { Address, AddressService } from '../address';
 import { JobCategory, JobCategoryService } from '../job-category';
 import { VisaType, VisaTypeService } from '../visa-type';
 import { ResponseWrapper } from '../../shared';
@@ -29,13 +28,11 @@ export class CandidateDialogComponent implements OnInit {
 
     users: User[];
 
+    nationalities: Nationality[];
+
     genders: Gender[];
 
     maritalstatuses: MaritalStatus[];
-
-    nationalities: Nationality[];
-
-    addresses: Address[];
 
     jobcategories: JobCategory[];
 
@@ -47,10 +44,9 @@ export class CandidateDialogComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private candidateService: CandidateService,
         private userService: UserService,
+        private nationalityService: NationalityService,
         private genderService: GenderService,
         private maritalStatusService: MaritalStatusService,
-        private nationalityService: NationalityService,
-        private addressService: AddressService,
         private jobCategoryService: JobCategoryService,
         private visaTypeService: VisaTypeService,
         private eventManager: JhiEventManager
@@ -61,58 +57,12 @@ export class CandidateDialogComponent implements OnInit {
         this.isSaving = false;
         this.userService.query()
             .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
-        this.genderService
-            .query({filter: 'candidate-is-null'})
-            .subscribe((res: ResponseWrapper) => {
-                if (!this.candidate.gender || !this.candidate.gender.id) {
-                    this.genders = res.json;
-                } else {
-                    this.genderService
-                        .find(this.candidate.gender.id)
-                        .subscribe((subRes: Gender) => {
-                            this.genders = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
-            }, (res: ResponseWrapper) => this.onError(res.json));
-        this.maritalStatusService
-            .query({filter: 'candidate-is-null'})
-            .subscribe((res: ResponseWrapper) => {
-                if (!this.candidate.maritalStatus || !this.candidate.maritalStatus.id) {
-                    this.maritalstatuses = res.json;
-                } else {
-                    this.maritalStatusService
-                        .find(this.candidate.maritalStatus.id)
-                        .subscribe((subRes: MaritalStatus) => {
-                            this.maritalstatuses = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
-            }, (res: ResponseWrapper) => this.onError(res.json));
-        this.nationalityService
-            .query({filter: 'candidate-is-null'})
-            .subscribe((res: ResponseWrapper) => {
-                if (!this.candidate.nationality || !this.candidate.nationality.id) {
-                    this.nationalities = res.json;
-                } else {
-                    this.nationalityService
-                        .find(this.candidate.nationality.id)
-                        .subscribe((subRes: Nationality) => {
-                            this.nationalities = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
-            }, (res: ResponseWrapper) => this.onError(res.json));
-        this.addressService
-            .query({filter: 'candidate-is-null'})
-            .subscribe((res: ResponseWrapper) => {
-                if (!this.candidate.address || !this.candidate.address.id) {
-                    this.addresses = res.json;
-                } else {
-                    this.addressService
-                        .find(this.candidate.address.id)
-                        .subscribe((subRes: Address) => {
-                            this.addresses = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
-                }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+        this.nationalityService.query()
+            .subscribe((res: ResponseWrapper) => { this.nationalities = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.genderService.query()
+            .subscribe((res: ResponseWrapper) => { this.genders = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.maritalStatusService.query()
+            .subscribe((res: ResponseWrapper) => { this.maritalstatuses = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.jobCategoryService.query()
             .subscribe((res: ResponseWrapper) => { this.jobcategories = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.visaTypeService.query()
@@ -157,19 +107,15 @@ export class CandidateDialogComponent implements OnInit {
         return item.id;
     }
 
+    trackNationalityById(index: number, item: Nationality) {
+        return item.id;
+    }
+
     trackGenderById(index: number, item: Gender) {
         return item.id;
     }
 
     trackMaritalStatusById(index: number, item: MaritalStatus) {
-        return item.id;
-    }
-
-    trackNationalityById(index: number, item: Nationality) {
-        return item.id;
-    }
-
-    trackAddressById(index: number, item: Address) {
         return item.id;
     }
 

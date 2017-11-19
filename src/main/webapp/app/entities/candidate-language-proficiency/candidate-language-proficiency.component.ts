@@ -62,23 +62,29 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         this.currentSearch = '';
         this.loadAll();
     }
+
+    loadCandidateLanguages(){
+        this.candidateLanguageProficiencyService.findByCandidateId(this.candidateId)
+            .subscribe(
+                (response : ResponseWrapper)=> {
+                    this.candidateLanguageProficiencies = response.json;
+                },
+                (response : ResponseWrapper) => {
+                    this.onError(response.json);
+                    
+                }
+            );
+    }
+
     ngOnInit() {
         this.principal.identity().then((account) => {
             this.currentAccount = account;
             if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
                 this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
                 this.currentSearch = this.candidateId;
+                this.loadCandidateLanguages();
             }
-
         });
-
-        // if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.ADMIN,AuthoritiesConstants.CANDIDATE])){
-        //     this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
-        //     console.log("Candidate id in lang"+ this.candidateId);
-        //     this.currentSearch = this.candidateId;
-        // }
-        this.loadAll();
-
         this.registerChangeInCandidateLanguageProficiencies();
     }
 

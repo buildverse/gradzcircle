@@ -6,6 +6,7 @@ import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
+import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -104,6 +105,15 @@ public class CandidateEducationResource {
         if("gpa".equals(candidateEducation.getScoreType()))
             setGrade(candidateEducation);
         candidateEducation.setProjects(null);
+        /* SHOULD WE ALLOW MULTIPLE HIGHEST QUALIFICATIONS ? - RUCHI SAYS YES*/
+       /* CandidateEducation educationWithHighestQualification = candidateEducationRepository.findByCandidateAndHighestQualification(candidateEducation.getCandidate(),Boolean.TRUE);
+        if(educationWithHighestQualification!=null && !educationWithHighestQualification.getId().equals(candidateEducation.getId()) && 
+            candidateEducation.isHighestQualification()){
+                throw new CustomParameterizedException("You cannot have two highest qualifications");
+            }
+
+        log.debug("This candidate has a highest education already {}", educationWithHighestQualification);
+        */
         CandidateEducation result = candidateEducationRepository.save(candidateEducation);
         candidateEducationSearchRepository.save(result);
         return ResponseEntity.ok()
@@ -160,6 +170,10 @@ public class CandidateEducationResource {
             candidateEducations.forEach(candidateEducation -> {
                 Set<CandidateProject> candidateProjects = candidateProjectRepository
                         .findByEducation(candidateEducation);
+                candidateProjects.forEach(candidateProject ->{
+                    candidateProject.setEducation(null);
+                });
+
                 candidateEducation.setProjects(candidateProjects);
                 candidateEducation.setCandidate(null);
                 candidateEducation.getCollege().getUniversity().setCountry(null);

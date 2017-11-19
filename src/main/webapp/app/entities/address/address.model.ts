@@ -1,6 +1,4 @@
 import { BaseEntity } from './../../shared';
-import { Country } from '../country/country.model';
-
 
 export class Address implements BaseEntity {
     constructor(
@@ -10,8 +8,8 @@ export class Address implements BaseEntity {
         public city?: string,
         public state?: string,
         public zip?: string,
-        public country?: Country,
-
+        public candidate?: BaseEntity,
+        public country?: BaseEntity,
     ) {
     }
 }

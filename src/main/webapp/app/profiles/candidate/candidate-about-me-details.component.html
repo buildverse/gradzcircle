@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card card-profile">
-<!--{{candidate | json}}-->
+                <!--{{candidate | json}}-->
                 <div class="row mx-4 my-3">
                     <div class="col-md-2 ">
                         <span jhiTranslate="gradzcircleApp.candidate.firstName" class="font-weight-bold text-muted">FirstName</span>
@@ -11,7 +11,7 @@
                         {{candidate.firstName}}
                     </div>
 
-                 
+
                     <div class="col-md-2 offset-md-1">
                         <span jhiTranslate="gradzcircleApp.candidate.middleName" class="font-weight-bold text-muted">Middle Name</span>
                     </div>
@@ -31,8 +31,8 @@
                     </div>
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
-                            <span class="font-weight-bold text-muted" jhiTranslate="userManagement.email">Email</span>
-                        </div>
+                        <span class="font-weight-bold text-muted" jhiTranslate="userManagement.email">Email</span>
+                    </div>
                     <div class="col-md-3">
                         {{candidate.login.email}}
                     </div>
@@ -46,16 +46,17 @@
                         {{candidate.aboutMe}}
                     </div>
                 </div> -->
+
                 <div class="row mx-4 my-3">
                     <div class="col-md-2 ">
                         <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.careerInterests">Career Interests</span>
                     </div>
-                    <div class="col-md-3"> 
+                    <div class="col-md-3">
                         <p *ngFor="let jobCategory of candidate.jobCategories">{{jobCategory.jobCategory}}</p>
                     </div>
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span>
                     </div>
                     <div class="col-md-3">
                         {{candidate.nationality?candidate.nationality.nationality:''}}
@@ -71,7 +72,7 @@
 
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.gender">Gender</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.gender">Gender</span>
                     </div>
                     <div class="col-md-3">
                         {{candidate.gender?(candidate.gender.gender):''}}
@@ -86,7 +87,7 @@
                     </div>
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span>
                     </div>
                     <div class="col-md-3">
                         {{candidate.facebook}}
@@ -102,7 +103,7 @@
                     </div>
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2 ">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.visaType.visa">Visa</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.visaType.visa">Visa</span>
                     </div>
                     <div class="col-md-3">
                         {{candidate.visaType?candidate.visaType.visa:''}}
@@ -117,65 +118,70 @@
                         {{candidate.twitter}}
                     </div>
                     <div class="col-md-1 invisible"></div>
-                    
+
                 </div>
+
+                <!-- this needs to be fixed when enhancing address as array-->
+
                 <div class="row mx-4 my-3">
-                      <!-- Hard coding address array here since we are supporting only one address per candidate. Later can open to 1 - many from candidate to addres -->
+                    <!-- Hard coding address array here since we are supporting only one address per candidate. Later can open to 1 - many from candidate to addres -->
                     <div class="col-md-2">
                         <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.detail.title">Address Line 1</span>
                     </div>
                     <div class="col-md-3">
-                        {{candidate.address?(candidate.address.addressLineOne):''}}
+                        {{candidate.addresses?(candidate.addresses[0]?.addressLineOne):''}}
                     </div>
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2 ">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.detail.title">Address Line 2</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{candidate.address?(candidate.address.addressLineTwo):''}}
-                        </div>
-                    
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.detail.title">Address Line 2</span>
+                    </div>
+                    <div class="col-md-3">
+                        {{candidate.addresses?(candidate.addresses[0]?.addressLineTwo):''}}
+                    </div>
+
                 </div>
                 <div class="row mx-4 my-3">
-                    
+
                     <div class="col-md-2">
                         <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.city">City</span>
                     </div>
                     <div class="col-md-3">
-                        {{candidate.address?(candidate.address.city):''}}
+                        {{candidate.addresses?(candidate.addresses[0]?.city):''}}
                     </div>
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2 ">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.state">State</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.state">State</span>
                     </div>
                     <div class="col-md-3">
-                        {{candidate.address?(candidate.address.state):''}}
+                        {{candidate.addresses?(candidate.addresses[0]?.state):''}}
                     </div>
-                   
+
                 </div>
                 <div class="row mx-4 my-3">
                     <div class="col-md-2">
                         <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.zip">Zip</span>
                     </div>
                     <div class="col-md-3">
-                        {{candidate.address?(candidate.address.zip):''}}
+                        {{candidate.addresses?(candidate.addresses[0]?.zip):''}}
                     </div>
 
                     <div class="col-md-1 invisible"></div>
                     <div class="col-md-2 ">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.country">Country</span>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.address.country">Country</span>
                     </div>
                     <div class="col-md-3">
-                        {{candidate.address?(candidate.address.country?candidate.address.country.countryNiceName:''):''}}
+                        {{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country.countryNiceName:''):''}}
                     </div>
                 </div>
+
+
                 <div class="row mx-4 my-3">
                     <div class="col-md-2">
-                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone Number</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
-                        </div>
+                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone Number</span>
+                    </div>
+                    <div class="col-md-3">
+                        {{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
+                    </div>
                 </div>
                 <!-- <div class="row mx-4 my-3">
                      <div class="col-md-2">
@@ -190,8 +196,8 @@
                 <div class="row mx-4 my-3 justify-content-end">
 
                     <a class="btn btn-sm btn-pill btn-primary" [routerLink]="['edit',candidate.id]">
-                                        <span class="icon icon-edit">Edit</span>                                      
-                        </a>
+                        <span class="icon icon-edit">Edit</span>
+                    </a>
 
 
 
@@ -206,6 +212,6 @@
 
     </div>
 </div>
- <div>
-        <router-outlet></router-outlet>
+<div>
+    <router-outlet></router-outlet>
 </div>

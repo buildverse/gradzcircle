@@ -39,9 +39,7 @@ import { SERVER_API_URL } from '../../app.constants';
  * 1. Update validations for type ahead need to ensure valid value is selected
  * 2. Clean up console logs
  * 3. Add config for url PROD vs DEV
- * 4. Should we seperate out the upload with actual data save ?
- * 5. Fix address save at spring JPA ( currenlty ad new row need to update -> remove cascade all) 
- * 
+ * 4. ADDRESS HANDLING IS VERY HACKY NEED TO FIX THIS AS PART OF UPLIFT.
  * 
  */
 
@@ -149,6 +147,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
         //this.route.data.subscribe((data: { employmentType: EmploymentType[] }) => this.employmentType = data.employmentType);
         this.route.data.subscribe((data: { nationality: Nationality[] }) => this.nationalities = data.nationality);
         this.route.data.subscribe((data: { candidate: Candidate }) => this.candidate = data.candidate);
+        //console.log("Got candidate "+JSON.stringify(this.candidate));
         if (!this.principal.getImageUrl()) {
             this.imageDataNotAvailable = true;
             // console.log("no image data ");
@@ -372,7 +371,12 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
             differentlyAbled: this.candidate.differentlyAbled,
             gender: this.candidate.gender,
             visaType: this.candidate.visaType,
-            address: this.candidate.address ? this.candidate.address : ''
+            address:{addressLineOne : this.candidate.addresses[0]?this.candidate.addresses[0].addressLineOne:'',
+            addressLineTwo : this.candidate.addresses[0]?this.candidate.addresses[0].addressLineTwo:'',
+            city : this.candidate.addresses[0]?this.candidate.addresses[0].city:'',
+            state : this.candidate.addresses[0]?this.candidate.addresses[0].state:'',
+            country : this.candidate.addresses[0]?this.candidate.addresses[0].country:'',
+            zip : this.candidate.addresses[0]?this.candidate.addresses[0].zip:''}
         });
         //this.candidateAboutMeForm.setControl('addresses', this.formBuilder.array(this.candidate.address || []));
 
@@ -383,12 +387,12 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
         return entity1 && entity2 ? entity1.id === entity2.id : entity1 === entity2;
     }
 
-    setAddresses(addresses: Address[]) {
+    /*setAddresses(addresses: Address[]) {
         const addressFormGroup = addresses.map(address => this.formBuilder.group(address));
         const adressFormArray = this.formBuilder.array(addressFormGroup);
         this.candidateAboutMeForm.setControl('addresses', adressFormArray);
     }
-
+*/
     save(): void {
 
         if (this.candidateAboutMeForm.dirty && this.candidateAboutMeForm.valid) {
@@ -396,7 +400,12 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
             this.candidateService.update(candidate).subscribe(
                 // ()=>this.uploader.uploadItem(item[0]),
                 () => this.onSaveComplete(),
-                (error: any) => this.errorMessage = <any>error
+                (error: any) =>{
+                     this.errorMessage = <any>error;
+                     this.candidateAboutMeForm.reset();
+                     this.router.navigate(['/error']);
+                     return Observable.of(null);
+                }
 
             );
 
@@ -413,9 +422,18 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
             this.candidatCoreFields = true;
         let candidate = Object.assign({}, this.candidate, this.candidateAboutMeForm.value);
         candidate.jobCategories = this.reCreateJobCategoryModelFromSelection(candidate.jobCategories);
+        this.setCandidateAddress(candidate);
+        console.log("sending candidate data "+JSON.stringify(candidate));
         return candidate;
     }
 
+    setCandidateAddress(candidate){
+        let addresses = new Array();
+        let address = this.candidateAboutMeForm.get('address').value;
+        address.id = this.candidate.addresses[0]?this.candidate.addresses[0].id:undefined;
+        addresses.push(address);
+        candidate.addresses = addresses;
+    }
 
     onSaveComplete(): void {
         this.candidateAboutMeForm.reset();

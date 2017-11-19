@@ -74,15 +74,19 @@
             </column>
             <column name="login_id" type="bigint">
                 <constraints unique="true" nullable="true" />
-            </column>            <column name="gender_id" type="bigint">
-                <constraints unique="true" nullable="true" />
-            </column>            <column name="marital_status_id" type="bigint">
-                <constraints unique="true" nullable="true" />
-            </column>            <column name="nationality_id" type="bigint">
-                <constraints unique="true" nullable="true" />
-            </column>            <column name="address_id" type="bigint">
-                <constraints unique="true" nullable="true" />
             </column>
+            <column name="nationality_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="gender_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="marital_status_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <column name="visa_type_id" type="bigint">
                 <constraints nullable="true" />
             </column>

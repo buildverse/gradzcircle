@@ -35,6 +35,7 @@
             <th><span jhiTranslate="gradzcircleApp.address.city">City</span></th>
             <th><span jhiTranslate="gradzcircleApp.address.state">State</span></th>
             <th><span jhiTranslate="gradzcircleApp.address.zip">Zip</span></th>
+            <th><span jhiTranslate="gradzcircleApp.address.candidate">Candidate</span></th>
             <th><span jhiTranslate="gradzcircleApp.address.country">Country</span></th>
             <th></th>
             </tr>
@@ -47,6 +48,11 @@
                 <td>{{address.city}}</td>
                 <td>{{address.state}}</td>
                 <td>{{address.zip}}</td>
+                <td>
+                    <div *ngIf="address.candidate">
+                        <a [routerLink]="['../candidate', address.candidate?.id ]" >{{address.candidate?.id}}</a>
+                    </div>
+                </td>
                 <td>
                     <div *ngIf="address.country">
                         <a [routerLink]="['../country', address.country?.id ]" >{{address.country?.id}}</a>

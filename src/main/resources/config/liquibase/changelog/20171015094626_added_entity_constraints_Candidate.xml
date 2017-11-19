@@ -14,6 +14,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
+        <addForeignKeyConstraint baseColumnNames="nationality_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_nationality_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nationality"/>
+
         <addForeignKeyConstraint baseColumnNames="gender_id"
                                  baseTableName="candidate"
                                  constraintName="fk_candidate_gender_id"
@@ -25,18 +31,6 @@
                                  constraintName="fk_candidate_marital_status_id"
                                  referencedColumnNames="id"
                                  referencedTableName="marital_status"/>
-
-        <addForeignKeyConstraint baseColumnNames="nationality_id"
-                                 baseTableName="candidate"
-                                 constraintName="fk_candidate_nationality_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="nationality"/>
-
-        <addForeignKeyConstraint baseColumnNames="address_id"
-                                 baseTableName="candidate"
-                                 constraintName="fk_candidate_address_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="address"/>
 
         <addForeignKeyConstraint baseColumnNames="candidates_id"
                                  baseTableName="candidate_job_category"

@@ -60,6 +60,12 @@
         <dd>
             {{candidate.login?.id}}
         </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></dt>
+        <dd>
+            <div *ngIf="candidate.nationality">
+                <a [routerLink]="['/nationality', candidate.nationality?.id]">{{candidate.nationality?.id}}</a>
+            </div>
+        </dd>
         <dt><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></dt>
         <dd>
             <div *ngIf="candidate.gender">
@@ -70,18 +76,6 @@
         <dd>
             <div *ngIf="candidate.maritalStatus">
                 <a [routerLink]="['/marital-status', candidate.maritalStatus?.id]">{{candidate.maritalStatus?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></dt>
-        <dd>
-            <div *ngIf="candidate.nationality">
-                <a [routerLink]="['/nationality', candidate.nationality?.id]">{{candidate.nationality?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.address">Address</span></dt>
-        <dd>
-            <div *ngIf="candidate.address">
-                <a [routerLink]="['/address', candidate.address?.id]">{{candidate.address?.id}}</a>
             </div>
         </dd>
         <dt><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job Category</span></dt>

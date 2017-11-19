@@ -1,7 +1,7 @@
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card mb-3">
 
                 <div class="row mx-4 my-4 justify-content-between">
                     <div>
@@ -9,7 +9,7 @@
                     </div>
                     <div>
                         <a class="btn btn-sm btn-pill btn-primary float-right" [routerLink]="['/', { outlets: { popup: 'candidate-employment-new/'+ candidateId } }]">
-                            <span  class="icon icon-circle-with-plus" jhiTranslate="gradzcircleApp.candidateEmployment.home.add">
+                            <span class="icon icon-circle-with-plus" jhiTranslate="gradzcircleApp.candidateEmployment.home.add">
                             Add
                             </span>
                         </a>
@@ -18,113 +18,115 @@
                 </div>
                 <div *ngIf="candidateEmployments?.length>0; else showNoEmploymentsMessage">
                     <div class="timeline">
-                            <div class="line text-muted"></div>
-                            <div *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
-                                <div class="separator text-muted">
-                                        <time>{{candidateEmployment.employmentStartDate | date:'mediumDate'}} - {{candidateEmployment.employmentEndDate ?(candidateEmployment.employmentEndDate | date:'mediumDate'): 'Till Date' }}</time>
-                                </div>
-                                <div class="card card-outline-primary">
-                                        <div class="card-header icon">
-                                            <span class="icon icon-briefcase" style="color:white">
+                        <div class="line text-muted"></div>
+                        <div *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
+                            <div class="separator text-muted">
+                                <time>{{candidateEmployment.employmentStartDate | date:'mediumDate'}} - {{candidateEmployment.employmentEndDate ?(candidateEmployment.employmentEndDate | date:'mediumDate'): 'Till Date' }}</time>
+                            </div>
+                            <div class="card card-outline-primary">
+                                <div class="card-header icon">
+                                    <span class="icon icon-briefcase" style="color:white">
                                         </div>
                                         <div class="card-header" style="background-color:#3097D1">
                                                 <div class="row mx-2 p-lower justify-content-end ">
                                                         <div class="mr-auto ">
-                                                            <p style="color:white" class="p-lower-lower "><span class="mt-0">{{candidateEmployment.jobTitle}} </span> at <span >{{candidateEmployment.employerName}}</span></p>
-                                                            <p style="color:white">Employment : <span class="font-italic">{{candidateEmployment.employmentType?.employmentType}}</span></p>
-                                                        </div>
-                                                        <div class="pr-2 pt-2">
-                                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]" replaceUrl="true">
-                                                                                    <span class="icon icon-edit" style="color:white" jhiTranslate="entity.action.edit">Edit</span>
-                                                            </a>
-                                                        </div>
+                                                            <p style="color:white" class="p-lower-lower "><span class="mt-0">{{candidateEmployment.jobTitle}} </span> at <span>{{candidateEmployment.employerName}}</span></p>
+                                    <p style="color:white">Employment : <span class="font-italic">{{candidateEmployment.employmentType?.employmentType}}</span></p>
+                                </div>
+                                <div class="pr-2 pt-2">
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]" replaceUrl="true">
+                                        <span class="icon icon-edit" style="color:white" jhiTranslate="entity.action.edit">Edit</span>
+                                    </a>
+                                </div>
 
-                                                        <div class="pt-2">
-                                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]" replaceUrl="true">
-                                                                                    <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                                            </a>
-                                                        </div>
+                                <div class="pt-2">
+                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]" replaceUrl="true">
+                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                    </a>
+                                </div>
 
-                                                </div>
-                                        </div>
-                                        <div class="card-block">
-                                                <div class="row my-1">
-                                                        <div class="col-md-2">
-                                                            <span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription" class="font-weight-bold text-muted">Description</span>
-                                                        </div>
-                                                </div>
-                                                <div class="row mx-1">
-                                                        <div class="col-md-10 " [innerHtml]=" candidateEmployment.jobDescription">
-
-                                                        </div>
-                                                </div>
-                                                <div *ngIf="candidateEmployment.projects?.length>0 ; else showProjectMessage" >
-                                                        <div class="row my-2 mx-1">
-                                                                <div class="col-md-12 mr-auto font-weight-bold text-muted" ><b>Projects included</b></div>
-                                                        </div>
-                                                        <hr class="seperator">
-                                                        <div *ngFor="let candidateProject of candidateEmployment.projects">
-                                                                <div class="row mx-1 justify-content-end" >
-                                                                        <div class="mr-auto p-1">
-                                                                            <ul class="square font-weight-bold p-lower-lower"><li><span>{{candidateProject.projectTitle}} </span></li></ul>
-                                                                            <span class="time-period px-5 "><time>{{candidateProject.projectStartDate | date:'mediumDate'}} - {{candidateProject.projectEndDate?(candidateProject.projectEndDate | date:'mediumDate'):' Am still working on this'}}</time></span>
-                                                                        </div>
-                                                                        <div class="p-2">
-                                                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/true/edit'} }]" replaceUrl="true">
-                                                                                            <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
-                                                                            </a>
-                                                                        </div>
-
-                                                                        <div class="p-2">
-                                                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
-                                                                                            <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                                                            </a>
-                                                                        </div>
-
-                                                                </div>
-
-                                                                <div class="row mx-4 my-3">
-                                                                        <div class="col-md-2 ">
-                                                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row mx-4 my-3">
-                                                                        <div class="col-md-10 " [innerHtml]="candidateProject.projectDescription">
-
-                                                                        </div>
-                                                                </div>
-                                                                <div class="row mx-4 my-3">
-                                                                        <div class="col-md-2 ">
-                                                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
-                                                                        </div>
-                                                                </div>
-                                                                <div class="row mx-4 my-3">
-                                                                        <div class="col-md-10 " [innerHtml]="candidateProject.contributionInProject">
-
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                                <ng-template #showProjectMessage>
-                                                        <hr class="seperator">
-                                                        <div class="col-md-12">
-                                                            <p class="profile-text-info">Please add your associated projects, providing overview of your contribution.</p>
-                                                            <p class="profile-text-info">Example : Ruchi to come up with one...</p>
-                                                        </div>
-                                                </ng-template>
-                                        </div>
-                                        <div class="card-footer">
-                                                <div class="row mx-4 justify-content-end">
-                                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]" replaceUrl="true">
-                                                        <span class="icon icon-circle-with-plus" jhiTranslate ="gradzcircleApp.candidateEmployment.home.addProject" style="color:#3097D1" >Add Project</span>
-                                                    </a>
-                                                </div>
-                                        </div>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <div class="row my-1">
+                                <div class="col-md-2">
+                                    <span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription" class="font-weight-bold text-muted">Description</span>
                                 </div>
                             </div>
+                            <div class="row mx-1">
+                                <div class="col-md-10 " [innerHtml]=" candidateEmployment.jobDescription">
+
+                                </div>
+                            </div>
+                            <div *ngIf="candidateEmployment.projects?.length>0 ; else showProjectMessage">
+                                <div class="row my-2 mx-1">
+                                    <div class="col-md-12 mr-auto font-weight-bold text-muted"><b>Projects included</b></div>
+                                </div>
+                                <hr class="seperator">
+                                <div *ngFor="let candidateProject of candidateEmployment.projects">
+                                    <div class="row mx-1 justify-content-end">
+                                        <div class="mr-auto p-1">
+                                            <ul class="square font-weight-bold p-lower-lower">
+                                                <li><span>{{candidateProject.projectTitle}} </span></li>
+                                            </ul>
+                                            <span class="time-period px-5 "><time>{{candidateProject.projectStartDate | date:'mediumDate'}} - {{candidateProject.projectEndDate?(candidateProject.projectEndDate | date:'mediumDate'):' Am still working on this'}}</time></span>
+                                        </div>
+                                        <div class="p-2">
+                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/true/edit'} }]" replaceUrl="true">
+                                                <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
+                                            </a>
+                                        </div>
+
+                                        <div class="p-2">
+                                            <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
+                                                <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row mx-4 my-3">
+                                        <div class="col-md-2 ">
+                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-4 my-3">
+                                        <div class="col-md-10 " [innerHtml]="candidateProject.projectDescription">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mx-4 my-3">
+                                        <div class="col-md-2 ">
+                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-4 my-3">
+                                        <div class="col-md-10 " [innerHtml]="candidateProject.contributionInProject">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #showProjectMessage>
+                                <hr class="seperator">
+                                <div class="col-md-12">
+                                    <p class="profile-text-info">Please add your associated projects, providing overview of your contribution.</p>
+                                    <p class="profile-text-info">Example : Ruchi to come up with one...</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row mx-4 justify-content-end">
+                                <a [routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]" replaceUrl="true">
+                                    <span class="icon icon-circle-with-plus" jhiTranslate="gradzcircleApp.candidateEmployment.home.addProject" style="color:#3097D1">Add Project</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- <div *ngIf="candidateEmployments?.length>0; else showNoEmploymentsMessage">
+            </div>
+        </div>
+        <!-- <div *ngIf="candidateEmployments?.length>0; else showNoEmploymentsMessage">
                     <div *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
                         <div class="row mx-4 my-3 justify-content-end">
                             <div class="mr-auto p-2">
@@ -265,15 +267,15 @@
                         </div>
                     </div>
                 </div> -->
-                <ng-template #showNoEmploymentsMessage>
-                    <div class="col-md-12">
-                        <p class="profile-text-info">Please add your emplyment details, providing overview of your contribution.</p>
-                        <p class="profile-text-info">Example : Ruchi to come up with one...</p>
-                    </div>
-                </ng-template>
+        <ng-template #showNoEmploymentsMessage>
+            <div class="col-md-12">
+                <p class="profile-text-info">Please add your emplyment details, providing overview of your contribution.</p>
+                <p class="profile-text-info">Example : Ruchi to come up with one...</p>
             </div>
-        </div>
+        </ng-template>
     </div>
+</div>
+</div>
 </div>
 
 
@@ -307,79 +309,71 @@
     <div class="table-responsive" *ngIf="candidateEmployments">
         <table class="table table-striped">
             <thead>
-            <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.location">Location</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle">Job Title</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employerName">Employer Name</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate">Employment Start Date</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate">Employment End Date</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentDuration">Employment Duration</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.isCurrentEmployment">Is Current Employment</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription">Job Description</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.candidate">Candidate</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentType">Employment Type</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.country">Country</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobType">Job Type</span></th>
-            <th></th>
-            </tr>
+                <tr>
+                    <th><span jhiTranslate="global.field.id">ID</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.location">Location</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle">Job Title</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employerName">Employer Name</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate">Employment Start Date</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate">Employment End Date</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentDuration">Employment Duration</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.isCurrentEmployment">Is Current Employment</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription">Job Description</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.candidate">Candidate</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.employmentType">Employment Type</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.country">Country</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.candidateEmployment.jobType">Job Type</span></th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
-                <td><a [routerLink]="['../candidate-employment', candidateEmployment.id ]">{{candidateEmployment.id}}</a></td>
-                <td>{{candidateEmployment.location}}</td>
-                <td>{{candidateEmployment.jobTitle}}</td>
-                <td>{{candidateEmployment.employerName}}</td>
-                <td>{{candidateEmployment.employmentStartDate | date:'mediumDate'}}</td>
-                <td>{{candidateEmployment.employmentEndDate | date:'mediumDate'}}</td>
-                <td>{{candidateEmployment.employmentDuration}}</td>
-                <td>{{candidateEmployment.isCurrentEmployment}}</td>
-                <td>{{candidateEmployment.jobDescription}}</td>
-                <td>
-                    <div *ngIf="candidateEmployment.candidate">
-                        <a [routerLink]="['../candidate', candidateEmployment.candidate?.id ]" >{{candidateEmployment.candidate?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidateEmployment.employmentType">
-                        <a [routerLink]="['../employment-type', candidateEmployment.employmentType?.id ]" >{{candidateEmployment.employmentType?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidateEmployment.country">
-                        <a [routerLink]="['../country', candidateEmployment.country?.id ]" >{{candidateEmployment.country?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidateEmployment.jobType">
-                        <a [routerLink]="['../job-type', candidateEmployment.jobType?.id ]" >{{candidateEmployment.jobType?.id}}</a>
-                    </div>
-                </td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['../candidate-employment', candidateEmployment.id ]"
-                                class="btn btn-info btn-sm">
+                <tr *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
+                    <td><a [routerLink]="['../candidate-employment', candidateEmployment.id ]">{{candidateEmployment.id}}</a></td>
+                    <td>{{candidateEmployment.location}}</td>
+                    <td>{{candidateEmployment.jobTitle}}</td>
+                    <td>{{candidateEmployment.employerName}}</td>
+                    <td>{{candidateEmployment.employmentStartDate | date:'mediumDate'}}</td>
+                    <td>{{candidateEmployment.employmentEndDate | date:'mediumDate'}}</td>
+                    <td>{{candidateEmployment.employmentDuration}}</td>
+                    <td>{{candidateEmployment.isCurrentEmployment}}</td>
+                    <td>{{candidateEmployment.jobDescription}}</td>
+                    <td>
+                        <div *ngIf="candidateEmployment.candidate">
+                            <a [routerLink]="['../candidate', candidateEmployment.candidate?.id ]">{{candidateEmployment.candidate?.id}}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="candidateEmployment.employmentType">
+                            <a [routerLink]="['../employment-type', candidateEmployment.employmentType?.id ]">{{candidateEmployment.employmentType?.id}}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="candidateEmployment.country">
+                            <a [routerLink]="['../country', candidateEmployment.country?.id ]">{{candidateEmployment.country?.id}}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="candidateEmployment.jobType">
+                            <a [routerLink]="['../job-type', candidateEmployment.jobType?.id ]">{{candidateEmployment.jobType?.id}}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit" [routerLink]="['../candidate-employment', candidateEmployment.id ]" class="btn btn-info btn-sm">
                             <span class="fa fa-eye"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]"
-                                replaceUrl="true"
-                                class="btn btn-primary btn-sm">
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
                             <span class="fa fa-pencil"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]"
-                                replaceUrl="true"
-                                class="btn btn-danger btn-sm">
+                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
                             <span class="fa fa-remove"></span>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -20,4 +20,6 @@ public interface CandidateEducationRepository extends JpaRepository<CandidateEdu
     @Query("select candidateEducation from CandidateEducation candidateEducation where candidateEducation.candidate.id=:id order By candidateEducation.educationToDate desc")
     List<CandidateEducation> findByCandidateId(@Param("id") Long id);
 
+    CandidateEducation findByCandidateAndHighestQualification(Candidate candidate,Boolean highestQualification);
+
 }

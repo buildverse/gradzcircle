@@ -45,6 +45,7 @@ describe('Address e2e test', () => {
         expect(addressDialogPage.getStateInput()).toMatch('state');
         addressDialogPage.setZipInput('zip');
         expect(addressDialogPage.getZipInput()).toMatch('zip');
+        addressDialogPage.candidateSelectLastOption();
         addressDialogPage.countrySelectLastOption();
         addressDialogPage.save();
         expect(addressDialogPage.getSaveButton().isPresent()).toBeFalsy();
@@ -77,6 +78,7 @@ export class AddressDialogPage {
     cityInput = element(by.css('input#field_city'));
     stateInput = element(by.css('input#field_state'));
     zipInput = element(by.css('input#field_zip'));
+    candidateSelect = element(by.css('select#field_candidate'));
     countrySelect = element(by.css('select#field_country'));
 
     getModalTitle() {
@@ -121,6 +123,22 @@ export class AddressDialogPage {
 
     getZipInput = function () {
         return this.zipInput.getAttribute('value');
+    }
+
+    candidateSelectLastOption = function () {
+        this.candidateSelect.all(by.tagName('option')).last().click();
+    }
+
+    candidateSelectOption = function (option) {
+        this.candidateSelect.sendKeys(option);
+    }
+
+    getCandidateSelect = function () {
+        return this.candidateSelect;
+    }
+
+    getCandidateSelectedOption = function () {
+        return this.candidateSelect.element(by.css('option:checked')).getText();
     }
 
     countrySelectLastOption = function () {

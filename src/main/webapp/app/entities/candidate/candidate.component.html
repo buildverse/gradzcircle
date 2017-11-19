@@ -44,10 +44,9 @@
             <th><span jhiTranslate="gradzcircleApp.candidate.availableForHiring">Available For Hiring</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.openToRelocate">Open To Relocate</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.login">Login</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital Status</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidate.address">Address</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job Category</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa Type</span></th>
             <th></th>
@@ -73,6 +72,11 @@
                     {{candidate.login?.id}}
                 </td>
                 <td>
+                    <div *ngIf="candidate.nationality">
+                        <a [routerLink]="['../nationality', candidate.nationality?.id ]" >{{candidate.nationality?.id}}</a>
+                    </div>
+                </td>
+                <td>
                     <div *ngIf="candidate.gender">
                         <a [routerLink]="['../gender', candidate.gender?.id ]" >{{candidate.gender?.id}}</a>
                     </div>
@@ -80,16 +84,6 @@
                 <td>
                     <div *ngIf="candidate.maritalStatus">
                         <a [routerLink]="['../marital-status', candidate.maritalStatus?.id ]" >{{candidate.maritalStatus?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidate.nationality">
-                        <a [routerLink]="['../nationality', candidate.nationality?.id ]" >{{candidate.nationality?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidate.address">
-                        <a [routerLink]="['../address', candidate.address?.id ]" >{{candidate.address?.id}}</a>
                     </div>
                 </td>
                 <td>

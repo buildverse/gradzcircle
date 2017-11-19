@@ -17,7 +17,9 @@ export class CandidateService {
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/candidates';
     private imageUrl = 'api/files';
     private deleteImageUrl ='api/remove';
-    private resourcePublicProfileUrl ='api/candidates/public-profile'
+    private resourcePublicProfileUrl ='api/candidates/public-profile';
+    private resourcePublicProfileUrlElastic ='api/candidates/public-profile-es'
+
 
     constructor(private http: Http, private dateUtils: JhiDateUtils) { }
 

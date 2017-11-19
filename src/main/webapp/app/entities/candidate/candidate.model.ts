@@ -31,7 +31,7 @@ export class Candidate implements BaseEntity {
         public gender?: Gender,
         public maritalStatus?: MaritalStatus,
         public nationality?: Nationality,
-        public address?: Address,
+        public addresses?: Address[],
         public educations?: CandidateEducation[],
         public nonAcademics?: CandidateNonAcademicWork[],
         public certifications?: CandidateCertification[],

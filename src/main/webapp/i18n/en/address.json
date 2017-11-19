@@ -21,6 +21,7 @@
             "city": "City",
             "state": "State",
             "zip": "Zip",
+            "candidate": "Candidate",
             "country": "Country"
         }
     }

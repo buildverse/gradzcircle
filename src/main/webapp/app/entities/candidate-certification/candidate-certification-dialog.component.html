@@ -26,7 +26,7 @@
                 <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails" for="field_certificationDetails">Certification Details</label>
             </div>
             <div class="col-md-9" [class.has-danger]="certificationDetails.invalid && certificationDetails.touched">
-                <textarea [froalaEditor]='options'  class="form-control" #certificationDetails="ngModel" required name="certificationDetails" id="field_certificationDetails" [(ngModel)]="candidateCertification.certificationDetails" rows="20">
+                <textarea [froalaEditor]='options' class="form-control" #certificationDetails="ngModel" required name="certificationDetails" id="field_certificationDetails" [(ngModel)]="candidateCertification.certificationDetails" rows="20">
                 </textarea>
                 <small class="form-text text-muted text-info">
                     Provide overview of what you learnt and how this will help in improving your skills.
@@ -79,14 +79,14 @@
 
         <div class="form-group">
             <label jhiTranslate="gradzcircleApp.candidateCertification.candidate" for="field_candidate">Candidate</label>
-            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateCertification.candidate" >
+            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateCertification.candidate">
                 <option [ngValue]="null"></option>
                 <option [ngValue]="candidateOption.id === candidateCertification.candidate?.id ? candidateCertification.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
             </select>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-pill btn-default" data-dismiss="modal" (click)="clear()">
+    <div class="modal-footer modal-footer-decorate">
+        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
         <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill btn-primary">

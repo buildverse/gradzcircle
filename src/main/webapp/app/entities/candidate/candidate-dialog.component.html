@@ -91,31 +91,24 @@
             </select>
         </div>
         <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.nationality" for="field_nationality">Nationality</label>
+            <select class="form-control" id="field_nationality" name="nationality" [(ngModel)]="candidate.nationality" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="nationalityOption.id === candidate.nationality?.id ? candidate.nationality : nationalityOption" *ngFor="let nationalityOption of nationalities; trackBy: trackNationalityById">{{nationalityOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.gender" for="field_gender">Gender</label>
-            <select class="form-control" id="field_gender" name="gender" [(ngModel)]="candidate.gender">
+            <select class="form-control" id="field_gender" name="gender" [(ngModel)]="candidate.gender" >
                 <option [ngValue]="null"></option>
                 <option [ngValue]="genderOption.id === candidate.gender?.id ? candidate.gender : genderOption" *ngFor="let genderOption of genders; trackBy: trackGenderById">{{genderOption.id}}</option>
             </select>
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.maritalStatus" for="field_maritalStatus">Marital Status</label>
-            <select class="form-control" id="field_maritalStatus" name="maritalStatus" [(ngModel)]="candidate.maritalStatus">
+            <select class="form-control" id="field_maritalStatus" name="maritalStatus" [(ngModel)]="candidate.maritalStatus" >
                 <option [ngValue]="null"></option>
                 <option [ngValue]="maritalStatusOption.id === candidate.maritalStatus?.id ? candidate.maritalStatus : maritalStatusOption" *ngFor="let maritalStatusOption of maritalstatuses; trackBy: trackMaritalStatusById">{{maritalStatusOption.id}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.nationality" for="field_nationality">Nationality</label>
-            <select class="form-control" id="field_nationality" name="nationality" [(ngModel)]="candidate.nationality">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="nationalityOption.id === candidate.nationality?.id ? candidate.nationality : nationalityOption" *ngFor="let nationalityOption of nationalities; trackBy: trackNationalityById">{{nationalityOption.id}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidate.address" for="field_address">Address</label>
-            <select class="form-control" id="field_address" name="address" [(ngModel)]="candidate.address">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="addressOption.id === candidate.address?.id ? candidate.address : addressOption" *ngFor="let addressOption of addresses; trackBy: trackAddressById">{{addressOption.id}}</option>
             </select>
         </div>
         <div class="form-group">

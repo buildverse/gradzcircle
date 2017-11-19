@@ -32,8 +32,6 @@ export class CandidateProfileAboutMeDetailsComponent implements OnInit {
     ngOnInit() { 
         this.candidate = this.route.snapshot.data['candidate'];
         this.route.parent.snapshot.data['candidate'] = this.candidate;
-       // console.log("Canddiate details is "+ JSON.stringify(this.candidate));
-                     
     }
 
     save ():void {

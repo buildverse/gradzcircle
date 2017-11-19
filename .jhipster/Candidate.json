@@ -10,35 +10,9 @@
             "otherEntityRelationshipName": "candidate"
         },
         {
-            "relationshipType": "one-to-one",
-            "relationshipName": "gender",
-            "otherEntityName": "gender",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "candidate"
-        },
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "maritalStatus",
-            "otherEntityName": "maritalStatus",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "candidate"
-        },
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "nationality",
-            "otherEntityName": "nationality",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "candidate"
-        },
-        {
-            "relationshipType": "one-to-one",
+            "relationshipType": "one-to-many",
             "relationshipName": "address",
             "otherEntityName": "address",
-            "otherEntityField": "id",
-            "ownerSide": true,
             "otherEntityRelationshipName": "candidate"
         },
         {
@@ -70,6 +44,24 @@
             "relationshipName": "candidateLanguageProficiency",
             "otherEntityName": "candidateLanguageProficiency",
             "otherEntityRelationshipName": "candidate"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "nationality",
+            "otherEntityName": "nationality",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "gender",
+            "otherEntityName": "gender",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "maritalStatus",
+            "otherEntityName": "maritalStatus",
+            "otherEntityField": "id"
         },
         {
             "relationshipType": "many-to-many",
