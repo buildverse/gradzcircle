@@ -12,26 +12,27 @@
                             <div class="public-profile-pic-square">
                                 <hr class="public-profile-splitter-line">
                                 <img class="rounded-circle media-object" [src]="noImage ? defaultImage : userImage " />
-                                    <h4 class="public-profile-header-user text-center">{{candidate.firstName}} {{candidate.lastName}}</h4>
+                                <h4 class="public-profile-header-user text-center">{{candidate.firstName}} {{candidate.lastName}}</h4>
                             </div>
                         </div>
+
                         <div class="col-md-8">
-                                <div class="public-profile-header container-inner" >
-                                    
-                                    <div class="row no-gutters mt-5 pl-0" >
-                                        <div class="col-md-2" style="color:white">  <span class="icon icon-emoji-happy"></span></div>
-                                        <div class="col-md-10" >
-                                            <p class="text-left public-profile-header-bio">{{candidate.aboutMe}}</p>
-                                        </div>
+                            <div class="public-profile-header container-inner">
+
+                                <div class="row no-gutters mt-5 pl-0">
+                                    <div class="col-md-2" style="color:white"> <span class="icon icon-emoji-happy"></span></div>
+                                    <div class="col-md-10">
+                                        <p class="text-left public-profile-header-bio">{{candidate.aboutMe}}</p>
                                     </div>
-                                    <div class="row mt-0"> 
-                                            <div class="col-md-12">
-                                                <div class="public-profile-split"></div> 
-                                            </div>
-                                    </div> 
-                                    <div *ngIf="candidate.login.email; else showDefaultEmail">
-                                        <div class="row mt-1 no-gutters " >
-                                            <div class="col-md-2" style="color:white">  <span class="icon icon-paper-plane"></div>
+                                </div>
+                                <div class="row mt-0">
+                                    <div class="col-md-12">
+                                        <div class="public-profile-split"></div>
+                                    </div>
+                                </div>
+                                <div *ngIf="candidate.login.email; else showDefaultEmail">
+                                    <div class="row mt-1 no-gutters ">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-paper-plane"></div>
                                             <div class="col-md-4"> <p class="text-left public-profile-header-bio">{{candidate.login.email}}</p></div>
                                         </div>
                                     </div>
@@ -44,95 +45,107 @@
                                     <div *ngIf="candidate.phoneNumber; else showDefaultPhone">
                                             <div class="row no-gutters">
                                                 <div class="col-md-2" style="color:white">  <span class="icon icon-old-phone"></span></div>
-                                                <div class="col-md-4"> <p class="text-left public-profile-header-bio">{{candidate.phoneNumber}}</p></div>
-                                            </div>
-                                    </div>
-                                    <ng-template #showDefaultPhone>
-                                        <div class="row no-gutters">
-                                            <div class="col-md-2" style="color:white">  <span class="icon icon-old-phone"></span></div>
-                                            <div class="col-md-4"> <p class="text-left public-profile-header-bio">999-999-9999</p></div>
+                                        <div class="col-md-4">
+                                            <p class="text-left public-profile-header-bio">{{candidate.phoneNumber}}</p>
                                         </div>
-                                    </ng-template>
-                                    <div *ngIf="candidate.dateOfBirth; else showDefaultDob">
-                                            <div class="row no-gutters">
-                                                <div class="col-md-2" style="color:white">  <span class="icon icon-cake"></span></div>
-                                                <div class="col-md-4"> <p class="text-left public-profile-header-bio">{{candidate.dateOfBirth|date:'mediumDate'}}</p></div>
-                                            </div>
                                     </div>
-                                    <ng-template #showDefaultDob>
-                                        <div class="row no-gutters">
-                                            <div class="col-md-2" style="color:white">  <span class="icon icon-cake"></span></div>
-                                            <div class="col-md-6"> <p class="text-left public-profile-header-bio">Date of birth-Not available</p></div>
-                                        </div>
-                                    </ng-template>
-                                    <div *ngIf="candidate.address?.city || candidate.address?.state; else showDefaultCity">
-                                            <div class="row no-gutters">
-                                                <div class="col-md-2" style="color:white">  <span class="icon icon-location"></span></div>
-                                                <div class="col-md-4"> <p class="text-left public-profile-header-bio">{{candidate.address?.city}} {{candidate.address?.state?+','+candidate.address?.state:''}}</p></div>
-                                            </div>
-                                    </div>
-                                    <ng-template #showDefaultCity>
-                                        <div class="row no-gutters">
-                                            <div class="col-md-2" style="color:white"> <span class="icon icon-location"></span></div>
-                                            <div class="col-md-6"> <p class="text-left public-profile-header-bio">Current location not available</p></div>
-                                        </div>
-                                    </ng-template>
                                 </div>
+                                <ng-template #showDefaultPhone>
+                                    <div class="row no-gutters">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-old-phone"></span></div>
+                                        <div class="col-md-4">
+                                            <p class="text-left public-profile-header-bio">999-999-9999</p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="candidate.dateOfBirth; else showDefaultDob">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-cake"></span></div>
+                                        <div class="col-md-4">
+                                            <p class="text-left public-profile-header-bio">{{candidate.dateOfBirth|date:'mediumDate'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template #showDefaultDob>
+                                    <div class="row no-gutters">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-cake"></span></div>
+                                        <div class="col-md-6">
+                                            <p class="text-left public-profile-header-bio">Date of birth-Not available</p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="candidate.addresses[0]?.city || candidate.addresses[0]?.state; else showDefaultCity">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-location"></span></div>
+                                        <div class="col-md-4">
+                                            <p class="text-left public-profile-header-bio">{{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template #showDefaultCity>
+                                    <div class="row no-gutters">
+                                        <div class="col-md-2" style="color:white"> <span class="icon icon-location"></span></div>
+                                        <div class="col-md-6">
+                                            <p class="text-left public-profile-header-bio">Current location not available</p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
                         </div>
-                        
+
                     </div>
                 </div>
-                
+
             </div>
             <div *ngIf="candidate.educations?.length==0  || (!candidate.nonAcademics || !candidate.candidateLanguageProficiencies); else showProfile">
                 <div class="my-3  ml-4 mr-3">
-                        <p class="public-profile-body profile-text-info">This is your public profile that will be visible to employers. 
-                                This will be your first impression to an employer, first impression is the last impression!! </p>
-                        <p class="public-profile-body profile-text-info">Please improve your profile by adding in atleast : -</p>
-                        <ul class="public-profile-body profile-text-info">
-                            <li>Education and Education Projects </li>
-                            <li>Extra Curriculars like sports, dramatics, dance etc and please mention awards won if any </li>
-                            <li>Languages known with proficiency </li>
-                            <li> Employments if any </li>
-                        </ul>
+                    <p class="public-profile-body profile-text-info">This is your public profile that will be visible to employers. This will be your first impression to an employer, first impression is the last impression!! </p>
+                    <p class="public-profile-body profile-text-info">Please improve your profile by adding in atleast : -</p>
+                    <ul class="public-profile-body profile-text-info">
+                        <li>Education and Education Projects </li>
+                        <li>Extra Curriculars like sports, dramatics, dance etc and please mention awards won if any </li>
+                        <li>Languages known with proficiency </li>
+                        <li> Employments if any </li>
+                    </ul>
 
                 </div>
             </div>
             <ng-template #showProfile>
                 <div class="my-3  ml-4 mr-3">
                     <!-- <div *ngIf="candidate.employments?.length>0; else noEmploymentView"> -->
-                    <div *ngIf="candidate.employments?.length>0">   
-                                <div class="row">
-                                    <div class="col-md-12">
-                                            <span style="color:grey;float:left;margin-left:-5px" class="icon icon-briefcase" ></span>
-                                            <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">EXPERIENCE</span>
-                                                    <div *ngFor="let candidateEmployment of candidate.employments ; trackBy: trackId">
-                                                        <blockquote class="ml-0 blockquote">
-                                                            <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEmployment.jobTitle}} <span class="public-profile-sub-header mb-0 font-weight-bold text-lowercase">at</span> {{candidateEmployment.employerName}}<span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEmployment.employmentStartDate | date}} - {{candidateEmployment.employmentEndDate?(candidateEmployment.employmentEndDate |date): 'Till Date'}}</span>
-                                                                <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> Position : {{candidateEmployment.employmentType?.employmentType}}</span></p>
-                                                            <p class="public-profile-body" [innerHtml]=" candidateEmployment.jobDescription"></p>
-                                                            <div *ngIf="candidateEmployment.projects?.length>0">
-                                                                        <div class="mt-4">
-                                                                            <span style="color:grey;float:left;margin-left:-5px" class="icon icon-text-document" ></span>
-                                                                            <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
-                                                                        </div>
-                                                                        <div *ngFor="let candidateEmploymentProject of candidateEmployment.projects; trackBy:trackId">
-                                                                            <blockquote class="ml-0 blockquote">
-                                                                                <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEmploymentProject.projectTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEmploymentProject.projectStartDate | date}} - {{candidateEmploymentProject.projectEndDate?(candidateEmploymentProject.projectEndDate |date): 'Till Date'}}</span></p>
-                                                                                <!-- <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEmploymentProject.projectType==='SELF_INTEREST'?'Self Interest':'Academic'}} Project</p> -->
-                                                                                <p class="public-profile-body">Description:</p>
-                                                                                <p class="public-profile-body" [innerHtml]=" candidateEmploymentProject.projectDescription"></p>
-                                                                                <p class="public-profile-body">Contribution:</p>
-                                                                                <p class="public-profile-body" [innerHtml]=" candidateEmploymentProject.contributionInProject"></p>
-                                                                            </blockquote>
-                                                                        </div>      
-                                                                    
-                                                            </div>
-                                                        </blockquote>
-                                                    </div>
+                    <div *ngIf="candidate.employments?.length>0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-briefcase"></span>
+                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">EXPERIENCE</span>
+                                <div *ngFor="let candidateEmployment of candidate.employments ; trackBy: trackId">
+                                    <blockquote class="ml-0 blockquote">
+                                        <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEmployment.jobTitle}} <span class="public-profile-sub-header mb-0 font-weight-bold text-lowercase">at</span> {{candidateEmployment.employerName}}<span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEmployment.employmentStartDate | date}} - {{candidateEmployment.employmentEndDate?(candidateEmployment.employmentEndDate |date): 'Till Date'}}</span>
+                                            <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> Position : {{candidateEmployment.employmentType?.employmentType}}</span></p>
+                                        <p class="public-profile-body" [innerHtml]=" candidateEmployment.jobDescription"></p>
+                                        <div *ngIf="candidateEmployment.projects?.length>0">
+                                            <div class="mt-4">
+                                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-text-document"></span>
+                                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
+                                            </div>
+                                            <div *ngFor="let candidateEmploymentProject of candidateEmployment.projects; trackBy:trackId">
+                                                <blockquote class="ml-0 blockquote">
+                                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEmploymentProject.projectTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEmploymentProject.projectStartDate | date}} - {{candidateEmploymentProject.projectEndDate?(candidateEmploymentProject.projectEndDate |date): 'Till Date'}}</span></p>
+                                                    <!-- <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEmploymentProject.projectType==='SELF_INTEREST'?'Self Interest':'Academic'}} Project</p> -->
+                                                    <p class="public-profile-body">Description:</p>
+                                                    <p class="public-profile-body" [innerHtml]=" candidateEmploymentProject.projectDescription"></p>
+                                                    <p class="public-profile-body">Contribution:</p>
+                                                    <p class="public-profile-body" [innerHtml]=" candidateEmploymentProject.contributionInProject"></p>
+                                                </blockquote>
+                                            </div>
+
                                         </div>
-                            
-                                        <!-- <div class="col-md-6">
+                                    </blockquote>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-6">
                                                 <span style="color:grey;float:left;margin-left:-5px" class="icon icon-graduation-cap" ></span>
                                                 <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">EDUCATION</span>
                                                 <div *ngIf="candidate.educations?.length>0; else noEducationView">
@@ -173,101 +186,101 @@
                                                         </blockquote>
                                                 </ng-template>
                                         </div> -->
-                                </div>
-                        
                         </div>
 
+                    </div>
+
                     <!-- <ng-template #noEmploymentView> -->
-                        <div class="row">
-                                <div class="col-md-12">
-                                        <span style="color:grey;float:left;margin-left:-5px" class="icon icon-graduation-cap" ></span>
-                                        <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">EDUCATION</span>
-                                        <div *ngIf="candidate.educations?.length>0">
-                                            <div *ngFor="let candidateEducation of candidate.educations ; trackBy: trackId">
-                                                <blockquote class="ml-0 blockquote">
-                                                    <p  class=" public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}}
-                                                            <span class="public-profile-sub-header mb-0 font-weight-bold text-lowercase"> in </span> {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2">{{candidateEducation.educationFromDate | date}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate |date): 'Till Date'}}</span></p>
-                                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEducation.college?(candidateEducation.college?.collegeName==='Other'?(candidateEducation.capturedCollege):
-                                                            (candidateEducation.college.collegeName)):''}}
-                                                            <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEducation.college?(candidateEducation.college.university?.universityName==='Other'?(candidateEducation.capturedUniversity):
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span style="color:grey;float:left;margin-left:-5px" class="icon icon-graduation-cap"></span>
+                            <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">EDUCATION</span>
+                            <div *ngIf="candidate.educations?.length>0">
+                                <div *ngFor="let candidateEducation of candidate.educations ; trackBy: trackId">
+                                    <blockquote class="ml-0 blockquote">
+                                        <p class=" public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}}
+                                            <span class="public-profile-sub-header mb-0 font-weight-bold text-lowercase"> in </span> {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}}
+                                            <span class="vertical-delimiter pr-1"> </span> <span class="pl-2">{{candidateEducation.educationFromDate | date}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate |date): 'Till Date'}}</span></p>
+                                        <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEducation.college?(candidateEducation.college?.collegeName==='Other'?(candidateEducation.capturedCollege): (candidateEducation.college.collegeName)):''}}
+                                            <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEducation.college?(candidateEducation.college.university?.universityName==='Other'?(candidateEducation.capturedUniversity):
                                                                     (candidateEducation.college.university.universityName)):''}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2">  {{candidateEducation.grade?"GPA "+candidateEducation.grade+"/10":"Percentage "+candidateEducation.percentage+"%"}}</span></p>
-                                                    <!-- <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">{{candidateEducation.grade?"GPA "+candidateEducation.grade+"/10":"Percentage "+candidateEducation.percentage+"%"}}</p>        -->
-                                                    <div *ngIf="candidateEducation.projects?.length>0">
-                                                                <div class="mt-4">
-                                                                    <span style="color:grey;float:left;margin-left:-5px" class="icon icon-text-document" ></span>
-                                                                    <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
-                                                                </div>
-                                                                <div *ngFor="let candidateEducationProject of candidateEducation.projects; trackBy:trackId">
-                                                                    <blockquote class="ml-0 mt-1 blockquote">
-                                                                        <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEducationProject.projectTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEducationProject.projectStartDate | date}} - {{candidateEducationProject.projectEndDate?(candidateEducationProject.projectEndDate |date): 'Till Date'}}</span></p>
-                                                                        <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEducationProject.projectType==='SELF_INTEREST'?'Self Interest':'Academic'}} Project</p>
-                                                                        <p class="public-profile-body">Description:</p>
-                                                                        <p class="public-profile-body" [innerHtml]=" candidateEducationProject.projectDescription"></p>
-                                                                        <p class="public-profile-body">Contribution:</p>
-                                                                        <p class="public-profile-body" [innerHtml]=" candidateEducationProject.contributionInProject"></p>
-                                                                    </blockquote>
-                                                                </div>      
-                                                            
-                                                    </div>
+                                        <!-- <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">{{candidateEducation.grade?"GPA "+candidateEducation.grade+"/10":"Percentage "+candidateEducation.percentage+"%"}}</p>        -->
+                                        <div *ngIf="candidateEducation.projects?.length>0">
+                                            <div class="mt-4">
+                                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-text-document"></span>
+                                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
+                                            </div>
+                                            <div *ngFor="let candidateEducationProject of candidateEducation.projects; trackBy:trackId">
+                                                <blockquote class="ml-0 mt-1 blockquote">
+                                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateEducationProject.projectTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{candidateEducationProject.projectStartDate | date}} - {{candidateEducationProject.projectEndDate?(candidateEducationProject.projectEndDate |date): 'Till Date'}}</span></p>
+                                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize"> {{candidateEducationProject.projectType==='SELF_INTEREST'?'Self Interest':'Academic'}} Project</p>
+                                                    <p class="public-profile-body">Description:</p>
+                                                    <p class="public-profile-body" [innerHtml]=" candidateEducationProject.projectDescription"></p>
+                                                    <p class="public-profile-body">Contribution:</p>
+                                                    <p class="public-profile-body" [innerHtml]=" candidateEducationProject.contributionInProject"></p>
                                                 </blockquote>
                                             </div>
+
                                         </div>
-                                        <!-- <ng-template #noEducationView>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            <!-- <ng-template #noEducationView>
                                                 <blockquote class="ml-0 blockquote">
                                                         <p  class=" public-profile-sub-header mb-0 font-weight-bold text-uppercase"> Bachelor in Something <span class="vertical-delimiter pr-1"> </span> <span class="pl-2">Aug 8, 2014-Aug 10, 2018</p>
                                                         <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> College Name affiliated to University of Knowledge</p> 
                                                     
                                                 </blockquote>
                                         </ng-template> -->
-                                </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                    <div *ngIf="candidate.candidateLanguageProficiencies?.length>0">
-                                        <span style="color:grey;float:left;margin-left:-5px" class="icon icon-chat" ></span>
-                                        <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">LANGUAGES</span>
-                                        <div *ngFor="let candidateLanguageProficiency of candidate.candidateLanguageProficiencies ; trackBy: trackId">
-                                            <div class="row ml-3 mt-3">
-                                                <div class="col-md-2">{{candidateLanguageProficiency.language?.language}}</div>
-                                                <div class="col-md-8 ml-5 pt-1">
-                                                    <div class="progress" >
-                                                            <div class="progress-bar align-items-right" role="progressbar" [style.width]="getWidth(candidateLanguageProficiency.proficiency)" style="height: 15px" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{candidateLanguageProficiency.proficiency}}</div>
-                                                    </div>
-                                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div *ngIf="candidate.candidateLanguageProficiencies?.length>0">
+                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-chat"></span>
+                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">LANGUAGES</span>
+                                <div *ngFor="let candidateLanguageProficiency of candidate.candidateLanguageProficiencies ; trackBy: trackId">
+                                    <div class="row ml-3 mt-3">
+                                        <div class="col-md-2">{{candidateLanguageProficiency.language?.language}}</div>
+                                        <div class="col-md-8 ml-5 pt-1">
+                                            <div class="progress">
+                                                <div class="progress-bar align-items-right" role="progressbar" [style.width]="getWidth(candidateLanguageProficiency.proficiency)" style="height: 15px" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{candidateLanguageProficiency.proficiency}}</div>
                                             </div>
-                                        
+                                        </div>
+                                    </div>
 
-                                        </div>
-                                    </div>
-                            </div>
-                            <div class="col-md-6">
-                                    <div *ngIf="candidate.nonAcademics?.length>0">
-                                        <span style="color:grey;float:left;margin-left:-5px" class="icon icon-trophy" ></span>
-                                        <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers text-uppercase">Extra - Curricular and Awards</span>
-                                    </div>
-                                    <div *ngFor="let candidateNonAcademic of candidate.nonAcademics ; trackBy: trackId">
-                                            <blockquote class="blockquote">
-                                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateNonAcademic.nonAcademicInitiativeTitle}} </p>
-                                                    <p class="public-profile-body" [innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
-                                            </blockquote>
-                                    </div>
-                                    
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                                <div class="col-md-12">
-                                        <div *ngIf="candidate.certifications?.length>0">
-                                            <span style="color:grey;float:left;margin-left:-5px" class="icon icon-price-ribbon" ></span>
-                                            <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">CERTIFICATIONS</span>
-                                            <div *ngFor="let certification of candidate.certifications ; trackBy: trackId">
-                                                    <blockquote class="blockquote">
-                                                            <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{certification.certificationTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{certification.certificationDate | date}} </span></p>
-                                                            <p class="public-profile-body" [innerHtml]=" certification.certificationDetails"></p>
-                                                    </blockquote>
-                                            </div>
-                                        </div>
+
                                 </div>
+                            </div>
                         </div>
+                        <div class="col-md-6">
+                            <div *ngIf="candidate.nonAcademics?.length>0">
+                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-trophy"></span>
+                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers text-uppercase">Extra - Curricular and Awards</span>
+                            </div>
+                            <div *ngFor="let candidateNonAcademic of candidate.nonAcademics ; trackBy: trackId">
+                                <blockquote class="blockquote">
+                                    <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{candidateNonAcademic.nonAcademicInitiativeTitle}} </p>
+                                    <p class="public-profile-body" [innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
+                                </blockquote>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div *ngIf="candidate.certifications?.length>0">
+                                <span style="color:grey;float:left;margin-left:-5px" class="icon icon-price-ribbon"></span>
+                                <span style="margin-left:15px;" class="underline-public-profile-headers public-profile-headers">CERTIFICATIONS</span>
+                                <div *ngFor="let certification of candidate.certifications ; trackBy: trackId">
+                                    <blockquote class="blockquote">
+                                        <p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase"> {{certification.certificationTitle}} <span class="vertical-delimiter pr-1"> </span> <span class="pl-2"> {{certification.certificationDate | date}} </span></p>
+                                        <p class="public-profile-body" [innerHtml]=" certification.certificationDetails"></p>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- </ng-template> -->
                 </div>
             </ng-template>

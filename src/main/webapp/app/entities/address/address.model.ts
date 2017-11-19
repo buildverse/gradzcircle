@@ -1,5 +1,6 @@
 import { BaseEntity } from './../../shared';
-
+import { Country } from '../../entities/country';
+import { Candidate } from '../../entities/candidate';
 export class Address implements BaseEntity {
     constructor(
         public id?: number,
@@ -8,8 +9,8 @@ export class Address implements BaseEntity {
         public city?: string,
         public state?: string,
         public zip?: string,
-        public candidate?: BaseEntity,
-        public country?: BaseEntity,
+        public candidate?: Candidate,
+        public country?: Country,
     ) {
     }
 }

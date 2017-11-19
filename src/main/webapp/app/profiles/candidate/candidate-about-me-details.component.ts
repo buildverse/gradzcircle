@@ -27,8 +27,6 @@ export class CandidateProfileAboutMeDetailsComponent implements OnInit {
 
     ) {}
 
-
-   
     ngOnInit() { 
         this.candidate = this.route.snapshot.data['candidate'];
         this.route.parent.snapshot.data['candidate'] = this.candidate;

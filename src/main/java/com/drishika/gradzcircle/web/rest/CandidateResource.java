@@ -144,7 +144,7 @@ public class CandidateResource {
             candidateAddresses.forEach(candidateAddress -> candidate.addAddress(candidateAddress));
             log.debug("Savig {} with addres {}",candidate,candidate.getAddresses());
         }*/
-        log.debug("Savig {} with addres {}",candidate,candidate.getAddresses());
+        log.debug("Saving {} with addres {}",candidate,candidate.getAddresses());
         candidate.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(candidate));
         Candidate result = candidateRepository.save(candidate);
         candidateSearchRepository.save(result);
@@ -176,6 +176,9 @@ public class CandidateResource {
         log.debug("REST request to get Candidate : {}", id);
         Candidate candidate = candidateRepository.findOneWithEagerRelationships(id);
         Set <Address> addresses = addressRepository.findAddressByCandidate(candidate);
+        addresses.forEach(candidateAddress->{
+            candidateAddress.setCandidate(null);
+        });
         candidate.setAddresses(addresses);
         log.debug("Retruning candidate {}",candidate.getAddresses());
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
@@ -234,76 +237,14 @@ public class CandidateResource {
      * @param query the query of the candidate search
      * @return the result of the search
      */
-    @GetMapping("/candidates/public-profile-es")
-    @Timed
-    public ResponseEntity<Candidate> retrieveCandidatePublicProfileFromElastic(@RequestParam String query) {
-        log.debug("REST request to get Candidate public profile for query {}", query);
-        Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));
-        if (candidate == null)
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
-        Set<CandidateEducation> candidateEducations = StreamSupport
-                .stream(candidateEducationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toSet());
-        Set<CandidateEmployment> candidateEmployments = StreamSupport
-                .stream(candidateEmploymentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toSet());
-        if (candidateEducations != null & candidateEducations.size() > 0) {
-            candidateEducations.forEach(candidateEducation -> {
-                Set<CandidateProject> candidateEducationProjects = StreamSupport
-                        .stream(candidateProjectSearchRepository
-                                .search(queryStringQuery(candidateEducation.getId().toString())).spliterator(), false)
-                        .collect(Collectors.toSet());
-                candidateEducation.setProjects(candidateEducationProjects);
-            });
-        }
-        if (candidateEmployments != null & candidateEmployments.size() > 0) {
-            candidateEmployments.forEach(candidateEmployment -> {
-                Set<CandidateProject> candidateEmploymentProjects = StreamSupport
-                        .stream(candidateProjectSearchRepository
-                                .search(queryStringQuery(candidateEmployment.getId().toString())).spliterator(), false)
-                        .collect(Collectors.toSet());
-                candidateEmployment.setProjects(candidateEmploymentProjects);
-            });
-        }
-
-        Set<CandidateCertification> candidateCertifications = StreamSupport
-                .stream(candidateCertificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toSet());
-        Set<CandidateNonAcademicWork> candidateNonAcademicWorks = StreamSupport
-                .stream(candidateNonAcademicWorkSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toSet());
-        Set<CandidateLanguageProficiency> candidateLanguageProficiencies = StreamSupport
-                .stream(candidateLanguageProficiencySearchRepository.search(queryStringQuery(query)).spliterator(),
-                        false)
-                .collect(Collectors.toSet());
-        trimCandidateAddressData(candidate);
-        trimCandidateEducationData(candidateEducations);
-        trimCandidateEmploymentData(candidateEmployments);
-        trimCandidateCertifications(candidateCertifications);
-        trimCandidateLanguageProficienies(candidateLanguageProficiencies);
-        trimCandidateNonAcademics(candidateNonAcademicWorks);
-        candidate.setEducations(candidateEducations);
-        candidate.setEmployments(candidateEmployments);
-        candidate.setCertifications(candidateCertifications);
-        candidate.setNonAcademics(candidateNonAcademicWorks);
-        candidate.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
-
-    }
-
-    /**
-     * database query to get public profile details
-     *
-     * @param query the query of the candidate search
-     * @return the result of the search
-     */
     @GetMapping("/candidates/public-profile")
     @Timed
-    public ResponseEntity<Candidate> retrieveCandidatePublicProfileFromDatabase(@RequestParam String query) {
+    public ResponseEntity<Candidate> retrieveCandidatePublicProfile(@RequestParam String query) {
         log.debug("REST request to get Candidate public profile for query {}", query);
         Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));
         if (candidate == null)
             return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
+        Set<Address>addresses = addressRepository.findAddressByCandidate(candidate);
         Set<CandidateEducation> candidateEducations = StreamSupport
                 .stream(candidateEducationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
                 .collect(Collectors.toSet());
@@ -341,12 +282,13 @@ public class CandidateResource {
                         false)
                 .collect(Collectors.toSet());
         //log.debug("Education, employments, Projects, certs and extra are {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
-        trimCandidateAddressData(candidate);
+        trimCandidateAddressData(addresses);
         trimCandidateEducationData(candidateEducations);
         trimCandidateEmploymentData(candidateEmployments);
         trimCandidateCertifications(candidateCertifications);
         trimCandidateLanguageProficienies(candidateLanguageProficiencies);
         trimCandidateNonAcademics(candidateNonAcademicWorks);
+        candidate.setAddresses(addresses);
         candidate.setEducations(candidateEducations);
         candidate.setEmployments(candidateEmployments);
         candidate.setCertifications(candidateCertifications);
@@ -398,15 +340,14 @@ public class CandidateResource {
         });
     }
 
-    private void trimCandidateAddressData(Candidate candidate) {
-        Set<Address> addresses = candidate.getAddresses();
+    private void trimCandidateAddressData(Set<Address> addresses) {
+
         if (addresses != null) {
             addresses.forEach(address -> {
                 if (address.getCountry() != null) {
                     address.getCountry().setCorporates(null);
                     address.getCountry().setVisas(null);
                     address.getCountry().setNationality(null);
-                    address.getCountry().setCandidateEmployments(null);
                     address.getCountry().setAddresses(null);
                 }
             });

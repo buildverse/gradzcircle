@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Objects;
@@ -42,6 +43,7 @@ public class Address implements Serializable {
     private String zip;
 
     @ManyToOne
+    @JsonIgnore
     private Candidate candidate;
 
     @ManyToOne
@@ -121,7 +123,6 @@ public class Address implements Serializable {
         this.zip = zip;
     }
 
-    @JsonBackReference
     public Candidate getCandidate() {
         return candidate;
     }
