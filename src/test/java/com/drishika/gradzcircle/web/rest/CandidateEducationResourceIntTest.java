@@ -4,7 +4,9 @@ import com.drishika.gradzcircle.GradzcircleApp;
 
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
+import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -92,6 +94,12 @@ public class CandidateEducationResourceIntTest {
     private CandidateEducationSearchRepository candidateEducationSearchRepository;
 
     @Autowired
+    private  CandidateProjectRepository candidateProjectRepository;
+
+    @Autowired
+    private CandidateProjectSearchRepository candidateProjectSearchRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -110,7 +118,8 @@ public class CandidateEducationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CandidateEducationResource candidateEducationResource = new CandidateEducationResource(candidateEducationRepository, candidateEducationSearchRepository);
+        final CandidateEducationResource candidateEducationResource = new CandidateEducationResource(candidateEducationRepository, 
+            candidateEducationSearchRepository,candidateProjectRepository,candidateProjectSearchRepository);
         this.restCandidateEducationMockMvc = MockMvcBuilders.standaloneSetup(candidateEducationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

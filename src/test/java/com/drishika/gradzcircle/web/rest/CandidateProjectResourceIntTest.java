@@ -113,7 +113,7 @@ public class CandidateProjectResourceIntTest {
             .projectEndDate(DEFAULT_PROJECT_END_DATE)
             .projectDescription(DEFAULT_PROJECT_DESCRIPTION)
             .projectDuration(DEFAULT_PROJECT_DURATION)
-            .projectPeriod(DEFAULT_PROJECT_PERIOD)
+           
             .contributionInProject(DEFAULT_CONTRIBUTION_IN_PROJECT)
             .isCurrentProject(DEFAULT_IS_CURRENT_PROJECT)
             .projectType(DEFAULT_PROJECT_TYPE);
@@ -146,7 +146,7 @@ public class CandidateProjectResourceIntTest {
         assertThat(testCandidateProject.getProjectEndDate()).isEqualTo(DEFAULT_PROJECT_END_DATE);
         assertThat(testCandidateProject.getProjectDescription()).isEqualTo(DEFAULT_PROJECT_DESCRIPTION);
         assertThat(testCandidateProject.getProjectDuration()).isEqualTo(DEFAULT_PROJECT_DURATION);
-        assertThat(testCandidateProject.getProjectPeriod()).isEqualTo(DEFAULT_PROJECT_PERIOD);
+      //  assertThat(testCandidateProject.getProjectPeriod()).isEqualTo(DEFAULT_PROJECT_PERIOD);
         assertThat(testCandidateProject.getContributionInProject()).isEqualTo(DEFAULT_CONTRIBUTION_IN_PROJECT);
         assertThat(testCandidateProject.isIsCurrentProject()).isEqualTo(DEFAULT_IS_CURRENT_PROJECT);
         assertThat(testCandidateProject.getProjectType()).isEqualTo(DEFAULT_PROJECT_TYPE);
@@ -191,7 +191,6 @@ public class CandidateProjectResourceIntTest {
             .andExpect(jsonPath("$.[*].projectEndDate").value(hasItem(DEFAULT_PROJECT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].projectDescription").value(hasItem(DEFAULT_PROJECT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].projectDuration").value(hasItem(DEFAULT_PROJECT_DURATION)))
-            .andExpect(jsonPath("$.[*].projectPeriod").value(hasItem(DEFAULT_PROJECT_PERIOD.toString())))
             .andExpect(jsonPath("$.[*].contributionInProject").value(hasItem(DEFAULT_CONTRIBUTION_IN_PROJECT.toString())))
             .andExpect(jsonPath("$.[*].isCurrentProject").value(hasItem(DEFAULT_IS_CURRENT_PROJECT.booleanValue())))
             .andExpect(jsonPath("$.[*].projectType").value(hasItem(DEFAULT_PROJECT_TYPE.toString())));
@@ -213,7 +212,6 @@ public class CandidateProjectResourceIntTest {
             .andExpect(jsonPath("$.projectEndDate").value(DEFAULT_PROJECT_END_DATE.toString()))
             .andExpect(jsonPath("$.projectDescription").value(DEFAULT_PROJECT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.projectDuration").value(DEFAULT_PROJECT_DURATION))
-            .andExpect(jsonPath("$.projectPeriod").value(DEFAULT_PROJECT_PERIOD.toString()))
             .andExpect(jsonPath("$.contributionInProject").value(DEFAULT_CONTRIBUTION_IN_PROJECT.toString()))
             .andExpect(jsonPath("$.isCurrentProject").value(DEFAULT_IS_CURRENT_PROJECT.booleanValue()))
             .andExpect(jsonPath("$.projectType").value(DEFAULT_PROJECT_TYPE.toString()));
@@ -243,7 +241,7 @@ public class CandidateProjectResourceIntTest {
             .projectEndDate(UPDATED_PROJECT_END_DATE)
             .projectDescription(UPDATED_PROJECT_DESCRIPTION)
             .projectDuration(UPDATED_PROJECT_DURATION)
-            .projectPeriod(UPDATED_PROJECT_PERIOD)
+          
             .contributionInProject(UPDATED_CONTRIBUTION_IN_PROJECT)
             .isCurrentProject(UPDATED_IS_CURRENT_PROJECT)
             .projectType(UPDATED_PROJECT_TYPE);
@@ -262,7 +260,7 @@ public class CandidateProjectResourceIntTest {
         assertThat(testCandidateProject.getProjectEndDate()).isEqualTo(UPDATED_PROJECT_END_DATE);
         assertThat(testCandidateProject.getProjectDescription()).isEqualTo(UPDATED_PROJECT_DESCRIPTION);
         assertThat(testCandidateProject.getProjectDuration()).isEqualTo(UPDATED_PROJECT_DURATION);
-        assertThat(testCandidateProject.getProjectPeriod()).isEqualTo(UPDATED_PROJECT_PERIOD);
+      //  assertThat(testCandidateProject.getProjectPeriod()).isEqualTo(UPDATED_PROJECT_PERIOD);
         assertThat(testCandidateProject.getContributionInProject()).isEqualTo(UPDATED_CONTRIBUTION_IN_PROJECT);
         assertThat(testCandidateProject.isIsCurrentProject()).isEqualTo(UPDATED_IS_CURRENT_PROJECT);
         assertThat(testCandidateProject.getProjectType()).isEqualTo(UPDATED_PROJECT_TYPE);
@@ -329,7 +327,6 @@ public class CandidateProjectResourceIntTest {
             .andExpect(jsonPath("$.[*].projectEndDate").value(hasItem(DEFAULT_PROJECT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].projectDescription").value(hasItem(DEFAULT_PROJECT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].projectDuration").value(hasItem(DEFAULT_PROJECT_DURATION)))
-            .andExpect(jsonPath("$.[*].projectPeriod").value(hasItem(DEFAULT_PROJECT_PERIOD.toString())))
             .andExpect(jsonPath("$.[*].contributionInProject").value(hasItem(DEFAULT_CONTRIBUTION_IN_PROJECT.toString())))
             .andExpect(jsonPath("$.[*].isCurrentProject").value(hasItem(DEFAULT_IS_CURRENT_PROJECT.booleanValue())))
             .andExpect(jsonPath("$.[*].projectType").value(hasItem(DEFAULT_PROJECT_TYPE.toString())));

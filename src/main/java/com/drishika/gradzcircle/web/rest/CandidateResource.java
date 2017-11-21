@@ -175,12 +175,14 @@ public class CandidateResource {
     public ResponseEntity<Candidate> getCandidate(@PathVariable Long id) {
         log.debug("REST request to get Candidate : {}", id);
         Candidate candidate = candidateRepository.findOneWithEagerRelationships(id);
-        Set <Address> addresses = addressRepository.findAddressByCandidate(candidate);
-        addresses.forEach(candidateAddress->{
-            candidateAddress.setCandidate(null);
-        });
-        candidate.setAddresses(addresses);
-        log.debug("Retruning candidate {}",candidate.getAddresses());
+        if(candidate != null){
+            Set <Address> addresses = addressRepository.findAddressByCandidate(candidate);
+            addresses.forEach(candidateAddress->{
+                candidateAddress.setCandidate(null);
+            });
+            candidate.setAddresses(addresses);
+            log.debug("Retruning candidate {}",candidate.getAddresses());
+        }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
     }
 

@@ -3,7 +3,15 @@ package com.drishika.gradzcircle.web.rest;
 import com.drishika.gradzcircle.GradzcircleApp;
 
 import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
+import com.drishika.gradzcircle.repository.search.AddressSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
@@ -86,6 +94,23 @@ public class CandidateResourceIntTest {
     private CandidateSearchRepository candidateSearchRepository;
 
     @Autowired
+    private CandidateEducationSearchRepository candidateEducationSearchRepository;
+    @Autowired
+    private CandidateProjectSearchRepository candidateProjectSearchRepository;
+    @Autowired
+    private CandidateEmploymentSearchRepository candidateEmploymentSearchRepository;
+    @Autowired
+    private CandidateCertificationSearchRepository candidateCertificationSearchRepository;
+    @Autowired
+    private CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository;
+    @Autowired
+    private CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
+    @Autowired
+    private AddressSearchRepository addressSearchRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -104,11 +129,18 @@ public class CandidateResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CandidateResource candidateResource = new CandidateResource(candidateRepository, candidateSearchRepository);
+        final CandidateResource candidateResource = new CandidateResource( candidateRepository,
+             candidateSearchRepository,
+             candidateEducationSearchRepository,
+             candidateProjectSearchRepository,
+             candidateEmploymentSearchRepository,
+             candidateCertificationSearchRepository,
+             candidateNonAcademicWorkSearchRepository,
+             candidateLanguageProficiencySearchRepository,
+             addressRepository,  addressSearchRepository);
         this.restCandidateMockMvc = MockMvcBuilders.standaloneSetup(candidateResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**
@@ -118,20 +150,12 @@ public class CandidateResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Candidate createEntity(EntityManager em) {
-        Candidate candidate = new Candidate()
-            .firstName(DEFAULT_FIRST_NAME)
-            .lastName(DEFAULT_LAST_NAME)
-            .middleName(DEFAULT_MIDDLE_NAME)
-            .facebook(DEFAULT_FACEBOOK)
-            .linkedIn(DEFAULT_LINKED_IN)
-            .twitter(DEFAULT_TWITTER)
-            .aboutMe(DEFAULT_ABOUT_ME)
-            .dateOfBirth(DEFAULT_DATE_OF_BIRTH)
-            .phoneCode(DEFAULT_PHONE_CODE)
-            .phoneNumber(DEFAULT_PHONE_NUMBER)
-            .differentlyAbled(DEFAULT_DIFFERENTLY_ABLED)
-            .availableForHiring(DEFAULT_AVAILABLE_FOR_HIRING)
-            .openToRelocate(DEFAULT_OPEN_TO_RELOCATE);
+        Candidate candidate = new Candidate().firstName(DEFAULT_FIRST_NAME).lastName(DEFAULT_LAST_NAME)
+                .middleName(DEFAULT_MIDDLE_NAME).facebook(DEFAULT_FACEBOOK).linkedIn(DEFAULT_LINKED_IN)
+                .twitter(DEFAULT_TWITTER).aboutMe(DEFAULT_ABOUT_ME).dateOfBirth(DEFAULT_DATE_OF_BIRTH)
+                .phoneCode(DEFAULT_PHONE_CODE).phoneNumber(DEFAULT_PHONE_NUMBER)
+                .differentlyAbled(DEFAULT_DIFFERENTLY_ABLED).availableForHiring(DEFAULT_AVAILABLE_FOR_HIRING)
+                .openToRelocate(DEFAULT_OPEN_TO_RELOCATE);
         return candidate;
     }
 
@@ -147,10 +171,8 @@ public class CandidateResourceIntTest {
         int databaseSizeBeforeCreate = candidateRepository.findAll().size();
 
         // Create the Candidate
-        restCandidateMockMvc.perform(post("/api/candidates")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidate)))
-            .andExpect(status().isCreated());
+        restCandidateMockMvc.perform(post("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(candidate))).andExpect(status().isCreated());
 
         // Validate the Candidate in the database
         List<Candidate> candidateList = candidateRepository.findAll();
@@ -184,10 +206,8 @@ public class CandidateResourceIntTest {
         candidate.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCandidateMockMvc.perform(post("/api/candidates")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidate)))
-            .andExpect(status().isBadRequest());
+        restCandidateMockMvc.perform(post("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(candidate))).andExpect(status().isBadRequest());
 
         // Validate the Candidate in the database
         List<Candidate> candidateList = candidateRepository.findAll();
@@ -201,23 +221,23 @@ public class CandidateResourceIntTest {
         candidateRepository.saveAndFlush(candidate);
 
         // Get all the candidateList
-        restCandidateMockMvc.perform(get("/api/candidates?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(candidate.getId().intValue())))
-            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
-            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
-            .andExpect(jsonPath("$.[*].middleName").value(hasItem(DEFAULT_MIDDLE_NAME.toString())))
-            .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK.toString())))
-            .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
-            .andExpect(jsonPath("$.[*].twitter").value(hasItem(DEFAULT_TWITTER.toString())))
-            .andExpect(jsonPath("$.[*].aboutMe").value(hasItem(DEFAULT_ABOUT_ME.toString())))
-            .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
-            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
-            .andExpect(jsonPath("$.[*].differentlyAbled").value(hasItem(DEFAULT_DIFFERENTLY_ABLED.booleanValue())))
-            .andExpect(jsonPath("$.[*].availableForHiring").value(hasItem(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue())))
-            .andExpect(jsonPath("$.[*].openToRelocate").value(hasItem(DEFAULT_OPEN_TO_RELOCATE.booleanValue())));
+        restCandidateMockMvc.perform(get("/api/candidates?sort=id,desc")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(candidate.getId().intValue())))
+                .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
+                .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
+                .andExpect(jsonPath("$.[*].middleName").value(hasItem(DEFAULT_MIDDLE_NAME.toString())))
+                .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK.toString())))
+                .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
+                .andExpect(jsonPath("$.[*].twitter").value(hasItem(DEFAULT_TWITTER.toString())))
+                .andExpect(jsonPath("$.[*].aboutMe").value(hasItem(DEFAULT_ABOUT_ME.toString())))
+                .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
+                .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
+                .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
+                .andExpect(jsonPath("$.[*].differentlyAbled").value(hasItem(DEFAULT_DIFFERENTLY_ABLED.booleanValue())))
+                .andExpect(jsonPath("$.[*].availableForHiring")
+                        .value(hasItem(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue())))
+                .andExpect(jsonPath("$.[*].openToRelocate").value(hasItem(DEFAULT_OPEN_TO_RELOCATE.booleanValue())));
     }
 
     @Test
@@ -227,31 +247,29 @@ public class CandidateResourceIntTest {
         candidateRepository.saveAndFlush(candidate);
 
         // Get the candidate
-        restCandidateMockMvc.perform(get("/api/candidates/{id}", candidate.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(candidate.getId().intValue()))
-            .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRST_NAME.toString()))
-            .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME.toString()))
-            .andExpect(jsonPath("$.middleName").value(DEFAULT_MIDDLE_NAME.toString()))
-            .andExpect(jsonPath("$.facebook").value(DEFAULT_FACEBOOK.toString()))
-            .andExpect(jsonPath("$.linkedIn").value(DEFAULT_LINKED_IN.toString()))
-            .andExpect(jsonPath("$.twitter").value(DEFAULT_TWITTER.toString()))
-            .andExpect(jsonPath("$.aboutMe").value(DEFAULT_ABOUT_ME.toString()))
-            .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
-            .andExpect(jsonPath("$.phoneCode").value(DEFAULT_PHONE_CODE.toString()))
-            .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER.toString()))
-            .andExpect(jsonPath("$.differentlyAbled").value(DEFAULT_DIFFERENTLY_ABLED.booleanValue()))
-            .andExpect(jsonPath("$.availableForHiring").value(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue()))
-            .andExpect(jsonPath("$.openToRelocate").value(DEFAULT_OPEN_TO_RELOCATE.booleanValue()));
+        restCandidateMockMvc.perform(get("/api/candidates/{id}", candidate.getId())).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(candidate.getId().intValue()))
+                .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRST_NAME.toString()))
+                .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME.toString()))
+                .andExpect(jsonPath("$.middleName").value(DEFAULT_MIDDLE_NAME.toString()))
+                .andExpect(jsonPath("$.facebook").value(DEFAULT_FACEBOOK.toString()))
+                .andExpect(jsonPath("$.linkedIn").value(DEFAULT_LINKED_IN.toString()))
+                .andExpect(jsonPath("$.twitter").value(DEFAULT_TWITTER.toString()))
+                .andExpect(jsonPath("$.aboutMe").value(DEFAULT_ABOUT_ME.toString()))
+                .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
+                .andExpect(jsonPath("$.phoneCode").value(DEFAULT_PHONE_CODE.toString()))
+                .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER.toString()))
+                .andExpect(jsonPath("$.differentlyAbled").value(DEFAULT_DIFFERENTLY_ABLED.booleanValue()))
+                .andExpect(jsonPath("$.availableForHiring").value(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue()))
+                .andExpect(jsonPath("$.openToRelocate").value(DEFAULT_OPEN_TO_RELOCATE.booleanValue()));
     }
 
     @Test
     @Transactional
     public void getNonExistingCandidate() throws Exception {
         // Get the candidate
-        restCandidateMockMvc.perform(get("/api/candidates/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCandidateMockMvc.perform(get("/api/candidates/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -264,25 +282,14 @@ public class CandidateResourceIntTest {
 
         // Update the candidate
         Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
-        updatedCandidate
-            .firstName(UPDATED_FIRST_NAME)
-            .lastName(UPDATED_LAST_NAME)
-            .middleName(UPDATED_MIDDLE_NAME)
-            .facebook(UPDATED_FACEBOOK)
-            .linkedIn(UPDATED_LINKED_IN)
-            .twitter(UPDATED_TWITTER)
-            .aboutMe(UPDATED_ABOUT_ME)
-            .dateOfBirth(UPDATED_DATE_OF_BIRTH)
-            .phoneCode(UPDATED_PHONE_CODE)
-            .phoneNumber(UPDATED_PHONE_NUMBER)
-            .differentlyAbled(UPDATED_DIFFERENTLY_ABLED)
-            .availableForHiring(UPDATED_AVAILABLE_FOR_HIRING)
-            .openToRelocate(UPDATED_OPEN_TO_RELOCATE);
+        updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
+                .facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
+                .aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)
+                .phoneNumber(UPDATED_PHONE_NUMBER).differentlyAbled(UPDATED_DIFFERENTLY_ABLED)
+                .availableForHiring(UPDATED_AVAILABLE_FOR_HIRING).openToRelocate(UPDATED_OPEN_TO_RELOCATE);
 
-        restCandidateMockMvc.perform(put("/api/candidates")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCandidate)))
-            .andExpect(status().isOk());
+        restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
 
         // Validate the Candidate in the database
         List<Candidate> candidateList = candidateRepository.findAll();
@@ -315,10 +322,8 @@ public class CandidateResourceIntTest {
         // Create the Candidate
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restCandidateMockMvc.perform(put("/api/candidates")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidate)))
-            .andExpect(status().isCreated());
+        restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(candidate))).andExpect(status().isCreated());
 
         // Validate the Candidate in the database
         List<Candidate> candidateList = candidateRepository.findAll();
@@ -334,9 +339,9 @@ public class CandidateResourceIntTest {
         int databaseSizeBeforeDelete = candidateRepository.findAll().size();
 
         // Get the candidate
-        restCandidateMockMvc.perform(delete("/api/candidates/{id}", candidate.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+        restCandidateMockMvc
+                .perform(delete("/api/candidates/{id}", candidate.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean candidateExistsInEs = candidateSearchRepository.exists(candidate.getId());
@@ -356,22 +361,22 @@ public class CandidateResourceIntTest {
 
         // Search the candidate
         restCandidateMockMvc.perform(get("/api/_search/candidates?query=id:" + candidate.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(candidate.getId().intValue())))
-            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
-            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
-            .andExpect(jsonPath("$.[*].middleName").value(hasItem(DEFAULT_MIDDLE_NAME.toString())))
-            .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK.toString())))
-            .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
-            .andExpect(jsonPath("$.[*].twitter").value(hasItem(DEFAULT_TWITTER.toString())))
-            .andExpect(jsonPath("$.[*].aboutMe").value(hasItem(DEFAULT_ABOUT_ME.toString())))
-            .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
-            .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
-            .andExpect(jsonPath("$.[*].differentlyAbled").value(hasItem(DEFAULT_DIFFERENTLY_ABLED.booleanValue())))
-            .andExpect(jsonPath("$.[*].availableForHiring").value(hasItem(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue())))
-            .andExpect(jsonPath("$.[*].openToRelocate").value(hasItem(DEFAULT_OPEN_TO_RELOCATE.booleanValue())));
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(candidate.getId().intValue())))
+                .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRST_NAME.toString())))
+                .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME.toString())))
+                .andExpect(jsonPath("$.[*].middleName").value(hasItem(DEFAULT_MIDDLE_NAME.toString())))
+                .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK.toString())))
+                .andExpect(jsonPath("$.[*].linkedIn").value(hasItem(DEFAULT_LINKED_IN.toString())))
+                .andExpect(jsonPath("$.[*].twitter").value(hasItem(DEFAULT_TWITTER.toString())))
+                .andExpect(jsonPath("$.[*].aboutMe").value(hasItem(DEFAULT_ABOUT_ME.toString())))
+                .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
+                .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
+                .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER.toString())))
+                .andExpect(jsonPath("$.[*].differentlyAbled").value(hasItem(DEFAULT_DIFFERENTLY_ABLED.booleanValue())))
+                .andExpect(jsonPath("$.[*].availableForHiring")
+                        .value(hasItem(DEFAULT_AVAILABLE_FOR_HIRING.booleanValue())))
+                .andExpect(jsonPath("$.[*].openToRelocate").value(hasItem(DEFAULT_OPEN_TO_RELOCATE.booleanValue())));
     }
 
     @Test

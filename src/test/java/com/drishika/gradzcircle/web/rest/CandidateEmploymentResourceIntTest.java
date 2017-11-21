@@ -4,6 +4,7 @@ import com.drishika.gradzcircle.GradzcircleApp;
 
 import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.repository.CandidateEmploymentRepository;
+import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
@@ -77,6 +78,9 @@ public class CandidateEmploymentResourceIntTest {
     private CandidateEmploymentSearchRepository candidateEmploymentSearchRepository;
 
     @Autowired
+    private CandidateProjectRepository candidateProjectRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -95,7 +99,8 @@ public class CandidateEmploymentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CandidateEmploymentResource candidateEmploymentResource = new CandidateEmploymentResource(candidateEmploymentRepository, candidateEmploymentSearchRepository);
+        final CandidateEmploymentResource candidateEmploymentResource = new CandidateEmploymentResource(candidateEmploymentRepository, 
+            candidateEmploymentSearchRepository,candidateProjectRepository);
         this.restCandidateEmploymentMockMvc = MockMvcBuilders.standaloneSetup(candidateEmploymentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -116,10 +121,10 @@ public class CandidateEmploymentResourceIntTest {
             .employmentStartDate(DEFAULT_EMPLOYMENT_START_DATE)
             .employmentEndDate(DEFAULT_EMPLOYMENT_END_DATE)
             .employmentDuration(DEFAULT_EMPLOYMENT_DURATION)
-            .employmentPeriod(DEFAULT_EMPLOYMENT_PERIOD)
+            
             .isCurrentEmployment(DEFAULT_IS_CURRENT_EMPLOYMENT)
-            .jobDescription(DEFAULT_JOB_DESCRIPTION)
-            .roleAndResponsibilities(DEFAULT_ROLE_AND_RESPONSIBILITIES);
+            .jobDescription(DEFAULT_JOB_DESCRIPTION);
+            
         return candidateEmployment;
     }
 
@@ -150,10 +155,10 @@ public class CandidateEmploymentResourceIntTest {
         assertThat(testCandidateEmployment.getEmploymentStartDate()).isEqualTo(DEFAULT_EMPLOYMENT_START_DATE);
         assertThat(testCandidateEmployment.getEmploymentEndDate()).isEqualTo(DEFAULT_EMPLOYMENT_END_DATE);
         assertThat(testCandidateEmployment.getEmploymentDuration()).isEqualTo(DEFAULT_EMPLOYMENT_DURATION);
-        assertThat(testCandidateEmployment.getEmploymentPeriod()).isEqualTo(DEFAULT_EMPLOYMENT_PERIOD);
+      //  assertThat(testCandidateEmployment.getEmploymentPeriod()).isEqualTo(DEFAULT_EMPLOYMENT_PERIOD);
         assertThat(testCandidateEmployment.isIsCurrentEmployment()).isEqualTo(DEFAULT_IS_CURRENT_EMPLOYMENT);
         assertThat(testCandidateEmployment.getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
-        assertThat(testCandidateEmployment.getRoleAndResponsibilities()).isEqualTo(DEFAULT_ROLE_AND_RESPONSIBILITIES);
+        //assertThat(testCandidateEmployment.getRoleAndResponsibilities()).isEqualTo(DEFAULT_ROLE_AND_RESPONSIBILITIES);
 
         // Validate the CandidateEmployment in Elasticsearch
         CandidateEmployment candidateEmploymentEs = candidateEmploymentSearchRepository.findOne(testCandidateEmployment.getId());
@@ -196,10 +201,9 @@ public class CandidateEmploymentResourceIntTest {
             .andExpect(jsonPath("$.[*].employmentStartDate").value(hasItem(DEFAULT_EMPLOYMENT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].employmentEndDate").value(hasItem(DEFAULT_EMPLOYMENT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].employmentDuration").value(hasItem(DEFAULT_EMPLOYMENT_DURATION)))
-            .andExpect(jsonPath("$.[*].employmentPeriod").value(hasItem(DEFAULT_EMPLOYMENT_PERIOD.toString())))
             .andExpect(jsonPath("$.[*].isCurrentEmployment").value(hasItem(DEFAULT_IS_CURRENT_EMPLOYMENT.booleanValue())))
-            .andExpect(jsonPath("$.[*].jobDescription").value(hasItem(DEFAULT_JOB_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].roleAndResponsibilities").value(hasItem(DEFAULT_ROLE_AND_RESPONSIBILITIES.toString())));
+            .andExpect(jsonPath("$.[*].jobDescription").value(hasItem(DEFAULT_JOB_DESCRIPTION.toString())));
+            
     }
 
     @Test
@@ -219,10 +223,9 @@ public class CandidateEmploymentResourceIntTest {
             .andExpect(jsonPath("$.employmentStartDate").value(DEFAULT_EMPLOYMENT_START_DATE.toString()))
             .andExpect(jsonPath("$.employmentEndDate").value(DEFAULT_EMPLOYMENT_END_DATE.toString()))
             .andExpect(jsonPath("$.employmentDuration").value(DEFAULT_EMPLOYMENT_DURATION))
-            .andExpect(jsonPath("$.employmentPeriod").value(DEFAULT_EMPLOYMENT_PERIOD.toString()))
             .andExpect(jsonPath("$.isCurrentEmployment").value(DEFAULT_IS_CURRENT_EMPLOYMENT.booleanValue()))
-            .andExpect(jsonPath("$.jobDescription").value(DEFAULT_JOB_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.roleAndResponsibilities").value(DEFAULT_ROLE_AND_RESPONSIBILITIES.toString()));
+            .andExpect(jsonPath("$.jobDescription").value(DEFAULT_JOB_DESCRIPTION.toString()));
+            
     }
 
     @Test
@@ -250,10 +253,10 @@ public class CandidateEmploymentResourceIntTest {
             .employmentStartDate(UPDATED_EMPLOYMENT_START_DATE)
             .employmentEndDate(UPDATED_EMPLOYMENT_END_DATE)
             .employmentDuration(UPDATED_EMPLOYMENT_DURATION)
-            .employmentPeriod(UPDATED_EMPLOYMENT_PERIOD)
+          //  .employmentPeriod(UPDATED_EMPLOYMENT_PERIOD)
             .isCurrentEmployment(UPDATED_IS_CURRENT_EMPLOYMENT)
-            .jobDescription(UPDATED_JOB_DESCRIPTION)
-            .roleAndResponsibilities(UPDATED_ROLE_AND_RESPONSIBILITIES);
+            .jobDescription(UPDATED_JOB_DESCRIPTION);
+           // .roleAndResponsibilities(UPDATED_ROLE_AND_RESPONSIBILITIES);
 
         restCandidateEmploymentMockMvc.perform(put("/api/candidate-employments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -270,10 +273,10 @@ public class CandidateEmploymentResourceIntTest {
         assertThat(testCandidateEmployment.getEmploymentStartDate()).isEqualTo(UPDATED_EMPLOYMENT_START_DATE);
         assertThat(testCandidateEmployment.getEmploymentEndDate()).isEqualTo(UPDATED_EMPLOYMENT_END_DATE);
         assertThat(testCandidateEmployment.getEmploymentDuration()).isEqualTo(UPDATED_EMPLOYMENT_DURATION);
-        assertThat(testCandidateEmployment.getEmploymentPeriod()).isEqualTo(UPDATED_EMPLOYMENT_PERIOD);
+      //  assertThat(testCandidateEmployment.getEmploymentPeriod()).isEqualTo(UPDATED_EMPLOYMENT_PERIOD);
         assertThat(testCandidateEmployment.isIsCurrentEmployment()).isEqualTo(UPDATED_IS_CURRENT_EMPLOYMENT);
         assertThat(testCandidateEmployment.getJobDescription()).isEqualTo(UPDATED_JOB_DESCRIPTION);
-        assertThat(testCandidateEmployment.getRoleAndResponsibilities()).isEqualTo(UPDATED_ROLE_AND_RESPONSIBILITIES);
+        //assertThat(testCandidateEmployment.getRoleAndResponsibilities()).isEqualTo(UPDATED_ROLE_AND_RESPONSIBILITIES);
 
         // Validate the CandidateEmployment in Elasticsearch
         CandidateEmployment candidateEmploymentEs = candidateEmploymentSearchRepository.findOne(testCandidateEmployment.getId());
@@ -338,10 +341,9 @@ public class CandidateEmploymentResourceIntTest {
             .andExpect(jsonPath("$.[*].employmentStartDate").value(hasItem(DEFAULT_EMPLOYMENT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].employmentEndDate").value(hasItem(DEFAULT_EMPLOYMENT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].employmentDuration").value(hasItem(DEFAULT_EMPLOYMENT_DURATION)))
-            .andExpect(jsonPath("$.[*].employmentPeriod").value(hasItem(DEFAULT_EMPLOYMENT_PERIOD.toString())))
             .andExpect(jsonPath("$.[*].isCurrentEmployment").value(hasItem(DEFAULT_IS_CURRENT_EMPLOYMENT.booleanValue())))
-            .andExpect(jsonPath("$.[*].jobDescription").value(hasItem(DEFAULT_JOB_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].roleAndResponsibilities").value(hasItem(DEFAULT_ROLE_AND_RESPONSIBILITIES.toString())));
+            .andExpect(jsonPath("$.[*].jobDescription").value(hasItem(DEFAULT_JOB_DESCRIPTION.toString())));
+            
     }
 
     @Test

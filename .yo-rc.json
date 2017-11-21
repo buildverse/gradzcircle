@@ -38,6 +38,7 @@
     "languages": [
       "en",
       "hi"
-    ]
+    ],
+    "herokuAppName": "gradzcircle"
   }
 }

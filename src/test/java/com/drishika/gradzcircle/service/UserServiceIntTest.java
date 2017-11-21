@@ -4,6 +4,7 @@ import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
 import com.drishika.gradzcircle.service.dto.UserDTO;
 import com.drishika.gradzcircle.service.util.RandomUtil;
 import org.junit.Test;
@@ -15,7 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import java.util.Set;
+import java.util.HashSet;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -54,7 +56,10 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "http://placehold.it/50x50", "en-US");
+        Set<String> authorities = new HashSet<String>();
+        authorities.add(AuthoritiesConstants.USER);
+        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost",
+                "http://placehold.it/50x50", "en-US", authorities, null, null, null);
         Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser.isPresent()).isFalse();
         userRepository.delete(user);
@@ -62,8 +67,10 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "http://placehold.it/50x50", "en-US");
-
+        Set<String> authorities = new HashSet<String>();
+        authorities.add(AuthoritiesConstants.USER);
+        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost",
+                "http://placehold.it/50x50", "en-US", authorities, null, null, null);
         Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
@@ -81,8 +88,10 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "http://placehold.it/50x50", "en-US");
-
+        Set<String> authorities = new HashSet<String>();
+        authorities.add(AuthoritiesConstants.USER);
+        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost",
+                "http://placehold.it/50x50", "en-US", authorities, null, null, null);
         Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -95,7 +104,10 @@ public class UserServiceIntTest {
 
     @Test
     public void assertThatUserCanResetPassword() {
-        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "http://placehold.it/50x50", "en-US");
+        Set<String> authorities = new HashSet<String>();
+        authorities.add(AuthoritiesConstants.USER);
+        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost",
+                "http://placehold.it/50x50", "en-US", authorities, null, null, null);
         String oldPassword = user.getPassword();
         Instant daysAgo = Instant.now().minus(2, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
@@ -125,13 +137,15 @@ public class UserServiceIntTest {
         final PageRequest pageable = new PageRequest(0, (int) userRepository.count());
         final Page<UserDTO> allManagedUsers = userService.getAllManagedUsers(pageable);
         assertThat(allManagedUsers.getContent().stream()
-            .noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin())))
-            .isTrue();
+                .noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin()))).isTrue();
     }
 
     @Test
     public void testRemoveNotActivatedUsers() {
-        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "http://placehold.it/50x50", "en-US");
+        Set<String> authorities = new HashSet<String>();
+        authorities.add(AuthoritiesConstants.USER);
+        User user = userService.createUser("johndoe", "johndoe", "John", "Doe", "john.doe@localhost",
+                "http://placehold.it/50x50", "en-US", authorities, null, null, null);
         user.setActivated(false);
         user.setCreatedDate(Instant.now().minus(30, ChronoUnit.DAYS));
         userRepository.save(user);
