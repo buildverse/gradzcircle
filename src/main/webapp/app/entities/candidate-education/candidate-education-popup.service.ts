@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
-import{ College } from '../../entities/college/college.model';
+import { College } from '../../entities/college/college.model';
 import { Course } from '../../entities/course/course.model';
 import { Qualification } from '../../entities/qualification/qualification.model';
 import { Candidate } from '../candidate/candidate.model';
@@ -11,7 +11,7 @@ import { Candidate } from '../candidate/candidate.model';
 @Injectable()
 export class CandidateEducationPopupService {
     private ngbModalRef: NgbModalRef;
-    private candidate : Candidate;
+    private candidate: Candidate;
 
 
     constructor(
@@ -23,7 +23,7 @@ export class CandidateEducationPopupService {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any,courses?:Course[],colleges?:College[],qualifications? : Qualification[]): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any,courses?:Course[],colleges?:College[],qualifications?: Qualification[]): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -63,7 +63,7 @@ export class CandidateEducationPopupService {
         });
     }
 
-    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation,courses?:Course[],colleges?:College[],qualifications? : Qualification[]): NgbModalRef {
+    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation,courses?:Course[],colleges?:College[],qualifications?: Qualification[]): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.candidateEducation = candidateEducation;
         modalRef.componentInstance.colleges = colleges;

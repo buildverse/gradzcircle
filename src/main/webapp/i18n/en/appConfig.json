@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "appConfig" : {
+            "home": {
+                "title": "App Configs",
+                "createLabel": "Create a new App Config",
+                "createOrEditLabel": "Create or edit a App Config",
+                "search": "Search for App Config"
+            },
+            "created": "A new App Config is created with identifier {{ param }}",
+            "updated": "A App Config is updated with identifier {{ param }}",
+            "deleted": "A App Config is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete App Config {{ id }}?"
+            },
+            "detail": {
+                "title": "App Config"
+            },
+            "configName": "Config Name",
+            "configValue": "Config Value"
+        }
+    }
+}

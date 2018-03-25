@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface CollegeRepository extends JpaRepository<College, Long> {
 
+    public College findByCollegeName(String CollegeName);
 }

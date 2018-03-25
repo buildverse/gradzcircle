@@ -17,6 +17,7 @@
                 "title": "Job Type"
             },
             "jobType": "Job Type",
+            "jobTypeCost": "Job Type Cost",
             "candidateEmployment": "Candidate Employment"
         }
     }

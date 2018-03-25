@@ -84,6 +84,12 @@
                 <a [routerLink]="['/job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last ? '' : ', '}}
             </span>
         </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidate.job">Job</span></dt>
+        <dd>
+            <span *ngFor="let job of candidate.jobs; let last = last">
+                <a [routerLink]="['/job', job?.id ]">{{job.id}}</a>{{last ? '' : ', '}}
+            </span>
+        </dd>
         <dt><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa Type</span></dt>
         <dd>
             <div *ngIf="candidate.visaType">

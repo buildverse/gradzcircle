@@ -97,6 +97,20 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.CaptureCollege.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.CaptureQualification.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".addresses", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".jobs", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Corporate.class.getName() + ".jobs", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".jobFilters", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".candidates", jcacheConfiguration);
+           // cm.createCache(com.drishika.gradzcircle.domain.FilterCategory.class.getName(), jcacheConfiguration);
+           // cm.createCache(com.drishika.gradzcircle.domain.FilterCategory.class.getName() + ".filters", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Filter.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.JobFilter.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".histories", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.JobFilter.class.getName() + ".histories", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.JobHistory.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.JobFilterHistory.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.AppConfig.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

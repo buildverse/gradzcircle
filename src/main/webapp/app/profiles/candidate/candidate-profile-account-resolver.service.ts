@@ -10,17 +10,15 @@ import { Observable } from 'rxjs/Observable';
 export class CandidateResolverService implements Resolve<any> {
     constructor(private principal: Principal, private router: Router, private candidateService: CandidateService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
        // console.log("Am calling resolver for candidate");
-        return  this.principal.identity().then((account) => {         
+        return  this.principal.identity().then((account) => {
              return this.candidateService.getCandidateByLoginId(account.id).toPromise()
                     .catch((error: any) => {
                         console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
-                    });       
+                    });
         });
-
-
     }
 }

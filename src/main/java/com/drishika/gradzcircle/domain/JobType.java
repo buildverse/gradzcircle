@@ -30,6 +30,9 @@ public class JobType implements Serializable {
     @Column(name = "job_type")
     private String jobType;
 
+    @Column(name = "job_type_cost")
+    private Double jobTypeCost;
+
     @OneToMany(mappedBy = "jobType")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -55,6 +58,19 @@ public class JobType implements Serializable {
 
     public void setJobType(String jobType) {
         this.jobType = jobType;
+    }
+
+    public Double getJobTypeCost() {
+        return jobTypeCost;
+    }
+
+    public JobType jobTypeCost(Double jobTypeCost) {
+        this.jobTypeCost = jobTypeCost;
+        return this;
+    }
+
+    public void setJobTypeCost(Double jobTypeCost) {
+        this.jobTypeCost = jobTypeCost;
     }
 
     public Set<CandidateEmployment> getCandidateEmployments() {
@@ -108,6 +124,7 @@ public class JobType implements Serializable {
         return "JobType{" +
             "id=" + getId() +
             ", jobType='" + getJobType() + "'" +
+            ", jobTypeCost='" + getJobTypeCost() + "'" +
             "}";
     }
 }

@@ -6,7 +6,7 @@ import { Language } from '../../entities/language/language.model'
 
 @Injectable()
 export class CandidateLanguageResolverService implements Resolve<Language[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Language[]>{
       return this.profileHelperService.getLanguages()

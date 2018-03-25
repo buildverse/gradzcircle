@@ -9,8 +9,8 @@ import { CandidateEducation } from '../candidate-education/candidate-education.m
 export class CandidateEducationProjectPopupService {
     private isOpen = false;
     private ngbModalRef: NgbModalRef;
-    private candidateProject : CandidateProject;
-    private candidateEducation : CandidateEducation;
+    private candidateProject: CandidateProject;
+    private candidateEducation: CandidateEducation;
     constructor(
         private modalService: NgbModal,
         private router: Router,

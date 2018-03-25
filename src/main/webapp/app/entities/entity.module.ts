@@ -31,6 +31,13 @@ import { GradzcircleCaptureCourseModule } from './capture-course/capture-course.
 import { GradzcircleCaptureUniversityModule } from './capture-university/capture-university.module';
 import { GradzcircleCaptureCollegeModule } from './capture-college/capture-college.module';
 import { GradzcircleCaptureQualificationModule } from './capture-qualification/capture-qualification.module';
+import { GradzcircleJobModule } from './job/job.module';
+import { GradzcircleFilterCategoryModule } from './filter-category/filter-category.module';
+import { GradzcircleFilterModule } from './filter/filter.module';
+import { GradzcircleJobFilterModule } from './job-filter/job-filter.module';
+import { GradzcircleJobHistoryModule } from './job-history/job-history.module';
+import { GradzcircleJobFilterHistoryModule } from './job-filter-history/job-filter-history.module';
+import { GradzcircleAppConfigModule } from './app-config/app-config.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -66,6 +73,13 @@ import { GradzcircleCaptureQualificationModule } from './capture-qualification/c
         GradzcircleCaptureUniversityModule,
         GradzcircleCaptureCollegeModule,
         GradzcircleCaptureQualificationModule,
+        GradzcircleJobModule,
+        GradzcircleFilterCategoryModule,
+        GradzcircleFilterModule,
+        GradzcircleJobFilterModule,
+        GradzcircleJobHistoryModule,
+        GradzcircleJobFilterHistoryModule,
+        GradzcircleAppConfigModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

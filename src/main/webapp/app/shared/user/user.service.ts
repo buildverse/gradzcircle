@@ -13,7 +13,7 @@ export class UserService {
     private imageUrl = SERVER_API_URL +'api/files';
     private deleteImageUrl = SERVER_API_URL +'api/remove';
 
-    private imageData : any;
+    private imageData: any;
 
     constructor(private http: Http) { }
 

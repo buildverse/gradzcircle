@@ -8,7 +8,7 @@ import { Candidate } from '../candidate/candidate.model';
 @Injectable()
 export class CandidateCertificationPopupService {
     private ngbModalRef: NgbModalRef;
-    private candidate : Candidate;
+    private candidate: Candidate;
     constructor(
         private modalService: NgbModal,
         private router: Router,

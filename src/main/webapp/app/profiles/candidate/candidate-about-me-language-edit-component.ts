@@ -38,7 +38,7 @@ export class CandidateProfileLanguaugeEditComponent implements OnInit {
     errorMessage: String;
     buttonText: String;
     languagesMetaData: Language[];
-    candidate : Candidate[];
+    candidate: Candidate[];
    
 
     get candidateLanguageProficiency(): FormArray{

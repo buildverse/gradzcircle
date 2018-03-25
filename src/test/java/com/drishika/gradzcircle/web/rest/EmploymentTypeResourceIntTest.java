@@ -41,6 +41,9 @@ public class EmploymentTypeResourceIntTest {
     private static final String DEFAULT_EMPLOYMENT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_EMPLOYMENT_TYPE = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_EMPLOYMENT_TYPE_COST = 1D;
+    private static final Double UPDATED_EMPLOYMENT_TYPE_COST = 2D;
+
     @Autowired
     private EmploymentTypeRepository employmentTypeRepository;
 
@@ -81,7 +84,8 @@ public class EmploymentTypeResourceIntTest {
      */
     public static EmploymentType createEntity(EntityManager em) {
         EmploymentType employmentType = new EmploymentType()
-            .employmentType(DEFAULT_EMPLOYMENT_TYPE);
+            .employmentType(DEFAULT_EMPLOYMENT_TYPE)
+            .employmentTypeCost(DEFAULT_EMPLOYMENT_TYPE_COST);
         return employmentType;
     }
 
@@ -107,6 +111,7 @@ public class EmploymentTypeResourceIntTest {
         assertThat(employmentTypeList).hasSize(databaseSizeBeforeCreate + 1);
         EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
         assertThat(testEmploymentType.getEmploymentType()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE);
+        assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE_COST);
 
         // Validate the EmploymentType in Elasticsearch
         EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
@@ -143,7 +148,8 @@ public class EmploymentTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].employmentTypeCost").value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
     }
 
     @Test
@@ -157,7 +163,8 @@ public class EmploymentTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(employmentType.getId().intValue()))
-            .andExpect(jsonPath("$.employmentType").value(DEFAULT_EMPLOYMENT_TYPE.toString()));
+            .andExpect(jsonPath("$.employmentType").value(DEFAULT_EMPLOYMENT_TYPE.toString()))
+            .andExpect(jsonPath("$.employmentTypeCost").value(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue()));
     }
 
     @Test
@@ -179,7 +186,8 @@ public class EmploymentTypeResourceIntTest {
         // Update the employmentType
         EmploymentType updatedEmploymentType = employmentTypeRepository.findOne(employmentType.getId());
         updatedEmploymentType
-            .employmentType(UPDATED_EMPLOYMENT_TYPE);
+            .employmentType(UPDATED_EMPLOYMENT_TYPE)
+            .employmentTypeCost(UPDATED_EMPLOYMENT_TYPE_COST);
 
         restEmploymentTypeMockMvc.perform(put("/api/employment-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -191,6 +199,7 @@ public class EmploymentTypeResourceIntTest {
         assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate);
         EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
         assertThat(testEmploymentType.getEmploymentType()).isEqualTo(UPDATED_EMPLOYMENT_TYPE);
+        assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(UPDATED_EMPLOYMENT_TYPE_COST);
 
         // Validate the EmploymentType in Elasticsearch
         EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
@@ -249,7 +258,8 @@ public class EmploymentTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].employmentTypeCost").value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
     }
 
     @Test

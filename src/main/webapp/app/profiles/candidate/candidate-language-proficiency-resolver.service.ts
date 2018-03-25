@@ -10,14 +10,14 @@ import { ResponseWrapper } from '../../shared';
 
 @Injectable()
 export class CandidateLanguageProficiencyResolverService implements Resolve<CandidateLanguageProficiency> {
-    candidateLanguageProficiencies : CandidateLanguageProficiency[];
-    constructor (private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,private router : Router){}
+    candidateLanguageProficiencies: CandidateLanguageProficiency[];
+    constructor (private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,private router: Router){}
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CandidateLanguageProficiency>{
         let candidateId = route.parent.data['candidate'].id;
        // console.log("Candidate id is "+JSON.stringify(candidateId));
         return this.candidateLanguageProficiencyService.search({
                 query: candidateId
-                }).map((res : ResponseWrapper)=> this.candidateLanguageProficiencies).catch((error: any) => {
+                }).map((res: ResponseWrapper)=> this.candidateLanguageProficiencies).catch((error: any) => {
                         console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);

@@ -31,6 +31,7 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="gradzcircleApp.jobType.jobType">Job Type</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobType.jobTypeCost">Job Type Cost</span></th>
             <th></th>
             </tr>
             </thead>
@@ -38,6 +39,7 @@
             <tr *ngFor="let jobType of jobTypes ;trackBy: trackId">
                 <td><a [routerLink]="['../job-type', jobType.id ]">{{jobType.id}}</a></td>
                 <td>{{jobType.jobType}}</td>
+                <td>{{jobType.jobTypeCost}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

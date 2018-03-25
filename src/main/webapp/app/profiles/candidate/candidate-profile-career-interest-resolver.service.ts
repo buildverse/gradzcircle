@@ -6,7 +6,7 @@ import { ProfileHelperService } from '../profile-helper.service';
 import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class CandidateCareerInterestResolverService implements Resolve<JobCategory[]> {
-    constructor (private profileHelper: ProfileHelperService,private router : Router){}
+    constructor (private profileHelper: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<JobCategory[]>{
         return this.profileHelper.getCareerInterests().catch((error: any) => {

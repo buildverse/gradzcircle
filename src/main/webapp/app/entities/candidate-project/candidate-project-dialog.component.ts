@@ -25,10 +25,10 @@ export class CandidateProjectDialogComponent implements OnInit {
     candidateProject: CandidateProject;
     authorities: any[];
     isSaving: boolean;
-    options : Object;
+    options: Object;
     candidateEducations: CandidateEducation[];
     endDateLesser: boolean;
-    endDateControl :boolean;
+    endDateControl:boolean;
     isEmploymentProject: boolean;
     candidateEmployments: CandidateEmployment[];
     projectStartDateDp: any;
@@ -135,7 +135,7 @@ export class CandidateProjectDialogComponent implements OnInit {
 })
 export class CandidateProjectPopupComponent implements OnInit, OnDestroy {
 
-    isEmploymentProject : boolean;
+    isEmploymentProject: boolean;
     routeSub: any;
 
     constructor(

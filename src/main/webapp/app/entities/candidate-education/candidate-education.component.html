@@ -22,7 +22,6 @@
                         <div class="line text-muted"></div>
                         <div *ngFor="let candidateEducation of candidateEducations ;">
 
-
                             <div class="separator text-muted">
                                 <time>{{candidateEducation.educationFromDate | date:'mediumDate'}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate| date:'mediumDate'): 'Till Date' }}</time>
                             </div>

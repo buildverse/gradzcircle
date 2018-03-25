@@ -25,7 +25,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="non_academic_initiative_description" type="varchar(255)">
+            <column name="non_academic_initiative_description" type="varchar(10000)">
                 <constraints nullable="true" />
             </column>
 

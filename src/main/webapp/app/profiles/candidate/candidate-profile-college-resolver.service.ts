@@ -6,7 +6,7 @@ import { College } from '../../entities/college/college.model';
 
 @Injectable()
 export class CandidateAccountResolverService implements Resolve<College[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<College[]>{
         return  this.profileHelperService.getColleges()

@@ -2,19 +2,28 @@ package com.drishika.gradzcircle.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.College;
-
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
 import com.drishika.gradzcircle.repository.CollegeRepository;
 import com.drishika.gradzcircle.repository.search.CollegeSearchRepository;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,9 +46,13 @@ public class CollegeResource {
 
     private final CollegeSearchRepository collegeSearchRepository;
 
-    public CollegeResource(CollegeRepository collegeRepository, CollegeSearchRepository collegeSearchRepository) {
+    private final ElasticsearchTemplate elasticsearchTemplate;
+
+    public CollegeResource(CollegeRepository collegeRepository, CollegeSearchRepository collegeSearchRepository,
+            ElasticsearchTemplate elasticsearchTemplate) {
         this.collegeRepository = collegeRepository;
         this.collegeSearchRepository = collegeSearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -54,24 +67,29 @@ public class CollegeResource {
     public ResponseEntity<College> createCollege(@RequestBody College college) throws URISyntaxException {
         log.debug("REST request to save College : {}", college);
         if (college.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new college cannot already have an ID")).body(null);
+            return ResponseEntity.badRequest().headers(
+                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new college cannot already have an ID"))
+                    .body(null);
         }
         College result = collegeRepository.save(college);
-        collegeSearchRepository.save(result);
+        // collegeSearchRepository.save(result);
+
+        elasticsearchTemplate.index(new CollegeEntityBuilder(college.getId()).name(college.getCollegeName())
+                .suggest(new String[] { college.getCollegeName() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
         return ResponseEntity.created(new URI("/api/colleges/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     /**
      * PUT  /colleges : Updates an existing college.
-     *
      * @param college the college to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated college,
      * or with status 400 (Bad Request) if the college is not valid,
      * or with status 500 (Internal Server Error) if the college couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
+
     @PutMapping("/colleges")
     @Timed
     public ResponseEntity<College> updateCollege(@RequestBody College college) throws URISyntaxException {
@@ -80,10 +98,22 @@ public class CollegeResource {
             return createCollege(college);
         }
         College result = collegeRepository.save(college);
-        collegeSearchRepository.save(result);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, college.getId().toString()))
-            .body(result);
+        com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
+        try {
+			BeanUtils.copyProperties(collegeElasticInstance, college);
+		} catch (IllegalAccessException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+		} catch (InvocationTargetException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			
+        }
+        elasticsearchTemplate.index(new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
+            .suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, college.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -96,7 +126,7 @@ public class CollegeResource {
     public List<College> getAllColleges() {
         log.debug("REST request to get all Colleges");
         return collegeRepository.findAll();
-        }
+    }
 
     /**
      * GET  /colleges/:id : get the "id" college.
@@ -134,13 +164,42 @@ public class CollegeResource {
      * @param query the query of the college search
      * @return the result of the search
      */
+    @GetMapping("/_search/collegesBySuggest")
+    @Timed
+    public String searchCollegesBySuggest(@RequestParam String query) {
+        log.debug("REST request to search Colleges for query {}", query);
+        String suggest=null;
+        CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("college-suggest").text(query).field("suggest");
+        SuggestResponse  suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder, com.drishika.gradzcircle.domain.elastic.College.class);
+        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("college-suggest");
+        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+        List <GenericElasticSuggest> colleges = new ArrayList<GenericElasticSuggest>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        options.forEach(option->{
+            colleges.add(new GenericElasticSuggest(option.getText().string(),option.getText().string()));
+            //colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+        });
+        try {
+			suggest = objectMapper.writeValueAsString(colleges);
+		} catch (JsonProcessingException e) {
+			log.error("Error parsing object to JSON {},{}",e.getMessage(),e);
+		}
+       return suggest;
+    }
+
+     /**
+     * SEARCH  /_search/colleges?query=:query : search for the college corresponding
+     * to the query.
+     *
+     * @param query the query of the college search
+     * @return the result of the search
+     */
     @GetMapping("/_search/colleges")
     @Timed
-    public List<College> searchColleges(@RequestParam String query) {
+    public List<com.drishika.gradzcircle.domain.elastic.College> searchColleges(@RequestParam String query) {
         log.debug("REST request to search Colleges for query {}", query);
-        return StreamSupport
-            .stream(collegeSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
+        return StreamSupport.stream(collegeSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toList());
     }
 
 }

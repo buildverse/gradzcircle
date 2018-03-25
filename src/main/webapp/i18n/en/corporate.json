@@ -4,7 +4,7 @@
             "home": {
                 "title": "Corporates",
                 "createLabel": "Create a new Corporate",
-                "createOrEditLabel": "Edit Profile",
+                "createOrEditLabel": "Create or edit a Corporate",
                 "search": "Search for Corporate"
             },
             "created": "A new Corporate is created with identifier {{ param }}",
@@ -16,28 +16,30 @@
             "detail": {
                 "title": "Corporate"
             },
-            "corporateName": "Company Name",
-            "uploadLogo":"Upload your Logo",
-            "corporateAddress": "Address",
-            "corporateCity": "City",
+            "name": "Name",
+            "address": "Address",
+            "city": "City",
             "establishedSince": "Established Since",
-            "corporateEmail": "Email",
-            "corporateOverview": "About Us",
-            "corporateBenefits": "Employee Benefits",
-            "corporateWebsite": "Website",
-            "corporateFacebook": "Facebook",
-            "corporateTwitter": "Twitter",
-            "corporateInstagram": "Instagram",
-            "corporateLinkedIn": "Linked In",
-            "corporateCulture": "Our Culture",
+            "email": "Email",
+            "overview": "Overview",
+            "benefits": "Benefits",
+            "website": "Website",
+            "facebook": "Facebook",
+            "twitter": "Twitter",
+            "instagram": "Instagram",
+            "linkedIn": "Linked In",
+            "culture": "Culture",
             "contactPerson": "Contact Person",
-            "corporatePhone": "Phone",
-            "corporatePhoneCode": "Phone Code",
-            "contactPersonDesignation": "Person Designation",
-            "corporateTagLine": "Tag Line",
+            "phone": "Phone",
+            "phoneCode": "Phone Code",
+            "personDesignation": "Person Designation",
+            "tagLine": "Tag Line",
+            "escrowAmount": "Escrow Amount",
             "country": "Country",
             "industry": "Industry",
-            "login": "Login"
+            "login": "Login",
+            "job": "Job",
+            "uploadLogo":"Logo"
         }
     }
 }

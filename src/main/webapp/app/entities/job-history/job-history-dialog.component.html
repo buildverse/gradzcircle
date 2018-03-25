@@ -1,0 +1,129 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myJobHistoryLabel" jhiTranslate="gradzcircleApp.jobHistory.home.createOrEditLabel">Create or edit a Job History</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!jobHistory.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="jobHistory.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.jobTitle" for="field_jobTitle">Job Title</label>
+            <input type="text" class="form-control" name="jobTitle" id="field_jobTitle"
+                [(ngModel)]="jobHistory.jobTitle"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.jobDescription" for="field_jobDescription">Job Description</label>
+            <input type="text" class="form-control" name="jobDescription" id="field_jobDescription"
+                [(ngModel)]="jobHistory.jobDescription" maxlength="10000" />
+            <div [hidden]="!(editForm.controls.jobDescription?.dirty && editForm.controls.jobDescription?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.jobDescription?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 10000 }">
+                   This field cannot be longer than 10000 characters.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.noOfApplicants" for="field_noOfApplicants">No Of Applicants</label>
+            <input type="number" class="form-control" name="noOfApplicants" id="field_noOfApplicants"
+                [(ngModel)]="jobHistory.noOfApplicants"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.salary" for="field_salary">Salary</label>
+            <input type="number" class="form-control" name="salary" id="field_salary"
+                [(ngModel)]="jobHistory.salary"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.jobStatus" for="field_jobStatus">Job Status</label>
+            <input type="number" class="form-control" name="jobStatus" id="field_jobStatus"
+                [(ngModel)]="jobHistory.jobStatus"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.createDate" for="field_createDate">Create Date</label>
+            <div class="d-flex">
+                <input id="field_createDate" type="datetime-local" class="form-control" name="createDate" [(ngModel)]="jobHistory.createDate"
+                  />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.jobCost" for="field_jobCost">Job Cost</label>
+            <input type="number" class="form-control" name="jobCost" id="field_jobCost"
+                [(ngModel)]="jobHistory.jobCost"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.amountPaid" for="field_amountPaid">Amount Paid</label>
+            <input type="number" class="form-control" name="amountPaid" id="field_amountPaid"
+                [(ngModel)]="jobHistory.amountPaid"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.escrowAmountUsed" for="field_escrowAmountUsed">Escrow Amount Used</label>
+            <input type="number" class="form-control" name="escrowAmountUsed" id="field_escrowAmountUsed"
+                [(ngModel)]="jobHistory.escrowAmountUsed"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.additionalAmountCharge" for="field_additionalAmountCharge">Additional Amount Charge</label>
+            <input type="number" class="form-control" name="additionalAmountCharge" id="field_additionalAmountCharge"
+                [(ngModel)]="jobHistory.additionalAmountCharge"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.paymentType" for="field_paymentType">Payment Type</label>
+            <select class="form-control" name="paymentType" [(ngModel)]="jobHistory.paymentType" id="field_paymentType" >
+                <option value="UPFRONT">{{'gradzcircleApp.PaymentType.UPFRONT' | translate}}</option>
+                <option value="AS_YOU_GO">{{'gradzcircleApp.PaymentType.AS_YOU_GO' | translate}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.hasBeenEdited" for="field_hasBeenEdited">Has Been Edited</label>
+            <input type="checkbox" class="form-control" name="hasBeenEdited" id="field_hasBeenEdited"
+                [(ngModel)]="jobHistory.hasBeenEdited"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.everActive" for="field_everActive">Ever Active</label>
+            <input type="checkbox" class="form-control" name="everActive" id="field_everActive"
+                [(ngModel)]="jobHistory.everActive"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.canEdit" for="field_canEdit">Can Edit</label>
+            <input type="checkbox" class="form-control" name="canEdit" id="field_canEdit"
+                [(ngModel)]="jobHistory.canEdit"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.updateDate" for="field_updateDate">Update Date</label>
+            <div class="d-flex">
+                <input id="field_updateDate" type="datetime-local" class="form-control" name="updateDate" [(ngModel)]="jobHistory.updateDate"
+                  />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.createdBy" for="field_createdBy">Created By</label>
+            <input type="number" class="form-control" name="createdBy" id="field_createdBy"
+                [(ngModel)]="jobHistory.createdBy"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.updatedBy" for="field_updatedBy">Updated By</label>
+            <input type="number" class="form-control" name="updatedBy" id="field_updatedBy"
+                [(ngModel)]="jobHistory.updatedBy"  />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.job" for="field_job">Job</label>
+            <select class="form-control" id="field_job" name="job" [(ngModel)]="jobHistory.job" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="jobOption.id === jobHistory.job?.id ? jobHistory.job : jobOption" *ngFor="let jobOption of jobs; trackBy: trackJobById">{{jobOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

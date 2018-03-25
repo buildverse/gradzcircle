@@ -105,6 +105,20 @@
 
         <addPrimaryKey columnNames="candidates_id, job_categories_id" tableName="candidate_job_category"/>
         
+       
+        
+    </changeSet>
+    <changeSet id="20171128094626-1" author="abhinav">
+     <createTable tableName="candidate_job">
+            <column name="jobs_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidates_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="candidates_id, jobs_id" tableName="candidate_job"/>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

@@ -21,6 +21,7 @@
                 "title": "Education"
             },
             "grade": "Grade",
+            "scoreFilter": "Score greater than..",
             "educationFromDate": "From Date",
             "educationToDate": "To Date",
             "isPursuingEducation": "Am Still Studying",
@@ -39,7 +40,9 @@
             "projects": "Projects",
             "qualification": "Qualification",
             "course": "Course",
-            "college": "College"
+            "college": "College",
+            "university": "University",
+            "graduationDate":"Graduation Date"
         }
     }
 }

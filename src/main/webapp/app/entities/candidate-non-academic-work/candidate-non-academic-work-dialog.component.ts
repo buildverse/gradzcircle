@@ -22,9 +22,9 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     candidateNonAcademicWork: CandidateNonAcademicWork;
     isSaving: boolean;
     authorities: any[];
-    options : Object;
+    options: Object;
     endDateLesser: boolean;
-    endDateControl :boolean;
+    endDateControl:boolean;
 
     candidates: Candidate[];
     nonAcademicWorkStartDateDp: any;

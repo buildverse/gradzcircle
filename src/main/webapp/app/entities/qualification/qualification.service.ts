@@ -11,6 +11,7 @@ export class QualificationService {
 
     private resourceUrl = SERVER_API_URL + 'api/qualifications';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/qualifications';
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/qualificationsBySuggest';
 
     constructor(private http: Http) { }
 
@@ -51,6 +52,12 @@ export class QualificationService {
         const options = createRequestOption(req);
         return this.http.get(this.resourceSearchUrl, options)
             .map((res: any) => this.convertResponse(res));
+    }
+
+    searchRemote(req?: any): Observable<Response> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, options);
+
     }
 
     private convertResponse(res: Response): ResponseWrapper {

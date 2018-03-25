@@ -2,6 +2,12 @@ package com.drishika.gradzcircle.service;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.*;
+import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.GenderEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.LanguageEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
 import com.drishika.gradzcircle.repository.*;
 import com.drishika.gradzcircle.repository.search.*;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
@@ -302,26 +308,30 @@ public class ElasticsearchIndexService {
         reindexForClass(CaptureCourse.class, captureCourseRepository, captureCourseSearchRepository);
         reindexForClass(CaptureQualification.class, captureQualificationRepository, captureQualificationSearchRepository);
         reindexForClass(CaptureUniversity.class, captureUniversityRepository, captureUniversitySearchRepository);
-        reindexForClass(College.class, collegeRepository, collegeSearchRepository);
         reindexForClass(Corporate.class, corporateRepository, corporateSearchRepository);
         reindexForClass(Country.class, countryRepository, countrySearchRepository);
-        reindexForClass(Course.class, courseRepository, courseSearchRepository);
+        //reindexForClass(Course.class, courseRepository, courseSearchRepository);
         reindexForClass(Employability.class, employabilityRepository, employabilitySearchRepository);
         reindexForClass(EmploymentType.class, employmentTypeRepository, employmentTypeSearchRepository);
         reindexForClass(ErrorMessages.class, errorMessagesRepository, errorMessagesSearchRepository);
-        reindexForClass(Gender.class, genderRepository, genderSearchRepository);
+       // reindexForClass(Gender.class, genderRepository, genderSearchRepository);
         reindexForClass(Industry.class, industryRepository, industrySearchRepository);
         reindexForClass(JobCategory.class, jobCategoryRepository, jobCategorySearchRepository);
         reindexForClass(JobType.class, jobTypeRepository, jobTypeSearchRepository);
-        reindexForClass(Language.class, languageRepository, languageSearchRepository);
+       // reindexForClass(Language.class, languageRepository, languageSearchRepository);
         reindexForClass(MaritalStatus.class, maritalStatusRepository, maritalStatusSearchRepository);
         reindexForClass(Nationality.class, nationalityRepository, nationalitySearchRepository);
-        reindexForClass(Qualification.class, qualificationRepository, qualificationSearchRepository);
+       // reindexForClass(Qualification.class, qualificationRepository, qualificationSearchRepository);
         reindexForClass(Skills.class, skillsRepository, skillsSearchRepository);
-        reindexForClass(University.class, universityRepository, universitySearchRepository);
+        //reindexForClass(University.class, universityRepository, universitySearchRepository);
         reindexForClass(VisaType.class, visaTypeRepository, visaTypeSearchRepository);
         reindexForClass(User.class, userRepository, userSearchRepository);
-
+        reindexForCollege(collegeRepository);
+        reindexForUniversity(universityRepository);
+        reindexForQualification(qualificationRepository);
+        reindexForCourse(courseRepository);
+        reindexForLanguage(languageRepository);
+        reindexForGender(genderRepository);
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
@@ -339,11 +349,72 @@ public class ElasticsearchIndexService {
         if (jpaRepository.count() > 0) {
             try {
                 Method m = jpaRepository.getClass().getMethod("findAllWithEagerRelationships");
+                log.debug("The class name is {}", entityClass.getName());
                 elasticsearchRepository.save((List<T>) m.invoke(jpaRepository));
             } catch (Exception e) {
                 elasticsearchRepository.save(jpaRepository.findAll());
             }
         }
         log.info("Elasticsearch: Indexed all rows for " + entityClass.getSimpleName());
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForCollege(CollegeRepository collegeRepository){
+        List<College> colleges = collegeRepository.findAll();
+        colleges.forEach(college->{
+            elasticsearchTemplate.index(new CollegeEntityBuilder(college.getId()).name(college.getCollegeName()).suggest(new String[]{college.getCollegeName()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForUniversity(UniversityRepository universityRepository){
+        List<University> universities = universityRepository.findAll();
+        universities.forEach(university->{
+            elasticsearchTemplate.index(new UniversityEntityBuilder(university.getId()).name(university.getUniversityName()).suggest(new String[]{university.getUniversityName()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForQualification(QualificationRepository qualificationRepository){
+        List<Qualification> qualifications = qualificationRepository.findAll();
+        qualifications.forEach(qualification->{
+            elasticsearchTemplate.index(new QualificationEntityBuilder(qualification.getId()).name(qualification.getQualification()).suggest(new String[]{qualification.getQualification()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForLanguage(LanguageRepository languageRepository){
+        List<Language> languages = languageRepository.findAll();
+        languages.forEach(language->{
+            elasticsearchTemplate.index(new LanguageEntityBuilder(language.getId()).name(language.getLanguage()).suggest(new String[]{language.getLanguage()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Language.class);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForCourse(CourseRepository courseRepository){
+        List<Course> courses = courseRepository.findAll();
+        courses.forEach(course->{
+            elasticsearchTemplate.index(new CourseEntityBuilder(course.getId()).name(course.getCourse()).suggest(new String[]{course.getCourse()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    private void reindexForGender(GenderRepository genderRepository){
+        List<Gender> genders = genderRepository.findAll();
+        genders.forEach(gender->{
+            elasticsearchTemplate.index(new GenderEntityBuilder(gender.getId()).name(gender.getGender()).suggest(new String[]{gender.getGender()}).buildIndex());
+            elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
+        });
     }
 }

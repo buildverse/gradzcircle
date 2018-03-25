@@ -2,19 +2,28 @@ package com.drishika.gradzcircle.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Course;
-
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
 import com.drishika.gradzcircle.repository.CourseRepository;
 import com.drishika.gradzcircle.repository.search.CourseSearchRepository;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,9 +46,13 @@ public class CourseResource {
 
     private final CourseSearchRepository courseSearchRepository;
 
-    public CourseResource(CourseRepository courseRepository, CourseSearchRepository courseSearchRepository) {
+    private final ElasticsearchTemplate elasticsearchTemplate;
+
+    public CourseResource(CourseRepository courseRepository, CourseSearchRepository courseSearchRepository,
+            ElasticsearchTemplate elasticsearchTemplate) {
         this.courseRepository = courseRepository;
         this.courseSearchRepository = courseSearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -54,13 +67,17 @@ public class CourseResource {
     public ResponseEntity<Course> createCourse(@RequestBody Course course) throws URISyntaxException {
         log.debug("REST request to save Course : {}", course);
         if (course.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new course cannot already have an ID")).body(null);
+            return ResponseEntity.badRequest().headers(
+                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new course cannot already have an ID"))
+                    .body(null);
         }
         Course result = courseRepository.save(course);
-        courseSearchRepository.save(result);
+        //courseSearchRepository.save(result);
+        elasticsearchTemplate.index(new CourseEntityBuilder(course.getId()).name(course.getCourse())
+                .suggest(new String[] { course.getCourse() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
         return ResponseEntity.created(new URI("/api/courses/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     /**
@@ -80,10 +97,23 @@ public class CourseResource {
             return createCourse(course);
         }
         Course result = courseRepository.save(course);
-        courseSearchRepository.save(result);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, course.getId().toString()))
-            .body(result);
+        //  courseSearchRepository.save(result);
+        com.drishika.gradzcircle.domain.elastic.Course courseElasticInstance = new com.drishika.gradzcircle.domain.elastic.Course();
+        try {
+            BeanUtils.copyProperties(courseElasticInstance, course);
+        } catch (IllegalAccessException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
+        } catch (InvocationTargetException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
+
+        }
+        elasticsearchTemplate.index(new CourseEntityBuilder(course.getId()).name(course.getCourse())
+                .suggest(new String[] { course.getCourse() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, course.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -96,7 +126,7 @@ public class CourseResource {
     public List<Course> getAllCourses() {
         log.debug("REST request to get all Courses");
         return courseRepository.findAll();
-        }
+    }
 
     /**
      * GET  /courses/:id : get the "id" course.
@@ -138,9 +168,40 @@ public class CourseResource {
     @Timed
     public List<Course> searchCourses(@RequestParam String query) {
         log.debug("REST request to search Courses for query {}", query);
-        return StreamSupport
-            .stream(courseSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
+        return StreamSupport.stream(courseSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+    /**
+    * SEARCH  /_search/colleges?query=:query : search for the college corresponding
+    * to the query.
+    *
+    * @param query the query of the college search
+    * @return the result of the search
+    */
+    @GetMapping("/_search/coursesBySuggest")
+    @Timed
+    public String searchCoursesBySuggest(@RequestParam String query) {
+        log.debug("REST request to search Courses for query {}", query);
+        String suggest = null;
+        CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+                .completionSuggestion("course-suggest").text(query).field("suggest");
+        SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
+                com.drishika.gradzcircle.domain.elastic.Course.class);
+        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("course-suggest");
+        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+        List<GenericElasticSuggest> courses = new ArrayList<GenericElasticSuggest>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        options.forEach(option -> {
+            courses.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
+            //colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+        });
+        try {
+            suggest = objectMapper.writeValueAsString(courses);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing object to JSON {},{}", e.getMessage(), e);
+        }
+        return suggest;
     }
 
 }

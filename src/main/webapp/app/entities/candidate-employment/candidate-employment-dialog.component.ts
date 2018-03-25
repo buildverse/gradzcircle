@@ -28,9 +28,9 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     authorities: any[];
     isSaving: boolean;
     endDateLesser: boolean;
-    endDateControl :boolean;
+    endDateControl:boolean;
     candidates: Candidate[];
-    options : Object;
+    options: Object;
     employmenttypes: EmploymentType[];
 
     countries: Country[];

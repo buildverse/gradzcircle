@@ -1,17 +1,31 @@
 package com.drishika.gradzcircle.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Candidate.
@@ -72,7 +86,7 @@ public class Candidate implements Serializable {
     @JoinColumn(unique = true)
     private User login;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade=CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Address> addresses = new HashSet<>();
 
@@ -111,6 +125,13 @@ public class Candidate implements Serializable {
                joinColumns = @JoinColumn(name="candidates_id", referencedColumnName="id"),
                inverseJoinColumns = @JoinColumn(name="job_categories_id", referencedColumnName="id"))
     private Set<JobCategory> jobCategories = new HashSet<>();
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "candidate_job",
+               joinColumns = @JoinColumn(name="candidates_id", referencedColumnName="id"),
+               inverseJoinColumns = @JoinColumn(name="jobs_id", referencedColumnName="id"))
+    private Set<Job> jobs = new HashSet<>();
 
     @ManyToOne
     private VisaType visaType;
@@ -518,6 +539,31 @@ public class Candidate implements Serializable {
 
     public void setJobCategories(Set<JobCategory> jobCategories) {
         this.jobCategories = jobCategories;
+    }
+
+    public Set<Job> getJobs() {
+        return jobs;
+    }
+
+    public Candidate jobs(Set<Job> jobs) {
+        this.jobs = jobs;
+        return this;
+    }
+
+    public Candidate addJob(Job job) {
+        this.jobs.add(job);
+        job.getCandidates().add(this);
+        return this;
+    }
+
+    public Candidate removeJob(Job job) {
+        this.jobs.remove(job);
+        job.getCandidates().remove(this);
+        return this;
+    }
+
+    public void setJobs(Set<Job> jobs) {
+        this.jobs = jobs;
     }
 
     public VisaType getVisaType() {

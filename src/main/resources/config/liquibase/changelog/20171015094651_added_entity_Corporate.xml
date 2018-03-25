@@ -21,15 +21,15 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="corporate_name" type="varchar(255)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_address" type="varchar(255)">
+            <column name="address" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_city" type="varchar(255)">
+            <column name="city" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -37,39 +37,39 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_email" type="varchar(255)">
+            <column name="email" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_overview" type="varchar(255)">
+            <column name="overview" type="varchar(10000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_benefits" type="varchar(255)">
+            <column name="benefits" type="varchar(10000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_website" type="varchar(255)">
+            <column name="website" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_facebook" type="varchar(255)">
+            <column name="facebook" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_twitter" type="varchar(255)">
+            <column name="twitter" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_instagram" type="varchar(255)">
+            <column name="instagram" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_linked_in" type="varchar(255)">
+            <column name="linked_in" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_culture" type="varchar(255)">
+            <column name="culture" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -77,19 +77,23 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_phone" type="varchar(255)">
+            <column name="phone" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_phone_code" type="varchar(255)">
+            <column name="phone_code" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="contact_person_designation" type="varchar(255)">
+            <column name="person_designation" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="corporate_tag_line" type="varchar(255)">
+            <column name="tag_line" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="escrow_amount" type="double">
                 <constraints nullable="true" />
             </column>
 

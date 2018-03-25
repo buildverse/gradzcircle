@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { of } from 'rxjs/observable/of';
 import { College } from './college.model';
 import { ResponseWrapper, createRequestOption } from '../../shared';
 
@@ -11,6 +11,7 @@ export class CollegeService {
 
     private resourceUrl = SERVER_API_URL + 'api/colleges';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/colleges';
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/collegesBySuggest';
 
     constructor(private http: Http) { }
 
@@ -52,6 +53,13 @@ export class CollegeService {
         return this.http.get(this.resourceSearchUrl, options)
             .map((res: any) => this.convertResponse(res));
     }
+
+    searchRemote(req?: any): Observable<Response> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, options);
+
+    }
+
 
     private convertResponse(res: Response): ResponseWrapper {
         const jsonResponse = res.json();

@@ -6,7 +6,7 @@ import { Country } from '../../entities/country/country.model';
 
 @Injectable()
 export class CountryResolverService implements Resolve<Country[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
     
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Country[]>{
         return this.profileHelperService.getCountries()

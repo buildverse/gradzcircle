@@ -9,7 +9,6 @@ describe('Candidate e2e test', () => {
     let candidateComponentsPage: CandidateComponentsPage;
     const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
     const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -55,7 +54,7 @@ describe('Candidate e2e test', () => {
         expect(candidateDialogPage.getPhoneCodeInput()).toMatch('phoneCode');
         candidateDialogPage.setPhoneNumberInput('phoneNumber');
         expect(candidateDialogPage.getPhoneNumberInput()).toMatch('phoneNumber');
-        candidateDialogPage.getDifferentlyAbledInput().isSelected().then(function (selected) {
+        candidateDialogPage.getDifferentlyAbledInput().isSelected().then(function(selected) {
             if (selected) {
                 candidateDialogPage.getDifferentlyAbledInput().click();
                 expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeFalsy();
@@ -64,7 +63,7 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeTruthy();
             }
         });
-        candidateDialogPage.getAvailableForHiringInput().isSelected().then(function (selected) {
+        candidateDialogPage.getAvailableForHiringInput().isSelected().then(function(selected) {
             if (selected) {
                 candidateDialogPage.getAvailableForHiringInput().click();
                 expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeFalsy();
@@ -73,7 +72,7 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeTruthy();
             }
         });
-        candidateDialogPage.getOpenToRelocateInput().isSelected().then(function (selected) {
+        candidateDialogPage.getOpenToRelocateInput().isSelected().then(function(selected) {
             if (selected) {
                 candidateDialogPage.getOpenToRelocateInput().click();
                 expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeFalsy();
@@ -90,7 +89,7 @@ describe('Candidate e2e test', () => {
         candidateDialogPage.visaTypeSelectLastOption();
         candidateDialogPage.save();
         expect(candidateDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -154,7 +153,7 @@ export class CandidateDialogPage {
         return this.lastNameInput.getAttribute('value');
     }
 
-    setMiddleNameInput = function (middleName) {
+    setMiddleNameInput = function(middleName) {
         this.middleNameInput.sendKeys(middleName);
     }
 
@@ -291,7 +290,7 @@ export class CandidateDialogPage {
         return this.maritalStatusSelect.element(by.css('option:checked')).getText();
     }
 
-    jobCategorySelectLastOption = function () {
+    jobCategorySelectLastOption = function() {
         this.jobCategorySelect.all(by.tagName('option')).last().click();
     }
 

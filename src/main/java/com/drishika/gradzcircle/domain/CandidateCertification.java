@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -31,7 +32,8 @@ public class CandidateCertification implements Serializable {
     @Column(name = "certification_date")
     private LocalDate certificationDate;
 
-    @Column(name = "certification_details")
+    @Size(max = 5000)
+    @Column(name = "certification_details", length = 5000)
     private String certificationDetails;
 
     @ManyToOne

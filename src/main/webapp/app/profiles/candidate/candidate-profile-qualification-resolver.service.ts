@@ -6,7 +6,7 @@ import { Qualification } from '../../entities/qualification/qualification.model'
 
 @Injectable()
 export class CandidateQualificationResolverService implements Resolve<Qualification[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Qualification[]>{
         return  this.profileHelperService.getQualification()

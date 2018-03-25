@@ -1,0 +1,26 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "jobFilter",
+            "otherEntityName": "jobFilter",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "filterDescription",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
+        }
+    ],
+    "changelogDate": "20180203082708",
+    "entityTableName": "job_filter_history",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

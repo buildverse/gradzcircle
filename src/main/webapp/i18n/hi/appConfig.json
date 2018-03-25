@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "appConfig" : {
+            "home": {
+                "title": "AppConfigs",
+                "createLabel": "नया App Config बनाएँ",
+                "createOrEditLabel": "App Config बनाएँ या संपादित करें",
+                "search": "App Config खोजें"
+            },
+            "created": "एक नया App Config [identifier: {{ param }}] तैयार है",
+            "updated": "एक App Config [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "App Config [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "App Config [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "App Config"
+            },
+            "configName": "Config Name",
+            "configValue": "Config Value"
+        }
+    }
+}

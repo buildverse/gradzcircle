@@ -7,7 +7,7 @@ import { Http, Response } from '@angular/http';
 import { ResponseWrapper } from '../../shared';
 @Injectable()
 export class CollegeResolverService implements Resolve<College []> {
-    constructor (private collegeService: CollegeService,private router : Router){}
+    constructor (private collegeService: CollegeService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<College []>{
         return this.collegeService.query().map(this.extractData)

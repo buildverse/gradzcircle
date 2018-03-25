@@ -23,7 +23,7 @@ export class CorporateDialogComponent implements OnInit {
 
     corporate: Corporate;
     isSaving: boolean;
-    options : Object;
+    options: Object;
     countries: Country[];
     industries: Industry[];
     users: User[];

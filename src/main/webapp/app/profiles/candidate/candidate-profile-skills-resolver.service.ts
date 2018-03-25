@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CandidateSkillsResolverService implements Resolve<Skills[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Skills[]>{
         return  this.profileHelperService.getSkills()

@@ -37,6 +37,8 @@ describe('JobType e2e test', () => {
         jobTypeComponentsPage.clickOnCreateButton();
         jobTypeDialogPage.setJobTypeInput('jobType');
         expect(jobTypeDialogPage.getJobTypeInput()).toMatch('jobType');
+        jobTypeDialogPage.setJobTypeCostInput('5');
+        expect(jobTypeDialogPage.getJobTypeCostInput()).toMatch('5');
         jobTypeDialogPage.save();
         expect(jobTypeDialogPage.getSaveButton().isPresent()).toBeFalsy();
     }); 
@@ -64,6 +66,7 @@ export class JobTypeDialogPage {
     saveButton = element(by.css('.modal-footer .btn.btn-primary'));
     closeButton = element(by.css('button.close'));
     jobTypeInput = element(by.css('input#field_jobType'));
+    jobTypeCostInput = element(by.css('input#field_jobTypeCost'));
 
     getModalTitle() {
         return this.modalTitle.getAttribute('jhiTranslate');
@@ -75,6 +78,14 @@ export class JobTypeDialogPage {
 
     getJobTypeInput = function () {
         return this.jobTypeInput.getAttribute('value');
+    }
+
+    setJobTypeCostInput = function (jobTypeCost) {
+        this.jobTypeCostInput.sendKeys(jobTypeCost);
+    }
+
+    getJobTypeCostInput = function () {
+        return this.jobTypeCostInput.getAttribute('value');
     }
 
     save() {

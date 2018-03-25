@@ -6,10 +6,10 @@ import { ErrorMessagesService } from '../../entities/error-messages/error-messag
 @Injectable()
 
 export class CorporateRegisterErrorMessagesResolver implements Resolve <ErrorMessages[]> {
-    constructor (private errorMessageService : ErrorMessagesService, private router: Router) {}
+    constructor (private errorMessageService: ErrorMessagesService, private router: Router) {}
     componentName = 'corporateRegister';
 
-    resolve(route : ActivatedRouteSnapshot, state : RouterStateSnapshot): Promise <ErrorMessages[]>{
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise <ErrorMessages[]>{
         return null;
         // return this.errorMessageService.getErrorMessages(this.componentName).toPromise()
         //     .then( errorMessages => {

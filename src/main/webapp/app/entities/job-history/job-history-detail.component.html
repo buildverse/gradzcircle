@@ -1,0 +1,95 @@
+
+<div *ngIf="jobHistory">
+    <h2><span jhiTranslate="gradzcircleApp.jobHistory.detail.title">Job History</span> {{jobHistory.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.jobTitle">Job Title</span></dt>
+        <dd>
+            <span>{{jobHistory.jobTitle}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.jobDescription">Job Description</span></dt>
+        <dd>
+            <span>{{jobHistory.jobDescription}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.noOfApplicants">No Of Applicants</span></dt>
+        <dd>
+            <span>{{jobHistory.noOfApplicants}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.salary">Salary</span></dt>
+        <dd>
+            <span>{{jobHistory.salary}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.jobStatus">Job Status</span></dt>
+        <dd>
+            <span>{{jobHistory.jobStatus}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.createDate">Create Date</span></dt>
+        <dd>
+            <span>{{jobHistory.createDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.jobCost">Job Cost</span></dt>
+        <dd>
+            <span>{{jobHistory.jobCost}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.amountPaid">Amount Paid</span></dt>
+        <dd>
+            <span>{{jobHistory.amountPaid}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.escrowAmountUsed">Escrow Amount Used</span></dt>
+        <dd>
+            <span>{{jobHistory.escrowAmountUsed}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.additionalAmountCharge">Additional Amount Charge</span></dt>
+        <dd>
+            <span>{{jobHistory.additionalAmountCharge}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.paymentType">Payment Type</span></dt>
+        <dd>
+            <span jhiTranslate="{{'gradzcircleApp.PaymentType.' + jobHistory.paymentType}}">{{jobHistory.paymentType}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.hasBeenEdited">Has Been Edited</span></dt>
+        <dd>
+            <span>{{jobHistory.hasBeenEdited}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.everActive">Ever Active</span></dt>
+        <dd>
+            <span>{{jobHistory.everActive}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.canEdit">Can Edit</span></dt>
+        <dd>
+            <span>{{jobHistory.canEdit}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.updateDate">Update Date</span></dt>
+        <dd>
+            <span>{{jobHistory.updateDate | date:'medium'}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.createdBy">Created By</span></dt>
+        <dd>
+            <span>{{jobHistory.createdBy}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.updatedBy">Updated By</span></dt>
+        <dd>
+            <span>{{jobHistory.updatedBy}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.job">Job</span></dt>
+        <dd>
+            <div *ngIf="jobHistory.job">
+                <a [routerLink]="['/job', jobHistory.job?.id]">{{jobHistory.job?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'job-history/'+ jobHistory.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

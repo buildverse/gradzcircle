@@ -68,7 +68,7 @@ class JobTypeGatlingTest extends Simulation {
             .exec(http("Create new jobType")
             .post("/api/job-types")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "jobType":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "jobType":"SAMPLE_TEXT", "jobTypeCost":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_jobType_url"))).exitHereIfFailed
             .pause(10)

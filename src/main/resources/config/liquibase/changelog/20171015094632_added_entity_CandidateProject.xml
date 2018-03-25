@@ -33,7 +33,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="project_description" type="varchar(255)">
+            <column name="project_description" type="varchar(10000)">
                 <constraints nullable="true" />
             </column>
 

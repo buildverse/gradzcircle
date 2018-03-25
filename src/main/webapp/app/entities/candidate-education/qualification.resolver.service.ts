@@ -8,7 +8,7 @@ import {ResponseWrapper} from '../../shared';
 
 @Injectable()
 export class QualificationResolverService implements Resolve<Qualification []> {
-    constructor (private qualificationService: QualificationService,private router : Router){}
+    constructor (private qualificationService: QualificationService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Qualification []>{
         return this.qualificationService.query().map(this.extractData)

@@ -3,7 +3,7 @@ import 'froala-editor/js/froala_editor.pkgd.min.js';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Ng2Webstorage } from 'ng2-webstorage';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GradzcircleSharedModule, UserRouteAccessService } from './shared';
 import { GradzcircleHomeModule } from './home/home.module';
 import { GradzcircleAdminModule } from './admin/admin.module';
@@ -23,7 +23,7 @@ import {
     ProfileService,
     PageRibbonComponent,
     ActiveMenuDirective,
-    ErrorComponent
+    ErrorComponent,
 } from './layouts';
 
 @NgModule({
@@ -33,10 +33,11 @@ import {
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         GradzcircleSharedModule,
         GradzcircleHomeModule,
-        GradzcircleAdminModule,
+        GradzcircleAdminModule, 
         GradzcircleAccountModule,
         GradzcircleEntityModule,
-        CandidateProfileModule
+        CandidateProfileModule,
+        BrowserAnimationsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

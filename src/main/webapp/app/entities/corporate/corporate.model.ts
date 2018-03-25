@@ -1,31 +1,34 @@
 import { BaseEntity, User } from './../../shared';
-import{ Country } from '../country';
+import { Country } from '../country';
+import { Job } from '../job';
 import { Industry } from '../industry';
 
 export class Corporate implements BaseEntity {
     constructor(
         public id?: number,
-        public corporateName?: string,
-        public corporateAddress?: string,
-        public corporateCity?: string,
+        public name?: string,
+        public address?: string,
+        public city?: string,
         public establishedSince?: any,
-        public corporateEmail?: string,
-        public corporateOverview?: string,
-        public corporateBenefits?: string,
-        public corporateWebsite?: string,
-        public corporateFacebook?: string,
-        public corporateTwitter?: string,
-        public corporateInstagram?: string,
-        public corporateLinkedIn?: string,
-        public corporateCulture?: string,
+        public email?: string,
+        public overview?: string,
+        public benefits?: string,
+        public website?: string,
+        public facebook?: string,
+        public twitter?: string,
+        public instagram?: string,
+        public linkedIn?: string,
+        public culture?: string,
         public contactPerson?: string,
-        public corporatePhone?: string,
-        public corporatePhoneCode?: string,
-        public contactPersonDesignation?: string,
-        public corporateTagLine?: string,
+        public phone?: string,
+        public phoneCode?: string,
+        public personDesignation?: string,
+        public tagLine?: string,
+        public escrowAmount?: number,
         public country?: Country,
         public industry?: Industry,
         public login?: User,
+        public jobs?: Job[],
     ) {
     }
 }

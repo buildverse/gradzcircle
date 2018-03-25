@@ -15,7 +15,11 @@
         },
         {
             "fieldName": "nonAcademicInitiativeDescription",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
         },
         {
             "fieldName": "duration",

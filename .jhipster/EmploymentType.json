@@ -12,6 +12,10 @@
         {
             "fieldName": "employmentType",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "employmentTypeCost",
+            "fieldType": "Double"
         }
     ],
     "changelogDate": "20171015094636",

@@ -32,7 +32,7 @@ public class CorporateService {
 
     public void createCorporate (String corporateName,String phoneNumber,String country,User user ){
         Corporate corporate = new Corporate();
-        corporate.setCorporateName(corporateName);
+        corporate.setName(corporateName);
         //corporate.setCorporatePhone(phoneNumber);
         //corporate.setCorporateCountry (country);
         corporate.setLogin(user);

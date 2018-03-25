@@ -9,7 +9,8 @@ import { CandidateCertification } from '../candidate-certification/candidate-cer
 import { CandidateEmployment } from '../candidate-employment/candidate-employment.model';
 import { CandidateLanguageProficiency } from '../candidate-language-proficiency/candidate-language-proficiency.model'
 import { JobCategory } from '../job-category/job-category.model';
-import { VisaType } from '../visa-type/visa-type.model'
+import { VisaType } from '../visa-type/visa-type.model';
+import { Job } from '../job/job.model'
 
 export class Candidate implements BaseEntity {
     constructor(
@@ -39,6 +40,7 @@ export class Candidate implements BaseEntity {
         public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
         public jobCategories?: JobCategory[],
         public visaType?: VisaType,
+        public jobs?: Job[],
     ) {
         this.differentlyAbled = false;
         this.availableForHiring = false;

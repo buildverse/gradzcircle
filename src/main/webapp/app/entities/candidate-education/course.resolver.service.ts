@@ -7,7 +7,7 @@ import { Http, Response } from '@angular/http';
 
 @Injectable()
 export class CourseResolverService implements Resolve<Course []> {
-    constructor (private courseService: CourseService,private router : Router){}
+    constructor (private courseService: CourseService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course []>{
         return this.courseService.query().map(this.extractData)

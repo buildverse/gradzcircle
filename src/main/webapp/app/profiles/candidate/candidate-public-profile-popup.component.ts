@@ -18,15 +18,15 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
 
     candidate: Candidate;
     defaultImage = require("../../../content/images/no-image.png");
-    userImage : any;
+    userImage: any;
     noImage:boolean;
   
     constructor(
         private candidateService: CandidateService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager,
-        private principal : Principal,
-        private userService : UserService,
+        private principal: Principal,
+        private userService: UserService,
         private router: Router
     ) {
     }

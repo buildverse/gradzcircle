@@ -18,7 +18,7 @@ export class CandidateLanguageProficiencyDetailsComponent implements OnInit {
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
-    candidateId : number;
+    candidateId: number;
 
     constructor(
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,

@@ -2,19 +2,28 @@ package com.drishika.gradzcircle.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.University;
-
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
 import com.drishika.gradzcircle.repository.UniversityRepository;
 import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,9 +46,12 @@ public class UniversityResource {
 
     private final UniversitySearchRepository universitySearchRepository;
 
-    public UniversityResource(UniversityRepository universityRepository, UniversitySearchRepository universitySearchRepository) {
+    private final ElasticsearchTemplate elasticsearchTemplate;
+
+    public UniversityResource(UniversityRepository universityRepository, UniversitySearchRepository universitySearchRepository,ElasticsearchTemplate elasticsearchTemplate) {
         this.universityRepository = universityRepository;
         this.universitySearchRepository = universitySearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -57,7 +69,10 @@ public class UniversityResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new university cannot already have an ID")).body(null);
         }
         University result = universityRepository.save(university);
-        universitySearchRepository.save(result);
+        //universitySearchRepository.save(result);
+        elasticsearchTemplate.index(new UniversityEntityBuilder(university.getId()).name(university.getUniversityName())
+                                            .suggest(new String[] { university.getUniversityName() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
         return ResponseEntity.created(new URI("/api/universities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -80,7 +95,21 @@ public class UniversityResource {
             return createUniversity(university);
         }
         University result = universityRepository.save(university);
-        universitySearchRepository.save(result);
+        //universitySearchRepository.save(result);
+        com.drishika.gradzcircle.domain.elastic.University universityElasticInstance = new com.drishika.gradzcircle.domain.elastic.University();
+        try {
+			BeanUtils.copyProperties(universityElasticInstance, university);
+		} catch (IllegalAccessException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+		} catch (InvocationTargetException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			
+        }
+        elasticsearchTemplate.index(new UniversityEntityBuilder(universityElasticInstance.getId()).name(universityElasticInstance.getUniversityName())
+            .suggest(new String[] { universityElasticInstance.getUniversityName() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, university.getId().toString()))
             .body(result);
@@ -142,5 +171,35 @@ public class UniversityResource {
             .stream(universitySearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
     }
+
+      /**
+     * SEARCH  /_search/colleges?query=:query : search for the college corresponding
+     * to the query.
+     *
+     * @param query the query of the college search
+     * @return the result of the search
+     */
+    @GetMapping("/_search/universitiesBySuggest")
+    @Timed
+    public String searchUniversityBySuggest(@RequestParam String query) {
+        log.debug("REST request to search University for query {}", query);
+        String suggest=null;
+        CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("university-suggest").text(query).field("suggest");
+        SuggestResponse  suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder, com.drishika.gradzcircle.domain.elastic.University.class);
+        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("university-suggest");
+        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+        List <GenericElasticSuggest> universities = new ArrayList<GenericElasticSuggest>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        options.forEach(option->{
+            universities.add(new GenericElasticSuggest(option.getText().string(),option.getText().string()));
+        });
+        try {
+			suggest = objectMapper.writeValueAsString(universities);
+		} catch (JsonProcessingException e) {
+			log.error("Error parsing object to JSON {},{}",e.getMessage(),e);
+		}
+       return suggest;
+    }
+
 
 }

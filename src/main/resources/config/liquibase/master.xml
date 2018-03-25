@@ -36,6 +36,12 @@
     <include file="config/liquibase/changelog/20171015094654_added_entity_CaptureUniversity.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171015094655_added_entity_CaptureCollege.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171015094656_added_entity_CaptureQualification.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171128154426_added_entity_Job.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171128154428_added_entity_Filter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171128154429_added_entity_JobFilter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180203082705_added_entity_JobHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180203082708_added_entity_JobFilterHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180324095618_added_entity_AppConfig.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20171015094626_added_entity_constraints_Candidate.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171015094627_added_entity_constraints_Address.xml" relativeToChangelogFile="false"/>
@@ -54,5 +60,9 @@
     <include file="config/liquibase/changelog/20171015094654_added_entity_constraints_CaptureUniversity.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171015094655_added_entity_constraints_CaptureCollege.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171015094656_added_entity_constraints_CaptureQualification.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171128154426_added_entity_constraints_Job.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20171128154429_added_entity_constraints_JobFilter.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180203082705_added_entity_constraints_JobHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180203082708_added_entity_constraints_JobFilterHistory.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

@@ -42,7 +42,8 @@
             "jobCategory": "Job Category",
             "visaType": "Visa Type",
             "profilePic" : "Profile Pic",
-            "careerInterests": "Carrer Interests"
+            "careerInterests": "Carrer Interests",
+            "job": "Job"
 
         }
     }

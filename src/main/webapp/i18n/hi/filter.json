@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "filter" : {
+            "home": {
+                "title": "Filters",
+                "createLabel": "नया Filter बनाएँ",
+                "createOrEditLabel": "Filter बनाएँ या संपादित करें",
+                "search": "Filter खोजें"
+            },
+            "created": "एक नया Filter [identifier: {{ param }}] तैयार है",
+            "updated": "एक Filter [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Filter [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Filter [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Filter"
+            },
+            "filterName": "Filter Name",
+            "filterCost": "Filter Cost"
+        }
+    }
+}

@@ -423,7 +423,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
         let candidate = Object.assign({}, this.candidate, this.candidateAboutMeForm.value);
         candidate.jobCategories = this.reCreateJobCategoryModelFromSelection(candidate.jobCategories);
         this.setCandidateAddress(candidate);
-        console.log("sending candidate data "+JSON.stringify(candidate));
+        //console.log("sending candidate data "+JSON.stringify(candidate));
         return candidate;
     }
 

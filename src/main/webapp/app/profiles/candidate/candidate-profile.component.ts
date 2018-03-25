@@ -21,8 +21,8 @@ import {SERVER_API_URL} from '../../app.constants';
 export class CandidateProfileComponent implements OnInit {
     candidate: Candidate;
     imageUrl: any;
-    loginId : string;
-    noImage : boolean;
+    loginId: string;
+    noImage: boolean;
     eventSubscriber: Subscription;
     currentSearch: string;
     defaultImage = require("../../../content/images/no-image.png");
@@ -34,7 +34,7 @@ export class CandidateProfileComponent implements OnInit {
         private localStorage: LocalStorageService,
         private sessionStorage: SessionStorageService,
         private principal: Principal,
-        private userService : UserService,
+        private userService: UserService,
         private router: Router) { }
 
         

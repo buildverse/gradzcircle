@@ -1,0 +1,58 @@
+{
+	"gradzcircleApp": {
+		"job": {
+			"home": {
+				"title": "Jobs",
+				"createLabel": "Create a new Job",
+				"createOrEditLabel": "Post or edit a Job",
+				"search": "Search for Job"
+			},
+			"created": "A new Job is created with identifier {{ param }}",
+			"updated": "A Job is updated with identifier {{ param }}",
+			"deleted": "A Job is deleted with identifier {{ param }}",
+			"delete": {
+				"question": "Are you sure you want to delete Job {{ id }}?"
+			},
+			"detail": {
+				"title": "Job"
+			},
+			"jobTitle": "Job Title",
+			"jobDescription": "Description",
+			"salary": "Salary",
+			"jobStatus": "Job Status",
+			"createDate": "Create Date",
+			"jobCost": "Job Cost",
+			"amountPaid": "Amount Paid",
+			"jobFilter": "Job Filter",
+			"jobType": "Job Type",
+			"employmentType": "Employment Type",
+			"additionalAmountCharge": "Additional Amount Charge",
+			"paymentType": "Payment Type",
+			"canEdit": "Can Edit",
+			"corporate": "Corporate",
+			"candidate": "Candidate",
+			"jobPostPreviewMessage": "Your Job Post",
+			"collegesSelected": "Colleges Selected",
+			"universitiesSelected": "Universities Selected",
+			"noOfApplicants": "Applicants",
+			"coursesSelected": "Courses",
+			"qualification": "Qualification",
+			"gpa": "GPA More Than",
+			"version": "Version",
+			"history": "History",
+			"escrowAmountUsed": "Escrow Amount Used",
+			"latest": "Latest",
+			"everActive": "Ever Active",
+			"percent": "Percentage More Than",
+			"graduatedDateLessThan": "Graduated Before",
+			"graduatedDateGreaterThan": "Graduated After",
+			"graduatedDateBetween": "Graduated Between",
+			"genderSelected": "Gender",
+			"languagesSelected": "Languages Selected",
+			"hasBeenEdited": "Has Been Edited",
+			"updateDate": "Update Date",
+			"createdBy": "Created By",
+			"updatedBy": "Updated By"
+		}
+	}
+}

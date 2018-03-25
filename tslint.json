@@ -79,14 +79,6 @@
             }
         ],
         "variable-name": false,
-        "whitespace": [
-            true,
-            "check-branch",
-            "check-decl",
-            "check-operator",
-            "check-separator",
-            "check-type"
-        ],
         "prefer-const": true,
         "arrow-parens": [true],
         "arrow-return-shorthand": [true],

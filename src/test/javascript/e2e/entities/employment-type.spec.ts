@@ -37,6 +37,8 @@ describe('EmploymentType e2e test', () => {
         employmentTypeComponentsPage.clickOnCreateButton();
         employmentTypeDialogPage.setEmploymentTypeInput('employmentType');
         expect(employmentTypeDialogPage.getEmploymentTypeInput()).toMatch('employmentType');
+        employmentTypeDialogPage.setEmploymentTypeCostInput('5');
+        expect(employmentTypeDialogPage.getEmploymentTypeCostInput()).toMatch('5');
         employmentTypeDialogPage.save();
         expect(employmentTypeDialogPage.getSaveButton().isPresent()).toBeFalsy();
     }); 
@@ -64,6 +66,7 @@ export class EmploymentTypeDialogPage {
     saveButton = element(by.css('.modal-footer .btn.btn-primary'));
     closeButton = element(by.css('button.close'));
     employmentTypeInput = element(by.css('input#field_employmentType'));
+    employmentTypeCostInput = element(by.css('input#field_employmentTypeCost'));
 
     getModalTitle() {
         return this.modalTitle.getAttribute('jhiTranslate');
@@ -75,6 +78,14 @@ export class EmploymentTypeDialogPage {
 
     getEmploymentTypeInput = function () {
         return this.employmentTypeInput.getAttribute('value');
+    }
+
+    setEmploymentTypeCostInput = function (employmentTypeCost) {
+        this.employmentTypeCostInput.sendKeys(employmentTypeCost);
+    }
+
+    getEmploymentTypeCostInput = function () {
+        return this.employmentTypeCostInput.getAttribute('value');
     }
 
     save() {

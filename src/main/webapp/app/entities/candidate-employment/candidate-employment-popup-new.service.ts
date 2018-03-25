@@ -12,7 +12,7 @@ import { Candidate } from '../candidate/candidate.model';
 export class CandidateEmploymentPopupServiceNew {
     private isOpen = false;
     private candidateEmployment: CandidateEmployment;
-    private candidate : Candidate;
+    private candidate: Candidate;
     private ngbModalRef: NgbModalRef;
     constructor(
         private modalService: NgbModal,

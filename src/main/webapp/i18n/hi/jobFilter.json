@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "jobFilter" : {
+            "home": {
+                "title": "JobFilters",
+                "createLabel": "नया Job Filter बनाएँ",
+                "createOrEditLabel": "Job Filter बनाएँ या संपादित करें",
+                "search": "Job Filter खोजें"
+            },
+            "created": "एक नया Job Filter [identifier: {{ param }}] तैयार है",
+            "updated": "एक Job Filter [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Job Filter [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Job Filter [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Job Filter"
+            },
+            "filterDescription": "Filter Description",
+            "history": "History",
+            "job": "Job"
+        }
+    }
+}

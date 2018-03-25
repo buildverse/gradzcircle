@@ -29,7 +29,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="certification_details" type="varchar(255)">
+            <column name="certification_details" type="varchar(5000)">
                 <constraints nullable="true" />
             </column>
 

@@ -20,19 +20,25 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "corporate"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "job",
+            "otherEntityName": "job",
+            "otherEntityRelationshipName": "corporate"
         }
     ],
     "fields": [
         {
-            "fieldName": "corporateName",
+            "fieldName": "name",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateAddress",
+            "fieldName": "address",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateCity",
+            "fieldName": "city",
             "fieldType": "String"
         },
         {
@@ -40,39 +46,47 @@
             "fieldType": "LocalDate"
         },
         {
-            "fieldName": "corporateEmail",
+            "fieldName": "email",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateOverview",
+            "fieldName": "overview",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
+        },
+        {
+            "fieldName": "benefits",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
+        },
+        {
+            "fieldName": "website",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateBenefits",
+            "fieldName": "facebook",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateWebsite",
+            "fieldName": "twitter",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateFacebook",
+            "fieldName": "instagram",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateTwitter",
+            "fieldName": "linkedIn",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateInstagram",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "corporateLinkedIn",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "corporateCulture",
+            "fieldName": "culture",
             "fieldType": "String"
         },
         {
@@ -80,20 +94,24 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "corporatePhone",
+            "fieldName": "phone",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporatePhoneCode",
+            "fieldName": "phoneCode",
             "fieldType": "String"
         },
         {
-            "fieldName": "contactPersonDesignation",
+            "fieldName": "personDesignation",
             "fieldType": "String"
         },
         {
-            "fieldName": "corporateTagLine",
+            "fieldName": "tagLine",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "escrowAmount",
+            "fieldType": "Double"
         }
     ],
     "changelogDate": "20171015094651",

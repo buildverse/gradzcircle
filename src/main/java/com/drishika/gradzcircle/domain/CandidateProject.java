@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -36,7 +37,8 @@ public class CandidateProject implements Serializable {
     @Column(name = "project_end_date")
     private LocalDate projectEndDate;
 
-    @Column(name = "project_description")
+    @Size(max = 10000)
+    @Column(name = "project_description", length = 10000)
     private String projectDescription;
 
     @Column(name = "project_duration")

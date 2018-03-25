@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,7 +17,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "college")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "college")
 public class College implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,7 +43,7 @@ public class College implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateEducation> candidateEducations = new HashSet<>();
-
+    
     @ManyToOne
     private University university;
 
@@ -134,6 +132,8 @@ public class College implements Serializable {
     public void setUniversity(University university) {
         this.university = university;
     }
+
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

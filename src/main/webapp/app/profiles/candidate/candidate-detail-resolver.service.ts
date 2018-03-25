@@ -8,7 +8,7 @@ import { BaseEntity } from '../../shared/model/base-entity';
 
 @Injectable()
 export class CandidateDetailResolverService implements Resolve<Candidate> {
-    constructor (private candidateService: CandidateService,private router : Router){}
+    constructor (private candidateService: CandidateService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Candidate>{
         let candidateId = route.parent.data['candidate'].id;

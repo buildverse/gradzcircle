@@ -35,42 +35,44 @@ describe('Corporate e2e test', () => {
 
     it('should create and save Corporates', () => {
         corporateComponentsPage.clickOnCreateButton();
-        corporateDialogPage.setCorporateNameInput('corporateName');
-        expect(corporateDialogPage.getCorporateNameInput()).toMatch('corporateName');
-        corporateDialogPage.setCorporateAddressInput('corporateAddress');
-        expect(corporateDialogPage.getCorporateAddressInput()).toMatch('corporateAddress');
-        corporateDialogPage.setCorporateCityInput('corporateCity');
-        expect(corporateDialogPage.getCorporateCityInput()).toMatch('corporateCity');
+        corporateDialogPage.setNameInput('name');
+        expect(corporateDialogPage.getNameInput()).toMatch('name');
+        corporateDialogPage.setAddressInput('address');
+        expect(corporateDialogPage.getAddressInput()).toMatch('address');
+        corporateDialogPage.setCityInput('city');
+        expect(corporateDialogPage.getCityInput()).toMatch('city');
         corporateDialogPage.setEstablishedSinceInput('2000-12-31');
         expect(corporateDialogPage.getEstablishedSinceInput()).toMatch('2000-12-31');
-        corporateDialogPage.setCorporateEmailInput('corporateEmail');
-        expect(corporateDialogPage.getCorporateEmailInput()).toMatch('corporateEmail');
-        corporateDialogPage.setCorporateOverviewInput('corporateOverview');
-        expect(corporateDialogPage.getCorporateOverviewInput()).toMatch('corporateOverview');
-        corporateDialogPage.setCorporateBenefitsInput('corporateBenefits');
-        expect(corporateDialogPage.getCorporateBenefitsInput()).toMatch('corporateBenefits');
-        corporateDialogPage.setCorporateWebsiteInput('corporateWebsite');
-        expect(corporateDialogPage.getCorporateWebsiteInput()).toMatch('corporateWebsite');
-        corporateDialogPage.setCorporateFacebookInput('corporateFacebook');
-        expect(corporateDialogPage.getCorporateFacebookInput()).toMatch('corporateFacebook');
-        corporateDialogPage.setCorporateTwitterInput('corporateTwitter');
-        expect(corporateDialogPage.getCorporateTwitterInput()).toMatch('corporateTwitter');
-        corporateDialogPage.setCorporateInstagramInput('corporateInstagram');
-        expect(corporateDialogPage.getCorporateInstagramInput()).toMatch('corporateInstagram');
-        corporateDialogPage.setCorporateLinkedInInput('corporateLinkedIn');
-        expect(corporateDialogPage.getCorporateLinkedInInput()).toMatch('corporateLinkedIn');
-        corporateDialogPage.setCorporateCultureInput('corporateCulture');
-        expect(corporateDialogPage.getCorporateCultureInput()).toMatch('corporateCulture');
+        corporateDialogPage.setEmailInput('email');
+        expect(corporateDialogPage.getEmailInput()).toMatch('email');
+        corporateDialogPage.setOverviewInput('overview');
+        expect(corporateDialogPage.getOverviewInput()).toMatch('overview');
+        corporateDialogPage.setBenefitsInput('benefits');
+        expect(corporateDialogPage.getBenefitsInput()).toMatch('benefits');
+        corporateDialogPage.setWebsiteInput('website');
+        expect(corporateDialogPage.getWebsiteInput()).toMatch('website');
+        corporateDialogPage.setFacebookInput('facebook');
+        expect(corporateDialogPage.getFacebookInput()).toMatch('facebook');
+        corporateDialogPage.setTwitterInput('twitter');
+        expect(corporateDialogPage.getTwitterInput()).toMatch('twitter');
+        corporateDialogPage.setInstagramInput('instagram');
+        expect(corporateDialogPage.getInstagramInput()).toMatch('instagram');
+        corporateDialogPage.setLinkedInInput('linkedIn');
+        expect(corporateDialogPage.getLinkedInInput()).toMatch('linkedIn');
+        corporateDialogPage.setCultureInput('culture');
+        expect(corporateDialogPage.getCultureInput()).toMatch('culture');
         corporateDialogPage.setContactPersonInput('contactPerson');
         expect(corporateDialogPage.getContactPersonInput()).toMatch('contactPerson');
-        corporateDialogPage.setCorporatePhoneInput('corporatePhone');
-        expect(corporateDialogPage.getCorporatePhoneInput()).toMatch('corporatePhone');
-        corporateDialogPage.setCorporatePhoneCodeInput('corporatePhoneCode');
-        expect(corporateDialogPage.getCorporatePhoneCodeInput()).toMatch('corporatePhoneCode');
-        corporateDialogPage.setContactPersonDesignationInput('contactPersonDesignation');
-        expect(corporateDialogPage.getContactPersonDesignationInput()).toMatch('contactPersonDesignation');
-        corporateDialogPage.setCorporateTagLineInput('corporateTagLine');
-        expect(corporateDialogPage.getCorporateTagLineInput()).toMatch('corporateTagLine');
+        corporateDialogPage.setPhoneInput('phone');
+        expect(corporateDialogPage.getPhoneInput()).toMatch('phone');
+        corporateDialogPage.setPhoneCodeInput('phoneCode');
+        expect(corporateDialogPage.getPhoneCodeInput()).toMatch('phoneCode');
+        corporateDialogPage.setPersonDesignationInput('personDesignation');
+        expect(corporateDialogPage.getPersonDesignationInput()).toMatch('personDesignation');
+        corporateDialogPage.setTagLineInput('tagLine');
+        expect(corporateDialogPage.getTagLineInput()).toMatch('tagLine');
+        corporateDialogPage.setEscrowAmountInput('5');
+        expect(corporateDialogPage.getEscrowAmountInput()).toMatch('5');
         corporateDialogPage.countrySelectLastOption();
         corporateDialogPage.industrySelectLastOption();
         corporateDialogPage.loginSelectLastOption();
@@ -100,24 +102,25 @@ export class CorporateDialogPage {
     modalTitle = element(by.css('h4#myCorporateLabel'));
     saveButton = element(by.css('.modal-footer .btn.btn-primary'));
     closeButton = element(by.css('button.close'));
-    corporateNameInput = element(by.css('input#field_corporateName'));
-    corporateAddressInput = element(by.css('input#field_corporateAddress'));
-    corporateCityInput = element(by.css('input#field_corporateCity'));
+    nameInput = element(by.css('input#field_name'));
+    addressInput = element(by.css('input#field_address'));
+    cityInput = element(by.css('input#field_city'));
     establishedSinceInput = element(by.css('input#field_establishedSince'));
-    corporateEmailInput = element(by.css('input#field_corporateEmail'));
-    corporateOverviewInput = element(by.css('input#field_corporateOverview'));
-    corporateBenefitsInput = element(by.css('input#field_corporateBenefits'));
-    corporateWebsiteInput = element(by.css('input#field_corporateWebsite'));
-    corporateFacebookInput = element(by.css('input#field_corporateFacebook'));
-    corporateTwitterInput = element(by.css('input#field_corporateTwitter'));
-    corporateInstagramInput = element(by.css('input#field_corporateInstagram'));
-    corporateLinkedInInput = element(by.css('input#field_corporateLinkedIn'));
-    corporateCultureInput = element(by.css('input#field_corporateCulture'));
+    emailInput = element(by.css('input#field_email'));
+    overviewInput = element(by.css('input#field_overview'));
+    benefitsInput = element(by.css('input#field_benefits'));
+    websiteInput = element(by.css('input#field_website'));
+    facebookInput = element(by.css('input#field_facebook'));
+    twitterInput = element(by.css('input#field_twitter'));
+    instagramInput = element(by.css('input#field_instagram'));
+    linkedInInput = element(by.css('input#field_linkedIn'));
+    cultureInput = element(by.css('input#field_culture'));
     contactPersonInput = element(by.css('input#field_contactPerson'));
-    corporatePhoneInput = element(by.css('input#field_corporatePhone'));
-    corporatePhoneCodeInput = element(by.css('input#field_corporatePhoneCode'));
-    contactPersonDesignationInput = element(by.css('input#field_contactPersonDesignation'));
-    corporateTagLineInput = element(by.css('input#field_corporateTagLine'));
+    phoneInput = element(by.css('input#field_phone'));
+    phoneCodeInput = element(by.css('input#field_phoneCode'));
+    personDesignationInput = element(by.css('input#field_personDesignation'));
+    tagLineInput = element(by.css('input#field_tagLine'));
+    escrowAmountInput = element(by.css('input#field_escrowAmount'));
     countrySelect = element(by.css('select#field_country'));
     industrySelect = element(by.css('select#field_industry'));
     loginSelect = element(by.css('select#field_login'));
@@ -126,28 +129,28 @@ export class CorporateDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCorporateNameInput = function (corporateName) {
-        this.corporateNameInput.sendKeys(corporateName);
+    setNameInput = function (name) {
+        this.nameInput.sendKeys(name);
     }
 
-    getCorporateNameInput = function () {
-        return this.corporateNameInput.getAttribute('value');
+    getNameInput = function () {
+        return this.nameInput.getAttribute('value');
     }
 
-    setCorporateAddressInput = function (corporateAddress) {
-        this.corporateAddressInput.sendKeys(corporateAddress);
+    setAddressInput = function (address) {
+        this.addressInput.sendKeys(address);
     }
 
-    getCorporateAddressInput = function () {
-        return this.corporateAddressInput.getAttribute('value');
+    getAddressInput = function () {
+        return this.addressInput.getAttribute('value');
     }
 
-    setCorporateCityInput = function (corporateCity) {
-        this.corporateCityInput.sendKeys(corporateCity);
+    setCityInput = function (city) {
+        this.cityInput.sendKeys(city);
     }
 
-    getCorporateCityInput = function () {
-        return this.corporateCityInput.getAttribute('value');
+    getCityInput = function () {
+        return this.cityInput.getAttribute('value');
     }
 
     setEstablishedSinceInput = function (establishedSince) {
@@ -158,76 +161,76 @@ export class CorporateDialogPage {
         return this.establishedSinceInput.getAttribute('value');
     }
 
-    setCorporateEmailInput = function (corporateEmail) {
-        this.corporateEmailInput.sendKeys(corporateEmail);
+    setEmailInput = function (email) {
+        this.emailInput.sendKeys(email);
     }
 
-    getCorporateEmailInput = function () {
-        return this.corporateEmailInput.getAttribute('value');
+    getEmailInput = function () {
+        return this.emailInput.getAttribute('value');
     }
 
-    setCorporateOverviewInput = function (corporateOverview) {
-        this.corporateOverviewInput.sendKeys(corporateOverview);
+    setOverviewInput = function (overview) {
+        this.overviewInput.sendKeys(overview);
     }
 
-    getCorporateOverviewInput = function () {
-        return this.corporateOverviewInput.getAttribute('value');
+    getOverviewInput = function () {
+        return this.overviewInput.getAttribute('value');
     }
 
-    setCorporateBenefitsInput = function (corporateBenefits) {
-        this.corporateBenefitsInput.sendKeys(corporateBenefits);
+    setBenefitsInput = function (benefits) {
+        this.benefitsInput.sendKeys(benefits);
     }
 
-    getCorporateBenefitsInput = function () {
-        return this.corporateBenefitsInput.getAttribute('value');
+    getBenefitsInput = function () {
+        return this.benefitsInput.getAttribute('value');
     }
 
-    setCorporateWebsiteInput = function (corporateWebsite) {
-        this.corporateWebsiteInput.sendKeys(corporateWebsite);
+    setWebsiteInput = function (website) {
+        this.websiteInput.sendKeys(website);
     }
 
-    getCorporateWebsiteInput = function () {
-        return this.corporateWebsiteInput.getAttribute('value');
+    getWebsiteInput = function () {
+        return this.websiteInput.getAttribute('value');
     }
 
-    setCorporateFacebookInput = function (corporateFacebook) {
-        this.corporateFacebookInput.sendKeys(corporateFacebook);
+    setFacebookInput = function (facebook) {
+        this.facebookInput.sendKeys(facebook);
     }
 
-    getCorporateFacebookInput = function () {
-        return this.corporateFacebookInput.getAttribute('value');
+    getFacebookInput = function () {
+        return this.facebookInput.getAttribute('value');
     }
 
-    setCorporateTwitterInput = function (corporateTwitter) {
-        this.corporateTwitterInput.sendKeys(corporateTwitter);
+    setTwitterInput = function (twitter) {
+        this.twitterInput.sendKeys(twitter);
     }
 
-    getCorporateTwitterInput = function () {
-        return this.corporateTwitterInput.getAttribute('value');
+    getTwitterInput = function () {
+        return this.twitterInput.getAttribute('value');
     }
 
-    setCorporateInstagramInput = function (corporateInstagram) {
-        this.corporateInstagramInput.sendKeys(corporateInstagram);
+    setInstagramInput = function (instagram) {
+        this.instagramInput.sendKeys(instagram);
     }
 
-    getCorporateInstagramInput = function () {
-        return this.corporateInstagramInput.getAttribute('value');
+    getInstagramInput = function () {
+        return this.instagramInput.getAttribute('value');
     }
 
-    setCorporateLinkedInInput = function (corporateLinkedIn) {
-        this.corporateLinkedInInput.sendKeys(corporateLinkedIn);
+    setLinkedInInput = function (linkedIn) {
+        this.linkedInInput.sendKeys(linkedIn);
     }
 
-    getCorporateLinkedInInput = function () {
-        return this.corporateLinkedInInput.getAttribute('value');
+    getLinkedInInput = function () {
+        return this.linkedInInput.getAttribute('value');
     }
 
-    setCorporateCultureInput = function (corporateCulture) {
-        this.corporateCultureInput.sendKeys(corporateCulture);
+    setCultureInput = function (culture) {
+        this.cultureInput.sendKeys(culture);
     }
 
-    getCorporateCultureInput = function () {
-        return this.corporateCultureInput.getAttribute('value');
+    getCultureInput = function () {
+        return this.cultureInput.getAttribute('value');
     }
 
     setContactPersonInput = function (contactPerson) {
@@ -238,36 +241,44 @@ export class CorporateDialogPage {
         return this.contactPersonInput.getAttribute('value');
     }
 
-    setCorporatePhoneInput = function (corporatePhone) {
-        this.corporatePhoneInput.sendKeys(corporatePhone);
+    setPhoneInput = function (phone) {
+        this.phoneInput.sendKeys(phone);
     }
 
-    getCorporatePhoneInput = function () {
-        return this.corporatePhoneInput.getAttribute('value');
+    getPhoneInput = function () {
+        return this.phoneInput.getAttribute('value');
     }
 
-    setCorporatePhoneCodeInput = function (corporatePhoneCode) {
-        this.corporatePhoneCodeInput.sendKeys(corporatePhoneCode);
+    setPhoneCodeInput = function (phoneCode) {
+        this.phoneCodeInput.sendKeys(phoneCode);
     }
 
-    getCorporatePhoneCodeInput = function () {
-        return this.corporatePhoneCodeInput.getAttribute('value');
+    getPhoneCodeInput = function () {
+        return this.phoneCodeInput.getAttribute('value');
     }
 
-    setContactPersonDesignationInput = function (contactPersonDesignation) {
-        this.contactPersonDesignationInput.sendKeys(contactPersonDesignation);
+    setPersonDesignationInput = function (personDesignation) {
+        this.personDesignationInput.sendKeys(personDesignation);
     }
 
-    getContactPersonDesignationInput = function () {
-        return this.contactPersonDesignationInput.getAttribute('value');
+    getPersonDesignationInput = function () {
+        return this.personDesignationInput.getAttribute('value');
     }
 
-    setCorporateTagLineInput = function (corporateTagLine) {
-        this.corporateTagLineInput.sendKeys(corporateTagLine);
+    setTagLineInput = function (tagLine) {
+        this.tagLineInput.sendKeys(tagLine);
     }
 
-    getCorporateTagLineInput = function () {
-        return this.corporateTagLineInput.getAttribute('value');
+    getTagLineInput = function () {
+        return this.tagLineInput.getAttribute('value');
+    }
+
+    setEscrowAmountInput = function (escrowAmount) {
+        this.escrowAmountInput.sendKeys(escrowAmount);
+    }
+
+    getEscrowAmountInput = function () {
+        return this.escrowAmountInput.getAttribute('value');
     }
 
     countrySelectLastOption = function () {

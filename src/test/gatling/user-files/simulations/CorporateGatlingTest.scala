@@ -68,7 +68,7 @@ class CorporateGatlingTest extends Simulation {
             .exec(http("Create new corporate")
             .post("/api/corporates")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "corporateName":"SAMPLE_TEXT", "corporateAddress":"SAMPLE_TEXT", "corporateCity":"SAMPLE_TEXT", "establishedSince":"2020-01-01T00:00:00.000Z", "corporateEmail":"SAMPLE_TEXT", "corporateOverview":"SAMPLE_TEXT", "corporateBenefits":"SAMPLE_TEXT", "corporateWebsite":"SAMPLE_TEXT", "corporateFacebook":"SAMPLE_TEXT", "corporateTwitter":"SAMPLE_TEXT", "corporateInstagram":"SAMPLE_TEXT", "corporateLinkedIn":"SAMPLE_TEXT", "corporateCulture":"SAMPLE_TEXT", "contactPerson":"SAMPLE_TEXT", "corporatePhone":"SAMPLE_TEXT", "corporatePhoneCode":"SAMPLE_TEXT", "contactPersonDesignation":"SAMPLE_TEXT", "corporateTagLine":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "address":"SAMPLE_TEXT", "city":"SAMPLE_TEXT", "establishedSince":"2020-01-01T00:00:00.000Z", "email":"SAMPLE_TEXT", "overview":"SAMPLE_TEXT", "benefits":"SAMPLE_TEXT", "website":"SAMPLE_TEXT", "facebook":"SAMPLE_TEXT", "twitter":"SAMPLE_TEXT", "instagram":"SAMPLE_TEXT", "linkedIn":"SAMPLE_TEXT", "culture":"SAMPLE_TEXT", "contactPerson":"SAMPLE_TEXT", "phone":"SAMPLE_TEXT", "phoneCode":"SAMPLE_TEXT", "personDesignation":"SAMPLE_TEXT", "tagLine":"SAMPLE_TEXT", "escrowAmount":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_corporate_url"))).exitHereIfFailed
             .pause(10)

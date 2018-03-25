@@ -6,7 +6,7 @@ import { JobType } from '../../entities/job-type/job-type.model';
 
 @Injectable()
 export class CandidateJobTypeResolverService implements Resolve<JobType[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<JobType[]>{
         return this.profileHelperService.getJobType()

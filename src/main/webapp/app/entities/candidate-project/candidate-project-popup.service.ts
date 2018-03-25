@@ -8,8 +8,8 @@ import { CandidateEducation } from '../candidate-education/candidate-education.m
 @Injectable()
 export class CandidateProjectPopupService {
     private ngbModalRef: NgbModalRef;
-    private candidateEmployment : CandidateEmployment;
-    private candidateEducation : CandidateEducation;
+    private candidateEmployment: CandidateEmployment;
+    private candidateEducation: CandidateEducation;
     constructor(
         private modalService: NgbModal,
         private router: Router,

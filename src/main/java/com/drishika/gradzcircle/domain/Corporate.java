@@ -1,12 +1,16 @@
 package com.drishika.gradzcircle.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -25,59 +29,64 @@ public class Corporate implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "corporate_name")
-    private String corporateName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "corporate_address")
-    private String corporateAddress;
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "corporate_city")
-    private String corporateCity;
+    @Column(name = "city")
+    private String city;
 
     @Column(name = "established_since")
     private LocalDate establishedSince;
 
-    @Column(name = "corporate_email")
-    private String corporateEmail;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "corporate_overview")
-    private String corporateOverview;
+    @Size(max = 10000)
+    @Column(name = "overview", length = 10000)
+    private String overview;
 
-    @Column(name = "corporate_benefits")
-    private String corporateBenefits;
+    @Size(max = 10000)
+    @Column(name = "benefits", length = 10000)
+    private String benefits;
 
-    @Column(name = "corporate_website")
-    private String corporateWebsite;
+    @Column(name = "website")
+    private String website;
 
-    @Column(name = "corporate_facebook")
-    private String corporateFacebook;
+    @Column(name = "facebook")
+    private String facebook;
 
-    @Column(name = "corporate_twitter")
-    private String corporateTwitter;
+    @Column(name = "twitter")
+    private String twitter;
 
-    @Column(name = "corporate_instagram")
-    private String corporateInstagram;
+    @Column(name = "instagram")
+    private String instagram;
 
-    @Column(name = "corporate_linked_in")
-    private String corporateLinkedIn;
+    @Column(name = "linked_in")
+    private String linkedIn;
 
-    @Column(name = "corporate_culture")
-    private String corporateCulture;
+    @Column(name = "culture")
+    private String culture;
 
     @Column(name = "contact_person")
     private String contactPerson;
 
-    @Column(name = "corporate_phone")
-    private String corporatePhone;
+    @Column(name = "phone")
+    private String phone;
 
-    @Column(name = "corporate_phone_code")
-    private String corporatePhoneCode;
+    @Column(name = "phone_code")
+    private String phoneCode;
 
-    @Column(name = "contact_person_designation")
-    private String contactPersonDesignation;
+    @Column(name = "person_designation")
+    private String personDesignation;
 
-    @Column(name = "corporate_tag_line")
-    private String corporateTagLine;
+    @Column(name = "tag_line")
+    private String tagLine;
+
+    @Column(name = "escrow_amount")
+    private Double escrowAmount;
 
     @ManyToOne
     private Country country;
@@ -89,6 +98,11 @@ public class Corporate implements Serializable {
     @JoinColumn(unique = true)
     private User login;
 
+    @OneToMany(mappedBy = "corporate")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Job> jobs = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -98,43 +112,43 @@ public class Corporate implements Serializable {
         this.id = id;
     }
 
-    public String getCorporateName() {
-        return corporateName;
+    public String getName() {
+        return name;
     }
 
-    public Corporate corporateName(String corporateName) {
-        this.corporateName = corporateName;
+    public Corporate name(String name) {
+        this.name = name;
         return this;
     }
 
-    public void setCorporateName(String corporateName) {
-        this.corporateName = corporateName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCorporateAddress() {
-        return corporateAddress;
+    public String getAddress() {
+        return address;
     }
 
-    public Corporate corporateAddress(String corporateAddress) {
-        this.corporateAddress = corporateAddress;
+    public Corporate address(String address) {
+        this.address = address;
         return this;
     }
 
-    public void setCorporateAddress(String corporateAddress) {
-        this.corporateAddress = corporateAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getCorporateCity() {
-        return corporateCity;
+    public String getCity() {
+        return city;
     }
 
-    public Corporate corporateCity(String corporateCity) {
-        this.corporateCity = corporateCity;
+    public Corporate city(String city) {
+        this.city = city;
         return this;
     }
 
-    public void setCorporateCity(String corporateCity) {
-        this.corporateCity = corporateCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public LocalDate getEstablishedSince() {
@@ -150,121 +164,121 @@ public class Corporate implements Serializable {
         this.establishedSince = establishedSince;
     }
 
-    public String getCorporateEmail() {
-        return corporateEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public Corporate corporateEmail(String corporateEmail) {
-        this.corporateEmail = corporateEmail;
+    public Corporate email(String email) {
+        this.email = email;
         return this;
     }
 
-    public void setCorporateEmail(String corporateEmail) {
-        this.corporateEmail = corporateEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getCorporateOverview() {
-        return corporateOverview;
+    public String getOverview() {
+        return overview;
     }
 
-    public Corporate corporateOverview(String corporateOverview) {
-        this.corporateOverview = corporateOverview;
+    public Corporate overview(String overview) {
+        this.overview = overview;
         return this;
     }
 
-    public void setCorporateOverview(String corporateOverview) {
-        this.corporateOverview = corporateOverview;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
-    public String getCorporateBenefits() {
-        return corporateBenefits;
+    public String getBenefits() {
+        return benefits;
     }
 
-    public Corporate corporateBenefits(String corporateBenefits) {
-        this.corporateBenefits = corporateBenefits;
+    public Corporate benefits(String benefits) {
+        this.benefits = benefits;
         return this;
     }
 
-    public void setCorporateBenefits(String corporateBenefits) {
-        this.corporateBenefits = corporateBenefits;
+    public void setBenefits(String benefits) {
+        this.benefits = benefits;
     }
 
-    public String getCorporateWebsite() {
-        return corporateWebsite;
+    public String getWebsite() {
+        return website;
     }
 
-    public Corporate corporateWebsite(String corporateWebsite) {
-        this.corporateWebsite = corporateWebsite;
+    public Corporate website(String website) {
+        this.website = website;
         return this;
     }
 
-    public void setCorporateWebsite(String corporateWebsite) {
-        this.corporateWebsite = corporateWebsite;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public String getCorporateFacebook() {
-        return corporateFacebook;
+    public String getFacebook() {
+        return facebook;
     }
 
-    public Corporate corporateFacebook(String corporateFacebook) {
-        this.corporateFacebook = corporateFacebook;
+    public Corporate facebook(String facebook) {
+        this.facebook = facebook;
         return this;
     }
 
-    public void setCorporateFacebook(String corporateFacebook) {
-        this.corporateFacebook = corporateFacebook;
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
     }
 
-    public String getCorporateTwitter() {
-        return corporateTwitter;
+    public String getTwitter() {
+        return twitter;
     }
 
-    public Corporate corporateTwitter(String corporateTwitter) {
-        this.corporateTwitter = corporateTwitter;
+    public Corporate twitter(String twitter) {
+        this.twitter = twitter;
         return this;
     }
 
-    public void setCorporateTwitter(String corporateTwitter) {
-        this.corporateTwitter = corporateTwitter;
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
     }
 
-    public String getCorporateInstagram() {
-        return corporateInstagram;
+    public String getInstagram() {
+        return instagram;
     }
 
-    public Corporate corporateInstagram(String corporateInstagram) {
-        this.corporateInstagram = corporateInstagram;
+    public Corporate instagram(String instagram) {
+        this.instagram = instagram;
         return this;
     }
 
-    public void setCorporateInstagram(String corporateInstagram) {
-        this.corporateInstagram = corporateInstagram;
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
     }
 
-    public String getCorporateLinkedIn() {
-        return corporateLinkedIn;
+    public String getLinkedIn() {
+        return linkedIn;
     }
 
-    public Corporate corporateLinkedIn(String corporateLinkedIn) {
-        this.corporateLinkedIn = corporateLinkedIn;
+    public Corporate linkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
         return this;
     }
 
-    public void setCorporateLinkedIn(String corporateLinkedIn) {
-        this.corporateLinkedIn = corporateLinkedIn;
+    public void setLinkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
     }
 
-    public String getCorporateCulture() {
-        return corporateCulture;
+    public String getCulture() {
+        return culture;
     }
 
-    public Corporate corporateCulture(String corporateCulture) {
-        this.corporateCulture = corporateCulture;
+    public Corporate culture(String culture) {
+        this.culture = culture;
         return this;
     }
 
-    public void setCorporateCulture(String corporateCulture) {
-        this.corporateCulture = corporateCulture;
+    public void setCulture(String culture) {
+        this.culture = culture;
     }
 
     public String getContactPerson() {
@@ -280,56 +294,69 @@ public class Corporate implements Serializable {
         this.contactPerson = contactPerson;
     }
 
-    public String getCorporatePhone() {
-        return corporatePhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public Corporate corporatePhone(String corporatePhone) {
-        this.corporatePhone = corporatePhone;
+    public Corporate phone(String phone) {
+        this.phone = phone;
         return this;
     }
 
-    public void setCorporatePhone(String corporatePhone) {
-        this.corporatePhone = corporatePhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getCorporatePhoneCode() {
-        return corporatePhoneCode;
+    public String getPhoneCode() {
+        return phoneCode;
     }
 
-    public Corporate corporatePhoneCode(String corporatePhoneCode) {
-        this.corporatePhoneCode = corporatePhoneCode;
+    public Corporate phoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
         return this;
     }
 
-    public void setCorporatePhoneCode(String corporatePhoneCode) {
-        this.corporatePhoneCode = corporatePhoneCode;
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
     }
 
-    public String getContactPersonDesignation() {
-        return contactPersonDesignation;
+    public String getPersonDesignation() {
+        return personDesignation;
     }
 
-    public Corporate contactPersonDesignation(String contactPersonDesignation) {
-        this.contactPersonDesignation = contactPersonDesignation;
+    public Corporate personDesignation(String personDesignation) {
+        this.personDesignation = personDesignation;
         return this;
     }
 
-    public void setContactPersonDesignation(String contactPersonDesignation) {
-        this.contactPersonDesignation = contactPersonDesignation;
+    public void setPersonDesignation(String personDesignation) {
+        this.personDesignation = personDesignation;
     }
 
-    public String getCorporateTagLine() {
-        return corporateTagLine;
+    public String getTagLine() {
+        return tagLine;
     }
 
-    public Corporate corporateTagLine(String corporateTagLine) {
-        this.corporateTagLine = corporateTagLine;
+    public Corporate tagLine(String tagLine) {
+        this.tagLine = tagLine;
         return this;
     }
 
-    public void setCorporateTagLine(String corporateTagLine) {
-        this.corporateTagLine = corporateTagLine;
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
+
+    public Double getEscrowAmount() {
+        return escrowAmount;
+    }
+
+    public Corporate escrowAmount(Double escrowAmount) {
+        this.escrowAmount = escrowAmount;
+        return this;
+    }
+
+    public void setEscrowAmount(Double escrowAmount) {
+        this.escrowAmount = escrowAmount;
     }
 
     public Country getCountry() {
@@ -370,6 +397,31 @@ public class Corporate implements Serializable {
     public void setLogin(User user) {
         this.login = user;
     }
+
+    public Set<Job> getJobs() {
+        return jobs;
+    }
+
+    public Corporate jobs(Set<Job> jobs) {
+        this.jobs = jobs;
+        return this;
+    }
+
+    public Corporate addJob(Job job) {
+        this.jobs.add(job);
+        job.setCorporate(this);
+        return this;
+    }
+
+    public Corporate removeJob(Job job) {
+        this.jobs.remove(job);
+        job.setCorporate(null);
+        return this;
+    }
+
+    public void setJobs(Set<Job> jobs) {
+        this.jobs = jobs;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -396,24 +448,25 @@ public class Corporate implements Serializable {
     public String toString() {
         return "Corporate{" +
             "id=" + getId() +
-            ", corporateName='" + getCorporateName() + "'" +
-            ", corporateAddress='" + getCorporateAddress() + "'" +
-            ", corporateCity='" + getCorporateCity() + "'" +
+            ", name='" + getName() + "'" +
+            ", address='" + getAddress() + "'" +
+            ", city='" + getCity() + "'" +
             ", establishedSince='" + getEstablishedSince() + "'" +
-            ", corporateEmail='" + getCorporateEmail() + "'" +
-            ", corporateOverview='" + getCorporateOverview() + "'" +
-            ", corporateBenefits='" + getCorporateBenefits() + "'" +
-            ", corporateWebsite='" + getCorporateWebsite() + "'" +
-            ", corporateFacebook='" + getCorporateFacebook() + "'" +
-            ", corporateTwitter='" + getCorporateTwitter() + "'" +
-            ", corporateInstagram='" + getCorporateInstagram() + "'" +
-            ", corporateLinkedIn='" + getCorporateLinkedIn() + "'" +
-            ", corporateCulture='" + getCorporateCulture() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", overview='" + getOverview() + "'" +
+            ", benefits='" + getBenefits() + "'" +
+            ", website='" + getWebsite() + "'" +
+            ", facebook='" + getFacebook() + "'" +
+            ", twitter='" + getTwitter() + "'" +
+            ", instagram='" + getInstagram() + "'" +
+            ", linkedIn='" + getLinkedIn() + "'" +
+            ", culture='" + getCulture() + "'" +
             ", contactPerson='" + getContactPerson() + "'" +
-            ", corporatePhone='" + getCorporatePhone() + "'" +
-            ", corporatePhoneCode='" + getCorporatePhoneCode() + "'" +
-            ", contactPersonDesignation='" + getContactPersonDesignation() + "'" +
-            ", corporateTagLine='" + getCorporateTagLine() + "'" +
+            ", phone='" + getPhone() + "'" +
+            ", phoneCode='" + getPhoneCode() + "'" +
+            ", personDesignation='" + getPersonDesignation() + "'" +
+            ", tagLine='" + getTagLine() + "'" +
+            ", escrowAmount='" + getEscrowAmount() + "'" +
             "}";
     }
 }

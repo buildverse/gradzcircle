@@ -2,19 +2,28 @@ package com.drishika.gradzcircle.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Qualification;
-
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,9 +46,12 @@ public class QualificationResource {
 
     private final QualificationSearchRepository qualificationSearchRepository;
 
-    public QualificationResource(QualificationRepository qualificationRepository, QualificationSearchRepository qualificationSearchRepository) {
+    private final ElasticsearchTemplate elasticsearchTemplate;
+
+    public QualificationResource(QualificationRepository qualificationRepository, QualificationSearchRepository qualificationSearchRepository,ElasticsearchTemplate elasticsearchTemplate) {
         this.qualificationRepository = qualificationRepository;
         this.qualificationSearchRepository = qualificationSearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -57,7 +69,10 @@ public class QualificationResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new qualification cannot already have an ID")).body(null);
         }
         Qualification result = qualificationRepository.save(qualification);
-        qualificationSearchRepository.save(result);
+        //qualificationSearchRepository.save(result);
+        elasticsearchTemplate.index(new QualificationEntityBuilder(qualification.getId()).name(qualification.getQualification())
+        .suggest(new String[] { qualification.getQualification() }).buildIndex());
+         elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
         return ResponseEntity.created(new URI("/api/qualifications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -80,7 +95,22 @@ public class QualificationResource {
             return createQualification(qualification);
         }
         Qualification result = qualificationRepository.save(qualification);
-        qualificationSearchRepository.save(result);
+       // qualificationSearchRepository.save(result);
+       com.drishika.gradzcircle.domain.elastic.Qualification qualificationElasticInstance = new com.drishika.gradzcircle.domain.elastic.Qualification();
+       try {
+           BeanUtils.copyProperties(qualificationElasticInstance, qualification);
+       } catch (IllegalAccessException e) {
+           log.error("Error copying bean for college elastic instance", e);
+           throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+       } catch (InvocationTargetException e) {
+           log.error("Error copying bean for college elastic instance", e);
+           throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+           
+       }
+       elasticsearchTemplate.index(new QualificationEntityBuilder(qualification.getId()).name(qualification.getQualification())
+       .suggest(new String[] { qualification.getQualification() }).buildIndex());
+       elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
+      
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, qualification.getId().toString()))
             .body(result);
@@ -141,6 +171,36 @@ public class QualificationResource {
         return StreamSupport
             .stream(qualificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * SEARCH  /_search/colleges?query=:query : search for the college corresponding
+     * to the query.
+     *
+     * @param query the query of the college search
+     * @return the result of the search
+     */
+    @GetMapping("/_search/qualificationsBySuggest")
+    @Timed
+    public String searchQualificationsBySuggest(@RequestParam String query) {
+        log.debug("REST request to search qualifications for query {}", query);
+        String suggest=null;
+        CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("qualification-suggest").text(query).field("suggest");
+        SuggestResponse  suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder, com.drishika.gradzcircle.domain.elastic.Qualification.class);
+        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("qualification-suggest");
+        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+        List <GenericElasticSuggest> qualifications = new ArrayList<GenericElasticSuggest>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        options.forEach(option->{
+            qualifications.add(new GenericElasticSuggest(option.getText().string(),option.getText().string()));
+            //colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+        });
+        try {
+			suggest = objectMapper.writeValueAsString(qualifications);
+		} catch (JsonProcessingException e) {
+			log.error("Error parsing object to JSON {},{}",e.getMessage(),e);
+		}
+       return suggest;
     }
 
 }

@@ -39,6 +39,13 @@
                 "captureUniversity": "Capture University",
                 "captureCollege": "Capture College",
                 "captureQualification": "Capture Qualification",
+                "job": "Job",
+                "filterCategory": "Filter Category",
+                "filter": "Filter",
+                "jobFilter": "Job Filter",
+                "jobHistory": "Job History",
+                "jobFilterHistory": "Job Filter History",
+                "appConfig": "App Config",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -82,8 +89,8 @@
                 "profile" : "Profile",
                 "jobs" :  "Jobs",
                 "job": {
-                     "post" : "Job Post",
-                     "active" : "All Jobs"
+                     "post" : "Post a Job",
+                     "allJobs" : "All Jobs"
              },
              "links" : "Linked Candidate"
             },
@@ -152,7 +159,8 @@
             "edit": "Edit",
             "open": "Open",
             "save": "Save",
-            "view": "View"
+            "view": "View",
+            "archive": "Archive"
         },
         "detail": {
             "field": "Field",

@@ -15,15 +15,15 @@ import { ActivatedRoute ,Router,ActivatedRouteSnapshot} from '@angular/router';
 })
 
 export class CandidateProfileAboutMeDetailsComponent implements OnInit {
-    candidate : Candidate;
+    candidate: Candidate;
     //account: Account;
     errorMessage: String;
   
     constructor(
-        private principal : Principal,
+        private principal: Principal,
         private candidateService: CandidateService,
-        private route : ActivatedRoute,
-        private router : Router
+        private route: ActivatedRoute,
+        private router: Router
 
     ) {}
 

@@ -13,10 +13,10 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
-    @Query("select distinct candidate from Candidate candidate left join fetch candidate.jobCategories")
+    @Query("select distinct candidate from Candidate candidate left join fetch candidate.jobCategories left join fetch candidate.jobs")
     List<Candidate> findAllWithEagerRelationships();
 
-    @Query("select candidate from Candidate candidate left join fetch candidate.jobCategories where candidate.id =:id")
+    @Query("select candidate from Candidate candidate left join fetch candidate.jobCategories left join fetch candidate.jobs where candidate.id =:id")
     Candidate findOneWithEagerRelationships(@Param("id") Long id);
 
     Candidate findByLoginId(@Param("uid") Long uid);

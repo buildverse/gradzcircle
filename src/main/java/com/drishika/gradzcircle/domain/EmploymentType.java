@@ -30,6 +30,9 @@ public class EmploymentType implements Serializable {
     @Column(name = "employment_type")
     private String employmentType;
 
+    @Column(name = "employment_type_cost")
+    private Double employmentTypeCost;
+
     @OneToMany(mappedBy = "employmentType")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -55,6 +58,19 @@ public class EmploymentType implements Serializable {
 
     public void setEmploymentType(String employmentType) {
         this.employmentType = employmentType;
+    }
+
+    public Double getEmploymentTypeCost() {
+        return employmentTypeCost;
+    }
+
+    public EmploymentType employmentTypeCost(Double employmentTypeCost) {
+        this.employmentTypeCost = employmentTypeCost;
+        return this;
+    }
+
+    public void setEmploymentTypeCost(Double employmentTypeCost) {
+        this.employmentTypeCost = employmentTypeCost;
     }
 
     public Set<CandidateEmployment> getCandidateEmployments() {
@@ -108,6 +124,7 @@ public class EmploymentType implements Serializable {
         return "EmploymentType{" +
             "id=" + getId() +
             ", employmentType='" + getEmploymentType() + "'" +
+            ", employmentTypeCost='" + getEmploymentTypeCost() + "'" +
             "}";
     }
 }

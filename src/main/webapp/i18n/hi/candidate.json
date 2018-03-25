@@ -30,20 +30,18 @@
             "availableForHiring": "Available For Hiring",
             "openToRelocate": "Open To Relocate",
             "login": "Login",
-            "gender": "Gender",
-            "maritalStatus": "Marital Status",
-            "nationality": "Nationality",
             "address": "Address",
             "education": "Education",
             "nonAcademic": "Non Academic",
             "certification": "Certification",
             "employment": "Employment",
             "candidateLanguageProficiency": "Candidate Language Proficiency",
+            "nationality": "Nationality",
+            "gender": "Gender",
+            "maritalStatus": "Marital Status",
             "jobCategory": "Job Category",
-            "visaType": "Visa Type",
-            "profilePic" : "Profile Pic",
-            "careerInterests": "Carrer Interests"
-
+            "job": "Job",
+            "visaType": "Visa Type"
         }
     }
 }

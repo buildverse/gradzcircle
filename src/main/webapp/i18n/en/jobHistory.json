@@ -1,0 +1,39 @@
+{
+    "gradzcircleApp": {
+        "jobHistory" : {
+            "home": {
+                "title": "Job Histories",
+                "createLabel": "Create a new Job History",
+                "createOrEditLabel": "Create or edit a Job History",
+                "search": "Search for Job History"
+            },
+            "created": "A new Job History is created with identifier {{ param }}",
+            "updated": "A Job History is updated with identifier {{ param }}",
+            "deleted": "A Job History is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Job History {{ id }}?"
+            },
+            "detail": {
+                "title": "Job History"
+            },
+            "jobTitle": "Job Title",
+            "jobDescription": "Job Description",
+            "noOfApplicants": "No Of Applicants",
+            "salary": "Salary",
+            "jobStatus": "Job Status",
+            "createDate": "Create Date",
+            "jobCost": "Job Cost",
+            "amountPaid": "Amount Paid",
+            "escrowAmountUsed": "Escrow Amount Used",
+            "additionalAmountCharge": "Additional Amount Charge",
+            "paymentType": "Payment Type",
+            "hasBeenEdited": "Has Been Edited",
+            "everActive": "Ever Active",
+            "canEdit": "Can Edit",
+            "updateDate": "Update Date",
+            "createdBy": "Created By",
+            "updatedBy": "Updated By",
+            "job": "Job"
+        }
+    }
+}

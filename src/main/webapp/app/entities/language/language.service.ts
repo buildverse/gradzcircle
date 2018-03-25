@@ -11,6 +11,7 @@ export class LanguageService {
 
     private resourceUrl = SERVER_API_URL + 'api/languages';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/languages';
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/languagesBySuggest';
 
     constructor(private http: Http) { }
 
@@ -53,6 +54,12 @@ export class LanguageService {
             .map((res: any) => this.convertResponse(res));
     }
 
+    searchRemote(req?: any): Observable<Response> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, options);
+
+    }
+    
     private convertResponse(res: Response): ResponseWrapper {
         const jsonResponse = res.json();
         const result = [];
@@ -61,6 +68,8 @@ export class LanguageService {
         }
         return new ResponseWrapper(res.headers, result, res.status);
     }
+
+
 
     /**
      * Convert a returned JSON object to Language.

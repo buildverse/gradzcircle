@@ -1,6 +1,9 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DatePipe } from '@angular/common';
-
+import { ArchwizardModule } from 'ng2-archwizard';
+import { TagInputModule } from 'ngx-chips';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+//import { MatButtonModule, MatCheckboxModule, MatRadioModule, MatInputModule, MatDatepickerModule, MatSelectModule } from '@angular/material';
 import {
     GradzcircleSharedLibsModule,
     GradzcircleSharedCommonModule,
@@ -17,19 +20,23 @@ import {
     JhiSocialComponent,
     SocialService,
     JhiLoginModalComponent,
-   // UserImagePipe
+    // UserImagePipe
 } from './';
 
 @NgModule({
     imports: [
         GradzcircleSharedLibsModule,
-        GradzcircleSharedCommonModule
+        GradzcircleSharedCommonModule,
+        ArchwizardModule,
+        MultiselectDropdownModule,TagInputModule
+       // MatButtonModule, MatCheckboxModule, MatRadioModule, MatInputModule, MatDatepickerModule, MatSelectModule
+
     ],
     declarations: [
         JhiSocialComponent,
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
-       // UserImagePipe
+        // UserImagePipe
 
     ],
     providers: [
@@ -44,7 +51,7 @@ import {
         SocialService,
         UserService,
         DatePipe,
-       // UserImagePipe
+        // UserImagePipe
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [
@@ -53,9 +60,13 @@ import {
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
         DatePipe,
-       // UserImagePipe
+        ArchwizardModule,
+        MultiselectDropdownModule,
+        TagInputModule
+      //  MatButtonModule, MatCheckboxModule, MatRadioModule, MatInputModule, MatDatepickerModule, MatSelectModule
+        // UserImagePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
-export class GradzcircleSharedModule {}
+export class GradzcircleSharedModule { }

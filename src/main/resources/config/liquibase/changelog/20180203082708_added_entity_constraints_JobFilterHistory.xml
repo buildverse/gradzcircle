@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity JobFilterHistory.
+    -->
+    <changeSet id="20180203082708-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="job_filter_id"
+                                 baseTableName="job_filter_history"
+                                 constraintName="fk_job_filter_history_job_filter_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="job_filter"/>
+
+    </changeSet>
+</databaseChangeLog>

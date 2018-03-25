@@ -8,6 +8,7 @@ import { JhiLanguageHelper, Principal, LoginModalService, LoginService,UserServi
 import { CandidateService } from '../../entities/candidate/candidate.service';
 import { VERSION, DEBUG_INFO_ENABLED } from '../../app.constants';
 import {SERVER_API_URL} from '../../app.constants';
+import { Corporate,CorporateService } from '../../entities/corporate/index';
 
 @Component({
     selector: 'jhi-navbar',
@@ -27,9 +28,10 @@ export class NavbarComponent implements OnInit {
     version: string;
     userImage: string;
     defaultImage = require("../../../content/images/no-image.png");
+    corporateId: number;
     // imageUrl='http://localhost:8080/api/files/';
     noImage: boolean;
-
+    authorities: string[];
     constructor(
         private loginService: LoginService,
         private languageService: JhiLanguageService,
@@ -39,8 +41,9 @@ export class NavbarComponent implements OnInit {
         private profileService: ProfileService,
         private router: Router,
         private eventManager: JhiEventManager,
-        private userService : UserService,
+        private userService: UserService,
         private candidateService: CandidateService,
+        private corporateService: CorporateService
 
     ) {
         this.version = VERSION ? 'v' + VERSION : '';
@@ -48,6 +51,17 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.authorities = ['ROLE_CORPORATE'];
+        if(this.principal.hasAnyAuthorityDirect(this.authorities)){
+            this.principal.identity(true).then((user) => {
+                if(user)
+                    this.corporateService.findCorporateByLoginId(user.id).subscribe((response =>{
+                        this.corporateId = response.id;
+                        console.log("Corproate id os "+ this.corporateId);
+                    }));
+            });
+           
+        }
         this.languageHelper.getAll().then((languages) => {
             this.languages = languages;
         });
@@ -108,7 +122,7 @@ export class NavbarComponent implements OnInit {
             if (user) {
                 if (user.imageUrl != undefined){
                     this.userService.getImageData(user.id).subscribe(response =>{
-                        let responseJson = response.json()
+                        let responseJson = response.json();
                         this.userImage = responseJson[0].href+'?t='+Math.random().toString();
                     });
                 }

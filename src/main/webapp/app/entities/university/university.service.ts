@@ -11,6 +11,7 @@ export class UniversityService {
 
     private resourceUrl = SERVER_API_URL + 'api/universities';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/universities';
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/universitiesBySuggest';
 
     constructor(private http: Http) { }
 
@@ -52,6 +53,14 @@ export class UniversityService {
         return this.http.get(this.resourceSearchUrl, options)
             .map((res: any) => this.convertResponse(res));
     }
+
+    searchRemote(req?: any):Observable<Response>{
+        const options = createRequestOption(req);
+       // console.log("Request query is "+req);
+       // console.log("options "+JSON.stringify(options));
+        return this.http.get(this.resourceSearchSuggestUrl, options);
+          
+      }
 
     private convertResponse(res: Response): ResponseWrapper {
         const jsonResponse = res.json();

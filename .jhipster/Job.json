@@ -1,0 +1,122 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "jobFilter",
+            "otherEntityName": "jobFilter",
+            "otherEntityRelationshipName": "job"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "history",
+            "otherEntityName": "jobHistory",
+            "otherEntityRelationshipName": "job"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "jobType",
+            "otherEntityName": "jobType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "employmentType",
+            "otherEntityName": "employmentType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "corporate",
+            "otherEntityName": "corporate",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "job"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "jobTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "jobDescription",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
+        },
+        {
+            "fieldName": "noOfApplicants",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "salary",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "jobStatus",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "createDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "jobCost",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "amountPaid",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "additionalAmountCharge",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "escrowAmountUsed",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "paymentType",
+            "fieldType": "PaymentType",
+            "fieldValues": "UPFRONT,AS_YOU_GO"
+        },
+        {
+            "fieldName": "hasBeenEdited",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "everActive",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "canEdit",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "updateDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "createdBy",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "updatedBy",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20171128154426",
+    "entityTableName": "job",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

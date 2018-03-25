@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Job.
+    -->
+    <changeSet id="20171128154426-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="job_type_id"
+                                 baseTableName="job"
+                                 constraintName="fk_job_job_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="job_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="employment_type_id"
+                                 baseTableName="job"
+                                 constraintName="fk_job_employment_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employment_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="corporate_id"
+                                 baseTableName="job"
+                                 constraintName="fk_job_corporate_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="corporate"/>
+
+    </changeSet>
+</databaseChangeLog>

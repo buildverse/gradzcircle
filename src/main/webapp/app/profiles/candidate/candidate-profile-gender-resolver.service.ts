@@ -6,7 +6,7 @@ import { Gender }  from '../../entities/gender/gender.model';
 
 @Injectable()
 export class CandidateGenderResolverService implements Resolve<Gender []> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Gender []>{
           return this.profileHelperService.getGender()

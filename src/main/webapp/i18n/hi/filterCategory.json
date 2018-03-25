@@ -1,0 +1,24 @@
+{
+    "gradzcircleApp": {
+        "filterCategory" : {
+            "home": {
+                "title": "FilterCategories",
+                "createLabel": "नया Filter Category बनाएँ",
+                "createOrEditLabel": "Filter Category बनाएँ या संपादित करें",
+                "search": "Filter Category खोजें"
+            },
+            "created": "एक नया Filter Category [identifier: {{ param }}] तैयार है",
+            "updated": "एक Filter Category [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Filter Category [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Filter Category [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Filter Category"
+            },
+            "filterCategory": "Filter Category",
+            "filterCost": "Filter Cost",
+            "filter": "Filter"
+        }
+    }
+}

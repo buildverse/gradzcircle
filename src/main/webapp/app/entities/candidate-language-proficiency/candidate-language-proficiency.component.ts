@@ -18,7 +18,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
-    candidateId : any;
+    candidateId: any;
 
 
     constructor(
@@ -66,10 +66,10 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     loadCandidateLanguages(){
         this.candidateLanguageProficiencyService.findByCandidateId(this.candidateId)
             .subscribe(
-                (response : ResponseWrapper)=> {
+                (response: ResponseWrapper)=> {
                     this.candidateLanguageProficiencies = response.json;
                 },
-                (response : ResponseWrapper) => {
+                (response: ResponseWrapper) => {
                     this.onError(response.json);
                     
                 }

@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "filterName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "filterCost",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20171128154428",
+    "entityTableName": "filter",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

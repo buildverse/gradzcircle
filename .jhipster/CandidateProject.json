@@ -29,7 +29,11 @@
         },
         {
             "fieldName": "projectDescription",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
         },
         {
             "fieldName": "projectDuration",
@@ -50,9 +54,8 @@
         }
     ],
     "changelogDate": "20171015094632",
-    "dto": "no",
-    "service": "no",
     "entityTableName": "candidate_project",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
 }

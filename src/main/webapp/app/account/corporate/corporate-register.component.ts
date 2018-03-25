@@ -48,11 +48,11 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
     errorUserExists: string;
     registerAccount: any;
     success: boolean;
-    corporateRegisterForm : FormGroup;
+    corporateRegisterForm: FormGroup;
     passwordMessage: string;
     countries: Country[];
-    errorMessage : string;
-    componentName : 'CorporateResgister';
+    errorMessage: string;
+    componentName: 'CorporateResgister';
  //   validationMessages : Map<String,String>;
    // messages : {[id: string]: string;} = {};
     
@@ -67,11 +67,11 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
         private registerService: Register,
         private elementRef: ElementRef,
         private renderer: Renderer,
-        private formBuilder : FormBuilder,
-        private countryService : CountryService,
+        private formBuilder: FormBuilder,
+        private countryService: CountryService,
       //  private router: Router,
-        private route : ActivatedRoute,
-        private errorMessageService : ErrorMessagesService
+        private route: ActivatedRoute,
+        private errorMessageService: ErrorMessagesService
     ) {
         //this.languageService(['register']);
     }

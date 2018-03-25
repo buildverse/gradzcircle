@@ -36,7 +36,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     selectLanguageProficiency:boolean
     notSelectedLanguage:boolean;
     default:string;
-    languageLocked : boolean;
+    languageLocked: boolean;
    // action :string;
 
     constructor(

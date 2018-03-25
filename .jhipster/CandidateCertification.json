@@ -19,7 +19,11 @@
         },
         {
             "fieldName": "certificationDetails",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 5000
         }
     ],
     "changelogDate": "20171015094628",

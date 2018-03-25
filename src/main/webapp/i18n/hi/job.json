@@ -1,0 +1,44 @@
+{
+    "gradzcircleApp": {
+        "job" : {
+            "home": {
+                "title": "Jobs",
+                "createLabel": "नया Job बनाएँ",
+                "createOrEditLabel": "Job बनाएँ या संपादित करें",
+                "search": "Job खोजें"
+            },
+            "created": "एक नया Job [identifier: {{ param }}] तैयार है",
+            "updated": "एक Job [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Job [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Job [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Job"
+            },
+            "jobTitle": "Job Title",
+            "jobDescription": "Job Description",
+            "noOfApplicants": "No Of Applicants",
+            "salary": "Salary",
+            "jobStatus": "Job Status",
+            "createDate": "Create Date",
+            "jobCost": "Job Cost",
+            "amountPaid": "Amount Paid",
+            "additionalAmountCharge": "Additional Amount Charge",
+            "escrowAmountUsed": "Escrow Amount Used",
+            "paymentType": "Payment Type",
+            "hasBeenEdited": "Has Been Edited",
+            "everActive": "Ever Active",
+            "canEdit": "Can Edit",
+            "updateDate": "Update Date",
+            "createdBy": "Created By",
+            "updatedBy": "Updated By",
+            "jobFilter": "Job Filter",
+            "history": "History",
+            "jobType": "Job Type",
+            "employmentType": "Employment Type",
+            "corporate": "Corporate",
+            "candidate": "Candidate"
+        }
+    }
+}

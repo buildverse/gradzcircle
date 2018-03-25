@@ -1,0 +1,91 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "job",
+            "otherEntityName": "job",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "jobTitle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "jobDescription",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
+        },
+        {
+            "fieldName": "noOfApplicants",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "salary",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "jobStatus",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "createDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "jobCost",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "amountPaid",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "escrowAmountUsed",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "additionalAmountCharge",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "paymentType",
+            "fieldType": "PaymentType",
+            "fieldValues": "UPFRONT,AS_YOU_GO"
+        },
+        {
+            "fieldName": "hasBeenEdited",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "everActive",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "canEdit",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "updateDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "createdBy",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "updatedBy",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20180203082705",
+    "entityTableName": "job_history",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

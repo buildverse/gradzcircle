@@ -667,7 +667,7 @@ INSERT INTO marital_status(
 	VALUES (1, 'Married'),
     		(2,'Single');
 
-INSERT into employment_type(id,employment_type) values (1,'Permanent'),(2,'Contract');
+INSERT into employment_type(id,employment_type,employment_type_cost) values (1,'Permanent',50),(2,'Contract',25);
 
 INSERT INTO job_category (id, job_category) VALUES
 (1,'Accounting'),
@@ -731,11 +731,11 @@ INSERT INTO job_category (id, job_category) VALUES
 (59,'Health, Safety & Env');
 
 
-INSERT INTO job_type (id,job_type) VALUES
-(1,'Full Time'),
-(2,'Part Time'),
-(3,'Internship'),
-(4,'Summer Job');
+INSERT INTO job_type (id,job_type,job_type_cost) VALUES
+(1,'Full Time',50),
+(2,'Part Time',30),
+(3,'Internship',20),
+(4,'Summer Job',10);
 
 INSERT INTO qualification (id, qualification) VALUES
 (1, 'Doctorate'),
@@ -781,4 +781,29 @@ INSERT INTO language (id,language) VALUES
   ( 7,'Chinese'),
   ( 8,'Spanish'),
   ( 9,'German');
+
+INSERT INTO course (id,course) VALUES
+  ( 1,'Chemical Engg.'),
+  ( 2,'Physiology'),
+  ( 3,'HR'),
+  ( 4,'Electircal Engg.'),
+  ( 5,'Computer Engg.'),
+  ( 6,'Computer Science'),
+  ( 7,'Microbiology'),
+  ( 8,'English Hon.'),
+  ( 9,'Other');
+
+insert into filter (id,filter_name,filter_cost) 
+values 
+(1,'gradDate',5),
+(2,'score',20),
+(3,'quali',20),
+(4,'course',20),
+(5,'gender',5),
+(6,'languages',5),
+(7,'colleges',0),
+(8,'universities',0);
+
+
+
 

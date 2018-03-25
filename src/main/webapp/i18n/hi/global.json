@@ -38,6 +38,13 @@
                 "captureUniversity": "Capture University",
                 "captureCollege": "Capture College",
                 "captureQualification": "Capture Qualification",
+                "job": "Job",
+                "filterCategory": "Filter Category",
+                "filter": "Filter",
+                "jobFilter": "Job Filter",
+                "jobHistory": "Job History",
+                "jobFilterHistory": "Job Filter History",
+                "appConfig": "App Config",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CandidateVisaResolverService implements Resolve<VisaType[]> {
-    constructor (private router : Router,
-        private profileHelperService : ProfileHelperService){}
+    constructor (private router: Router,
+        private profileHelperService: ProfileHelperService){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<VisaType[]>{
         return  this.profileHelperService.getVisa()

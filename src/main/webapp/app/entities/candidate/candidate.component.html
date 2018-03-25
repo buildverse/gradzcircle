@@ -48,6 +48,7 @@
             <th><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital Status</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job Category</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.job">Job</span></th>
             <th><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa Type</span></th>
             <th></th>
             </tr>
@@ -89,6 +90,11 @@
                 <td>
                     <span *ngFor="let jobCategory of candidate.jobCategories; let last = last">
                             <a class="form-control-static" [routerLink]="['../job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let job of candidate.jobs; let last = last">
+                            <a class="form-control-static" [routerLink]="['../job', job?.id ]">{{job.id}}</a>{{last ? '' : ', '}}
                         </span>
                 </td>
                 <td>

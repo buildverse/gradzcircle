@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "filter" : {
+            "home": {
+                "title": "Filters",
+                "createLabel": "Create a new Filter",
+                "createOrEditLabel": "Create or edit a Filter",
+                "search": "Search for Filter"
+            },
+            "created": "A new Filter is created with identifier {{ param }}",
+            "updated": "A Filter is updated with identifier {{ param }}",
+            "deleted": "A Filter is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Filter {{ id }}?"
+            },
+            "detail": {
+                "title": "Filter"
+            },
+            "filterName": "Filter Name",
+            "filterCost": "Filter Cost"
+        }
+    }
+}

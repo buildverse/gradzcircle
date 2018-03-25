@@ -1,3 +1,63 @@
+entity Job{
+	jobTitle String,
+    jobDescription String maxlength(10000),
+    noOfApplicants Integer,
+    salary Double,
+    jobStatus Integer,
+    createDate ZonedDateTime,
+    jobCost Double,
+    amountPaid Double,
+    additionalAmountCharge Double,
+    escrowAmountUsed Double,
+    paymentType PaymentType,
+    hasBeenEdited Boolean,
+    everActive Boolean,
+    canEdit Boolean,
+    updateDate ZonedDateTime,
+    createdBy Long,
+    updatedBy Long
+
+}
+
+entity JobHistory{
+	jobTitle String,
+    jobDescription String maxlength(10000),
+    noOfApplicants Integer,
+    salary Double,
+    jobStatus Integer,
+    createDate ZonedDateTime,
+    jobCost Double,
+    amountPaid Double,
+    escrowAmountUsed Double,
+    additionalAmountCharge Double,
+    paymentType PaymentType,
+    hasBeenEdited Boolean,
+    everActive Boolean,
+    canEdit Boolean,
+    updateDate ZonedDateTime,
+    createdBy Long,
+    updatedBy Long
+
+}
+
+entity AppConfig {
+	configName String,
+	configValue Boolean
+}
+entity Filter {
+filterName String,
+filterCost Double
+}
+
+
+entity JobFilter {
+	filterDescription String maxlength(10000)
+}
+
+entity JobFilterHistory {
+	filterDescription String maxlength(10000)
+}
+
 entity Candidate {
 	firstName String,
 	lastName String,
@@ -11,7 +71,7 @@ entity Candidate {
 	phoneNumber String,
 	differentlyAbled Boolean,
 	availableForHiring Boolean,
-	openToRelocate Boolean,
+	openToRelocate Boolean
 }
 
 entity Address {
@@ -26,7 +86,7 @@ entity Address {
 entity CandidateCertification {
 	certificationTitle String,
 	certificationDate LocalDate,
-	certificationDetails String
+	certificationDetails String maxlength(5000)
 }
 
 entity CandidateEducation {
@@ -55,13 +115,13 @@ entity CandidateEmployment {
     employmentEndDate LocalDate,
     employmentDuration Integer,
     isCurrentEmployment Boolean,
-    jobDescription String
+    jobDescription String maxlength(10000)
     
 }
 
 entity CandidateNonAcademicWork {
 	nonAcademicInitiativeTitle String,
-    nonAcademicInitiativeDescription String,
+    nonAcademicInitiativeDescription String maxlength(10000),
   	duration Integer,
     isCurrentActivity Boolean,
     roleInInitiative String,
@@ -74,7 +134,7 @@ entity CandidateProject {
 	projectTitle String,
     projectStartDate LocalDate,
     projectEndDate LocalDate,
-    projectDescription String,
+    projectDescription String maxlength(10000),
     projectDuration Integer,
     contributionInProject String,
     isCurrentProject Boolean,
@@ -94,7 +154,8 @@ entity MaritalStatus {
 }
 
 entity EmploymentType {
-	employmentType String
+	employmentType String,
+    employmentTypeCost Double
 }
 
 entity Qualification {
@@ -129,11 +190,12 @@ entity Industry {
 
 
 entity Skills {
-	skill String,
+	skill String
 }
 
 entity JobType {
-jobType String
+jobType String,
+jobTypeCost Double
 }
 
 
@@ -148,7 +210,7 @@ entity University{
 }
 
 entity JobCategory {
-	jobCategory String    
+	jobCategory String
 }
 
 entity Language {
@@ -166,6 +228,10 @@ enum ProjectType {
 ACADEMIC, SELF_INTEREST,CORPORATE
 }
 
+enum PaymentType {
+	UPFRONT,AS_YOU_GO
+}
+
 entity Employability {
 	employableSkillName String,
     employabilityScore Integer,
@@ -173,24 +239,25 @@ entity Employability {
 }
 
 entity Corporate {
-	corporateName String,
-    corporateAddress String,
-    corporateCity String,
+	name String,
+    address String,
+    city String,
     establishedSince LocalDate,
-    corporateEmail String,
-    corporateOverview String,
-    corporateBenefits String,
-    corporateWebsite String,
-    corporateFacebook String,
-    corporateTwitter String,
-    corporateInstagram String,
-    corporateLinkedIn String,
-    corporateCulture String,
+    email String,
+    overview String maxlength(10000),
+    benefits String maxlength(10000),
+    website String,
+    facebook String,
+    twitter String,
+    instagram String,
+    linkedIn String,
+    culture String,
     contactPerson String,
-    corporatePhone String,
-    corporatePhoneCode String,
-    contactPersonDesignation String,
-    corporateTagLine String
+    phone String,
+    phoneCode String,
+    personDesignation String,
+    tagLine String,
+    escrowAmount Double
 }
 
 entity ErrorMessages {
@@ -240,15 +307,18 @@ relationship OneToMany {
     Language {candidateLanguageProficiency} to CandidateLanguageProficiency,
     University {college} to College,
     Country {university} to University,
-   
     VisaType {candidate} to Candidate,
     JobType {candidateEmployment} to CandidateEmployment,
     EmploymentType {candidateEmployment} to CandidateEmployment,
     Country {candidateEmployment} to CandidateEmployment,
     Country {visa} to VisaType,
     Industry {corporate} to Corporate,
-    Country {corporate} to Corporate
-    
+    Country {corporate} to Corporate,
+    Corporate {job} to Job {corporate},
+    Job {jobFilter} to JobFilter {job},
+    Job {history} to JobHistory {job},
+    JobFilter{history} to JobFilterHistory{jobFilter}
+   
 }
 
 relationship ManyToOne {
@@ -256,19 +326,14 @@ relationship ManyToOne {
     CandidateProject {employment} to CandidateEmployment {projects},
     Candidate {nationality} to Nationality,
     Candidate {gender} to Gender,
-    Candidate {maritalStatus} to MaritalStatus
-
+    Candidate {maritalStatus} to MaritalStatus,
+    Job {jobType}  to JobType,
+    Job {employmentType} to EmploymentType
 }
 
 relationship ManyToMany {
-	Candidate {jobCategory} to JobCategory {candidate}
+	Candidate {jobCategory} to JobCategory {candidate},
+    Candidate {job} to Job {candidate}
 }
- 
-
-
-
-
-
-
 
 

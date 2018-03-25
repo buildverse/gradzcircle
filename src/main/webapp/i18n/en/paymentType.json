@@ -1,0 +1,9 @@
+{
+    "gradzcircleApp": {
+        "PaymentType" : {
+            "null": "",
+            "UPFRONT": "UPFRONT",
+            "AS_YOU_GO": "AS_YOU_GO"
+        }
+    }
+}

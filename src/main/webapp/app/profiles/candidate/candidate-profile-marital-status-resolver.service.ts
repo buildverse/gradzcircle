@@ -6,7 +6,7 @@ import { MaritalStatus } from '../../entities/marital-status/marital-status.mode
 
 @Injectable()
 export class CandidateMaritalStatusResolverService implements Resolve<MaritalStatus[]> {
-    constructor (private profileHelperService: ProfileHelperService,private router : Router){}
+    constructor (private profileHelperService: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<MaritalStatus[]>{
        return this.profileHelperService.getMaritalStatus()

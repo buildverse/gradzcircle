@@ -72,6 +72,14 @@
             "ownerSide": true
         },
         {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "candidate",
+            "relationshipName": "job",
+            "otherEntityName": "job",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
             "relationshipName": "visaType",
             "otherEntityName": "visaType",
             "relationshipType": "many-to-one",

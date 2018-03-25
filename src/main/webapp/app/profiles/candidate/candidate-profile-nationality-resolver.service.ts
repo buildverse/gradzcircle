@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CandidateNationalityResolverService implements Resolve<Nationality[]> {
-    constructor (private profileHelper: ProfileHelperService,private router : Router){}
+    constructor (private profileHelper: ProfileHelperService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Nationality[]>{
         return this.profileHelper.getNationalities().catch((error: any )=> {

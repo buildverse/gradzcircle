@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobFilterHistory" : {
+            "home": {
+                "title": "Job Filter Histories",
+                "createLabel": "Create a new Job Filter History",
+                "createOrEditLabel": "Create or edit a Job Filter History",
+                "search": "Search for Job Filter History"
+            },
+            "created": "A new Job Filter History is created with identifier {{ param }}",
+            "updated": "A Job Filter History is updated with identifier {{ param }}",
+            "deleted": "A Job Filter History is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Job Filter History {{ id }}?"
+            },
+            "detail": {
+                "title": "Job Filter History"
+            },
+            "filterDescription": "Filter Description",
+            "jobFilter": "Job Filter"
+        }
+    }
+}

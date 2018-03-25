@@ -63,13 +63,16 @@
         },
         {
             "fieldName": "jobDescription",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 10000
         }
     ],
     "changelogDate": "20171015094630",
-    "dto": "no",
-    "service": "no",
     "entityTableName": "candidate_employment",
-    "jpaMetamodelFiltering": false,
-    "pagination": "no"
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
 }

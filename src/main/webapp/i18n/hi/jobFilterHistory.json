@@ -1,0 +1,23 @@
+{
+    "gradzcircleApp": {
+        "jobFilterHistory" : {
+            "home": {
+                "title": "JobFilterHistories",
+                "createLabel": "नया Job Filter History बनाएँ",
+                "createOrEditLabel": "Job Filter History बनाएँ या संपादित करें",
+                "search": "Job Filter History खोजें"
+            },
+            "created": "एक नया Job Filter History [identifier: {{ param }}] तैयार है",
+            "updated": "एक Job Filter History [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Job Filter History [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Job Filter History [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Job Filter History"
+            },
+            "filterDescription": "Filter Description",
+            "jobFilter": "Job Filter"
+        }
+    }
+}

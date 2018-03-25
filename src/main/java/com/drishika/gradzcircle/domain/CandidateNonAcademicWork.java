@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -28,7 +29,8 @@ public class CandidateNonAcademicWork implements Serializable {
     @Column(name = "non_academic_initiative_title")
     private String nonAcademicInitiativeTitle;
 
-    @Column(name = "non_academic_initiative_description")
+    @Size(max = 10000)
+    @Column(name = "non_academic_initiative_description", length = 10000)
     private String nonAcademicInitiativeDescription;
 
     @Column(name = "duration")

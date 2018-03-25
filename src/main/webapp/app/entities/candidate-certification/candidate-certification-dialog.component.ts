@@ -24,7 +24,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
     authorities: any[];
     candidates: Candidate[];
     certificationDateDp: any;
-    options : Object;
+    options: Object;
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,

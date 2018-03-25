@@ -3,9 +3,9 @@
         <div class="container-fluid">
             <div class="container-inner" *ngIf="corporate">
                 <img class="rounded-circle media-object" [src]="noImage ? defaultImage : imageUrl " />
-                <h3 class="profile-header-user">Welcome {{corporate.corporateName}}</h3>
+                <h3 class="profile-header-user">Welcome {{corporate.name}}</h3>
                 <p class="profile-header-bio">
-                    {{corporate.corporateTagLine}}
+                    {{corporate.tagLine}}
                 </p>
             </div>
         </div>
@@ -50,16 +50,16 @@
                             {{corporate.industry?.industryName}}
                         </div>
                         <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateWebsite" class="font-weight-bold text-muted">Website</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.website" class="font-weight-bold text-muted">Website</span>
                         </div>
 
                         <div class="col-md-3">
-                            {{corporate.corporateWebsite}}
+                            {{corporate.website}}
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateEmail" class="font-weight-bold text-muted">Email</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.email" class="font-weight-bold text-muted">Email</span>
                         </div>
                         <div class="col-md-3">
                             {{corporate.login?.email}}
@@ -76,51 +76,51 @@
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateOverview" class="font-weight-bold text-muted">About Us</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.overview" class="font-weight-bold text-muted">About Us</span>
                         </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.corporateOverview">
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateCulture" class="font-weight-bold text-muted">Our Culture</span>
-                        </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.corporateCulture">
+                        <div class="col-md-10" [innerHtml]="corporate?.overview">
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateBenefits" class="font-weight-bold text-muted">Employee Benefits</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.culture" class="font-weight-bold text-muted">Our Culture</span>
                         </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.corporateBenefits">
+                        <div class="col-md-10" [innerHtml]="corporate?.culture">
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateLinkedIn" class="font-weight-bold text-muted">LinkedIn</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.benefits" class="font-weight-bold text-muted">Employee Benefits</span>
+                        </div>
+                        <div class="col-md-10" [innerHtml]="corporate?.benefits">
+                        </div>
+                    </div>
+                    <div class="row mx-4 my-3">
+                        <div class="col-md-2 ">
+                            <span jhiTranslate="gradzcircleApp.corporate.linkedIn" class="font-weight-bold text-muted">LinkedIn</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporateLinkedIn}}
+                            {{corporate.linkedIn}}
                         </div>
                         <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateTwitter" class="font-weight-bold text-muted">Twitter</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.twitter" class="font-weight-bold text-muted">Twitter</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporateTwitter}}
+                            {{corporate.twitter}}
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateInstagram" class="font-weight-bold text-muted">Instagram</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.instagram" class="font-weight-bold text-muted">Instagram</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporateInstagram}}
+                            {{corporate.instagram}}
                         </div>
                         <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateFacebook" class="font-weight-bold text-muted">Facebook</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.facebook" class="font-weight-bold text-muted">Facebook</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporateFacebook}}
+                            {{corporate.facebook}}
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
@@ -131,24 +131,24 @@
                             {{corporate.contactPerson}}
                         </div>
                         <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.contactPersonDesignation" class="font-weight-bold text-muted">Designation</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.personDesignation" class="font-weight-bold text-muted">Designation</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.contactPersonDesignation}}
+                            {{corporate.personDesignation}}
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
                         <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporateAddress" class="font-weight-bold text-muted">Address</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.address" class="font-weight-bold text-muted">Address</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporateAddress}} {{corporate?.corporateCity}}
+                            {{corporate.address}} {{corporate?.city}}
                         </div>
                         <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.corporatePhone" class="font-weight-bold text-muted">Phone</span>
+                            <span jhiTranslate="gradzcircleApp.corporate.phone" class="font-weight-bold text-muted">Phone</span>
                         </div>
                         <div class="col-md-3">
-                            {{corporate.corporatePhoneCode}}-{{corporate?.corporatePhone}}
+                            {{corporate.phoneCode}}-{{corporate?.phone}}
                         </div>
                     </div>
                     <div class="row mx-4 my-3">
@@ -204,24 +204,25 @@
             <thead>
                 <tr>
                     <th><span jhiTranslate="global.field.id">ID</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateName">Corporate Name</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateAddress">Corporate Address</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateCity">Corporate City</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.name">Corporate Name</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.address">Corporate Address</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.city">Corporate City</span></th>
                     <th><span jhiTranslate="gradzcircleApp.corporate.establishedSince">Established Since</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateEmail">Corporate Email</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateOverview">Corporate Overview</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateBenefits">Corporate Benefits</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateWebsite">Corporate Website</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateFacebook">Corporate Facebook</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateTwitter">Corporate Twitter</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateInstagram">Corporate Instagram</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateLinkedIn">Corporate Linked In</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateCulture">Corporate Culture</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.email">Corporate Email</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.overview">Corporate Overview</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.benefits">Corporate Benefits</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.escrowAmount">Corporate EscrowAmount</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.website">Corporate Website</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.facebook">Corporate Facebook</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.twitter">Corporate Twitter</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.instagram">Corporate Instagram</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.linkedIn">Corporate Linked In</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.culture">Corporate Culture</span></th>
                     <th><span jhiTranslate="gradzcircleApp.corporate.contactPerson">Contact Person</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporatePhone">Corporate Phone</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporatePhoneCode">Corporate Phone Code</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.contactPersonDesignation">Contact Person Designation</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.corporateTagLine">Corporate Tag Line</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.phone">Corporate Phone</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.phoneCode">Corporate Phone Code</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.personDesignation">Contact Person Designation</span></th>
+                    <th><span jhiTranslate="gradzcircleApp.corporate.tagLine">Corporate Tag Line</span></th>
                     <th><span jhiTranslate="gradzcircleApp.corporate.country">Country</span></th>
                     <th><span jhiTranslate="gradzcircleApp.corporate.industry">Industry</span></th>
                     <th><span jhiTranslate="gradzcircleApp.corporate.login">Login</span></th>
@@ -231,24 +232,25 @@
             <tbody>
                 <tr *ngFor="let corporate of corporates ;trackBy: trackId">
                     <td><a [routerLink]="['../corporate', corporate.id ]">{{corporate.id}}</a></td>
-                    <td>{{corporate.corporateName}}</td>
-                    <td>{{corporate.corporateAddress}}</td>
-                    <td>{{corporate.corporateCity}}</td>
+                    <td>{{corporate.name}}</td>
+                    <td>{{corporate.address}}</td>
+                    <td>{{corporate.city}}</td>
                     <td>{{corporate.establishedSince | date:'mediumDate'}}</td>
-                    <td>{{corporate.corporateEmail}}</td>
-                    <td>{{corporate.corporateOverview}}</td>
-                    <td>{{corporate.corporateBenefits}}</td>
-                    <td>{{corporate.corporateWebsite}}</td>
-                    <td>{{corporate.corporateFacebook}}</td>
-                    <td>{{corporate.corporateTwitter}}</td>
-                    <td>{{corporate.corporateInstagram}}</td>
-                    <td>{{corporate.corporateLinkedIn}}</td>
-                    <td>{{corporate.corporateCulture}}</td>
+                    <td>{{corporate.email}}</td>
+                    <td>{{corporate.overview}}</td>
+                    <td>{{corporate.benefits}}</td>
+                    <td>{{corporate.escrowAmount}}</td>
+                    <td>{{corporate.website}}</td>
+                    <td>{{corporate.facebook}}</td>
+                    <td>{{corporate.twitter}}</td>
+                    <td>{{corporate.instagram}}</td>
+                    <td>{{corporate.linkedIn}}</td>
+                    <td>{{corporate.culture}}</td>
                     <td>{{corporate.contactPerson}}</td>
-                    <td>{{corporate.corporatePhone}}</td>
-                    <td>{{corporate.corporatePhoneCode}}</td>
-                    <td>{{corporate.contactPersonDesignation}}</td>
-                    <td>{{corporate.corporateTagLine}}</td>
+                    <td>{{corporate.phone}}</td>
+                    <td>{{corporate.phoneCode}}</td>
+                    <td>{{corporate.personDesignation}}</td>
+                    <td>{{corporate.tagLine}}</td>
                     <td>
                         <div *ngIf="corporate.country">
                             <a [routerLink]="['../country', corporate.country?.id ]">{{corporate.country?.id}}</a>

@@ -41,6 +41,9 @@ public class JobTypeResourceIntTest {
     private static final String DEFAULT_JOB_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_JOB_TYPE = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_JOB_TYPE_COST = 1D;
+    private static final Double UPDATED_JOB_TYPE_COST = 2D;
+
     @Autowired
     private JobTypeRepository jobTypeRepository;
 
@@ -81,7 +84,8 @@ public class JobTypeResourceIntTest {
      */
     public static JobType createEntity(EntityManager em) {
         JobType jobType = new JobType()
-            .jobType(DEFAULT_JOB_TYPE);
+            .jobType(DEFAULT_JOB_TYPE)
+            .jobTypeCost(DEFAULT_JOB_TYPE_COST);
         return jobType;
     }
 
@@ -107,6 +111,7 @@ public class JobTypeResourceIntTest {
         assertThat(jobTypeList).hasSize(databaseSizeBeforeCreate + 1);
         JobType testJobType = jobTypeList.get(jobTypeList.size() - 1);
         assertThat(testJobType.getJobType()).isEqualTo(DEFAULT_JOB_TYPE);
+        assertThat(testJobType.getJobTypeCost()).isEqualTo(DEFAULT_JOB_TYPE_COST);
 
         // Validate the JobType in Elasticsearch
         JobType jobTypeEs = jobTypeSearchRepository.findOne(testJobType.getId());
@@ -143,7 +148,8 @@ public class JobTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(jobType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].jobType").value(hasItem(DEFAULT_JOB_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].jobType").value(hasItem(DEFAULT_JOB_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].jobTypeCost").value(hasItem(DEFAULT_JOB_TYPE_COST.doubleValue())));
     }
 
     @Test
@@ -157,7 +163,8 @@ public class JobTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(jobType.getId().intValue()))
-            .andExpect(jsonPath("$.jobType").value(DEFAULT_JOB_TYPE.toString()));
+            .andExpect(jsonPath("$.jobType").value(DEFAULT_JOB_TYPE.toString()))
+            .andExpect(jsonPath("$.jobTypeCost").value(DEFAULT_JOB_TYPE_COST.doubleValue()));
     }
 
     @Test
@@ -179,7 +186,8 @@ public class JobTypeResourceIntTest {
         // Update the jobType
         JobType updatedJobType = jobTypeRepository.findOne(jobType.getId());
         updatedJobType
-            .jobType(UPDATED_JOB_TYPE);
+            .jobType(UPDATED_JOB_TYPE)
+            .jobTypeCost(UPDATED_JOB_TYPE_COST);
 
         restJobTypeMockMvc.perform(put("/api/job-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -191,6 +199,7 @@ public class JobTypeResourceIntTest {
         assertThat(jobTypeList).hasSize(databaseSizeBeforeUpdate);
         JobType testJobType = jobTypeList.get(jobTypeList.size() - 1);
         assertThat(testJobType.getJobType()).isEqualTo(UPDATED_JOB_TYPE);
+        assertThat(testJobType.getJobTypeCost()).isEqualTo(UPDATED_JOB_TYPE_COST);
 
         // Validate the JobType in Elasticsearch
         JobType jobTypeEs = jobTypeSearchRepository.findOne(testJobType.getId());
@@ -249,7 +258,8 @@ public class JobTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(jobType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].jobType").value(hasItem(DEFAULT_JOB_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].jobType").value(hasItem(DEFAULT_JOB_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].jobTypeCost").value(hasItem(DEFAULT_JOB_TYPE_COST.doubleValue())));
     }
 
     @Test

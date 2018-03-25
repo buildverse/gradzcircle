@@ -34,7 +34,7 @@ export class ProfileHelperService {
             .catch(this.handleError);
     }
 
-    getGender () : Observable <Gender []>{
+    getGender (): Observable <Gender []>{
         return this.http.get('api/genders').map(this.extractData)
            // .do(data => console.log('getGender: '+JSON.stringify(data)))
             .catch(this.handleError);
@@ -61,37 +61,37 @@ export class ProfileHelperService {
             .catch(this.handleError);
     }
 
-    getColleges () : Observable<College[]> {
+    getColleges (): Observable<College[]> {
         return this.http.get('api/colleges').map(this.extractData)
            // .do(data => console.log('colleges: '+JSON.stringify))
             .catch(this.handleError);
     }
 
-    getQualification() : Observable <Qualification []> {
+    getQualification(): Observable <Qualification []> {
         return this.http.get('api/qualifications').map(this.extractData)
            // .do(data => console.log('qualifications: '+this.extractData))
             .catch(this.handleError);
     }
 
-    getLanguages () :Observable <Language []> {
+    getLanguages ():Observable <Language []> {
         return this.http.get('api/languages').map(this.extractData)
           //  .do(data => console.log('Languages: '+JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-    getSkills () : Observable < Skills []> {
+    getSkills (): Observable < Skills []> {
         return this.http.get('api/skills').map(this.extractData)
            // .do(data => console.log('Skills: '+JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-    getEmploymentType () : Observable < EmploymentType []> {
+    getEmploymentType (): Observable < EmploymentType []> {
         return this.http.get('api/employment-types').map(this.extractData)
            //.do(data => console.log('Employment - Types : '+this.extractData))
             .catch(this.handleError);
     }
 
-    getJobType () : Observable < JobType []> {
+    getJobType (): Observable < JobType []> {
         return this.http.get('api/job-types').map(this.extractData)
           //  .do(data => console.log('Job-Types : '+this.extractData))
             .catch(this.handleError);

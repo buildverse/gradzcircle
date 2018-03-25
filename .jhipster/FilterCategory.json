@@ -1,0 +1,26 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "filter",
+            "otherEntityName": "filter",
+            "otherEntityRelationshipName": "filterCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "filterCategory",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "filterCost",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20171128154427",
+    "entityTableName": "filter_category",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}

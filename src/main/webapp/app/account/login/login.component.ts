@@ -20,8 +20,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     rememberMe: boolean;
     username: string;
     credentials: any;
-    loginForm : FormGroup;
-    account : any;
+    loginForm: FormGroup;
+    account: any;
 
   
 
@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         private renderer: Renderer,
         private socialService: SocialService,
         private router: Router,
-        private formBuilder : FormBuilder,
-        private principal : Principal
+        private formBuilder: FormBuilder,
+        private principal: Principal
     
        // public activeModal: NgbActiveModal
     ) {

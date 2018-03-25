@@ -1,10 +1,12 @@
 package com.drishika.gradzcircle.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -48,14 +50,14 @@ public class CandidateEmployment implements Serializable {
     @Column(name = "is_current_employment")
     private Boolean isCurrentEmployment;
 
-    @Column(name = "job_description")
+    @Size(max = 10000)
+    @Column(name = "job_description", length = 10000)
     private String jobDescription;
 
     @ManyToOne
     private Candidate candidate;
 
     @OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE)
-
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateProject> projects = new HashSet<>();
 

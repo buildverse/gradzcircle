@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Job.
+    -->
+    <changeSet id="20171128154426-1" author="jhipster">
+        <createTable tableName="job">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="job_title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="job_description" type="varchar(10000)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="no_of_applicants" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="salary" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="job_status" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="create_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="job_cost" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="amount_paid" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="additional_amount_charge" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="escrow_amount_used" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="payment_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="has_been_edited" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+			<column name="ever_active" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="can_edit" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="update_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="created_by" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="updated_by" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="job_type_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="employment_type_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="corporate_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="job" columnName="create_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="job" columnName="update_date" columnDataType="datetime"/>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    <changeSet id="20171128154426-2" author="abhinav">
+     <addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="job">
+        <column name="escrow_amount_used" type="number"/>
+    </addColumn>
+    </changeSet>
+     <changeSet id="20171128154426-3" author="abhinav">
+     <addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="job">
+        <column name="ever_active" type="boolean"/>
+    </addColumn>
+    </changeSet>
+</databaseChangeLog>
