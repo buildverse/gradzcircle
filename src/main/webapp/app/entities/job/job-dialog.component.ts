@@ -69,7 +69,7 @@ export class JobDialogComponent implements OnInit {
   gradDate; gradToDate; gradFromDate: Date;
   gpaValues: number[];
   gpaDecimalValues: number[];
-  percentage; qualificationCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost;escrowAmount: number;
+  percentage; qualificationCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost;escrowAmount;amendmentCharge: number;
   gpa: number;
   roundOfGrade; gradeDecimal: number;
   filters: Filter[];
@@ -153,7 +153,7 @@ export class JobDialogComponent implements OnInit {
     this.filterService.query()
       .subscribe((res: ResponseWrapper) => {
         this.filters = res.json;
-        console.log('filter data is ' + JSON.stringify(this.filters));
+        //console.log('filter data is ' + JSON.stringify(this.filters));
         this.filters.forEach((filter) => {
           this.filterMap.set(filter.filterName, filter.filterCost);
           if (filter.filterName.indexOf('grad') > -1) {
@@ -197,7 +197,7 @@ export class JobDialogComponent implements OnInit {
       this.job.jobCost = this.prevJobCost;
       this.amountOutstanding = this.prevJobCost - this.job.amountPaid;
       this.filterCost = this.job.jobCost / this.job.noOfApplicants;
-      console.log('check this' + this.filterCost);
+      //console.log('check this' + this.filterCost);
     } else {
       this.isNew = true;
       this.job.noOfApplicants = 20;
@@ -221,11 +221,11 @@ export class JobDialogComponent implements OnInit {
       this.setScoreControl();
       this.percentage = jobFilter.filterDescription.percentage;
       const scoreSplit = jobFilter.filterDescription.gpa ? jobFilter.filterDescription.gpa.split('.') : [];
-      console.log('score split is ' + JSON.stringify(scoreSplit));
+      //console.log('score split is ' + JSON.stringify(scoreSplit));
       if (scoreSplit.length > 0) {
         this.roundOfGrade = scoreSplit[0];
         this.gradeDecimal = scoreSplit[1];
-        console.log('values are ' + this.roundOfGrade + '.' + this.gradeDecimal);
+        //console.log('values are ' + this.roundOfGrade + '.' + this.gradeDecimal);
       }
       this.shouldDisableDecimal();
       this.addOn = jobFilter.filterDescription.addOn;
@@ -311,7 +311,7 @@ export class JobDialogComponent implements OnInit {
   shouldDisableDecimal() {
     this.enableDecimal = true;
     if (this.roundOfGrade) {
-      if (this.roundOfGrade == 10) {
+      if (this.roundOfGrade === 10) {
         this.gradeDecimal = undefined;
         this.enableDecimal = false;
       }
@@ -339,7 +339,7 @@ export class JobDialogComponent implements OnInit {
       }
       this.clearScore();
     }
-    console.log('Filter cost premium is ' + this.filterCost);
+    //console.log('Filter cost premium is ' + this.filterCost);
   }
 
   toggleAddOnFilter() {
@@ -354,7 +354,7 @@ export class JobDialogComponent implements OnInit {
       // this.genderAdded = false;
       this.updateGenderCost();
     }
-    console.log('Filter cost add on is ' + this.filterCost);
+    //console.log('Filter cost add on is ' + this.filterCost);
   }
 
   addQualificationCost() {
@@ -490,8 +490,8 @@ export class JobDialogComponent implements OnInit {
   }
 */
   offsetEscrow() {
-    console.log('value os check box escrow '+this.useEscrow);
-     console.log('value local escrow fild '+this.escrowAmount);
+    //console.log('value os check box escrow '+this.useEscrow);
+     //console.log('value local escrow fild '+this.escrowAmount);
     if (this.job.corporate.escrowAmount && this.useEscrow) {
       if (this.job.corporate.escrowAmount > this.job.jobCost) {
         this.job.corporate.escrowAmount -= this.job.jobCost;
@@ -503,13 +503,13 @@ export class JobDialogComponent implements OnInit {
         this.job.escrowAmountUsed = this.job.corporate.escrowAmount;
       }
     } else if ( !this.useEscrow) {
-      console.log('in else');
+      //console.log('in else');
       this.job.jobCost += this.escrowAmount;
       this.job.corporate.escrowAmount += this.escrowAmount;
       this.job.escrowAmountUsed -=this.escrowAmount;
     }
-    console.log('copr amunt es'+this.job.corporate.escrowAmount);
-    console.log('job costs'+this.job.jobCost);
+    //console.log('copr amunt es'+this.job.corporate.escrowAmount);
+    //console.log('job costs'+this.job.jobCost);
   }
 
   clearDates() {
@@ -576,7 +576,7 @@ export class JobDialogComponent implements OnInit {
   }
 
   updateJobCost() {
-    console.log('Filter cost is =======' + JSON.stringify(this.filterCost));
+    //console.log('Filter cost is =======' + JSON.stringify(this.filterCost));
     this.job.jobCost = this.job.noOfApplicants * (this.filterCost);
     if (this.prevJobCost) {
       this.jobCostDifference = this.job.jobCost - this.prevJobCost;
@@ -604,7 +604,7 @@ export class JobDialogComponent implements OnInit {
         this.filterCost = this.filterCost + value.employmentTypeCost;
       } else if (this.employmentTypeCost.length > 0) {
         this.filterCost = this.filterCost - this.employmentTypeCost.pop();
-        console.log('filter cost employment type ' + JSON.stringify(this.filterCost));
+        //console.log('filter cost employment type ' + JSON.stringify(this.filterCost));
         this.employmentTypeCost.push(value.employmentTypeCost)
         this.filterCost = this.filterCost + value.employmentTypeCost;
       }
@@ -689,7 +689,7 @@ export class JobDialogComponent implements OnInit {
       this.job.jobFilters.push(this.jobFilter);
     }
 
-    console.log('job filter is ' + JSON.stringify(this.job.jobFilters));
+    //console.log('job filter is ' + JSON.stringify(this.job.jobFilters));
   }
 
   clearFilterDescription() {
@@ -708,13 +708,13 @@ export class JobDialogComponent implements OnInit {
   }
 
   save(saveType) {
-    console.log('Job ststaus is' + saveType);
+    //console.log('Job ststaus is' + saveType);
     this.isSaving = true;
     if (saveType === JobConstants.ACTIVE) {
       this.prepareJobFilter();
     }
-    console.log('Prev job is ' + JSON.stringify(this.prevJob));
-    console.log('Current job is ' + JSON.stringify(this.job));
+    //console.log('Prev job is ' + JSON.stringify(this.prevJob));
+    //console.log('Current job is ' + JSON.stringify(this.job));
     this.job.jobTitle = this.job.jobTitle.trim();
     this.job.jobDescription = this.job.jobDescription.trim();
     if (this.discountedJobCost && this.discountedJobCost > 0) {
@@ -723,7 +723,7 @@ export class JobDialogComponent implements OnInit {
     this.setAmountPaid();
     if (!this.jobEquals(this.job, this.prevJob)
       || !this.jobFilterEquals(this.job, this.prevJob)) {
-      console.log('Am i in ');
+      //console.log('Am i in ');
       this.job.jobStatus = saveType;
       if (this.job.id !== undefined) {
         this.job.updatedBy = this.account.id;
@@ -751,7 +751,7 @@ export class JobDialogComponent implements OnInit {
       equal(JSON.stringify(currentJob.employmentType), JSON.stringify(previousJob.employmentType)) &&
       equal(JSON.stringify(currentJob.jobType), JSON.stringify(previousJob.jobType)) &&
       equal(JSON.stringify(currentJob.noOfApplicants), JSON.stringify(previousJob.noOfApplicants))) {
-      console.log('filter equals');
+      //console.log('filter equals');
       this.isSaving = false;
       return true;
     } else {
@@ -767,7 +767,7 @@ export class JobDialogComponent implements OnInit {
     if ((equal(JSON.stringify(currentJob.jobTitle), JSON.stringify(previousJob.jobTitle))) &&
       (equal(JSON.stringify(currentJob.jobDescription), JSON.stringify(previousJob.jobDescription))) &&
       (equal(JSON.stringify(currentJob.salary), JSON.stringify(previousJob.salary)))) {
-      console.log('JOB equals');
+      //console.log('JOB equals');
       this.isSaving = false;
       return true;
     } else {
@@ -790,9 +790,9 @@ export class JobDialogComponent implements OnInit {
       result.jobFilters = null;
     }
     this.job = result;
-    // console.log('result is ' + JSON.stringify(this.job));
+    // //console.log('result is ' + JSON.stringify(this.job));
     this.prevJob = deepcopy(result);
-    console.log('result is ' + JSON.stringify(this.job));
+    //console.log('result is ' + JSON.stringify(this.job));
     this.eventManager.broadcast({name: 'jobListModification', content: 'OK'});
     this.isSaving = false;
 
@@ -802,7 +802,7 @@ export class JobDialogComponent implements OnInit {
   }
 
   private onSaveError(error: any) {
-    console.log('in error' + JSON.stringify(error));
+    //console.log('in error' + JSON.stringify(error));
     this.isSaving = false;
     this.onError(error);
   }

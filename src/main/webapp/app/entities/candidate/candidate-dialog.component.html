@@ -120,7 +120,7 @@
         <div class="form-group">
             <label jhiTranslate="gradzcircleApp.candidate.job" for="field_job">Job</label>
             <select class="form-control" id="field_job" multiple name="job" [(ngModel)]="candidate.jobs">
-                <option [ngValue]="getSelected(candidate.jobs, jobOption)" *ngFor="let jobOption of jobs; trackBy: trackJobById">{{jobOption.id}}</option>
+                <option [ngValue]="getSelected(candidate.jobs, jobOption)" *ngFor="let jobOption of candidate.jobs;">{{jobOption.id}}</option>
             </select>
         </div>
         <div class="form-group">

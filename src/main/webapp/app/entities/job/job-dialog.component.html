@@ -1,4 +1,4 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+<form name="editForm" role="form" novalidate (ngSubmit)="save(-2)"
 	#editForm="ngForm">
 
 	<div class="modal-header modal-header-decorate">
@@ -8,7 +8,7 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
-	{{job|json}} filtercost is {{filterCost}}
+	<!--  {{job|json}} filtercost is {{filterCost}}-->
 	<div
 		*ngIf="businessPlanEnabled && job?.jobCost>0 && !preview && !job.hasBeenEdited && (isNew || job.jobStatus===0)"
 		class="d-flex justify-content-end">
@@ -648,10 +648,7 @@
 					nextStep>Next</button>
 			</div>
 		</div>
-		<!-- <div class="modal-footer modal-footer-decorate d-flex justify-content-between">
-                    <button type="button" class="btn btn-sm btn-pill  btn-warning" previousStep>Back</button>
-                    <button type="button" class="btn btn-sm btn-pill  btn-primary" nextStep>Next</button>
-                </div> --> </wizard-step> <wizard-step stepTitle="Preview"
+		</wizard-step> <wizard-step stepTitle="Preview"
 			navigationSymbol="&#xf06e;" navigationSymbolFontFamily="FontAwesome"
 			(stepEnter)="enterPreview()" (stepExit)="exitPreview()">
 		<div class="row mx-2 my-4">
@@ -832,7 +829,7 @@
 				<div
 					class="form-inline col-md-6 font-weight-bold text-muted justify-content-center d-flex"
 					*ngIf="job?.corporate?.escrowAmount>0||useEscrow; else nullEscrow">&#8377; {{job.corporate.escrowAmount}}
-					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount; else disableEscrowCheckbox">
+					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount">
 						<label for="use_escrow"> 
 							<input type="checkbox" class="form-check-input text-muted" name="useEscrow" id="use_escrow" [(ngModel)]="useEscrow" (ngModelChange)="offsetEscrow()"> Use Escrow
 					    </label>
@@ -938,9 +935,9 @@
 
 	</div>
 </form>
-{{job.jobFilters | json}}
+<!--  {{job.jobFilters | json}}-->
 
-<div *jhiHasAnyAuthority="['ROLE_ADMIN']">
+!<div *jhiHasAnyAuthority="['ROLE_ADMIN']">
 	<form name="editForm" role="form" novalidate (ngSubmit)="save()"
 		#editForm="ngForm">
 
@@ -1082,7 +1079,7 @@
 		</div>
 	</form>
 </div>
-
+<!-- 
 <br>
 Dirty: {{ editForm.dirty }}
 <br>
@@ -1091,4 +1088,4 @@ Touched: {{ editForm.touched }}
 Valid: {{ editForm.form.get('jobTitle')?.valid }} Valid agai : {{
 editForm.form.get('jobDescription')?.valid }}
 <br>
-Value: {{ editForm.value | json }}
+Value: {{ editForm.value | json }} -->

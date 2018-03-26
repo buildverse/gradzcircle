@@ -13,5 +13,4 @@ import '../content/fonts/toolkit-entypo.woff2';
 import './js/application.js';
 import './js/toolkit.js';
 import './js/chart.js';
-import "@angular/material/prebuilt-themes/indigo-pink.css";
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
