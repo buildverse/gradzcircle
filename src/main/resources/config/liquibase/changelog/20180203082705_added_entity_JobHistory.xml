@@ -49,10 +49,6 @@
 				<constraints nullable="true" />
 			</column>
 
-			<column name="escrow_amount_used" type="double">
-				<constraints nullable="true" />
-			</column>
-
 			<column name="additional_amount_charge" type="double">
 				<constraints nullable="true" />
 			</column>
@@ -62,10 +58,6 @@
 			</column>
 
 			<column name="has_been_edited" type="boolean">
-				<constraints nullable="true" />
-			</column>
-
-			<column name="ever_active" type="boolean">
 				<constraints nullable="true" />
 			</column>
 

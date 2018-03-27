@@ -57,10 +57,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="escrow_amount_used" type="double">
-                <constraints nullable="true" />
-            </column>
-
             <column name="payment_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -69,10 +65,6 @@
                 <constraints nullable="true" />
             </column>
 
-			<column name="ever_active" type="boolean">
-                <constraints nullable="true" />
-            </column>
-            
             <column name="can_edit" type="boolean">
                 <constraints nullable="true" />
             </column>
