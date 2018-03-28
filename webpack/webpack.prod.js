@@ -11,6 +11,8 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
 const extractCSS = new ExtractTextPlugin(`[name].[hash].css`);
+const extractSASS = new ExtractTextPlugin(`[name]-sass.[hash].css`);
+
 
 module.exports = webpackMerge(commonConfig({ env: ENV }), {
     // Enable source maps. Please note that this will slow down the build.
@@ -27,7 +29,8 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         chunkFilename: 'app/[id].[hash].chunk.js'
     },
     module: {
-        rules: [{
+        rules: [
+        	{
             test: /\.ts$/,
             use: [
                 {
@@ -59,6 +62,18 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
             exclude: /(vendor\.css|global\.css)/
         },
         {
+            test: /\.scss$/,
+            loaders: ['to-string-loader', 'css-loader', 'sass-loader'],
+            exclude: /(vendor\.scss|global\.scss)/
+        },
+        {
+            test: /(vendor\.scss|global\.scss)/,
+            use: extractSASS.extract({
+                fallback: 'style-loader',
+                use: ['css-loader', 'postcss-loader', 'sass-loader']
+            })
+        },
+        {
             test: /(vendor\.css|global\.css)/,
             use: extractCSS.extract({
                 fallback: 'style-loader',
@@ -67,6 +82,7 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         }]
     },
     plugins: [
+    	extractSASS,
         extractCSS,
         new Visualizer({
             // Webpack statistics in target folder
@@ -98,7 +114,7 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
                 }
             }
         }),
-        new ngcWebpack.NgcWebpackPlugin({
+     new ngcWebpack.NgcWebpackPlugin({
             disabled: false,
             tsConfig: utils.root('tsconfig-aot.json'),
             resourceOverride: ''

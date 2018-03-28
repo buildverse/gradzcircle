@@ -14,7 +14,11 @@
         "lib": ["es6", "dom"],
         "typeRoots": [
             "node_modules/@types"
+        ],
+        "types" : [
+        		""
         ]
+        
     },
     "include": [
         "src/main/webapp/app",
@@ -22,5 +26,5 @@
     ],
     "exclude": [
         "src/main/webapp/app/app.main-aot.ts"
-    ]
+   ]
 }

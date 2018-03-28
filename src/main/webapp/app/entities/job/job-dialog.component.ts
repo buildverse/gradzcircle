@@ -144,7 +144,7 @@ export class JobDialogComponent implements OnInit {
       .subscribe((res: ResponseWrapper) => {
         this.appConfigs = res.json;
         this.appConfigs.forEach((appConfig) => {
-          if (appConfig.configName.toUpperCase().indexOf('BusinessPlan'.toUpperCase()) > -1) {
+          if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName.toUpperCase())> -1) {
             this.businessPlanEnabled = appConfig.configValue;
           }
         });

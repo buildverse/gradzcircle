@@ -41,12 +41,12 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes:
+            cluster-name: 3c324b76257b9c008f22f0a038088ec1
+            cluster-nodes: 3c324b76257b9c008f22f0a038088ec1.us-east-1.aws.found.io:9243 
             properties:
-                path:
-                    logs: build/elasticsearch/log
-                    data: build/elasticsearch/data
+               # path:
+                #    logs: build/elasticsearch/log
+                 #   data: build/elasticsearch/data
                 http:
                     enabled: true
     mail:

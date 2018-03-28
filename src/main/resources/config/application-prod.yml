@@ -24,9 +24,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/gradzcircle
-        username: gradzcircle
-        password:
+        url: jdbc:postgresql://ec2-54-235-146-51.compute-1.amazonaws.com:5432/dcfsg446lq1q0r
+        username: nriufkzrpmubkz
+        password: b733bf18757d6c9554faf91e78774e38c0ac41e54eecc9bf67865522834578c9
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -39,8 +39,8 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name: d21850cf4f253174fc46a3c1bbce67d3
-            cluster-nodes: d21850cf4f253174fc46a3c1bbce67d3.us-east-1.aws.found.io:9243 
+            cluster-name: 3c324b76257b9c008f22f0a038088ec1
+            cluster-nodes: 3c324b76257b9c008f22f0a038088ec1.us-east-1.aws.found.io:9243 
             properties:
                 http:
                     enabled: true

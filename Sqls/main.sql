@@ -535,7 +535,7 @@ INSERT INTO university (id, university_name,country_id) VALUES
   (50, 'TMC Academy',192),
   (51,'DIMENSIONS International College',192 ),
   (52, 'Melior International College', 192),
-  (53, 'Others', 192);
+  (53, 'Other', 192);
 
 INSERT INTO college (id, college_name,domain_name,university_id, status) VALUES
   (1, 'National University of Singapore','nus.edu.sg', 1, 1),
@@ -594,7 +594,7 @@ INSERT INTO college (id, college_name,domain_name,university_id, status) VALUES
   (54, 'TMC Academy', 'tmc.edu.sg',50, 1),
   (55,'DIMENSIONS International College','dimensions.edu.sg', 51, 1),
   (56, 'Melior International College','mic.edu.sg', 52, 1),
-  (57, 'Others','others', 53, 1);
+  (57, 'Other','others', 53, 1);
 
 
 INSERT INTO industry(id,industry_name)VALUES
@@ -804,6 +804,6 @@ values
 (7,'colleges',0),
 (8,'universities',0);
 
-
-
-
+insert into app_config (id,config_name,config_value) 
+values 
+(1,'Busin',true);
