@@ -44,6 +44,9 @@ public class FilterResourceIntTest {
     private static final Double DEFAULT_FILTER_COST = 1D;
     private static final Double UPDATED_FILTER_COST = 2D;
 
+    private static final String DEFAULT_COMMENTS = "AAAAAAAAAA";
+    private static final String UPDATED_COMMENTS = "BBBBBBBBBB";
+
     @Autowired
     private FilterRepository filterRepository;
 
@@ -85,7 +88,8 @@ public class FilterResourceIntTest {
     public static Filter createEntity(EntityManager em) {
         Filter filter = new Filter()
             .filterName(DEFAULT_FILTER_NAME)
-            .filterCost(DEFAULT_FILTER_COST);
+            .filterCost(DEFAULT_FILTER_COST)
+            .comments(DEFAULT_COMMENTS);
         return filter;
     }
 
@@ -112,6 +116,7 @@ public class FilterResourceIntTest {
         Filter testFilter = filterList.get(filterList.size() - 1);
         assertThat(testFilter.getFilterName()).isEqualTo(DEFAULT_FILTER_NAME);
         assertThat(testFilter.getFilterCost()).isEqualTo(DEFAULT_FILTER_COST);
+        assertThat(testFilter.getComments()).isEqualTo(DEFAULT_COMMENTS);
 
         // Validate the Filter in Elasticsearch
         Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
@@ -149,7 +154,8 @@ public class FilterResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(filter.getId().intValue())))
             .andExpect(jsonPath("$.[*].filterName").value(hasItem(DEFAULT_FILTER_NAME.toString())))
-            .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())));
+            .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())))
+            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())));
     }
 
     @Test
@@ -164,7 +170,8 @@ public class FilterResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(filter.getId().intValue()))
             .andExpect(jsonPath("$.filterName").value(DEFAULT_FILTER_NAME.toString()))
-            .andExpect(jsonPath("$.filterCost").value(DEFAULT_FILTER_COST.doubleValue()));
+            .andExpect(jsonPath("$.filterCost").value(DEFAULT_FILTER_COST.doubleValue()))
+            .andExpect(jsonPath("$.comments").value(DEFAULT_COMMENTS.toString()));
     }
 
     @Test
@@ -187,7 +194,8 @@ public class FilterResourceIntTest {
         Filter updatedFilter = filterRepository.findOne(filter.getId());
         updatedFilter
             .filterName(UPDATED_FILTER_NAME)
-            .filterCost(UPDATED_FILTER_COST);
+            .filterCost(UPDATED_FILTER_COST)
+            .comments(UPDATED_COMMENTS);
 
         restFilterMockMvc.perform(put("/api/filters")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -200,6 +208,7 @@ public class FilterResourceIntTest {
         Filter testFilter = filterList.get(filterList.size() - 1);
         assertThat(testFilter.getFilterName()).isEqualTo(UPDATED_FILTER_NAME);
         assertThat(testFilter.getFilterCost()).isEqualTo(UPDATED_FILTER_COST);
+        assertThat(testFilter.getComments()).isEqualTo(UPDATED_COMMENTS);
 
         // Validate the Filter in Elasticsearch
         Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
@@ -259,7 +268,8 @@ public class FilterResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(filter.getId().intValue())))
             .andExpect(jsonPath("$.[*].filterName").value(hasItem(DEFAULT_FILTER_NAME.toString())))
-            .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())));
+            .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())))
+            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())));
     }
 
     @Test

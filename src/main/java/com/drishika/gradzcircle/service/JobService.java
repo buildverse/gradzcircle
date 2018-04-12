@@ -3,7 +3,6 @@ package com.drishika.gradzcircle.service;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
@@ -113,10 +113,9 @@ public class JobService {
 		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
 		jobSearchRepository.save(updatedJob);
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
-
-			corporateRepository.save(job.getCorporate());
-			corporateSearchRepository.save(job.getCorporate());
-
+			//Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
+			//corporate.setEscrowAmount(corporate.getEscrowAmount()+job.getCorporate().getEscrowAmount());
+			corporateSearchRepository.save(corporateRepository.save(job.getCorporate()));
 		}
 		return updatedJob;
 	}

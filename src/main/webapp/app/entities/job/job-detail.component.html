@@ -28,6 +28,10 @@
         <dd>
             <span>{{job.createDate | date:'medium'}}</span>
         </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.originalJobCost">Original Job Cost</span></dt>
+        <dd>
+            <span>{{job.originalJobCost}}</span>
+        </dd>
         <dt><span jhiTranslate="gradzcircleApp.job.jobCost">Job Cost</span></dt>
         <dd>
             <span>{{job.jobCost}}</span>
@@ -36,9 +40,29 @@
         <dd>
             <span>{{job.amountPaid}}</span>
         </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.additionalAmountCharge">Additional Amount Charge</span></dt>
+        <dt><span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed Filter Amount</span></dt>
         <dd>
-            <span>{{job.additionalAmountCharge}}</span>
+            <span>{{job.removedFilterAmount}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.additionalFilterAmount">Additional Filter Amount</span></dt>
+        <dd>
+            <span>{{job.additionalFilterAmount}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.adminCharge">Admin Charge</span></dt>
+        <dd>
+            <span>{{job.adminCharge}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.adminChargeRate">Admin Charge Rate</span></dt>
+        <dd>
+            <span>{{job.adminChargeRate}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.upfrontDiscountRate">Upfront Discount Rate</span></dt>
+        <dd>
+            <span>{{job.upfrontDiscountRate}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.job.upfrontDiscountAmount">Upfront Discount Amount</span></dt>
+        <dd>
+            <span>{{job.upfrontDiscountAmount}}</span>
         </dd>
         <dt><span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow Amount Used</span></dt>
         <dd>

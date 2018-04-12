@@ -14,6 +14,7 @@ import { Nationality, NationalityService } from '../nationality';
 import { Gender, GenderService } from '../gender';
 import { MaritalStatus, MaritalStatusService } from '../marital-status';
 import { JobCategory, JobCategoryService } from '../job-category';
+import { Job, JobService } from '../job';
 import { VisaType, VisaTypeService } from '../visa-type';
 import { ResponseWrapper } from '../../shared';
 
@@ -36,6 +37,8 @@ export class CandidateDialogComponent implements OnInit {
 
     jobcategories: JobCategory[];
 
+    jobs: Job[];
+
     visatypes: VisaType[];
     dateOfBirthDp: any;
 
@@ -48,6 +51,7 @@ export class CandidateDialogComponent implements OnInit {
         private genderService: GenderService,
         private maritalStatusService: MaritalStatusService,
         private jobCategoryService: JobCategoryService,
+        private jobService: JobService,
         private visaTypeService: VisaTypeService,
         private eventManager: JhiEventManager
     ) {
@@ -65,6 +69,8 @@ export class CandidateDialogComponent implements OnInit {
             .subscribe((res: ResponseWrapper) => { this.maritalstatuses = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.jobCategoryService.query()
             .subscribe((res: ResponseWrapper) => { this.jobcategories = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.jobService.query()
+            .subscribe((res: ResponseWrapper) => { this.jobs = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.visaTypeService.query()
             .subscribe((res: ResponseWrapper) => { this.visatypes = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
     }
@@ -120,6 +126,10 @@ export class CandidateDialogComponent implements OnInit {
     }
 
     trackJobCategoryById(index: number, item: JobCategory) {
+        return item.id;
+    }
+
+    trackJobById(index: number, item: Job) {
         return item.id;
     }
 

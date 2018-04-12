@@ -17,7 +17,8 @@
                 "title": "Filter"
             },
             "filterName": "Filter Name",
-            "filterCost": "Filter Cost"
+            "filterCost": "Filter Cost",
+            "comments": "Comments"
         }
     }
 }

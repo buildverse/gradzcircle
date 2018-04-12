@@ -47,17 +47,35 @@ public class JobHistory implements Serializable {
     @Column(name = "create_date")
     private ZonedDateTime createDate;
 
+    @Column(name = "original_job_cost")
+    private Double originalJobCost;
+
     @Column(name = "job_cost")
     private Double jobCost;
 
     @Column(name = "amount_paid")
     private Double amountPaid;
 
+    @Column(name = "removed_filter_amount")
+    private Double removedFilterAmount;
+
+    @Column(name = "additional_filter_amount")
+    private Double additionalFilterAmount;
+
+    @Column(name = "admin_charge")
+    private Double adminCharge;
+
+    @Column(name = "admin_charge_rate")
+    private Double adminChargeRate;
+
+    @Column(name = "upfront_discount_rate")
+    private Double upfrontDiscountRate;
+
+    @Column(name = "upfront_discount_amount")
+    private Double upfrontDiscountAmount;
+
     @Column(name = "escrow_amount_used")
     private Double escrowAmountUsed;
-
-    @Column(name = "additional_amount_charge")
-    private Double additionalAmountCharge;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type")
@@ -171,6 +189,19 @@ public class JobHistory implements Serializable {
         this.createDate = createDate;
     }
 
+    public Double getOriginalJobCost() {
+        return originalJobCost;
+    }
+
+    public JobHistory originalJobCost(Double originalJobCost) {
+        this.originalJobCost = originalJobCost;
+        return this;
+    }
+
+    public void setOriginalJobCost(Double originalJobCost) {
+        this.originalJobCost = originalJobCost;
+    }
+
     public Double getJobCost() {
         return jobCost;
     }
@@ -197,6 +228,84 @@ public class JobHistory implements Serializable {
         this.amountPaid = amountPaid;
     }
 
+    public Double getRemovedFilterAmount() {
+        return removedFilterAmount;
+    }
+
+    public JobHistory removedFilterAmount(Double removedFilterAmount) {
+        this.removedFilterAmount = removedFilterAmount;
+        return this;
+    }
+
+    public void setRemovedFilterAmount(Double removedFilterAmount) {
+        this.removedFilterAmount = removedFilterAmount;
+    }
+
+    public Double getAdditionalFilterAmount() {
+        return additionalFilterAmount;
+    }
+
+    public JobHistory additionalFilterAmount(Double additionalFilterAmount) {
+        this.additionalFilterAmount = additionalFilterAmount;
+        return this;
+    }
+
+    public void setAdditionalFilterAmount(Double additionalFilterAmount) {
+        this.additionalFilterAmount = additionalFilterAmount;
+    }
+
+    public Double getAdminCharge() {
+        return adminCharge;
+    }
+
+    public JobHistory adminCharge(Double adminCharge) {
+        this.adminCharge = adminCharge;
+        return this;
+    }
+
+    public void setAdminCharge(Double adminCharge) {
+        this.adminCharge = adminCharge;
+    }
+
+    public Double getAdminChargeRate() {
+        return adminChargeRate;
+    }
+
+    public JobHistory adminChargeRate(Double adminChargeRate) {
+        this.adminChargeRate = adminChargeRate;
+        return this;
+    }
+
+    public void setAdminChargeRate(Double adminChargeRate) {
+        this.adminChargeRate = adminChargeRate;
+    }
+
+    public Double getUpfrontDiscountRate() {
+        return upfrontDiscountRate;
+    }
+
+    public JobHistory upfrontDiscountRate(Double upfrontDiscountRate) {
+        this.upfrontDiscountRate = upfrontDiscountRate;
+        return this;
+    }
+
+    public void setUpfrontDiscountRate(Double upfrontDiscountRate) {
+        this.upfrontDiscountRate = upfrontDiscountRate;
+    }
+
+    public Double getUpfrontDiscountAmount() {
+        return upfrontDiscountAmount;
+    }
+
+    public JobHistory upfrontDiscountAmount(Double upfrontDiscountAmount) {
+        this.upfrontDiscountAmount = upfrontDiscountAmount;
+        return this;
+    }
+
+    public void setUpfrontDiscountAmount(Double upfrontDiscountAmount) {
+        this.upfrontDiscountAmount = upfrontDiscountAmount;
+    }
+
     public Double getEscrowAmountUsed() {
         return escrowAmountUsed;
     }
@@ -208,19 +317,6 @@ public class JobHistory implements Serializable {
 
     public void setEscrowAmountUsed(Double escrowAmountUsed) {
         this.escrowAmountUsed = escrowAmountUsed;
-    }
-
-    public Double getAdditionalAmountCharge() {
-        return additionalAmountCharge;
-    }
-
-    public JobHistory additionalAmountCharge(Double additionalAmountCharge) {
-        this.additionalAmountCharge = additionalAmountCharge;
-        return this;
-    }
-
-    public void setAdditionalAmountCharge(Double additionalAmountCharge) {
-        this.additionalAmountCharge = additionalAmountCharge;
     }
 
     public PaymentType getPaymentType() {
@@ -358,10 +454,16 @@ public class JobHistory implements Serializable {
             ", salary='" + getSalary() + "'" +
             ", jobStatus='" + getJobStatus() + "'" +
             ", createDate='" + getCreateDate() + "'" +
+            ", originalJobCost='" + getOriginalJobCost() + "'" +
             ", jobCost='" + getJobCost() + "'" +
             ", amountPaid='" + getAmountPaid() + "'" +
+            ", removedFilterAmount='" + getRemovedFilterAmount() + "'" +
+            ", additionalFilterAmount='" + getAdditionalFilterAmount() + "'" +
+            ", adminCharge='" + getAdminCharge() + "'" +
+            ", adminChargeRate='" + getAdminChargeRate() + "'" +
+            ", upfrontDiscountRate='" + getUpfrontDiscountRate() + "'" +
+            ", upfrontDiscountAmount='" + getUpfrontDiscountAmount() + "'" +
             ", escrowAmountUsed='" + getEscrowAmountUsed() + "'" +
-            ", additionalAmountCharge='" + getAdditionalAmountCharge() + "'" +
             ", paymentType='" + getPaymentType() + "'" +
             ", hasBeenEdited='" + isHasBeenEdited() + "'" +
             ", everActive='" + isEverActive() + "'" +

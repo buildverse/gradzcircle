@@ -51,15 +51,23 @@ export class JobDialogComponent implements OnInit {
   jobtypes: JobType[];
   numberOfCandidateError: boolean;
   employmentTypes: EmploymentType[];
-  qualifications: Qualification[];
+  prevQualifications: any;
+  addedQualifications: any;
+  qualifications: any;
+  removedQualifications: any;
+  addedCourses: Course[];
+  removedCourses: Course[];
   courses: Course[];
   universities: University[];
   corporates: Corporate[];
   candidates: Candidate[];
+  prevLanguages: Language[];
   languages: Language[];
   colleges: College[];
+  // prevGender: Gender;
   genders: Gender[];
   appConfigs: AppConfig[];
+  prevGender: Gender;
   gender: Gender;
   jobPostDateDp: any;
   filterCost: number;
@@ -69,8 +77,8 @@ export class JobDialogComponent implements OnInit {
   gradDate; gradToDate; gradFromDate: Date;
   gpaValues: number[];
   gpaDecimalValues: number[];
-  percentage; qualificationCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost;escrowAmount;amendmentCharge: number;
-  gpa: number;
+  percentage; qualificationCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost; escrowAmount; amendmentCharge: number;
+  gpa; amountPaid: number;
   roundOfGrade; gradeDecimal: number;
   filters: Filter[];
   enableGpa; enablePercent; validPercentScore; enableDecimal; useEscrow: boolean;
@@ -79,7 +87,7 @@ export class JobDialogComponent implements OnInit {
   QUALIFICATION; LANGUAGE; SCORE; GRADUATION_DATE; COLLEGE; UNIVERSITY; COURSE; GENDER; DISCOUNT; AMEND: string;
   jobTypeCost: number[];
   employmentTypeCost: number[];
-  scoreAdded; genderAdded; preview: boolean;
+  scoreAdded; genderAdded; preview; addingFilter; filter; jobInitiate: boolean;
   premium; addOn; basic: boolean;
   DRAFT = JobConstants.DRAFT;
   ACTIVE = JobConstants.ACTIVE;
@@ -87,8 +95,15 @@ export class JobDialogComponent implements OnInit {
   prevJobCost: number;
   jobCostDifference: number;
   paymentType: string;
-  amountOutstanding: number;
+  amountOutstanding; noOfApplicants: number;
   account: any;
+  employmentTypeChanged; jobTypeChanged; qualificationChanged; courseChanged; scoreChanged; gradDateChanged; languageChanged; genderChanged: boolean;
+  prevEmploymentType; currentEmploymentType: EmploymentType;
+  prevJobType; currentJobType: JobType;
+  prevEmploymentTypeCost; prevJobTypeCost; currentEmploymentTypeCost; currentJobTypeCost; prevNoOfApplicants: number;
+  noOfApplicantsIncreased; noOfApplicantsDecreased; noOfApplicantsChanged: boolean;
+  liveEscrowAmount; currentEscrowAmount; tempEscrow: number;
+
   constructor(
     public activeModal: NgbActiveModal,
     private jhiAlertService: JhiAlertService,
@@ -115,20 +130,33 @@ export class JobDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.noOfApplicantsChanged = false;
     this.discountedJobCost = 0;
     this.graduationDateAdded = false;
     this.graduationFromDateAdded = false;
     this.graduationToDateAdded = false;
     this.businessPlanEnabled = false;
     this.isSaving = false;
+    this.prevNoOfApplicants = 0;
+    this.addedQualifications = [];
+    this.removedQualifications = [];
+    this.employmentTypeChanged = false;
+    this.jobTypeChanged = false;
     this.qualificationCost = 0;
     this.coursesCost = 0;
+    this.tempEscrow = 0;
+    this.addingFilter = false;
+    this.filter = false;
+    this.jobInitiate = false;
+    this.currentEscrowAmount = 0;
     this.scoreCost = 0;
     this.gradDateCost = 0;
     this.languageCost = 0;
     this.genderCost = 0;
     this.jobCostDifference = 0;
-    this.escrowAmount =0;
+    this.escrowAmount = 0;
+    this.liveEscrowAmount = 0;
+    this.amountPaid = 0;
     this.scoreAdded = false;
     this.genderAdded = false;
     this.filterMap = new Map<string, number>();
@@ -144,7 +172,7 @@ export class JobDialogComponent implements OnInit {
       .subscribe((res: ResponseWrapper) => {
         this.appConfigs = res.json;
         this.appConfigs.forEach((appConfig) => {
-          if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName.toUpperCase())> -1) {
+          if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName.toUpperCase()) > -1) {
             this.businessPlanEnabled = appConfig.configValue;
           }
         });
@@ -188,16 +216,17 @@ export class JobDialogComponent implements OnInit {
     if (this.job.id) {
       this.isNew = false;
       this.prevJob = deepcopy(this.job);
-
-      this.prevJobCost = this.job.jobCost;
-      if (this.job.jobFilters) {
-        this.initializeFormFilterData();
-      }
+      //this.prevJobCost = this.job.jobCost;
+      this.prevJobCost = this.job.originalJobCost;
+      this.amountPaid = this.job.amountPaid;
+      this.noOfApplicants = this.job.noOfApplicants;
+      this.initializeFormFilterData();
       this.escrowAmount = this.job.corporate.escrowAmount;
-      this.job.jobCost = this.prevJobCost;
+      this.currentEscrowAmount = this.job.corporate.escrowAmount ? this.job.corporate.escrowAmount : 0;
+      // this.job.jobCost = this.prevJobCost;
       this.amountOutstanding = this.prevJobCost - this.job.amountPaid;
-      this.filterCost = this.job.jobCost / this.job.noOfApplicants;
-      //console.log('check this' + this.filterCost);
+      // this.filterCost = this.job.jobCost / this.job.noOfApplicants;
+      this.filterCost = this.job.originalJobCost / this.job.noOfApplicants;
     } else {
       this.isNew = true;
       this.job.noOfApplicants = 20;
@@ -207,8 +236,12 @@ export class JobDialogComponent implements OnInit {
   }
 
   initializeFormFilterData() {
+
     this.employmentTypeCost.push(this.job.employmentType.employmentTypeCost);
+    this.prevEmploymentType = this.job.employmentType;
     this.jobTypeCost.push(this.job.jobType.jobTypeCost);
+    this.prevJobType = this.job.jobType;
+    this.prevNoOfApplicants = this.job.noOfApplicants;
     this.job.jobFilters.forEach((jobFilter) => {
       this.jobFilter.id = jobFilter.id;
       this.basic = jobFilter.filterDescription.basic;
@@ -216,7 +249,9 @@ export class JobDialogComponent implements OnInit {
       this.universities = jobFilter.filterDescription.universities;
       this.premium = jobFilter.filterDescription.premium;
       this.courses = jobFilter.filterDescription.courses;
+      // this.prevCourses = jobFilter.filterDescription.courses;
       this.qualifications = jobFilter.filterDescription.qualifications;
+      this.prevQualifications = jobFilter.filterDescription.qualifications;
       this.scoreType = jobFilter.filterDescription.scoreType;
       this.setScoreControl();
       this.percentage = jobFilter.filterDescription.percentage;
@@ -235,7 +270,9 @@ export class JobDialogComponent implements OnInit {
       this.graduationToDate = jobFilter.filterDescription.graduationToDate;
       this.showDateControl();
       this.languages = jobFilter.filterDescription.languages;
+      this.prevLanguages = jobFilter.filterDescription.languages;
       this.gender = jobFilter.filterDescription.gender;
+      this.prevGender = jobFilter.filterDescription.gender;
       this.jobCostDifference = 0;
 
     });
@@ -319,13 +356,30 @@ export class JobDialogComponent implements OnInit {
 
   }
   numOfCandidateValueChange(value) {
+    // this.noOfApplicantsChanged = false; 
+    console.log('values on num of candidates is ' + value + ' th job candidate is ' + this.job.noOfApplicants + ' no of cand is ' + this.noOfApplicants);
     if (value < 20) {
       this.numberOfCandidateError = true;
     } else {
-      this.job.noOfApplicants = value;
-      this.numberOfCandidateError = false;
-      this.updateJobCost();
+      if (value < this.noOfApplicants) {
+        console.log('values less than');
+        this.job.noOfApplicants = value;
+        this.noOfApplicantsDecreased = true;
+        this.noOfApplicantsIncreased = false;
+        this.numberOfCandidateError = false;
+        this.updateJobCost();
+      } else if (value > this.noOfApplicants) {
+        console.log('values gretare than');
+        this.job.noOfApplicants = value;
+        this.noOfApplicantsDecreased = false;
+        this.noOfApplicantsIncreased = true;
+        this.numberOfCandidateError = false;
+        this.updateJobCost();
+      }
+      this.noOfApplicantsChanged = true;
+      this.noOfApplicants = value;
     }
+
   }
   togglePremiumFilter() {
     if (!this.premium) {
@@ -357,24 +411,75 @@ export class JobDialogComponent implements OnInit {
     //console.log('Filter cost add on is ' + this.filterCost);
   }
 
-  addQualificationCost() {
+  addQualificationCost(value?) {
+    if (!this.valuePresent(this.addedQualifications, value)) {
+      this.addedQualifications.push(value);
+    }
     if (this.qualifications && this.qualifications.length <= 1) {
       this.qualificationCost += this.filterMap.get(this.QUALIFICATION);
       this.filterCost += this.filterMap.get(this.QUALIFICATION);
     }
     this.updateJobCost();
-
+    console.log('added one is ' + JSON.stringify(this.addedQualifications));
+    console.log('removed one is ' + JSON.stringify(this.removedQualifications));
   }
-  removeQualificationCost() {
+
+  valuePresent(dataSet, value) {
+    console.log('in value present');
+    const iterator = dataSet.values();
+    let done = false;
+    let valuePresent = false;
+    let iteratorValue;
+    while (!done) {
+      iteratorValue = iterator.next();
+      done = iteratorValue.done;
+      if (iteratorValue.value) {
+        if (equal(iteratorValue.value, value) && !done) {
+          console.log('in if');
+          valuePresent = true;
+        }
+      }
+
+    }
+    return valuePresent;
+  }
+
+  removeQualificationCost(value?) {
+    if (!this.valuePresent(this.removedQualifications, value)) {
+      this.removedQualifications.push(value);
+    }
     if (this.qualifications && this.qualifications.length === 0) {
       this.qualificationCost -= this.filterMap.get(this.QUALIFICATION);
       this.filterCost -= this.filterMap.get(this.QUALIFICATION);
     }
     this.updateJobCost();
+    console.log('added one is ' + JSON.stringify(this.addedQualifications));
+    console.log('removwd one is ' + JSON.stringify(this.removedQualifications));
   }
 
+ /* filterArray(sourceData, filterData) {
+    console.log('source dat is '+JSON.stringify(sourceData));
+    console.log('filter dat is '+JSON.stringify(filterData));
+    let filteredData = [];
+    if (filterData.length === 0) {
+      filteredData = sourceData;
+    } else {
+      for (let i in sourceData) {
+        for (let filter in filterData) {
+          if (equal(sourceData[i], filterData[filter])) {
+            filteredData = sourceData.splice(i,1);
+            sourceData = filteredData;
+          }
+        }
+      }
+    }
+
+    return filteredData;
+  }
+*/
+  
   addCourseCost() {
-    // console.log("Qualifications are "+this.qualifications);
+
     if (this.courses && this.courses.length <= 1) {
       this.coursesCost += this.filterMap.get(this.COURSE);
       this.filterCost += this.filterMap.get(this.COURSE);
@@ -478,20 +583,27 @@ export class JobDialogComponent implements OnInit {
     this.preview = false;
   }
 
-/*  offsetEscrow() {
+  enterFilters() {
+    this.filter = true;
 
-    if (this.job.corporate.escrowAmount && this.useEscrow) {
-      this.job.jobCost -= this.job.corporate.escrowAmount;
-      this.job.corporate.escrowAmount -= this.job.corporate.escrowAmount;
-    } else if (this.job.corporate.escrowAmount && !this.useEscrow) {
-      this.job.jobCost += this.job.corporate.escrowAmount;
-      this.job.corporate.escrowAmount += this.job.corporate.escrowAmount;
-    }
   }
-*/
+
+  exitFilters() {
+    this.filter = false;
+  }
+
+  enterJobInitiate() {
+    this.jobInitiate = true;
+
+  }
+
+  exitJobInitiate() {
+    this.jobInitiate = false;
+  }
+
   offsetEscrow() {
     //console.log('value os check box escrow '+this.useEscrow);
-     //console.log('value local escrow fild '+this.escrowAmount);
+    //console.log('value local escrow fild '+this.escrowAmount);
     if (this.job.corporate.escrowAmount && this.useEscrow) {
       if (this.job.corporate.escrowAmount > this.job.jobCost) {
         this.job.corporate.escrowAmount -= this.job.jobCost;
@@ -502,11 +614,11 @@ export class JobDialogComponent implements OnInit {
         this.job.corporate.escrowAmount -= this.job.corporate.escrowAmount;
         this.job.escrowAmountUsed = this.job.corporate.escrowAmount;
       }
-    } else if ( !this.useEscrow) {
+    } else if (!this.useEscrow) {
       //console.log('in else');
       this.job.jobCost += this.escrowAmount;
       this.job.corporate.escrowAmount += this.escrowAmount;
-      this.job.escrowAmountUsed -=this.escrowAmount;
+      this.job.escrowAmountUsed -= this.escrowAmount;
     }
     //console.log('copr amunt es'+this.job.corporate.escrowAmount);
     //console.log('job costs'+this.job.jobCost);
@@ -528,11 +640,15 @@ export class JobDialogComponent implements OnInit {
 
   calculateDiscountedCost() {
     this.setPayment();
-    this.discountedJobCost = (this.job.jobCost * this.filterMap.get(this.DISCOUNT) / 100);
+    //this.discountedJobCost = (this.job.jobCost * this.filterMap.get(this.DISCOUNT) / 100);
+    this.discountedJobCost = (this.job.originalJobCost * this.filterMap.get(this.DISCOUNT) / 100);
   }
 
   applyDiscount() {
-    this.job.jobCost -= this.discountedJobCost;
+    //this.job.jobCost -= this.discountedJobCost;
+    this.job.jobCost = this.job.originalJobCost - this.discountedJobCost;
+    this.job.upfrontDiscountRate = this.filterMap.get(this.DISCOUNT);
+    this.job.upfrontDiscountAmount = this.discountedJobCost;
   }
 
   revertDiscount() {
@@ -576,13 +692,26 @@ export class JobDialogComponent implements OnInit {
   }
 
   updateJobCost() {
-    //console.log('Filter cost is =======' + JSON.stringify(this.filterCost));
+    this.jobCostDifference = 0;
     this.job.jobCost = this.job.noOfApplicants * (this.filterCost);
+    if (!this.prevJobCost || this.prevJobCost === 0) {
+      this.job.originalJobCost = this.job.jobCost;
+    }
     if (this.prevJobCost) {
       this.jobCostDifference = this.job.jobCost - this.prevJobCost;
+      //this.jobCostDifference = this.job.originalJobCost - this.prevJobCost;
+      console.log('job cost diff is ' + this.jobCostDifference);
       if (this.jobCostDifference < 0) {
-        this.job.corporate.escrowAmount = this.absoluteValue(this.jobCostDifference);
+        this.liveEscrowAmount = this.absoluteValue(this.jobCostDifference);
+        this.job.corporate.escrowAmount += this.liveEscrowAmount;
         this.job.jobCost = this.prevJobCost;
+        this.addingFilter = false;
+      } else if (this.jobCostDifference === 0) {
+        this.job.corporate.escrowAmount -= this.liveEscrowAmount;
+        this.liveEscrowAmount -= this.liveEscrowAmount;
+      } else if (this.jobCostDifference > 0) {
+        this.liveEscrowAmount -= this.liveEscrowAmount;
+        this.addingFilter = true;
       }
 
     }
@@ -597,7 +726,9 @@ export class JobDialogComponent implements OnInit {
   absoluteValue(value) {
     return Math.abs(value);
   }
+
   captureEmploymentTypeCost(value) {
+    this.employmentTypeChanged = false;
     if (value) {
       if (this.employmentTypeCost.length === 0) {
         this.employmentTypeCost.push(value.employmentTypeCost)
@@ -608,6 +739,8 @@ export class JobDialogComponent implements OnInit {
         this.employmentTypeCost.push(value.employmentTypeCost)
         this.filterCost = this.filterCost + value.employmentTypeCost;
       }
+      this.currentEmploymentType = value;
+      this.employmentTypeChanged = true;
     } else {
       this.filterCost = this.filterCost - this.employmentTypeCost.pop();
     }
@@ -615,6 +748,7 @@ export class JobDialogComponent implements OnInit {
   }
 
   captureJobTypeCost(value) {
+    this.jobTypeChanged = false;
     if (value) {
       if (this.jobTypeCost.length === 0) {
         this.jobTypeCost.push(value.jobTypeCost)
@@ -624,6 +758,8 @@ export class JobDialogComponent implements OnInit {
         this.jobTypeCost.push(value.jobTypeCost)
         this.filterCost = this.filterCost + value.jobTypeCost;
       }
+      this.currentJobType = value;
+      this.jobTypeChanged = true;
     } else {
       this.filterCost = this.filterCost - this.jobTypeCost.pop();
     }

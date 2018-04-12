@@ -39,6 +39,8 @@ describe('Filter e2e test', () => {
         expect(filterDialogPage.getFilterNameInput()).toMatch('filterName');
         filterDialogPage.setFilterCostInput('5');
         expect(filterDialogPage.getFilterCostInput()).toMatch('5');
+        filterDialogPage.setCommentsInput('comments');
+        expect(filterDialogPage.getCommentsInput()).toMatch('comments');
         filterDialogPage.save();
         expect(filterDialogPage.getSaveButton().isPresent()).toBeFalsy();
     }); 
@@ -67,6 +69,7 @@ export class FilterDialogPage {
     closeButton = element(by.css('button.close'));
     filterNameInput = element(by.css('input#field_filterName'));
     filterCostInput = element(by.css('input#field_filterCost'));
+    commentsInput = element(by.css('input#field_comments'));
 
     getModalTitle() {
         return this.modalTitle.getAttribute('jhiTranslate');
@@ -86,6 +89,14 @@ export class FilterDialogPage {
 
     getFilterCostInput = function () {
         return this.filterCostInput.getAttribute('value');
+    }
+
+    setCommentsInput = function (comments) {
+        this.commentsInput.sendKeys(comments);
+    }
+
+    getCommentsInput = function () {
+        return this.commentsInput.getAttribute('value');
     }
 
     save() {

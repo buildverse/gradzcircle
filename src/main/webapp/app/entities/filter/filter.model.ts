@@ -5,6 +5,7 @@ export class Filter implements BaseEntity {
         public id?: number,
         public filterName?: string,
         public filterCost?: number,
+        public comments?: string,
     ) {
     }
 }

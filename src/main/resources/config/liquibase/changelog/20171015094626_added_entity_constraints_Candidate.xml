@@ -43,17 +43,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="job_category"/>
         
-       
-        
-        <addForeignKeyConstraint baseColumnNames="visa_type_id"
-                                 baseTableName="candidate"
-                                 constraintName="fk_candidate_visa_type_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="visa_type"/>
-
-    </changeSet>
-
-     <changeSet id="20171128094626-1" author="abhinav">
         <addForeignKeyConstraint baseColumnNames="candidates_id"
                                  baseTableName="candidate_job"
                                  constraintName="fk_candidate_job_candidates_id"
@@ -64,5 +53,12 @@
                                  constraintName="fk_candidate_job_jobs_id"
                                  referencedColumnNames="id"
                                  referencedTableName="job"/>
+        
+        <addForeignKeyConstraint baseColumnNames="visa_type_id"
+                                 baseTableName="candidate"
+                                 constraintName="fk_candidate_visa_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="visa_type"/>
+
     </changeSet>
 </databaseChangeLog>

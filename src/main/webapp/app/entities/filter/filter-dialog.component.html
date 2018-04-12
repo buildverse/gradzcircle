@@ -22,6 +22,11 @@
             <input type="number" class="form-control" name="filterCost" id="field_filterCost"
                 [(ngModel)]="filter.filterCost"  />
         </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.filter.comments" for="field_comments">Comments</label>
+            <input type="text" class="form-control" name="comments" id="field_comments"
+                [(ngModel)]="filter.comments"  />
+        </div>
 
     </div>
     <div class="modal-footer">

@@ -47,12 +47,24 @@ describe('Job e2e test', () => {
         expect(jobDialogPage.getJobStatusInput()).toMatch('5');
         jobDialogPage.setCreateDateInput(12310020012301);
         expect(jobDialogPage.getCreateDateInput()).toMatch('2001-12-31T02:30');
+        jobDialogPage.setOriginalJobCostInput('5');
+        expect(jobDialogPage.getOriginalJobCostInput()).toMatch('5');
         jobDialogPage.setJobCostInput('5');
         expect(jobDialogPage.getJobCostInput()).toMatch('5');
         jobDialogPage.setAmountPaidInput('5');
         expect(jobDialogPage.getAmountPaidInput()).toMatch('5');
-        jobDialogPage.setAdditionalAmountChargeInput('5');
-        expect(jobDialogPage.getAdditionalAmountChargeInput()).toMatch('5');
+        jobDialogPage.setRemovedFilterAmountInput('5');
+        expect(jobDialogPage.getRemovedFilterAmountInput()).toMatch('5');
+        jobDialogPage.setAdditionalFilterAmountInput('5');
+        expect(jobDialogPage.getAdditionalFilterAmountInput()).toMatch('5');
+        jobDialogPage.setAdminChargeInput('5');
+        expect(jobDialogPage.getAdminChargeInput()).toMatch('5');
+        jobDialogPage.setAdminChargeRateInput('5');
+        expect(jobDialogPage.getAdminChargeRateInput()).toMatch('5');
+        jobDialogPage.setUpfrontDiscountRateInput('5');
+        expect(jobDialogPage.getUpfrontDiscountRateInput()).toMatch('5');
+        jobDialogPage.setUpfrontDiscountAmountInput('5');
+        expect(jobDialogPage.getUpfrontDiscountAmountInput()).toMatch('5');
         jobDialogPage.setEscrowAmountUsedInput('5');
         expect(jobDialogPage.getEscrowAmountUsedInput()).toMatch('5');
         jobDialogPage.paymentTypeSelectLastOption();
@@ -124,9 +136,15 @@ export class JobDialogPage {
     salaryInput = element(by.css('input#field_salary'));
     jobStatusInput = element(by.css('input#field_jobStatus'));
     createDateInput = element(by.css('input#field_createDate'));
+    originalJobCostInput = element(by.css('input#field_originalJobCost'));
     jobCostInput = element(by.css('input#field_jobCost'));
     amountPaidInput = element(by.css('input#field_amountPaid'));
-    additionalAmountChargeInput = element(by.css('input#field_additionalAmountCharge'));
+    removedFilterAmountInput = element(by.css('input#field_removedFilterAmount'));
+    additionalFilterAmountInput = element(by.css('input#field_additionalFilterAmount'));
+    adminChargeInput = element(by.css('input#field_adminCharge'));
+    adminChargeRateInput = element(by.css('input#field_adminChargeRate'));
+    upfrontDiscountRateInput = element(by.css('input#field_upfrontDiscountRate'));
+    upfrontDiscountAmountInput = element(by.css('input#field_upfrontDiscountAmount'));
     escrowAmountUsedInput = element(by.css('input#field_escrowAmountUsed'));
     paymentTypeSelect = element(by.css('select#field_paymentType'));
     hasBeenEditedInput = element(by.css('input#field_hasBeenEdited'));
@@ -191,6 +209,14 @@ export class JobDialogPage {
         return this.createDateInput.getAttribute('value');
     }
 
+    setOriginalJobCostInput = function (originalJobCost) {
+        this.originalJobCostInput.sendKeys(originalJobCost);
+    }
+
+    getOriginalJobCostInput = function () {
+        return this.originalJobCostInput.getAttribute('value');
+    }
+
     setJobCostInput = function (jobCost) {
         this.jobCostInput.sendKeys(jobCost);
     }
@@ -207,12 +233,52 @@ export class JobDialogPage {
         return this.amountPaidInput.getAttribute('value');
     }
 
-    setAdditionalAmountChargeInput = function (additionalAmountCharge) {
-        this.additionalAmountChargeInput.sendKeys(additionalAmountCharge);
+    setRemovedFilterAmountInput = function (removedFilterAmount) {
+        this.removedFilterAmountInput.sendKeys(removedFilterAmount);
     }
 
-    getAdditionalAmountChargeInput = function () {
-        return this.additionalAmountChargeInput.getAttribute('value');
+    getRemovedFilterAmountInput = function () {
+        return this.removedFilterAmountInput.getAttribute('value');
+    }
+
+    setAdditionalFilterAmountInput = function (additionalFilterAmount) {
+        this.additionalFilterAmountInput.sendKeys(additionalFilterAmount);
+    }
+
+    getAdditionalFilterAmountInput = function () {
+        return this.additionalFilterAmountInput.getAttribute('value');
+    }
+
+    setAdminChargeInput = function (adminCharge) {
+        this.adminChargeInput.sendKeys(adminCharge);
+    }
+
+    getAdminChargeInput = function () {
+        return this.adminChargeInput.getAttribute('value');
+    }
+
+    setAdminChargeRateInput = function (adminChargeRate) {
+        this.adminChargeRateInput.sendKeys(adminChargeRate);
+    }
+
+    getAdminChargeRateInput = function () {
+        return this.adminChargeRateInput.getAttribute('value');
+    }
+
+    setUpfrontDiscountRateInput = function (upfrontDiscountRate) {
+        this.upfrontDiscountRateInput.sendKeys(upfrontDiscountRate);
+    }
+
+    getUpfrontDiscountRateInput = function () {
+        return this.upfrontDiscountRateInput.getAttribute('value');
+    }
+
+    setUpfrontDiscountAmountInput = function (upfrontDiscountAmount) {
+        this.upfrontDiscountAmountInput.sendKeys(upfrontDiscountAmount);
+    }
+
+    getUpfrontDiscountAmountInput = function () {
+        return this.upfrontDiscountAmountInput.getAttribute('value');
     }
 
     setEscrowAmountUsedInput = function (escrowAmountUsed) {

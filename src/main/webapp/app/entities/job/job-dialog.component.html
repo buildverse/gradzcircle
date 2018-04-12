@@ -8,9 +8,8 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
-	<!--  {{job|json}} filtercost is {{filterCost}}-->
-	<div
-		*ngIf="businessPlanEnabled && job?.jobCost>0 && !preview && !job.hasBeenEdited && (isNew || job.jobStatus===0)"
+	  {{job|json}} filtercost is {{filterCost}}
+	<div *ngIf="businessPlanEnabled && job?.jobCost>0 && !preview && !job.hasBeenEdited && isNew"
 		class="d-flex justify-content-end">
 		<div class="growl growl-static">
 			<div
@@ -37,8 +36,7 @@
 			</div>
 		</div>
 	</div>
-	<div
-		*ngIf="businessPlanEnabled && prevJobCost && jobCostDifference>0 && !preview && !isNew"
+	<div *ngIf="businessPlanEnabled && prevJobCost && jobCostDifference>0 && !preview && !isNew"
 		class="d-flex justify-content-end">
 		<div class="growl growl-static">
 			<div
@@ -49,9 +47,9 @@
                 </button> -->
 				<div class="row">
 					<div class="col-md-12">
-						Cost for additional filters is &#8377; <strong>{{jobCostDifference}}</strong>
+						Your job cost is increasing by &#8377; <strong>{{jobCostDifference}}</strong>
 					</div>
-					<div class="col-md-12">On submit additional filter amount
+					<div class="col-md-12">Additional amount
 						will be charged to your account.</div>
 				</div>
 
@@ -59,18 +57,33 @@
 			</div>
 		</div>
 	</div>
-	<div
-		*ngIf="businessPlanEnabled && prevJobCost && jobCostDifference<0 && !preview"
+	<!--  <div *ngIf="businessPlanEnabled && prevJobCost && jobCostDifference>0 && !preview && !isNew && noOfApplicantsIncreased"
 		class="d-flex justify-content-end">
 		<div class="growl growl-static">
 			<div
 				class="alert alert-dark alert-dismissable d-flex justify-content-center"
 				role="alert">
-				<!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button> -->
 				<div class="row">
-					<div class="col-md-12">Your job cost is lower than earlier,
+					<div class="col-md-12">
+						Cost for additional candidates is &#8377; <strong>{{jobCostDifference}}</strong>
+					</div>
+					<div class="col-md-12">On submit additional amount
+						will be charged to your account.</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+	
+	<div *ngIf="businessPlanEnabled && prevJobCost && jobCostDifference<0 && !preview && noOfApplicantsDecreased"
+		class="d-flex justify-content-end">
+		<div class="growl growl-static">
+			<div
+				class="alert alert-dark alert-dismissable d-flex justify-content-center"
+				role="alert">
+				<div class="row">
+					<div class="col-md-12">You are reducing the number of candidates, 
 						{{absoluteValue(jobCostDifference)}} will be added to your escrow
 						account that you can use later.</div>
 
@@ -79,9 +92,26 @@
 
 			</div>
 		</div>
+	</div>-->
+	<div *ngIf="businessPlanEnabled && prevJobCost && jobCostDifference<0 && !preview"
+		class="d-flex justify-content-end">
+		<div class="growl growl-static">
+			<div
+				class="alert alert-dark alert-dismissable d-flex justify-content-center"
+				role="alert">
+				<div class="row">
+					<div class="col-md-12">Your job cost is reducing by 
+						{{absoluteValue(jobCostDifference)}}, this amount will be added to your escrow
+						account that you can use later.</div>
+
+				</div>
+
+
+			</div>
+		</div>
 	</div>
-	<div
-		*ngIf="businessPlanEnabled && !preview && (prevJob?.jobStatus===1||job.hasBeenEdited) && !isNew"
+	
+	<div *ngIf="businessPlanEnabled && !preview && !isNew && job.paymentType == 'AS_YOU_GO'"
 		class="d-flex justify-content-end">
 		<div class="growl growl-static">
 			<div
@@ -98,11 +128,27 @@
 			</div>
 		</div>
 	</div>
-	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
+	<div *ngIf="businessPlanEnabled && !preview && !isNew && job.paymentType == 'UPFRONT'"
+		class="d-flex justify-content-end">
+		<div class="growl growl-static">
+			<div
+				class="alert alert-dark alert-dismissable d-flex justify-content-center"
+				role="alert">
+				<div class="row">
+					<div class="col-md-12">
+						You have paid &#8377; <strong>{{amountPaid}}</strong> for this job post
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+   	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
 
 		<wizard navBarLocation="top" navBarLayout="large-empty-symbols">
 		<wizard-step stepTitle="Job Details" navigationSymbol="&#xf015;"
-			navigationSymbolFontFamily="FontAwesome">
+			navigationSymbolFontFamily="FontAwesome" (stepEnter)="enterJobInitiate()" (stepExit)="exitJobInitiate()">
 		<hr>
 		<div *ngIf="prevJob && !job.hasBeenEdited && prevJob.jobStatus===1">
 			<small class="offset-md-2 form-text text-muted profile-text-info">
@@ -217,7 +263,8 @@
 
 
 		</wizard-step> <wizard-step stepTitle="Filters" optionalStep
-			navigationSymbol="&#xf0b0;" navigationSymbolFontFamily="FontAwesome">
+			navigationSymbol="&#xf0b0;" navigationSymbolFontFamily="FontAwesome" 
+			(stepEnter)="enterFilters()" (stepExit)="exitFilters()">
 		<hr>
 		<div class="modal-body my-0">
 			<div class="form-inline d-flex justify-content-around">
@@ -656,17 +703,61 @@
 				<h4 jhiTranslate="gradzcircleApp.job.jobPostPreviewMessage"></h4>
 			</div>
 		</div>
-		<div class="row mx-4">
-			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.jobType"></div>
-			<div class="col-md-6 d-flex justify-content-center">{{job.jobType?.jobType}}</div>
-
+		<div *ngIf="!(prevEmploymentType && prevJobType); else changedTypes">
+			<div class="row mx-4">
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.jobType"></div>
+				<div class="col-md-6 d-flex justify-content-center">{{job.jobType?.jobType}}</div>
+	
+			</div>
+			<div class="row mx-4 mt-4">
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.employmentType"></div>
+				<div class="col-md-6 d-flex justify-content-center">{{job.employmentType?.employmentType}}</div>
+			</div>
 		</div>
-		<div class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.employmentType"></div>
-			<div class="col-md-6 d-flex justify-content-center">{{job.employmentType?.employmentType}}</div>
-		</div>
+		<ng-template #changedTypes>
+			<div *ngIf="prevEmploymentType?.id != currentEmploymentType?.id && employmentTypeChanged; else sameEmploymentType">
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.prevEmploymentType"></div>
+					<div class="col-md-6 d-flex justify-content-center text-danger">{{prevEmploymentType?.employmentType}}</div>
+		
+				</div>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.newEmploymentType"></div>
+					<div class="col-md-6 d-flex justify-content-center text-success">{{currentEmploymentType?.employmentType}}</div>
+				</div>
+			</div>
+			<ng-template #sameEmploymentType>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.employmentType"></div>
+					<div class="col-md-6 d-flex justify-content-center">{{job.employmentType?.employmentType}}</div>
+				</div>
+			</ng-template>
+			<div *ngIf="prevJobType?.id != currentJobType?.id && jobTypeChanged; else sameJobType">
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.prevJobType"></div>
+					<div class="col-md-6 d-flex justify-content-center text-danger">{{prevJobType?.jobType}}</div>
+		
+				</div>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.newJobType"></div>
+					<div class="col-md-6 d-flex justify-content-center text-success">{{currentJobType?.jobType}}</div>
+				</div>
+			</div>
+			<ng-template #sameJobType>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 font-weight-bold text-muted"
+						jhiTranslate="gradzcircleApp.job.jobType"></div>
+					<div class="col-md-6 d-flex justify-content-center">{{job.jobType?.jobType}}</div>
+				</div>
+			</ng-template>
+	    </ng-template>
 		<div class="row mx-4 mt-4">
 			<div class="col-md-6 font-weight-bold text-muted"
 				jhiTranslate="gradzcircleApp.job.jobTitle"></div>
@@ -823,13 +914,18 @@
 				<div
 					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377; {{genderCost+languageCost+gradDateCost}}</div>
 			</div>
-			<div class="row mx-4 mt-4">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Escrow
+			<div class="row mx-4 mt-4" *ngIf="job?.corporate?.escrowAmount>0">
+				<div class="col-md-6 d-flex font-weight-bold text-muted ">Current Escrow Amount</div>
+				<div
+					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377; {{currentEscrowAmount}}</div>
+			</div>
+			<div class="row mx-4 mt-4" *ngIf="job?.corporate?.escrowAmount>0 && liveEscrowAmount >0">
+				<div class="col-md-6 d-flex font-weight-bold text-muted "> New Escrow
 					Amount</div>
 				<div
 					class="form-inline col-md-6 font-weight-bold text-muted justify-content-center d-flex"
-					*ngIf="job?.corporate?.escrowAmount>0||useEscrow; else nullEscrow">&#8377; {{job.corporate.escrowAmount}}
-					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount">
+					*ngIf="job?.corporate?.escrowAmount>0||useEscrow; else nullEscrow">&#8377; {{currentEscrowAmount}} + &#8377; {{liveEscrowAmount}} = &#8377; {{currentEscrowAmount+liveEscrowAmount}}
+					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount && addingFilter">
 						<label for="use_escrow"> 
 							<input type="checkbox" class="form-check-input text-muted" name="useEscrow" id="use_escrow" [(ngModel)]="useEscrow" (ngModelChange)="offsetEscrow()"> Use Escrow
 					    </label>
@@ -846,26 +942,50 @@
 				<div
 					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{0}}</div>
 			</div>
-			<div class="row mx-4 mt-4" *ngIf="job.noOfApplicants>0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">No.
+			<div class="row mx-4 mt-4" *ngIf="job.noOfApplicants===prevNoOfApplicants; else deltaNoOfApplicants">
+				<div class="col-md-6 d-flex font-weight-bold text-muted " jhiTranslate="gradzcircleApp.job.noOfApplicants">No.
 					Of candidate</div>
 				<div
 					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{job.noOfApplicants}}</div>
 			</div>
-			<div class="row mx-4 mt-4 ">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Total</div>
+			<ng-template #deltaNoOfApplicants>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 d-flex font-weight-bold text-muted " jhiTranslate="gradzcircleApp.job.prevNoOfApplicants">No.
+						Of candidate
+					</div>
+					<div class="col-md-6 d-flex font-weight-bold text-muted text-danger justify-content-center">{{prevNoOfApplicants}}
+					</div>
+				</div>
+				<div class="row mx-4 mt-4">
+					<div class="col-md-6 d-flex font-weight-bold text-muted " jhiTranslate="gradzcircleApp.job.currNoOfApplicants">No.
+						Of candidate</div>
+					<div
+						class="col-md-6 d-flex font-weight-bold text-muted text-success justify-content-center">{{job.noOfApplicants}}
+					</div>
+				</div>
+			</ng-template>
+			pre employment cost {{prevEmploymentTypeCost}} current is {{currentEmploymentTypeCost|json}}
+			pre job cost {{prevJobTypeCost}} current is {{currentJobTypeCost|json}}
+			<div class="row mx-4 mt-4">
+				<div class="col-md-6 d-flex font-weight-bold text-muted" *ngIf="jobCostDifference===0; else edit">Total</div>
+				<ng-template #edit>
+					<div class="col-md-6 d-flex font-weight-bold text-muted" *ngIf="jobCostDifference>0" >Additional Amount Payable</div>
+				</ng-template>
 				<div
 					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
 					*ngIf="job?.corporate?.escrowAmount && useEscrow; else noEscrow"> {{filterCost}}
 					x {{job.noOfApplicants}} - {{job.corporate.escrowAmount}} = &#8377;
 					{{job.jobCost}}</div>
 				<ng-template #noEscrow>
-				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377; {{filterCost}}
-					x {{job.noOfApplicants}} = &#8377; {{job.jobCost}}</div>
+					<div *ngIf="escrowAmount===0; else noEscrowAmount"
+						class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377; {{filterCost}}
+						x {{job.noOfApplicants}} = &#8377; {{job.jobCost}}</div>
+					<ng-template #noEscrowAmount>
+						<div class="col-md-6 d-flex font-weight-bold text-muted justify-content-center text-danger">N/A</div>
+					</ng-template>
 				</ng-template>
 			</div>
-			<div class="row mx-4 mt-4" *ngIf="jobCostDifference>=0">
+			<div class="row mx-4 mt-4" *ngIf="jobCostDifference>0">
 				<div class="mx-auto form-check justify-content-center">
 					<label class="form-check-label"> <input type="radio"
 						name="paymentType" value="now" [(ngModel)]="paymentType"
@@ -878,7 +998,7 @@
 					</label>
 				</div>
 			</div>
-			<div *ngIf="businessPlanEnabled && !paymentType && jobCostDifference>=0; else escrowCondition"
+			<div *ngIf="businessPlanEnabled && !paymentType && jobCostDifference>0; else escrowCondition"
 				class="d-flex justify-content-end">
 				<div class="growl growl-static">
 					<div class="alert alert-info d-flex justify-content-center"
@@ -924,7 +1044,7 @@
 			</div>
 			<div class=" p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-primary"
-					[disabled]="businessPlanEnabled && ! paymentType && jobCostDifference>=0"
+					[disabled]="businessPlanEnabled && ! paymentType && jobCostDifference>0"
 					(click)="save(ACTIVE)">Submit</button>
 			</div>
 		</div>

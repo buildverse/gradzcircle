@@ -227,9 +227,12 @@
 							Cost</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.amountPaid">Amount
 							Paid</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.job.additionalAmountCharge">Additional
-							Amount Charge</span></th>
+							 <th><span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed Filter Amount</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.additionalFilterAmount">Additional Filter Amount</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.adminCharge">Admin Charge</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.adminChargeRate">Admin Charge Rate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.upfrontDiscountRate">Upfront Discount Rate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.upfrontDiscountAmount">Upfront Discount Amount</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow
 							Amount Used</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.paymentType">Payment
@@ -265,9 +268,15 @@
 					<td>{{job.jobStatus}}</td>
 
 					<td>{{job.createDate | date:'medium'}}</td>
-					<td>{{job.jobCost}}</td>
-					<td>{{job.amountPaid}}</td>
-					<td>{{job.additionalAmountCharge}}</td>
+					 <td>{{job.originalJobCost}}</td>
+                <td>{{job.jobCost}}</td>
+                <td>{{job.amountPaid}}</td>
+                <td>{{job.removedFilterAmount}}</td>
+                <td>{{job.additionalFilterAmount}}</td>
+                <td>{{job.adminCharge}}</td>
+                <td>{{job.adminChargeRate}}</td>
+                <td>{{job.upfrontDiscountRate}}</td>
+                <td>{{job.upfrontDiscountAmount}}</td>
 					<td>{{job.escrowAmountUsed}}</td>
 					<td
 						jhiTranslate="{{'gradzcircleApp.PaymentType.' + job.paymentType}}">{{job.paymentType}}</td>

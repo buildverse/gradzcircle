@@ -9,6 +9,10 @@
         {
             "fieldName": "filterCost",
             "fieldType": "Double"
+        },
+        {
+            "fieldName": "comments",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171128154428",

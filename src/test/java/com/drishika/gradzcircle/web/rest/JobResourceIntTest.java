@@ -62,14 +62,32 @@ public class JobResourceIntTest {
     private static final ZonedDateTime DEFAULT_CREATE_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATE_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final Double DEFAULT_ORIGINAL_JOB_COST = 1D;
+    private static final Double UPDATED_ORIGINAL_JOB_COST = 2D;
+
     private static final Double DEFAULT_JOB_COST = 1D;
     private static final Double UPDATED_JOB_COST = 2D;
 
     private static final Double DEFAULT_AMOUNT_PAID = 1D;
     private static final Double UPDATED_AMOUNT_PAID = 2D;
 
-    private static final Double DEFAULT_ADDITIONAL_AMOUNT_CHARGE = 1D;
-    private static final Double UPDATED_ADDITIONAL_AMOUNT_CHARGE = 2D;
+    private static final Double DEFAULT_REMOVED_FILTER_AMOUNT = 1D;
+    private static final Double UPDATED_REMOVED_FILTER_AMOUNT = 2D;
+
+    private static final Double DEFAULT_ADDITIONAL_FILTER_AMOUNT = 1D;
+    private static final Double UPDATED_ADDITIONAL_FILTER_AMOUNT = 2D;
+
+    private static final Double DEFAULT_ADMIN_CHARGE = 1D;
+    private static final Double UPDATED_ADMIN_CHARGE = 2D;
+
+    private static final Double DEFAULT_ADMIN_CHARGE_RATE = 1D;
+    private static final Double UPDATED_ADMIN_CHARGE_RATE = 2D;
+
+    private static final Double DEFAULT_UPFRONT_DISCOUNT_RATE = 1D;
+    private static final Double UPDATED_UPFRONT_DISCOUNT_RATE = 2D;
+
+    private static final Double DEFAULT_UPFRONT_DISCOUNT_AMOUNT = 1D;
+    private static final Double UPDATED_UPFRONT_DISCOUNT_AMOUNT = 2D;
 
     private static final Double DEFAULT_ESCROW_AMOUNT_USED = 1D;
     private static final Double UPDATED_ESCROW_AMOUNT_USED = 2D;
@@ -141,9 +159,15 @@ public class JobResourceIntTest {
             .salary(DEFAULT_SALARY)
             .jobStatus(DEFAULT_JOB_STATUS)
             .createDate(DEFAULT_CREATE_DATE)
+            .originalJobCost(DEFAULT_ORIGINAL_JOB_COST)
             .jobCost(DEFAULT_JOB_COST)
             .amountPaid(DEFAULT_AMOUNT_PAID)
-            .additionalAmountCharge(DEFAULT_ADDITIONAL_AMOUNT_CHARGE)
+            .removedFilterAmount(DEFAULT_REMOVED_FILTER_AMOUNT)
+            .additionalFilterAmount(DEFAULT_ADDITIONAL_FILTER_AMOUNT)
+            .adminCharge(DEFAULT_ADMIN_CHARGE)
+            .adminChargeRate(DEFAULT_ADMIN_CHARGE_RATE)
+            .upfrontDiscountRate(DEFAULT_UPFRONT_DISCOUNT_RATE)
+            .upfrontDiscountAmount(DEFAULT_UPFRONT_DISCOUNT_AMOUNT)
             .escrowAmountUsed(DEFAULT_ESCROW_AMOUNT_USED)
             .paymentType(DEFAULT_PAYMENT_TYPE)
             .hasBeenEdited(DEFAULT_HAS_BEEN_EDITED)
@@ -182,9 +206,15 @@ public class JobResourceIntTest {
         assertThat(testJob.getSalary()).isEqualTo(DEFAULT_SALARY);
         assertThat(testJob.getJobStatus()).isEqualTo(DEFAULT_JOB_STATUS);
         assertThat(testJob.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(testJob.getOriginalJobCost()).isEqualTo(DEFAULT_ORIGINAL_JOB_COST);
         assertThat(testJob.getJobCost()).isEqualTo(DEFAULT_JOB_COST);
         assertThat(testJob.getAmountPaid()).isEqualTo(DEFAULT_AMOUNT_PAID);
-        assertThat(testJob.getAdditionalAmountCharge()).isEqualTo(DEFAULT_ADDITIONAL_AMOUNT_CHARGE);
+        assertThat(testJob.getRemovedFilterAmount()).isEqualTo(DEFAULT_REMOVED_FILTER_AMOUNT);
+        assertThat(testJob.getAdditionalFilterAmount()).isEqualTo(DEFAULT_ADDITIONAL_FILTER_AMOUNT);
+        assertThat(testJob.getAdminCharge()).isEqualTo(DEFAULT_ADMIN_CHARGE);
+        assertThat(testJob.getAdminChargeRate()).isEqualTo(DEFAULT_ADMIN_CHARGE_RATE);
+        assertThat(testJob.getUpfrontDiscountRate()).isEqualTo(DEFAULT_UPFRONT_DISCOUNT_RATE);
+        assertThat(testJob.getUpfrontDiscountAmount()).isEqualTo(DEFAULT_UPFRONT_DISCOUNT_AMOUNT);
         assertThat(testJob.getEscrowAmountUsed()).isEqualTo(DEFAULT_ESCROW_AMOUNT_USED);
         assertThat(testJob.getPaymentType()).isEqualTo(DEFAULT_PAYMENT_TYPE);
         assertThat(testJob.isHasBeenEdited()).isEqualTo(DEFAULT_HAS_BEEN_EDITED);
@@ -235,9 +265,15 @@ public class JobResourceIntTest {
             .andExpect(jsonPath("$.[*].salary").value(hasItem(DEFAULT_SALARY.doubleValue())))
             .andExpect(jsonPath("$.[*].jobStatus").value(hasItem(DEFAULT_JOB_STATUS)))
             .andExpect(jsonPath("$.[*].createDate").value(hasItem(sameInstant(DEFAULT_CREATE_DATE))))
+            .andExpect(jsonPath("$.[*].originalJobCost").value(hasItem(DEFAULT_ORIGINAL_JOB_COST.doubleValue())))
             .andExpect(jsonPath("$.[*].jobCost").value(hasItem(DEFAULT_JOB_COST.doubleValue())))
             .andExpect(jsonPath("$.[*].amountPaid").value(hasItem(DEFAULT_AMOUNT_PAID.doubleValue())))
-            .andExpect(jsonPath("$.[*].additionalAmountCharge").value(hasItem(DEFAULT_ADDITIONAL_AMOUNT_CHARGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].removedFilterAmount").value(hasItem(DEFAULT_REMOVED_FILTER_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].additionalFilterAmount").value(hasItem(DEFAULT_ADDITIONAL_FILTER_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].adminCharge").value(hasItem(DEFAULT_ADMIN_CHARGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].adminChargeRate").value(hasItem(DEFAULT_ADMIN_CHARGE_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].upfrontDiscountRate").value(hasItem(DEFAULT_UPFRONT_DISCOUNT_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].upfrontDiscountAmount").value(hasItem(DEFAULT_UPFRONT_DISCOUNT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].escrowAmountUsed").value(hasItem(DEFAULT_ESCROW_AMOUNT_USED.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentType").value(hasItem(DEFAULT_PAYMENT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].hasBeenEdited").value(hasItem(DEFAULT_HAS_BEEN_EDITED.booleanValue())))
@@ -265,9 +301,15 @@ public class JobResourceIntTest {
             .andExpect(jsonPath("$.salary").value(DEFAULT_SALARY.doubleValue()))
             .andExpect(jsonPath("$.jobStatus").value(DEFAULT_JOB_STATUS))
             .andExpect(jsonPath("$.createDate").value(sameInstant(DEFAULT_CREATE_DATE)))
+            .andExpect(jsonPath("$.originalJobCost").value(DEFAULT_ORIGINAL_JOB_COST.doubleValue()))
             .andExpect(jsonPath("$.jobCost").value(DEFAULT_JOB_COST.doubleValue()))
             .andExpect(jsonPath("$.amountPaid").value(DEFAULT_AMOUNT_PAID.doubleValue()))
-            .andExpect(jsonPath("$.additionalAmountCharge").value(DEFAULT_ADDITIONAL_AMOUNT_CHARGE.doubleValue()))
+            .andExpect(jsonPath("$.removedFilterAmount").value(DEFAULT_REMOVED_FILTER_AMOUNT.doubleValue()))
+            .andExpect(jsonPath("$.additionalFilterAmount").value(DEFAULT_ADDITIONAL_FILTER_AMOUNT.doubleValue()))
+            .andExpect(jsonPath("$.adminCharge").value(DEFAULT_ADMIN_CHARGE.doubleValue()))
+            .andExpect(jsonPath("$.adminChargeRate").value(DEFAULT_ADMIN_CHARGE_RATE.doubleValue()))
+            .andExpect(jsonPath("$.upfrontDiscountRate").value(DEFAULT_UPFRONT_DISCOUNT_RATE.doubleValue()))
+            .andExpect(jsonPath("$.upfrontDiscountAmount").value(DEFAULT_UPFRONT_DISCOUNT_AMOUNT.doubleValue()))
             .andExpect(jsonPath("$.escrowAmountUsed").value(DEFAULT_ESCROW_AMOUNT_USED.doubleValue()))
             .andExpect(jsonPath("$.paymentType").value(DEFAULT_PAYMENT_TYPE.toString()))
             .andExpect(jsonPath("$.hasBeenEdited").value(DEFAULT_HAS_BEEN_EDITED.booleanValue()))
@@ -303,9 +345,15 @@ public class JobResourceIntTest {
             .salary(UPDATED_SALARY)
             .jobStatus(UPDATED_JOB_STATUS)
             .createDate(UPDATED_CREATE_DATE)
+            .originalJobCost(UPDATED_ORIGINAL_JOB_COST)
             .jobCost(UPDATED_JOB_COST)
             .amountPaid(UPDATED_AMOUNT_PAID)
-            .additionalAmountCharge(UPDATED_ADDITIONAL_AMOUNT_CHARGE)
+            .removedFilterAmount(UPDATED_REMOVED_FILTER_AMOUNT)
+            .additionalFilterAmount(UPDATED_ADDITIONAL_FILTER_AMOUNT)
+            .adminCharge(UPDATED_ADMIN_CHARGE)
+            .adminChargeRate(UPDATED_ADMIN_CHARGE_RATE)
+            .upfrontDiscountRate(UPDATED_UPFRONT_DISCOUNT_RATE)
+            .upfrontDiscountAmount(UPDATED_UPFRONT_DISCOUNT_AMOUNT)
             .escrowAmountUsed(UPDATED_ESCROW_AMOUNT_USED)
             .paymentType(UPDATED_PAYMENT_TYPE)
             .hasBeenEdited(UPDATED_HAS_BEEN_EDITED)
@@ -330,9 +378,15 @@ public class JobResourceIntTest {
         assertThat(testJob.getSalary()).isEqualTo(UPDATED_SALARY);
         assertThat(testJob.getJobStatus()).isEqualTo(UPDATED_JOB_STATUS);
         assertThat(testJob.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
+        assertThat(testJob.getOriginalJobCost()).isEqualTo(UPDATED_ORIGINAL_JOB_COST);
         assertThat(testJob.getJobCost()).isEqualTo(UPDATED_JOB_COST);
         assertThat(testJob.getAmountPaid()).isEqualTo(UPDATED_AMOUNT_PAID);
-        assertThat(testJob.getAdditionalAmountCharge()).isEqualTo(UPDATED_ADDITIONAL_AMOUNT_CHARGE);
+        assertThat(testJob.getRemovedFilterAmount()).isEqualTo(UPDATED_REMOVED_FILTER_AMOUNT);
+        assertThat(testJob.getAdditionalFilterAmount()).isEqualTo(UPDATED_ADDITIONAL_FILTER_AMOUNT);
+        assertThat(testJob.getAdminCharge()).isEqualTo(UPDATED_ADMIN_CHARGE);
+        assertThat(testJob.getAdminChargeRate()).isEqualTo(UPDATED_ADMIN_CHARGE_RATE);
+        assertThat(testJob.getUpfrontDiscountRate()).isEqualTo(UPDATED_UPFRONT_DISCOUNT_RATE);
+        assertThat(testJob.getUpfrontDiscountAmount()).isEqualTo(UPDATED_UPFRONT_DISCOUNT_AMOUNT);
         assertThat(testJob.getEscrowAmountUsed()).isEqualTo(UPDATED_ESCROW_AMOUNT_USED);
         assertThat(testJob.getPaymentType()).isEqualTo(UPDATED_PAYMENT_TYPE);
         assertThat(testJob.isHasBeenEdited()).isEqualTo(UPDATED_HAS_BEEN_EDITED);
@@ -405,9 +459,15 @@ public class JobResourceIntTest {
             .andExpect(jsonPath("$.[*].salary").value(hasItem(DEFAULT_SALARY.doubleValue())))
             .andExpect(jsonPath("$.[*].jobStatus").value(hasItem(DEFAULT_JOB_STATUS)))
             .andExpect(jsonPath("$.[*].createDate").value(hasItem(sameInstant(DEFAULT_CREATE_DATE))))
+            .andExpect(jsonPath("$.[*].originalJobCost").value(hasItem(DEFAULT_ORIGINAL_JOB_COST.doubleValue())))
             .andExpect(jsonPath("$.[*].jobCost").value(hasItem(DEFAULT_JOB_COST.doubleValue())))
             .andExpect(jsonPath("$.[*].amountPaid").value(hasItem(DEFAULT_AMOUNT_PAID.doubleValue())))
-            .andExpect(jsonPath("$.[*].additionalAmountCharge").value(hasItem(DEFAULT_ADDITIONAL_AMOUNT_CHARGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].removedFilterAmount").value(hasItem(DEFAULT_REMOVED_FILTER_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].additionalFilterAmount").value(hasItem(DEFAULT_ADDITIONAL_FILTER_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].adminCharge").value(hasItem(DEFAULT_ADMIN_CHARGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].adminChargeRate").value(hasItem(DEFAULT_ADMIN_CHARGE_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].upfrontDiscountRate").value(hasItem(DEFAULT_UPFRONT_DISCOUNT_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].upfrontDiscountAmount").value(hasItem(DEFAULT_UPFRONT_DISCOUNT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].escrowAmountUsed").value(hasItem(DEFAULT_ESCROW_AMOUNT_USED.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentType").value(hasItem(DEFAULT_PAYMENT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].hasBeenEdited").value(hasItem(DEFAULT_HAS_BEEN_EDITED.booleanValue())))

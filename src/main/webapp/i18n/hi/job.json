@@ -22,9 +22,15 @@
             "salary": "Salary",
             "jobStatus": "Job Status",
             "createDate": "Create Date",
+            "originalJobCost": "Original Job Cost",
             "jobCost": "Job Cost",
             "amountPaid": "Amount Paid",
-            "additionalAmountCharge": "Additional Amount Charge",
+            "removedFilterAmount": "Removed Filter Amount",
+            "additionalFilterAmount": "Additional Filter Amount",
+            "adminCharge": "Admin Charge",
+            "adminChargeRate": "Admin Charge Rate",
+            "upfrontDiscountRate": "Upfront Discount Rate",
+            "upfrontDiscountAmount": "Upfront Discount Amount",
             "escrowAmountUsed": "Escrow Amount Used",
             "paymentType": "Payment Type",
             "hasBeenEdited": "Has Been Edited",
@@ -37,8 +43,7 @@
             "history": "History",
             "jobType": "Job Type",
             "employmentType": "Employment Type",
-            "corporate": "Corporate",
-            "candidate": "Candidate"
+            "corporate": "Corporate"
         }
     }
 }

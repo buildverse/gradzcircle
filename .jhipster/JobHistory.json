@@ -38,6 +38,10 @@
             "fieldType": "ZonedDateTime"
         },
         {
+            "fieldName": "originalJobCost",
+            "fieldType": "Double"
+        },
+        {
             "fieldName": "jobCost",
             "fieldType": "Double"
         },
@@ -46,11 +50,31 @@
             "fieldType": "Double"
         },
         {
-            "fieldName": "escrowAmountUsed",
+            "fieldName": "removedFilterAmount",
             "fieldType": "Double"
         },
         {
-            "fieldName": "additionalAmountCharge",
+            "fieldName": "additionalFilterAmount",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "adminCharge",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "adminChargeRate",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "upfrontDiscountRate",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "upfrontDiscountAmount",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "escrowAmountUsed",
             "fieldType": "Double"
         },
         {

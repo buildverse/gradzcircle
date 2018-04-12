@@ -30,6 +30,9 @@ public class Filter implements Serializable {
     @Column(name = "filter_cost")
     private Double filterCost;
 
+    @Column(name = "comments")
+    private String comments;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -64,6 +67,19 @@ public class Filter implements Serializable {
     public void setFilterCost(Double filterCost) {
         this.filterCost = filterCost;
     }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public Filter comments(String comments) {
+        this.comments = comments;
+        return this;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -92,6 +108,7 @@ public class Filter implements Serializable {
             "id=" + getId() +
             ", filterName='" + getFilterName() + "'" +
             ", filterCost='" + getFilterCost() + "'" +
+            ", comments='" + getComments() + "'" +
             "}";
     }
 }
