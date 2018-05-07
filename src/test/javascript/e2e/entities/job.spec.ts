@@ -53,6 +53,10 @@ describe('Job e2e test', () => {
         expect(jobDialogPage.getJobCostInput()).toMatch('5');
         jobDialogPage.setAmountPaidInput('5');
         expect(jobDialogPage.getAmountPaidInput()).toMatch('5');
+        jobDialogPage.setTotalAmountPaidInput('5');
+        expect(jobDialogPage.getTotalAmountPaidInput()).toMatch('5');
+        jobDialogPage.setNoOfApplicantsBoughtInput('5');
+        expect(jobDialogPage.getNoOfApplicantsBoughtInput()).toMatch('5');
         jobDialogPage.setRemovedFilterAmountInput('5');
         expect(jobDialogPage.getRemovedFilterAmountInput()).toMatch('5');
         jobDialogPage.setAdditionalFilterAmountInput('5');
@@ -67,6 +71,8 @@ describe('Job e2e test', () => {
         expect(jobDialogPage.getUpfrontDiscountAmountInput()).toMatch('5');
         jobDialogPage.setEscrowAmountUsedInput('5');
         expect(jobDialogPage.getEscrowAmountUsedInput()).toMatch('5');
+        jobDialogPage.setEscrowAmountAddedInput('5');
+        expect(jobDialogPage.getEscrowAmountAddedInput()).toMatch('5');
         jobDialogPage.paymentTypeSelectLastOption();
         jobDialogPage.getHasBeenEditedInput().isSelected().then(function (selected) {
             if (selected) {
@@ -139,6 +145,8 @@ export class JobDialogPage {
     originalJobCostInput = element(by.css('input#field_originalJobCost'));
     jobCostInput = element(by.css('input#field_jobCost'));
     amountPaidInput = element(by.css('input#field_amountPaid'));
+    totalAmountPaidInput = element(by.css('input#field_totalAmountPaid'));
+    noOfApplicantsBoughtInput = element(by.css('input#field_noOfApplicantsBought'));
     removedFilterAmountInput = element(by.css('input#field_removedFilterAmount'));
     additionalFilterAmountInput = element(by.css('input#field_additionalFilterAmount'));
     adminChargeInput = element(by.css('input#field_adminCharge'));
@@ -146,6 +154,7 @@ export class JobDialogPage {
     upfrontDiscountRateInput = element(by.css('input#field_upfrontDiscountRate'));
     upfrontDiscountAmountInput = element(by.css('input#field_upfrontDiscountAmount'));
     escrowAmountUsedInput = element(by.css('input#field_escrowAmountUsed'));
+    escrowAmountAddedInput = element(by.css('input#field_escrowAmountAdded'));
     paymentTypeSelect = element(by.css('select#field_paymentType'));
     hasBeenEditedInput = element(by.css('input#field_hasBeenEdited'));
     everActiveInput = element(by.css('input#field_everActive'));
@@ -233,6 +242,22 @@ export class JobDialogPage {
         return this.amountPaidInput.getAttribute('value');
     }
 
+    setTotalAmountPaidInput = function (totalAmountPaid) {
+        this.totalAmountPaidInput.sendKeys(totalAmountPaid);
+    }
+
+    getTotalAmountPaidInput = function () {
+        return this.totalAmountPaidInput.getAttribute('value');
+    }
+
+    setNoOfApplicantsBoughtInput = function (noOfApplicantsBought) {
+        this.noOfApplicantsBoughtInput.sendKeys(noOfApplicantsBought);
+    }
+
+    getNoOfApplicantsBoughtInput = function () {
+        return this.noOfApplicantsBoughtInput.getAttribute('value');
+    }
+
     setRemovedFilterAmountInput = function (removedFilterAmount) {
         this.removedFilterAmountInput.sendKeys(removedFilterAmount);
     }
@@ -287,6 +312,14 @@ export class JobDialogPage {
 
     getEscrowAmountUsedInput = function () {
         return this.escrowAmountUsedInput.getAttribute('value');
+    }
+
+    setEscrowAmountAddedInput = function (escrowAmountAdded) {
+        this.escrowAmountAddedInput.sendKeys(escrowAmountAdded);
+    }
+
+    getEscrowAmountAddedInput = function () {
+        return this.escrowAmountAddedInput.getAttribute('value');
     }
 
     setPaymentTypeSelect = function (paymentType) {

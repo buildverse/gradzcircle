@@ -157,6 +157,18 @@ public class JobResource {
 		log.debug("REST request to get all Jobs");
 		return jobRepository.findAll();
 	}
+	
+	/**
+	 * GET /activeJobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobs")
+	@Timed
+	public List<Job> getActiveJobs() {
+		log.debug("REST request to get active Jobs");
+		return jobRepository.findByJobStatus();
+	}
 
 	/**
 	 * GET /jobs/:id : get the "id" job.
@@ -199,6 +211,23 @@ public class JobResource {
 		log.debug("REST request to delete Job : {}", id);
 		jobRepository.delete(id);
 		jobSearchRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
+	
+	/**
+	 * Remove /deActivatejob/:id : Deactivate the "id" job.
+	 *
+	 * @param id
+	 *            the id of the job to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/deActivateJob/{id}")
+	@Timed
+	public ResponseEntity<Void> removeJob(@PathVariable Long id) {
+		log.debug("REST request to remove Job : {}", id);
+		//jobRepository.delete(id);
+		//jobSearchRepository.delete(id);
+		jobService.deActivateJob(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

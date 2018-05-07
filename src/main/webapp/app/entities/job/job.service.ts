@@ -12,13 +12,15 @@ import {ResponseWrapper, createRequestOption} from '../../shared';
 export class JobService {
 
   private resourceUrl = SERVER_API_URL + 'api/jobs';
+  private resourceDeActivateJobsUrl = SERVER_API_URL + 'api/deActivateJob'
+  private resourceActiveJobsUrl = SERVER_API_URL + 'api/activeJobs';
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/jobs';
 
   constructor(private http: Http, private dateUtils: JhiDateUtils) {}
 
   create(job: Job): Observable<Job> {
     const copy = this.convert(job);
-        console.log('Sending over wire in create '+JSON.stringify(job));
+       // console.log('Sending over wire in create '+JSON.stringify(job));
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -27,7 +29,7 @@ export class JobService {
 
   update(job: Job): Observable<Job> {
     const copy = this.convert(job);
-    console.log('Sending over wire in update '+JSON.stringify(job));
+   // console.log('Sending over wire in update '+JSON.stringify(job));
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -47,10 +49,21 @@ export class JobService {
     return this.http.get(this.resourceUrl, options)
       .map((res: Response) => this.convertResponse(res));
   }
+  
+  queryActiveJobs(req?: any): Observable<ResponseWrapper> {
+    const options = createRequestOption(req);
+    return this.http.get(this.resourceActiveJobsUrl, options)
+      .map((res: Response) => this.convertResponse(res));
+  }
 
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
   }
+  
+   remove(id: number): Observable<Response> {
+    return this.http.delete(`${this.resourceDeActivateJobsUrl}/${id}`);
+  }
+
 
   search(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);

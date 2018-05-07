@@ -54,6 +54,16 @@ export class JobComponent implements OnInit, OnDestroy {
     );
   }
 
+  loadActiveJobs() {
+    this.jobService.queryActiveJobs().subscribe(
+      (res: ResponseWrapper) => {
+        this.jobs = res.json;
+        this.currentSearch = '';
+      },
+      (res: ResponseWrapper) => this.onError(res.json)
+    );
+  }
+
   search(query) {
     if (!query) {
       return this.clear();
@@ -67,19 +77,23 @@ export class JobComponent implements OnInit, OnDestroy {
     this.loadAll();
   }
   ngOnInit() {
+    this.corporateId = null;
     this.DRAFT = JobConstants.DRAFT;
-
-    this.loadAll();
     this.principal.identity().then((account) => {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-        this.corporateService.findCorporateByLoginId(account.id).subscribe(((response) => {
-          this.corporateId = response.id;
-          console.log('Corproate id in job comp ' + this.corporateId);
-        }));
+        this.loadActiveJobs();
+      } else {
+        this.loadAll();
+        this.registerChangeInJobs();
       }
+      this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
+        this.corporateId = response.id;
+        this.registerChangeInJobs();
+      });
     });
-    this.registerChangeInJobs();
+   // this.registerChangeInJobs();
+
   }
 
   ngOnDestroy() {
@@ -90,7 +104,14 @@ export class JobComponent implements OnInit, OnDestroy {
     return item.id;
   }
   registerChangeInJobs() {
-    this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadAll());
+    if (this.corporateId) {
+      this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadActiveJobs());
+     // console.log('calling ative ?');
+    } else {
+      this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadAll());
+     // console.log('calling all ?');
+    }
+
   }
 
   private onError(error) {

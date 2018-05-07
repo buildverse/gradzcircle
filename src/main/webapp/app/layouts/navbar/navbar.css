@@ -113,16 +113,4 @@ Logo styles
     padding: 5px 15px;
 }
 
-.logo .logo-img {
-    height: 28px;
-    display: inline-block;
-    vertical-align: middle;
-    width: 70px;
-}
 
-.logo-img {
-    height: 100%;
-    background: url("../../../content/images/brand-white.png") no-repeat center center;
-    background-size: contain;
-    width: 100%;
-}

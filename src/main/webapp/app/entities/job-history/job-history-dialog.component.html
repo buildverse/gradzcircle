@@ -66,6 +66,16 @@
                 [(ngModel)]="jobHistory.amountPaid"  />
         </div>
         <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.totalAmountPaid" for="field_totalAmountPaid">Total Amount Paid</label>
+            <input type="number" class="form-control" name="totalAmountPaid" id="field_totalAmountPaid"
+                [(ngModel)]="jobHistory.totalAmountPaid"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantsBought" for="field_noOfApplicantsBought">No Of Applicants Bought</label>
+            <input type="number" class="form-control" name="noOfApplicantsBought" id="field_noOfApplicantsBought"
+                [(ngModel)]="jobHistory.noOfApplicantsBought"  />
+        </div>
+        <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.removedFilterAmount" for="field_removedFilterAmount">Removed Filter Amount</label>
             <input type="number" class="form-control" name="removedFilterAmount" id="field_removedFilterAmount"
                 [(ngModel)]="jobHistory.removedFilterAmount"  />
@@ -99,6 +109,11 @@
             <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.escrowAmountUsed" for="field_escrowAmountUsed">Escrow Amount Used</label>
             <input type="number" class="form-control" name="escrowAmountUsed" id="field_escrowAmountUsed"
                 [(ngModel)]="jobHistory.escrowAmountUsed"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.escrowAmountAdded" for="field_escrowAmountAdded">Escrow Amount Added</label>
+            <input type="number" class="form-control" name="escrowAmountAdded" id="field_escrowAmountAdded"
+                [(ngModel)]="jobHistory.escrowAmountAdded"  />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.paymentType" for="field_paymentType">Payment Type</label>

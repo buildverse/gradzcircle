@@ -5,24 +5,28 @@
 				"title": "Jobs",
 				"createLabel": "Create a new Job",
 				"createOrEditLabel": "Post or edit a Job",
-				"search": "Search for Job"
+				"search": "Search for Job",
+				"delete": "Remove Posted Job"
 			},
 			"created": "A new Job is created with identifier {{ param }}",
 			"updated": "A Job is updated with identifier {{ param }}",
 			"deleted": "A Job is deleted with identifier {{ param }}",
 			"delete": {
-				"question": "Are you sure you want to delete Job {{ id }}?"
+				"question": "Are you sure you want to remove {{ job }}?"
 			},
 			"detail": {
 				"title": "Job"
 			},
 			"jobTitle": "Job Title",
 			"jobDescription": "Description",
-			"salary": "Salary",
+			"salary": "Salary (p.a)",
 			"jobStatus": "Job Status",
 			"createDate": "Create Date",
 			"jobCost": "Job Cost",
+			"originalJobCost": "Actual Cost",
 			"amountPaid": "Amount Paid",
+			"totalAmountPaid": "Total Amount Paid",
+            "noOfApplicantsBought": "No Of Applicants Bought",
 			"removedFilterAmount": "Removed Filter Amount",
             "additionalFilterAmount": "Additional Filter Amount",
             "adminCharge": "Admin Charge",
@@ -52,6 +56,7 @@
 			"version": "Version",
 			"history": "History",
 			"escrowAmountUsed": "Escrow Amount Used",
+			"escrowAmountAdded": "Escrow Amount Added",
 			"latest": "Latest",
 			"everActive": "Ever Active",
 			"percent": "Percentage More Than",
@@ -63,7 +68,10 @@
 			"hasBeenEdited": "Has Been Edited",
 			"updateDate": "Update Date",
 			"createdBy": "Created By",
-			"updatedBy": "Updated By"
+			"updatedBy": "Updated By",
+			"cannotEditMessage":"You cannot edit the job again. Please create a new job. You do not have to pay again for the candidates you have already bought.",
+			"cannotEditCandidateMessage":"You do not have to pay again for the candidates you have already bought.",
+			"editHeader":"Cannot Edit Job"
 		}
 	}
 }

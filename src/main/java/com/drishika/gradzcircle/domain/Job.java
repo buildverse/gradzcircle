@@ -57,6 +57,12 @@ public class Job implements Serializable {
 
     @Column(name = "amount_paid")
     private Double amountPaid;
+    
+    @Column(name = "total_amount_paid")
+    private Double totalAmountPaid;
+
+    @Column(name = "no_of_applicants_bought")
+    private Integer noOfApplicantsBought;
 
     @Column(name = "removed_filter_amount")
     private Double removedFilterAmount;
@@ -78,6 +84,9 @@ public class Job implements Serializable {
 
     @Column(name = "escrow_amount_used")
     private Double escrowAmountUsed;
+    
+    @Column(name = "escrow_amount_added")
+    private Double escrowAmountAdded;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type")
@@ -249,6 +258,33 @@ public class Job implements Serializable {
     public void setAmountPaid(Double amountPaid) {
         this.amountPaid = amountPaid;
     }
+    
+    public Double getTotalAmountPaid() {
+        return totalAmountPaid;
+    }
+
+    public Job totalAmountPaid(Double totalAmountPaid) {
+        this.totalAmountPaid = totalAmountPaid;
+        return this;
+    }
+
+    public void setTotalAmountPaid(Double totalAmountPaid) {
+        this.totalAmountPaid = totalAmountPaid;
+    }
+
+    public Integer getNoOfApplicantsBought() {
+        return noOfApplicantsBought;
+    }
+
+    public Job noOfApplicantsBought(Integer noOfApplicantsBought) {
+        this.noOfApplicantsBought = noOfApplicantsBought;
+        return this;
+    }
+
+    public void setNoOfApplicantsBought(Integer noOfApplicantsBought) {
+        this.noOfApplicantsBought = noOfApplicantsBought;
+    }
+
 
     public Double getRemovedFilterAmount() {
         return removedFilterAmount;
@@ -341,6 +377,19 @@ public class Job implements Serializable {
         this.escrowAmountUsed = escrowAmountUsed;
     }
 
+    public Double getEscrowAmountAdded() {
+        return escrowAmountAdded;
+    }
+
+    public Job escrowAmountAdded(Double escrowAmountAdded) {
+        this.escrowAmountAdded = escrowAmountAdded;
+        return this;
+    }
+
+    public void setEscrowAmountAdded(Double escrowAmountAdded) {
+        this.escrowAmountAdded = escrowAmountAdded;
+    }
+    
     public PaymentType getPaymentType() {
         return paymentType;
     }
@@ -357,6 +406,10 @@ public class Job implements Serializable {
     public Boolean isHasBeenEdited() {
         return hasBeenEdited;
     }
+    
+    public Boolean getHasBeenEdited () {
+    	return hasBeenEdited;
+    }
 
     public Job hasBeenEdited(Boolean hasBeenEdited) {
         this.hasBeenEdited = hasBeenEdited;
@@ -371,6 +424,10 @@ public class Job implements Serializable {
         return everActive;
     }
 
+    public Boolean getEverActive() {
+        return everActive;
+    }
+
     public Job everActive(Boolean everActive) {
         this.everActive = everActive;
         return this;
@@ -381,6 +438,10 @@ public class Job implements Serializable {
     }
 
     public Boolean isCanEdit() {
+        return canEdit;
+    }
+    
+    public Boolean getCanEdit() {
         return canEdit;
     }
 
@@ -586,6 +647,8 @@ public class Job implements Serializable {
             ", originalJobCost='" + getOriginalJobCost() + "'" +
             ", jobCost='" + getJobCost() + "'" +
             ", amountPaid='" + getAmountPaid() + "'" +
+            ", totalAmountPaid='" + getTotalAmountPaid() + "'" +
+            ", noOfApplicantsBought='" + getNoOfApplicantsBought() + "'" +
             ", removedFilterAmount='" + getRemovedFilterAmount() + "'" +
             ", additionalFilterAmount='" + getAdditionalFilterAmount() + "'" +
             ", adminCharge='" + getAdminCharge() + "'" +
@@ -593,6 +656,7 @@ public class Job implements Serializable {
             ", upfrontDiscountRate='" + getUpfrontDiscountRate() + "'" +
             ", upfrontDiscountAmount='" + getUpfrontDiscountAmount() + "'" +
             ", escrowAmountUsed='" + getEscrowAmountUsed() + "'" +
+            ", escrowAmountAdded='" + getEscrowAmountAdded() + "'" +
             ", paymentType='" + getPaymentType() + "'" +
             ", hasBeenEdited='" + isHasBeenEdited() + "'" +
             ", everActive='" + isEverActive() + "'" +

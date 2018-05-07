@@ -50,6 +50,14 @@
             "fieldType": "Double"
         },
         {
+            "fieldName": "totalAmountPaid",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "noOfApplicantsBought",
+            "fieldType": "Integer"
+        },
+        {
             "fieldName": "removedFilterAmount",
             "fieldType": "Double"
         },
@@ -75,6 +83,10 @@
         },
         {
             "fieldName": "escrowAmountUsed",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "escrowAmountAdded",
             "fieldType": "Double"
         },
         {

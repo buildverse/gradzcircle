@@ -6,8 +6,8 @@ import { JobType } from '../job-type/job-type.model';
 import { BaseEntity } from './../../shared';
 
 export const enum PaymentType {
-    'UPFRONT',
-    'AS_YOU_GO'
+     UPFRONT ='UPFRONT',
+    AS_YOU_GO ='AS_YOU_GO'
 }
 
 export class Job implements BaseEntity {
@@ -25,10 +25,13 @@ export class Job implements BaseEntity {
         public removedFilterAmount?: number,
         public additionalFilterAmount?: number,
         public adminCharge?: number,
+        public totalAmountPaid?: number,
+        public noOfApplicantsBought?: number,
         public adminChargeRate?: number,
         public upfrontDiscountRate?: number,
         public upfrontDiscountAmount?: number,
         public escrowAmountUsed?: number,
+        public escrowAmountAdded?: number,
         public paymentType?: PaymentType,
         public hasBeenEdited?: boolean,
         public everActive?: boolean,

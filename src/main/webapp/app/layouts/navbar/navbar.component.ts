@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
                 if(user)
                     this.corporateService.findCorporateByLoginId(user.id).subscribe((response =>{
                         this.corporateId = response.id;
-                        console.log("Corproate id os "+ this.corporateId);
+                       // console.log("Corproate id os "+ this.corporateId);
                     }));
             });
            
@@ -79,6 +79,7 @@ export class NavbarComponent implements OnInit {
 
     collapseNavbar() {
         this.isNavbarCollapsed = true;
+      //console.log('nav bar is '+ this.isNavbarCollapsed);
     }
 
     isAuthenticated() {

@@ -8,3 +8,5 @@ export * from './job-detail.component';
 export * from './job.component';
 export * from './job.route';
 export * from './job.constants';
+export * from './job-edit-message-dialog.component';
+export * from './job-remove-dialog.component';

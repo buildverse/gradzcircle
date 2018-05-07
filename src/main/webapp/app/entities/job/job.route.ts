@@ -7,9 +7,9 @@ import { JhiPaginationUtil } from 'ng-jhipster';
 import { JobComponent } from './job.component';
 import { JobDetailComponent } from './job-detail.component';
 import { JobPopupComponent,JobPopupComponentNew } from './job-dialog.component';
-
+import { JobRemoveDialogComponent,JobRemovePopupComponent} from './job-remove-dialog.component'
 import { JobDeletePopupComponent } from './job-delete-dialog.component';
-
+import {JobEditMessageDialogComponent,JobEditMessagePopupComponent} from './job-edit-message-dialog.component';
 
 export const jobRoute: Routes = [
     {
@@ -65,6 +65,26 @@ export const jobPopupRoute: Routes = [
     {
         path: 'job/:id/delete',
         component: JobDeletePopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.job.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+     {
+        path: 'job/:id/remove',
+        component: JobRemovePopupComponent,
+        data: {
+            authorities: ['ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.job.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'jobEditMessage',
+        component: JobEditMessagePopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.job.home.title'

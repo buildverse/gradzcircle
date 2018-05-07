@@ -57,6 +57,14 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="total_amount_paid" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="no_of_applicants_bought" type="integer">
+                <constraints nullable="true" />
+            </column>
+
             <column name="removed_filter_amount" type="double">
                 <constraints nullable="true" />
             </column>
@@ -82,6 +90,10 @@
             </column>
 
             <column name="escrow_amount_used" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="escrow_amount_added" type="double">
                 <constraints nullable="true" />
             </column>
 

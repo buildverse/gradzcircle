@@ -11,6 +11,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
@@ -75,6 +76,7 @@ public class JobService {
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
 		job.setCorporate(corporateRepository.findOne(job.getCorporate().getId()));
 		job.setCreateDate(dateTime);
+		job.setCanEdit(Boolean.TRUE);
 		Job savedJob = jobRepository.save(job);
 		jobSearchRepository.save(savedJob);
 		saveJobFilters(job, savedJob);
@@ -87,15 +89,13 @@ public class JobService {
 		Job prevJob = getJob(job.getId());
 		log.debug("The rpev job is ++++++++++++++++{},{},{},{}", prevJob, prevJob.getEmploymentType(),
 				prevJob.getJobType(), prevJob.equals(job));
-		if (job.equals(prevJob)) {
-			saveJobFilters(job, prevJob);
-			return prevJob;
-		}
+		saveJobFilters(job, prevJob);
 		job.setCreateDate(prevJob.getCreateDate());
 		if(job.getJobStatus()==1 && !prevJob.isEverActive())
 			job.setEverActive(Boolean.TRUE);
-		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus()==1)
+		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus()==1) {
 			job.setHasBeenEdited(Boolean.TRUE);
+		}
 		if(prevJob.isHasBeenEdited() && job.getJobStatus()==1)
 			job.setCanEdit(Boolean.FALSE);
 		JobsUtil.populateHistories(jobHistory, prevJob);
@@ -113,9 +113,9 @@ public class JobService {
 		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
 		jobSearchRepository.save(updatedJob);
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
-			//Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
-			//corporate.setEscrowAmount(corporate.getEscrowAmount()+job.getCorporate().getEscrowAmount());
-			corporateSearchRepository.save(corporateRepository.save(job.getCorporate()));
+			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
+			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
+			corporateSearchRepository.save(corporateRepository.save(updatedJob.getCorporate()));
 		}
 		return updatedJob;
 	}
@@ -155,6 +155,14 @@ public class JobService {
 
 	public Job getJob(Long id) {
 		return jobRepository.findOne(id);
+	}
+	
+	public void deActivateJob (Long id) {
+		log.info("Deactivating job {}",id);
+		Job job = jobRepository.getOne(id);
+		job.setJobStatus(ApplicationConstants.JOB_DEACTIVATE);
+		jobSearchRepository.save(jobRepository.save(job));
+		log.info("Deactivated job {}",id);
 	}
 
 }

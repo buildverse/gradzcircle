@@ -20,7 +20,7 @@
             data-toggle="collapse"
             data-target="#navbarResponsive"
             aria-controls="navbarResponsive"
-            aria-expanded="false"
+            [attr.aria-expanded]="!isNavbarCollapsed"
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -377,8 +377,8 @@
                         </li>
                     </ul>
                 </li>
-                <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" ngbDropdown class="nav-item dropdown pointer">
-                    <a class="nav-link" [routerLink]="['/job']" routerLinkActive="active">
+                <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" ngbDropdown class="nav-item dropdown pointer" (click)="collapseNavbar()" [routerLink]="['/job']" routerLinkActive="active">
+                    <a class="nav-link" >
                             <span jhiTranslate="global.menu.corporate.dashboard">Dashboard</span>
                     </a>
                 </li>

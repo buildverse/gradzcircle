@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<br />
-	<div *ngIf="jobs?.length>0; else noJobs">
+	<div class="table-responsive" *ngIf="jobs?.length>0; else noJobs">
 		<div class="ml-5 mr-5">
 			<table class="table table-hover ">
 				<thead class="bg-primary text-white ">
@@ -45,7 +45,7 @@
 						<th class="justfiy-content-center"><span
 							jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span></th>
 						<th></th>
-						<th></th>
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -60,44 +60,39 @@
 						</td>
 						<td *ngIf="job?.jobStatus===1;else draft">Active</td>
 						<ng-template #draft>
-						<td>Draft</td>
+							<td>Draft</td>
 						</ng-template>
-						<!--  <td><a
-							[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
-							replaceUrl="true"> <span class="icon icon-edit"></span> <span
-								class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
-						</a></td>
-						<td><a
-							[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
-							replaceUrl="true"> <span class="icon icon-trash"
-								style="color: maroon"></span> <span class="hidden-md-down"
-								jhiTranslate="entity.action.delete">Delete</span>
-						</a></td>-->
 						<td>
-							<div class="dropdown">
+							  <div class="btn-group">
 								<button
-									class="btn btn-sm btn-pill btn-secondary dropdown-toggle"
-									type="button" id="dropdownMenu2" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">Actions</button>
-								<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-									<button class="dropdown-item" type="button"
+									class="btn btn-sm btn-warning dropdown-toggle "
+									type="button" data-toggle="dropdown"  
+									 aria-expanded="false">Actions<span class="caret"></span></button>
+								<div class="dropdown-menu" >
+									<a  *ngIf="!job.canEdit" class="dropdown-item" 
+										[routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]"
+										replaceUrl="true">	
+										<span class="icon icon-edit"></span> <span
+											 jhiTranslate="entity.action.edit">Edit</span>
+									</a>
+									<a *ngIf="job.canEdit" class="dropdown-item " 
 										[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
 										replaceUrl="true">
 										<span class="icon icon-edit"></span> <span
-											class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
-									</button>
-									<button class="dropdown-item" type="button"
+											 jhiTranslate="entity.action.edit">Edit</span>
+									</a>
+									<!--  <a class="dropdown-item "
 										[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
 										replaceUrl="true">
 										<span class="icon icon-box" style="color: #3097D1"></span> <span
-											class="hidden-md-down" jhiTranslate="entity.action.archive">Archive</span>
-									</button>
-									<button class="dropdown-item" type="button"
-										[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
+										 jhiTranslate="entity.action.archive">Archive</span>
+									</a>-->
+									<a class="dropdown-item"
+										[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/remove'} }]"
 										replaceUrl="true">
 										<span class="icon icon-trash" style="color: maroon"></span> <span
-											class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
-									</button>
+										jhiTranslate="entity.action.delete">Delete</span>
+									</a>
 								</div>
 							</div>
 						</td>
@@ -107,73 +102,8 @@
 		</div>
 	</div>
 	<ng-template #noJobs> </ng-template>
-	<!-- <div class="table-responsive" *ngIf="jobs">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                    <th><span jhiTranslate="global.field.id">ID</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobDescription">Job Description</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.noOfApplicants">No Of Applicants</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.salary">Salary</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobPostDate">Job Post Date</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobCost">Job Cost</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></th>
-                    <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let job of jobs ;trackBy: trackId">
-                        <td><a [routerLink]="['../job', job.id ]">{{job.id}}</a></td>
-                        <td>{{job.jobTitle}}</td>
-                        <td>{{job.jobDescription}}</td>
-                        <td>{{job.noOfApplicants}}</td>
-                        <td>{{job.salary}}</td>
-                        <td>{{job.jobStatus==DRAFT?'Draft':'Active'}}</td>
-                        <td>{{job.jobPostDate | date:'mediumDate'}}</td>
-                        <td>{{job.jobCost}}</td>
-                        <td>
-                            <div *ngIf="job.jobType">
-                                <a [routerLink]="['../job-type', job.jobType?.id ]" >{{job.jobType?.jobType}}</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div *ngIf="job.employmentType">
-                                <a [routerLink]="['../employment-type', job.employmentType?.id ]" >{{job.employmentType?.employmentType}}</a>
-                            </div>
-                        </td>
-                        <td class="text-right">
-                            <div class="btn-group flex-btn-group-container">
-                                <button type="submit"
-                                        [routerLink]="['../job', job.id ]"
-                                        class="btn btn-info btn-sm">
-                                    <span class="fa fa-eye"></span>
-                                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                                </button>
-                                <button type="submit"
-                                        [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
-                                        replaceUrl="true"
-                                        class="btn btn-primary btn-sm">
-                                    <span class="fa fa-pencil"></span>
-                                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                                </button>
-                                <button type="submit"
-                                        [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
-                                        replaceUrl="true"
-                                        class="btn btn-danger btn-sm">
-                                    <span class="fa fa-remove"></span>
-                                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div> -->
+	
 </div>
-
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
 
 	<h2>
@@ -223,39 +153,33 @@
 							Status</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.createDate">Create
 							Date</span></th>
+					<th><span jhiTranslate="gradzcircleApp.job.originalJobCost">Job
+							Cost</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.jobCost">Job
 							Cost</span></th>
 					<th><span jhiTranslate="gradzcircleApp.job.amountPaid">Amount
 							Paid</span></th>
-							 <th><span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed Filter Amount</span></th>
+		    <th><span jhiTranslate="gradzcircleApp.job.totalAmountPaid">Total Amount Paid</span></th>
+            <th><span jhiTranslate="gradzcircleApp.job.noOfApplicantsBought">No Of Applicants Bought</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed Filter Amount</span></th>
             <th><span jhiTranslate="gradzcircleApp.job.additionalFilterAmount">Additional Filter Amount</span></th>
             <th><span jhiTranslate="gradzcircleApp.job.adminCharge">Admin Charge</span></th>
             <th><span jhiTranslate="gradzcircleApp.job.adminChargeRate">Admin Charge Rate</span></th>
             <th><span jhiTranslate="gradzcircleApp.job.upfrontDiscountRate">Upfront Discount Rate</span></th>
             <th><span jhiTranslate="gradzcircleApp.job.upfrontDiscountAmount">Upfront Discount Amount</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow
-							Amount Used</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.paymentType">Payment
-							Type</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.hasBeenEdited">Has
-							Been Edited</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.everActive">Ever
-							Active</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.canEdit">Can
-							Edit</span></th>
-
-					<th><span jhiTranslate="gradzcircleApp.job.updateDate">Update
-							Date</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.createdBy">Created
-							By</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.updatedBy">Updated
-							By</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.jobType">Job
-							Type</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.employmentType">Employment
-							Type</span></th>
-					<th><span jhiTranslate="gradzcircleApp.job.corporate">Corporate</span></th>
-					<th></th>
+			<th><span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow Amount Used</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.escrowAmountAdded">Escrow Amount Added</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.paymentType">Payment Type</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.hasBeenEdited">Has Been Edited</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.everActive">Ever Active</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.canEdit">Can Edit</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.updateDate">Update	Date</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.createdBy">Created By</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.updatedBy">Updated By</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></th>
+			<th><span jhiTranslate="gradzcircleApp.job.corporate">Corporate</span></th>
+			<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -269,15 +193,18 @@
 
 					<td>{{job.createDate | date:'medium'}}</td>
 					 <td>{{job.originalJobCost}}</td>
-                <td>{{job.jobCost}}</td>
-                <td>{{job.amountPaid}}</td>
-                <td>{{job.removedFilterAmount}}</td>
-                <td>{{job.additionalFilterAmount}}</td>
-                <td>{{job.adminCharge}}</td>
-                <td>{{job.adminChargeRate}}</td>
-                <td>{{job.upfrontDiscountRate}}</td>
-                <td>{{job.upfrontDiscountAmount}}</td>
+	                <td>{{job.jobCost}}</td>
+	                <td>{{job.amountPaid}}</td>
+	                 <td>{{job.totalAmountPaid}}</td>
+	                <td>{{job.noOfApplicantsBought}}</td>
+	                <td>{{job.removedFilterAmount}}</td>
+	                <td>{{job.additionalFilterAmount}}</td>
+	                <td>{{job.adminCharge}}</td>
+	                <td>{{job.adminChargeRate}}</td>
+	                <td>{{job.upfrontDiscountRate}}</td>
+	                <td>{{job.upfrontDiscountAmount}}</td>
 					<td>{{job.escrowAmountUsed}}</td>
+					 <td>{{job.escrowAmountAdded}}</td>
 					<td
 						jhiTranslate="{{'gradzcircleApp.PaymentType.' + job.paymentType}}">{{job.paymentType}}</td>
 					<td>{{job.hasBeenEdited}}</td>
@@ -286,7 +213,7 @@
 					<td>{{job.updateDate | date:'medium'}}</td>
 					<td>{{job.createdBy}}</td>
 					<td>{{job.updatedBy}}</td>
-
+	
 					<td>
 						<div *ngIf="job.jobType">
 							<a [routerLink]="['../job-type', job.jobType?.id ]">{{job.jobType?.id}}</a>
