@@ -98,7 +98,7 @@ public class Corporate implements Serializable {
     @JoinColumn(unique = true)
     private User login;
 
-    @OneToMany(mappedBy = "corporate")
+    @OneToMany(mappedBy = "corporate",cascade=CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Job> jobs = new HashSet<>();
