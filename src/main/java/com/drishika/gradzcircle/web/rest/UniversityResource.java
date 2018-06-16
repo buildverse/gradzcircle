@@ -70,8 +70,8 @@ public class UniversityResource {
         }
         University result = universityRepository.save(university);
         //universitySearchRepository.save(result);
-        elasticsearchTemplate.index(new UniversityEntityBuilder(university.getId()).name(university.getUniversityName())
-                                            .suggest(new String[] { university.getUniversityName() }).buildIndex());
+        elasticsearchTemplate.index(new UniversityEntityBuilder(result.getId()).name(result.getUniversityName())
+                                            .suggest(new String[] { result.getUniversityName() }).buildIndex());
         elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
         return ResponseEntity.created(new URI("/api/universities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

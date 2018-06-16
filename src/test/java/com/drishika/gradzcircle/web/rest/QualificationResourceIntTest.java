@@ -1,11 +1,18 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.Qualification;
-import com.drishika.gradzcircle.repository.QualificationRepository;
-import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,13 +29,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
+import com.drishika.gradzcircle.repository.QualificationRepository;
+import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the QualificationResource REST controller.
@@ -46,6 +53,9 @@ public class QualificationResourceIntTest {
 
     @Autowired
     private QualificationSearchRepository qualificationSearchRepository;
+    
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -62,11 +72,13 @@ public class QualificationResourceIntTest {
     private MockMvc restQualificationMockMvc;
 
     private Qualification qualification;
+    
+    private com.drishika.gradzcircle.domain.elastic.Qualification elasticQualification;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QualificationResource qualificationResource = new QualificationResource(qualificationRepository, qualificationSearchRepository);
+        final QualificationResource qualificationResource = new QualificationResource(qualificationRepository, qualificationSearchRepository,elasticsearchTemplate);
         this.restQualificationMockMvc = MockMvcBuilders.standaloneSetup(qualificationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -83,6 +95,30 @@ public class QualificationResourceIntTest {
         Qualification qualification = new Qualification()
             .qualification(DEFAULT_QUALIFICATION);
         return qualification;
+    }
+    
+    /**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static QualificationEntityBuilder createEntityBuilder(Qualification qualification) {
+		QualificationEntityBuilder entityBuilder = new QualificationEntityBuilder(qualification.getId());
+		entityBuilder.name(qualification.getQualification());
+		return entityBuilder;
+	}
+	
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static com.drishika.gradzcircle.domain.elastic.Qualification createElasticInstance(Qualification qualification) {
+    	com.drishika.gradzcircle.domain.elastic.Qualification elasticQualification = new com.drishika.gradzcircle.domain.elastic.Qualification();
+    	elasticQualification.qualification(qualification.getQualification());
+        return elasticQualification;
     }
 
     @Before
@@ -110,7 +146,8 @@ public class QualificationResourceIntTest {
 
         // Validate the Qualification in Elasticsearch
         Qualification qualificationEs = qualificationSearchRepository.findOne(testQualification.getId());
-        assertThat(qualificationEs).isEqualToComparingFieldByField(testQualification);
+        assertThat(qualificationEs.getId()).isEqualTo(testQualification.getId());
+        assertThat(qualificationEs.getQualification()).isEqualTo(testQualification.getQualification());
     }
 
     @Test
@@ -173,7 +210,9 @@ public class QualificationResourceIntTest {
     public void updateQualification() throws Exception {
         // Initialize the database
         qualificationRepository.saveAndFlush(qualification);
-        qualificationSearchRepository.save(qualification);
+        elasticsearchTemplate.index(createEntityBuilder(qualification)
+				.suggest(new String[] { createElasticInstance(qualification).getQualification() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
         int databaseSizeBeforeUpdate = qualificationRepository.findAll().size();
 
         // Update the qualification
@@ -194,7 +233,8 @@ public class QualificationResourceIntTest {
 
         // Validate the Qualification in Elasticsearch
         Qualification qualificationEs = qualificationSearchRepository.findOne(testQualification.getId());
-        assertThat(qualificationEs).isEqualToComparingFieldByField(testQualification);
+        assertThat(qualificationEs.getId()).isEqualTo(testQualification.getId());
+        assertThat(qualificationEs.getQualification()).isEqualTo(testQualification.getQualification());
     }
 
     @Test
@@ -220,7 +260,9 @@ public class QualificationResourceIntTest {
     public void deleteQualification() throws Exception {
         // Initialize the database
         qualificationRepository.saveAndFlush(qualification);
-        qualificationSearchRepository.save(qualification);
+        elasticsearchTemplate.index(createEntityBuilder(qualification)
+				.suggest(new String[] { createElasticInstance(qualification).getQualification() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
         int databaseSizeBeforeDelete = qualificationRepository.findAll().size();
 
         // Get the qualification
@@ -242,7 +284,9 @@ public class QualificationResourceIntTest {
     public void searchQualification() throws Exception {
         // Initialize the database
         qualificationRepository.saveAndFlush(qualification);
-        qualificationSearchRepository.save(qualification);
+        elasticsearchTemplate.index(createEntityBuilder(qualification)
+				.suggest(new String[] { createElasticInstance(qualification).getQualification() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
 
         // Search the qualification
         restQualificationMockMvc.perform(get("/api/_search/qualifications?query=id:" + qualification.getId()))

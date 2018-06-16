@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -30,6 +32,14 @@ public class University implements Serializable {
 
     @ManyToOne
     private Country country;
+    
+    @Transient
+    @JsonInclude
+    private String value;
+    
+    @Transient
+    @JsonInclude
+    private String display;
 
     @OneToMany(mappedBy = "university")
     @JsonIgnore
@@ -95,9 +105,39 @@ public class University implements Serializable {
     public void setColleges(Set<College> colleges) {
         this.colleges = colleges;
     }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+    /**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the display
+	 */
+	public String getDisplay() {
+		return display;
+	}
+
+	/**
+	 * @param display the display to set
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -117,11 +157,12 @@ public class University implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "University{" +
-            "id=" + getId() +
-            ", universityName='" + getUniversityName() + "'" +
-            "}";
-    }
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "University [id=" + id + ", universityName=" + universityName + ", country=" + country + ", value="
+				+ value + ", display=" + display + ", colleges=" + colleges + "]";
+	}
 }

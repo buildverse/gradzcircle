@@ -1,11 +1,18 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.University;
-import com.drishika.gradzcircle.repository.UniversityRepository;
-import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,13 +29,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
+import com.drishika.gradzcircle.repository.UniversityRepository;
+import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the UniversityResource REST controller.
@@ -46,6 +53,9 @@ public class UniversityResourceIntTest {
 
     @Autowired
     private UniversitySearchRepository universitySearchRepository;
+    
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -62,11 +72,13 @@ public class UniversityResourceIntTest {
     private MockMvc restUniversityMockMvc;
 
     private University university;
+    
+    private com.drishika.gradzcircle.domain.elastic.University elasticUniversity;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final UniversityResource universityResource = new UniversityResource(universityRepository, universitySearchRepository);
+        final UniversityResource universityResource = new UniversityResource(universityRepository, universitySearchRepository,elasticsearchTemplate);
         this.restUniversityMockMvc = MockMvcBuilders.standaloneSetup(universityResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -84,11 +96,36 @@ public class UniversityResourceIntTest {
             .universityName(DEFAULT_UNIVERSITY_NAME);
         return university;
     }
+    
+    /**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static UniversityEntityBuilder createEntityBuilder(University university) {
+		UniversityEntityBuilder entityBuilder = new UniversityEntityBuilder(university.getId());
+		entityBuilder.name(university.getUniversityName());
+		return entityBuilder;
+	}
+    
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static com.drishika.gradzcircle.domain.elastic.University createElasticInstance(University university) {
+    	com.drishika.gradzcircle.domain.elastic.University elasticUniversity = new com.drishika.gradzcircle.domain.elastic.University();
+    	elasticUniversity.universityName(university.getUniversityName());
+        return elasticUniversity;
+    }
 
     @Before
     public void initTest() {
         universitySearchRepository.deleteAll();
         university = createEntity(em);
+        elasticUniversity = createElasticInstance(university);
     }
 
     @Test
@@ -110,7 +147,9 @@ public class UniversityResourceIntTest {
 
         // Validate the University in Elasticsearch
         University universityEs = universitySearchRepository.findOne(testUniversity.getId());
-        assertThat(universityEs).isEqualToComparingFieldByField(testUniversity);
+        assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
+        assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
+        
     }
 
     @Test
@@ -173,7 +212,9 @@ public class UniversityResourceIntTest {
     public void updateUniversity() throws Exception {
         // Initialize the database
         universityRepository.saveAndFlush(university);
-        universitySearchRepository.save(university);
+        elasticsearchTemplate.index(createEntityBuilder(university)
+				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
         int databaseSizeBeforeUpdate = universityRepository.findAll().size();
 
         // Update the university
@@ -194,7 +235,8 @@ public class UniversityResourceIntTest {
 
         // Validate the University in Elasticsearch
         University universityEs = universitySearchRepository.findOne(testUniversity.getId());
-        assertThat(universityEs).isEqualToComparingFieldByField(testUniversity);
+        assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
+        assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
     }
 
     @Test
@@ -220,7 +262,9 @@ public class UniversityResourceIntTest {
     public void deleteUniversity() throws Exception {
         // Initialize the database
         universityRepository.saveAndFlush(university);
-        universitySearchRepository.save(university);
+        elasticsearchTemplate.index(createEntityBuilder(university)
+				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
         int databaseSizeBeforeDelete = universityRepository.findAll().size();
 
         // Get the university
@@ -242,7 +286,9 @@ public class UniversityResourceIntTest {
     public void searchUniversity() throws Exception {
         // Initialize the database
         universityRepository.saveAndFlush(university);
-        universitySearchRepository.save(university);
+        elasticsearchTemplate.index(createEntityBuilder(university)
+				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
 
         // Search the university
         restUniversityMockMvc.perform(get("/api/_search/universities?query=id:" + university.getId()))

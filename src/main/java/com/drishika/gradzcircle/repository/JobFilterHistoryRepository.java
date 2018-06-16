@@ -1,9 +1,12 @@
 package com.drishika.gradzcircle.repository;
 
-import com.drishika.gradzcircle.domain.JobFilterHistory;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.data.jpa.repository.*;
+import com.drishika.gradzcircle.domain.JobFilter;
+import com.drishika.gradzcircle.domain.JobFilterHistory;
 
 
 /**
@@ -13,4 +16,7 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface JobFilterHistoryRepository extends JpaRepository<JobFilterHistory, Long> {
 
+	JobFilterHistory findByJobFilter(JobFilter jobFilter);
+	List<JobFilterHistory>  findByJobFilterOrderByIdDesc(JobFilter jobFilter);
+	
 }

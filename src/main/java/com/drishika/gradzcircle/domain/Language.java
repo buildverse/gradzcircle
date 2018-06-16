@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -29,6 +31,15 @@ public class Language implements Serializable {
 
     @Column(name = "language")
     private String language;
+    
+    
+    @Transient
+    @JsonInclude
+    private String value;
+    
+    @Transient
+    @JsonInclude
+    private String display;
 
     @OneToMany(mappedBy = "language")
     @JsonIgnore
@@ -81,9 +92,39 @@ public class Language implements Serializable {
     public void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
         this.candidateLanguageProficiencies = candidateLanguageProficiencies;
     }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+    /**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the display
+	 */
+	public String getDisplay() {
+		return display;
+	}
+
+	/**
+	 * @param display the display to set
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

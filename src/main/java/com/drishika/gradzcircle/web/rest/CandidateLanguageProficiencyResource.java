@@ -1,29 +1,34 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
-
-import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
-import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
+import com.drishika.gradzcircle.service.CandidateLanguageService;
+import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing CandidateLanguageProficiency.
@@ -36,13 +41,12 @@ public class CandidateLanguageProficiencyResource {
 
     private static final String ENTITY_NAME = "candidateLanguageProficiency";
 
-    private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
+    private final CandidateLanguageService candidateLanguageService;
+   
 
-    private final CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
-
-    public CandidateLanguageProficiencyResource(CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository, CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository) {
-        this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
-        this.candidateLanguageProficiencySearchRepository = candidateLanguageProficiencySearchRepository;
+    public CandidateLanguageProficiencyResource(CandidateLanguageService candidateLanguageService) {
+        this.candidateLanguageService = candidateLanguageService;
+       
     }
 
     /**
@@ -59,9 +63,7 @@ public class CandidateLanguageProficiencyResource {
         if (candidateLanguageProficiency.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new candidateLanguageProficiency cannot already have an ID")).body(null);
         }
-        CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency);
-        log.debug("The result post save language proficicency{}",result);
-        candidateLanguageProficiencySearchRepository.save(result);
+        CandidateLanguageProficiency result = candidateLanguageService.createCandidateLanguageProficiency(candidateLanguageProficiency);
 
         return ResponseEntity.created(new URI("/api/candidate-language-proficiencies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -86,10 +88,7 @@ public class CandidateLanguageProficiencyResource {
         }
         CandidateLanguageProficiency result =null;
         try{
-        result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency);
-        log.debug("The result post update language proficicency{}",result);
-        candidateLanguageProficiencySearchRepository.save(result);
-
+        	result = candidateLanguageService.updateCandidateLanguageProficiency(candidateLanguageProficiency);
         } catch(org.springframework.dao.DataIntegrityViolationException dataIntegrityViolationException){
 
             throw new CustomParameterizedException(candidateLanguageProficiency.getLanguage().getLanguage()+" already exists");
@@ -110,8 +109,7 @@ public class CandidateLanguageProficiencyResource {
     @Timed
     public List<CandidateLanguageProficiency> getAllCandidateLanguageProficiencies() {
         log.debug("REST request to get all CandidateLanguageProficiencies");
-        List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository.findAll();
-        //candidateLanguageProficiencies.forEach(candidateLanguageProficiency->candidateLanguageProficiency.setCandidate(null));
+        List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService.getAllCandidateLanguageProficiencies();
         return candidateLanguageProficiencies;
     }
 
@@ -125,7 +123,7 @@ public class CandidateLanguageProficiencyResource {
     @Timed
     public ResponseEntity<CandidateLanguageProficiency> getCandidateLanguageProficiency(@PathVariable Long id) {
         log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-        CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(id);
+        CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageService.getCandidateLanguageProficiency(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateLanguageProficiency));
     }
 
@@ -139,9 +137,8 @@ public class CandidateLanguageProficiencyResource {
     @Timed
     public List<CandidateLanguageProficiency> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
         log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-        List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository.findCandidateLanguageProficienciesByCandidateId(id);
-        candidateLanguageProficiencies.forEach(candidateLanguageProficiency->candidateLanguageProficiency.setCandidate(null));
-        return candidateLanguageProficiencies;
+       
+        return candidateLanguageService.getCandidateLanguageProficiencyByCandidate(id);
     }
 
     /**
@@ -154,8 +151,7 @@ public class CandidateLanguageProficiencyResource {
     @Timed
     public ResponseEntity<Void> deleteCandidateLanguageProficiency(@PathVariable Long id) {
         log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
-        candidateLanguageProficiencyRepository.delete(id);
-        candidateLanguageProficiencySearchRepository.delete(id);
+        candidateLanguageService.deleteCandidateLanguageProficiency(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -169,12 +165,8 @@ public class CandidateLanguageProficiencyResource {
     @GetMapping("/_search/candidate-language-proficiencies")
     @Timed
     public List<CandidateLanguageProficiency> searchCandidateLanguageProficiencies(@RequestParam String query) {
-        log.debug("REST request to search CandidateLanguageProficiencies for query {}", query);
-         List<CandidateLanguageProficiency> candidateLanguageProficiencies = StreamSupport
-            .stream(candidateLanguageProficiencySearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
-        candidateLanguageProficiencies.forEach(candidateLanguageProficiency->candidateLanguageProficiency.setCandidate(null));
-        return candidateLanguageProficiencies;
+        log.debug("REST request to search CandidateLanguageProficiencies for query {}", query);    
+        return candidateLanguageService.searchCandidateLanguageProficiencies(query);
     }
 
 }

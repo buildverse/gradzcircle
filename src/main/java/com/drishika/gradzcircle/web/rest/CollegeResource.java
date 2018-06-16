@@ -74,8 +74,8 @@ public class CollegeResource {
         College result = collegeRepository.save(college);
         // collegeSearchRepository.save(result);
 
-        elasticsearchTemplate.index(new CollegeEntityBuilder(college.getId()).name(college.getCollegeName())
-                .suggest(new String[] { college.getCollegeName() }).buildIndex());
+        elasticsearchTemplate.index(new CollegeEntityBuilder(result.getId()).name(result.getCollegeName())
+                .suggest(new String[] { result.getCollegeName() }).buildIndex());
         elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
         return ResponseEntity.created(new URI("/api/colleges/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
@@ -100,7 +100,7 @@ public class CollegeResource {
         College result = collegeRepository.save(college);
         com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
         try {
-			BeanUtils.copyProperties(collegeElasticInstance, college);
+			BeanUtils.copyProperties(collegeElasticInstance, result);
 		} catch (IllegalAccessException e) {
             log.error("Error copying bean for college elastic instance", e);
             throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());

@@ -70,8 +70,8 @@ public class QualificationResource {
         }
         Qualification result = qualificationRepository.save(qualification);
         //qualificationSearchRepository.save(result);
-        elasticsearchTemplate.index(new QualificationEntityBuilder(qualification.getId()).name(qualification.getQualification())
-        .suggest(new String[] { qualification.getQualification() }).buildIndex());
+        elasticsearchTemplate.index(new QualificationEntityBuilder(result.getId()).name(result.getQualification())
+        .suggest(new String[] { result.getQualification() }).buildIndex());
          elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
         return ResponseEntity.created(new URI("/api/qualifications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -107,8 +107,8 @@ public class QualificationResource {
            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
            
        }
-       elasticsearchTemplate.index(new QualificationEntityBuilder(qualification.getId()).name(qualification.getQualification())
-       .suggest(new String[] { qualification.getQualification() }).buildIndex());
+       elasticsearchTemplate.index(new QualificationEntityBuilder(result.getId()).name(result.getQualification())
+       .suggest(new String[] { result.getQualification() }).buildIndex());
        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
       
         return ResponseEntity.ok()

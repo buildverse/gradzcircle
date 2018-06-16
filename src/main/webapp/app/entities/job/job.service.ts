@@ -50,9 +50,9 @@ export class JobService {
       .map((res: Response) => this.convertResponse(res));
   }
   
-  queryActiveJobs(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceActiveJobsUrl, options)
+  queryActiveJobs(id: number): Observable<ResponseWrapper> {
+  //  const options = createRequestOption(req);
+    return this.http.get(`${this.resourceActiveJobsUrl}/${id}`)
       .map((res: Response) => this.convertResponse(res));
   }
 

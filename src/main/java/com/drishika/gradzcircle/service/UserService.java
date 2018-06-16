@@ -1,20 +1,16 @@
 package com.drishika.gradzcircle.service;
 
-import com.drishika.gradzcircle.domain.Authority;
-import com.drishika.gradzcircle.domain.User;
-import com.drishika.gradzcircle.repository.AuthorityRepository;
-import com.drishika.gradzcircle.config.Constants;
-import com.drishika.gradzcircle.repository.UserRepository;
-import com.drishika.gradzcircle.repository.search.UserSearchRepository;
-import com.drishika.gradzcircle.security.AuthoritiesConstants;
-import com.drishika.gradzcircle.security.SecurityUtils;
-import com.drishika.gradzcircle.service.util.RandomUtil;
-import com.drishika.gradzcircle.service.dto.UserDTO;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,10 +18,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.Authority;
+import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.repository.AuthorityRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.repository.search.UserSearchRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
+import com.drishika.gradzcircle.security.SecurityUtils;
+import com.drishika.gradzcircle.service.dto.UserDTO;
+import com.drishika.gradzcircle.service.util.RandomUtil;
 
 /**
  * Service class for managing users.
@@ -232,6 +236,13 @@ public class UserService {
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             socialService.deleteUserSocialConnection(user.getLogin());
+            Candidate candidate = candidateService.getCandidateByLoginId(user.getId());
+            Corporate corporate = corporateService.getCorporateByLoginId(user.getId());
+            if(candidate != null) {
+            		candidateService.deleteCandidate(candidate.getId());
+            } else if (corporate != null) {
+            		corporateService.deleteCorporate(corporate.getId());
+            }
             userRepository.delete(user);
             userSearchRepository.delete(user);
             cacheManager.getCache("users").evict(login);

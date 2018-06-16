@@ -41,5 +41,23 @@ public class CorporateService {
         logger.debug("Information for created Corporate {} ",corporate);
     }
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	public Corporate getCorporateByLoginId(Long id) {
+		// TODO Auto-generated method stub
+		return corporateRepository.findByLoginId(id);
+	}
+
+	/**
+	 * @param id
+	 */
+	public void deleteCorporate(Long id) {
+		corporateRepository.delete(id);
+		corporateSearchRepository.delete(id);
+		
+	}
+
 
 }

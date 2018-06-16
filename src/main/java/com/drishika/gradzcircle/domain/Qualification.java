@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -29,6 +31,14 @@ public class Qualification implements Serializable {
 
     @Column(name = "qualification")
     private String qualification;
+    
+    @Transient
+    @JsonInclude
+    private String value;
+    
+    @Transient
+    @JsonInclude
+    private String display;
 
     @OneToMany(mappedBy = "qualification")
     @JsonIgnore
@@ -81,9 +91,40 @@ public class Qualification implements Serializable {
     public void setCandidateEducations(Set<CandidateEducation> candidateEducations) {
         this.candidateEducations = candidateEducations;
     }
+    
+    /**
+   	 * @return the value
+   	 */
+   	public String getValue() {
+   		return value;
+   	}
+
+   	/**
+   	 * @param value the value to set
+   	 */
+   	public void setValue(String value) {
+   		this.value = value;
+   	}
+
+   	/**
+   	 * @return the display
+   	 */
+   	public String getDisplay() {
+   		return display;
+   	}
+
+   	/**
+   	 * @param display the display to set
+   	 */
+   	public void setDisplay(String display) {
+   		this.display = display;
+   	}
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+   
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -103,11 +144,12 @@ public class Qualification implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Qualification{" +
-            "id=" + getId() +
-            ", qualification='" + getQualification() + "'" +
-            "}";
-    }
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Qualification [id=" + id + ", qualification=" + qualification + ", value=" + value + ", display="
+				+ display + ", candidateEducations=" + candidateEducations + "]";
+	}
 }

@@ -55,7 +55,7 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   loadActiveJobs() {
-    this.jobService.queryActiveJobs().subscribe(
+    this.jobService.queryActiveJobs(this.corporateId).subscribe(
       (res: ResponseWrapper) => {
         this.jobs = res.json;
         this.currentSearch = '';
@@ -81,17 +81,17 @@ export class JobComponent implements OnInit, OnDestroy {
     this.DRAFT = JobConstants.DRAFT;
     this.principal.identity().then((account) => {
       this.currentAccount = account;
+       this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
+        this.corporateId = response.id;
+        this.registerChangeInJobs();
+     
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
         this.loadActiveJobs();
       } else {
         this.loadAll();
         this.registerChangeInJobs();
       }
-      this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-        this.corporateId = response.id;
-        this.registerChangeInJobs();
-      });
-    });
+    }); });
    // this.registerChangeInJobs();
 
   }

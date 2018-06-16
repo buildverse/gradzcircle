@@ -2,8 +2,7 @@ package com.drishika.gradzcircle.service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,8 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
-import com.drishika.gradzcircle.exceptions.BeanCopyException;
+import com.drishika.gradzcircle.exception.BeanCopyException;
+import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.JobFilterRepository;
@@ -47,8 +47,6 @@ public class JobService {
 
 	private final JobHistorySearchRepository jobHistorySearchRepository;
 
-	private final CacheManager cacheManager;
-
 	private final CorporateRepository corporateRepository;
 
 	private final CorporateSearchRepository corporateSearchRepository;
@@ -62,7 +60,7 @@ public class JobService {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
 		this.corporateRepository = corporateRepository;
-		this.cacheManager = cacheManager;
+		// this.cacheManager = cacheManager;
 		this.corporateSearchRepository = corporateSearchRepository;
 		this.jobHistoryRepository = jobHistoryRepository;
 		this.jobHistorySearchRepository = jobHistorySearchRepository;
@@ -72,34 +70,39 @@ public class JobService {
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
-		log.debug("In Job Service to create Job with JobFilter : {} , {}", job, job.getJobFilters());
+		log.info("In create job {}", job);
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
 		job.setCorporate(corporateRepository.findOne(job.getCorporate().getId()));
 		job.setCreateDate(dateTime);
 		job.setCanEdit(Boolean.TRUE);
 		Job savedJob = jobRepository.save(job);
 		jobSearchRepository.save(savedJob);
-		saveJobFilters(job, savedJob);
+		/*
+		 * if(job.getJobFilters() !=null) saveJobFilters(job, savedJob);
+		 */
 		return savedJob;
 	}
 
-	public Job updateJob(Job job) throws BeanCopyException {
-		log.debug("In Job Service to update Job with JobFilter : {} , {}", job, job.getJobFilters());
+	/*public Job updateJob(Job job) throws BeanCopyException {
+		log.info("In updating job {}", job);
 		JobHistory jobHistory = new JobHistory();
 		Job prevJob = getJob(job.getId());
-		log.debug("The rpev job is ++++++++++++++++{},{},{},{}", prevJob, prevJob.getEmploymentType(),
-				prevJob.getJobType(), prevJob.equals(job));
-		saveJobFilters(job, prevJob);
-		job.setCreateDate(prevJob.getCreateDate());
-		if(job.getJobStatus()==1 && !prevJob.isEverActive())
+		if (job.getJobStatus() == 1 && !prevJob.isEverActive())
 			job.setEverActive(Boolean.TRUE);
-		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus()==1) {
+		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus() == 1) {
 			job.setHasBeenEdited(Boolean.TRUE);
 		}
-		if(prevJob.isHasBeenEdited() && job.getJobStatus()==1)
+		if (prevJob.isHasBeenEdited() && job.getJobStatus() == 1)
 			job.setCanEdit(Boolean.FALSE);
+		saveJobFilters(job, prevJob);
+		if (job.equals(prevJob)) {
+			log.info("Jobs were same .. aborting update");
+			return prevJob;
+		}
+		job.setCreateDate(prevJob.getCreateDate());
+
 		JobsUtil.populateHistories(jobHistory, prevJob);
-		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
 		jobHistory.job(prevJob);
 		jobHistory.createDate(dateTime);
 		job.setUpdateDate(dateTime);
@@ -110,39 +113,100 @@ public class JobService {
 		}
 
 		Job updatedJob = jobRepository.save(job);
-		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
 		jobSearchRepository.save(updatedJob);
+		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
+
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
 			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
 			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
 			corporateSearchRepository.save(corporateRepository.save(updatedJob.getCorporate()));
 		}
+		log.info("Job updated");
 		return updatedJob;
 	}
+*/
+	public Job updateJob(Job job) throws BeanCopyException, JobEditException {
+		log.info("In updating job {}", job);
+		if(!job.getCanEdit())
+			throw new JobEditException("Cannot Edit job anymmore");
+		Job prevJob = getJob(job.getId());
+		if(!( job.equals(prevJob) && jobFiltersSame(prevJob, job) ) ) {
+			updateJobMetaActions(job, prevJob);
+			setJob(job,prevJob);
+			setJobFilters(job,prevJob);
+			log.info("Updating job");
+		}
+		jobSearchRepository.save(jobRepository.save(job));
+		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
+			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
+			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
+			corporateSearchRepository.save(corporateRepository.save(corporate));
+		}
+		log.info("Job updated");
+		return job;
+	}
+	
+	private void setJob(Job job, Job prevJob) throws BeanCopyException {
+		job.setCreateDate(prevJob.getCreateDate());
+		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
+		job.setUpdateDate(dateTime);
+		setJobHistory(job, prevJob);
+		
+	}
+	
+	private void setJobHistory(Job job, Job prevJob) throws BeanCopyException{
+		JobHistory jobHistory = new JobHistory();
+		JobsUtil.populateHistories(jobHistory, prevJob);
+		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
+		jobHistory.job(prevJob);
+		jobHistory.createDate(dateTime);
+		//Set<JobHistory> jobHistories = new HashSet<JobHistory>();
+		//jobHistories.add(jobHistory);
+		//job.setHistories(jobHistories);
+		job.addHistory(jobHistory);
+		
+		
+	}
+	private Boolean jobFiltersSame(Job job, Job prevJob) {
+		log.info(" Current filter is {}",job.getJobFilters());
+		log.info(" Prev filter is {}",prevJob.getJobFilters());
+		if (job.getJobFilters().equals(prevJob.getJobFilters()))
+			return true;
+		else
+			return false;
+	}
+	
+	private void updateJobMetaActions(Job job, Job prevJob) {
+		if (job.getJobStatus() == 1 && !prevJob.isEverActive())
+			job.setEverActive(Boolean.TRUE);
+		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus() == 1) {
+			job.setHasBeenEdited(Boolean.TRUE);
+		}
+		if (prevJob.isHasBeenEdited() && job.getJobStatus() == 1)
+			job.setCanEdit(Boolean.FALSE);
+	}
 
-	private void saveJobFilters(Job job, Job savedJob) throws BeanCopyException {
-		log.debug("In save for job filters {} and saved job {} and its filters are {}", job.getJobFilters(), savedJob,
-				savedJob.getJobFilters());
-		Set<JobFilterHistory> jobFilterHistories= new HashSet<JobFilterHistory>();
+	private void setJobFilters(Job job,Job prevJob) throws BeanCopyException {
+		if(jobFiltersSame(job, prevJob))
+			return;
+		log.info("In saving Job filter  {}", job.getJobFilters());
+	//	Set<JobFilterHistory> jobFilterHistories = new HashSet<JobFilterHistory>();
 		if (job.getJobFilters() != null && !job.getJobFilters().isEmpty()) {
 			for (JobFilter jobFilter : job.getJobFilters()) {
 				if (jobFilter.getId() != null) {
 					JobFilter prevJobFilter = getJobFilter(jobFilter.getId());
-					log.debug("Previous job filter is {}",prevJobFilter );
 					JobFilterHistory jobFilterHistory = new JobFilterHistory();
 					JobsUtil.populateHistories(jobFilterHistory, prevJobFilter);
-					
 					jobFilterHistory.jobFilter(prevJobFilter);
-					jobFilterHistories.add(jobFilterHistory);
-					jobFilter.job(savedJob);
+	//				jobFilterHistories.add(jobFilterHistory);
+					jobFilter.job(job);
+					jobFilter.addHistory(jobFilterHistory);
 				} else {
-					jobFilter.job(savedJob);
-				}
+					jobFilter.job(job);
+				}	
 			}
+			
 		}
-		jobFilterRepository.save(job.getJobFilters());
-		log.debug("JSaving what ======= {}",jobFilterHistories );
-		jobFilterHistoryRepository.save(jobFilterHistories);
 	}
 
 	public JobFilter getJobFilter(Job job) {
@@ -156,13 +220,22 @@ public class JobService {
 	public Job getJob(Long id) {
 		return jobRepository.findOne(id);
 	}
-	
-	public void deActivateJob (Long id) {
-		log.info("Deactivating job {}",id);
-		Job job = jobRepository.getOne(id);
-		job.setJobStatus(ApplicationConstants.JOB_DEACTIVATE);
-		jobSearchRepository.save(jobRepository.save(job));
-		log.info("Deactivated job {}",id);
+
+	public List<Job> getAllActiveJobs() {
+		return jobRepository.findAllActiveJobs();
+	}
+
+	public Job deActivateJob(Long id) throws BeanCopyException {
+		log.info("Deactivating job {}", id);
+		Job prevJob = getJob(id);
+		JobHistory jobHistory = new JobHistory();
+		JobsUtil.populateHistories(jobHistory, prevJob);
+		prevJob.setJobStatus(ApplicationConstants.JOB_DEACTIVATE);
+		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
+		Job job = jobRepository.save(prevJob);
+		jobSearchRepository.save(job);
+		log.info("Deactivated job {}", id);
+		return job;
 	}
 
 }

@@ -4,8 +4,7 @@
 package com.drishika.gradzcircle.service.util;
 
 import java.lang.reflect.InvocationTargetException;
-
-import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
-import com.drishika.gradzcircle.exceptions.BeanCopyException;
+import com.drishika.gradzcircle.exception.BeanCopyException;
 
 /**
  * @author abhinav
@@ -46,7 +45,7 @@ public class JobsUtil {
 
 	}
 
-	public static void trimJobFromFilter(List<JobFilter> jobFilters) {
+	public static void trimJobFromFilter(Set<JobFilter> jobFilters) {
 
 		if (jobFilters != null) {
 			jobFilters.forEach(jobFilter -> {

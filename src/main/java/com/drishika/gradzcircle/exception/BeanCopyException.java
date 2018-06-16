@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.drishika.gradzcircle.exceptions;
+package com.drishika.gradzcircle.exception;
 
 /**
  * @author abhinav

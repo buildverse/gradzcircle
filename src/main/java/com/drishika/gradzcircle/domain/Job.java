@@ -1,18 +1,33 @@
 package com.drishika.gradzcircle.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.drishika.gradzcircle.domain.enumeration.PaymentType;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.drishika.gradzcircle.domain.enumeration.PaymentType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * A Job.
@@ -21,6 +36,7 @@ import java.util.Objects;
 @Table(name = "job")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "job")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,9 +128,10 @@ public class Job implements Serializable {
 
 	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@JsonManagedReference
     private Set<JobFilter> jobFilters = new HashSet<>();
 
-	@OneToMany(mappedBy = "job", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<JobHistory> histories = new HashSet<>();

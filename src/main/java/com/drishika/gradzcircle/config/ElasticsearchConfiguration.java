@@ -30,7 +30,7 @@ public class ElasticsearchConfiguration {
     }
 
     /* USED for PROD */
-/*   @Bean
+   /*@Bean
     public ElasticsearchTemplate elasticsearchTemplate(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         return new ElasticsearchTemplate(client(),
                 new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));
@@ -53,8 +53,8 @@ public class ElasticsearchConfiguration {
             log.error("Error creating Elastic Client {}", e.getMessage());
         }
         return client;
-    }*/
-
+    }
+*/
     public class CustomEntityMapper implements EntityMapper {
 
         private ObjectMapper objectMapper;

@@ -70,7 +70,7 @@ public class LanguageResource {
         }
         Language result = languageRepository.save(language);
         //languageSearchRepository.save(result);
-        elasticsearchTemplate.index(new LanguageEntityBuilder(language.getId()).name(language.getLanguage())
+        elasticsearchTemplate.index(new LanguageEntityBuilder(result.getId()).name(result.getLanguage())
         .suggest(new String[] { language.getLanguage() }).buildIndex());
          elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Language.class);
         return ResponseEntity.created(new URI("/api/languages/" + result.getId()))
@@ -108,7 +108,7 @@ public class LanguageResource {
            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
            
        }
-       elasticsearchTemplate.index(new LanguageEntityBuilder(language.getId()).name(language.getLanguage())
+       elasticsearchTemplate.index(new LanguageEntityBuilder(result.getId()).name(result.getLanguage())
        .suggest(new String[] { language.getLanguage() }).buildIndex());
        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Language.class);
         return ResponseEntity.ok()

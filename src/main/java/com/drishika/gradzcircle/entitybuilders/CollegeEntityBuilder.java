@@ -17,6 +17,16 @@ public class CollegeEntityBuilder {
             college.setCollegeName(name);
             return this;
         }
+        
+        public CollegeEntityBuilder domainName(String domainName) {
+            college.setDomainName(domainName);
+            return this;
+        }
+        
+        public CollegeEntityBuilder status(Integer status) {
+            college.setStatus(status);
+            return this;
+        }
     
         public CollegeEntityBuilder suggest(String[] input) {
             return suggest(input, null);

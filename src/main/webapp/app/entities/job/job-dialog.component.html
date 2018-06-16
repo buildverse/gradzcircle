@@ -881,7 +881,7 @@
 			<div class="row mx-4 mt-4" *ngIf="escrowAmount>0">
 				<div class="col-md-6 d-flex font-weight-bold text-muted ">Escrow Amount</div>
 				<div class="form-inline col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377; {{escrowAmount?escrowAmount:0}}
-					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount && job.jobCost>0 && this.jobCostDifference >0 && this.job.paymentType==='UPFRONT' ">
+					<div class="form-check ml-3 font-weight-normal" *ngIf="escrowAmount && job.jobCost>0 && this.jobCostDifference >=0 && this.job.paymentType==='UPFRONT' ">
 							<label for="use_escrow"> 
 								<input type="checkbox" class="form-check-input text-muted" name="useEscrow" id="use_escrow" [(ngModel)]="useEscrow" (ngModelChange)="offsetEscrow()"> Use Escrow
 						    </label>
@@ -993,7 +993,8 @@
 				<div class="d-flex justify-content-end" *ngIf="!paymentType">
 					<div class="growl growl-static">
 						<div class="alert alert-info d-flex justify-content-center"
-							role="alert">Please Select a Payment Type to proceed...</div>
+							role="alert">Please Select a Payment Type to proceed...<br/>Discount of
+									{{filterMap.get(DISCOUNT)}} %</strong> if you pay upfront.  </div>
 					</div>
 				</div>
 				

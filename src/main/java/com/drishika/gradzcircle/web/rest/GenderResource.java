@@ -72,8 +72,8 @@ public class GenderResource {
                     .body(null);
         }
         Gender result = genderRepository.save(gender);
-        elasticSearchTemplate.index(new GenderEntityBuilder(gender.getId()).name(gender.getGender())
-                .suggest(new String[] { gender.getGender() }).buildIndex());
+        elasticSearchTemplate.index(new GenderEntityBuilder(result.getId()).name(result.getGender())
+                .suggest(new String[] { result.getGender() }).buildIndex());
         elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
         // genderSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/genders/" + result.getId()))
@@ -109,8 +109,8 @@ public class GenderResource {
             throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
 
         }
-        elasticSearchTemplate.index(new GenderEntityBuilder(gender.getId()).name(gender.getGender())
-                .suggest(new String[] { gender.getGender() }).buildIndex());
+        elasticSearchTemplate.index(new GenderEntityBuilder(result.getId()).name(result.getGender())
+                .suggest(new String[] { result.getGender() }).buildIndex());
         elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, gender.getId().toString()))
                 .body(result);

@@ -1,15 +1,28 @@
 package com.drishika.gradzcircle.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * A College.
@@ -31,8 +44,16 @@ public class College implements Serializable {
 
     @Column(name = "domain_name")
     private String domainName;
+    
+    @Transient
+    private String value;
+    
+    @Transient
+    private String display;
 
-    /**
+    
+
+	/**
      * need to make this unique
      */
     @ApiModelProperty(value = "need to make this unique")
@@ -133,7 +154,33 @@ public class College implements Serializable {
         this.university = university;
     }
 
-    
+    /**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the display
+	 */
+	public String getDisplay() {
+		return display;
+	}
+
+	/**
+	 * @param display the display to set
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -156,13 +203,13 @@ public class College implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "College{" +
-            "id=" + getId() +
-            ", collegeName='" + getCollegeName() + "'" +
-            ", domainName='" + getDomainName() + "'" +
-            ", status='" + getStatus() + "'" +
-            "}";
-    }
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "College [id=" + id + ", collegeName=" + collegeName + ", domainName=" + domainName + ", value=" + value
+				+ ", display=" + display + ", status=" + status + ", candidateEducations=" + candidateEducations
+				+ ", university=" + university + "]";
+	}
 }

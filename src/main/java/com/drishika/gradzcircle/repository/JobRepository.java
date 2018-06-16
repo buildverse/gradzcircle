@@ -15,6 +15,9 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
 	
-	@Query(" select j from Job j where j.jobStatus>=0")
-	List<Job> findByJobStatus();
+	List<Job> findByJobStatusGreaterThanAndCorporateId(int jobStatus, Long corporateId);
+	
+	@Query(" select j from Job j where j.jobStatus=1")
+	List<Job> findAllActiveJobs();
+	
 }

@@ -23,6 +23,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.drishika.gradzcircle.web.rest.util.CustomJobFilterDeserializer;
 import com.drishika.gradzcircle.web.rest.util.CustomeJobFilterSerialize;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -36,7 +37,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "job_filter")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "jobfilter")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class JobFilter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,12 +53,13 @@ public class JobFilter implements Serializable {
 	@JsonSerialize(using = CustomeJobFilterSerialize.class)
 	private String filterDescription;
 
-	@OneToMany(mappedBy = "jobFilter",cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "jobFilter",cascade = CascadeType.ALL)
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<JobFilterHistory> histories = new HashSet<>();
 
 	@ManyToOne
+	@JsonBackReference
 	private Job job;
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
@@ -135,7 +137,7 @@ public class JobFilter implements Serializable {
 		if (jobFilter.getId() == null || getId() == null) {
 			return false;
 		}
-		return Objects.equals(getId(), jobFilter.getId());
+		return Objects.equals(getId(), jobFilter.getId()) && Objects.equals(getFilterDescription(), jobFilter.getFilterDescription());
 	}
 
 	@Override
@@ -145,6 +147,6 @@ public class JobFilter implements Serializable {
 
 	@Override
 	public String toString() {
-		return "JobFilter{" + "id=" + getId() + ", filterDescription='" + getFilterDescription() + "'" + "} abd job is "+getJob();
+		return "JobFilter{" + "id=" + getId() + ", filterDescription='" + getFilterDescription() + "'" + "} and job is "+getJob();
 	}
 }

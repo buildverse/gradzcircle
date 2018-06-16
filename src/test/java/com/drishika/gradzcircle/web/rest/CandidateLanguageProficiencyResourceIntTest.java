@@ -1,11 +1,18 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
-import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
-import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +28,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
+import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
+import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
+import com.drishika.gradzcircle.service.CandidateLanguageService;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CandidateLanguageProficiencyResource REST controller.
@@ -46,6 +52,9 @@ public class CandidateLanguageProficiencyResourceIntTest {
 
     @Autowired
     private CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
+    
+    @Autowired
+    private CandidateLanguageService candidateLanguageService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -66,7 +75,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CandidateLanguageProficiencyResource candidateLanguageProficiencyResource = new CandidateLanguageProficiencyResource(candidateLanguageProficiencyRepository, candidateLanguageProficiencySearchRepository);
+        final CandidateLanguageProficiencyResource candidateLanguageProficiencyResource = new CandidateLanguageProficiencyResource(candidateLanguageService);
         this.restCandidateLanguageProficiencyMockMvc = MockMvcBuilders.standaloneSetup(candidateLanguageProficiencyResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

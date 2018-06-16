@@ -595,6 +595,7 @@ export class JobDialogComponent implements OnInit {
     this.job.jobCost = this.job.originalJobCost;
     this.job.corporate.escrowAmount = this.escrowAmount;
     this.useEscrow = null;
+    this.job.paymentType = null;
     this.paymentType = null;
 
   }
@@ -928,14 +929,18 @@ export class JobDialogComponent implements OnInit {
   prepareJobEconomics() {
     // console.log('job cost incoming prep eco is ' + this.job.jobCost);
     this.amountPayable = this.job.jobCost;
+    console.log('Amount payable is '+this.amountPayable);
+     
     if (!this.job.everActive && !this.job.originalJobCost) {
       this.job.originalJobCost = this.job.jobCost;
     }
     if (!this.job.hasBeenEdited && !this.jobCostDifference && this.job.everActive) {
+      console.log('First if Amount payable is '+this.amountPayable);
       this.amountPayable = null;
     } else {
       if (this.jobCostDifference) {
         if (this.jobCostDifference < 0) {
+
           this.job.removedFilterAmount = this.absoluteValue(this.jobCostDifference);
           if (this.businessPlanEnabled) {
             this.job.escrowAmountAdded += this.job.removedFilterAmount;
@@ -944,7 +949,9 @@ export class JobDialogComponent implements OnInit {
           this.job.jobCost -= this.job.removedFilterAmount;
           this.job.additionalFilterAmount = null;
           this.useEscrow = null;
+
           this.amountPayable = null;
+          console.log('Job cost diff less than 0 '+this.amountPayable);
         } else if (this.jobCostDifference > 0) {
           this.job.additionalFilterAmount = this.jobCostDifference;
           this.job.jobCost += this.job.additionalFilterAmount;
@@ -954,11 +961,13 @@ export class JobDialogComponent implements OnInit {
             this.useEscrow = true;
             this.offsetEscrow();
           }
-        }
-      } else {
-        this.jobCostDifference = 0; 
+        } 
+      } /*else {
+        console.log('In Else '+this.amountPayable);
+        console.log('Job Cost diff is '+this.jobCostDifference);
+        this.jobCostDifference = 0;
         this.amountPayable = null;
-      }
+      }*/
     }
     if (this.job.hasBeenEdited && this.job.paymentType === PaymentType.UPFRONT) {
       this.calculateAdminCharge();

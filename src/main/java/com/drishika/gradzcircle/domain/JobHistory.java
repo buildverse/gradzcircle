@@ -1,14 +1,24 @@
 package com.drishika.gradzcircle.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.drishika.gradzcircle.domain.enumeration.PaymentType;
 
@@ -419,7 +429,29 @@ public class JobHistory implements Serializable {
         this.canEdit = canEdit;
     }
 
-    public ZonedDateTime getUpdateDate() {
+    
+    /**
+	 * @return the hasBeenEdited
+	 */
+	public Boolean getHasBeenEdited() {
+		return hasBeenEdited;
+	}
+
+	/**
+	 * @return the everActive
+	 */
+	public Boolean getEverActive() {
+		return everActive;
+	}
+
+	/**
+	 * @return the canEdit
+	 */
+	public Boolean getCanEdit() {
+		return canEdit;
+	}
+
+	public ZonedDateTime getUpdateDate() {
         return updateDate;
     }
 

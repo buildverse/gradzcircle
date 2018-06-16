@@ -13,7 +13,6 @@ import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,19 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
-import com.drishika.gradzcircle.domain.JobFilterHistory;
-import com.drishika.gradzcircle.exceptions.BeanCopyException;
-import com.drishika.gradzcircle.repository.CorporateRepository;
-import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
-import com.drishika.gradzcircle.repository.JobFilterRepository;
-import com.drishika.gradzcircle.repository.JobHistoryRepository;
+import com.drishika.gradzcircle.exception.BeanCopyException;
+import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.JobRepository;
-import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
-import com.drishika.gradzcircle.repository.search.JobFilterSearchRepository;
-import com.drishika.gradzcircle.repository.search.JobHistorySearchRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.JobService;
 import com.drishika.gradzcircle.service.util.JobsUtil;
+import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -67,11 +60,7 @@ public class JobResource {
 	private final JobService jobService;
 
 	public JobResource(JobRepository jobRepository, JobSearchRepository jobSearchRepository,
-			JobFilterRepository jobFilterRepository, JobFilterSearchRepository jobFilterSearchRepository,
-			CorporateRepository corporateRepository, CacheManager cacheManager,
-			CorporateSearchRepository corporateSearchRepository, JobHistoryRepository jobHistoryRepository,
-			JobHistorySearchRepository jobHistorySearchRepository,
-			JobFilterHistoryRepository jobFilterHistoryRepository, JobService jobService) {
+			JobService jobService) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
 		//this.jobFilterRepository = jobFilterRepository;
@@ -138,8 +127,13 @@ public class JobResource {
 			
 		} catch (BeanCopyException e) {
 			result=job;
-			result.jobDescription(e.getMessage());
-			log.error("Error creating job {} , {}",e.getMessage(),e.getCause());
+			result.setJobDescription(e.getMessage());
+			log.error("Error updating job {} , {}",e.getMessage(),e.getCause());
+		} catch (JobEditException e) {
+			result=job;
+			result.setJobDescription(e.getMessage());
+			log.error("Error updating job {} , {}",e.getMessage(),e.getCause());
+			throw new CustomParameterizedException(e.getMessage());
 		}
 		JobsUtil.trimJobFromFilter(result);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, job.getId().toString()))
@@ -163,11 +157,11 @@ public class JobResource {
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
-	@GetMapping("/activeJobs")
+	@GetMapping("/activeJobs/{corporateId}")
 	@Timed
-	public List<Job> getActiveJobs() {
+	public List<Job> getActiveJobs(@PathVariable Long corporateId) {
 		log.debug("REST request to get active Jobs");
-		return jobRepository.findByJobStatus();
+		return jobRepository.findByJobStatusGreaterThanAndCorporateId(-1,corporateId);
 	}
 
 	/**
@@ -185,16 +179,21 @@ public class JobResource {
 		Set<JobFilter> jobFilters = null;
 		Job job = jobRepository.findOne(id);
 		
-		//JobFilter jobFilter = jobFilterRepository.findByJob(job);
-		JobFilter jobFilter = jobService.getJobFilter(job);
-		if (jobFilter != null) {
-			jobFilters = new HashSet<JobFilter>();
-			jobFilters.add(jobFilter);
+		if(job!=null) {
+			JobFilter jobFilter = jobService.getJobFilter(job);
+			if (jobFilter != null) {
+				jobFilters = new HashSet<JobFilter>();
+				jobFilters.add(jobFilter);
+				job.setJobFilters(jobFilters);
+				JobsUtil.trimJobFromFilter(job);
+			}
+			
+			JobsUtil.trimCorporateFromJob(job);
+			
+			log.debug("exiting for {} with filters {}", id, job.getJobFilters());
 		}
-		job.setJobFilters(jobFilters);
-		JobsUtil.trimCorporateFromJob(job);
-		JobsUtil.trimJobFromFilter(job);
-		log.debug("exiting for {} with filters {}", id, job.getJobFilters());
+		
+		
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(job));
 	}
 
@@ -225,9 +224,14 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<Void> removeJob(@PathVariable Long id) {
 		log.debug("REST request to remove Job : {}", id);
-		//jobRepository.delete(id);
-		//jobSearchRepository.delete(id);
-		jobService.deActivateJob(id);
+		try {
+			jobService.deActivateJob(id);
+			
+		} catch (BeanCopyException e) {
+			log.error("Error creating job {} , {}",e.getMessage(),e.getCause());
+			return ResponseEntity.badRequest().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+		}
+		
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

@@ -73,8 +73,8 @@ public class CourseResource {
         }
         Course result = courseRepository.save(course);
         //courseSearchRepository.save(result);
-        elasticsearchTemplate.index(new CourseEntityBuilder(course.getId()).name(course.getCourse())
-                .suggest(new String[] { course.getCourse() }).buildIndex());
+        elasticsearchTemplate.index(new CourseEntityBuilder(result.getId()).name(result.getCourse())
+                .suggest(new String[] { result.getCourse() }).buildIndex());
         elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
         return ResponseEntity.created(new URI("/api/courses/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
@@ -109,8 +109,8 @@ public class CourseResource {
             throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
 
         }
-        elasticsearchTemplate.index(new CourseEntityBuilder(course.getId()).name(course.getCourse())
-                .suggest(new String[] { course.getCourse() }).buildIndex());
+        elasticsearchTemplate.index(new CourseEntityBuilder(result.getId()).name(result.getCourse())
+                .suggest(new String[] { result.getCourse() }).buildIndex());
         elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, course.getId().toString()))
                 .body(result);
