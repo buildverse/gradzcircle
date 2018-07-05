@@ -10,9 +10,9 @@
             <label for="id" jhiTranslate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                    [(ngModel)]="candidateEducation.id" readonly />
-        </div>-->
+        </div>-->{{candidateEducation|json}}
         <div class="form-group row mx-4 my-4">
-            <ng-template #rtQualification let-r="result" let-t="term">
+            <!--  <ng-template #rtQualification let-r="result" let-t="term">
                 {{ r.qualification}}
             </ng-template>
             <div class="col-md-2">
@@ -21,9 +21,26 @@
             <div class="col-md-4" [class.has-danger]="qualification.invalid && qualification.touched">
                 <input required name="qualifications" #qualification="ngModel" type="text" class="form-control text-muted" [(ngModel)]="candidateEducation.qualification" id="field_qualification" placeholder="{{'gradzcircleApp.candidateEducation.qualification' | translate}}"
                     [ngbTypeahead]="searchQualification" [resultTemplate]="rtQualification" (ngModelChange)="isQualificationOther($event)" [inputFormatter]="qualificationFormatter" [editable]="false" />
-                <div *ngIf="qualification.invalid && qualification.touched" class="text-danger">
-                    <small> Please select a Qualification.</small>
-                </div>
+                    -->
+             <div class="col-md-2">
+                <label jhiTranslate="gradzcircleApp.candidateEducation.qualification" for="field_qualification" class="form-control-label font-weight-bold text-muted">Qualification</label>
+            </div>
+             <div class="col-md-4" [class.has-danger]="qualification.invalid && qualification.touched">
+              		<tag-input name="qualifications" [(ngModel)]="candidateEducation.qualification" theme='bootstrap' #qualification="ngModel" required
+						[onlyFromAutocomplete]="true" [placeholder]="'Qualification+'"
+						[onTextChangeDebounce]="500" id="field_qualification"
+						[secondaryPlaceholder]="'Enter your qualification'"
+						(onAdd) ="isQualificationOther()"
+						(onRemove) ="isQualificationOther()"
+						[maxItems]='1'> 
+						
+						<tag-input-dropdown
+						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
+						
+					</tag-input>
+	                <div *ngIf="qualification.invalid && qualification.touched" class="text-danger">
+	                    <small> Please select a Qualification.</small>
+	                </div>
             </div>
 
             <div *ngIf="showQualificationTextArea" class="col-md-2">
@@ -44,7 +61,7 @@
             <div class="col-md-2 ">
                 <label jhiTranslate="gradzcircleApp.candidateEducation.course" for="field_course" class="form-control-label font-weight-bold text-muted">Course</label>
             </div>
-            <div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
+            <!--div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
                 <ng-template #rtCourse let-r="result" let-t="term">
                     {{ r.course}}
                 </ng-template>
@@ -54,7 +71,24 @@
                     <small>Please select a Course.</small>
                 </div>
 
-            </div>
+            </div-->
+           <div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
+           		<tag-input name="courses" [(ngModel)]="candidateEducation.course" theme='bootstrap' #course="ngModel" required
+						[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
+						[onTextChangeDebounce]="500" id="field_qualification"
+						[secondaryPlaceholder]="'Enter the course'"
+						(onAdd) ="isCourseOther()"
+						(onRemove) ="isCourseOther()"
+						[maxItems]='1'> 
+						
+						<tag-input-dropdown [autocompleteObservable]='requestCourseData'>
+						</tag-input-dropdown>
+						
+					</tag-input>
+					<div *ngIf="course.invalid && course.touched" class="text-danger">
+                 	   <small>Please select a Course.</small>
+                		</div>
+           </div>
             <div class="col-md-2" *ngIf="showCourseTextArea">
                 <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse" for="field_capturedCourse">Captured Course</label>
             </div>
@@ -130,12 +164,27 @@
                 <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.college" for="field_college">College</label>
             </div>
             <div class="col-md-10" [class.has-danger]="college.invalid && college.touched">
-                <ng-template #rtCollege let-r="result" let-t="term">
+                <!--  <ng-template #rtCollege let-r="result" let-t="term">
                     {{r.collegeName}}
                 </ng-template>
                 <input name="colleges" #college="ngModel" required class="form-control text-muted" type="text" placeholder="{{'gradzcircleApp.candidateEducation.college' | translate}}" id="field_college" [(ngModel)]="candidateEducation.college" [ngbTypeahead]="searchCollege"
                     [resultTemplate]="rtCollege" [inputFormatter]="collegeFormatter" [editable]="false" (ngModelChange)="isCollegeOther($event)">
                 <div *ngIf="college.invalid && college.touched" class="text-danger">
+                    <small>Please select your College.</small>
+                </div>-->
+                <tag-input name="colleges" [(ngModel)]="candidateEducation.college" theme='bootstrap' #college="ngModel" required
+						[onlyFromAutocomplete]="true" [placeholder]="'College+'"
+						[onTextChangeDebounce]="500" id="field_college"
+						[secondaryPlaceholder]="'Enter college name'"
+						(onAdd) ="isCollegeOther()"
+						(onRemove) ="isCollegeOther()"
+						[maxItems]='1'> 
+						
+						<tag-input-dropdown
+						[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
+						
+					</tag-input>
+					<div *ngIf="college.invalid && college.touched" class="text-danger">
                     <small>Please select your College.</small>
                 </div>
             </div>

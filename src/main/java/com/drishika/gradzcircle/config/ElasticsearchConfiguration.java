@@ -24,13 +24,13 @@ public class ElasticsearchConfiguration {
     private final Logger log = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
 
     //USE in DEV
-  @Bean
+ @Bean
     public ElasticsearchTemplate elasticsearchTemplate(Client client, Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         return new ElasticsearchTemplate(client, new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));
     }
 
     /* USED for PROD */
-   /*@Bean
+  /* @Bean
     public ElasticsearchTemplate elasticsearchTemplate(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         return new ElasticsearchTemplate(client(),
                 new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));

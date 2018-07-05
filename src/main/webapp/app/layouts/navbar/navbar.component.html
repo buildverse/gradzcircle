@@ -292,6 +292,18 @@
                             <span jhiTranslate="global.menu.entities.candidate">Candidate</span>
                         </a>
                     </li>
+                        <li>
+                        <a class="dropdown-item" routerLink="college" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.college">College</span>
+                        </a>
+                    </li>
+                        <li>
+                        <a class="dropdown-item" routerLink="university" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.university">University</span>
+                        </a>
+                    </li>
                         <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                     </ul>
                 </li>

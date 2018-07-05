@@ -31,6 +31,8 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="gradzcircleApp.university.universityName">University Name</span></th>
+            <th><span jhiTranslate="gradzcircleApp.university.universityType">University Type</span></th>
+            <th><span jhiTranslate="gradzcircleApp.university.website">Website</span></th>
             <th><span jhiTranslate="gradzcircleApp.university.country">Country</span></th>
             <th></th>
             </tr>
@@ -39,6 +41,8 @@
             <tr *ngFor="let university of universities ;trackBy: trackId">
                 <td><a [routerLink]="['../university', university.id ]">{{university.id}}</a></td>
                 <td>{{university.universityName}}</td>
+                <td>{{university.universityType}}</td>
+                <td>{{university.website}}</td>
                 <td>
                     <div *ngIf="university.country">
                         <a [routerLink]="['../country', university.country?.id ]" >{{university.country?.id}}</a>

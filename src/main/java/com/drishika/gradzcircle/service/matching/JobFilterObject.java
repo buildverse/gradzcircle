@@ -20,7 +20,7 @@ import com.drishika.gradzcircle.domain.University;
 public class JobFilterObject {
 	
 	private List<Language> languages;
-	private List < College> colleges;
+	private List <College> colleges;
 	private List<University> universities;
 	private List<Qualification> qualifications;
 	private List<Course> courses;

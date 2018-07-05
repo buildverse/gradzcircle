@@ -37,6 +37,10 @@ describe('University e2e test', () => {
         universityComponentsPage.clickOnCreateButton();
         universityDialogPage.setUniversityNameInput('universityName');
         expect(universityDialogPage.getUniversityNameInput()).toMatch('universityName');
+        universityDialogPage.setUniversityTypeInput('universityType');
+        expect(universityDialogPage.getUniversityTypeInput()).toMatch('universityType');
+        universityDialogPage.setWebsiteInput('website');
+        expect(universityDialogPage.getWebsiteInput()).toMatch('website');
         universityDialogPage.countrySelectLastOption();
         universityDialogPage.save();
         expect(universityDialogPage.getSaveButton().isPresent()).toBeFalsy();
@@ -65,6 +69,8 @@ export class UniversityDialogPage {
     saveButton = element(by.css('.modal-footer .btn.btn-primary'));
     closeButton = element(by.css('button.close'));
     universityNameInput = element(by.css('input#field_universityName'));
+    universityTypeInput = element(by.css('input#field_universityType'));
+    websiteInput = element(by.css('input#field_website'));
     countrySelect = element(by.css('select#field_country'));
 
     getModalTitle() {
@@ -77,6 +83,22 @@ export class UniversityDialogPage {
 
     getUniversityNameInput = function () {
         return this.universityNameInput.getAttribute('value');
+    }
+
+    setUniversityTypeInput = function (universityType) {
+        this.universityTypeInput.sendKeys(universityType);
+    }
+
+    getUniversityTypeInput = function () {
+        return this.universityTypeInput.getAttribute('value');
+    }
+
+    setWebsiteInput = function (website) {
+        this.websiteInput.sendKeys(website);
+    }
+
+    getWebsiteInput = function () {
+        return this.websiteInput.getAttribute('value');
     }
 
     countrySelectLastOption = function () {

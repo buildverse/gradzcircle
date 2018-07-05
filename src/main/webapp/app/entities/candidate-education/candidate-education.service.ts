@@ -5,6 +5,10 @@ import { JhiDateUtils } from 'ng-jhipster';
 import { SERVER_API_URL, ENABLE_ELASTIC } from '../../app.constants';
 import { CandidateEducation } from './candidate-education.model';
 import { ResponseWrapper, createRequestOption } from '../../shared';
+import { College } from '../college/college.model';
+import { University } from '../university/university.model';
+import { Qualification } from '../qualification/qualification.model';
+import { Course } from '../course/course.model';
 
 @Injectable()
 export class CandidateEducationService {
@@ -18,7 +22,7 @@ export class CandidateEducationService {
 
     create(candidateEducation: CandidateEducation): Observable<CandidateEducation> {
         const copy = this.convert(candidateEducation);
-        // console.log("Seding in create" + JSON.stringify(copy));
+         console.log("Seding in create" + JSON.stringify(copy));
 
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
@@ -28,6 +32,7 @@ export class CandidateEducationService {
 
     update(candidateEducation: CandidateEducation): Observable<CandidateEducation> {
         const copy = this.convert(candidateEducation);
+      console.log('data sent to server '+copy);
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
@@ -91,6 +96,10 @@ export class CandidateEducationService {
             .convertLocalDateFromServer(json.educationFromDate);
         entity.educationToDate = this.dateUtils
             .convertLocalDateFromServer(json.educationToDate);
+        const collegeArray = new Array();
+        collegeArray.push(entity.college);
+      entity.college = collegeArray;
+      console.log('After conversion '+ JSON.stringify(entity));
         return entity;
     }
 
@@ -103,6 +112,23 @@ export class CandidateEducationService {
             .convertLocalDateToServer(candidateEducation.educationFromDate);
         copy.educationToDate = this.dateUtils
             .convertLocalDateToServer(candidateEducation.educationToDate);
+        this.convertEducationMeta(copy);
         return copy;
     }
+  
+  //CONVERT FROM VALUE: DISPLAY: TO COLLEGE OBJECT- This is required to process data at server
+  private convertEducationMeta(candidateEducation: CandidateEducation) {
+    const college = new College();
+    const university = new University();
+    const qualification = new Qualification ();
+    const course = new Course ();
+    college.collegeName = candidateEducation.college[0].value;
+    university.universityName = candidateEducation.college[0].university?candidateEducation.college[0].university[0].universityName:'';
+    qualification.qualification = candidateEducation.qualification[0].value;
+    course.course = candidateEducation.course[0].value;
+    candidateEducation.college.university = university;
+    candidateEducation.college = college;
+    candidateEducation.qualification = qualification;
+    candidateEducation.course = course;
+  }
 }

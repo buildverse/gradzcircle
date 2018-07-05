@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <!--
-        Added the constraints for entity University.
-    -->
-    <changeSet id="20171015094646-2" author="jhipster">
-        
-        <addForeignKeyConstraint baseColumnNames="country_id"
-                                 baseTableName="university"
-                                 constraintName="fk_university_country_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="country"/>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+	<!-- Added the constraints for entity University. -->
+	<changeSet id="20171015094646-2" author="jhipster">
 
-    </changeSet>
+		<addForeignKeyConstraint baseColumnNames="country_id"
+			baseTableName="university" constraintName="fk_university_country_id"
+			referencedColumnNames="id" referencedTableName="country" />
+
+	</changeSet>
+	<changeSet id="20171015094646-3" author="abhinav">
+
+		<addUniqueConstraint catalogName="gradzcircle"
+			columnNames="university_name" tableName="university" constraintName="unique_university_name"
+			schemaName="public" />
+
+	</changeSet>
+
+	<changeSet author="abhinav" id="20171015094646-4">
+		<dropUniqueConstraint catalogName="gradzcircle"
+			constraintName="unique_university_name" schemaName="public"
+			tableName="university" />
+	</changeSet>
 </databaseChangeLog>

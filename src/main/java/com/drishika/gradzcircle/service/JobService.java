@@ -83,48 +83,6 @@ public class JobService {
 		return savedJob;
 	}
 
-	/*public Job updateJob(Job job) throws BeanCopyException {
-		log.info("In updating job {}", job);
-		JobHistory jobHistory = new JobHistory();
-		Job prevJob = getJob(job.getId());
-		if (job.getJobStatus() == 1 && !prevJob.isEverActive())
-			job.setEverActive(Boolean.TRUE);
-		if (!prevJob.isHasBeenEdited() && prevJob.isEverActive() && job.getJobStatus() == 1) {
-			job.setHasBeenEdited(Boolean.TRUE);
-		}
-		if (prevJob.isHasBeenEdited() && job.getJobStatus() == 1)
-			job.setCanEdit(Boolean.FALSE);
-		saveJobFilters(job, prevJob);
-		if (job.equals(prevJob)) {
-			log.info("Jobs were same .. aborting update");
-			return prevJob;
-		}
-		job.setCreateDate(prevJob.getCreateDate());
-
-		JobsUtil.populateHistories(jobHistory, prevJob);
-		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
-		jobHistory.job(prevJob);
-		jobHistory.createDate(dateTime);
-		job.setUpdateDate(dateTime);
-		if (job.getJobFilters() != null) {
-			job.getJobFilters().forEach(jobFilter -> {
-				jobFilter.job(job);
-			});
-		}
-
-		Job updatedJob = jobRepository.save(job);
-		jobSearchRepository.save(updatedJob);
-		jobHistorySearchRepository.save(jobHistoryRepository.save(jobHistory));
-
-		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
-			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
-			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
-			corporateSearchRepository.save(corporateRepository.save(updatedJob.getCorporate()));
-		}
-		log.info("Job updated");
-		return updatedJob;
-	}
-*/
 	public Job updateJob(Job job) throws BeanCopyException, JobEditException {
 		log.info("In updating job {}", job);
 		if(!job.getCanEdit())

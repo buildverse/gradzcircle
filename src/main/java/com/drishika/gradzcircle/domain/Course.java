@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,11 +35,11 @@ public class Course implements Serializable {
     
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String value;
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String display;
 
     @OneToMany(mappedBy = "course")
@@ -149,7 +150,6 @@ public class Course implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Course [id=" + id + ", course=" + course + ", value=" + value + ", display=" + display
-				+ ", candidateEducations=" + candidateEducations + "]";
+		return "Course [id=" + id + ", course=" + course + ", value=" + value + ", display=" + display+"]";
 	}
 }

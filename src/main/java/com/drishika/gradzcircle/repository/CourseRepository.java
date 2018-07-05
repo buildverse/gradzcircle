@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
+	
+	Course findByCourse(String course);
 
 }

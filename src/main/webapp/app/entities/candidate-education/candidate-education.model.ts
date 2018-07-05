@@ -24,7 +24,7 @@ export class CandidateEducation implements BaseEntity {
         public projects?: BaseEntity[],
         public qualification?: Qualification,
         public course?: Course,
-        public college?: BaseEntity,
+        public college?: any,
     ) {
         this.isPursuingEducation = false;
         this.highestQualification = false;

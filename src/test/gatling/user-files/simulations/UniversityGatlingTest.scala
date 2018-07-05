@@ -68,7 +68,7 @@ class UniversityGatlingTest extends Simulation {
             .exec(http("Create new university")
             .post("/api/universities")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "universityName":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "universityName":"SAMPLE_TEXT", "universityType":"SAMPLE_TEXT", "website":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_university_url"))).exitHereIfFailed
             .pause(10)

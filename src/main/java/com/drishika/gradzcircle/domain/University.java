@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,12 +35,18 @@ public class University implements Serializable {
     private Country country;
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String value;
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String display;
+    
+    @Column(name = "university_type")
+    private String universityType;
+
+    @Column(name = "website")
+    private String website;
 
     @OneToMany(mappedBy = "university")
     @JsonIgnore
@@ -67,6 +74,33 @@ public class University implements Serializable {
     public void setUniversityName(String universityName) {
         this.universityName = universityName;
     }
+    
+    public String getUniversityType() {
+        return universityType;
+    }
+
+    public University universityType(String universityType) {
+        this.universityType = universityType;
+        return this;
+    }
+
+    public void setUniversityType(String universityType) {
+        this.universityType = universityType;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public University website(String website) {
+        this.website = website;
+        return this;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
 
     public Country getCountry() {
         return country;
@@ -160,9 +194,13 @@ public class University implements Serializable {
     /* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
-	public String toString() {
-		return "University [id=" + id + ", universityName=" + universityName + ", country=" + country + ", value="
-				+ value + ", display=" + display + ", colleges=" + colleges + "]";
-	}
+    @Override
+    public String toString() {
+        return "University{" +
+            "id=" + getId() +
+            ", universityName='" + getUniversityName() + "'" +
+            ", universityType='" + getUniversityType() + "'" +
+            ", website='" + getWebsite() + "'" +
+            "}";
+    }
 }

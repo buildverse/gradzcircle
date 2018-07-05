@@ -14,6 +14,7 @@ public final class Constants {
     public static final String SUCCESS ="SUCCESS";
     public static final String ERROR ="ERROR";
     public static final String AWS_REGION="us-west-1";
+    public static final String OTHER = "Other";
     private Constants() {
 
     }

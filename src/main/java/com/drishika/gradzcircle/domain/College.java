@@ -20,7 +20,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -46,12 +46,15 @@ public class College implements Serializable {
     private String domainName;
     
     @Transient
+    @JsonProperty
     private String value;
     
     @Transient
+    @JsonProperty
     private String display;
 
-    
+    @Column(name = "affiliation")
+    private String affiliation;
 
 	/**
      * need to make this unique
@@ -103,6 +106,19 @@ public class College implements Serializable {
         this.domainName = domainName;
     }
 
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public College affiliation(String affiliation) {
+        this.affiliation = affiliation;
+        return this;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
+    
     public Integer getStatus() {
         return status;
     }
@@ -206,10 +222,14 @@ public class College implements Serializable {
     /* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
-	public String toString() {
-		return "College [id=" + id + ", collegeName=" + collegeName + ", domainName=" + domainName + ", value=" + value
-				+ ", display=" + display + ", status=" + status + ", candidateEducations=" + candidateEducations
-				+ ", university=" + university + "]";
-	}
+    @Override
+    public String toString() {
+        return "College{" +
+            "id=" + getId() +
+            ", collegeName='" + getCollegeName() + "'" +
+            ", domainName='" + getDomainName() + "'" +
+            ", affiliation='" + getAffiliation() + "'" +
+            ", status='" + getStatus() + "'" +
+            "}";
+    }
 }

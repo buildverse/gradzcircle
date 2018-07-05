@@ -55,11 +55,11 @@ export const candidateEducationPopupRoute: Routes = [
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateEducation.home.title'
         },
-        resolve: {
+       /* resolve: {
             courses: CourseResolverService,
             qualifications: QualificationResolverService,
             colleges: CollegeResolverService
-        },
+        },*/
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },
@@ -70,11 +70,11 @@ export const candidateEducationPopupRoute: Routes = [
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateEducation.home.title'
         },
-        resolve: {
+      /*  resolve: {
             courses: CourseResolverService,
             qualifications: QualificationResolverService,
             colleges: CollegeResolverService
-        },
+        },*/
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },

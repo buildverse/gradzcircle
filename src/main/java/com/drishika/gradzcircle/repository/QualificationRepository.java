@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface QualificationRepository extends JpaRepository<Qualification, Long> {
+	
+	Qualification findByQualification(String qualification);
 
 }

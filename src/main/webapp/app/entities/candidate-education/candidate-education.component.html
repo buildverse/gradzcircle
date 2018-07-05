@@ -1,4 +1,5 @@
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
+
     <div class="row">
         <div class="col-md-12">
             <div class="card  mb-3">
@@ -32,8 +33,8 @@
                                     <div class="card-header" style="background-color:#3097D1">
                                                 <div class="row mx-2 pb-0 justify-content-end ">
                                                     <div class="mr-auto">
-                                                        <p style="color:white"><span class="mt-0">{{candidateEducation.college?(candidateEducation.college?.collegeName==='Other'?(candidateEducation.capturedCollege+", "+candidateEducation.capturedUniversity):
-                                                                                    (candidateEducation.college.collegeName+", "+candidateEducation.college.university.universityName)):''}}
+                                                        <p style="color:white"><span class="mt-0">{{candidateEducation.college?(candidateEducation.college[0]?.collegeName==='Other'?(candidateEducation.capturedCollege+", "+candidateEducation.capturedUniversity):
+                                                                                    (candidateEducation.college[0].collegeName+", "+candidateEducation.college[0].university.universityName)):''}}
                                                                                 </span></p>
 
                                 </div>

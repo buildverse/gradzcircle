@@ -18,6 +18,7 @@
             },
             "collegeName": "College Name",
             "domainName": "Domain Name",
+            "affiliation": "Affiliation",
             "status": "Status",
             "candidateEducation": "Candidate Education",
             "university": "University"

@@ -23,6 +23,11 @@
                 [(ngModel)]="college.domainName"  />
         </div>
         <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.affiliation" for="field_affiliation">Affiliation</label>
+            <input type="text" class="form-control" name="affiliation" id="field_affiliation"
+                [(ngModel)]="college.affiliation"  />
+        </div>
+        <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.college.status" for="field_status">Status</label>
             <input type="number" class="form-control" name="status" id="field_status"
                 [(ngModel)]="college.status"  />

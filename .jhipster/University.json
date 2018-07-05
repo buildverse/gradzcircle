@@ -18,6 +18,14 @@
         {
             "fieldName": "universityName",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "universityType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "website",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171015094646",

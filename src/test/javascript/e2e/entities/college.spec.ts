@@ -39,6 +39,8 @@ describe('College e2e test', () => {
         expect(collegeDialogPage.getCollegeNameInput()).toMatch('collegeName');
         collegeDialogPage.setDomainNameInput('domainName');
         expect(collegeDialogPage.getDomainNameInput()).toMatch('domainName');
+        collegeDialogPage.setAffiliationInput('affiliation');
+        expect(collegeDialogPage.getAffiliationInput()).toMatch('affiliation');
         collegeDialogPage.setStatusInput('5');
         expect(collegeDialogPage.getStatusInput()).toMatch('5');
         collegeDialogPage.universitySelectLastOption();
@@ -70,6 +72,7 @@ export class CollegeDialogPage {
     closeButton = element(by.css('button.close'));
     collegeNameInput = element(by.css('input#field_collegeName'));
     domainNameInput = element(by.css('input#field_domainName'));
+    affiliationInput = element(by.css('input#field_affiliation'));
     statusInput = element(by.css('input#field_status'));
     universitySelect = element(by.css('select#field_university'));
 
@@ -91,6 +94,14 @@ export class CollegeDialogPage {
 
     getDomainNameInput = function () {
         return this.domainNameInput.getAttribute('value');
+    }
+
+    setAffiliationInput = function (affiliation) {
+        this.affiliationInput.sendKeys(affiliation);
+    }
+
+    getAffiliationInput = function () {
+        return this.affiliationInput.getAttribute('value');
     }
 
     setStatusInput = function (status) {

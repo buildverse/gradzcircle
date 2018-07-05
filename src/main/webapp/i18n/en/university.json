@@ -17,6 +17,8 @@
                 "title": "University"
             },
             "universityName": "University Name",
+            "universityType": "University Type",
+            "website": "Website",
             "country": "Country",
             "college": "College"
         }

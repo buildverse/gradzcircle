@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface UniversityRepository extends JpaRepository<University, Long> {
+	
+	public University findByUniversityName(String universityName);
 
 }

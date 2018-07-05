@@ -219,12 +219,15 @@ jobTypeCost Double
 
 entity College {
 	collegeName String,
-    domainName String,/* need to make this unique */
+    domainName String,
+    affiliation String,
     status Integer
 }
 
 entity University{
-	universityName String    
+	universityName String,
+	universityType String,
+	website String
 }
 
 entity JobCategory {

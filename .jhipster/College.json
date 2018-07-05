@@ -24,8 +24,11 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "affiliation",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "status",
-            "javadoc": "need to make this unique",
             "fieldType": "Integer"
         }
     ],

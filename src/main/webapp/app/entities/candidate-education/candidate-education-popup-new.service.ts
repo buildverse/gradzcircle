@@ -20,7 +20,8 @@ export class CandidateEducationPopupServiceNew {
         private candidateEducationService: CandidateEducationService
 
     ) { }
-    open(component: Component, id?: number | any, colleges?: College[], courses?: Course[], qualifications?: Qualification[]): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any): Promise<NgbModalRef> {
+      //, colleges?: College[], courses?: Course[], qualifications?: Qualification[]
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -32,7 +33,8 @@ export class CandidateEducationPopupServiceNew {
             this.candidateEducation.candidate = this.candidate;
             this.candidateEducation.candidate.id = id;
             setTimeout(() => {
-                this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation, colleges, courses, qualifications);
+                this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation);
+            //  this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation, colleges, courses, qualifications);
                 resolve(this.ngbModalRef);
             }, 0);
         });
@@ -49,12 +51,13 @@ export class CandidateEducationPopupServiceNew {
     //     return this.candidateEducationModalRef(component,this.candidateEducation,colleges,courses,qualifications);
     // }
 
-    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation, colleges?: College[], courses?: Course[], qualifications?: Qualification[]): NgbModalRef {
+    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation): NgbModalRef {
+      //, colleges?: College[], courses?: Course[], qualifications?: Qualification[]
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateEducation = candidateEducation;
-        modalRef.componentInstance.colleges = colleges;
-        modalRef.componentInstance.qualifications = qualifications;
-        modalRef.componentInstance.courses = courses;
+      //  modalRef.componentInstance.colleges = colleges;
+       // modalRef.componentInstance.qualifications = qualifications;
+      //  modalRef.componentInstance.courses = courses;
         modalRef.result.then((result) => {
             this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
             this.isOpen = false;
