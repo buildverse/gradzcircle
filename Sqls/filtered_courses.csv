@@ -1,0 +1,959 @@
+id,course
+1,Civil Engineering 
+2,Computer Engineering 
+3,Electrical Engineering 
+4,Electronics And Communications Engineering 
+5,Hotel Management  &  Catering Technology 
+6,Information Technology 
+7,Mechanical Engineering 
+8,Computer Science & Engineering 
+9,Electronics & Communication Engg 
+10,Industrial Pharmacy 
+11,Pharmaceutical Analysis 
+12,Pharmaceutical Chemistry 
+13,Pharmaceutics 
+14,Pharmacy Practice 
+15,Pharmacy 
+16,Applied Electronics And Instrumentation Engineering 
+17,Electrical And Electronics Engineering 
+18,Pharmaceutical Analysis And Quality Assurance 
+19,Pharmacology 
+20,Computer Science And Engineering 
+21,Thermal Engineering 
+22,Masters In Business Administration 
+23,Power Systems 
+24,Structural Design 
+25,Transportation Engineering 
+26,Vlsi 
+27,Agricultural Engineering 
+28,Masters In Computer Applications 
+29,Medical Chemistry 
+30,Pharmaceutical Biotechnology 
+31,Pharmaceutical Technology 
+32,Pharmacognosy And Phytochemistry 
+33,Automobile Engineering 
+34,Cad/cam 
+35,Computer Sceince & Engineering 
+36,Embedded Systems 
+37,Machine Design 
+38,Power And Industrial Drives 
+39,Structural Engineering 
+40,Computer Aided Structural Analysis And Design 
+41,Embedded System And Vlsi 
+42,Power Electronics 
+43,Vlsi And Embedded Systems 
+44,Mining Engineering 
+45,Masters Of Applied Management 
+46,Electrical Power Systems 
+47,Power Electronics And Drives 
+48,Cad Cam 
+49,Computer Science 
+50,Petroleum Engineering 
+51,Software Engineering 
+52,Vlsi Design 
+53,Petroleum Technology 
+54,Post Graduate Diploma In Management ( Post Graduate Diploma )
+55,Civil Engin
+56,Post Graduate Diploma In Management (business Management) ( Post Graduate Diploma )
+57,Pharmaceutical Analysis And Quality Control 
+58,Digital Electronics And Communication Systems 
+59,Vlsi System Design 
+60,Electric Power System 
+61,Master Of Computer Applications 
+62,Vlsi And Embedded Systems Design 
+63,Architecture Assistantship 
+64,Artificial Intelligence 
+65,Bioinformatics 
+66,Biomedical Engineering 
+67,Biotechnology 
+68,Cad/cam Engineering 
+69,Chemical Engineering 
+70,Chemical Technology(rubber / Plastic) 
+71,Computer Applications 
+72,Computer Networks 
+73,Computer Science & Technology 
+74,Control Systems 
+75,Electronics And Instrumentation Engineering 
+76,Environmental Engineering And Management 
+77,Geo Informatics 
+78,Heat Power Engineering 
+79,Hydraulics Engineering 
+80,Industrial Engineering 
+81,Industrial Instrumentation And Control 
+82,Industrial Pollution Control ( Post
+83,Communication Systems 
+84,Computer Science And Technology 
+85,Pharmaceutics (drug Regulatory Affairs) 
+86,Computer Aided Design And Manufacture 
+87,Electrical Power Engineering 
+88,Electronics And Electrical Engineering
+89,Digital Systems And Computer Electronics 
+90,Production Engineering And Engineering Design 
+91,Communication Engineering And Signal Processing 
+92,Digital Image Processing 
+93,Power Systems Engineering 
+94,Applied Electronics 
+95,Power Electronics And Electrical Drives 
+96,Highway Engineering 
+97,Electronics & Instrumentation Engineering 
+98,Electronics & Communication Engg(industry Integrated) 
+99,Structural Engineering And Construction Management 
+100,Civil Engineering (2 Shift)
+101,Advanced Manufacturing Systems 
+102,Computer Aided Structural Engineering 
+103,Soil Mechanics And Foundation Engineering 
+104,Business Management 
+105,Pharmaceutical Management And Regulatory Affairs 
+106,Power Systems Control And Automation Engineering 
+107,Business Administration 
+108,Mechanical Cad/cam 
+109,Systems And Signal Processing 
+110,Digital Electronics And Communication Engineering 
+111,Metallurgical Engineering 
+112,Pharmaceutical Science 
+113,Masters In Business Administration (finance) 
+114,Post Graduate Diploma In Management (banking Insurance Finance And Allied Services) ( Post Graduate Diploma )
+115,Post Graduate Diploma In Management (marketing And Finance) ( Post Graduate Diploma )
+116,Masters In Business Management 
+117,Communication & Signal Process 
+118,Thermal Sciences & Energy Systems 
+119,Computer Aided Analysis And Design 
+120,Cyber Security 
+121,Infrastructure Engineering And Management 
+122,Power System And Control Automation 
+123,Vlsi Design And Embedded Systems 
+124,Masters In Computer Applications ( Post G
+125,Civil Engineering Environment & Pollution Control 
+126,Architecture 
+127,Construction Planning And Management 
+128,Fashion Technology 
+129,Medical Lab Technology 
+130,Refrigeration And Air Conditioning 
+131,Environmental Engineering 
+132,Power Engineering 
+133,Mechanical Engine
+134,Pharmacology And Toxicology 
+135,Quality Assurance And Pharm Regulatory Affairs 
+136,Diploma Medical Lab Technology 
+137,Geotechnical Engineering 
+138,Mechanical Engineering Design 
+139,Neural Networks 
+140,Electrical And Electronics Engineering (sandwich) 
+141,Electronics And Communication Engineering (sandwich) 
+142,Mechanical Engg(sandwitch Pattern) 
+143,Ceramic Engineering And Technology 
+144,Chemical Engineering (oil Technology) 
+145,Chemical Engineering (petrochemical) 
+146,Chemical Engineering (plastic & Polymer) 
+147,Chemical Engineering [sw] 
+148,Commercial & Computer Practise 
+149,Garment  Technology 
+150,Textile Technology 
+151,Machine Engineering 
+152,Textile Technology (sandwich) 
+153,High Voltage And Power Systems Engineering 
+154,Post Graduate Diploma In Management (tourism And Cargo) ( Post Graduate Diploma )
+155,Avionics 
+156,Nano Technology 
+157,Electrical Power System 
+158,Agriculture Engineering 
+159,Electronics & Computer Science 
+160,Master In Business Administration(general Management) 
+161,Energy Systems 
+162,Internal Combustion And Automobiles 
+163,Product Design 
+164,Refrigeration & Air Conditioning 
+165,Reliability Engineering 
+166,Electronics And Communications Engineering ( Unde
+167,High Voltage Engineering 
+168,Aeronautical Engineering 
+169,Electronics And Computer Engineering 
+170,Industrial And Production Engineering 
+171,Information Science And Technology 
+172,Power Electronics And Power Systems 
+173,Aero Space Engineering 
+174,Embedded System And Vlsi Design 
+175,Micro And Nano Electronics 
+176,Solar Power Systems 
+177,Mas
+178,Computer Networks And Information Security 
+179,Drug Regulatory Affairs 
+180,Masters In Business Administration (information Management) 
+181,Textile Engineering 
+182,Mechanical Engineering ( Diplom
+183,Electrical Machines And Drives 
+184,Signal Processing And Communications 
+185,Pharmacognosy 
+186,Power Systems And Power Electronics 
+187,Electronics And Communications Engineering
+188,Power Electronics And Control 
+189,Microwave And Communication Engineering 
+190,Power System And Control 
+191,Marine Engineering 
+192,Mechatronics 
+193,Masters In Business Administration (general Management) 
+194,Retail Management 
+195,Metallurgical And Materials Engineering 
+196,Computational Analysis In Mechanical Science 
+197,Computational Mechanics 
+198,Computational Mechanics (mechanical Engineering) 
+199,Computer Networks And Internet Security 
+200,Computing In Computing 
+201,Chemical Engineering (sugar Technology) 
+202,Power Systems And Automation 
+203,Masters In Business Administration (finance Marketing And Human Resource Management) 
+204,Computer Aided Design & Computer Adided Manufacture 
+205,Industrial Biotechnology 
+206,Food Processing Technology 
+207,AdvancedIn Maring Engineering And Systems 
+208,Marine Engineering And Systems 
+209,Pharma Technology 
+210,Diploma In Mechanical Engineering 
+211,Remote Sensing 
+212,Diploma In Handloom And Textile Technology 
+213,Computer Science And Systems Engineering 
+214,Electronics And Control Systems 
+215,Mechanical Engineering ( Dipl
+216,Hospital And Clinical Pharmacy 
+217,Commercial Practice 
+218,Hotel Management And Catering Technology 
+219,Civil Engineering ( Dipl
+220,Masters In Business Administration (environment) 
+221,Instrumentation Engineering 
+222,Petrochemical Technology 
+223,Masters In Computer Applicat
+224,Pharmaceutical Science ( Doctorate )
+225,Production Engineering 
+226,Craft Technology 
+227,Environment Engineering 
+228,Instrumentation & Control 
+229,Signal Processing 
+230,Water Resource Engineering 
+231,Civil Engineeri
+232,Electronics Communication  And Instrumentation Engg 
+233,Power Electronics And Systems 
+234,Advanced Electrical Power System 
+235,Computer And Communication 
+236,Instrumentation & Control Engineering 
+237,Vlsi And Microelectronics 
+238,Pharmacy Practice And Clinical Pharmacy 
+239,Telematics 
+240,Electronics And Telecommunications Engineering 
+241,Mechanical Engineering (
+242,Electrical And Power Engineering 
+243,Metallurgy And Material Technology 
+244,Cosmetology 
+245,Garment & Fashion Technology 
+246,Travel & Tourism 
+247,Chemical Engineering ( Doctorate )
+248,Civil Engineering ( Doctorate )
+249,Electrical Engineering ( Doctorate )
+250,Mechanical Engineering ( Doctorate )
+251,Electronics & Tele-communication Engineering 
+252,Business Management ( Post Graduate Diploma )
+253,Garment Technology 
+254,Electrical And Instrumentation Engineering 
+255,Plastic Mould Technology (dpmt/pdpmt) 
+256,Plastic Technology (dpt/pdpt) 
+257,Plastic Mould Design 
+258,Plastics Processing & Testing 
+259,Post Plastic Process & Testing 
+260,Civil Engineering(construction Technology) 
+261,Animation And Multimedia Technology 
+262,Construction Technology 
+263,Control And Instrumentation 
+264,Thermal And Fluid Engineering 
+265,Instrumentation And Control Engineering 
+266,Instrumentation Technology 
+267,Handloom & Textile Technology 
+268,Vlsi Design And Signal Processing 
+269,Production And Industrial Engineering 
+270,Power Electronics And Instrumentation Engineering 
+271,Architectural Assistantship 
+272,Civil Engineering & Planning 
+273,Modern Office Management 
+274,Audiography & Sound Engineering 
+275,Cinematography 
+276,Film & Video Editing 
+277,Fine Arts 
+278,Textile Chemistry 
+279,Bio Electronics 
+280,Electronics Design And Technology 
+281,Energy Technology 
+282,Food Engineering And Technology 
+283,Polymer Science And Technology 
+284,Electronic Engineering 
+285,Electronics Engineering 
+286,Wireless Communications 
+287,Architecture And Interior Decoration 
+288,Plastics Technology 
+289,Plastics Processing And Testing 
+290,Mechanical Engineering (auto) 
+291,Civil Engineering (rural Engineering) 
+292,Electronic Science And Engineering 
+293,Costume Design & Garment Technology 
+294,Library And Information Science 
+295,Modern Office Practice 
+296,Electronics 
+297,Ceramics 
+298,Printing Technology 
+299,Diploma In Architectural Assistantship 
+300,Library & Information Science 
+301,Masters In Business Administration (international Business) 
+302,Masters In Human Resource Management 
+303,Masters In Business Administration (executive) 
+304,Leather Technology 
+305,Electrical Engineering (industrial Control) 
+306,Interior Decoration 
+307,Instrument Technology 
+308,Advanced Die & Mould Making 
+309,Advanced Mechatronics & Industrial Automation 
+310,Mechanical Engineering (tool & Die) 
+311,Civil Engineering (construction Technology) 
+312,Electrical Engg (instrumentation & Control) 
+313,Engineering Education 
+314,Mechanical Engg (manufacturing Technology) 
+315,Industrial Design 
+316,Industrial Metallurgy 
+317,Information Security 
+318,Quality Engineering And Management 
+319,Post Graduate Diploma In Management (agri Business And Management) ( Post Graduate Diploma )
+320,Medical Laboratory Technology 
+321,Polymer Engineering 
+322,Food Technology 
+323,Micro Electronics 
+324,Drug Discovery & Drug Development 
+325,Metallurgy 
+326,E-security 
+327,Environmental Science And Engineering 
+328,Industrial Drives And Control 
+329,Power And Energy Engineering 
+330,Industrial Safety 
+331,Digital Electronics Engineering 
+332,Mechanical Engineering( Production) 
+333,Electrical Devices And Power Systems 
+334,Industrial Engineering And Management 
+335,Design And Thermal Engineering 
+336,Digital Electronics 
+337,Computer Technology 
+338,Masters In Business Admi
+339,Digital Communication 
+340,Costume Design & Dress Making 
+341,Cddm 
+342,Power Plant Engineering & Energy Management 
+343,Design Of Mechanical Systems 
+344,Material Science And Technology 
+345,Energy Management 
+346,Agricu
+347,Optoelectronics And Laser Technology ( Post Graduate Diploma )
+348,Turbo Machinery 
+349,Quality Assurance 
+350,Computer Technology And Applications 
+351,Electrical A
+352,Mechanical Engineering Production 
+353,Cyber Forensics And Information Security 
+354,Pharmacy (quality Assurance Techniques) 
+355,Information Technology Enabled Services And Management 
+356,Advanced Materials Technology 
+357,Digital Communications 
+358,Radio Frequency And Microwave Engineering 
+359,Medical Electronics 
+360,Mechanical And Automation Engineering 
+361,Garment Fabrication 
+362,Mechanical Engineering (maintenance) 
+363,Post Graduate Diploma In Management (banking And Financial Services) ( Post Graduate Diploma )
+364,Post Graduate Diploma In Management (executive Marketing) ( Post Graduate Diploma )
+365,Post Graduate Diploma In Management (executive) ( Post Graduate Diploma )
+366,Post Graduate Diploma In Management (general) ( Post Graduate Diploma )
+367,Post Graduate Diploma In Management (international Business) ( Post Graduate Diploma )
+368,Post Graduate Diploma In Management (marketing) ( Post Graduate Diploma )
+369,Modern Office Practice (english) ( Post Graduate Diploma )
+370,Modern Office Practice (hindi) ( Post Graduate Diploma )
+371,Post Graduate Diploma In Management (information Technology Management) ( Post Graduate Diploma )
+372,Electronics Engineering (digital Electronics) 
+373,Hydraulics & Flood Control 
+374,Information Systems 
+375,Microwave & Optical Communication 
+376,Nano Science & Technology 
+377,Polymer Technology 
+378,Electrical Engineering ( U
+379,Tool & Die Making 
+380,Tool Engineering 
+381,Clinical Pharmacy 
+382,Post Graduate Diploma In Management (global Business) ( Post Graduate Diploma )
+383,Post Graduate Diploma In Management (human Resources) ( Post Graduate Diploma )
+384,Post Graduate Diploma In Management Advertising Communication ( Post Graduate Diploma )
+385,Post Graduate Diploma In Management Research And Business Analytics ( Post Graduate Diploma )
+386,Master Of Science In Software Engineering 
+387,Plastic Engineering 
+388,Plastics Engineering 
+389,Post Graduate Diploma In Retail Management ( Post Graduate Diploma )
+390,Post Graduate Diploma In Management (tourism And Leisure) ( Post Graduate Diploma )
+391,Post Graduate Diploma In Management (hospital And Health Management) ( Post Graduate Diploma )
+392,Fellowship Programme In Management ( Doctorate )
+393,Post Graduate Diploma In Management (human Resource Management) ( Post Graduate Diploma )
+394,Fashion Designing 
+395,Textile Designing 
+396,Post Graduate Diploma In Management (retail Management) ( Post Graduate Diploma )
+397,Pharmaceutical Assurance 
+398,Post Graduate Diploma In Management (pharmaceutical Management) ( Post Graduate Diploma )
+399,Earthquake Engineering 
+400,Architecture Pedagogy 
+401,Building Services 
+402,Ekistics 
+403,Medical Architecture 
+404,Recreation Architecture 
+405,Urban Regeneration 
+406,Civil (public Health & Environment) Engineering 
+407,Digital Electronics & Microprocessor 
+408,Post Graduate Diploma In Management (finance) ( Post Graduate Diploma )
+409,Electrical And Computer Engineering 
+410,Commercial Art 
+411,Interior Design 
+412,Cosmetology And Health 
+413,Biochemical Engineering 
+414,Industrial Electronics 
+415,Manufacturing Process & Automation Engineering 
+416,Masters In Engineering And Management 
+417,Process Control 
+418,Construction Engineering 
+419,Art For Drawing Teacher 
+420,Post Graduate Certificate In Management (retail Management) ( Post Graduate Diploma )
+421,Foundation Engineering 
+422,Industrial Automation & Rf Engineering 
+423,Pharmacy (quality Assurance) 
+424,Post Graduate Diploma In Management (healthcare) ( Post Graduate Diploma )
+425,Architecture Assitantship 
+426,Fabrication Technology & Erection Engg (sandwitch Pattern) 
+427,Electronics & Telecommunication Engineering (technologynician Electronic Radio) 
+428,Electronics And Telecommunication Engineering (radio And System) 
+429,Information And Communication Technology 
+430,Shipbuilding Engineering 
+431,Computer Aided Costume Design And Dress Making 
+432,Textile Manufacturing Technology 
+433,Civil And Infrastructure Engineering 
+434,Executive Post Graduate Diploma In Management (infrastructure Management) ( Post Graduate Diploma )
+435,Post Graduate Diploma In Management (infrastructure Management) ( Post Graduate Diploma )
+436,Pharmaceutical Quality Assurance 
+437,Planning 
+438,Hospitality And Tourism Administration 
+439,Manufacturing Engineering 
+440,Process Control Instrumentation 
+441,Architecture (town Planning) 
+442,Construction Engineern And Management 
+443,Transportation System Engineering 
+444,Textile Processing 
+445,Plastic Mould Technology 
+446,Plastic Technology 
+447,Plastics Mould Design 
+448,Plastics Processing & Testing ( Post Graduate Diploma )
+449,Advanced Manufacturing Technology 
+450,Automobile Technology 
+451,Thermal Systems And Design 
+452,Please Select 
+453,Textile Processing Technology 
+454,Armament Engineering (gun Fitter) 
+455,Artificer Training (mech) 
+456,Automobile Engineering [automobile Fitter] 
+457,Instruments And Medical Equipment 
+458,Weapons Engineering 
+459,Pgdm(business Entrepreneurship) ( Post Graduate Diploma )
+460,Pgdm(development Studies) ( Post Graduate Diploma )
+461,Architecture ( Doctorate )
+462,Urban And Regional Planning 
+463,Computer Science & Engineering ( Doctorate )
+464,Electrical And Electronics Engineering ( Doctorate )
+465,Metallurgical And Materials Engineering ( Doctorate )
+466,Structural Engineering ( Doctorate )
+467,Textile Chemistry ( Doctorate )
+468,Textile Engineering ( Doctorate )
+469,Water Resource Engineering ( Doctorate )
+470,Advanced Electronics And Communication Engineering 
+471,Fracture Mechanics 
+472,Gas Turbine Technology 
+473,Hydraulics Engineeri
+474,Communications Engineering 
+475,Power Electronics Engineering 
+476,Computer Aided Design Manufacture And Engineering 
+477,Energy Engineering 
+478,Textile Design 
+479,Electrical Drives And Control 
+480,Tool And Die Engineering 
+481,Construction Project Management 
+482,Artificer Training (electrical) 
+483,Artificer Training (electronics) 
+484,Navy Entry Artificer/In Mechanical And Electrical 
+485,Post Graduate Diploma In Management (rural Management) ( Post Graduate Diploma )
+486,Applied Instrumentation 
+487,Automation And Control Power Systems 
+488,Computer Aided Process Design 
+489,Cryogenic Engineering 
+490,Environmental Management 
+491,Rubber Technology 
+492,Water Resource Management 
+493,Electrical Engineering
+494,Instrumentation And Control 
+495,Masters In Business Administration ( Post
+496,Medical Pharmaceutical Chemistry 
+497,Infrastructure Engineering 
+498,Ceramic Technology 
+499,New Drug Deliverty System 
+500,Post Graduate Diploma In Management (communications) ( Post Graduate Diploma )
+501,Masters In Business Administration (marketing Management) 
+502,Architecture And Interior Design 
+503,Civil Engineering ( Un
+504,Quality Assurance Techniques 
+505,Mechan
+506,Petrochemical Engineering 
+507,Textile Manufacturing And Technology 
+508,Thermal Science 
+509,Masters In Management Studies 
+510,Computer Aided Design Of Structures 
+511,Wireless Communication Technology 
+512,Information Technology(information And Cyber Warfare) 
+513,Information Engineering 
+514,Town & Country Planning 
+515,System And Network Security 
+516,Construction Management 
+517,Chemical Technology 
+518,Environmental Science And Technology 
+519,Fabrication Technology 
+520,Masters In Administrative Management 
+521,Communication Engineering 
+522,Mechanical Engineering Automobile 
+523,Computer Networking 
+524,Construction Technology And Management 
+525,Manufacturing Technology & Automation 
+526,Structural And Foundation Engineering 
+527,Mechanical And Automation Eng
+528,Mechanical Engineering (prod) 
+529,Medical  Electronics Engineering 
+530,Manufacturing And Automation 
+531,Office Management And Computer Application 
+532,Robotics And Automation 
+533,Electrical Instrumentation And Control Engineering 
+534,Energy And Environmental Management 
+535,Materical Engineering(nanotechnology) 
+536,Highway Engineering ( Post
+537,Civil(construction) 
+538,Surface Coating Technology 
+539,Electronics And Electrical Engineering 
+540,Computer Science And Information Technology 
+541,Fashion And Apparel Design 
+542,Fire Technology And Safety 
+543,Hotel Management 
+544,Finance Account & Auditing 
+545,First Year/other 
+546,Agricultural Technology 
+547,Finance ( Post Graduate Diploma )
+548,Fire Technology & Safety 
+549,Retail Management ( Post Graduate Diploma )
+550,Modern Office Practice ( Post Graduate Diploma )
+551,Fashion & Design 
+552,Civil Engineering (public Health Engineering) 
+553,Foundry Technology 
+554,Packaging Technology 
+555,Optical Engineering 
+556,Pharmac
+557,Civil & Rural Engineering 
+558,Pharmacy Management 
+559,Civil Engineering (transportation Engineering) 
+560,Human Resource Management 
+561,Computer And Information Science 
+562,Diploma In Management ( Post Graduate Diploma )
+563,Hotel Management & Catering Technology 
+564,Executive Fellow Programme In Management ( Doctorate )
+565,Post Graduate Diploma In Management (energy Management) ( Post Graduate Diploma )
+566,Post Graduate Diploma In Management (international Management) ( Post Graduate Diploma )
+567,Post Graduate Diploma In Management (national Management Programme) ( Post Graduate Diploma )
+568,Post Graduate Diploma In Management (public Policy And Management) ( Post Graduate Diploma )
+569,Information Technology And Engineering 
+570,Structural Engineering And Construction 
+571,Fashion Designing & Garment Technology 
+572,Manufacturing Systems Engineering 
+573,Transportation Engineering And Management 
+574,Automation Engineering 
+575,Cement Technology ( Post Graduate Diploma )
+576,Government Accounting & Internal Audit ( Post Graduate Diploma )
+577,Post Graduate Diploma In Management (financial Management) ( Post Graduate Diploma )
+578,Post Graduate Diploma In Management(fin-mkt) ( Post Graduate Diploma )
+579,Public Financial Management ( Post Graduate Diploma )
+580,Food Plant Operations Management 
+581,Food Process Engineering And Management 
+582,Food Safety And Quality Management 
+583,Food Supply Chain Management 
+584,Food Technology And Management 
+585,Communication &media Technology 
+586,Fashion And Apparel Engineering 
+587,Printing And Packing Technology 
+588,Aircraft Maintenance Engineering 
+589,Machine Design And Robotics 
+590,Manufacturing Science And Engineering 
+591,Footwear Technology 
+592,Garment Manufacturing Technology 
+593,Knitting Technology 
+594,Pharmaceutics Chemistry 
+595,Computer Engineering (co-edu) 
+596,Electronics And Communication Engineering (microwaves) 
+597,Masters In Business Administration (marketing And Finance) 
+598,Electrical And Electronics (power System) 
+599,B. Arch(general) 
+600,Town Planning 
+601,Network Security And Management 
+602,Manufacturing Technology 
+603,Computer Engineering & Application 
+604,Manufacturing Process 
+605,Mechanical Engineering Auto Mobile 
+606,Architectural Engineering 
+607,Network Engineering 
+608,Electronics Instrument & Control 
+609,Film Technology & Tv Production [film Processing] 
+610,Diploma In Modern Office Management ( Post Graduate Diploma )
+611,Civil Technology 
+612,Travel And Tourism 
+613,Wood Technology 
+614,Quantity Surveying & Construction Management 
+615,Masters In Business Administration (business Economics) 
+616,International Business 
+617,Control System Engineering 
+618,Physical Metallurgy 
+619,Plant Design 
+620,Process Metallurgy 
+621,Production Technology And Management 
+622,Urban Planning 
+623,Aero Dynamic Engineering 
+624,Automated Manufacturing Systems 
+625,Design Of Mechanical Equipment 
+626,Fuel And Combustion 
+627,Microwave Engineering 
+628,New Material Process And Technology 
+629,Power Syst
+630,Drilling Technology 
+631,International Business ( Post Graduate Diploma )
+632,Biomedical Instrumentation 
+633,Ecg Technology 
+634,Technician X-ray Technology 
+635,Post Graduate Diploma In Management (healthcare And Hospital Management) ( Post Graduate Diploma )
+636,Post Graduate Diploma In Management (information Technology) ( Post Graduate Diploma )
+637,Global Management ( Post Graduate Diploma )
+638,Personal Management & Human Resource Management ( Post Graduate Diploma )
+639,Information Science And Engineering 
+640,Telecommunication Engineering 
+641,Networking And Internet Engineering 
+642,Computer Networking And Engineering 
+643,Computer Applications In Industrial Drives 
+644,Thermal Power Engineering 
+645,Industrial Mathematics 
+646,Product Design And Manufacturing 
+647,M
+648,Apparel Design & Fashion Technology 
+649,Commercial Practice (kannada & Eng) 
+650,Post Graduate Diploma In Management (agriculture Business) ( Post Graduate Diploma )
+651,Pharmaceutical Marketing Management 
+652,Networking 
+653,Structural Dynamics And Earthquake Engineering 
+654,Production Engineering System Technology 
+655,Waste Water Management
+656,Health And Safety Engineering 
+657,Apparel Design & Fabrication Technology 
+658,Computer Network Engineering 
+659,Digital Electronics And Communication 
+660,Energy Systems Engineering 
+661,Production Management 
+662,Vlsi Design And Testing 
+663,Automation And Robotics 
+664,Production Technology 
+665,Industrial Production Engineering 
+666,Infrastructure Management 
+667,Digital Communications And Networking 
+668,Micro Electronics And Control Systems 
+669,Biomedical Signal Processing And Instrumentation 
+670,Electron
+671,Master Of Engineering And Management 
+672,Commercial Practice (english) 
+673,Design Engineering 
+674,Machine Tools Technology 
+675,Plastics Mould Technology 
+676,Computer Integrated Manufacturing 
+677,Highway Technology 
+678,Computer Science And Engineering ( Under Gra
+679,Computer Cognition And Technology 
+680,Information Technology(information And Cyber Warfare) ( Post
+681,Construcion Technology 
+682,Production Design And Manufacturing 
+683,Commercial Practice (kan & Eng) 
+684,Information Science 
+685,Machine Tools & Maintenance Engineering 
+686,Sound Recording And Engineering 
+687,Civil Draftsman 
+688,Commercial Practice (kannada) 
+689,Apparel Design & Fabric 
+690,Silk Technology 
+691,Precision Manufacturing 
+692,Tool Design 
+693,Post Graduate Certificate In Management ( Post Graduate Diploma )
+694,Biopharmaceutics 
+695,Pharmacy (clinical Research) 
+696,Mechanical Engineering (sandwich Pattern) 
+697,Water Technology And Health Science 
+698,Jewellery Design & Manufacture Technology 
+699,Electronics Instrumentation And Control Engineering 
+700,Engineering Design 
+701,Industrial Automation And Robotics 
+702,Bulk Drug Technology 
+703,Leather And Fashion Technology 
+704,Petrochem Engineering 
+705,Electronics Product Design And Technology 
+706,Power Engineering And Energy Systems 
+707,Architecture (landscape) 
+708,Instrumenta
+709,Electronic Instrumentation And Control Engineering 
+710,Costumer Design & Dress Making 
+711,Software Testing 
+712,Pharmaceutical Administration 
+713,Pharmaceutical Marketing 
+714,Computer Science And Information Security 
+715,Aeron
+716,Re
+717,Biomedical Electronics 
+718,Cement And Ceramic Technology 
+719,Post Graduate Diploma In Management (business Design And Innovation) ( Post Graduate Diploma )
+720,Post Graduate Diploma In Management (e-business) ( Post Graduate Diploma )
+721,Ceramics Engineering 
+722,Urban Design 
+723,Masters Of Engineering And Management 
+724,Ch
+725,Sugar Technology 
+726,Electrical Energy Systems 
+727,Engineering Analysis And Design 
+728,Civil Environmental Engineering 
+729,Instrumentation 
+730,Mechanical Welding And Sheet Metal 
+731,Mining & Mine Surveying 
+732,Digital Communication Engineering 
+733,Mechanical
+734,Biotechnology And Biochemical Engineering 
+735,Appareal Design & Fashion Technology(u) 
+736,Automotive Electronics 
+737,Energy Systems And Management 
+738,Health Science And Water Engineering 
+739,Industrial Structures 
+740,Maintenance Engineering 
+741,Electro
+742,Computer Aided Design 
+743,Mine Engineering 
+744,Masters In Computer Applications
+745,Mechatronics
+746,Construction And Project Management 
+747,Pre Stressed Concrete 
+748,Thermal Scienc
+749,Civil Engineering (environmental Engineering) 
+750,Geomechanics And Structures 
+751,E-learning Technologies 
+752,Wireless Networks And Applications 
+753,Pharmacy ( Post-doctoral )
+754,Electronics Engineering (self-financed) 
+755,Applied Electronics & Communication Sytsem 
+756,Construction Engineerng And Management 
+757,Wireless Technology 
+758,Image Processing 
+759,Architecture (housing) 
+760,Electrical Machines 
+761,Financial Engineering 
+762,Guidance And Navigation Control 
+763,Microwave And Tv Engineering 
+764,Microwav
+765,Manufacturing Systems And Management 
+766,Polymer Science And Technology ( Doctorate )
+767,Optoelectronics & Communication 
+768,Computer Hardware Maintenance 
+769,Telecommunication Technology 
+770,Computer Science And Information System 
+771,Computer Application & Business Management 
+772,Electronics & Avenoics 
+773,Advanced Manufacturing And Mechanical Systems Design 
+774,Signal Processing And Embedded Systems 
+775,Wood And Paper Technology 
+776,Computer Hardware & Maintenance 
+777,Geotechnical Earthquake Engineering 
+778,Internal Combustion Engienes And Turbo Machinery 
+779,Water Resources And Hydro Informatics 
+780,Translational Engineering 
+781,Energy Systems Analysis And Design 
+782,Electronics & Production 
+783,Optoelectronics And Laser Technology 
+784,Applied Electronics And Communications 
+785,Electronics Design Technology 
+786,Mechanical Engg(industry Integrated) 
+787,Tool And Die Making 
+788,Digital Signal Processing 
+789,Applied Electronics & Instrumentation Engineering 
+790,Power Control And Drives 
+791,Computer Science And Engineering (cyber Security) 
+792,Advanced Communication And Information System 
+793,Opto Electronics & Communication Systems 
+794,Electronics And Biomedical Engineering 
+795,Civil Engineering (water Resource And Management) 
+796,Bioprocess Engineering 
+797,Masters In Management 
+798,Geomachines And Structures 
+799,Post Graduate Diploma In Management (banking And Insurance Service) ( Post Graduate Diploma )
+800,Mechanical(computer Integrated Manufacturing) 
+801,Naval Architecture & Ship Building Engg 
+802,Internal Combustion Engineering 
+803,Opto-electronics Engineering 
+804,Industrial Refrigeration And Cryogenics 
+805,Computer Science & Engineering(networks) 
+806,Safety And Fire Engineering 
+807,Cement Technology 
+808,Wireless And Mobile Communications 
+809,Electrical And Mechanical Engineering 
+810,Master In Hospital Administration 
+811,Mechanical Engineering (thermal Engg) 
+812,Construction Technology & Management 
+813,Plastic Mould Technology (dpmt) 
+814,Bachelor In Management (business Studies) 
+815,Modern Office Management ( Post Graduate Diploma )
+816,Beauty Culture And Cosmetology 
+817,Mine Surveying 
+818,Campus Wide Network Design & Maintenance 
+819,Digital Systems 
+820,Advanced Production Systems 
+821,Software Systems 
+822,Post Graduate Diploma In Management (services) ( Post Graduate Diploma )
+823,Post Graduate Diploma In Management (tourism And Travel) ( Post Graduate Diploma )
+824,Interior Decoration And Design 
+825,Masters In Business Administration (tourism Management) 
+826,Industrial Sefty & Engineering 
+827,Digital Instrumentation 
+828,Film Technology & Tv Production [cinematography] 
+829,Communication Technology And Management 
+830,Electronics & Instrumentation Engineerin
+831,Electronics & Tele-communication Engineering ( Under
+832,Masters In Personnel Management 
+833,C
+834,Masters In Business Administration (financial Administration) 
+835,Masters In Business Adminstration (foreign Trade) 
+836,Building Construction Technology 
+837,Advertising & Public Relation 
+838,Masters In Business Administration (personnel Administration) 
+839,Thermal Science Engineering 
+840,Microwave And Millimeter Engineering 
+841,Architecture (interior Design) 
+842,Applied Videography 
+843,AdvancedIn Computer Applications 
+844,Town Planning And Architecture 
+845,Micro Electronics & Vlsi Design 
+846,Electronics And Communica
+847,Petrochemical Refinery 
+848,Mobile Technology 
+849,Spatial Information Technology 
+850,Future Studies & Planning 
+851,System Management 
+852,Rural Planning And Management ( Post Graduate Diploma )
+853,Industrial Safety & Engineering 
+854,Cad/cam/cae 
+855,Digital Techniques And Instrumentation 
+856,Microelectronics & Vlsi Design 
+857,Optoelectronics -optical Communication 
+858,Tribology And Maintenance 
+859,Electronics & Instrumentation Engineering ( Unde
+860,System Software 
+861,Masters Of Technology Management 
+862,Ophthalmic Technology 
+863,Post Graduate Diploma In Management (hospital Management) ( Post Graduate Diploma )
+864,Mining Engineering ( Under
+865,Heat Power And Thermal Engineering 
+866,Data Sciences 
+867,Cyber Forensics 
+868,Electronics & Telecommunication Engg. 
+869,Entrepreneurship 
+870,Mass Communication 
+871,Integrated Power Systems 
+872,Wireless Communication & Computing 
+873,B.arch.(interiror Design) 
+874,Civil Engineering (sandwich Pattern) 
+875,Fabrication Technology & Erection Engg (sandwich Pattern) 
+876,Industrial Electronics(sandwitch Pattern) 
+877,Dress Designing & Garment Manufacturing 
+878,Masters In Marketing Management 
+879,Mcm (master In Computer Management) 
+880,Automotive Technology 
+881,Mechanical Engineering (sandwich) 
+882,Production Engineering (sandwich) 
+883,Master In Hotel Management And Catering Technology(mhmct) 
+884,Electronics & Telecommunication 
+885,Microwaves 
+886,Mechanical-computer Aided Design/computer Aided Manufacturing 
+887,Electrical Engineering (electronics & Power) 
+888,Post Graduate Diploma In Management (business Administration) ( Post Graduate Diploma )
+889,Electrical
+890,Electronics And Power 
+891,Post Graduate Diploma In Management (pm And Hrd) ( Post Graduate Diploma )
+892,Information Technology & Marketing ( Post Graduate Diploma )
+893,Post Graduate Diploma In Management (telecom And Marketing) ( Post Graduate Diploma )
+894,Post Graduate Diploma In Management (telecom) ( Post Graduate Diploma )
+895,Electronics And Power Engineering 
+896,Mechanical-manufacturing Engineering 
+897,Mechanical Engineering-product Design And Development 
+898,Masters In Financial Management 
+899,Masters In Human Resource Development And Management 
+900,Pharmacy (herbal Drug Technology) 
+901,Environment And Water Resource Engineering 
+902,Manufacturing Engineering And Automation 
+903,Process Instrumentation 
+904,Project Management 
+905,Wired And Wireless Communication 
+906,Computer Engineering (
+907,Architectural Assistantship (interior Design) 
+908,Technical Textile 
+909,Man-made Textile Technology 
+910,Textile Plant Engineering 
+911,Masters In Business Administration (textiles) 
+912,Fashion & Clothing Technology 
+913,Textile Manufactures 
+914,Communication Networks 
+915,Heat And Power 
+916,Chemical Science And Technology 
+917,Air Armament 
+918,Combat Vehicles(mechanical Engineering) 
+919,Energetic Materials & Polymers 
+920,Guided Missiles 
+921,Modeling & Simulation 
+922,Radar & Communication 
+923,Sensor Technology 
+924,Drugs And Pharmaceuticals 
+925,Electronics Technology 
+926,Electronics & Communication Technology 
+927,Mechanical (computer Aided Design
+928,Manufacture & Engineering) 
+929,Plastic And Polymer Engineering 
+930,Computer Aided Design Manufacture And Automation 
+931,Embedded System & Computing 
+932,Elec
+933,Mechanical (cadme) 
+934,Advanced Electronics 
+935,Electronics Systems And Communication 
+936,Electronics ( Doctorate )
+937,Soil Mechanics 
+938,Electrical Engineering (electronics & Power) ( Under Gr
+939,Civil Engineering (for Girls) 
+940,Leather Goods & Footwear Tech 
+941,Pulp Technology 
+942,Electronics Tele Communication 
+943,Transport & Logistics Management ( Post Graduate Diploma )
+944,Media Management ( Post Graduate Diploma )
+945,3-d Animation & Graphics
+946,Robotics And Mechatronics 
+947,Masters In Information Management 
+948,Post Graduate Diploma In Management (pharma And Healthcare Management) ( Post Graduate Diploma )
+949,Management ( Logistics And Supply Chain Management) 
+950,Marine Engineering & Systems(artificer Training) 
+951,Bioprocess Technology 
+952,Chemical Engineering (part Time) 
+953,Dyestuff Technology 
+954,Food Biotechnology 
+955,Green Technology 
+956,Oils
+957,Oleochemicals And Surfactants Technology 
+958,Perfumery And Flavour Tec

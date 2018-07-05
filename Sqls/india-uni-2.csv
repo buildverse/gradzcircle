@@ -1,0 +1,750 @@
+id,university_name,university_type,website,country_id
+1,"A.P. UNIVERSITY OF LAW, VISHAKHAPATNAM",State Public University,https://dsnlu.ac.in,99
+2,"ACHARYA NAGARJUNA UNIVERSITY, GUNTUR",State Public University,www.anu.ac.in,99
+3,"ADIKAVI NANNAYA UNIVERSITY, RAJAHMUNDRY, EAST GODAWARI",State Public University,www.nannayauniversity.info,99
+4,"ANDHRA UNIVERSITY, VISAKHAPATNAM",State Public University,www.andhrauniversity.edu.in,99
+5,DR Y S R HORTICULTURE UNIVERSITY,State Public University,www.drysrhu.edu.in,99
+6,"DR. N.T.R. UNIVERSITY OF HEALTH SCIENCES, VIJAYWADA",State Public University,http://ntruhs.ap.nic.in,99
+7,"DR.B.R.AMBEDKAR UNIVERSITY, ETCHERLA",State Public University,www.brau.in,99
+8,"DRAVIDIAN UNIVERSITY, KUPPAM, CHITTOOR DISTRICT",State Public University,www.dravidianuniversity.ac.in,99
+9,"GANDHI INSTITUTE OF TECHNOLOGY & MANAGEMENT (GITAM) UNIVERSITY, VISAKHAPATNAM",Deemed University-Private,www.gitam.edu,99
+10,INDIAN INSTITUTE OF INFORMATION TECHNOLOGY,Others,-,99
+11,"JAWAHARLAL NEHRU TECHNOLOGICAL UNIVERSITY, ANANTAPUR",State Public University,www.jntua.ac.in,99
+12,"JAWAHARLAL NEHRU TECHNOLOGICAL UNIVERSITY, KAKINADA",State Public University,www.jntuk.edu.in,99
+13,"KONERU LAKSHMAIAH EDUCATION FOUNDATION,GUNTUR",Deemed University-Private,www.kluniversity.in,99
+14,"KRISHNA UNIVERSITY, MACHHLIPATTANAM",State Public University,www.krishnauniversity.in,99
+15,RAJIV GANDHI UNIVERSITY OF KNOWLEDGE TECHNOLOGIES,State Public University,http://www.rgukt.in,99
+16,"RASTRIYA SANSKRIT VIDYAPEETH, TIRUPATHI",Deemed University-Government,www.rsvidyapeetha.ac.in,99
+17,"RAYALASEEMA, UNIVERSITY KURNOOL",State Public University,www.rayalaseemauniversity.ac.in,99
+18,SCHOOL OF PLANNING & ARCHITECTURE VIJAYWADA,Others,www.spav.ac.in,99
+19,"SRI KRISHNADEVARAYA UNIVERSITY, ANANTAPUR",State Public University,skuniversity.org,99
+20,"SRI PADMAVATHI MAHILA VISVA VIDYALAYAM, TIRUPATHI",State Public University,www.spmvv.ac.in,99
+21,"SRI SATYA SAI INSTITUTE OF HIGHER LEARNING, ANANTPUR",Deemed University-Private,www.sssihl.edu.in,99
+22,"SRI VENKATESWARA INSTITUTE OF MEDICAL SCIENCES, TIRUPATHI",Institute under State Legislature Act,www.svimstpt.ap.nic.in,99
+23,"SRI VENKATESWARA UNIVERSITY, TIRUPATHY",State Public University,www.svuniversity.in,99
+24,"SRI VENKATESWARA VEDIC UNIVERSITY, TIRPUPATHI",State Public University,www.svvedicuniversity.org,99
+25,"SRI VENKATESWARA VETERINARY UNIVERSITY, TIRUPATHI",State Public University,www.svvu.edu.in,99
+26,"VIGNAN'S FOUNDATION OF SCIENCE, TECHNOLOGY & RESEARCH, GUNTUR",Deemed University-Private,www.vignanuniversity.org,99
+27,"VIKRAM SIMHAPURI UNIVERSITY, NELLORE",State Public University,www.simhapuriuniv.org,99
+28,"YOGI VEMANA UNIVERSITY, KADAPA",State Public University,www.yogivemanauniversity.ac.in,99
+29,APEX PROFESSIONAL UNIVERSITY,State Private University,,99
+30,ARUNACHAL UNIVERSITY OF STUDIES,State Private University,,99
+31,"HIMALAYAN UNIVERSITY, ITANAGAR",State Private University,,99
+32,"INDIRA GANDHI TECHNOLOGICAL AND MEDICAL SCIENCES UNIVERSITY, ZIRO",State Private University,www.igtamsu.ac.in,99
+33,NATIONAL INSTITUTE OF TECHNOLOGY ARUNACHAL PRADESH,Institute of National Importance,www.nitap.in,99
+34,"NORTH EASTERN REGIONAL INSTITUTE OF SCIENCE & TECHNOLOGY, PAPUM PARE, ITANAGAR",Deemed University-Government,www.nerist.ac.in,99
+35,"RAJIV GANDHI UNIVERSITY, ITANAGAR",Central University,www.rgu.ac.in,99
+36,"ASSAM AGRICULTURAL UNIVERSITY, JORHAT",State Public University,www.aau.ac.in,99
+37,"ASSAM DON BOSCO UNIVERSITY, GUWAHATI",State Private University,www.dbuniversity.ac.in,99
+38,ASSAM DOWN TOWN UNIVERSITY,State Private University,www.adtu.in,99
+39,ASSAM RAJIV GANDHI UNIVERSITY OF COOPERATIVE MANAGEMENT,State Public University,,99
+40,ASSAM SCIENCE AND TECHNOLOGY UNIVERSITY,State Public University,www.astu.org.in,99
+41,"ASSAM UNIVERSITY, SILCHAR",Central University,http://www.aus.ac.in,99
+42,BODOLAND UNIVERSITY,State Public University,bodolanduniversity.ac.in,99
+43,COTTON COLLEGE STATE UNIVERSITY,State Public University,www.ccsu.ac.in,99
+44,"DIBRUGARH UNIVERSITY, DIBRUGARH",State Public University,dibru.ac.in,99
+45,"GAUHATI UNIVERSITY, GUWAHATI",State Public University,www.gauhati.ac.in,99
+46,"INDIAN INSTITUTE OF TECHNOLOGY, GUWAHATI",Institute of National Importance,"www.iitg.ernet.in, www.iitg.ac.in",99
+47,KAZIRANGA UNIVERSITY,State Private University,www.kazirangauniversity.in,99
+48,"KRISHNA KANTA HANIDIQUI STATE OPEN UNIVERSITY, GUWAHATI",State Open University,http://www.kkhsou.in,99
+49,KUMAR BHASKAR VARMA SANSKRIT AND ANCIENT STUDIES UNIVERSITY,State Public University,www.kbvsasuni.ac.in,99
+50,"NATIONAL INSTITUTE OF TECHNOLOGY, SILCHAR",Institute of National Importance,www.nits.ac.in,99
+51,NATIONAL LAW UNIVERSITY AND JUDICIAL ACADEMY,State Public University,www.nluassam.ac.in,99
+52,"SRIMANTA SANKARADEVA UNIVERSITY OF HEALTH SCIENCES, GUWAHATI",State Public University,www.ssuhs.in,99
+53,"TEZPUR UNIVERSITY, TEZPUR",Central University,www.tezu.ernet.in,99
+54,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, PATNA",Institute of National Importance,http://www.aiimspatna.org,99
+55,"ARYABHATTA KNOWELEDGE UNIVERSITY , PATNA",State Public University,www.akubihar.ac.in,99
+56,"BABASAHEB BHIMRAO AMBEDKAR BIHAR UNIVERSITY, MUZAFFARPUR",State Public University,brabu.net,99
+57,"BHUPENDRA NARAYAN MANDAL UNIVERSITY, MADHEPURA",State Public University,www.bnmuniversity.com,99
+58,"BIHAR AGRICULTURE UNIVERSITY, SABOUR",State Public University,bausabour,99
+59,"CENTRAL UNIVERSITY OF BIHAR, PATNA",Central University,www.cub.ac.in,99
+60,"CHANKAYA NATIONAL LAW UNIVERSITY, PATNA",State Public University,www.cnlu.ac.in,99
+61,"INDIAN INSTITUTE OF TECHNOLOGY, PATNA",Institute of National Importance,http://www.iitp.ac.in,99
+62,"INDIRA GANDHI INSTITUTE OF MEDICAL SCIENCES, PATNA",Institute under State Legislature Act,www.igims.org,99
+63,"JAI PRAKASH VISHWAVIDYALAYA, CHAPRA",State Public University,www.jpv.bih.nic.in,99
+64,"KAMESHWAR SINGH DARBHANGA SANSKRIT VISHWAVIDYALAYA, DARBHANGA",State Public University,www.ksdsu.edu.in,99
+65,"LALIT NARAYAN MITHILA UNIVERSITY, DARBHANGA",State Public University,www.lnmu.in,99
+66,"MAGADH UNIVERSITY, BODH GAYA",State Public University,www.magadhuniversity.ac.in,99
+67,"MAULANA MAZHARUL HAQUE ARABIC & PERSIAN UNIVERSITY, PATNA",State Public University,www.mmhapu.bih.nic.in,99
+68,"NALANDA OPEN UNIVERSITY, PATNA",State Open University,www.nalandaopenuniversity.com,99
+69,NALANDA UNIVERSITY,Central University,naladauniv.edu.in,99
+70,"NATIONAL INSTITUTE OF TECHNOLOGY, PATNA",Institute of National Importance,www.nitp.ac.in,99
+71,"NAVA NALANDA MAHAVIHARA, NALANDA",Deemed University-Government,www.nnm.ac.in,99
+72,"PATNA UNIVERSITY, PATNA",State Public University,patnauniversity.ac.in,99
+73,"RAJENDRA AGRICULTURAL UNIVERSITY, SAMASTIPUR",State Public University,www.pusavarsity.org.jn,99
+74,"T.M. BHAGALPUR UNIVERSITY, BHAGALPUR",State Public University,www.tmbu.org,99
+75,"VEER KUNWAR SINGH UNIVERSITY, ARRAH",State Public University,www.vksu.ac.in,99
+76,"PANJAB UNIVERSITY,CHANDIGARH",State Public University,www.puchd.ac.in,99
+77,"PEC UNIVERSITY OF TECHNOLOGY, CHANDIGARH",Deemed University-Government,www.pec.ac.in,99
+78,POST GRADUATE INSTITUTE OF MEDICAL SCIENCES,Institute of National Importance,pgimer.edu.in,99
+79,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, RAIPUR",Institute of National Importance,www.aiimsraipur.edu.in,99
+80,"AMITY UNIVERSITY, RAIPUR",State Private University,,99
+81,"AYUSH AND HEALTH SCIENCE UNIVERSITY OF CHATTISGARH, RAIPUR",State Public University,http:/www.cghealthuniv.com,99
+82,"BASTAR VISHWAVIDYALAYA, BASTAR",State Public University,www.bvvjdp.ac.in,99
+83,BILASPUR VISHWAVIDYALAYA,State Public University,http://www.bilaspuruniversity.ac.in,99
+84,CHHATTISGARH KAMDHENU VISHWAVIDALAYA,State Public University,www.cgkv.ac.in,99
+85,"CHHATTISGARH SWAMI VIVEKANAND TECHNICAL UNIVERSITY, BHILAI",State Public University,csvtu.ac.in,99
+86,"DR. C. V. RAMAN UNIVERSITY, KOTA BILASPUR",State Private University,www.cvru.ac.in,99
+87,"GURU GHASIDAS VISHWAVIDYALAYA, BILASPUR",Central University,www.ggu.ac.in,99
+88,"HIDAYATULLAH NATIONAL LAW UNIVERSITY, RAIPUR",State Public University,www.hnlu.ac.in,99
+89,ICFAI UNIVERSITY,State Private University,www.iuraipur.edu.in,99
+90,"INDIRA GANDHI KRISHI VISHWAVIDYALAYA, RAIPUR",State Public University,"igau.edu.in, igau.nic.in",99
+91,"INDIRA KALA SANGIT VISHWAVIDYALAYA, KHAIRAGARH",State Public University,http//www.iksvv.com,99
+92,ITM UNIVERSITY,State Private University,www.itmuniversity.org,99
+93,"KALINGA UNIVERSITY, RAIPUR",State Private University,www.kalingauniversity.ac.in,99
+94,"KUSHABHAU THAKRE PATRAKARITA AVAM JANSANCHAR VISHWAVIDYALAYA, RAIPUR",State Public University,ktujm.ac.in,99
+95,"MAHARISHI UNIVERSITY OF MANAGEMENT AND TECHNOLOGY, BILASPUR",State Private University,www.mumt.com,99
+96,"MATS UNIVERSITY, RAIPUR",State Private University,www.matsuniversity.ac.in,99
+97,"NATIONAL INSTITUTE OF TECHNOLOGY, RAIPUR",Institute of National Importance,nitrr.ac.in,99
+98,"PT. RAVISHANKAR SHUKLA UNIVERSITY, RAIPUR",State Public University,www.prsu.ac.in,99
+99,"PT. SUNDARLAL SHARMA (OPEN) UNIVERSITY, BILASPUR",State Open University,www.pssou.ac.in,99
+100,"SARGUJA UNIVERSITY, AMBIKAPUR",State Public University,www.sargujauniversity.in,99
+101,ALL INDIA INSTITUTE OF MEDICAL SCIENCES,Institute of National Importance,"wwww.aiims.edu, www.aiims.ac.in",99
+102,BHARAT RATANA DR. B. R. AMBEDKAR UNIVERSITY,State Public University,www.aud.ac.in,99
+103,DELHI TECHNOLOGICAL UNIVERSITY,State Public University,www.dce.edu,99
+104,GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY,State Public University,www.ipu.ac.in,99
+105,INDIAN AGRICULTURAL RESEARCH INSTITUTE (KRISHI PUSHA) NEW DELHI.,Deemed University-Government,www.iari.res.in,99
+106,"INDIAN INSTITUTE OF FOREIGN TRADE, DELHI",Deemed University-Government,www.iift.edu,99
+107,"INDIAN INSTITUTE OF TECHNOLOGY, DELHI",Institute of National Importance,www.iitd.ac.in,99
+108,"INDIAN LAW INSTITUTE, BHAGWANDAS ROAD, NEW DELHI",Deemed University-Government Aided,www.ili.ac.in,99
+109,INDIRA GANDHI DELHI TECHNICAL UNIVERSITY FOR WOMEN,State Public University,www.igit.ac.in,99
+110,INDIRA GANDHI NATIONAL OPEN UNIVERSITY,Central Open University,www.igNo(0)u.ac.in,99
+111,"INDRAPRASTHA INSTITUTE OF INFORMATION TECHNOLOGY, DELHI",State Public University,www.iiitd.ac.in,99
+112,"INSTITUTE OF LIVER AND BILARY SCIENCES, NEW DELHI",Deemed University-Government,www.ilbs.in,99
+113,JAMIA HAMDARD,Deemed University-Government Aided,www.jamiahamdard.edu,99
+114,JAMIA MILLIA ISLAMIA UNIVERSITY,Central University,http://jmi.ac.in,99
+115,JAWAHAR LAL NEHRU UNIVERSITY,Central University,www.jnu.ac.in,99
+116,"NATIONAL INSTITUTE OF FASHION TECHNOLOGY, HAUZ KHAS",Others,www.nift.ac.in,99
+117,NATIONAL INSTITUTE OF TECHNOLOGY DELHI,Institute of National Importance,www.nitdelhi.ac.in,99
+118,"NATIONAL LAW UNIVERSITY, DELHI",State Public University,www.nludelhi.ac.in,99
+119,NATIONAL MUSEUM INSTITUTE OF HISOTRY OF ART CONSERVATION AND MUSICOLOGY,Deemed University-Government,www.nmi.gov.in,99
+120,"NATIONAL SCHOOL OF DRAMA, NEW DELHI",Deemed University-Government,,99
+121,"NATIONAL UNIVERSITY OF EDUCATION, PLANNING & ADMINISTRATION, NEW DELHI",Deemed University-Government,www.nuepa.org,99
+122,"RASHTRIYA SANSKRIT SANSTHAN, NEW DELHI",Deemed University-Government,www.sanskrit.nic.in/,99
+123,"SCHOOL OF PLANNING & ARCHITECTURE, NEW DELHI",Deemed University-Government,www.spa.ac.in,99
+124,"SHRI LAL BHADUR SHASHTRI RASHTRIYA SANSKRIT VIDYAPITH, NEW DELHI",Deemed University-Government,http://www.slbsrsv.ac.in,99
+125,"SOUTH ASIAN UNIVERSITY, NEW DELHI",Central University,http://www.southasianuniversity.org,99
+126,"TERI SCHOOL OF ADVANCED STUDIES, NEW DELHI",Deemed University-Private,www.teriuniversity.ac.in,99
+127,UNIVERSITY OF DELHI,Central University,www.du.ac.in,99
+128,"GOA UNIVERSITY, GOA",State Public University,www.unigoa.ac.in,99
+129,NATIONAL INSTITUTE OF TECHNOLOGY GOA,Institute of National Importance,http://www.nitgoa.ac.in/,99
+130,AHMEDABAD UNIVERSITY,State Private University,www.ahduni.edu.in,99
+131,"ANAND AGRICULTURAL UNIVERSITY, ANAND",State Public University,www.aau.in,99
+132,"C.U.SHAH UNIVERSITY, SURENDRANAGAR",State Private University,www.cushahuniversity.ac.in,99
+133,"CARLOX TEACHER'S UNIVERSITY, AHMEDABAD",State Private University,www.ctu.calorx.org,99
+134,"CENTRAL UNIVERISTY OF GUJARAT, GANDHINAGAR",Central University,www.cug.ac.in,99
+135,"CENTRE FOR ENVIRONMENTAL PLANNING AND TECHNOLOGY UNIVERSITY, AHMEDABAD",State Public University,www.cept.ac.in,99
+136,"CHAROTAR UNIVERSITY OF SCIENCE & TECHNOLOGY, ANAND",State Private University,www.charusat.ac.in,99
+137,"CHILDREN UNIVERSITY, GANDHINAGAR",State Public University,www.cugujarat.ac.in,99
+138,"DHARMSINH DESAI UNIVERISTY, NADIAD",State Public University,http://www.ddu.ac.in,99
+139,"DHIRUBHAI AMBANI INSTITUTE OF INFORMATION & COMMUNICATION TECHNOLOGY, GANDHI NAGAR",State Private University,www.daiict.ac.in,99
+140,"DR. BABASAHEB AMBEDKAR OPEN UNIVERSITY, AHMEDABAD",State Open University,http://www.baou.edu.in/,99
+141,G S F C UNIVERSITY,State Private University,,99
+142,"GANPAT UNIVERSITY, GANPAT VIDYANAGAR, KHERVA",State Private University,www.ganpatuniversity.ac.in,99
+143,"GUJARAT AYURVEDA UNIVERSITY, JAMNAGAR",State Public University,www.ayurveduniversity.edu.in,99
+144,GUJARAT FORENSIC SCIENCES UNIVERSITY,State Public University,www.gfsu.edu.in,99
+145,"GUJARAT NATIONAL LAW UNIVERSITY, GANDHINAGAR",State Public University,www.gnlu.ac.in,99
+146,"GUJARAT TECHNOLOGICAL UNIVERSITY, AHMEDBABD",State Public University,www.gtu.ac.in,99
+147,"GUJARAT UNIVERSITY, AHMEDABAD",State Public University,www.gujaratuniversity.org.in,99
+148,"GUJARAT VIDYAPITH, AHMEDABAD",Deemed University-Government Aided,www.gujaratvidyapith.org,99
+149,"HEMCHANDRACHARYA NORTH GUJART UNIVERSITY, PATAN",State Public University,www.ngu.ac.in,99
+150,"INDIAN INSTITUTE OF TEACHER EDUCATION, GANDHINAGAR",State Public University,www.iite.ac.in,99
+151,"INDIAN INSTITUTE OF TECHNOLOGY, GANDHINAGAR",Institute of National Importance,www.iitgn.ac.in,99
+152,INDUS UNIVERSITY,State Private University,www.indusuni.ac.in,99
+153,"ITM VOCATIONAL UNIVERSITY, VADODARA",State Private University,www.itm.ac.in,99
+154,JUNAGADH AGRICULTURAL UNIVERSITY,State Public University,jau.in,99
+155,"KADI SARVA VISHWAVIDYALAYA, GANDIHNAGAR",State Private University,www.ksvuniversity.org.in,99
+156,"KAMDHENU UNIVERSITY, GANDHINAGAR",State Public University,www.kamdhenuuniversity.in,99
+157,"KRANTIGURU SHYAMJI KRISHNA VERMA KACHCHH UNIVERSITY, KACHCHH",State Public University,kskvku.digitaluniversity.ac,99
+158,"LAKULISH YOGA UNIVERSITY, AHMEDABAD",State Private University,lyu.ac.in,99
+159,MAHARAJA KRISHNAKUMARSINHJI BHAVNAGAR UNIVERSITY,State Public University,http://www.mkbhavuni.edu.in,99
+160,"MAHARAJA SAYAJIRAO UNIVERSITY OF BARODA, VADODARA",State Public University,msubaroda.ac.in,99
+161,NAVRACHANA UNIVERSITY,State Private University,www.nuv.ac.in,99
+162,NAVSARI AGRICULTURAL UNIVERSITY,State Public University,www.nau.in,99
+163,"NIRMA UNIVERSITY, AHMEDABAD",State Private University,www.nirmauni.ac.in,99
+164,"PANDIT DEENDAYAL PETROLEUM UNIVERSITY, GANDHI NAGAR",State Private University,www.pdpu.ac.in,99
+165,"R K UNIVERSITY, RAJKOT",State Private University,http://www.rku.ac.in,99
+166,"RAKSHASHAKTI UNIVERSITY, GUJARAT",State Public University,www.rakshashaktiuniversity.edu.in,99
+167,"SARDAR PATEL UNIVERSITY, VALLABH VIDYANAGAR",State Public University,http://www.spuvvn.edu,99
+168,"SARDAR VALLABHBHAI NATIONAL INSTITUTE OF TECHNOLOGY, SURAT",Institute of National Importance,http://www.svnit.ac.in,99
+169,"SARDARKRUSHINAGAR DANTIWADA AGRICULTURAL UNIVERSITY, BANASKANTHA",State Public University,www.sdau.edu.in,99
+170,"SAURASHTRA UNIVERSITY, RAJKOT",State Public University,www.saurashtrauniversity.edu,99
+171,"SHREE SOMNATH SANSKRIT UNIVERSITY, JUNAGARH",State Public University,www.shreesomnathsanskrituniversity.info,99
+172,"SUMANDEEP VIDYAPEETH, VADODARA",Deemed University-Private,www.sumandeepuniversity.co.in,99
+173,SWARNIM GUJARAT SPORTS UNIVERSITY,State Public University,www.sgsu.edu.in,99
+174,"UKA TARSADIA UNIVERSITY, SURAT",State Private University,www.utu.ac.in,99
+175,"VEER NARMAD SOUTH GUJARAT UNIVERSITY, SURAT",State Public University,www.vnsgu.ac.in,99
+176,"AMITY UNIVERSITY HARYANA, GURGAON",State Private University,www.amity.edu/gurgaon,99
+177,ANSAL UNIVERSITY,State Private University,ansaluniversity.edu.in,99
+178,"APEEJAY STYA UNIVERSITY, SOHNA",State Private University,www.university.apeejay.edu,99
+179,ASHOKA UNIVERSITY,State Private University,,99
+180,BABA MASTNATH UNIVERSITY,State Private University,www.babamastnathuniversity.com,99
+181,"BHAGAT PHOOL SINGH MAHILA UNIVERSITY, KHANPUR KALAN, SONIPAT",State Public University,www.bpswomenuniversity.ac.in,99
+182,BML MUNJAL UNIVERSITY,State Private University,www.bml.edu.in,99
+183,"CENTRAL UNIVERSITY OF HARYANA, MAHENDERGARH",Central University,www.cuh.ac.in,99
+184,"CH. DEVI LAL UNIVERSITY, SIRSA",State Public University,www.cdlu.ac.in,99
+185,"CHAUDHARY CHARAN SINGH HARYANA AGRICULTURAL UNIVERSITY, HISAR",State Public University,http//www.hau.ernet.in,99
+186,"CHAUDHARY RANBIR SINGH UNIVERSITY, JIND",State Public University,www.crsujind.org,99
+187,"DEENBANDHU CHHOTU RAM UNIVERSITY OF SCIENCE & TECHNOLOGY, MURTHAL(SONEPAT)",State Public University,"dcrustm.org, dcrustm.ac.in",99
+188,G.D. GOENKA UNIVERSITY,State Private University,,99
+189,"GURU JAMBHESHWAR UNIVERSITY OF SCIENCE AND TECHNOLOGY, HISSAR",State Public University,www.gjust.ac.in,99
+190,"INDIRA GANDHI UNIVERSITY, MEERPUR",State Public University,www.igu.ac.in,99
+191,"ITM UNIVERSITY, GURGAON",State Private University,www.itmindia.edu,99
+192,"JAGAN NATH UNIVERSITY, JHAJJAR",State Private University,,99
+193,"K.R. MANGALAM UNIVERSITY, GURGAON",State Private University,www.krmangalam.edu.in,99
+194,"KURUKSHETRA UNIVERSITY, KURUKSHETRA",State Public University,www.kuk.ac.in,99
+195,LALA LAJPAT RAI UNIVERSITY OF VETERINARY AND ANIMAL SCIENCES,State Public University,www.luvas.edu.in,99
+196,"LINGAYA'S UNIVERSITY, FARIDABAD",Deemed University-Private,www.lingayasuniversity.edu.in,99
+197,"M V N UNIVERSITY, PALWAL",State Private University,,99
+198,"MAHARASHI MARKENDESHWAR UNIVERSITY, SADOPUR-AMBALA",State Private University,www.mmambala.org,99
+199,"MAHARISHI MARKANDESHWAR UNIVERSITY, MULLANA-AMBALA",Deemed University-Private,www. mmumullana.org,99
+200,"MAHARSHI DAYANAND UNIVERSITY, ROHTAK",State Public University,www.mdurohtak.ac.in,99
+201,"MANAV RACHNA INTERNATIONAL UNIVERSITY, FARIDABAD",Deemed University-Private,www.mriu.edu.in,99
+202,"NATIONAL BRAIN RESEARCH CENTRE, GURGAON",Deemed University-Government,http://www.nbrc.ac.in,99
+203,"NATIONAL DAIRY RESEARCH INSTITUTE, KARNAL",Deemed University-Government,ndri.res.in,99
+204,"NATIONAL INSTITUTE OF TECHNOLOGY, KURUKSHETRA",Institute of National Importance,www.nitkkr.ac.in,99
+205,NIILM UNIVERSITY,State Private University,www.niilmuniversity.in,99
+206,"O. P. JINDAL GLOBAL UNIVERSITY, SONIPAT",State Private University,www.jgu.edu.in,99
+207,PT. BHAGWAT DAYAL SHARMA UNIVERSITY OF HEALTH SCIENCES,State Public University,www.uhsr.ac.in,99
+208,"SHREE GURU GOBIND SINGH TRICENTENARY UNIVERSITY, GURGAON",State Private University,www.sgtuniversity.org,99
+209,"SRM UNIVERSITY, SONEPAT",State Private University,www.srmuniversity.ac.in,99
+210,STATE UNIVERSITY OF PERFORMING AND VISUAL ARTS,State Public University,,99
+211,YMCA UNIVERSITY OF SCIENCE & TECHNOLOGY,State Public University,www.ymcaust.ac.in,99
+212,ABHILASHI UNIVERSITY,State Private University,,99
+213,APG (ALAKH PRAKASH GOYAL) SHIMLA UNIVERSITY,State Private University,apg.edu.in,99
+214,"ARNI UNIVERSITY, KATGARH (INDORA), KANGRA",State Private University,www.arni.in,99
+215,"BADDI UNIVERSITY OF EMERGING SCIENCES AND TECHNOLOGY, BUDHA (MAKHNUMAJRA), SOLAN",State Private University,www.baddiuniv.ac.in,99
+216,"BAHRA UNIVERSITY, SOLAN",State Private University,www.bahrauniversity.edu.in,99
+217,"CAREER POINT UNIVERSITY, HAMIRPUR",State Private University,www.cpuh.in,99
+218,"CENTRAL UNIVERSITY OF HIMACHAL PRADESH, DHARMSHALA, KANGRA",Central University,www.cuhimachal.ac.in,99
+219,"CHAUDHARY SARWAN KUMAR HIMACHAL PARDESH KRISHI VISHVAVIDYALAYA, PALAMPUR",State Public University,http://www.hillagric.ac.in,99
+220,"CHITKARA UNIVERSITY, KALU JHANDA (BAROTIWALA), SOLAN",State Private University,www.chitkarauniversity.edu.in,99
+221,"DR. Y.S. PARMAR UNIVERSITY OF HORTICULTURE AND FORESTRY, SOLAN",State Public University,www.yspuniversity.ac.in,99
+222,"ETERNAL UNIVERSITY, BARU SAHIB SIRMOUR",State Private University,www.eternaluniversity.edu.in,99
+223,"HIMACHAL PRADESH TECHNICAL UNIVERSITY, HAMIRPUR",State Public University,www.himtu.ac.in,99
+224,"HIMACHAL PRADESH UNIVERSITY , SHIMLA",State Public University,www.hpuniv.nic.in,99
+225,IEC (INDIA EDUCATION CENTRE) UNIVERSITY,State Private University,www.iecuniversity.com,99
+226,"INDIAN INSTITUTE OF TECHNOLOGY, MANDI",Institute of National Importance,www.iitmandi.ac.in,99
+227,"INDUS INTERNATIONAL UNIVERSITY, BATHU, UNA",State Private University,www.iiuedu.in,99
+228,"INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, SOLAN",State Private University,www.iuhimachal.edu.in,99
+229,"JAYPEE UNIVERSITY OF INFORMATION TECHNOLOGY, WAKNAGHAT, SOLAN",State Private University,www.juit.ac.in,99
+230,MAHARAJA AGRASEN UNIVERSITY,State Private University,www.mau.ac.in,99
+231,"MAHARASHI MARKANDESHWAR UNIVERSITY, SOLAN",State Private University,www.mmusolan.org,99
+232,"MANAV BHARTI UNIVERSITY, SULTANPUR, SOLAN",State Private University,www.manavbhartiuniversity.edu.in,99
+233,"NATIONAL INSTITUTE OF TECHNOLOGY, HAMIRPUR",Institute of National Importance,www.nith.ac.in,99
+234,"SHOOLINI UNIVERSITY OF BIO TECHNOLOGY AND MANAGEMENT SCIENCES, OACHGHAT, SOLAN",State Private University,www.shooliniuniversity.com,99
+235,"SRI SAI UNIVERSITY, PALAMPUR",State Private University,www.srisaiuniversity.com,99
+236,"BIRLA INSTITUTE OF TECHNOLOGY, RANCHI",Deemed University-Private,www.bitmesra.ac.in,99
+237,"BIRSA AGRICULTURAL UNIVERSITY, RANCHI",State Public University,http://www.bauranchi.org,99
+238,"CENTRAL UNIVERSITY OF JHARKHAND, RANCHI",Central University,www.cuj.ac.in,99
+239,"INDIAN SCHOOL OF MINES, DHANBAD",Deemed University-Government,http://www.ismdhanbad.ac.in,99
+240,JHARKHAND RAI UNIVERSITY,State Private University,,99
+241,"KOLHAN UNIVERSITY, WEST SINGHBHUM",State Public University,www.kolhanuniversity.ac.in,99
+242,"NATIONAL INSTITUTE OF TECHNOLOGY, JAMSHEDPUR",Institute of National Importance,www.nitjsr.ac.in,99
+243,"NATIONAL UNIVERSITY OF STUDY & RESEARCH IN LAW, RANCHI",State Public University,www.nusrlranchi.com,99
+244,"NILAMBER-PITAMBER UNIVERSITY, PALAMU",State Public University,www.npu.ac.in,99
+245,"RANCHI UNIVERSITY, RANCHI",State Public University,http://www.ranchiuniversity.ac.in,99
+246,"SIDO KANHU MURMU UNIVERSITY, DUMKA",State Public University,www.skmu.org.in,99
+247,"THE INSTITUTE OF CHARTERED FINANCIAL AYALYSTS OF INDIA UNIVERSITY, RANCHI",State Private University,www.iujharkhand.edu.in,99
+248,"VINOBA BHAVE UNIVERSITY, HAZARIBAGH",State Public University,www.vbu.co.in,99
+249,"BABA GHULAM SHAH BADSHAH UNIVERSITY, JAMMU",State Public University,www.bgsbuniversity.org,99
+250,CENTRAL UNIVERSITY OF JAMMU,Central University,http://www.cujammu.ac.in,99
+251,"CENTRAL UNIVERSITY OF KASHMIR, SRINAGAR",Central University,www.cukashmir.ac.in,99
+252,"ISLAMIC UNIVERSITY OF SCIENCE & TECHNOLOGY, PULWAMA",State Public University,www.islamicuniversity.edu.in,99
+253,"NATIONAL INSTITUTE OF TECHNOLOGY, SRINAGAR",Institute of National Importance,www.nitsri.net,99
+254,"SHER-E-KASHMIR INSTITUTE OF MEDICAL SCIENCES, SRINAGAR",Institute under State Legislature Act,http://skims.ac.in,99
+255,"SHER-E-KASHMIR UNIVERSITY OF AGRICULTURAL SCIENCE & TECHNOLOGY OF JAMMU, JAMMU",State Public University,www.skuast.org,99
+256,"SHER-E-KASHMIR UNIVERSITY OF AGRICULTURAL SCIENCE & TECHNOLOGY OF KASHMIR, SRINAGAR",State Public University,www.skuastkashmir.ac.in,99
+257,"SHRI MATA VAISHNO DEVI UNIVERSITY, JAMMU",State Public University,http://smvdu.net.in,99
+258,"UNIVERSITY OF JAMMU, JAMMU TAWI",State Public University,www.jammuuniversity.in,99
+259,"UNIVERSITY OF KASHMIR, SRINAGAR",State Public University,www.kashmiruniversity.net,99
+260,ALLIANCE UNIVERSITY. BANGALORE,State Private University,www.alliance.edu.in,99
+261,"AZIM PREMJI UNIVERSITY, BANGALORE",State Private University,www.azimpremjiuniversity.edu.in,99
+262,"B.L.D.E. UNIVERSITY, BIJAPUR",Deemed University-Private,www.bldeuniversity.org,99
+263,"BANGALORE UNIVERSITY, BANGALORE",State Public University,www.bangaloreuniversity.ac.in,99
+264,"CENTRAL UNIVERSITY OF KARNATAKA, GULBARGA",Central University,www.cuk.ac.in,99
+265,"CHRIST UNIVERSITY, BANGALORE",Deemed University-Private,http://www.christuniversity.in,99
+266,"CMR UNIVERSITY, BANGALORE",State Private University,www.cmr.edu.in,99
+267,"DAVANGERE UNIVERSITY, DAVANGERE",State Public University,www.davangereuniversity.ac.in,99
+268,"GULBARGA UNIVERSITY, GULBARGA",State Public University,http://www.gulbargauniversity.kar.nic.in,99
+269,"INDIAN INSTITUTE OF SCIENCE, BANGALORE",Deemed University-Government,http://www.iisc.ernet.in,99
+270,"INTERNATIONAL INSTITUTE OF INFORMATION TECHNOLOGY, BANGALORE",Deemed University-Government,www.iiitb.ac.in,99
+271,"JAGADGURU SRI SHIVARATHREESWARA UNIVERSITY, MYSORE",Deemed University-Private,www.jssuni.edu.in,99
+272,"JAIN UNIVERSITY,BANGALORE",Deemed University-Private,www.jainuniversity.ac.in,99
+273,"JAWAHARLAL NEHRU CENTRE FOR ADVANCED SCIENTIFIC RESEARCH, BANAGLORE",Deemed University-Government,www.jncasr.ac.in,99
+274,"K.L.E. ACADEMY OF HIGHER EDUCATION AND RESEARCH, BELGAUM",Deemed University-Private,www.kleuniversity.edu.in,99
+275,"KANNADA UNIVERSITY, HAMPI, KAMALAPURA",State Public University,www.kannadauniversity.org,99
+276,"KARNATAKA JANAPADA VISHWAVIDYALAYA, GOTAGODI",State Public University,www.Janapadauni.in,99
+277,KARNATAKA SANSKRIT UNIVERSITY,State Public University,www.ksu.ac.in,99
+278,KARNATAKA STATE DR. GANGUBAI HANGAL MUSIC AND PERFORMING ARTS UNIVERSITY,State Public University,www.musicuniversity.ac.in,99
+279,"KARNATAKA STATE LAW UNIVERSITY, HUBLI",State Public University,www.kslu.ac.in,99
+280,"KARNATAKA STATE OPEN UNIVERSITY, MYSORE",State Open University,www.ksoumysore.edu.in,99
+281,"KARNATAKA STATE WOMEN UNIVERSITY, BIJAPUR",State Public University,www.kswub.ac.in,99
+282,"KARNATAKA UNIVERSITY, DHARWAD",State Public University,www.kud.ac.in,99
+283,"KARNATAKA VETRINARY, ANIMAL & FISHERIES SCIENCE UNIVERSITY, NANDINAGAR",State Public University,www.kvafsu.kar.nic.in,99
+284,"KUVEMPU UNIVERSITY, SHANKARAGHATTA, SHIMOGA",State Public University,www.kuvempu.ac.in,99
+285,"M.S. RAMAIAH UNIVERSITY OF APPLIED SCIENCES, BANGALORE",State Private University,www.msruas.ac.in,99
+286,"MANGALORE UNIVERSITY, MANGALORE",State Public University,www.mangaloreuniversity.ac.in,99
+287,"MANIPAL ACADEMY OF HIGHER EDUCATION, MANIPAL",Deemed University-Private,www.manipal.edu,99
+288,"MYSORE UNIVERSITY, MYSORE",State Public University,www.uni-mysore.ac.in,99
+289,"NATIONAL INSTITUTE OF MENTAL HEALTH & NEURO SCIENCES, BANGALORE",Deemed University-Government,kttp://www.nimhans.kar.nic.in,99
+290,"NATIONAL INSTITUTE OF TECHNOLOGY, KARNATAKA",Institute of National Importance,http://www.nitk.ac.in,99
+291,"NATIONAL LAW SCHOOL OF INDIA UNIVERSITY, BANGALORE",State Public University,www.nls.ac.in,99
+292,"NITTE UNVERSITY, MANGALORE",Deemed University-Private,www.nitte.edu.in,99
+293,"PES UNIVERSITY, BANGLORE",State Private University,,99
+294,"RAI TECHNOLOGY UNIVERSITY, BANGALORE",State Private University,,99
+295,"RAJIV GANDHI UNIVERSITY OF HEALTH SCIENCES, BANGALORE",State Public University,www.rguhs.ac.in,99
+296,"RANI CHANNAMMA UNIVERSITY, BELAGAVI",State Public University,www.rcub.ac.in,99
+297,"REVA UNIVERSITY, BANGALORE",State Private University,www.reva.edu.in,99
+298,"SRI DEVRAJ URS ACAEDMY OF HIGHEHR EDUCATION AND RESEARCH, KOLAR",Deemed University-Private,www.sduu.ac.in,99
+299,SRI SIDDHARATHA ACEDEMY OF HIGHER EDUCATION,Deemed University-Private,www.sahetumkur.ac.in,99
+300,"SWAMI VIVEKANANDA YOGA ANUSANDHANA SAMSTHAN, BANGALORE",Deemed University-Private,www.svyasa.edu.in,99
+301,THE INSTITUTE OF TRANS-DISCIPLINARY HEALTH SCIENCES AND TECHNOLOGY,State Private University,tdu.edu.in,99
+302,"TUMKUR UNIVERSITY, TUMKUR",State Public University,www.tumkuruniversity.ac.in,99
+303,"UNIVERSITY OF AGRICULTURAL AND HORTICULTURAL SCIENCES, SHIMOGA",State Public University,www.uahs.in,99
+304,"UNIVERSITY OF AGRICULTURAL SCIENCES, BANGALORE",State Public University,www.uasbangalore.edu.in,99
+305,"UNIVERSITY OF AGRICULTURAL SCIENCES, DHARWAD",State Public University,WWW.UASD.EDU,99
+306,"UNIVERSITY OF AGRICULTURAL SCIENCES, RAICHUR",State Public University,www.uasraichur.edu.in,99
+307,"UNIVERSITY OF HORTICULTURAL SCIENCES, BAGALKOT",State Public University,http://www.uhsbagalkot.edu.in,99
+308,"VESVESWARAIAH TECHNOLOGICAL UNIVERSITY, BELGAUM",State Public University,www.vtu.ac.in,99
+309,"VIJAYANAGARA SRI KRISHNADEVARAYA UNIVERSITY, BELLARY",State Public University,www.vskub.ac.in,99
+310,"YENEPOYA UNIVERSITY, MANGALORE",Deemed University-Private,www.yenepoya.edu.in,99
+311,"CALICUT UNIVERSITY, THENHIPALEM, MALAPURAM",State Public University,http//www.university of calicut.info,99
+312,"CENTRAL UNIVERISTY OF KERALA, TRIVANDRUM",Central University,www.cukerala.ac.in,99
+313,"COCHIN UNIVERSITY OF SCIENCE & TECHNOLOGY, KOCHI",State Public University,www.cusat.ac.in,99
+314,"INDIAN INSTITUTE OF SCIENCE EDUCATION & RESEARCH (IISER), THIRUVANANTHAPURAM",Institute of National Importance,http://www.iisertvm.ac.in,99
+315,"INDIAN INSTITUTE OF SPACE SCIENCE AND TECHNOLOGY, THIRUVANANTHAPURAM",Deemed University-Government,www.iist.ac.in,99
+316,"KANNUR UNIVERSITY, KANNUR",State Public University,www.kannuruniversity.ac.in,99
+317,"KERALA AGRICULTURAL UNIVERSITY, THRISSUR",State Public University,www.kau.edu,99
+318,"KERALA KALAMANDALAM, THRISSUR",Deemed University-Government,www.kalamandalam.org,99
+319,"KERALA UNIVERSITY OF FISHERIES & OCEAN STUDIES, KOCHI",State Public University,www.kufos.ac.in,99
+320,KERALA UNIVERSITY OF HEALTH AND ALLIED SCIENCES,State Public University,http://kuhs.ac.in,99
+321,"KERALA UNIVERSITY, THIRUVANANTHAPURAM",State Public University,www.keralauniversity.ac.in,99
+322,"KERALA VETERINARY & ANIMAL SCIENCE UNIVERSITY, WAYANAD",State Public University,www.kvasu.ac.in,99
+323,"MAHATMA GANDHI UNIVERSITY, KOTTAYAM",State Public University,www.mgu.ac.in,99
+324,"NATIONAL INSTITUTE OF TECHNOLOGY, CALICUT",Institute of National Importance,http://www.nitc.ac.in/,99
+325,"NATIONAL UNIVERSITY OF ADVANCED LEGAL STUDIES, KOCHI",State Public University,www.nuals.ac.in,99
+326,"SHREE SANKARACHARYA UNIVERISTY OF SANSKRIT, KALADY",State Public University,ssus.ac.in,99
+327,"SREE CHITRA TIRUNAL INSTITUTE FOR MEDICAL SCIENCES AND TECHNOLOGY, THIRUVANANTHAPURAM",Institute of National Importance,www.sctimst.ac.in,99
+328,"THUNCHATH EZHUTHACHAN MALAYALAM UNIVERSITY, TIRUR",State Public University,,99
+329,AISECT UNIVERSITY,State Private University,www.aisectuniversity.ac.in,99
+330,"AKS UNIVERSITY, SATNA",State Private University,www.aksuniversity.ac.in,99
+331,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, BHOPAL",Institute of National Importance,,99
+332,"AMITY UNIVERSITY, GWALIOR",State Private University,www.amity.edu/gwalior,99
+333,ATAL BIHARI VAJPAYEE HINDI VISHWAVIDYALAYA,State Public University,www.abvhv.org,99
+334,"ATAL BIHARI VAJPAYEE INDIAN INSTITUTE OF INFORMATION TECHNOLOGY AND MANAGEMENT, GWALIOR",Deemed University-Government,www.iiitm.ac.in,99
+335,"AWADESH PRATAP SINGH UNIVERSITY, REWA",State Public University,www.apsurewa.ac.in,99
+336,"BARKATULLAH UNIVERSITY, BHOPAL",State Public University,www.bubhopal.nic.in,99
+337,"DEVI AHILYA VISHWAVIDYALAYA, INDORE",State Public University,www.dauniv.ac.in,99
+338,"DR. HARISINGH GAUR VISHWAVIDYALAYA, SAGAR",Central University,www.dhsgsu.ac.in,99
+339,"INDIAN INSTITUTE OF SCIENCE EDUCATION & RESEARCH (IISER), BHOPAL",Institute of National Importance,www.iiserb.ac.in,99
+340,"INDIAN INSTITUTE OF TECHNOLOGY, INDORE",Institute of National Importance,www.iiti.ac.in,99
+341,"INDIRA GANDHI NATIONAL TRIBAL UNIVERSITY, AMARKANTAK",Central University,www.igntu.ac.in,99
+342,"ITM UNIVERSITY, GWALIOR",State Private University,www.itmuniversity.ac.in,99
+343,"JAGRAN LAKECITY UNIVERSITY, BHOPAL",State Private University,www.jlu.edu.in,99
+344,"JAWAHARLAL NEHRU KRISHI VISHWAVIDYALAYA, JABALPUR",State Public University,www.jnkvv.nic.in,99
+345,"JAYPEE UNIVERSITY OF ENGEENERING & TECHNOLOGY, GUNA",State Private University,www.juet.ac.in,99
+346,"JIWAJI UNIVERSITY, GWALIOR",State Public University,www.jiwaji.edu,99
+347,"LAKSHMIBAI NATIONAL INSTITUTE OF PHYSICAL EDUCATION, GWALIOR",Deemed University-Government,www.lnipe.gov.in,99
+348,"M.P. BHOJ (OPEN) UNIVERSITY, BHOPAL",State Open University,www.bhojvirtualuniversity.com,99
+349,"MAHARISHI MAHESH YOGI VEDIC VISHWAVIDYALAYA, JABALPUR",State Public University,www.mmyvv.com,99
+350,"MAHARISHI PANINI SANSKRIT VISHWAVIDYALAYA, UJJAIN",State Public University,www.mpsvvujjain.org,99
+351,"MAHATAMA GANDHI GRAMODAYA VISHWAVIDYALAYA, CHITRAKOOT, SATNA",State Public University,www.mgcgvchitrakoot.com,99
+352,"MAKHANLAL CHATURVEDI NATIONAL UNIVERSITY OF JOURNALISM AND COMMUNICATION, BHOPAL",State Public University,www.mcu.ac.in,99
+353,"MAULANA AZAD NATIONAL INSTITUTE OF TECHNOLOGY, BHOPAL",Institute of National Importance,www.manit.ac.in,99
+354,"NANAJI DESHMUKH PASHU CHIKITSA VIGYAN VISHWAVIDALAYA, JABALPUR",State Public University,,99
+355,"NATIONAL LAW INSTITUTE UNIVERSITY, BHOPAL",State Public University,www.nliu.ac.in,99
+356,ORIENTAL UNIVERSITY,State Private University,www.orientaluniversity.in,99
+357,"PANDHI DWARKA PRASAD MISHRA INDIAN INSTITUTE OF INFORMATION TECHNOLOGY & MANUFACTURING , JABALPUR",Deemed University-Government,www.iiitdmj.ac.in,99
+358,PEOPLES UNIVERSITY,State Private University,www.peoplesuniversity.edu.in,99
+359,"RAJA MANSINGH TOMAR MUSIC & ARTS UNIVERSITY, GWALIOR",State Public University,www.rmtmusicandartsuniversity.com,99
+360,"RAJIV GANDHI PRODOYOGIKI VISHWAVIDYALAYA, BHOPAL",State Public University,www.rgpv.ac.in,99
+361,"RAJMATA VIJAYARAJE SCINDIA KRISHI VISHWA VIDYALAYA, GWALIOR",State Public University,http://www.rvskvv.net,99
+362,"RANI DURGAVATI VISHWAVIDYALAYA, JABALPUR",State Public University,www.rdunijbpin.nic.in,99
+363,RKDF UNIVERSITY,State Private University,www.rkdf.ac.in,99
+364,SARVEPALLI RADHAKRISHNAN UNIVERSITY,State Private University,,99
+365,SCHOOL OF PLANNING & ARCHITECTURE BHOPAL,Others,www.spabhopal.ac.in,99
+366,"SRI SATYA SAI UNIVERSITY OF TECHNOLOGY & MEDICAL SCIENCES, SEHORE",State Private University,www.sssutms.co.in,99
+367,SWAMI VIVEKANANDA UNIVERSITY,State Private University,www.svnuniversity.co.in,99
+368,"TECHNO GLOBAL UNIVERSITY, SIRONG",State Private University,,99
+369,"VIKRAM UNIVERSITY, UJJAIN",State Public University,www.vikramuniv.net,99
+370,"BHARATI VIDYAPEETH, PUNE",Deemed University-Private,www.bvuniversity.edu.in,99
+371,"CENTRAL INSTITUTE OF FISHERIES EDUCATION, FISHRIES UNIVERSITY, MUMBAI",Deemed University-Government,http://www.cife.edu.in,99
+372,"D.Y. PATIL EDUCATIONAL SOCIETY , KOLHAPUR",Deemed University-Private,www.dypatilunikop.org,99
+373,"DATTA MEGHE INSTITUTE OF MEDICAL SCIENCES, NAGPUR",Deemed University-Private,www.dmimsu.edu.in,99
+374,"DECCAN COLLEGE POSTGRADUATE & RESEARCH INSTITUTE, PUNE",Deemed University-Private,www.deccancollegepune.org,99
+375,"DEFENCE INSTITUTE OF ADVANCED TECHNOLOGY, GIRINAGAR, PUNE",Deemed University-Government,www.diat.ac.in,99
+376,"DR. BABASAHEB AMBEDKAR MARATHWADA UNIVERSITY, AURANGABAD",State Public University,www.bamu.ac.in,99
+377,"DR. BABASAHEB AMBEDKAR TECHNOLOGICAL UNIVERSITY, LONERE",State Public University,www.dbatu.ac.in,99
+378,"DR. BALASAHEB SAWANT KONKAN KRISHI VIDYAAPEETH,(FORMER KONKAN KRISHI VIDYAPEETH) RATNAGIRI",State Public University,www.dbskkv.org,99
+379,"DR. D.Y.PATIL VIDYAPEETH, PUNE",Deemed University-Private,www.dpu.edu.in,99
+380,"DR. PUNJARAO DESHMUKH KRISHI VIDYAPEETH, AKOLA",State Public University,www.pdkv.ac.in,99
+381,"GOKHALE INSTITUTE OF POLITICS & ECONOMICS, PUNE",Deemed University-Government Aided,www.gipe.ac.in,99
+382,"GONDWANA UNIVERSITY, GADCHIROLI",State Public University,gondwanauniversity.org,99
+383,"HOMI BHABHA NATIOANAL INSTITUTE KNOWLEDGE MANAGEMENT GROUP, MUMBAI",Deemed University-Government,www.hbni.ac.in,99
+384,"INDIAN INSTITUTE OF SCIENCE EDUCATION & RESEARCH (IISER), PUNE,",Institute of National Importance,www.iiserpune.ac.in,99
+385,"INDIAN INSTITUTE OF TECHNOLOGY, MUMBAI",Institute of National Importance,www.iitb.ac.in,99
+386,"INDIRA GANDHI INSTITUTE OF DEVELOPMENT RESEARCH, MUMBAI",Deemed University-Government,www.postmaster@igidr.ac.in,99
+387,"INSTITUTE OF CHEMICAL TECHNOLOGY, MUMBAI",Deemed University-Government,www.ictmumbai.edu.in,99
+388,"INTERNATIONAL INSTITUTE FOR POPULATION SCIENCES, MUMBAI",Deemed University-Government,www.iipsindia.org,99
+389,"KAVI KULGURU KALIDAS SANSKRIT VISHWAVIDYALAYA, RAMTEK",State Public University,www.kksanskrituni.digitaluniversity.ac,99
+390,"KRISHNA INSTITUTE OF MEDICAL SCIENCES DEEMED UNIVERSITY, KARAD",Deemed University-Private,www.kimsuniversity.in,99
+391,"MAHARASHTRA ANIMAL & FISHERY SCIENCES UNIVERSITY, NAGPUR",State Public University,www.mafsu.in,99
+392,"MAHARASHTRA UNIVERSITY OF HEALTH SCIENCES, NASHIK",State Public University,www.muhs.ac.in,99
+393,"MAHATAMA GANDHI ANTARRASHTRIYA HINDI VISHWAVIDYALAYA, WARDHA",Central University,www.hindivishwa.org,99
+394,"MAHATMA PHULE KRISHI VIDYAPEETH, RAHURI",State Public University,www.mpkv.ac.in,99
+395,"MARATHWADA AGRICULTURAL UNIVERSITY, PARBHANI",State Public University,www.mkv.ac.in,99
+396,"MGM INSTITUTE OF HEALTH SCIENCES, NAVI MUMBAI",Deemed University-Private,www.mgmuhs.com,99
+397,MUMBAI UNIVERSITY MUMBAI,State Public University,www.mu.ac.in,99
+398,"NARSEE MONJEE INSTITUTE OF MANAGEMENT STUDIES, MUMBAI",Deemed University-Private,www.nmims.edu,99
+399,"NORTH MAHARASHTRA UNIVERSITY, JALGAON",State Public University,www.nmu.ac.in,99
+400,"PADMASHREE DR. D. Y. PATIL VIDYAPEETH, , MUMBAI",Deemed University-Private,www.dypatil.in,99
+401,"PRAVARA INSTITUTE OF MEDICAL SCIENCES, AHMEDNAGAR",Deemed University-Private,www.pravara.com,99
+402,"RASHTRASANT TUKADOJI MAHARAJ NAGPUR UNIVERSITY, NAGPUR",State Public University,http://www.nagpuruniversity.org/index.htm,99
+403,"SANT GADGE BABA AMRAVATI UNIVERSITY, AMRAVATI",State Public University,www.sgbau.ac.in,99
+404,SAVITRIBAI PHULE PUNE UNIVERSITY,State Public University,www.unipune.ac.in,99
+405,"SHIVAJI UNIVERSITY, KOLHAPUR",State Public University,www.unishivaji.ac.in,99
+406,"SMT. NATHIBAI DAMODAR THACKERSEY WOMEN'S UNIVERSITY, MUMBAI",State Public University,www.sndt.ac.in,99
+407,"SOLAPUR UNIVERSITY, SOLAPUR",State Public University,http://su.digitaluniversity.ac,99
+408,"SWAMI RAMANAND TEERTH MARATHWADA UNIVERSITY, NANDED",State Public University,www.srtmun.ac.in,99
+409,"SYMBIOSIS INTERNATIONAL UNIVERSITY, PUNE",Deemed University-Private,www.siu.edu.in,99
+410,"TATA INSTITUTE OF FUNDAMENTAL RESEARCH, MUMBAI",Deemed University-Government,www.tifr.res.in,99
+411,"TATA INSTITUTE OF SOCIAL SCIENCES, MUMBAI",Deemed University-Government Aided,www.tiss.edu,99
+412,"TILAK MAHARASHTRA VIDYAPEETH, PUNE",Deemed University-Government Aided,www.tmv.edu.in,99
+413,"VISVESVARAYA NATIONAL INSTITUTE OF TECHNOLOGY, NAGPUR",Institute of National Importance,www.vnit.ac.in,99
+414,YASHWANT RAO CHAVAN MAHARASHTRA OPEN UNIVERSITY,State Open University,http://ycmou.digitaluniversity.ac,99
+415,"CENTRAL AGRICULTURAL UNIVERSITY, IMPHAL",Central University,www.cau.org.in,99
+416,"MANIPUR UNIVERSITY, IMPHAL",Central University,www.manipuruniv.ac.in,99
+417,NATIONAL INSTITUTE OF TECHNOLOGY MANIPUR,Institute of National Importance,www.nitmanipur.ac.in,99
+418,"CMJ UNIVERSITY, SHILLONG",State Private University,,99
+419,"INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, MEGHALAYA",State Private University,www.iumeghalaya.edu.in,99
+420,"MAHATMA GANDHI UNIVERSITY, TURA, WEST GARO HILLS",State Private University,www.mgu.edu.in,99
+421,"MARTIN LUTHER CHRISTIAN UNIVERSITY, SHILLONG",State Private University,www.mlcuniv.in,99
+422,NATIONAL INSTITUTE OF TECHNOLOGY MEGHALAYA,Institute of National Importance,www.nitm.ac.in,99
+423,"NORTH EASTERN HILL UNIVERSITY, SHILLONG",Central University,www.nehu.ac.in,99
+424,"TECHNO GLOBAL UNIVERSITY, SHILLONG",State Private University,,99
+425,UNIVERSITY OF SCIENCE AND TECHNOLOGY,State Private University,www.ustm.ac.in,99
+426,"UNIVERSITY OF TECHNOLOGY & MANAGEMENT, SHILLONG",State Private University,http://www.utm.ac.in,99
+427,"WILLIAM CAREY UNIVERSITY, SHILLONG",State Private University,www.wcu.co.in,99
+428,"INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, AIZAWL",State Private University,www.iumizoram.edu.in,99
+429,"MIZORAM UNIVERSITY, AIZWAL",Central University,www.mzu.edu.in,99
+430,NATIONAL INSTITUTE OF TECHNOLOGY MIZORAM,Institute of National Importance,www.nitmz.ac.in,99
+431,NAGALAND UNIVERSITY,Central University,www.nagalanduniversity.ac.in,99
+432,NATIONAL INSTITUTE OF TECHNOLOGY NAGALAND,Institute of National Importance,www.nitnagaland.ac.in,99
+433,"THE GLOBAL OPEN UNIVERSITY NAGALAND, DIMAPUR",State Private University,www.nagaland.net.in,99
+434,"THE INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, DIMAPUR",State Private University,www.iunagaland.edu.in,99
+435,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, BHUBANESWAR",Institute of National Importance,www.aiimsbhubaneswar.edu.in,99
+436,"BERHAMPUR UNIVERSITY, BERHAMPUR",State Public University,www.buodisha.edu.in,99
+437,"BIJU PATNAIK UNIVERSITY OF TECHNOLOGY, ROURKELA",State Public University,www.bput.ac.in,99
+438,"CENTRAL UNIVERSITY OF ORISSA, KORAPUT",Central University,www.cuo.ac.in,99
+439,CENTURION UNIVERSITY OF TECHNOLOGY AND MANAGEMENT,State Private University,www.cutm.ac.in,99
+440,"FAKIR MOHAN UNIVERSITY, BALASORE",State Public University,www.fmuniversity.nic.in,99
+441,"INDIAN INSTITUTE OF TECHNOLOGY, BHUBANESHWAR",Institute of National Importance,www.iitbbs.ac.in,99
+442,"KALINGA INSTITUTE OF INDUSTRIAL TECHNOLOGY, BHUBANESWAR",Deemed University-Private,www.kiit.ac.in,99
+443,"NATIONAL INSTITUTE OF TECHNOLOGY, ROURKELA",Institute of National Importance,www.nitrkl.ac.in,99
+444,"NATIONAL LAW UNIVERSITY, CUTTUCK",State Public University,www.nluo.ac.in,99
+445,"NORTH ORISSA UNIVERSITY, MAYURBHANJ",State Public University,www.No(0)u.nic.in,99
+446,"ORISSA UNIVERSITY OF AGRICULTURE & TECHNOLOGY, BHUBANESWAR",State Public University,http://ouat.ac.in,99
+447,"RAVENSHAW UNIVERSITY, CUTTAK",State Public University,www.ravenshawunivesity .ac.in,99
+448,"SAMBALPUR UNIVERSITY, SAMBALPUR",State Public University,www.suniv.ac.in,99
+449,"SHRI JAGANNATH SANSKRIT VISHWAVIDYALAYA, PURI",State Public University,www.sjsv.nic.in,99
+450,SIKSHA 'O' ANUSANDHAN UNIVERSITY,Deemed University-Private,www.soauniversity.ac.in,99
+451,SRI SRI UNIVERSITY,State Private University,www.srisriuniversity.edu.in,99
+452,"UTKAL UNIVERSITY OF CULTURE, BHUBANESWAR",State Public University,www.uuc.ac.in,99
+453,"UTKAL UNIVERSITY, BHUBANESWAR",State Public University,www.utkal_university.org,99
+454,"VEER SURENDRA SAI UNIVERSITY OF TECHNOLOGY, SAMBALPUR",State Public University,www.vssut.ac.in,99
+455,"XAVIER UNIVERSITY, BHUBANESWAR",State Private University,www.xub.edu.in,99
+456,"JAWAHARLAL INSTITUTE OF POST GRADUATE MEDICAL EDUCATION & RESEARCH, PUDUCHERRY",Institute of National Importance,www.jipmer.edu.in,99
+457,NATIONAL INSTITUTE OF TECHNOLOGY PUDUCHERRY,Institute of National Importance,www.nitpy.ac.in,99
+458,"PONDICHERRY UNIVERISTY, PUDUCHERRY",Central University,www.pondiuni.edu.in,99
+459,"SRI BALAJAI VIDYAPEETH MAHATMA GANDHI MEDICAL COLLEGE, PUDUCHERRY",Deemed University-Private,sbvu.ac.in,99
+460,ADESH UNIVERSITY,State Private University,adeshuniversity.ac.in,99
+461,"BABA FARID UNIVERSITY OF HEALTH & MEDICAL SCIENCES, FARIDKOT",State Public University,www.bfuhs.ac.in,99
+462,"CENTRAL UNIVERSITY OF PUNJAB, BATHHINDA",Central University,www.cup.ac.in,99
+463,CHANDIGARH UNIVERSITY,State Private University,www.chandigarhuniversity.ac.in,99
+464,"CHITKARA UNIVERSITY, PATIALA",State Private University,www.chitkara.edu.in,99
+465,DESH BHAGAT UNIVERSITY,State Private University,www.deshbahagatuniversity.in,99
+466,"DR. B. R. AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY, JALANDHAR",Institute of National Importance,www.nitj.ac.in,99
+467,"GURU ANGAD DEV VETERINARY & ANIMAL SCIENCES UNIVERSITY, LUDHIANA",State Public University,www.gadvasu.in,99
+468,GURU KASHI UNIVERSITY,State Private University,www.gurukashiuniversity.in,99
+469,"GURU NANAK DEV UNIVERSITY, AMRITSAR",State Public University,www.gndu.ac.in,99
+470,GURU RAVIDAS AYURVED UNIVERSITY,State Public University,graupunjab.org,99
+471,"INDIAN INSTITUTE OF SCIENCE EDUCATION & RESEARCH (IISER), MOHALI",Institute of National Importance,www.iisermohali.ac.in,99
+472,"INDIAN INSTITUTE OF TECHNOLOGY, ROPAR",Institute of National Importance,www.iitrpr.ac.in,99
+473,"LOVELY PROFESSIONAL UNIVERSITY, JULLUNDER",State Private University,www.lpu.in,99
+474,"NATIONAL INSTITUTE OF PHARMACEUTICAL, EDUCATIONAL AND RESEARCH, MOHALI",Institute of National Importance,www.niper.gov.in,99
+475,"PUNJAB AGRICULTURAL UNIVERSITY, LUDHIANA",State Public University,www.pau.edu,99
+476,"PUNJAB TECHNICAL UNIVERSITY, JALANDHAR",State Public University,www.ptu.ac.in,99
+477,"PUNJABI UNIVERSITY, PATIALA",State Public University,www.punjabiuniversity.ac.in,99
+478,"SANT LONGOWAL INSTITUTE OF ENGG. & TECH., LONGOWAL",Deemed University-Government,www.sliet.ac.in,99
+479,"SRI GURU GRANTH SAHIB WORLD UNIVERSITY, FATEHGARH SAHIB",State Private University,www.sggswu.org,99
+480,"THAPAR INSTITUTE OF ENGINEERING AND TECHNOLOGY, PATIALA",Deemed University-Private,www.thapar.edu,99
+481,"THE RAJIV GANDHI NATIONAL UNIVERSITY OF LAW, PATIALA",State Public University,www.rgnul.ac.in,99
+482,"AGRICULTURE UNIVERSITY, JODHPUR",State Public University,,99
+483,"AGRICULTURE UNIVERSITY, KOTA",State Public University,,99
+484,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, JODHPUR",Institute of National Importance,,99
+485,"AMITY UNIVERSITY, JAIPUR,",State Private University,www.amity.edu/jaipur,99
+486,BANASTHALI VIDYAPITH,Deemed University-Private,www.banasthali.org,99
+487,"BHAGWANT UNIVERSITY, AJMER",State Private University,www.bhagwantuniversity.com,99
+488,"BIRLA INSTITUTE OF TECHNOLOGY & SCIENCES, PILANI",Deemed University-Private,www.bits-pilani.ac.in,99
+489,"CENTRAL UNIVERSITY OF RAJASTHAN, JAIPUR",Central University,www.curaj.ac.in,99
+490,"DR K N MODI UNIVERSITY, TONK",State Private University,www.dknmu.org,99
+491,"DR SARVEPALLI RADHAKRISHNAN RAJASTHAN AYURVED UNIVERSITY, JODHPUR",State Public University,www.raujodhpur.org,99
+492,GEETANJALI UNIVERSITY,State Private University,www.geetangaliuniversity.com,99
+493,HARIDEV JOSHI UNIVERSITY OF JOURNALISM AND MASS COMMUNICATION,State Public University,www.hjuj.ac.in,99
+494,"HOMOEOPATHY UNIVERSITY, JAIPUR",State Private University,www.homoeopathyuniversity.org   & www.homoeopathyuniversity.com,99
+495,"I.I.S. UNIVERSITY, JAIPUR",Deemed University-Private,www.iisuniv.ac.in,99
+496,"INDIAN INSTITUTE OF TECHNOLOGY, JODHPUR",Institute of National Importance,www.iitj.ac.in,99
+497,"INSTITUTE OF ADVANCED STUDIES IN EDUCATION, CHURU",Deemed University-Private,iaseuniversity.org.in,99
+498,"JAGADGURU RAMANANDACHARYA RAJASTHAN SANSKRIT UNIVERSITY, JAIPUR",State Public University,www.jrrsanskrituniversity.ac.in,99
+499,"JAGANNATH UNIVERSITY, JAIPUR",State Private University,www.jagannathuniversity.org,99
+500,"JAI NARAIN VYAS UNIVERSITY, JODHPUR",State Public University,www.jnvu.edu.in,99
+501,"JAIN VISHVA BHARATI INSTITUTE, NAGAUR",Deemed University-Private,http://jvbi.ac.in/,99
+502,"JAIPUR NATIONAL UNIVERSITY, JAIPUR",State Private University,www.jnujaipur.ac.in,99
+503,"JANARDAN RAI NAGAR RAJASTHAN VIDYAPEETH, UDAIPUR",Deemed University-Private,http://www.jrnrvu.edu.in,99
+504,JECRC UNIVERSITY,State Private University,jecrcuniversity.edu.in,99
+505,JK LAKSHMIPAT UNIVERSITY,State Private University,www.jklu.edu.in,99
+506,"JODHPUR NATIONAL UNIVERSITY, JODHPUR",State Private University,www.jodhpurnationaluniversity.com,99
+507,"JYOTI VIDYAPEETH WOMEN'S UNIVERSITY, JAIPUR",State Private University,www.jvwomensuniv.com,99
+508,"KOTA UNIVERSITY, KOTA",State Public University,www.uok.ac.in,99
+509,"LNM INSTITUTE OF INFORMATION TECHNOLOGY, JAIPUR",Deemed University-Private,www.lnmiit.ac.in,99
+510,MADHAV UNIVERSITY,State Private University,www.madhavuniversity.edu.in,99
+511,"MAHARAJA GANGA SINGH UNIVERSITY, BIKANER",State Public University,www.mgsubikaner.ac.in,99
+512,"MAHARANA PRATAP UNIVERSITY OF AGRICULTURE & TECHNOLOGY, UDAIPUR",State Public University,www.mpuat.ac.in,99
+513,"MAHARISHI DAYANAND SARASWATI UNIVERSITY, AJMER",State Public University,mdsuajmer.ac.in,99
+514,"MAHATMA GANDHI UNIVERSITY OF MEDICAL SCIENCES AND TECHNOLOGY, JAIPUR",State Private University,www.mgumst.org,99
+515,"MAHATMA JYOTI RAO PHOOLE UNIVERSITY, JAIPUR",State Private University,WWW.MJRPUNIVERSITY.COM,99
+516,"MALVIYA NATIONAL INSTITUTE OF TECHNOLOGY, JAIPUR",Institute of National Importance,www.mnit.ac.in,99
+517,"MANIPAL UNIVERSITY, JAIPUR",State Private University,www.jaipur.manipal.edu,99
+518,"MAULANA AZAD UNIVERSITY, JODHPUR",State Private University,maulanaazaduniversity.in,99
+519,"MEWAR UNIVERSITY, CHITTORGARH",State Private University,www.mewaruniversity.org,99
+520,"MODY INSTITUTE OF TECHNOLOGY & SCIENCE, SIKAR",Deemed University-Private,www.modyuniversity.ac.in,99
+521,"MOHAN LAL SUKHADIA UNIVERSITY, UAIPUR",State Public University,www.mlsu.org,99
+522,"NATIONAL LAW UNIVERSITY, JODHPUR",State Public University,www.nlujodhpur.ac.in,99
+523,"NIMS UNIVERSITY, JAIPUR",State Private University,www.nimsuniversity.org,99
+524,"OPJS UNIVERSITY, CHURU",State Private University,,99
+525,"PACIFIC ACADEMY OF HIGHER EDUCATION RESEARCH UNIVERSITY, UDAIPUR",State Private University,www.pacific-university.ac.in,99
+526,PACIFIC MEDICAL UNIVERSITY,State Private University,,99
+527,POORNIMA UNIVERSITY,State Private University,,99
+528,RAFFLLES UNIVERSITY,State Private University,www.rafflesuniversity.edu.in,99
+529,"RAJASTHAN AGRICULTURAL UNIVERSITY, BIKANER",State Public University,www.raubikaner.org,99
+530,"RAJASTHAN TECHNICAL UNIVERSITY, KOTA",State Public University,www.rtu.ac.in,99
+531,"RAJASTHAN UNIVERSITY OF HEALTH SCIENCES, JAIPUR",State Public University,www.ruhsraj.org,99
+532,"RAJASTHAN UNIVERSITY OF VETERINARY AND ANIMAL SCIENCES, BIKANER",State Public University,www.rajuvas.org,99
+533,"RAJASTHAN UNIVERSITY, JAIPUR",State Public University,www.uniraj.ac.in,99
+534,"SANGAM UNIVERSITY, BHILWARA",State Private University,www.sangamuniversity.ac.in,99
+535,"SARDAR PATEL UNIVERSITY OF POLICE, SECURITY AND CRIMINAL JUSTICE",State Public University,www.policeuniversity.ac.in,99
+536,"SHRI JAGDISH PRASAD JHABARMAL TIBREWALA UNIVERSITY, JHUNJHUNU",State Private University,www.jjtu.ac.in,99
+537,"SHRIDHAR UNIVERSITY, PILANI",State Private University,www.shridharuniversity.ac.in,99
+538,"SINGHANIA UNIVERSITY, JHUNJHUNU",State Private University,,99
+539,"SIR PADAMPAT SINGHANIA UNIVERSITY, UDAIPUR",State Private University,http://www.spsu.ac.in,99
+540,"SKN AGRICULTURE UNIVERSITY, JOBNER",State Public University,,99
+541,"SURESH GYAN VIHAR UNIVERISTY, JAIPUR",State Private University,www.gyanvihar.org,99
+542,"TANTIA UNIVERSITY, SRI GANGANAGAR",State Private University,,99
+543,UNIVERSITY OF ENGINEERING AND MANAGEMENT,State Private University,,99
+544,"VARDHMAN MAHAVEER OPEN UNIVERSITY, KOTA",State Open University,http://www.vmou.ac.in/,99
+545,VIVEKANANDA GLOBAL UNIVERSITY,State Private University,http://www.vgu.ac.in,99
+546,"EASTERN INSTITUTE FOR INTEGRATED LEARNING IN MANAGEMENT UNIVERSITY, JORETHANG",State Private University,www.eiilmuniversity.ac.in,99
+547,NATIONAL INSTITUTE OF TECHNOLOGY SIKKIM,Institute of National Importance,http://www.nitsikkim.ac.in,99
+548,"SIKKIM MANIPAL UNIVERSITY, GANGTOK",State Private University,www.smu.edu.in,99
+549,"SIKKIM UNIVERSITY, GANGTOK",Central University,www.sikkimuniversity.ac.in,99
+550,"THE INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, SIKKIM",State Private University,www.iusikkim.edu.in,99
+551,"VINAYAKA MISSIONS SIKKIM UNIVERSITY, TADONG",State Private University,www.vmsuniversity.in,99
+552,"ACADEMY OF MARITIME EDUCATION AND TRAINING, CHENNAI",Deemed University-Private,www.ametuniv.ac.in,99
+553,ACADEMY OF SCIENTIFIC & INNOVATIVE RESEARCH,Institute of National Importance,http://acsir.res.in,99
+554,"ALAGAPPA UNIVERSITY, ALAGAPPA NAGAR, KARAIKUDI",State Public University,www.alagappauniversity.ac.in,99
+555,"AMRITA VISHWA VIDYAPEETHAM, COIMBATORE",Deemed University-Private,www.amrita.edu,99
+556,"ANNA UNIVERSITY, CHENNAI",State Public University,www.annauniv.edu,99
+557,"ANNAMALAI UNIVERSITY, ANNAMALAINAGAR",State Public University,www.annamalaiuniversity.ac.in,99
+558,"AVINASHILINGAM INSTITUTE FOR HOME SCIENCE & HIGHER EDUCATION FOR WOMEN, COIMBATORE",Deemed University-Government Aided,www.avinuty.ac.in,99
+559,B.S. ABDUR RAHMAN INSTITUTE OF SCIENCE & TECHNOLOGY,Deemed University-Private,www.bsauniv.ac.in,99
+560,BHARATH INSTITUTE OF HIGHER EDUCATION & RESEARCH,Deemed University-Private,www.bharathuniv.ac.in,99
+561,"BHARATHIAR UNIVERSITY, COIMBATORE",State Public University,http://www.b-u.ac.in,99
+562,"BHARATHIDASAN UNIVERSITY, TIRUCHIRAPPALLI",State Public University,www.bdu.ac.in,99
+563,"CENTRAL UNIVERSITY OF TAMIL NADU, TIRUVARUR",Central University,www.cutn.ac.in,99
+564,"CHENNAI MATHEMATICAL INSTITUE, CHENNAI",Deemed University-Private,www.cmi.ac.in,99
+565,"CHETTINAD ACADEMY OF RESEARCH & EDUCATION, KANCHEEPURAM",Deemed University-Private,www.chettinadhealthcity.com,99
+566,DAKSHINA BHARAT HINDI PRACHAR SABHA,Institute of National Importance,www.dbhpscentral.org,99
+567,"GANDHIGRAM RURAL INSTITUTE, DINDIGUL",Deemed University-Government Aided,www.ruraluniv.ac.in,99
+568,"HINDUSTAN INSTITUTE OF TECHNOLOGY AND SCIENCE, KANCHEEPURAM",Deemed University-Private,www.hindustanuniv.ac.in,99
+569,"INDIAN INSTITUTE OF INFORMATION TECHNOLOGY, DESIGN & MANUFACTURING, KANCHEEPURAM",Institute of National Importance,www.iiitdm.ac.in,99
+570,"INDIAN INSTITUTE OF INFORMATION TECHNOLOGY, SRIRANGAM",Others,,99
+571,"INDIAN INSTITUTE OF TECHNOLOGY, CHENNAI",Institute of National Importance,www.iitm.ac.in,99
+572,INDIAN MARITIME UNIVERSITY,Central University,imu.edu.in,99
+573,"KALASALINGAM ACADEMY OF RESEARCH AND HIGHER EDUCATION, SRIVILLIPUTHRUR",Deemed University-Private,www.kalasalingam.ac.in,99
+574,"KARPAGAM ACADEMY OF HIGHER EDUCATION, COIMBATORE",Deemed University-Private,www.karpagamuniversity.edu.in,99
+575,"KARUNYA INSTITUTE OF TECHNOLOGY AND SCIENCES, COIMBATORE",Deemed University-Private,www.karunya.edu,99
+576,"M.G.R. EDUCATIONAL AND RESEARCH INSTITUTE, CHENNAI",Deemed University-Private,www.drmgrdu.ac.in,99
+577,"MADRAS UNIVERSITY, CHENNAI",State Public University,www.uNo(0)m.ac.in,99
+578,"MADURAI KAMRAJ UNIVERSITY, MADURAI",State Public University,www.mkuniversity.org,99
+579,"MANONMANIAM SUNDARANAR UNIVERSITY, TIRUNELVELI",State Public University,www.msuniv.ac.in,99
+580,"MEENAKSHRI ACADEMY OF HIGHER EDUCATION AND RESEARCH, CHENNAI",Deemed University-Private,www.maher.ac.in,99
+581,"MOTHER TERESA WOMEN'S UNIVERSITY, KODAIKANAL",State Public University,www.motherteresawomenuniv.ac.in,99
+582,"NATIONAL INSTITUTE OF TECHNOLOGY, TIRUCHIRAPALLI",Institute of National Importance,http://www.nitt.edu,99
+583,"NOORUL ISLAM CENTRE FOR HIGHER EDUCATION, KANYAKUMARI",Deemed University-Private,www.niceindia.com,99
+584,"PERIYAR MANIAMMAL INSTITUTE OF SCIENCE & TECHNOLOYG, THANJAVUR",Deemed University-Private,www.pmu.edu,99
+585,"PERIYAR UNIVERSITY, SALEM",State Public University,www.periyaruniversity.ac.in,99
+586,"PONNAIYAH RAMAJAYAM INSTITUTE OF SCIENCE & TECHNOLOGY, THANJAVUR",Deemed University-Private,www.prist.ac.in,99
+587,"RAJIV GANDHI NATIONAL INSTIUTE OF YOUTH DEVELOPMENT, SRIPERUMBUDUR",Institute of National Importance,www.rgniyd.gov.in,99
+588,"S.R.M. INSTITUTE OF SCIENCE & TECHNOLOGY, CHENNAI",Deemed University-Private,www.srmuniv.ac.in,99
+589,"SATHYABAMA INSTITUTE OF SCIENCE & TECHNOLOGY, CHENNAI",Deemed University-Private,www.sathyabamauniversity.ac.in,99
+590,"SAVEETHA UNIVERSITY, CHENNAI",Deemed University-Private,www.saveetha.com,99
+591,"SHANMUGHA ARTS, SCIENCE, TECHNOLOGY & RESERCH ACADEMY (SASTRA), THANJAVUR",Deemed University-Private,www.sastra.edu,99
+592,"SRI CHANDRASEKHARENDRA SARASWATHI VISHWA MAHAVIDYALAYA, KANCHEEPURAM",Deemed University-Private,http://www.kanchiuniv.ac.in,99
+593,"SRI RAMACHANDRA MEDICAL COLLEGE AND RESEARCH INSTITUTE, CHENNAI",Deemed University-Private,www.sriramachandra.edu.in,99
+594,"ST. PETER'S INSTITUTE OF HIGHER EDUCATION AND RESEARCH, CHENNAI",Deemed University-Private,www.stpetersuniversity.org,99
+595,"TAMIL NADU DR. AMBEDKAR LAW UNIVERSITY, CHENNAI",State Public University,www.tndalu.ac.in,99
+596,"TAMIL NADU DR. M.G.R. MEDICAL UNIVERSITY , CHENNAI",State Public University,www.tnmgrmu.ac.in,99
+597,TAMIL NADU FISHERIES UNIVERSITY,State Public University,www.tnfu.ac.in,99
+598,TAMIL NADU NATIONAL LAW SCHOOL,State Public University,,99
+599,"TAMIL NADU OPEN UNIVERSITY, CHENNAI",State Open University,www.tNo(0)u.ac.in,99
+600,"TAMIL NADU TEACHER EDUCATION UNIVERSITY, CHENNAI",State Public University,www.tnteu.in,99
+601,"TAMIL UNIVESITY, THANJAVUR",State Public University,www.tamiluniversity.ac.in,99
+602,"TAMILNADU AGRICULTURAL UNIVERSITY, COIMBATORE",State Public University,www.tnau.ac.in,99
+603,"TAMILNADU PHYSICAL EDUCATION AND SPORTS UNIVERSITY, CHENNAI",State Public University,wwww.tnpesu.org,99
+604,"TAMILNADU VETERINARY & ANIMAL SCIENCES UNIVERSITY, CHENNAI",State Public University,tanuvas.ac.in,99
+605,"THIRUVALLUVAR UNIVERISTY, VELLORE",State Public University,WWW.thiruvalluvaruniversity.ac.in,99
+606,"VEL TECH RANGARAJAN DR. SAGUNTHALA R & D INSTITUTE OF SCIENCE & TECHNOLOGY, CHENNAI",Deemed University-Private,http://www.veltechuniv.edu.in/,99
+607,"VELLORE INSTITUTE OF TECHNOLOGY, VELLORE",Deemed University-Private,www.vit.ac.in,99
+608,"VELS INSTITUTE OF SCIENCE, TECHNOLOGY AND ADVANCED STUDIES, CHENNAI",Deemed University-Private,www.velsuniv.ac.in,99
+609,"VINAYAKA MISSIONS RESEARCH FOUNDATION, SALEM",Deemed University-Private,www.vinaykamission.com,99
+610,"ACHARYA NG RANGA AGRICULTURAL UNIVERSITY, HYDERABAD",State Public University,www.angrau.net,99
+611,"DR. B. R. AMBEDKAR OPEN UNIVERSITY, HYDERABAD",State Open University,www.braou.ac.in,99
+612,"ICFAI FOUNDATION FOR HIGHER EDUCATION, HYDERABAD",Deemed University-Private,http://www.ifheindia.org,99
+613,"INDIAN INSTITUTE OF TECHNOLOGY, HYDERABAD",Institute of National Importance,www.iith.ac.in,99
+614,"INTERNATIONAL INSTITUTE OF INFORMATION TECHNOLOGY, HYDERABAD",Deemed University-Private,www.iiit.ac.in,99
+615,"JAWAHARLAL NEHRU TECHNOLOGICAL UNIVERSITY, HYDERABAD",State Public University,www.jntuh.ac.in,99
+616,JAWARHARLAL NEHRU ARCHITECTURE AND FINE ART UNIVERSITY HYDERABAD,State Public University,www.jnafau.ac.in,99
+617,"KAKATIYA UNIVERSITY, WARANGAL",State Public University,www.kakatiya.ac.in,99
+618,"MAHATMA GANDHI UNIVERSITY, NALGONDA",State Public University,www.mguniversity.ac.in,99
+619,"MAULANA AZAD NATIONAL URDU UNIVERSITY, HYDERABAD",Central University,manuu.ac.in,99
+620,NATIONAL ACADEMY OF LEGAL STUDIES & RESEARCH (NALSR) UNIVERSITY HYDERABAD,State Public University,www.nalsar.ac.in,99
+621,"NATIONAL INSTITUTE OF TECHNOLOGY, WARANGAL",Institute of National Importance,nitw.ac.in,99
+622,"NIZAM INSTITUTE OF MEDICAL SCIENCES, HYDERABAD",Institute under State Legislature Act,,99
+623,"OSMANIA UNIVERSITY, HYDERABAD",State Public University,http://www.osmania.ac.in,99
+624,"PALAMURU UNIVERSITY, MAHABUBNAGAR",State Public University,www.palamuruuniversity.ac.in,99
+625,"POTTI SRI RAMULU TELUGU UNIVERSITY, HYDERABAD",State Public University,teluguuniversity.ac.in,99
+626,"SATAVAHANA UNIVERSITY, KARIMNAGAR",State Public University,www.satavahana.ac.in,99
+627,"TELANGANA UNIVERSITY, NIZAMABAD",State Public University,www.telanganauniversity.ac.in,99
+628,"THE ENGLISH AND FOREIGN LANGUAGES UNIVERSITY, HYDERABAD",Central University,www.efluniversity.ac.in,99
+629,"UNIVERSITY OF HYDERABAD, HYDERABAD",Central University,www.uohyd.ernet.in,99
+630,"NATIONAL INSTITUTE OF TECHNOLOGY, AGARTALA",Institute of National Importance,www.nitagartala.in,99
+631,"THE INSTITUTE OF CHARTERED FINANCIAL ANALYSTS OF INDIA UNIVERSITY, AGARTALA",State Private University,www.iutripura.edu.in,99
+632,"TRIPURA UNIVERSITY, AGARTALA",Central University,www.tripurauniv.in,99
+633,"ALIGARH MUSLIM UNIVERSITY, ALIGARH",Central University,www.amu.ac.in,99
+634,"AMITY UNIVERSITY, GAUTAM BUDH NAGAR",State Private University,http://amity.edu/,99
+635,"BABASHEB BHIMRAO AMBEDKAR UNIVERSITY, LUCKNOW",Central University,www.bbau.ac.in,99
+636,"BABU BANARSI DAS UNIVERSITY, LUCKNOW",State Private University,www.bbdu.ac.in,99
+637,"BANARAS HINDU UNIVERSITY, BANARAS",Central University,www.bhu.ac.in,99
+638,"BHATKHANDE MUSIC INSTITUTE, LUCKNOW",Deemed University-Government Aided,www.bhatkhandemusic.edu.in,99
+639,"BUNDELKHAND UNIVERSITY, JHANSI",State Public University,www.bujhansi.org,99
+640,"CENTRAL INSTITUTE OF HIGHER TIBETAN STUDIES, VARANASI",Deemed University-Government,www.cuts.ac.in,99
+641,"CHANDRA SHEKHAR AZAD UNIVERSITY OF AGRICULTURE & TECHNOLOGY, KANPUR",State Public University,www.csauk.ac.in,99
+642,"CHATRAPATI SAHUJI MAHARAJ KANPUR UNIVERSITY, KANPUR",State Public University,www.kanpuruniversity.org,99
+643,"CHOUDHARY CHARAN SINGH UNIVERSITY, MEERUT",State Public University,www.ccsuniversity.ac.in,99
+644,"DAYALBAGH EDUCATIONAL INSTITUTE, AGRA",Deemed University-Government Aided,www.dei.ac.in,99
+645,"DEEN DAYAL UPADHYAY GORAKHPUR UNIVERSITY, GORAKHPUR",State Public University,www.ddugu.edu.in,99
+646,"DR. B. R. AMBEDKAR UNIVERSITY, AGRA",State Public University,WWW.DBRAU.AC.IN,99
+647,"DR. RAM MANOHAR LOHIA AWADH UNIVERSITY, FAIZABAD",State Public University,www.rmlau.ac.in,99
+648,"DR. RAM MANOHAR LOHIYA NATIONAL LAW UNIVERSITY, LUCKNOW",State Public University,www.rmlnlu.ac.in,99
+649,"G.L.A UNIVERSITY, MATHURA",State Private University,www.gla.ac.in,99
+650,GALGOTIAS UNIVERSITY,State Private University,WWW.GALGOTIASUNIVERSITY.EDU.IN,99
+651,"GAUTAM BUDDHA UNIVERSITY, GREATER NOIDA, GAUTAM BUDH NAGAR",State Public University,www.gbu.ac.in,99
+652,GLOCAL UNIVERSITY,State Private University,,99
+653,"IFTM UNIVERSITY, MORADABAD",State Private University,www.iftmuniversity.ac.in,99
+654,"INDIAN INSTITUTE OF INFORMATION TECHNOLOGY, ALLAHABAD",Deemed University-Government,www.iiita.ac.in,99
+655,"INDIAN INSTITUTE OF TECHNOLOGY (BANARAS HINDU UNIVERSITY), VARANASI",Institute of National Importance,www.iitbhu.ac.in,99
+656,"INDIAN INSTITUTE OF TECHNOLOGY, KANPUR",Institute of National Importance,www.iitk.ac.in,99
+657,"INDIAN VETERINARY RESEARCH INSTITUTE, IZATNAGAR",Deemed University-Government,www.ivri.nic.in,99
+658,"INTEGRAL UNIVERSITY, LUCKNOW",State Private University,www.integraluniversity.ac.in,99
+659,"INVERTIS UNIVERSITY, BAREILY",State Private University,www.invertisuniversity.ac.in,99
+660,JAGADGURU RAMBHADRACHARYA HANDICAPPED UNIVERSITY,State Private University,www.jrhu.com,99
+661,"JAYPEE INSTITUTE OF INFORMATION TECHNOLOGY, NOIDA",Deemed University-Private,www.jiit.ac.in,99
+662,KHWAJA MOINUDDIN CHISHTI URDU ARABI FARSI UNIVERSITY,State Public University,www.uafuluckNo(0)w.ac.in,99
+663,KING GEORGE MEDICAL UNIVERSITY,State Public University,www.kgmcindia.edu,99
+664,"LUCKNOW UNIVERSITY, LUCKNOW",State Public University,www.lkouniv.ac.in,99
+665,"MADAN MOHAN MALAVIYA UNIVERSITY OF TECHNOLOGY,",State Public University,,99
+666,MAHAMAYA TECHNICAL UNIVERSITY,State Public University,www.mtu.ac.in,99
+667,"MAHATAMA JYOTIBA PHULE ROHIKHAND UNIVERSITY, BAREILLY",State Public University,www.mjpru.ac.in,99
+668,"MAHATMA GANDHI KASHI VIDYAPEETH, VARANASI",State Public University,www.mgkvp.ac.in,99
+669,"MANGALAYATAN UNIVERSITY, ALIGARH",State Private University,www.mangalayatan.in,99
+670,"MANYAWAR SHRI KANSHIRAM JI UNIVERSITY OF AGRICULTURE AND TECHNOLOGY, BANDA",State Public University,www.mskjuat.edu.in,99
+671,"MOHAMMAD ALI JAUHAR UNIVERSITY, RAMPUR",State Private University,www.jauharuniversity.edu.in,99
+672,MONAD UNIVERSITY,State Private University,monad.edu.in,99
+673,"MOTILAL NEHRU NATIONAL INSTITUTE OF TECHNOLOGY, ALLAHABAD",Institute of National Importance,www.mnnit.ac.in,99
+674,"NARENDRA DEO UNIVERSITY OF AGRICULTURE & TECHNOLOGY, FAIZABAD",State Public University,nduat.in,99
+675,"NEHRU GRAM BHARATI, ALLAHABAD",Deemed University-Private,"www.ngbu.edu.in , www.nehrugrambharati.org.in",99
+676,NOIDA INTERNATIONAL UNIVERSITY,State Private University,http://niu.edu.in,99
+677,"RAJIV GANDHI INSTITUTE OF PETROLEUM TECHNOLOGY, RAE BARELI",Institute of National Importance,www.rgipt.ac.in,99
+678,"SAM HIGGINBOTTOM INSTITUTE OF AGRICULTURE, TECHNOLOGY & SCIENCES, ALLAHABAD",Deemed University-Government Aided,shiats.edu.in,99
+679,"SAMPURNANAND SANSKRIT VISHWAVIDYALAYA, VARANASI",State Public University,ssvv.ac.in,99
+680,"SANJAY GANDHI POST GRADUATE INSTITUTE OF MEDICAL SCIENCES, LUCKNOW",Institute under State Legislature Act,www.sgpgi.ac.in,99
+681,"SANTOSH UNIVERSITY, GHAZIABAD",Deemed University-Private,www.santoshuniversity.com,99
+682,"SARDAR VALLABH BHAI PATEL UNIVERSITY OF AGRICULTURE & TECHNOLOGY, MEERUT",State Public University,svbpmeerut.ac.in,99
+683,"SHARDA UNIVERSITY, GAUTAM BUDH NAGAR",State Private University,www.sharda.ac.in,99
+684,SHIV NADAR UNIVERSITY,State Private University,www.snu.edu.in,99
+685,"SHOBHIT UNIVERSITY, GANGOH",State Private University,,99
+686,"SHOBIT INSTITUTE OF ENGINEERING & TECHNOLOGY, MEERUT",Deemed University-Private,www.shobhituniversity.ac.in,99
+687,SHRI RAMSWAROOP MEMORIAL UNIVERSITY,State Private University,,99
+688,"SRI VENKATESHWARA UNIVERSITY, GAJRAULA, J.P NAGAR",State Private University,www.svu.edu.in,99
+689,"SWAMI VIVEKANANDA SUBHARTI UNIVERSITY, MEERUT",State Private University,www.subharti.org,99
+690,"TEERTHANKER MAHAVEER UNIVERSITY, MORADABAD",State Private University,www.tmu.ac.in,99
+691,"U.P. RAJARSHI TANDON OPEN UNIVERSITY, ALLAHABAD",State Open University,www.uprtou.ac.in,99
+692,"UNIVERSITY OF ALLAHABAD, ALLAHABAD",Central University,http://www.allduniv.ac.in,99
+693,"UP PANDIT DEEN DAYAL UPADHYAYA VETERINARY UNIVERSITY & GAU-ANUSANDHAN SANSTHAN, MATHURA",State Public University,www.upvetuniv.edu.in,99
+694,"GAUTAM BUDDH TECHNICAL UNIVERSITY, LUCKNOW",State Public University,www.uptu.ac.in,99
+695,UTTAR PRADESH VIKLANG UDDHAR DR SHAKUNTALA MISRA UNIVERSITY,State Public University,http://dsmru.up.nic.in,99
+696,"VEER BAHADUR SINGH PURVANCHAL UNIVERSITY, JAUNPUR",State Public University,www.vbspu.ac.in,99
+697,"ALL INDIA INSTITUTE OF MEDICAL SCIENCES, RISHIKESH",Institute of National Importance,www.aiimsrishikesh.edu.in,99
+698,"DEV SANSKRIT VISHWAVIDYALAYA GAYATRIKUNJ, HARIDWAR",State Private University,www.dsvv.ac.in,99
+699,"DOON UNIVERSITY, DEHRADUN",State Public University,www.doonuniversity.ac.in,99
+700,"FOREST RESEARCH INSTITUTE, DEHRADUN",Deemed University-Government,www.icfre.fri.gov.in,99
+701,"G.B. PANT UNIVERSTIY OF AGRICULTURE AND TECHNOLOGY, PANTNAGAR",State Public University,www.gbpuat.ac.in,99
+702,GRAPHIC ERA HILL UNIVERSITY,State Private University,http://www.gehu.ac.in,99
+703,"GRAPHIC ERA UNIVERSITY, DEHRADUN",Deemed University-Private,www.geu.ac.in,99
+704,"GURUKUL KANGRI VISHWAVIDYALAYA, HARIDWAR",Deemed University-Government Aided,www.gkv.ac.in,99
+705,"HEMWATI NANDAN BAHUGUNA GARHWAL UNIVERISTY, SRINAGAR, GARHWAL",Central University,www.hnbgu.ac.in,99
+706,"HIMGIRI ZEE UNIVERSITY, DEHRADUN",State Private University,www.hzu.edu.in,99
+707,"INDIAN INSTITUTE OF TECHNOLOGY, ROORKEE",Institute of National Importance,www.iitr.ac.in,99
+708,"INSTITUTE OF CHATERTERED FINANCIAL ANALYSTS OF INDIA, DEHRADUN",State Private University,www.iudehradun.edu.in,99
+709,"KUMAUN UNIVERSITY, NAINITAL",State Public University,www.kunainital.ac.in,99
+710,NATIONAL INSTITUTE OF TECHNOLOGY UTTARAKHAND,Institute of National Importance,www.nituk.ac.in,99
+711,"SRI DEV SUMAN UTTARAKHAND UNIVERSITY, BADSHAHITHOL, TEHRI",State Public University,www.sdsuv.ac.in,99
+712,SWAMI RAMA HIMALAYAN UNIVERSITY,State Private University,,99
+713,"UNIVERSITY OF PATANJALI, PATANJALI YOGPEETH, HARIDWAR",State Private University,www.universityofpatanjali.com,99
+714,"UNIVERSITY OF PETROLEUM AND ENERGY STUDIES, DEHRADUN",State Private University,www.upes.ac.in,99
+715,UTTARAKHAND AYURVED UNIVERSITY,State Public University,,99
+716,UTTARAKHAND OPEN UNIVERSITY,State Open University,www.uou.ac.in,99
+717,"UTTARAKHAND UNIVERSITY OF HORTICULTURE AND FORESTRY, BHARSAR",State Public University,www.uuhf.ac.in,99
+718,"UTTARANCHAL SANSKRIT UNIVERSITY, HARDWAR",State Public University,www.usvv.ac.in,99
+719,"UTTARANCHAL UNIVERSITY, DEHRADUN",State Private University,www.uttaranchaluniveristy.ac.in,99
+720,"UTTRAKHAND TECHNICAL UNIVERSITY, DEHRADUN",State Public University,www.uktech.ac.in,99
+721,"ALIAH UNIVERSITY, KOLKATA",State Public University,www.aliah.ac.in,99
+722,"BIDHAN CHANDRA KRISHI VISHWAVIDYALAYA , NADIA",State Public University,www.bckv.edu.in,99
+723,"BURDWAN UNIVERSITY, BURDWAN",State Public University,www.buruniv.ac.in,99
+724,"CALCUTTA UNIVERSITY, KOLKATA",State Public University,www.caluniv.ac.in,99
+725,"INDIAN INSTITUTE OF ENGINEERING SCIENCE AND TECHNOLOGY, SHIBPUR",Institute of National Importance,www.becs.ac.in,99
+726,"INDIAN INSTITUTE OF SCIENCE EDUCATION & RESEARCH (IISER), KOLKATA,",Institute of National Importance,www.iiserkol.ac.in,99
+727,"INDIAN INSTITUTE OF TECHNOLOGY, KAHARAGPUR",Institute of National Importance,www.iitkgp.ac.in,99
+728,"INDIAN STATISTICAL INSTITUTE, KOLKATA",Institute of National Importance,www.isical.ac.in,99
+729,"JADAVPUR UNIVERSITY, KOLKATA",State Public University,http://www.jaduniv.edu.in,99
+730,"KALYANI UNIVERSITY, KALYANI",State Public University,www.klyuniv.ac.in,99
+731,"KAZI NAZRUL UNIVERSITY, ASANSOL",State Public University,http://www.knuedu.in,99
+732,"NATIONAL INSTITUTE OF TECHNOLOGY, DURGAPUR",Institute of National Importance,www.nitdgp.ac.in,99
+733,"NETAJI SUBHASH OPEN UNIVERSITY, KOLKATA",State Open University,www.wbnsou.ac.in,99
+734,"NORTH BENGAL UNIVERSITY, DARJEELING",State Public University,www.nbu.ac.in,99
+735,PRESIDENCY UNIVERSITY,State Public University,www.presiuniv.ac.in,99
+736,"RABINDRA BHARATI UNIVERSITY, KOLKATA",State Public University,www.rbu.ac.in,99
+737,"RAMAKRISHNA MISSION VIVEKANANDA EDUCATIONAL AND RESEARCH INSTITUTE, HOWRAH",Deemed University-Private,www.rkmvu.ac.in,99
+738,SIDHO-KANHO BIRSA UNIVERSITY,State Public University,www.skbu.ac.in,99
+739,"THE WEST BENGAL NATIONAL UNIVERSITY OF JURIDICIAL SCIENCES, KOLKATA",State Public University,www.nujs.edu,99
+740,"THE WEST BENGAL UNIVERSITY OF HEALTH SCIENCES, KOLKATA",State Public University,http://www.wbuhs.ac.in,99
+741,"UNIVERSITY OF GOUR BANGA, MALDA",State Public University,www.ugb.ac.in,99
+742,"UTTAR BANGA KRISHI VISHWAVIDYALAYA, COOCH BEHAR",State Public University,www.ubkv.ac.in,99
+743,"VIDYA SAGAR UNIVERSITY, MIDNAPORE",State Public University,www.vidyasagar.ac.in,99
+744,"VISVA BHARATI, SHANTINIKETAN",Central University,www.visva-bharati.ac.in,99
+745,"WEST BENGAL STATE UNIVERSITY, KOLKATA",State Public University,www.wbsubregistration.org,99
+746,"WEST BENGAL UNIVERSITY OF ANIMAL AND FISHERY SCIENCES, KOLKATA",State Public University,www.wbuafscl.ac.in,99
+747,"WEST BENGAL UNIVERSITY OF TECHNOLOGY, KOLKATA",State Public University,http://www.wbut.ac.in,99
+748,"PANDIT BHAGWAT DAYAL SHARMA UNIVERSITY OF HEALTH SCIENCES, ROHTAK",State Public University,http://http://uhsr.ac.in,99
+749,"RANI CHANNAMMA UNIVERSITY, BELAGAVI",State Public University,http://http://www.rcub.ac.in,99
