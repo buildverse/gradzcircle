@@ -83,7 +83,9 @@ public class CandidateEducationResource {
 	@Timed
 	public ResponseEntity<CandidateEducation> createCandidateEducation(
 			@RequestBody CandidateEducation candidateEducation) throws URISyntaxException {
-		log.debug("REST request to save CandidateEducation : {}", candidateEducation);
+		log.debug("REST request to save CandidateEducation : {},{},{},{}", candidateEducation,
+				candidateEducation.getCollege(),candidateEducation.getCourse()
+				,candidateEducation.getQualification());
 		if (candidateEducation.getId() != null) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
 					"A new candidateEducation cannot already have an ID")).body(null);

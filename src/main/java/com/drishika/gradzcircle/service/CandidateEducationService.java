@@ -2,15 +2,18 @@ package com.drishika.gradzcircle.service;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
-import java.util.HashSet;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
 import com.drishika.gradzcircle.config.Constants;
@@ -20,6 +23,8 @@ import com.drishika.gradzcircle.domain.College;
 import com.drishika.gradzcircle.domain.Course;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.CollegeRepository;
@@ -28,6 +33,10 @@ import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.UniversityRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
+import com.drishika.gradzcircle.repository.search.CollegeSearchRepository;
+import com.drishika.gradzcircle.repository.search.CourseSearchRepository;
+import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
+import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
 import com.drishika.gradzcircle.service.matching.Matcher;
 
 @Service
@@ -41,7 +50,12 @@ public class CandidateEducationService {
 	private final QualificationRepository qualififcationRepository;
 	private final CourseRepository courseRepository;
 	private final UniversityRepository universityRepository;
+	private final UniversitySearchRepository universitySearchRepository;
+	private final CollegeSearchRepository collegeSearchRepository;
+	private final QualificationSearchRepository qualificationSearchRepository;
+	private final CourseSearchRepository courseSearchRepository;
 	private final CandidateEducationSearchRepository candidateEducationSearchRepository;
+	 private final ElasticsearchTemplate elasticsearchTemplate;
 
 	@Qualifier("CandidateEducationMatcher")
 	private final Matcher<CandidateEducation> jobMatcher;
@@ -51,7 +65,10 @@ public class CandidateEducationService {
 			CandidateProjectRepository candidateProjectRepository,
 			CandidateProjectSearchRepository candidateProjectSearchRepository, CollegeRepository collegeRepository,
 			QualificationRepository qualififcationRepository, CourseRepository courseRepository,
-			UniversityRepository universityRepository, Matcher<CandidateEducation> jobMatcher) {
+			UniversityRepository universityRepository, Matcher<CandidateEducation> jobMatcher,
+			CollegeSearchRepository collegeSearchRepository,QualificationSearchRepository qualificationSearchRepository,
+			CourseSearchRepository courseSearchRepository,UniversitySearchRepository universitySearchRepository,
+			ElasticsearchTemplate elasticsearchTemplate) {
 		this.candidateEducationRepository = candidateEducationRepository;
 		this.candidateEducationSearchRepository = candidateEducationSearchRepository;
 		this.candidateProjectRepository = candidateProjectRepository;
@@ -60,7 +77,11 @@ public class CandidateEducationService {
 		this.courseRepository = courseRepository;
 		this.qualififcationRepository = qualififcationRepository;
 		this.jobMatcher = jobMatcher;
-
+		this.collegeSearchRepository = collegeSearchRepository;
+		this.universitySearchRepository = universitySearchRepository;
+		this.courseSearchRepository = courseSearchRepository;
+		this.qualificationSearchRepository = qualificationSearchRepository;
+		this.elasticsearchTemplate = elasticsearchTemplate;
 	}
 
 	private void setGrade(CandidateEducation candidateEducation) {
@@ -72,11 +93,11 @@ public class CandidateEducationService {
 	public CandidateEducation createCandidateEducation(CandidateEducation candidateEducation) {
 		if ("gpa".equals(candidateEducation.getScoreType()))
 			setGrade(candidateEducation);
-		if(candidateEducation.getCapturedCollege() != null)
-			massageCollegeInformation(candidateEducation);
+		massageCollegeInformation(candidateEducation);
 		massageCourseInformation(candidateEducation);
 		massageQualificationInformation(candidateEducation);
-		log.debug("Creating education for candidate {}", candidateEducation.getCandidate());
+		log.debug("Creating education for candidate, course,qualification {},{},{}", 
+				candidateEducation.getCandidate(),candidateEducation.getCourse(),candidateEducation.getQualification());
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
 		candidateEducationSearchRepository.save(result);
 		// Replace with future
@@ -86,14 +107,29 @@ public class CandidateEducationService {
 	}
 
 	private void massageCollegeInformation(CandidateEducation candidateEducation) {
-		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation, candidateEducation.getCollege());
+		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation, 
+				candidateEducation.getCollege());
 		String capturedCollegeName = candidateEducation.getCapturedCollege();
 		String capturedUniversityName = candidateEducation.getCapturedUniversity();
 		College capturedCollege = collegeRepository.findByCollegeName(capturedCollegeName);
 		University capturedUniversity = universityRepository.findByUniversityName(capturedUniversityName);
-		Boolean capturedCollegeExist = false;
-		Boolean capturedUninversityExist = false;
-		if(capturedCollege != null)
+		if(capturedCollege == null && capturedUniversity == null ) {
+			candidateEducation.setCollege(collegeRepository.findByCollegeName(candidateEducation.getCollege()
+					.getCollegeName()));
+		} else if (candidateEducation.getCollege().getCollegeName().equalsIgnoreCase("OTHER")) {
+			if(capturedUniversity == null) {
+				University newUniversity = universityRepository.save(new University().
+						universityName(capturedUniversityName).display(capturedUniversityName)
+						.value(capturedUniversityName));	
+				updateUniversityIndex(newUniversity);
+			} else if (capturedCollege == null) {
+				College newCollege = collegeRepository.save(new College().
+						collegeName(capturedCollegeName).display(capturedCollegeName)
+						.value(capturedCollegeName));
+				updateCollegeIndex(newCollege);
+			}
+		}
+		/*if(capturedCollege != null)
 		 capturedCollegeExist = true;
 		if(capturedUniversity != null)
 			capturedUninversityExist = true;
@@ -126,8 +162,8 @@ public class CandidateEducationService {
 						newUniversity.getUniversityName());
 			} 
 
-		}
-		log.debug("Looked up college details {}", college);
+		}*/
+		//log.debug("Looked up college details {}", college);
 		
 	}
 
@@ -193,6 +229,7 @@ public class CandidateEducationService {
 	}
 
 	public CandidateEducation getCandidateEducation(Long id) {
+		log.debug("Getting candidate Education for {}",id);
 		CandidateEducation candidateEducation = candidateEducationRepository.findOne(id);
 		if (candidateEducation != null) {
 			Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEducation(candidateEducation);
@@ -255,4 +292,39 @@ public class CandidateEducationService {
 		candidateEducation.getCourse().setValue(candidateEducation.getCourse().getCourse());
 	}
 
+	private void updateUniversityIndex(University university) {
+		com.drishika.gradzcircle.domain.elastic.University universityElasticInstance = new com.drishika.gradzcircle.domain.elastic.University();
+        try {
+			BeanUtils.copyProperties(universityElasticInstance, university);
+		} catch (IllegalAccessException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+            //@TODO - SEND EMAIL Alert 
+		} catch (InvocationTargetException e) {
+            log.error("Error copying bean for college elastic instance", e);
+            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			
+        }
+        elasticsearchTemplate.index(new UniversityEntityBuilder(universityElasticInstance.getId()).name(universityElasticInstance.getUniversityName())
+            .suggest(new String[] { universityElasticInstance.getUniversityName() }).buildIndex());
+        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
+	}
+	
+	private void updateCollegeIndex(College college) {
+		 com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
+	        try {
+				BeanUtils.copyProperties(collegeElasticInstance, college);
+			} catch (IllegalAccessException e) {
+	            log.error("Error copying bean for college elastic instance", e);
+	            //@TODO SEND EMAIL ALERT
+	          //  throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			} catch (InvocationTargetException e) {
+	            log.error("Error copying bean for college elastic instance", e);
+	            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+				
+	        }
+	        elasticsearchTemplate.index(new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
+	            .suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
+	        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+	}
 }

@@ -129,6 +129,11 @@ public class CandidateEducationResourceIntTest {
 
 	private CandidateEducation candidateEducation;
 
+	private Course course;
+	private Qualification qualification;
+	private College college;
+	private University university;
+
 	@Autowired
 	private CandidateEducationService candidateEducationService;
 
@@ -137,10 +142,10 @@ public class CandidateEducationResourceIntTest {
 
 	@Autowired
 	private UniversityRepository universityRepository;
-	
+
 	@Autowired
 	private CourseRepository courseRepository;
-	
+
 	@Autowired
 	private QualificationRepository qualificationRepository;
 
@@ -161,6 +166,7 @@ public class CandidateEducationResourceIntTest {
 	 * they test an entity which requires the current entity.
 	 */
 	public static CandidateEducation createEntity(EntityManager em) {
+		
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -172,10 +178,38 @@ public class CandidateEducationResourceIntTest {
 		return candidateEducation;
 	}
 
+	public static Course createCourse(EntityManager em) {
+		Course course = new Course().course("Computer").display("Computer").value("Computer");
+		return course;
+	}
+
+	public static Qualification createQualification(EntityManager em) {
+		Qualification qualification = new Qualification().qualification("Master").display("Master").value("Master");
+		return qualification;
+	}
+
+	public static College createCollege(EntityManager em) {
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda");
+		return college;
+	}
+	
+	public static University createUniversity(EntityManager em) {
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		return university;
+	}
+
 	@Before
 	public void initTest() {
 		candidateEducationSearchRepository.deleteAll();
+		university = createUniversity(em);
+		college = createCollege(em);
+		college.setUniversity(university);
+		qualification = createQualification(em);
+		course = createCourse(em);
 		candidateEducation = createEntity(em);
+		candidateEducation.setCourse(course);
+		candidateEducation.setCollege(college);
+		candidateEducation.setQualification(qualification);
 	}
 
 	@Test
@@ -190,56 +224,31 @@ public class CandidateEducationResourceIntTest {
 
 	}
 
-	@Test
-	@Transactional
-	public void createCandidateEducationWhenCollegeIsOtherShouldSaveUserCapturedValues() throws Exception {
-		// Create College with name in DB
-		// Create Uni with name in DB
-		// Save edcuation with same college and uni name
-		// Must not save - create custom error
-		Qualification qualification = new Qualification ();
-		qualification.qualification("BBB");
-		Course course = new Course();
-		course.course("BBB");
-		courseRepository.saveAndFlush(course);
-		qualificationRepository.saveAndFlush(qualification);
-		College college = new College();
-		college.setCollegeName("OTHER");
-		University university = new University();
-		university.setUniversityName("OTHER");
-		college.setUniversity(university);
-		Set<College> colleges = new HashSet<College>();
-		colleges.add(college);
-		university.colleges(colleges);
-		universityRepository.saveAndFlush(university);
-		Candidate candidate = new Candidate();
-		candidateRepository.saveAndFlush(candidate);
-		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
-		int collegeDatabaseSizeBeforeCreate = collegeRepository.findAll().size();
-		int universityDatabaseSizeBeforeCreate = universityRepository.findAll().size();
-
-		CandidateEducation candidateEducation = new CandidateEducation();
-		candidateEducation.setCandidate(candidate);
-		candidateEducation.capturedCollege("OTHER");
-		candidateEducation.capturedUniversity("OTHER");
-		candidateEducation.course(new Course().course("BBB"));
-		candidateEducation.qualification(new Qualification().qualification("BBB"));
-		candidateEducation
-				.college(new College().collegeName("OTHER").university(new University().universityName("OTHER")));
-		restCandidateEducationMockMvc
-				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
-						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
-				.andExpect(status().isCreated());
-
-		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
-		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
-	}
-
+	
 	@Test
 	@Transactional
 	public void createCandidateEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda").university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification);
+		
 		// Create the CandidateEducation
 		restCandidateEducationMockMvc
 				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -248,7 +257,15 @@ public class CandidateEducationResourceIntTest {
 
 		// Validate the CandidateEducation in the database
 		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		List<Qualification> qualifications = qualificationRepository.findAll();
+		List<Course> courses = courseRepository.findAll();
+		List<College> colleges = collegeRepository.findAll();
+		List<University>universities = universityRepository.findAll();
 		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
+		assertThat(qualifications).hasSize(1);
+		assertThat(courses).hasSize(1);
+		assertThat(colleges).hasSize(1);
+		assertThat(universities).hasSize(1);
 		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
 		assertThat(testCandidateEducation.getGrade()).isEqualTo(DEFAULT_GRADE);
 		assertThat(testCandidateEducation.getEducationFromDate()).isEqualTo(DEFAULT_EDUCATION_FROM_DATE);
@@ -265,13 +282,313 @@ public class CandidateEducationResourceIntTest {
 		assertThat(testCandidateEducation.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
 		assertThat(testCandidateEducation.getScoreType()).isEqualTo(DEFAULT_SCORE_TYPE);
 		assertThat(testCandidateEducation.getEducationDuration()).isEqualTo(DEFAULT_EDUCATION_DURATION);
-
+		assertThat(testCandidateEducation.getCollege().getCollegeName()).isEqualTo(college.getCollegeName());
+		assertThat(testCandidateEducation.getCollege().getUniversity().getUniversityName()).isEqualTo("Delhi");
+		assertThat(testCandidateEducation.getCourse().getCourse()).isEqualTo("Computer");
+		assertThat(testCandidateEducation.getQualification().getQualification()).isEqualTo("Master");
 		// Validate the CandidateEducation in Elasticsearch
 		CandidateEducation candidateEducationEs = candidateEducationSearchRepository
 				.findOne(testCandidateEducation.getId());
 		assertThat(candidateEducationEs).isEqualToComparingFieldByField(testCandidateEducation);
 	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherQualificationOnlyWithExistingQualification() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda").university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Other").qualification("Other").value("Other");
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification).capturedQualification("Master");
+		
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateEducation in the database
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		List<Qualification> qualifications = qualificationRepository.findAll();
+		List<Course> courses = courseRepository.findAll();
+		List<College> colleges = collegeRepository.findAll();
+		List<University>universities = universityRepository.findAll();
+		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
+		assertThat(candidateEducationList).hasSize(1);
+		assertThat(qualifications).hasSize(1);
+		assertThat(courses).hasSize(1);
+		assertThat(colleges).hasSize(1);
+		assertThat(universities).hasSize(1);
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		assertThat(testCandidateEducation.getGrade()).isEqualTo(DEFAULT_GRADE);
+		assertThat(testCandidateEducation.getEducationFromDate()).isEqualTo(DEFAULT_EDUCATION_FROM_DATE);
+		assertThat(testCandidateEducation.getEducationToDate()).isEqualTo(DEFAULT_EDUCATION_TO_DATE);
+		assertThat(testCandidateEducation.isIsPursuingEducation()).isEqualTo(DEFAULT_IS_PURSUING_EDUCATION);
+		assertThat(testCandidateEducation.getGradeScale()).isEqualTo(DEFAULT_GRADE_SCALE);
+		assertThat(testCandidateEducation.isHighestQualification()).isEqualTo(DEFAULT_HIGHEST_QUALIFICATION);
+		assertThat(testCandidateEducation.getRoundOfGrade()).isEqualTo(DEFAULT_ROUND_OF_GRADE);
+		assertThat(testCandidateEducation.getGradeDecimal()).isEqualTo(DEFAULT_GRADE_DECIMAL);
+		assertThat(testCandidateEducation.getCapturedCourse()).isEqualTo(DEFAULT_CAPTURED_COURSE);
+		assertThat(testCandidateEducation.getCapturedQualification()).isEqualTo("Master");
+		assertThat(testCandidateEducation.getCapturedCollege()).isEqualTo(DEFAULT_CAPTURED_COLLEGE);
+		assertThat(testCandidateEducation.getCapturedUniversity()).isEqualTo(DEFAULT_CAPTURED_UNIVERSITY);
+		assertThat(testCandidateEducation.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
+		assertThat(testCandidateEducation.getScoreType()).isEqualTo(DEFAULT_SCORE_TYPE);
+		assertThat(testCandidateEducation.getEducationDuration()).isEqualTo(DEFAULT_EDUCATION_DURATION);
+		assertThat(testCandidateEducation.getCollege().getCollegeName()).isEqualTo(college.getCollegeName());
+		assertThat(testCandidateEducation.getCollege().getUniversity().getUniversityName()).isEqualTo("Delhi");
+		assertThat(testCandidateEducation.getCourse().getCourse()).isEqualTo("Computer");
+		assertThat(testCandidateEducation.getQualification().getQualification()).isEqualTo("Master");
+		// Validate the CandidateEducation in Elasticsearch
+		CandidateEducation candidateEducationEs = candidateEducationSearchRepository
+				.findOne(testCandidateEducation.getId());
+		assertThat(candidateEducationEs).isEqualToComparingFieldByField(testCandidateEducation);
+
+	}
+
+	@Test
+	@Transactional
+	public void createEducationWithOtherQualificationOnlyWithNonExistingQualification() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
+
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda").university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Other").qualification("Other").value("Other");
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification).capturedQualification("Bachelor");
+		
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateEducation in the database
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		List<Qualification> qualifications = qualificationRepository.findAll();
+		List<Course> courses = courseRepository.findAll();
+		List<College> colleges = collegeRepository.findAll();
+		List<University>universities = universityRepository.findAll();
+		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
+		assertThat(candidateEducationList).hasSize(1);
+		assertThat(qualifications).hasSize(2);
+		assertThat(courses).hasSize(1);
+		assertThat(colleges).hasSize(1);
+		assertThat(universities).hasSize(1);
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		assertThat(testCandidateEducation.getGrade()).isEqualTo(DEFAULT_GRADE);
+		assertThat(testCandidateEducation.getEducationFromDate()).isEqualTo(DEFAULT_EDUCATION_FROM_DATE);
+		assertThat(testCandidateEducation.getEducationToDate()).isEqualTo(DEFAULT_EDUCATION_TO_DATE);
+		assertThat(testCandidateEducation.isIsPursuingEducation()).isEqualTo(DEFAULT_IS_PURSUING_EDUCATION);
+		assertThat(testCandidateEducation.getGradeScale()).isEqualTo(DEFAULT_GRADE_SCALE);
+		assertThat(testCandidateEducation.isHighestQualification()).isEqualTo(DEFAULT_HIGHEST_QUALIFICATION);
+		assertThat(testCandidateEducation.getRoundOfGrade()).isEqualTo(DEFAULT_ROUND_OF_GRADE);
+		assertThat(testCandidateEducation.getGradeDecimal()).isEqualTo(DEFAULT_GRADE_DECIMAL);
+		assertThat(testCandidateEducation.getCapturedCourse()).isEqualTo(DEFAULT_CAPTURED_COURSE);
+		assertThat(testCandidateEducation.getCapturedQualification()).isEqualTo("Bachelor");
+		assertThat(testCandidateEducation.getCapturedCollege()).isEqualTo(DEFAULT_CAPTURED_COLLEGE);
+		assertThat(testCandidateEducation.getCapturedUniversity()).isEqualTo(DEFAULT_CAPTURED_UNIVERSITY);
+		assertThat(testCandidateEducation.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
+		assertThat(testCandidateEducation.getScoreType()).isEqualTo(DEFAULT_SCORE_TYPE);
+		assertThat(testCandidateEducation.getEducationDuration()).isEqualTo(DEFAULT_EDUCATION_DURATION);
+		assertThat(testCandidateEducation.getCollege().getCollegeName()).isEqualTo(college.getCollegeName());
+		assertThat(testCandidateEducation.getCollege().getUniversity().getUniversityName()).isEqualTo("Delhi");
+		assertThat(testCandidateEducation.getCourse().getCourse()).isEqualTo("Computer");
+		assertThat(testCandidateEducation.getQualification().getQualification()).isEqualTo("Bachelor");
+		// Validate the CandidateEducation in Elasticsearch
+		CandidateEducation candidateEducationEs = candidateEducationSearchRepository
+				.findOne(testCandidateEducation.getId());
+		assertThat(candidateEducationEs).isEqualToComparingFieldByField(testCandidateEducation);
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCourseOnlyWithExistingCourse() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
+
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda").university(university);
+		Course course = new Course().course("Other").value("Other").display("Other");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification).capturedCourse("Computer");
+		
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateEducation in the database
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		List<Qualification> qualifications = qualificationRepository.findAll();
+		List<Course> courses = courseRepository.findAll();
+		List<College> colleges = collegeRepository.findAll();
+		List<University>universities = universityRepository.findAll();
+		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
+		assertThat(candidateEducationList).hasSize(1);
+		assertThat(qualifications).hasSize(1);
+		assertThat(courses).hasSize(1);
+		assertThat(colleges).hasSize(1);
+		assertThat(universities).hasSize(1);
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		assertThat(testCandidateEducation.getGrade()).isEqualTo(DEFAULT_GRADE);
+		assertThat(testCandidateEducation.getEducationFromDate()).isEqualTo(DEFAULT_EDUCATION_FROM_DATE);
+		assertThat(testCandidateEducation.getEducationToDate()).isEqualTo(DEFAULT_EDUCATION_TO_DATE);
+		assertThat(testCandidateEducation.isIsPursuingEducation()).isEqualTo(DEFAULT_IS_PURSUING_EDUCATION);
+		assertThat(testCandidateEducation.getGradeScale()).isEqualTo(DEFAULT_GRADE_SCALE);
+		assertThat(testCandidateEducation.isHighestQualification()).isEqualTo(DEFAULT_HIGHEST_QUALIFICATION);
+		assertThat(testCandidateEducation.getRoundOfGrade()).isEqualTo(DEFAULT_ROUND_OF_GRADE);
+		assertThat(testCandidateEducation.getGradeDecimal()).isEqualTo(DEFAULT_GRADE_DECIMAL);
+		assertThat(testCandidateEducation.getCapturedCourse()).isEqualTo("Computer");
+		assertThat(testCandidateEducation.getCapturedQualification()).isEqualTo(DEFAULT_CAPTURED_QUALIFICATION);
+		assertThat(testCandidateEducation.getCapturedCollege()).isEqualTo(DEFAULT_CAPTURED_COLLEGE);
+		assertThat(testCandidateEducation.getCapturedUniversity()).isEqualTo(DEFAULT_CAPTURED_UNIVERSITY);
+		assertThat(testCandidateEducation.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
+		assertThat(testCandidateEducation.getScoreType()).isEqualTo(DEFAULT_SCORE_TYPE);
+		assertThat(testCandidateEducation.getEducationDuration()).isEqualTo(DEFAULT_EDUCATION_DURATION);
+		assertThat(testCandidateEducation.getCollege().getCollegeName()).isEqualTo(college.getCollegeName());
+		assertThat(testCandidateEducation.getCollege().getUniversity().getUniversityName()).isEqualTo("Delhi");
+		assertThat(testCandidateEducation.getCourse().getCourse()).isEqualTo("Computer");
+		assertThat(testCandidateEducation.getQualification().getQualification()).isEqualTo("Master");
+		// Validate the CandidateEducation in Elasticsearch
+		CandidateEducation candidateEducationEs = candidateEducationSearchRepository
+				.findOne(testCandidateEducation.getId());
+		assertThat(candidateEducationEs).isEqualToComparingFieldByField(testCandidateEducation);
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCourseOnlyWithNonExistingCourse() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
+
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda").university(university);
+		Course course = new Course().course("Other").value("Other").display("Other");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification).capturedCourse("Pharma");
+		
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateEducation in the database
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		List<Qualification> qualifications = qualificationRepository.findAll();
+		List<Course> courses = courseRepository.findAll();
+		List<College> colleges = collegeRepository.findAll();
+		List<University>universities = universityRepository.findAll();
+		assertThat(candidateEducationList).hasSize(databaseSizeBeforeCreate + 1);
+		assertThat(candidateEducationList).hasSize(1);
+		assertThat(qualifications).hasSize(1);
+		assertThat(courses).hasSize(2);
+		assertThat(colleges).hasSize(1);
+		assertThat(universities).hasSize(1);
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		assertThat(testCandidateEducation.getGrade()).isEqualTo(DEFAULT_GRADE);
+		assertThat(testCandidateEducation.getEducationFromDate()).isEqualTo(DEFAULT_EDUCATION_FROM_DATE);
+		assertThat(testCandidateEducation.getEducationToDate()).isEqualTo(DEFAULT_EDUCATION_TO_DATE);
+		assertThat(testCandidateEducation.isIsPursuingEducation()).isEqualTo(DEFAULT_IS_PURSUING_EDUCATION);
+		assertThat(testCandidateEducation.getGradeScale()).isEqualTo(DEFAULT_GRADE_SCALE);
+		assertThat(testCandidateEducation.isHighestQualification()).isEqualTo(DEFAULT_HIGHEST_QUALIFICATION);
+		assertThat(testCandidateEducation.getRoundOfGrade()).isEqualTo(DEFAULT_ROUND_OF_GRADE);
+		assertThat(testCandidateEducation.getGradeDecimal()).isEqualTo(DEFAULT_GRADE_DECIMAL);
+		assertThat(testCandidateEducation.getCapturedCourse()).isEqualTo("Pharma");
+		assertThat(testCandidateEducation.getCapturedQualification()).isEqualTo(DEFAULT_CAPTURED_QUALIFICATION);
+		assertThat(testCandidateEducation.getCapturedCollege()).isEqualTo(DEFAULT_CAPTURED_COLLEGE);
+		assertThat(testCandidateEducation.getCapturedUniversity()).isEqualTo(DEFAULT_CAPTURED_UNIVERSITY);
+		assertThat(testCandidateEducation.getPercentage()).isEqualTo(DEFAULT_PERCENTAGE);
+		assertThat(testCandidateEducation.getScoreType()).isEqualTo(DEFAULT_SCORE_TYPE);
+		assertThat(testCandidateEducation.getEducationDuration()).isEqualTo(DEFAULT_EDUCATION_DURATION);
+		assertThat(testCandidateEducation.getCollege().getCollegeName()).isEqualTo(college.getCollegeName());
+		assertThat(testCandidateEducation.getCollege().getUniversity().getUniversityName()).isEqualTo("Delhi");
+		assertThat(testCandidateEducation.getCourse().getCourse()).isEqualTo("Pharma");
+		assertThat(testCandidateEducation.getQualification().getQualification()).isEqualTo("Master");
+		// Validate the CandidateEducation in Elasticsearch
+		CandidateEducation candidateEducationEs = candidateEducationSearchRepository
+				.findOne(testCandidateEducation.getId());
+		assertThat(candidateEducationEs).isEqualToComparingFieldByField(testCandidateEducation);
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCollegeOnlyWithExistingCollegeAndNotExistingUniversity() throws Exception {
+		
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCollegeOnlyWithExistingUniversityAndNotExistingCollege() throws Exception {
+		
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCollegeOnlyWithNotExistingUniversityAndNotExistingCollege() throws Exception {
+		
+	}
+	
+	@Test
+	@Transactional
+	public void createEducationWithOtherCollegeOnlyWithExistingUniversityAndExistingCollege() throws Exception {
+		
+	}
+	
 	@Test
 	@Transactional
 	public void createCandidateEducationWithExistingId() throws Exception {
@@ -295,6 +612,10 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void getAllCandidateEducations() throws Exception {
 		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
 
 		// Get all the candidateEducationList
@@ -325,7 +646,12 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void getCandidateEducation() throws Exception {
 		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
+		System.out.println("Id is " + candidateEducation.getId());
 
 		// Get the candidateEducation
 		restCandidateEducationMockMvc.perform(get("/api/candidate-educations/{id}", candidateEducation.getId()))
@@ -360,6 +686,10 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void updateCandidateEducation() throws Exception {
 		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
 		candidateEducationSearchRepository.save(candidateEducation);
 		int databaseSizeBeforeUpdate = candidateEducationRepository.findAll().size();
@@ -410,6 +740,10 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void updateNonExistingCandidateEducation() throws Exception {
 		int databaseSizeBeforeUpdate = candidateEducationRepository.findAll().size();
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 
 		// Create the CandidateEducation
 
@@ -429,6 +763,10 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void deleteCandidateEducation() throws Exception {
 		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
 		candidateEducationSearchRepository.save(candidateEducation);
 		int databaseSizeBeforeDelete = candidateEducationRepository.findAll().size();
@@ -450,6 +788,10 @@ public class CandidateEducationResourceIntTest {
 	@Transactional
 	public void searchCandidateEducation() throws Exception {
 		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		collegeRepository.saveAndFlush(college);
+		qualificationRepository.saveAndFlush(qualification);
+		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
 		candidateEducationSearchRepository.save(candidateEducation);
 

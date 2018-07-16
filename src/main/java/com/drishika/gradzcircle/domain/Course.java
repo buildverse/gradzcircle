@@ -23,81 +23,81 @@ import java.util.Objects;
 
 public class Course implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "course")
-    private String course;
-    
-    
-    @Transient
-    @JsonProperty
-    private String value;
-    
-    @Transient
-    @JsonProperty
-    private String display;
+	@Column(name = "course")
+	private String course;
 
-    @OneToMany(mappedBy = "course")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<CandidateEducation> candidateEducations = new HashSet<>();
+	@Transient
+	@JsonProperty
+	private String value;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+	@Transient
+	@JsonProperty
+	private String display;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@OneToMany(mappedBy = "course")
+	@JsonIgnore
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	private Set<CandidateEducation> candidateEducations = new HashSet<>();
 
-    public String getCourse() {
-        return course;
-    }
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
+	// remove
+	public Long getId() {
+		return id;
+	}
 
-    public Course course(String course) {
-        this.course = course;
-        return this;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setCourse(String course) {
-        this.course = course;
-    }
+	public String getCourse() {
+		return course;
+	}
 
-    public Set<CandidateEducation> getCandidateEducations() {
-        return candidateEducations;
-    }
+	public Course course(String course) {
+		this.course = course;
+		return this;
+	}
 
-    public Course candidateEducations(Set<CandidateEducation> candidateEducations) {
-        this.candidateEducations = candidateEducations;
-        return this;
-    }
+	public void setCourse(String course) {
+		this.course = course;
+	}
 
-    public Course addCandidateEducation(CandidateEducation candidateEducation) {
-        this.candidateEducations.add(candidateEducation);
-        candidateEducation.setCourse(this);
-        return this;
-    }
+	public Set<CandidateEducation> getCandidateEducations() {
+		return candidateEducations;
+	}
 
-    public Course removeCandidateEducation(CandidateEducation candidateEducation) {
-        this.candidateEducations.remove(candidateEducation);
-        candidateEducation.setCourse(null);
-        return this;
-    }
+	public Course candidateEducations(Set<CandidateEducation> candidateEducations) {
+		this.candidateEducations = candidateEducations;
+		return this;
+	}
 
-    public void setCandidateEducations(Set<CandidateEducation> candidateEducations) {
-        this.candidateEducations = candidateEducations;
-    }
-    
-    
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+	public Course addCandidateEducation(CandidateEducation candidateEducation) {
+		this.candidateEducations.add(candidateEducation);
+		candidateEducation.setCourse(this);
+		return this;
+	}
 
-    /**
+	public Course removeCandidateEducation(CandidateEducation candidateEducation) {
+		this.candidateEducations.remove(candidateEducation);
+		candidateEducation.setCourse(null);
+		return this;
+	}
+
+	public void setCandidateEducations(Set<CandidateEducation> candidateEducations) {
+		this.candidateEducations = candidateEducations;
+	}
+
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+	// setters here, do not remove
+
+	/**
 	 * @return the value
 	 */
 	public String getValue() {
@@ -105,10 +105,16 @@ public class Course implements Serializable {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public Course display(String display) {
+		this.display = display;
+		return this;
 	}
 
 	/**
@@ -118,38 +124,46 @@ public class Course implements Serializable {
 		return display;
 	}
 
+	public Course value(String value) {
+		this.value = value;
+		return this;
+	}
+
 	/**
-	 * @param display the display to set
+	 * @param display
+	 *            the display to set
 	 */
 	public void setDisplay(String display) {
 		this.display = display;
 	}
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Course course = (Course) o;
-        if (course.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), course.getId());
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Course course = (Course) o;
+		if (course.getId() == null || getId() == null) {
+			return false;
+		}
+		return Objects.equals(getId(), course.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
 
-    /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Course [id=" + id + ", course=" + course + ", value=" + value + ", display=" + display+"]";
+		return "Course [id=" + id + ", course=" + course + ", value=" + value + ", display=" + display + "]";
 	}
 }

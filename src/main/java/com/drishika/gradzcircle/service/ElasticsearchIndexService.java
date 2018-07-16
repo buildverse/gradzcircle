@@ -326,12 +326,12 @@ public class ElasticsearchIndexService {
         //reindexForClass(University.class, universityRepository, universitySearchRepository);
         reindexForClass(VisaType.class, visaTypeRepository, visaTypeSearchRepository);
         reindexForClass(User.class, userRepository, userSearchRepository);
-        reindexForCollege(collegeRepository);
         reindexForUniversity(universityRepository);
         reindexForQualification(qualificationRepository);
         reindexForCourse(courseRepository);
         reindexForLanguage(languageRepository);
         reindexForGender(genderRepository);
+        reindexForCollege(collegeRepository);
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 

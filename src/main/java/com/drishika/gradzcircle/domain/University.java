@@ -21,137 +21,143 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class University implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "university_name")
-    private String universityName;
+	@Column(name = "university_name")
+	private String universityName;
 
-    @ManyToOne
-    private Country country;
-    
-    @Transient
-    @JsonProperty
-    private String value;
-    
-    @Transient
-    @JsonProperty
-    private String display;
-    
-    @Column(name = "university_type")
-    private String universityType;
+	@ManyToOne
+	private Country country;
 
-    @Column(name = "website")
-    private String website;
+	@Transient
+	@JsonProperty
+	private String value;
 
-    @OneToMany(mappedBy = "university")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<College> colleges = new HashSet<>();
+	@Transient
+	@JsonProperty
+	private String display;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "university_type")
+	private String universityType;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "website")
+	private String website;
 
-    public String getUniversityName() {
-        return universityName;
-    }
+	@OneToMany(mappedBy = "university")
+	@JsonIgnore
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	private Set<College> colleges = new HashSet<>();
 
-    public University universityName(String universityName) {
-        this.universityName = universityName;
-        return this;
-    }
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
+	// remove
+	public Long getId() {
+		return id;
+	}
 
-    public void setUniversityName(String universityName) {
-        this.universityName = universityName;
-    }
-    
-    public String getUniversityType() {
-        return universityType;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public University universityType(String universityType) {
-        this.universityType = universityType;
-        return this;
-    }
+	public String getUniversityName() {
+		return universityName;
+	}
 
-    public void setUniversityType(String universityType) {
-        this.universityType = universityType;
-    }
+	public University universityName(String universityName) {
+		this.universityName = universityName;
+		return this;
+	}
 
-    public String getWebsite() {
-        return website;
-    }
+	public void setUniversityName(String universityName) {
+		this.universityName = universityName;
+	}
 
-    public University website(String website) {
-        this.website = website;
-        return this;
-    }
+	public String getUniversityType() {
+		return universityType;
+	}
 
-    public void setWebsite(String website) {
-        this.website = website;
-    }
+	public University universityType(String universityType) {
+		this.universityType = universityType;
+		return this;
+	}
 
+	public void setUniversityType(String universityType) {
+		this.universityType = universityType;
+	}
 
-    public Country getCountry() {
-        return country;
-    }
+	public String getWebsite() {
+		return website;
+	}
 
-    public University country(Country country) {
-        this.country = country;
-        return this;
-    }
+	public University website(String website) {
+		this.website = website;
+		return this;
+	}
 
-    public void setCountry(Country country) {
-        this.country = country;
-    }
+	public void setWebsite(String website) {
+		this.website = website;
+	}
 
-    public Set<College> getColleges() {
-        return colleges;
-    }
+	public Country getCountry() {
+		return country;
+	}
 
-    public University colleges(Set<College> colleges) {
-        this.colleges = colleges;
-        return this;
-    }
+	public University country(Country country) {
+		this.country = country;
+		return this;
+	}
 
-    public University addCollege(College college) {
-        this.colleges.add(college);
-        college.setUniversity(this);
-        return this;
-    }
+	public void setCountry(Country country) {
+		this.country = country;
+	}
 
-    public University removeCollege(College college) {
-        this.colleges.remove(college);
-        college.setUniversity(null);
-        return this;
-    }
+	public Set<College> getColleges() {
+		return colleges;
+	}
 
-    public void setColleges(Set<College> colleges) {
-        this.colleges = colleges;
-    }
-    
-    
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+	public University colleges(Set<College> colleges) {
+		this.colleges = colleges;
+		return this;
+	}
 
-    /**
+	public University addCollege(College college) {
+		this.colleges.add(college);
+		college.setUniversity(this);
+		return this;
+	}
+
+	public University removeCollege(College college) {
+		this.colleges.remove(college);
+		college.setUniversity(null);
+		return this;
+	}
+
+	public void setColleges(Set<College> colleges) {
+		this.colleges = colleges;
+	}
+
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+	// setters here, do not remove
+
+	/**
 	 * @return the value
 	 */
 	public String getValue() {
 		return value;
 	}
 
+	public University value(String value) {
+		this.value = value;
+		return this;
+	}
+
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;
@@ -164,43 +170,47 @@ public class University implements Serializable {
 		return display;
 	}
 
+	public University display(String display) {
+		this.display = display;
+		return this;
+	}
+
 	/**
-	 * @param display the display to set
+	 * @param display
+	 *            the display to set
 	 */
 	public void setDisplay(String display) {
 		this.display = display;
 	}
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        University university = (University) o;
-        if (university.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), university.getId());
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		University university = (University) o;
+		if (university.getId() == null || getId() == null) {
+			return false;
+		}
+		return Objects.equals(getId(), university.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
 
-    /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
-    @Override
-    public String toString() {
-        return "University{" +
-            "id=" + getId() +
-            ", universityName='" + getUniversityName() + "'" +
-            ", universityType='" + getUniversityType() + "'" +
-            ", website='" + getWebsite() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "University{" + "id=" + getId() + ", universityName='" + getUniversityName() + "'" + ", universityType='"
+				+ getUniversityType() + "'" + ", website='" + getWebsite() + "'" + "}";
+	}
 }

@@ -176,6 +176,12 @@ public class College implements Serializable {
 	public String getValue() {
 		return value;
 	}
+	
+	public College value(String value) {
+        this.value = value;
+        return this;
+    }
+	
 
 	/**
 	 * @param value the value to set
@@ -183,6 +189,12 @@ public class College implements Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+    public College display(String display) {
+        this.display = display;
+        return this;
+    }
+
 
 	/**
 	 * @return the display
