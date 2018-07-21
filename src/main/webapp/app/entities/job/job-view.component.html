@@ -1,4 +1,4 @@
-{{job|json}}
+
 <div class="modal-header modal-header-decorate">
 	<h6 class="modal-title" id="myJobLabel" jhiTranslate="global.title">Gradzcircle</h6>
 	<button type="button" class="close" data-dismiss="modal"
@@ -37,7 +37,7 @@
 		jhiTranslate="gradzcircleApp.job.noOfApplicantsShotlisted">No.
 		Of candidate</div>
 	<div
-		class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{job.noOfApplicantsBought}}</div>
+		class="col-md-6 d-flex font-weight-bold text-muted justify-content-center" jhiTranslate="gradzcircleApp.job.noCandidateShortlisted">{{job.noOfApplicantsBought}}</div>
 </div>
 <div class="row mx-4 mt-4">
 	<div class="col-md-6 font-weight-bold text-muted"
@@ -46,148 +46,146 @@
 		declared'}}</div>
 </div>
 <div *ngIf="job.jobFilters?.length>0">
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.colleges?.length>0">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.collegesSelected"></div>
-
-		<div class="table-responsive col-md-6 ">
-			<table class="table table-striped">
-				<tbody>
-					<tr
-						*ngFor="let college of job.jobFilters[0].filterDescription.colleges">
-						<td class="d-flex justify-content-center">{{college.display}}</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-	</div>
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.universities?.length>0">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.universitiesSelected"></div>
-		<div class="col-md-6 table-responsive">
-			<table class="table table-striped">
-				<tbody>
-					<tr
-						*ngFor="let university of job.jobFilters[0].filterDescription.universities">
-						<td class="d-flex justify-content-center">{{university.display}}</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-	</div>
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.qualifications && job.jobFilters[0].filterDescription.qualifications?.length>0">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.qualification"></div>
-		<div class="col-md-6 table-responsive">
-			<table class="table table-striped">
-				<tbody>
-					<tr
-						*ngFor="let qualification of job.jobFilters[0].filterDescription.qualifications">
-						<td class="d-flex justify-content-center">{{qualification.display}}</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-	</div>
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.courses && job.jobFilters[0].filterDescription.courses?.length>0">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.coursesSelected"></div>
-		<div class="col-md-6 table-responsive">
-			<table class="table table-striped">
-				<tbody>
-					<tr
-						*ngFor="let course of job.jobFilters[0].filterDescription.courses">
-						<td class="d-flex justify-content-center">{{course.display}}</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-	</div>
-	<div *ngIf="job.jobFilters[0].filterDescription.scoreType==='percent'">
-		<div class="row mx-4 mt-4">
+	<div *ngFor="let jobFilter of job.jobFilters ;">
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.colleges?.length>0">
 			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.percent"></div>
-			<div class="col-md-6 d-flex justify-content-center">
-				{{job.jobFilters[0].filterDescription.percentage}}%</div>
-		</div>
-	</div>
-
-	<div *ngIf="job.jobFilters[0].filterDescription.scoreType==='gpa'"
-		class="row mx-4 mt-4">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.gpa"></div>
-		<div class="col-md-6 d-flex justify-content-center">
-			{{job.jobFilters[0].filterDescription.gpa}}</div>
-	</div>
-
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.gender">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.genderSelected"></div>
-		<div class="col-md-6 d-flex justify-content-center">
-			{{job.jobFilters[0].filterDescription.gender.gender}}</div>
-	</div>
-	<div class="row mx-4 mt-4" *ngIf="job.jobFilters[0].filterDescription.graduationDateType==='less'">
-		
-			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.graduatedDateLessThan"></div>
-			<div class="col-md-6 d-flex justify-content-center">{{job.jobFilters[0].filterDescription.graduationDate
-				| date:'mediumDate'}}
+				jhiTranslate="gradzcircleApp.job.collegesSelected"></div>
+	
+			<div class="table-responsive col-md-6 ">
+				<table class="table table-striped">
+					<tbody>
+						<tr
+							*ngFor="let college of jobFilter.filterDescription.colleges">
+							<td class="d-flex justify-content-center">{{college.display}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
 			</div>
-	</div>
-
-		<div class="row mx-4 mt-4" *ngIf="job.jobFilters[0].filterDescription.graduationDateType==='greater'">
-			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.graduatedDateGreaterThan"></div>
-			<div class="col-md-6 d-flex justify-content-center">{{job.jobFilters[0].filterDescription.graduationDate|date:'mediumDate'}}</div>
 		</div>
-		<div class="row mx-4 mt-4" *ngIf="job.jobFilters[0].filterDescription.graduationDateType==='between'">
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.universities?.length>0">
 			<div class="col-md-6 font-weight-bold text-muted"
-				jhiTranslate="gradzcircleApp.job.graduatedDateBetween"></div>
-			<div class="col-md-6 d-flex justify-content-center">
-				{{job.jobFilters[0].filterDescription.gradFromDate |
-				date:'mediumDate'}}
-				<p class="font-weight-bold pl-2 pr-2">and</p>
-				{{job.jobFilters[0].filterDescription.gradToDate |
-				date:'mediumDate'}}
+				jhiTranslate="gradzcircleApp.job.universitiesSelected"></div>
+			<div class="col-md-6 table-responsive">
+				<table class="table table-striped">
+					<tbody>
+						<tr
+							*ngFor="let university of jobFilter.filterDescription.universities">
+							<td class="d-flex justify-content-center">{{university.display}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
+			</div>
+		</div>
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.qualifications && jobFilter.filterDescription.qualifications?.length>0">
+			<div class="col-md-6 font-weight-bold text-muted"
+				jhiTranslate="gradzcircleApp.job.qualification"></div>
+			<div class="col-md-6 table-responsive">
+				<table class="table table-striped">
+					<tbody>
+						<tr
+							*ngFor="let qualification of jobFilter.filterDescription.qualifications">
+							<td class="d-flex justify-content-center">{{qualification.display}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
+			</div>
+		</div>
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.courses && jobFilter.filterDescription.courses?.length>0">
+			<div class="col-md-6 font-weight-bold text-muted"
+				jhiTranslate="gradzcircleApp.job.coursesSelected"></div>
+			<div class="col-md-6 table-responsive">
+				<table class="table table-striped">
+					<tbody>
+						<tr
+							*ngFor="let course of jobFilter.filterDescription.courses">
+							<td class="d-flex justify-content-center">{{course.display}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
+			</div>
+		</div>
+		<div *ngIf="jobFilter.filterDescription.scoreType==='percent'">
+			<div class="row mx-4 mt-4">
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.percent"></div>
+				<div class="col-md-6 d-flex justify-content-center">
+					{{jobFilter.filterDescription.percentage}}%</div>
 			</div>
 		</div>
 	
-
-
-
-	
-
-
-	<div class="row mx-4 mt-4"
-		*ngIf="job.jobFilters[0].filterDescription.languages && job.jobFilters[0].filterDescription.languages?.length>0">
-		<div class="col-md-6 font-weight-bold text-muted"
-			jhiTranslate="gradzcircleApp.job.languagesSelected"></div>
-		<div class="col-md-6 table-responsive">
-			<table class="table table-striped">
-				<tbody>
-					<tr
-						*ngFor="let language of job.jobFilters[0].filterDescription.languages">
-						<td class="d-flex justify-content-center">{{language.display}}</td>
-					</tr>
-				</tbody>
-			</table>
-
+		<div *ngIf="jobFilter.filterDescription.scoreType==='gpa'"
+			class="row mx-4 mt-4">
+			<div class="col-md-6 font-weight-bold text-muted"
+				jhiTranslate="gradzcircleApp.job.gpa"></div>
+			<div class="col-md-6 d-flex justify-content-center">
+				{{jobFilter.filterDescription.gpa}}</div>
 		</div>
-	</div>
-	<div class="row mx-4 mt-4 mb-4">
-		<div class="col-md-6 d-flex font-weight-bold text-muted "
-			jhiTranslate="gradzcircleApp.job.amountPaid">No. Of candidate</div>
-		<div
-			class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{job.amountPaid}}</div>
+	
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.gender">
+			<div class="col-md-6 font-weight-bold text-muted"
+				jhiTranslate="gradzcircleApp.job.genderSelected"></div>
+			<div class="col-md-6 d-flex justify-content-center">
+				{{jobFilter.filterDescription.gender.gender}}</div>
+		</div>
+		<div class="row mx-4 mt-4" *ngIf="jobFilter.filterDescription.graduationDateType==='less'">
+			
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.graduatedDateLessThan"></div>
+				<div class="col-md-6 d-flex justify-content-center">{{jobFilter.filterDescription.graduationDate
+					| date:'mediumDate'}}
+				</div>
+		</div>
+	
+			<div class="row mx-4 mt-4" *ngIf="jobFilter.filterDescription.graduationDateType==='greater'">
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.graduatedDateGreaterThan"></div>
+				<div class="col-md-6 d-flex justify-content-center">{{jobFilter.filterDescription.graduationDate|date:'mediumDate'}}</div>
+			</div>
+			<div class="row mx-4 mt-4" *ngIf="jobFilter.filterDescription.graduationDateType==='between'">
+				<div class="col-md-6 font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.job.graduatedDateBetween"></div>
+				<div class="col-md-6 d-flex justify-content-center">
+					{{jobFilter.filterDescription.graduationFromDate |
+					date:'mediumDate'}}
+					<p class="font-weight-bold pl-2 pr-2">and</p>
+					{{jobFilter.filterDescription.graduationToDate |
+					date:'mediumDate'}}
+				</div>
+			</div>
+		<div class="row mx-4 mt-4"
+			*ngIf="jobFilter.filterDescription.languages && jobFilter.filterDescription.languages?.length>0">
+			<div class="col-md-6 font-weight-bold text-muted"
+				jhiTranslate="gradzcircleApp.job.languagesSelected"></div>
+			<div class="col-md-6 table-responsive">
+				<table class="table table-striped">
+					<tbody>
+						<tr
+							*ngFor="let language of jobFilter.filterDescription.languages">
+							<td class="d-flex justify-content-center">{{language.display}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
+			</div>
+		</div>
+		<div class="row mx-4 mt-4 mb-4">
+			<div class="col-md-6 d-flex font-weight-bold text-muted "
+				jhiTranslate="gradzcircleApp.job.amountPaid">No. Of candidate</div>
+			<div *ngIf="job.amountPaid;else noPaid"
+				class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{job.amountPaid}}</div>
+			</div>
+			<ng-template #noPaid>
+			<div class="col-md-6 d-flex font-weight-bold text-muted justify-content-center" jhiTranslate="gradzcircleApp.job.noAmountPaid"></div>
+			</ng-template>
 	</div>
 </div>
 

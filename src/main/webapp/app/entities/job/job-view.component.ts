@@ -12,7 +12,7 @@ import {JobService} from './job.service';
   selector: 'jhi-job-view',
   templateUrl: './job-view.component.html'
 })
-export class JobViewComponent {
+export class JobViewComponent implements OnInit {
 
   job: Job;
 
@@ -27,8 +27,26 @@ export class JobViewComponent {
   clear() {
     this.activeModal.dismiss('cancel');
   }
+  
+  ngOnInit() {
+     console.log('Converting ?');
+    if (this.job.jobFilters !== null && this.job.jobFilters.length > 0) {
+      if (this.job.jobFilters[0].filterDescription.graduationDate !== null) {
+         console.log('converting '+JSON.stringify(this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate)));
+        this.job.jobFilters[0].filterDescription.graduationDate = (this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationDate));
+      }
+      if (this.job.jobFilters[0].filterDescription.graduationToDate !== null) {
+        console.log('converting '+JSON.stringify(this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate)));
+        this.job.jobFilters[0].filterDescription.graduationToDate = (this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate));
+      }
+      if (this.job.jobFilters[0].filterDescription.graduationFromDate !== null) {
+        this.job.jobFilters[0].filterDescription.graduationFromDate = (this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationFromDate));
+      }
+    }
+    
+  }
 
-  load(id: number) {
+  /*load(id: number) {
     this.jobService.find(id).subscribe((job) => {
       this.changeFilterDates(job);
       this.job = job;
@@ -50,7 +68,7 @@ export class JobViewComponent {
         job.jobFilters[0].filterDescription.graduationFromDate = (this.dateUtils.convertLocalDateToServer(job.jobFilters[0].filterDescription.graduationFromDate));
       }
     }
-  }
+  }*/
 }
 
 @Component({

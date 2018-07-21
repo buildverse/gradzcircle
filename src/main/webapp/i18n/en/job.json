@@ -26,13 +26,13 @@
 			"originalJobCost": "Actual Cost",
 			"amountPaid": "Amount Paid",
 			"totalAmountPaid": "Total Amount Paid",
-            "noOfApplicantsBought": "No Of Applicants Bought",
+			"noOfApplicantsBought": "No Of Applicants Bought",
 			"removedFilterAmount": "Removed Filter Amount",
-            "additionalFilterAmount": "Additional Filter Amount",
-            "adminCharge": "Admin Charge",
-            "adminChargeRate": "Admin Charge Rate",
-            "upfrontDiscountRate": "Upfront Discount Rate",
-            "upfrontDiscountAmount": "Upfront Discount Amount",
+			"additionalFilterAmount": "Additional Filter Amount",
+			"adminCharge": "Admin Charge",
+			"adminChargeRate": "Admin Charge Rate",
+			"upfrontDiscountRate": "Upfront Discount Rate",
+			"upfrontDiscountAmount": "Upfront Discount Amount",
 			"jobFilter": "Job Filter",
 			"jobType": "Job Type",
 			"employmentType": "Employment Type",
@@ -70,9 +70,11 @@
 			"updateDate": "Update Date",
 			"createdBy": "Created By",
 			"updatedBy": "Updated By",
-			"cannotEditMessage":"You cannot edit the job again. Please create a new job. You do not have to pay again for the candidates you have already bought.",
-			"cannotEditCandidateMessage":"You do not have to pay again for the candidates you have already bought.",
-			"editHeader":"Cannot Edit Job"
+			"cannotEditMessage": "You cannot edit the job again. Please create a new job. You do not have to pay again for the candidates you have already bought.",
+			"cannotEditCandidateMessage": "You do not have to pay again for the candidates you have already bought.",
+			"editHeader": "Cannot Edit Job",
+			"noCandidateShortlisted": "No Candidtaes Shortlisted",
+			"noAmountPaid": "No Payment Yet"
 		}
 	}
 }

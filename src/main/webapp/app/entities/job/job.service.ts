@@ -89,9 +89,6 @@ export class JobService {
       .convertDateTimeFromServer(json.createDate);
     entity.updateDate = this.dateUtils
       .convertDateTimeFromServer(json.updateDate);
- 
-
-
     return entity;
   }
 
