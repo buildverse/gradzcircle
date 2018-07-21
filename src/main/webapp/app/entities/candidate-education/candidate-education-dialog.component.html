@@ -31,7 +31,6 @@
 						[onTextChangeDebounce]="500" id="field_qualification"
 						[secondaryPlaceholder]="'Enter your qualification'"
 						(onAdd) ="isQualificationOther()"
-						(onRemove) ="isQualificationOther()"
 						[maxItems]='1'> 
 						
 						<tag-input-dropdown
@@ -78,7 +77,7 @@
 						[onTextChangeDebounce]="500" id="field_qualification"
 						[secondaryPlaceholder]="'Enter the course'"
 						(onAdd) ="isCourseOther()"
-						(onRemove) ="isCourseOther()"
+						
 						[maxItems]='1'> 
 						
 						<tag-input-dropdown [autocompleteObservable]='requestCourseData'>
@@ -177,7 +176,6 @@
 						[onTextChangeDebounce]="500" id="field_college"
 						[secondaryPlaceholder]="'Enter college name'"
 						(onAdd) ="isCollegeOther()"
-						(onRemove) ="isCollegeOther()"
 						[maxItems]='1'> 
 						
 						<tag-input-dropdown

@@ -163,9 +163,13 @@
 						for="field_jobDescription">Job Description</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-10">
-					<input type="text" required #jobDesc="ngModel"
+				 <textarea [froalaEditor]='options' class="form-control text-muted" required
+				  #jobDesc="ngModel" name="jobDescription" 
+				  id="field_jobDescription" rows="20" [(ngModel)]="job.jobDescription">
+                </textarea>
+					<!--  <input type="text" required #jobDesc="ngModel"
 						class="form-control text-muted" name="jobDescription"
-						id="field_jobDescription" [(ngModel)]="job.jobDescription" />
+						id="field_jobDescription" [(ngModel)]="job.jobDescription" />-->
 					<div *ngIf="jobDesc.invalid && jobDesc.touched" class="text-danger">
 						<small>Please enter Job Description</small>
 					</div>
@@ -507,7 +511,7 @@
 					<div class="col-md-6">
 						<div class=" input-group">
 							<input id="field_graduationDate" #gradDat="ngModel" type="text"
-								class="form-control text-muted" name="gradDate" ngbDatepicker
+								class="form-control text-muted" name="gradDate" ngbDatepicker required
 								#graduationDateDp="ngbDatepicker" [(ngModel)]="graduationDate"
 								(ngModelChange)="updateGraduationDateCost()" /> <span
 								class="input-group-addon " (click)="graduationDateDp.toggle()">
@@ -531,7 +535,7 @@
 						<div class="input-group">
 							<input id="field_graduationFromDate" #fromDate="ngModel" required
 								type="text" class="form-control text-muted"
-								name="graduationFromDate" ngbDatepicker
+								name="graduationFromDate" ngbDatepicker required
 								#graduationFromDateDp="ngbDatepicker"
 								[(ngModel)]="graduationFromDate"
 								(ngModelChange)="validateDatesAndUpdateCost()" /> <span
@@ -632,10 +636,16 @@
 			<div class=" p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-primary"
 					[disabled]=" !((editForm.form.get('employmentType')?.valid) && (editForm.form.get('jobType')?.valid)
-								&& (!numberOfCandidateError)) || isSaving"
+								&& (!numberOfCandidateError)  
+								&& ((editForm.form.get('scoreType')?.value==='gpa')?(editForm.form.get('roundOfGrade')?.valid) :true )
+								&& ((editForm.form.get('scoreType')?.value==='percent')?(editForm.form.get('percentage')?.valid) :true )
+								&& ((editForm.form.get('date')?.value==='less')?(editForm.form.get('gradDate')?.valid) :true )
+								&& ((editForm.form.get('date')?.value==='between')?(editForm.form.get('graduationFromDate')?.valid && editForm.form.get('graduationToDate')?.valid) :true )
+								&& ((editForm.form.get('date')?.value==='greater')?(editForm.form.get('gradDate')?.valid) :true ))
+								|| isSaving "
 					nextStep>Next</button>
 			</div>
-		</div>
+		</div> 
 		</wizard-step> <wizard-step stepTitle="Preview"
 			navigationSymbol="&#xf06e;" navigationSymbolFontFamily="FontAwesome"
 			(stepEnter)="enterPreview()" (stepExit)="exitPreview()">

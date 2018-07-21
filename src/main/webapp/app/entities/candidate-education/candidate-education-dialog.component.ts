@@ -41,7 +41,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   showCollegeTextArea: boolean;
   showCourseTextArea: boolean;
 
-//  colleges: College[];
+  //  colleges: College[];
   educationFromDateDp: any;
   educationToDateDp: any;
   scoreType: string;
@@ -182,9 +182,15 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
     // console.log("what is on init"+JSON.stringify(this.enablePercent));
     this.candidateEducation.isPursuingEducation ? this.endDateControl = true : this.endDateControl = false;
-    this.candidateEducation.capturedCollege ? this.showCollegeTextArea = true : this.showCollegeTextArea = false;
-    this.candidateEducation.capturedCourse ? this.showCourseTextArea = true : this.showCourseTextArea = false;
-    this.candidateEducation.capturedQualification ? this.showQualificationTextArea = true : this.showQualificationTextArea = false;
+    if (this.candidateEducation.college) {
+      this.candidateEducation.college.length === 0 ? this.showCollegeTextArea = true : this.showCollegeTextArea = false;
+    }
+    if (this.candidateEducation.course) {
+      this.candidateEducation.course.length === 0 ? this.showCourseTextArea = true : this.showCourseTextArea = false;
+    }
+    if (this.candidateEducation.qualification) {
+      this.candidateEducation.qualification.length === 0 ? this.showQualificationTextArea = true : this.showQualificationTextArea = false;
+    }
     this.enableDecimal = true;
     this.gpaValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     this.gpaDecimalValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -212,33 +218,33 @@ export class CandidateEducationDialogComponent implements OnInit {
   clear() {
     this.activeModal.dismiss('cancel');
   }
- /* searchQualification = (text$: Observable<string>) =>
-    text$
-      .debounceTime(100)
-      .distinctUntilChanged()
-      .map(term => term.length < 2 ? []
-        : this.qualifications.filter
-          (v => v.qualification ? v.qualification.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
-
-  qualificationFormatter = (n: {qualification: string}) => n.qualification;
-
-  searchCourse = (text$: Observable<string>) =>
-    text$
-      .debounceTime(200)
-      .distinctUntilChanged()
-      .map(term => term.length < 2 ? []
-        : this.courses.filter(v => v.course ?
-          v.course.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
-  courseFormatter = (c: {course: string}) => c.course;
-
-  searchCollege = (text$: Observable<string>) =>
-    text$
-      .debounceTime(200)
-      .map(term => term.length < 2 ? []
-        : this.colleges.filter(v => v.collegeName ?
-          v.collegeName.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
-  collegeFormatter = (x: {collegeName: string}) => x.collegeName;
-*/
+  /* searchQualification = (text$: Observable<string>) =>
+     text$
+       .debounceTime(100)
+       .distinctUntilChanged()
+       .map(term => term.length < 2 ? []
+         : this.qualifications.filter
+           (v => v.qualification ? v.qualification.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
+ 
+   qualificationFormatter = (n: {qualification: string}) => n.qualification;
+ 
+   searchCourse = (text$: Observable<string>) =>
+     text$
+       .debounceTime(200)
+       .distinctUntilChanged()
+       .map(term => term.length < 2 ? []
+         : this.courses.filter(v => v.course ?
+           v.course.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
+   courseFormatter = (c: {course: string}) => c.course;
+ 
+   searchCollege = (text$: Observable<string>) =>
+     text$
+       .debounceTime(200)
+       .map(term => term.length < 2 ? []
+         : this.colleges.filter(v => v.collegeName ?
+           v.collegeName.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
+   collegeFormatter = (x: {collegeName: string}) => x.collegeName;
+ */
 
   // searchCollege = (text$: Observable<string>) =>
   //     text$
@@ -366,17 +372,17 @@ export class CandidateEducationPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //this.route.data.subscribe((data: {courses: Course[]}) => this.courses = data.courses);
-   // this.route.data.subscribe((data: {qualifications: Qualification[]}) => this.qualifications = data.qualifications);
-   // this.route.data.subscribe((data: {colleges: College[]}) => this.colleges = data.colleges);
+    // this.route.data.subscribe((data: {qualifications: Qualification[]}) => this.qualifications = data.qualifications);
+    // this.route.data.subscribe((data: {colleges: College[]}) => this.colleges = data.colleges);
     this.routeSub = this.route.params.subscribe((params) => {
       if (params['id']) {
         this.candidateEducationPopupService
-        //  .open(CandidateEducationDialogComponent as Component, params['id'], this.courses, this.colleges, this.qualifications);
-        .open(CandidateEducationDialogComponent as Component, params['id']);
+          //  .open(CandidateEducationDialogComponent as Component, params['id'], this.courses, this.colleges, this.qualifications);
+          .open(CandidateEducationDialogComponent as Component, params['id']);
       } else {
         this.candidateEducationPopupService
-        .open(CandidateEducationDialogComponent as Component);
-         // .open(CandidateEducationDialogComponent as Component, this.courses, this.colleges, this.qualifications);
+          .open(CandidateEducationDialogComponent as Component);
+        // .open(CandidateEducationDialogComponent as Component, this.courses, this.colleges, this.qualifications);
       }
     });
   }

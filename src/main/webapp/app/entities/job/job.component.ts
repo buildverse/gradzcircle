@@ -115,6 +115,7 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
+    console.log(error);
     this.jhiAlertService.error(error.message, null, null);
   }
 }

@@ -22,7 +22,6 @@
                     <div class="timeline">
                         <div class="line text-muted"></div>
                         <div *ngFor="let candidateEducation of candidateEducations ;">
-
                             <div class="separator text-muted">
                                 <time>{{candidateEducation.educationFromDate | date:'mediumDate'}} - {{candidateEducation.educationToDate?(candidateEducation.educationToDate| date:'mediumDate'): 'Till Date' }}</time>
                             </div>
@@ -33,14 +32,14 @@
                                     <div class="card-header" style="background-color:#3097D1">
                                                 <div class="row mx-2 pb-0 justify-content-end ">
                                                     <div class="mr-auto">
-                                                        <p style="color:white"><span class="mt-0">{{candidateEducation.college?(candidateEducation.college[0]?.collegeName==='Other'?(candidateEducation.capturedCollege+", "+candidateEducation.capturedUniversity):
-                                                                                    (candidateEducation.college[0].collegeName+", "+candidateEducation.college[0].university.universityName)):''}}
+                                                        <p style="color:white"><span class="mt-0">{{
+                                                                     candidateEducation.college[0].collegeName+", "+candidateEducation.college[0].university.universityName}}
                                                                                 </span></p>
 
                                 </div>
                                 <div class="ml-auto">
-                                    <p style="color:white"><span>{{candidateEducation.qualification?(candidateEducation.qualification.qualification==='Other'?candidateEducation.capturedQualification:candidateEducation.qualification.qualification):''}} in
-                                                                        {{candidateEducation.course?(candidateEducation.course.course==='Other'?candidateEducation.capturedCourse:candidateEducation.course.course):''}}
+                                    <p style="color:white"><span>{{candidateEducation.qualification[0]?.qualification}} in
+                                                                        {{candidateEducation.course[0]?.course}}
                                                                         </span>
                                     </p>
                                 </div>

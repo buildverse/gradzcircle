@@ -69,6 +69,12 @@
 									type="button" data-toggle="dropdown"  
 									 aria-expanded="false">Actions<span class="caret"></span></button>
 								<div class="dropdown-menu" >
+									<a class="dropdown-item" 
+										[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/view'} }]"
+										replaceUrl="true">	
+										<span class="icon icon-eye"></span> <span
+											 jhiTranslate="entity.action.view">View</span>
+									</a>
 									<a  *ngIf="!job.canEdit" class="dropdown-item" 
 										[routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]"
 										replaceUrl="true">	

@@ -1,7 +1,7 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {GradzcircleSharedModule} from '../../shared';
-
+import { FroalaEditorModule } from 'angular-froala-wysiwyg';
 
 import {
   JobService,
@@ -19,7 +19,9 @@ import {
   JobEditMessageDialogComponent,
   JobEditMessagePopupComponent,
   JobRemoveDialogComponent,
-  JobRemovePopupComponent
+  JobRemovePopupComponent,
+  JobViewComponent,
+  JobViewPopupComponent
 } from './';
 
 
@@ -31,7 +33,8 @@ const ENTITY_STATES = [
 @NgModule({
   imports: [
     GradzcircleSharedModule,
-    RouterModule.forRoot(ENTITY_STATES, {useHash: true})
+    RouterModule.forRoot(ENTITY_STATES, {useHash: true}),
+     FroalaEditorModule.forRoot()
   ],
   declarations: [
     JobComponent,
@@ -44,7 +47,9 @@ const ENTITY_STATES = [
     JobPopupComponent,
     JobDeletePopupComponent,
     JobRemoveDialogComponent,
-    JobRemovePopupComponent
+    JobRemovePopupComponent,
+    JobViewComponent,
+  JobViewPopupComponent
   ],
   entryComponents: [
     JobComponent,
@@ -56,7 +61,9 @@ const ENTITY_STATES = [
     JobEditMessagePopupComponent,
     JobEditMessageDialogComponent,
     JobRemoveDialogComponent,
-    JobRemovePopupComponent
+    JobRemovePopupComponent,
+    JobViewComponent,
+  JobViewPopupComponent
   ],
   providers: [
     JobService,

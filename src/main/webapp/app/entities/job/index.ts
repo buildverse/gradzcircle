@@ -10,3 +10,4 @@ export * from './job.route';
 export * from './job.constants';
 export * from './job-edit-message-dialog.component';
 export * from './job-remove-dialog.component';
+export * from './job-view.component';

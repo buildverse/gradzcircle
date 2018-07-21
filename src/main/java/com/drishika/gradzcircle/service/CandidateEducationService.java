@@ -3,7 +3,6 @@ package com.drishika.gradzcircle.service;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +23,8 @@ import com.drishika.gradzcircle.domain.Course;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
@@ -55,7 +56,7 @@ public class CandidateEducationService {
 	private final QualificationSearchRepository qualificationSearchRepository;
 	private final CourseSearchRepository courseSearchRepository;
 	private final CandidateEducationSearchRepository candidateEducationSearchRepository;
-	 private final ElasticsearchTemplate elasticsearchTemplate;
+	private final ElasticsearchTemplate elasticsearchTemplate;
 
 	@Qualifier("CandidateEducationMatcher")
 	private final Matcher<CandidateEducation> jobMatcher;
@@ -66,9 +67,9 @@ public class CandidateEducationService {
 			CandidateProjectSearchRepository candidateProjectSearchRepository, CollegeRepository collegeRepository,
 			QualificationRepository qualififcationRepository, CourseRepository courseRepository,
 			UniversityRepository universityRepository, Matcher<CandidateEducation> jobMatcher,
-			CollegeSearchRepository collegeSearchRepository,QualificationSearchRepository qualificationSearchRepository,
-			CourseSearchRepository courseSearchRepository,UniversitySearchRepository universitySearchRepository,
-			ElasticsearchTemplate elasticsearchTemplate) {
+			CollegeSearchRepository collegeSearchRepository,
+			QualificationSearchRepository qualificationSearchRepository, CourseSearchRepository courseSearchRepository,
+			UniversitySearchRepository universitySearchRepository, ElasticsearchTemplate elasticsearchTemplate) {
 		this.candidateEducationRepository = candidateEducationRepository;
 		this.candidateEducationSearchRepository = candidateEducationSearchRepository;
 		this.candidateProjectRepository = candidateProjectRepository;
@@ -93,105 +94,90 @@ public class CandidateEducationService {
 	public CandidateEducation createCandidateEducation(CandidateEducation candidateEducation) {
 		if ("gpa".equals(candidateEducation.getScoreType()))
 			setGrade(candidateEducation);
-		massageCollegeInformation(candidateEducation);
-		massageCourseInformation(candidateEducation);
-		massageQualificationInformation(candidateEducation);
-		log.debug("Creating education for candidate, course,qualification {},{},{}", 
-				candidateEducation.getCandidate(),candidateEducation.getCourse(),candidateEducation.getQualification());
+		injestCollegeInformation(candidateEducation);
+		injestCourseInformation(candidateEducation);
+		injestQualificationInformation(candidateEducation);
+		log.debug("Creating education for candidate, course,qualification {},{},{}", candidateEducation.getCandidate(),
+				candidateEducation.getCourse(), candidateEducation.getQualification());
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
 		candidateEducationSearchRepository.save(result);
 		// Replace with future
 		jobMatcher.match(result);
-		// updateEducationDependentMetaForDisplay(result);
+		updateEducationDependentMetaForDisplay(result);
 		return result;
 	}
 
-	private void massageCollegeInformation(CandidateEducation candidateEducation) {
-		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation, 
+	private void injestCollegeInformation(CandidateEducation candidateEducation) {
+		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation,
 				candidateEducation.getCollege());
-		String capturedCollegeName = candidateEducation.getCapturedCollege();
-		String capturedUniversityName = candidateEducation.getCapturedUniversity();
-		College capturedCollege = collegeRepository.findByCollegeName(capturedCollegeName);
-		University capturedUniversity = universityRepository.findByUniversityName(capturedUniversityName);
-		if(capturedCollege == null && capturedUniversity == null ) {
-			candidateEducation.setCollege(collegeRepository.findByCollegeName(candidateEducation.getCollege()
-					.getCollegeName()));
-		} else if (candidateEducation.getCollege().getCollegeName().equalsIgnoreCase("OTHER")) {
-			if(capturedUniversity == null) {
-				University newUniversity = universityRepository.save(new University().
-						universityName(capturedUniversityName).display(capturedUniversityName)
-						.value(capturedUniversityName));	
-				updateUniversityIndex(newUniversity);
-			} else if (capturedCollege == null) {
-				College newCollege = collegeRepository.save(new College().
-						collegeName(capturedCollegeName).display(capturedCollegeName)
-						.value(capturedCollegeName));
-				updateCollegeIndex(newCollege);
+		if (candidateEducation.getCollege().getCollegeName().equals(Constants.OTHER)) {
+			College college = collegeRepository.findByCollegeName(candidateEducation.getCapturedCollege());
+			University university = universityRepository
+					.findByUniversityName(candidateEducation.getCapturedUniversity());
+			University newUniversity = null;
+			if (university == null) {
+				newUniversity = new University().universityName(candidateEducation.getCapturedUniversity());
+				updateUniversityIndex(universityRepository.save(newUniversity));
+				log.info("Created new University {}", newUniversity);
 			}
-		}
-		/*if(capturedCollege != null)
-		 capturedCollegeExist = true;
-		if(capturedUniversity != null)
-			capturedUninversityExist = true;
-		
-		if(capturedCollegeExist && capturedUninversityExist) {
-			if(capturedCollege.getUniversity().equals(capturedUniversity)) {
-				candidateEducation.setCollege(capturedCollege);
+			if (college == null) {
+				College newCollege = new College().collegeName(candidateEducation.getCapturedCollege());
+				if (university == null) {
+					newCollege.university(newUniversity);
+				} else {
+					newCollege.university(university);
+				}
+				updateCollegeIndex(collegeRepository.save(newCollege));
+				log.info("Created new College {}", newCollege);
+				candidateEducation.setCollege(newCollege);
+
 			} else {
-				
-			}
-		}
-		College college = collegeRepository.findByCollegeName(candidateEducation.getCollege().getCollegeName());
-		if (candidateEducation.getCollege().getCollegeName().equalsIgnoreCase(Constants.OTHER)) {
-		
-			if(capturedCollegeExist && capturedUninversityExist) {
 				candidateEducation.setCollege(college);
 			}
-				
-			else if (! capturedCollegeExist && ! capturedUninversityExist) {
-				College newCollege = new College();
-				Set<College> colleges = new HashSet<College>();
-				newCollege.setCollegeName(candidateEducation.getCapturedCollege());
-				colleges.add(newCollege);
-				University newUniversity = new University();
-				newUniversity.setUniversityName(candidateEducation.getCapturedUniversity());
-				newCollege.setUniversity(newUniversity);
-				newUniversity.colleges(colleges);
-				universityRepository.save(newUniversity);
-				log.info("Saved new College {}  and University {} ", newCollege.getCollegeName(),
-						newUniversity.getUniversityName());
-			} 
 
-		}*/
-		//log.debug("Looked up college details {}", college);
-		
+		} else {
+			candidateEducation
+					.setCollege(collegeRepository.findByCollegeName(candidateEducation.getCollege().getCollegeName()));
+		}
+
 	}
 
+	private void injestQualificationInformation(CandidateEducation candidateEducation) {
 
-
-	private void massageQualificationInformation(CandidateEducation candidateEducation) {
-		Qualification qualification = qualififcationRepository
-				.findByQualification(candidateEducation.getQualification().getQualification());
 		if (candidateEducation.getQualification().getQualification().equals(Constants.OTHER)) {
-			Qualification newQualification = new Qualification();
-			newQualification.setQualification(candidateEducation.getCapturedQualification());
-			qualififcationRepository.save(newQualification);
-			log.info("Saved new Qualifcation {} ", qualification.getQualification());
+			Qualification qualification = qualififcationRepository
+					.findByQualification(candidateEducation.getCapturedQualification());
+			if (qualification == null) {
+				Qualification newQualification = new Qualification();
+				newQualification.setQualification(candidateEducation.getCapturedQualification());
+				updateQualificationIndex(qualififcationRepository.save(newQualification));
+				log.info("Saved new Qualifcation {} ", newQualification.getQualification());
+				candidateEducation.setQualification(newQualification);
+			} else {
+				candidateEducation.setQualification(qualification);
+			}
+		} else {
+			candidateEducation.setQualification(qualififcationRepository
+					.findByQualification(candidateEducation.getQualification().getQualification()));
 		}
-		log.debug("Looked up qualification details {}", qualification);
-		candidateEducation.setQualification(qualification);
 	}
 
-	private void massageCourseInformation(CandidateEducation candidateEducation) {
-		Course course = courseRepository.findByCourse(candidateEducation.getCourse().getCourse());
+	private void injestCourseInformation(CandidateEducation candidateEducation) {
 		if (candidateEducation.getCourse().getCourse().equals(Constants.OTHER)) {
-			Course newCourse = new Course();
-			newCourse.setCourse(candidateEducation.getCapturedCourse());
-			courseRepository.save(newCourse);
-			log.info("Saved new Course {} ", course.getCourse());
+			Course course = courseRepository.findByCourse(candidateEducation.getCapturedCourse());
+			if (course == null) {
+				Course newCourse = new Course();
+				newCourse.setCourse(candidateEducation.getCapturedCourse());
+				updateCourseIndex(courseRepository.save(newCourse));
+				log.info("Saved new Course {} ", newCourse.getCourse());
+				candidateEducation.setCourse(newCourse);
+			} else {
+				candidateEducation.setCourse(course);
+			}
+		} else {
+			candidateEducation.setCourse(courseRepository.findByCourse(candidateEducation.getCourse().getCourse()));
 		}
-		log.debug("Looked up course details {}", course);
-		candidateEducation.setCourse(course);
+
 	}
 
 	public CandidateEducation updateCandidateEductaion(CandidateEducation candidateEducation) {
@@ -199,9 +185,9 @@ public class CandidateEducationService {
 		if ("gpa".equals(candidateEducation.getScoreType()))
 			setGrade(candidateEducation);
 		candidateEducation.setProjects(null);
-		massageCollegeInformation(candidateEducation);
-		massageCourseInformation(candidateEducation);
-		massageQualificationInformation(candidateEducation);
+		injestCollegeInformation(candidateEducation);
+		injestCourseInformation(candidateEducation);
+		injestQualificationInformation(candidateEducation);
 		/* SHOULD WE ALLOW MULTIPLE HIGHEST QUALIFICATIONS ? - RUCHI SAYS YES */
 		/*
 		 * CandidateEducation educationWithHighestQualification =
@@ -229,7 +215,7 @@ public class CandidateEducationService {
 	}
 
 	public CandidateEducation getCandidateEducation(Long id) {
-		log.debug("Getting candidate Education for {}",id);
+		log.debug("Getting candidate Education for {}", id);
 		CandidateEducation candidateEducation = candidateEducationRepository.findOne(id);
 		if (candidateEducation != null) {
 			Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEducation(candidateEducation);
@@ -294,37 +280,77 @@ public class CandidateEducationService {
 
 	private void updateUniversityIndex(University university) {
 		com.drishika.gradzcircle.domain.elastic.University universityElasticInstance = new com.drishika.gradzcircle.domain.elastic.University();
-        try {
+		try {
 			BeanUtils.copyProperties(universityElasticInstance, university);
 		} catch (IllegalAccessException e) {
-            log.error("Error copying bean for college elastic instance", e);
-            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
-            //@TODO - SEND EMAIL Alert 
+			log.error("Error copying bean for college elastic instance", e);
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			// @TODO - SEND EMAIL Alert
 		} catch (InvocationTargetException e) {
-            log.error("Error copying bean for college elastic instance", e);
-            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
-			
-        }
-        elasticsearchTemplate.index(new UniversityEntityBuilder(universityElasticInstance.getId()).name(universityElasticInstance.getUniversityName())
-            .suggest(new String[] { universityElasticInstance.getUniversityName() }).buildIndex());
-        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
+			log.error("Error copying bean for college elastic instance", e);
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+
+		}
+		elasticsearchTemplate.index(new UniversityEntityBuilder(universityElasticInstance.getId())
+				.name(universityElasticInstance.getUniversityName())
+				.suggest(new String[] { universityElasticInstance.getUniversityName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
 	}
-	
+
 	private void updateCollegeIndex(College college) {
-		 com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
-	        try {
-				BeanUtils.copyProperties(collegeElasticInstance, college);
-			} catch (IllegalAccessException e) {
-	            log.error("Error copying bean for college elastic instance", e);
-	            //@TODO SEND EMAIL ALERT
-	          //  throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
-			} catch (InvocationTargetException e) {
-	            log.error("Error copying bean for college elastic instance", e);
-	            //throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
-				
-	        }
-	        elasticsearchTemplate.index(new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
-	            .suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
-	        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+		com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
+		try {
+			BeanUtils.copyProperties(collegeElasticInstance, college);
+		} catch (IllegalAccessException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// @TODO SEND EMAIL ALERT
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+		} catch (InvocationTargetException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+
+		}
+		elasticsearchTemplate.index(
+				new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
+						.suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+	}
+
+	private void updateQualificationIndex(Qualification qualification) {
+		com.drishika.gradzcircle.domain.elastic.Qualification qualificationElasticInstance = new com.drishika.gradzcircle.domain.elastic.Qualification();
+		try {
+			BeanUtils.copyProperties(qualificationElasticInstance, qualification);
+		} catch (IllegalAccessException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// @TODO SEND EMAIL ALERT
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+		} catch (InvocationTargetException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+
+		}
+		elasticsearchTemplate.index(new QualificationEntityBuilder(qualificationElasticInstance.getId())
+				.name(qualificationElasticInstance.getQualification())
+				.suggest(new String[] { qualificationElasticInstance.getQualification() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Qualification.class);
+	}
+
+	private void updateCourseIndex(Course course) {
+		com.drishika.gradzcircle.domain.elastic.Course courseElasticInstance = new com.drishika.gradzcircle.domain.elastic.Course();
+		try {
+			BeanUtils.copyProperties(courseElasticInstance, course);
+		} catch (IllegalAccessException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// @TODO SEND EMAIL ALERT
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+		} catch (InvocationTargetException e) {
+			log.error("Error copying bean for college elastic instance", e);
+			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+
+		}
+		elasticsearchTemplate
+				.index(new CourseEntityBuilder(courseElasticInstance.getId()).name(courseElasticInstance.getCourse())
+						.suggest(new String[] { courseElasticInstance.getCourse() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 	}
 }

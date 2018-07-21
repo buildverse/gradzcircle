@@ -14,7 +14,7 @@ import {JobType, JobTypeService} from '../job-type';
 import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
-import {ResponseWrapper} from '../../shared';
+import {ResponseWrapper,EditorProperties} from '../../shared';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Qualification, QualificationService} from '../qualification';
@@ -48,6 +48,7 @@ export class JobDialogComponent implements OnInit {
   job: Job;
   prevJob: Job;
   isSaving: boolean;
+  options: Object;
   jobtypes: JobType[];
   numberOfCandidateError: boolean;
   employmentTypes: EmploymentType[];
@@ -157,6 +158,7 @@ export class JobDialogComponent implements OnInit {
     this.employmentTypeCost = [];
     this.jobFilter = new JobFilter();
     this.basic = true;
+    this.options = new EditorProperties().options;
     this.jobTypeService.query()
       .subscribe((res: ResponseWrapper) => {this.jobtypes = res.json;}, (res: ResponseWrapper) => this.onError(res.json));
     this.employmentTypeService.query()

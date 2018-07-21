@@ -20,7 +20,7 @@ export class JobService {
 
   create(job: Job): Observable<Job> {
     const copy = this.convert(job);
-       // console.log('Sending over wire in create '+JSON.stringify(job));
+    // console.log('Sending over wire in create '+JSON.stringify(job));
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -29,7 +29,7 @@ export class JobService {
 
   update(job: Job): Observable<Job> {
     const copy = this.convert(job);
-   // console.log('Sending over wire in update '+JSON.stringify(job));
+    // console.log('Sending over wire in update '+JSON.stringify(job));
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -49,9 +49,9 @@ export class JobService {
     return this.http.get(this.resourceUrl, options)
       .map((res: Response) => this.convertResponse(res));
   }
-  
+
   queryActiveJobs(id: number): Observable<ResponseWrapper> {
-  //  const options = createRequestOption(req);
+    //  const options = createRequestOption(req);
     return this.http.get(`${this.resourceActiveJobsUrl}/${id}`)
       .map((res: Response) => this.convertResponse(res));
   }
@@ -59,8 +59,8 @@ export class JobService {
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
   }
-  
-   remove(id: number): Observable<Response> {
+
+  remove(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceDeActivateJobsUrl}/${id}`);
   }
 
@@ -89,6 +89,8 @@ export class JobService {
       .convertDateTimeFromServer(json.createDate);
     entity.updateDate = this.dateUtils
       .convertDateTimeFromServer(json.updateDate);
+ 
+
 
     return entity;
   }
@@ -98,8 +100,6 @@ export class JobService {
    */
   private convert(job: Job): Job {
     const copy: Job = Object.assign({}, job);
-
-
     copy.createDate = this.dateUtils
       .toDate(job.createDate);
     copy.updateDate = this.dateUtils
