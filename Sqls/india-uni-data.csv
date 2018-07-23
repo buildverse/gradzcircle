@@ -294,7 +294,6 @@ id,university_name,university_type,website,country_id
 293,"PES UNIVERSITY, BANGLORE",State Private University,,99
 294,"RAI TECHNOLOGY UNIVERSITY, BANGALORE",State Private University,,99
 295,"RAJIV GANDHI UNIVERSITY OF HEALTH SCIENCES, BANGALORE",State Public University,www.rguhs.ac.in,99
-296,"RANI CHANNAMMA UNIVERSITY, BELAGAVI",State Public University,www.rcub.ac.in,99
 297,"REVA UNIVERSITY, BANGALORE",State Private University,www.reva.edu.in,99
 298,"SRI DEVRAJ URS ACAEDMY OF HIGHEHR EDUCATION AND RESEARCH, KOLAR",Deemed University-Private,www.sduu.ac.in,99
 299,SRI SIDDHARATHA ACEDEMY OF HIGHER EDUCATION,Deemed University-Private,www.sahetumkur.ac.in,99
@@ -748,3 +747,4 @@ id,university_name,university_type,website,country_id
 747,"WEST BENGAL UNIVERSITY OF TECHNOLOGY, KOLKATA",State Public University,http://www.wbut.ac.in,99
 748,"PANDIT BHAGWAT DAYAL SHARMA UNIVERSITY OF HEALTH SCIENCES, ROHTAK",State Public University,http://http://uhsr.ac.in,99
 749,"RANI CHANNAMMA UNIVERSITY, BELAGAVI",State Public University,http://http://www.rcub.ac.in,99
+750,Other,Other,,
