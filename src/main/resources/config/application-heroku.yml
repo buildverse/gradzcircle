@@ -22,8 +22,11 @@ eureka:
 spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource        
-        url: ${JDBC_DATABASE_URL}
-        username: ${JDBC_DATABASE_USERNAME}
-        password: ${JDBC_DATABASE_PASSWORD}
+        #url: ${JDBC_DATABASE_URL}
+        #username: ${JDBC_DATABASE_USERNAME}
+        #password: ${JDBC_DATABASE_PASSWORD}
+        url: jdbc:postgresql://ec2-174-129-22-84.compute-1.amazonaws.com:5432/ddsk6kjocpbd3r
+        username: xllxrjezvwzgnf
+        password: c080edbf5c5e3de2ec9879297c1602dfde9f1572f94db12a74e9dac5e516733d
         hikari:
             maximumPoolSize: 8

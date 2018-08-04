@@ -120,6 +120,8 @@ apply from: 'gradle/heroku.gradle'
 
 if (project.hasProperty('prod')) {
     apply from: 'gradle/profile_prod.gradle'
+} else if(project.hasProperty('uat')){
+    apply from: 'gradle/profile_uat.gradle'
 } else {
     apply from: 'gradle/profile_dev.gradle'
 }
