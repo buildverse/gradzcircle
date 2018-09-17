@@ -52,8 +52,8 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     }
 
     validateLanguage() {
-        //console.log("langugae selected " + JSON.stringify(this.candidateLanguageProficiency));
-        //console.log("Value passed is "+ JSON.stringify(value));
+        console.log("langugae selected " + JSON.stringify(this.candidateLanguageProficiency));
+       // console.log("Value passed is "+ JSON.stringify(value));
         this.serverSideError ='';
         if (!this.candidateLanguageProficiency.language) {
             this.hasNoLanguageSelectedError = true;
@@ -74,7 +74,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         this.languageAlreadyPresentError = false;
         if (this.currentCandidateLanguageProficiencies) {
 
-          //  console.log("Current languages is "+ JSON.stringify(this.currentCandidateLanguageProficiencies));
+            console.log("Current languages is "+ JSON.stringify(this.currentCandidateLanguageProficiencies));
             for (var i = 0; i < this.currentCandidateLanguageProficiencies.length; i++) {
 
                 if (this.candidateLanguageProficiency.language.id === this.currentCandidateLanguageProficiencies[i].language.id) {

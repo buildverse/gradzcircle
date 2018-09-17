@@ -64,7 +64,8 @@ entity AppConfig {
 entity Filter {
 filterName String,
 filterCost Double,
-comments String
+comments String,
+matchWeight Long
 }
 
 
@@ -89,7 +90,8 @@ entity Candidate {
 	phoneNumber String,
 	differentlyAbled Boolean,
 	availableForHiring Boolean,
-	openToRelocate Boolean
+	openToRelocate Boolean,
+	matchEligible Boolean
 }
 
 entity Address {
@@ -177,7 +179,8 @@ entity EmploymentType {
 }
 
 entity Qualification {
-    qualification String
+    qualification String,
+    weightage Integer
 }
 
 entity Gender {
@@ -349,12 +352,15 @@ relationship ManyToOne {
     Candidate {gender} to Gender,
     Candidate {maritalStatus} to MaritalStatus,
     Job {jobType}  to JobType,
-    Job {employmentType} to EmploymentType
+    Job {employmentType} to EmploymentType,
+    JobHistory {jobType} to JobType,
+    JobHistory {employmentType} to EmploymentType
 }
 
 relationship ManyToMany {
 	Candidate {jobCategory} to JobCategory {candidate},
-	 Candidate {job} to Job {candidate}
+	 Candidate {job} to Job {candidate},
+	 Corporate {candidate} to Candidate {corporate} /*This about this relationship. Do we need to maintain for what job this was linked  */
    
 }
 

@@ -82,6 +82,15 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeTruthy();
             }
         });
+        candidateDialogPage.getMatchEligibleInput().isSelected().then(function (selected) {
+            if (selected) {
+                candidateDialogPage.getMatchEligibleInput().click();
+                expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeFalsy();
+            } else {
+                candidateDialogPage.getMatchEligibleInput().click();
+                expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeTruthy();
+            }
+        });
         candidateDialogPage.loginSelectLastOption();
         candidateDialogPage.nationalitySelectLastOption();
         candidateDialogPage.genderSelectLastOption();
@@ -128,6 +137,7 @@ export class CandidateDialogPage {
     differentlyAbledInput = element(by.css('input#field_differentlyAbled'));
     availableForHiringInput = element(by.css('input#field_availableForHiring'));
     openToRelocateInput = element(by.css('input#field_openToRelocate'));
+    matchEligibleInput = element(by.css('input#field_matchEligible'));
     loginSelect = element(by.css('select#field_login'));
     nationalitySelect = element(by.css('select#field_nationality'));
     genderSelect = element(by.css('select#field_gender'));
@@ -228,6 +238,9 @@ export class CandidateDialogPage {
     }
     getOpenToRelocateInput = function () {
         return this.openToRelocateInput;
+    }
+    getMatchEligibleInput = function () {
+        return this.matchEligibleInput;
     }
     loginSelectLastOption = function () {
         this.loginSelect.all(by.tagName('option')).last().click();

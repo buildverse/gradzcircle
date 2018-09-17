@@ -12,6 +12,10 @@
         {
             "fieldName": "qualification",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "weightage",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20171015094637",

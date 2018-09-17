@@ -17,6 +17,7 @@
                 "title": "Qualification"
             },
             "qualification": "Qualification",
+            "weightage": "Weightage",
             "candidateEducation": "Candidate Education"
         }
     }

@@ -1,15 +1,34 @@
 package com.drishika.gradzcircle.domain;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * A Candidate.
@@ -18,6 +37,9 @@ import java.util.Objects;
 @Table(name = "candidate")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidate")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id", scope=Candidate.class)
 public class Candidate implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,6 +87,9 @@ public class Candidate implements Serializable {
 
     @Column(name = "open_to_relocate")
     private Boolean openToRelocate;
+    
+    @Column(name = "match_eligible")
+    private Boolean matchEligible;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -72,10 +97,12 @@ public class Candidate implements Serializable {
 
     @OneToMany(mappedBy = "candidate", cascade=CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+   // @JsonManagedReference
     private Set<Address> addresses = new HashSet<>();
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+   // @JsonManagedReference
     private Set<CandidateEducation> educations = new HashSet<>();
 
     @OneToMany(mappedBy = "candidate")
@@ -90,7 +117,7 @@ public class Candidate implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateEmployment> employments = new HashSet<>();
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate",cascade=CascadeType.ALL, orphanRemoval=true,fetch=FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
 
@@ -110,12 +137,17 @@ public class Candidate implements Serializable {
                inverseJoinColumns = @JoinColumn(name="job_categories_id", referencedColumnName="id"))
     private Set<JobCategory> jobCategories = new HashSet<>();
 
-    @ManyToMany
+   /* @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "candidate_job",
                joinColumns = @JoinColumn(name="candidates_id", referencedColumnName="id"),
                inverseJoinColumns = @JoinColumn(name="jobs_id", referencedColumnName="id"))
     private Set<Job> jobs = new HashSet<>();
+    */
+    
+    @OneToMany(mappedBy ="candidate", cascade= CascadeType.ALL, orphanRemoval=true,fetch=FetchType.EAGER)
+    @JsonManagedReference
+    private Set<CandidateJob> candidatejobs = new HashSet<CandidateJob>();
 
     @ManyToOne
     private VisaType visaType;
@@ -298,6 +330,23 @@ public class Candidate implements Serializable {
         this.openToRelocate = openToRelocate;
     }
 
+    public Boolean isMatchEligible() {
+        return matchEligible;
+    }
+    
+    public Boolean getMatchEligible() {
+        return matchEligible;
+    }
+
+    public Candidate matchEligible(Boolean matchEligible) {
+        this.matchEligible = matchEligible;
+        return this;
+    }
+
+    public void setMatchEligible(Boolean matchEligible) {
+        this.matchEligible = matchEligible;
+    }
+    
     public User getLogin() {
         return login;
     }
@@ -525,7 +574,7 @@ public class Candidate implements Serializable {
         this.jobCategories = jobCategories;
     }
 
-    public Set<Job> getJobs() {
+   /* public Set<Job> getJobs() {
         return jobs;
     }
 
@@ -549,7 +598,7 @@ public class Candidate implements Serializable {
     public void setJobs(Set<Job> jobs) {
         this.jobs = jobs;
     }
-
+*/
     public VisaType getVisaType() {
         return visaType;
     }
@@ -561,10 +610,46 @@ public class Candidate implements Serializable {
 
     public void setVisaType(VisaType visaType) {
         this.visaType = visaType;
+    }   
+    
+    public Candidate addCandidateJob(CandidateJob candidateJob) {
+        this.candidatejobs.add(candidateJob);
+        candidateJob.setCandidate(this);
+        //job.getCandidateJobs().add(candidateJob);
+        return this;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+   /* public Candidate removeJob(Job job) {
+    	for (Iterator<CandidateJob> iterator = jobs.iterator(); 
+                iterator.hasNext(); ) {
+    		CandidateJob candidateJob = iterator.next();
+    		if(candidateJob.getCandidate().equals(this) && candidateJob.getJob().getId().equals(job.getId())) {
+    			iterator.remove();
+    			candidateJob.getJob().getCandidates().remove(candidateJob);
+    			candidateJob.setCandidate(null);
+    			candidateJob.setJob(null);
+    		}
+    	}
+        return this;
+    }*/
+
+	/**
+	 * @return the jobs
+	 */
+	public Set<CandidateJob> getCandidateJobs() {
+		return candidatejobs;
+	}
+
+	/**
+	 * @param jobs the jobs to set
+	 */
+	public void setCandidateJobs(Set<CandidateJob> candidatejobs) {
+		this.candidatejobs = candidatejobs;
+	}
+	
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -601,6 +686,7 @@ public class Candidate implements Serializable {
             ", differentlyAbled='" + isDifferentlyAbled() + "'" +
             ", availableForHiring='" + isAvailableForHiring() + "'" +
             ", openToRelocate='" + isOpenToRelocate() + "'" +
+            ", matchEligible='" + isMatchEligible() + "'" +
             "}";
     }
 }

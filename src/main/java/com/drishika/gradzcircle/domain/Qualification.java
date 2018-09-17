@@ -41,6 +41,9 @@ public class Qualification implements Serializable {
 	@JsonProperty
 	private String display;
 
+	@Column(name = "weightage")
+	private Long weightage;
+
 	@OneToMany(mappedBy = "qualification")
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -137,6 +140,26 @@ public class Qualification implements Serializable {
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
 	// setters here, do not remove
 
+	/**
+	 * @return the weightage
+	 */
+	public Long getWeightage() {
+		return weightage;
+	}
+
+	public Qualification weightage(Long weightage) {
+		this.weightage = weightage;
+		return this;
+	}
+
+	/**
+	 * @param weightage
+	 *            the weightage to set
+	 */
+	public void setWeightage(Long weightage) {
+		this.weightage = weightage;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -165,6 +188,7 @@ public class Qualification implements Serializable {
 	@Override
 	public String toString() {
 		return "Qualification [id=" + id + ", qualification=" + qualification + ", value=" + value + ", display="
-				+ display + "]";
+				+ display + ", weightage=" + weightage + "]";
 	}
+
 }

@@ -234,14 +234,9 @@ public class College implements Serializable {
     /* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-    @Override
-    public String toString() {
-        return "College{" +
-            "id=" + getId() +
-            ", collegeName='" + getCollegeName() + "'" +
-            ", domainName='" + getDomainName() + "'" +
-            ", affiliation='" + getAffiliation() + "'" +
-            ", status='" + getStatus() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "College [id=" + id + ", collegeName=" + collegeName + ", domainName=" + domainName + ", value=" + value
+				+ ", display=" + display + ", affiliation=" + affiliation + ", status=" + status + "]";
+	}
 }

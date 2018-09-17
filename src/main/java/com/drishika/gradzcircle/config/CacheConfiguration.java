@@ -102,6 +102,9 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".jobFilters", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".candidates", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".candidateJobs", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.CandidateJob.class.getName(), jcacheConfiguration);
+            
            // cm.createCache(com.drishika.gradzcircle.domain.FilterCategory.class.getName(), jcacheConfiguration);
            // cm.createCache(com.drishika.gradzcircle.domain.FilterCategory.class.getName() + ".filters", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Filter.class.getName(), jcacheConfiguration);

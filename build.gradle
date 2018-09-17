@@ -33,6 +33,7 @@ apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 defaultTasks 'bootRun'
 
 group = 'com.drishika.gradzcircle'

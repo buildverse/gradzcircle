@@ -47,6 +47,9 @@ public class FilterResourceIntTest {
     private static final String DEFAULT_COMMENTS = "AAAAAAAAAA";
     private static final String UPDATED_COMMENTS = "BBBBBBBBBB";
 
+    private static final Long DEFAULT_MATCH_WEIGHT = 1L;
+    private static final Long UPDATED_MATCH_WEIGHT = 2L;
+
     @Autowired
     private FilterRepository filterRepository;
 
@@ -89,7 +92,8 @@ public class FilterResourceIntTest {
         Filter filter = new Filter()
             .filterName(DEFAULT_FILTER_NAME)
             .filterCost(DEFAULT_FILTER_COST)
-            .comments(DEFAULT_COMMENTS);
+            .comments(DEFAULT_COMMENTS)
+            .matchWeight(DEFAULT_MATCH_WEIGHT);
         return filter;
     }
 
@@ -117,6 +121,7 @@ public class FilterResourceIntTest {
         assertThat(testFilter.getFilterName()).isEqualTo(DEFAULT_FILTER_NAME);
         assertThat(testFilter.getFilterCost()).isEqualTo(DEFAULT_FILTER_COST);
         assertThat(testFilter.getComments()).isEqualTo(DEFAULT_COMMENTS);
+        assertThat(testFilter.getMatchWeight()).isEqualTo(DEFAULT_MATCH_WEIGHT);
 
         // Validate the Filter in Elasticsearch
         Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
@@ -155,7 +160,8 @@ public class FilterResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(filter.getId().intValue())))
             .andExpect(jsonPath("$.[*].filterName").value(hasItem(DEFAULT_FILTER_NAME.toString())))
             .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())))
-            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())));
+            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())))
+            .andExpect(jsonPath("$.[*].matchWeight").value(hasItem(DEFAULT_MATCH_WEIGHT.intValue())));
     }
 
     @Test
@@ -171,7 +177,8 @@ public class FilterResourceIntTest {
             .andExpect(jsonPath("$.id").value(filter.getId().intValue()))
             .andExpect(jsonPath("$.filterName").value(DEFAULT_FILTER_NAME.toString()))
             .andExpect(jsonPath("$.filterCost").value(DEFAULT_FILTER_COST.doubleValue()))
-            .andExpect(jsonPath("$.comments").value(DEFAULT_COMMENTS.toString()));
+            .andExpect(jsonPath("$.comments").value(DEFAULT_COMMENTS.toString()))
+            .andExpect(jsonPath("$.matchWeight").value(DEFAULT_MATCH_WEIGHT.intValue()));
     }
 
     @Test
@@ -195,7 +202,8 @@ public class FilterResourceIntTest {
         updatedFilter
             .filterName(UPDATED_FILTER_NAME)
             .filterCost(UPDATED_FILTER_COST)
-            .comments(UPDATED_COMMENTS);
+            .comments(UPDATED_COMMENTS)
+            .matchWeight(UPDATED_MATCH_WEIGHT);
 
         restFilterMockMvc.perform(put("/api/filters")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -209,6 +217,7 @@ public class FilterResourceIntTest {
         assertThat(testFilter.getFilterName()).isEqualTo(UPDATED_FILTER_NAME);
         assertThat(testFilter.getFilterCost()).isEqualTo(UPDATED_FILTER_COST);
         assertThat(testFilter.getComments()).isEqualTo(UPDATED_COMMENTS);
+        assertThat(testFilter.getMatchWeight()).isEqualTo(UPDATED_MATCH_WEIGHT);
 
         // Validate the Filter in Elasticsearch
         Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
@@ -269,7 +278,8 @@ public class FilterResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(filter.getId().intValue())))
             .andExpect(jsonPath("$.[*].filterName").value(hasItem(DEFAULT_FILTER_NAME.toString())))
             .andExpect(jsonPath("$.[*].filterCost").value(hasItem(DEFAULT_FILTER_COST.doubleValue())))
-            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())));
+            .andExpect(jsonPath("$.[*].comments").value(hasItem(DEFAULT_COMMENTS.toString())))
+            .andExpect(jsonPath("$.[*].matchWeight").value(hasItem(DEFAULT_MATCH_WEIGHT.intValue())));
     }
 
     @Test

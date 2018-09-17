@@ -27,6 +27,11 @@
             <input type="text" class="form-control" name="comments" id="field_comments"
                 [(ngModel)]="filter.comments"  />
         </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.filter.matchWeight" for="field_matchWeight">Match Weight</label>
+            <input type="number" class="form-control" name="matchWeight" id="field_matchWeight"
+                [(ngModel)]="filter.matchWeight"  />
+        </div>
 
     </div>
     <div class="modal-footer">

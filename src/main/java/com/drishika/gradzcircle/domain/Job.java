@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.domain;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,10 +12,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -145,10 +146,17 @@ public class Job implements Serializable {
     @ManyToOne
     private Corporate corporate;
 
-    @ManyToMany(mappedBy = "jobs")
+    /*@ManyToMany(mappedBy = "jobs")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Candidate> candidates = new HashSet<>();
+    private Set<Candidate> candidates = new HashSet<>();*/
+    
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonManagedReference(value="jobToCandidate")
+    private Set<CandidateJob> candidateJobs = new HashSet<>();
+    
+    
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -599,7 +607,8 @@ public class Job implements Serializable {
         this.corporate = corporate;
     }
 
-    public Set<Candidate> getCandidates() {
+    
+    /*public Set<Candidate> getCandidates() {
         return candidates;
     }
 
@@ -608,7 +617,7 @@ public class Job implements Serializable {
         return this;
     }
 
-    public Job addCandidate(Candidate candidate) {
+   public Job addCandidate(Candidate candidate) {
         this.candidates.add(candidate);
         candidate.getJobs().add(this);
         return this;
@@ -622,10 +631,36 @@ public class Job implements Serializable {
 
     public void setCandidates(Set<Candidate> candidates) {
         this.candidates = candidates;
-    }
+    }*/
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+    /**
+	 * @return the candidates
+	 */
+	public Set<CandidateJob> getCandidateJobs() {
+		return candidateJobs;
+	}
+
+	/**
+	 * @param candidates the candidates to set
+	 */
+	public void setCandidateJobs(Set<CandidateJob> candidateJobs) {
+		this.candidateJobs = candidateJobs;
+	}
+
+	public Job addCandidateJob(CandidateJob candidateJob) {
+		this.candidateJobs.add(candidateJob);
+		candidateJob.setJob(this);
+		return this;
+	}
+	
+	public Job removeCandidateJob(CandidateJob candidateJob) {
+		this.candidateJobs.remove(candidateJob);
+		candidateJob.setJob(null);
+		return this;
+	}
+	
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -636,11 +671,12 @@ public class Job implements Serializable {
         Job job = (Job) o;
         if (job.getId() == null || getId() == null) {
             return false;
-		} else if (getId().equals(job.getId()) && getJobTitle().equals(job.getJobTitle())
+		} /*else if (getId().equals(job.getId()) && getJobTitle().equals(job.getJobTitle())
 				&& getJobDescription().equals(job.getJobDescription()) && getSalary().equals(job.getSalary())
 				&& getJobStatus().equals(job.getJobStatus()))
-			return true;
-		return false;
+			return true;*/
+        
+        return Objects.equals(getId(), job.getId());
 
         
        

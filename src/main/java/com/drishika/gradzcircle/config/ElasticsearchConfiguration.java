@@ -1,20 +1,17 @@
 package com.drishika.gradzcircle.config;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.shield.ShieldPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.EntityMapper;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +27,7 @@ public class ElasticsearchConfiguration {
     }
 
     /* USED for PROD */
-  /* @Bean
+/*  @Bean
     public ElasticsearchTemplate elasticsearchTemplate(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         return new ElasticsearchTemplate(client(),
                 new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));

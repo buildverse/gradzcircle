@@ -177,7 +177,7 @@ export class JobDialogComponent implements OnInit {
 
     this.genderService.query()
       .subscribe((res: ResponseWrapper) => {this.genders = res.json;}, (res: ResponseWrapper) => this.onError(res.json));
-    this.gpaValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     this.gpaDecimalValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     this.useEscrow = false;
 
@@ -844,7 +844,12 @@ export class JobDialogComponent implements OnInit {
         this.jobFilter.filterDescription.percentage = this.percentage;
       }
       if (this.roundOfGrade) {
+        console.log('AM I HERE');
+        if(!this.gradeDecimal){
+          this.gradeDecimal =0;
+        }
         this.jobFilter.filterDescription.gpa = this.roundOfGrade + '.' + this.gradeDecimal;
+        console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
       }
     }
     if (this.addOn) {

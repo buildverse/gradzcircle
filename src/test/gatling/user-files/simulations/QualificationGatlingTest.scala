@@ -68,7 +68,7 @@ class QualificationGatlingTest extends Simulation {
             .exec(http("Create new qualification")
             .post("/api/qualifications")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "qualification":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "qualification":"SAMPLE_TEXT", "weightage":"0"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_qualification_url"))).exitHereIfFailed
             .pause(10)

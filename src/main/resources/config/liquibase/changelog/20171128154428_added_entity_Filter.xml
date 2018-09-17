@@ -38,4 +38,11 @@
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    <changeSet id="20171128154428-2" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="filter">
+        		<column name="match_weight" type="bigint"/>
+    		</addColumn>
+     </changeSet>
 </databaseChangeLog>

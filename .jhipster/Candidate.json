@@ -138,6 +138,10 @@
         {
             "fieldName": "openToRelocate",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "matchEligible",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20171015094626",

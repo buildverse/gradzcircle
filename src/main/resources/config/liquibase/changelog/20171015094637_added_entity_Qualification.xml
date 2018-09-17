@@ -30,4 +30,11 @@
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    <changeSet id="20171015094637-2" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="qualification">
+        		<column name="weightage" type="bigint"/>
+    		</addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -2,15 +2,19 @@ package com.drishika.gradzcircle.service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.constants.ApplicationConstants;
+import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
@@ -27,6 +31,7 @@ import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.repository.search.JobFilterSearchRepository;
 import com.drishika.gradzcircle.repository.search.JobHistorySearchRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
+import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 
 @Service
@@ -41,7 +46,8 @@ public class JobService {
 
 	private final JobFilterRepository jobFilterRepository;
 
-	private final JobFilterHistoryRepository jobFilterHistoryRepository;
+	@Qualifier("JobMatcher")
+	private final Matcher<Job> matcher;
 
 	private final JobHistoryRepository jobHistoryRepository;
 
@@ -56,7 +62,7 @@ public class JobService {
 			CorporateRepository corporateRepository, CacheManager cacheManager,
 			CorporateSearchRepository corporateSearchRepository, JobHistoryRepository jobHistoryRepository,
 			JobHistorySearchRepository jobHistorySearchRepository,
-			JobFilterHistoryRepository jobFilterHistoryRepository) {
+			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
 		this.corporateRepository = corporateRepository;
@@ -65,7 +71,7 @@ public class JobService {
 		this.jobHistoryRepository = jobHistoryRepository;
 		this.jobHistorySearchRepository = jobHistorySearchRepository;
 		this.jobFilterRepository = jobFilterRepository;
-		this.jobFilterHistoryRepository = jobFilterHistoryRepository;
+		this.matcher = matcher;
 
 	}
 
@@ -76,64 +82,72 @@ public class JobService {
 		job.setCreateDate(dateTime);
 		job.setCanEdit(Boolean.TRUE);
 		Job savedJob = jobRepository.save(job);
-		jobSearchRepository.save(savedJob);
-		/*
-		 * if(job.getJobFilters() !=null) saveJobFilters(job, savedJob);
-		 */
+		//matcher.match(savedJob);
 		return savedJob;
 	}
 
 	public Job updateJob(Job job) throws BeanCopyException, JobEditException {
 		log.info("In updating job {}", job);
-		if(!job.getCanEdit())
+		if (!job.getCanEdit())
 			throw new JobEditException("Cannot Edit job anymmore");
 		Job prevJob = getJob(job.getId());
-		if(!( job.equals(prevJob) && jobFiltersSame(prevJob, job) ) ) {
+		if (!(job.equals(prevJob) 
+				&& (job.getJobDescription().equals(prevJob.getJobDescription())
+						&& (job.getSalary().equals(prevJob.getSalary()) && (job.getJobTitle().equals(prevJob.getJobTitle()))
+								&& (job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job) ))))) {
 			updateJobMetaActions(job, prevJob);
-			setJob(job,prevJob);
-			setJobFilters(job,prevJob);
+			setJob(job, prevJob);
+			setJobFilters(job, prevJob);
+			
 			log.info("Updating job");
 		}
-		jobSearchRepository.save(jobRepository.save(job));
+		//jobSearchRepository.save(jobRepository.save(job));
+		
+		
+		job = jobRepository.save(job);
+		log.info("Job updated {} ,{}",job,job.getJobFilters());
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
 			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
 			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
-			corporateSearchRepository.save(corporateRepository.save(corporate));
+			//corporateSearchRepository.save(corporateRepository.save(corporate));
+			corporateRepository.save(corporate);
 		}
-		log.info("Job updated");
+		if(job.getJobFilters() != null && job.getJobFilters().size()>0)
+			matcher.match(job);
+		log.info("TRIGGER MATHCING ASYNCH");
 		return job;
 	}
-	
+
 	private void setJob(Job job, Job prevJob) throws BeanCopyException {
 		job.setCreateDate(prevJob.getCreateDate());
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
 		job.setUpdateDate(dateTime);
 		setJobHistory(job, prevJob);
-		
+		Set<CandidateJob> candidateJobs = new HashSet<>();
+		candidateJobs.addAll(prevJob.getCandidateJobs());
+		job.setCandidateJobs(candidateJobs);
+
 	}
-	
-	private void setJobHistory(Job job, Job prevJob) throws BeanCopyException{
+
+	private void setJobHistory(Job job, Job prevJob) throws BeanCopyException {
 		JobHistory jobHistory = new JobHistory();
 		JobsUtil.populateHistories(jobHistory, prevJob);
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
 		jobHistory.job(prevJob);
 		jobHistory.createDate(dateTime);
-		//Set<JobHistory> jobHistories = new HashSet<JobHistory>();
-		//jobHistories.add(jobHistory);
-		//job.setHistories(jobHistories);
 		job.addHistory(jobHistory);
-		
-		
+
 	}
+
 	private Boolean jobFiltersSame(Job job, Job prevJob) {
-		log.info(" Current filter is {}",job.getJobFilters());
-		log.info(" Prev filter is {}",prevJob.getJobFilters());
+		log.info(" Current filter is {}", job.getJobFilters());
+		log.info(" Prev filter is {}", prevJob.getJobFilters());
 		if (job.getJobFilters().equals(prevJob.getJobFilters()))
 			return true;
 		else
 			return false;
 	}
-	
+
 	private void updateJobMetaActions(Job job, Job prevJob) {
 		if (job.getJobStatus() == 1 && !prevJob.isEverActive())
 			job.setEverActive(Boolean.TRUE);
@@ -144,11 +158,10 @@ public class JobService {
 			job.setCanEdit(Boolean.FALSE);
 	}
 
-	private void setJobFilters(Job job,Job prevJob) throws BeanCopyException {
-		if(jobFiltersSame(job, prevJob))
+	private void setJobFilters(Job job, Job prevJob) throws BeanCopyException {
+		if (jobFiltersSame(job, prevJob))
 			return;
 		log.info("In saving Job filter  {}", job.getJobFilters());
-	//	Set<JobFilterHistory> jobFilterHistories = new HashSet<JobFilterHistory>();
 		if (job.getJobFilters() != null && !job.getJobFilters().isEmpty()) {
 			for (JobFilter jobFilter : job.getJobFilters()) {
 				if (jobFilter.getId() != null) {
@@ -156,14 +169,13 @@ public class JobService {
 					JobFilterHistory jobFilterHistory = new JobFilterHistory();
 					JobsUtil.populateHistories(jobFilterHistory, prevJobFilter);
 					jobFilterHistory.jobFilter(prevJobFilter);
-	//				jobFilterHistories.add(jobFilterHistory);
 					jobFilter.job(job);
 					jobFilter.addHistory(jobFilterHistory);
 				} else {
 					jobFilter.job(job);
-				}	
+				}
 			}
-			
+
 		}
 	}
 
@@ -181,6 +193,14 @@ public class JobService {
 
 	public List<Job> getAllActiveJobs() {
 		return jobRepository.findAllActiveJobs();
+	}
+
+	public List<Job> getAllJobs() {
+		return jobRepository.findAll();
+	}
+
+	public void saveJobOnly(Job job) {
+		jobSearchRepository.save(jobRepository.save(job));
 	}
 
 	public Job deActivateJob(Long id) throws BeanCopyException {

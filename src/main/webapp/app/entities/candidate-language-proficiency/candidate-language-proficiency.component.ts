@@ -32,7 +32,9 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     }
 
     loadAll() {
-        if (this.currentSearch) {
+        if (this.currentSearch.length>0) {
+          
+        console.log('In search');
             this.candidateLanguageProficiencyService.search({
                 query: this.currentSearch,
                 }).subscribe(
@@ -83,9 +85,12 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
                 this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
                 this.currentSearch = this.candidateId;
                 this.loadCandidateLanguages();
+            } else {
+              this.loadAll();
             }
+          this.registerChangeInCandidateLanguageProficiencies();
         });
-        this.registerChangeInCandidateLanguageProficiencies();
+       // this.registerChangeInCandidateLanguageProficiencies();
     }
 
     ngOnDestroy() {
@@ -96,7 +101,17 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         return item.id;
     }
     registerChangeInCandidateLanguageProficiencies() {
-        this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadAll());
+      console.log('CANDIDATE ID IS '+JSON.stringify(this.candidateId));
+       if (this.candidateId) {
+
+            this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
+            this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
+        }
+        else {
+            this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadAll());
+      }
+
+     //   this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadAll());
     }
 
     private onError(error) {

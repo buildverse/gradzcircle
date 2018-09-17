@@ -164,7 +164,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   shouldDisableDecimal() {
     this.enableDecimal = true;
     if (this.candidateEducation.roundOfGrade) {
-      if (this.candidateEducation.roundOfGrade == 10)
+      if (this.candidateEducation.roundOfGrade === 10)
         this.enableDecimal = false;
     }
   }
@@ -192,7 +192,7 @@ export class CandidateEducationDialogComponent implements OnInit {
       this.candidateEducation.qualification.length === 0 ? this.showQualificationTextArea = true : this.showQualificationTextArea = false;
     }
     this.enableDecimal = true;
-    this.gpaValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     this.gpaDecimalValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     this.endDateLesser = false;
     this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];

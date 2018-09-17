@@ -31,6 +31,7 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="gradzcircleApp.qualification.qualification">Qualification</span></th>
+            <th><span jhiTranslate="gradzcircleApp.qualification.weightage">Weightage</span></th>
             <th></th>
             </tr>
             </thead>
@@ -38,6 +39,7 @@
             <tr *ngFor="let qualification of qualifications ;trackBy: trackId">
                 <td><a [routerLink]="['../qualification', qualification.id ]">{{qualification.id}}</a></td>
                 <td>{{qualification.qualification}}</td>
+                <td>{{qualification.weightage}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

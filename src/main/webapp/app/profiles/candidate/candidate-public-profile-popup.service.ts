@@ -24,7 +24,7 @@ export class CandidatePublicProfilePopupService {
             }
 
             if (id) {
-                this.candidateService.getPublicProfile({query:id}).subscribe(
+                this.candidateService.getCandidatePublicProfile(id).subscribe(
                     (candidate) => {
                         this.ngbModalRef = this.candidateModalRef(component, candidate);
                         resolve(this.ngbModalRef);

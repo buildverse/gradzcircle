@@ -6,6 +6,7 @@ export class Filter implements BaseEntity {
         public filterName?: string,
         public filterCost?: number,
         public comments?: string,
+        public matchWeight?: number,
     ) {
     }
 }

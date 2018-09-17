@@ -29,7 +29,7 @@ captureCourses: CaptureCourse[];
     }
 
     loadAll() {
-        if (this.currentSearch) {
+        if (this.currentSearch.length>0) {
             this.captureCourseService.search({
                 query: this.currentSearch,
                 }).subscribe(

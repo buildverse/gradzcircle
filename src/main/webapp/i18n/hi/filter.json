@@ -18,7 +18,8 @@
             },
             "filterName": "Filter Name",
             "filterCost": "Filter Cost",
-            "comments": "Comments"
+            "comments": "Comments",
+            "matchWeight": "Match Weight"
         }
     }
 }

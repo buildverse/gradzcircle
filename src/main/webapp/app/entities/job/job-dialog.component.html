@@ -451,7 +451,7 @@
 					<select class="form-control text-muted" name="roundOfGrade"
 						#roundOfGrades="ngModel" required [(ngModel)]="roundOfGrade"
 						(change)="shouldDisableDecimal()" (blur)="updateScoreCost()">
-						<option [ngValue]="null"></option>
+						<!--  <option [ngValue]="null"></option>-->
 						<option [ngValue]="score == roundOfGrade? roundOfGrade : score"
 							*ngFor="let score of gpaValues;">{{score}}</option>
 					</select>
@@ -463,7 +463,7 @@
 				<div *ngIf="enableGpa" required class="col-md-2">
 					<select class="form-control text-muted" name="gradeDecimal"
 						[(ngModel)]="gradeDecimal" [disabled]="!enableDecimal">
-						<option [ngValue]="null"></option>
+						<!--  <option [ngValue]="null"></option>-->
 						<option [ngValue]="score == gradeDecimal? gradeDecimal : score"
 							*ngFor="let score of gpaDecimalValues;">.{{score}}</option>
 					</select>
@@ -473,6 +473,7 @@
 					style="color: #448AFF"> GPA or percentage will be average
 						across all year from school to college </small>
 				</small>
+				
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-12 justify-content-end d-flex">
@@ -1226,3 +1227,4 @@ Valid: {{ editForm.form.get('jobTitle')?.valid }} Valid agai : {{
 editForm.form.get('jobDescription')?.valid }}
 <br>
 Value: {{ editForm.value | json }} -->
+Value: {{ editForm.value | json }}

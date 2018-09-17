@@ -4,6 +4,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,6 +18,9 @@ import java.util.Objects;
 @Table(name = "candidate_language_proficiency")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidatelanguageproficiency")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class CandidateLanguageProficiency implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -84,7 +90,7 @@ public class CandidateLanguageProficiency implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+      if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
@@ -94,6 +100,7 @@ public class CandidateLanguageProficiency implements Serializable {
         if (candidateLanguageProficiency.getId() == null || getId() == null) {
             return false;
         }
+    	
         return Objects.equals(getId(), candidateLanguageProficiency.getId());
     }
 

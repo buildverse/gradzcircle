@@ -17,8 +17,8 @@ export class CandidateLanguageResolverService implements Resolve<CandidateLangua
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CandidateLanguageProficiency[]> {
         //console.log("My parama is "+JSON.stringify(route.firstChild));
         this.id = route.params.id;
-
-        return this.candidateLanguageProficiencyService.search({ query: this.id }).map(this.extractData)
+        return this.candidateLanguageProficiencyService.findByCandidateId(this.id).map(this.extractData)
+        //return this.candidateLanguageProficiencyService.search({ query: this.id }).map(this.extractData)
             .catch((error: any) => {
                 console.log(`${error}`);
                 this.router.navigate(['/error']);

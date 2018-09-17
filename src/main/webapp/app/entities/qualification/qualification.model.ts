@@ -6,6 +6,7 @@ export class Qualification implements BaseEntity {
         public qualification?: string,
         public value?:string,
         public display?:string,
+        public weightage?: number,
         public candidateEducations?: BaseEntity[],
     ) {
     }

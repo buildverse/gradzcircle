@@ -68,7 +68,7 @@ class FilterGatlingTest extends Simulation {
             .exec(http("Create new filter")
             .post("/api/filters")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "filterName":"SAMPLE_TEXT", "filterCost":null, "comments":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "filterName":"SAMPLE_TEXT", "filterCost":null, "comments":"SAMPLE_TEXT", "matchWeight":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_filter_url"))).exitHereIfFailed
             .pause(10)

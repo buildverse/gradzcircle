@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author abhinav
  *
  */
+@Service
 public class JobFilterParser {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JobFilterParser.class);

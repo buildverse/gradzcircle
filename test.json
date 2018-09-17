@@ -1,0 +1,11 @@
+{
+	"basic": true,
+	"premium": true,
+	"scoreType": "percent",
+	"percentage": 78,
+	"addOn": true,
+	"gender": {
+		"id": 1,
+		"gender": "Male"
+	}
+}

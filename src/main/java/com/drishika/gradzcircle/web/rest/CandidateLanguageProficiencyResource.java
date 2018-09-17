@@ -37,136 +37,168 @@ import io.github.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class CandidateLanguageProficiencyResource {
 
-    private final Logger log = LoggerFactory.getLogger(CandidateLanguageProficiencyResource.class);
+	private final Logger log = LoggerFactory.getLogger(CandidateLanguageProficiencyResource.class);
 
-    private static final String ENTITY_NAME = "candidateLanguageProficiency";
+	private static final String ENTITY_NAME = "candidateLanguageProficiency";
 
-    private final CandidateLanguageService candidateLanguageService;
-   
+	private final CandidateLanguageService candidateLanguageService;
 
-    public CandidateLanguageProficiencyResource(CandidateLanguageService candidateLanguageService) {
-        this.candidateLanguageService = candidateLanguageService;
-       
-    }
+	public CandidateLanguageProficiencyResource(CandidateLanguageService candidateLanguageService) {
+		this.candidateLanguageService = candidateLanguageService;
 
-    /**
-     * POST  /candidate-language-proficiencies : Create a new candidateLanguageProficiency.
-     *
-     * @param candidateLanguageProficiency the candidateLanguageProficiency to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new candidateLanguageProficiency, or with status 400 (Bad Request) if the candidateLanguageProficiency has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/candidate-language-proficiencies")
-    @Timed
-    public ResponseEntity<CandidateLanguageProficiency> createCandidateLanguageProficiency(@RequestBody CandidateLanguageProficiency candidateLanguageProficiency) throws URISyntaxException {
-        log.debug("REST request to save CandidateLanguageProficiency : {}", candidateLanguageProficiency);
-        if (candidateLanguageProficiency.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new candidateLanguageProficiency cannot already have an ID")).body(null);
-        }
-        CandidateLanguageProficiency result = candidateLanguageService.createCandidateLanguageProficiency(candidateLanguageProficiency);
+	}
 
-        return ResponseEntity.created(new URI("/api/candidate-language-proficiencies/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * POST /candidate-language-proficiencies : Create a new
+	 * candidateLanguageProficiency.
+	 *
+	 * @param candidateLanguageProficiency
+	 *            the candidateLanguageProficiency to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the new
+	 *         candidateLanguageProficiency, or with status 400 (Bad Request) if the
+	 *         candidateLanguageProficiency has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/candidate-language-proficiencies")
+	@Timed
+	public ResponseEntity<CandidateLanguageProficiency> createCandidateLanguageProficiency(
+			@RequestBody CandidateLanguageProficiency candidateLanguageProficiency) throws URISyntaxException {
+		log.debug("REST request to save CandidateLanguageProficiency : {}", candidateLanguageProficiency);
+		if (candidateLanguageProficiency.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
+					"A new candidateLanguageProficiency cannot already have an ID")).body(null);
+		}
+		CandidateLanguageProficiency result = candidateLanguageService
+				.createCandidateLanguageProficiency(candidateLanguageProficiency);
 
-    /**
-     * PUT  /candidate-language-proficiencies : Updates an existing candidateLanguageProficiency.
-     *
-     * @param candidateLanguageProficiency the candidateLanguageProficiency to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated candidateLanguageProficiency,
-     * or with status 400 (Bad Request) if the candidateLanguageProficiency is not valid,
-     * or with status 500 (Internal Server Error) if the candidateLanguageProficiency couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/candidate-language-proficiencies")
-    @Timed
-    public ResponseEntity<CandidateLanguageProficiency> updateCandidateLanguageProficiency(@RequestBody CandidateLanguageProficiency candidateLanguageProficiency) throws URISyntaxException {
-        log.debug("REST request to update CandidateLanguageProficiency : {}", candidateLanguageProficiency);
-        if (candidateLanguageProficiency.getId() == null) {
-            return createCandidateLanguageProficiency(candidateLanguageProficiency);
-        }
-        CandidateLanguageProficiency result =null;
-        try{
-        	result = candidateLanguageService.updateCandidateLanguageProficiency(candidateLanguageProficiency);
-        } catch(org.springframework.dao.DataIntegrityViolationException dataIntegrityViolationException){
+		return ResponseEntity.created(new URI("/api/candidate-language-proficiencies/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
 
-            throw new CustomParameterizedException(candidateLanguageProficiency.getLanguage().getLanguage()+" already exists");
-        } catch (Exception ex){
-            throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
-        }
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateLanguageProficiency.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * PUT /candidate-language-proficiencies : Updates an existing
+	 * candidateLanguageProficiency.
+	 *
+	 * @param candidateLanguageProficiency
+	 *            the candidateLanguageProficiency to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         candidateLanguageProficiency, or with status 400 (Bad Request) if the
+	 *         candidateLanguageProficiency is not valid, or with status 500
+	 *         (Internal Server Error) if the candidateLanguageProficiency couldn't
+	 *         be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/candidate-language-proficiencies")
+	@Timed
+	public ResponseEntity<CandidateLanguageProficiency> updateCandidateLanguageProficiency(
+			@RequestBody CandidateLanguageProficiency candidateLanguageProficiency) throws URISyntaxException {
+		log.debug("REST request to update CandidateLanguageProficiency : {}", candidateLanguageProficiency);
+		if (candidateLanguageProficiency.getId() == null) {
+			return createCandidateLanguageProficiency(candidateLanguageProficiency);
+		}
+		CandidateLanguageProficiency result = null;
+		try {
+			result = candidateLanguageService.updateCandidateLanguageProficiency(candidateLanguageProficiency);
+		} catch (org.springframework.dao.DataIntegrityViolationException dataIntegrityViolationException) {
 
-    /**
-     * GET  /candidate-language-proficiencies : get all the candidateLanguageProficiencies.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of candidateLanguageProficiencies in body
-     */
-    @GetMapping("/candidate-language-proficiencies")
-    @Timed
-    public List<CandidateLanguageProficiency> getAllCandidateLanguageProficiencies() {
-        log.debug("REST request to get all CandidateLanguageProficiencies");
-        List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService.getAllCandidateLanguageProficiencies();
-        return candidateLanguageProficiencies;
-    }
+			throw new CustomParameterizedException(
+					candidateLanguageProficiency.getLanguage().getLanguage() + " already exists");
+		} catch (Exception ex) {
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		return ResponseEntity.ok().headers(
+				HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateLanguageProficiency.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * GET  /candidate-language-proficiencies/:id : get the "id" candidateLanguageProficiency.
-     *
-     * @param id the id of the candidateLanguageProficiency to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the candidateLanguageProficiency, or with status 404 (Not Found)
-     */
-    @GetMapping("/candidate-language-proficiencies/{id}")
-    @Timed
-    public ResponseEntity<CandidateLanguageProficiency> getCandidateLanguageProficiency(@PathVariable Long id) {
-        log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-        CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageService.getCandidateLanguageProficiency(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateLanguageProficiency));
-    }
+	/**
+	 * GET /candidate-language-proficiencies : get all the
+	 * candidateLanguageProficiencies.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of
+	 *         candidateLanguageProficiencies in body
+	 */
+	@GetMapping("/candidate-language-proficiencies")
+	@Timed
+	public List<CandidateLanguageProficiency> getAllCandidateLanguageProficiencies() {
+		log.debug("REST request to get all CandidateLanguageProficiencies");
+		List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService
+				.getAllCandidateLanguageProficiencies();
+		return candidateLanguageProficiencies;
+	}
 
-     /**
-     * GET  /language-proficiencies-by-candidate/:id : get the "id" candidate Id.
-     *
-     * @param id the id of the candidate to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the candidateLanguageProficiency, or with status 404 (Not Found)
-     */
-    @GetMapping("/language-proficiencies-by-candidate/{id}")
-    @Timed
-    public List<CandidateLanguageProficiency> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
-        log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-       
-        return candidateLanguageService.getCandidateLanguageProficiencyByCandidate(id);
-    }
+	/**
+	 * GET /candidate-language-proficiencies/:id : get the "id"
+	 * candidateLanguageProficiency.
+	 *
+	 * @param id
+	 *            the id of the candidateLanguageProficiency to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         candidateLanguageProficiency, or with status 404 (Not Found)
+	 */
+	@GetMapping("/candidate-language-proficiencies/{id}")
+	@Timed
+	public ResponseEntity<CandidateLanguageProficiency> getCandidateLanguageProficiency(@PathVariable Long id) {
+		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
+		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageService
+				.getCandidateLanguageProficiency(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateLanguageProficiency));
+	}
 
-    /**
-     * DELETE  /candidate-language-proficiencies/:id : delete the "id" candidateLanguageProficiency.
-     *
-     * @param id the id of the candidateLanguageProficiency to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/candidate-language-proficiencies/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteCandidateLanguageProficiency(@PathVariable Long id) {
-        log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
-        candidateLanguageService.deleteCandidateLanguageProficiency(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+	/**
+	 * GET /language-proficiencies-by-candidate/:id : get the "id" candidate Id.
+	 *
+	 * @param id
+	 *            the id of the candidate to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         candidateLanguageProficiency, or with status 404 (Not Found)
+	 */
+	@GetMapping("/language-proficiencies-by-candidate/{id}")
+	@Timed
+	public List<CandidateLanguageProficiency> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
+		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
+		List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService
+				.getCandidateLanguageProficiencyByCandidate(id);
+		candidateLanguageProficiencies
+				.forEach(candidateLanguageProficiency -> candidateLanguageProficiency.setCandidate(null));
+		return candidateLanguageProficiencies;
+	}
 
-    /**
-     * SEARCH  /_search/candidate-language-proficiencies?query=:query : search for the candidateLanguageProficiency corresponding
-     * to the query.
-     *
-     * @param query the query of the candidateLanguageProficiency search
-     * @return the result of the search
-     */
-    @GetMapping("/_search/candidate-language-proficiencies")
-    @Timed
-    public List<CandidateLanguageProficiency> searchCandidateLanguageProficiencies(@RequestParam String query) {
-        log.debug("REST request to search CandidateLanguageProficiencies for query {}", query);    
-        return candidateLanguageService.searchCandidateLanguageProficiencies(query);
-    }
+	/**
+	 * DELETE /candidate-language-proficiencies/:id : delete the "id"
+	 * candidateLanguageProficiency.
+	 *
+	 * @param id
+	 *            the id of the candidateLanguageProficiency to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/candidate-language-proficiencies/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteCandidateLanguageProficiency(@PathVariable Long id) {
+		log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
+		candidateLanguageService.deleteCandidateLanguageProficiency(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
+
+	/**
+	 * SEARCH /_search/candidate-language-proficiencies?query=:query : search for
+	 * the candidateLanguageProficiency corresponding to the query.
+	 *
+	 * @param query
+	 *            the query of the candidateLanguageProficiency search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/candidate-language-proficiencies")
+	@Timed
+	public List<CandidateLanguageProficiency> searchCandidateLanguageProficiencies(@RequestParam String query) {
+		log.debug("REST request to search CandidateLanguageProficiencies for query {}", query);
+		List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService
+				.searchCandidateLanguageProficiencies(query);
+		candidateLanguageProficiencies
+				.forEach(candidateLanguageProficiency -> candidateLanguageProficiency.setCandidate(null));
+		return candidateLanguageProficiencies;
+	}
 
 }

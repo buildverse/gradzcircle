@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface LanguageRepository extends JpaRepository<Language, Long> {
+	
+	public Language findByLanguage(String language);
 
 }

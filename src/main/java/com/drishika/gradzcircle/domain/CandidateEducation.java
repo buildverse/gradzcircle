@@ -1,15 +1,28 @@
 package com.drishika.gradzcircle.domain;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * A CandidateEducation.
@@ -18,6 +31,9 @@ import java.util.Objects;
 @Table(name = "candidate_education")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidateeducation")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id", scope=CandidateEducation.class)
 public class CandidateEducation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,6 +89,7 @@ public class CandidateEducation implements Serializable {
     private Integer educationDuration;
 
     @ManyToOne
+   // @JsonBackReference
     private Candidate candidate;
 
     @OneToMany(mappedBy = "education", cascade = CascadeType.REMOVE)
@@ -139,6 +156,10 @@ public class CandidateEducation implements Serializable {
     public Boolean isIsPursuingEducation() {
         return isPursuingEducation;
     }
+    
+    public Boolean getIsPursuingEducation() {
+        return isPursuingEducation;
+    }
 
     public CandidateEducation isPursuingEducation(Boolean isPursuingEducation) {
         this.isPursuingEducation = isPursuingEducation;
@@ -163,6 +184,10 @@ public class CandidateEducation implements Serializable {
     }
 
     public Boolean isHighestQualification() {
+        return highestQualification;
+    }
+    
+    public Boolean getHighestQualification() {
         return highestQualification;
     }
 

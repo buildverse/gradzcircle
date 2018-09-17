@@ -28,6 +28,7 @@ export class Candidate implements BaseEntity {
         public differentlyAbled?: boolean,
         public availableForHiring?: boolean,
         public openToRelocate?: boolean,
+        public matchEligible?: boolean,
         public login?: User,
         public gender?: Gender,
         public maritalStatus?: MaritalStatus,
@@ -45,5 +46,6 @@ export class Candidate implements BaseEntity {
         this.differentlyAbled = false;
         this.availableForHiring = false;
         this.openToRelocate = false;
+        this.matchEligible = false;
     }
 }

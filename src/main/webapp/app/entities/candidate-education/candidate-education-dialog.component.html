@@ -142,18 +142,21 @@
             </div>
             <div *ngIf="enableGpa" class="col-md-2" [class.has-danger]="roundOfGrade.invalid && roundOfGrade.touched">
                 <select class="form-control text-muted" name="roundOfGrade" #roundOfGrade="ngModel" required [(ngModel)]="candidateEducation.roundOfGrade" (change)="shouldDisableDecimal()">
-                    <option [ngValue]="null"></option>
+                   <!--   <option [ngValue]="null"></option>-->
                     <option [ngValue]="score" *ngFor="let score of gpaValues;">{{score}}</option>
                 </select>
                 <div *ngIf="roundOfGrade.invalid && roundOfGrade.touched" class="text-danger">
                     <small> Please enter GPA</small>
                 </div>
             </div>
-            <div *ngIf="enableGpa" required class="col-md-2">
-                <select class="form-control text-muted" name="gradeDecimal" [(ngModel)]="candidateEducation.gradeDecimal" [disabled]="!enableDecimal">
-                    <option [ngValue]="null"></option>
+            <div *ngIf="enableGpa" required class="col-md-2" [class.has-danger]="gradeDecimal.invalid && gradeDecimal.touched">
+                <select class="form-control text-muted" name="gradeDecimal" #gradeDecimal="ngModel" [(ngModel)]="candidateEducation.gradeDecimal" [disabled]="!enableDecimal">
+                    <!--  option [ngValue]="null"></option-->
                     <option [ngValue]="score" *ngFor="let score of gpaDecimalValues;">.{{score}}</option>
                 </select>
+                <div *ngIf="gradeDecimal.invalid && gradeDecimal.touched" class="text-danger">
+                    <small> Please select GPA</small>
+                </div>
             </div>
         </div>
 

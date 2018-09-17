@@ -19,6 +19,7 @@ export class CandidateService {
     private deleteImageUrl ='api/remove';
     private resourcePublicProfileUrl ='api/candidates/public-profile';
     private resourcePublicProfileUrlElastic ='api/candidates/public-profile-es'
+  private resourceCandidatePublicProfile ='api/candidates/candidatePublicProfile'
 
 
     constructor(private http: Http, private dateUtils: JhiDateUtils) { }
@@ -42,6 +43,12 @@ export class CandidateService {
 
     getCandidateByLoginId(id: string): Observable<Candidate> {
         return this.http.get(`api/candidateByLogin/${id}`)
+            .map((response: Response) => <Candidate>response.json())
+            .catch(this.handleError);
+    }
+  
+   getCandidatePublicProfile(id: string): Observable<Candidate> {
+        return this.http.get(`${this.resourceCandidatePublicProfile}/${id}`)
             .map((response: Response) => <Candidate>response.json())
             .catch(this.handleError);
     }

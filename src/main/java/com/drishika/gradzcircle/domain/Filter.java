@@ -33,6 +33,9 @@ public class Filter implements Serializable {
     @Column(name = "comments")
     private String comments;
 
+    @Column(name = "match_weight")
+    private Long matchWeight;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -80,6 +83,19 @@ public class Filter implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    public Long getMatchWeight() {
+        return matchWeight;
+    }
+
+    public Filter matchWeight(Long matchWeight) {
+        this.matchWeight = matchWeight;
+        return this;
+    }
+
+    public void setMatchWeight(Long matchWeight) {
+        this.matchWeight = matchWeight;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -109,6 +125,7 @@ public class Filter implements Serializable {
             ", filterName='" + getFilterName() + "'" +
             ", filterCost='" + getFilterCost() + "'" +
             ", comments='" + getComments() + "'" +
+            ", matchWeight='" + getMatchWeight() + "'" +
             "}";
     }
 }

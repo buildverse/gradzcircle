@@ -13,6 +13,10 @@
         {
             "fieldName": "comments",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "matchWeight",
+            "fieldType": "Long"
         }
     ],
     "changelogDate": "20171128154428",

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -96,7 +97,7 @@ public class JobResource {
 			log.error("Error creating job {} , {}",e.getMessage(),e.getCause());
 			
 		}
-		JobsUtil.trimJobFromFilter(result);
+		//JobsUtil.trimJobFromFilter(result);
 		return ResponseEntity.created(new URI("/api/jobs/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -121,10 +122,12 @@ public class JobResource {
 			return createJob(job);
 		}
 		Job result;
-
+		Job updatedJob = new Job();
+		
 		try {
 			result = jobService.updateJob(job);
-			
+			//BeanUtils.copyProperties(updatedJob, result);
+			log.info("Updated job is {},{}",updatedJob,updatedJob.getJobFilters());
 		} catch (BeanCopyException e) {
 			result=job;
 			result.setJobDescription(e.getMessage());
@@ -134,9 +137,15 @@ public class JobResource {
 			result.setJobDescription(e.getMessage());
 			log.error("Error updating job {} , {}",e.getMessage(),e.getCause());
 			throw new CustomParameterizedException(e.getMessage());
+		} catch(Exception ex) {
+			result=job;
+			result.setJobDescription(ex.getMessage());
+			log.error("Error updating job {} , {}",ex.getMessage(),ex.getCause());
+			throw new CustomParameterizedException(ex.getMessage());
 		}
-		JobsUtil.trimJobFromFilter(result);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, job.getId().toString()))
+		
+	//	JobsUtil.trimJobFromFilter(updatedJob);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
 	}
 
@@ -190,7 +199,7 @@ public class JobResource {
 			
 			JobsUtil.trimCorporateFromJob(job);
 			
-			log.debug("exiting for {} with filters {}", id, job.getJobFilters());
+			//log.debug("exiting for {} with filters {}", id, job.getJobFilters());
 		}
 		
 		

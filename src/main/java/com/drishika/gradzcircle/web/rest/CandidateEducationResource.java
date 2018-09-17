@@ -42,26 +42,6 @@ public class CandidateEducationResource {
 
 	private static final String ENTITY_NAME = "candidateEducation";
 
-	/*
-	 * private final CandidateEducationRepository candidateEducationRepository;
-	 * private final CandidateProjectRepository candidateProjectRepository;
-	 * 
-	 * private final CandidateEducationSearchRepository
-	 * candidateEducationSearchRepository; private final
-	 * CandidateProjectSearchRepository candidateProjectSearchRepository;
-	 * 
-	 * public CandidateEducationResource(CandidateEducationRepository
-	 * candidateEducationRepository, CandidateEducationSearchRepository
-	 * candidateEducationSearchRepository, CandidateProjectRepository
-	 * candidateProjectRepository, CandidateProjectSearchRepository
-	 * candidateProjectSearchRepository) { this.candidateEducationRepository =
-	 * candidateEducationRepository; this.candidateEducationSearchRepository =
-	 * candidateEducationSearchRepository; this.candidateProjectRepository =
-	 * candidateProjectRepository; this.candidateProjectSearchRepository =
-	 * candidateProjectSearchRepository;
-	 * 
-	 * }
-	 */
 	private final CandidateEducationService candidateEducationService;
 
 	public CandidateEducationResource(CandidateEducationService candidateEducationService) {
@@ -84,13 +64,13 @@ public class CandidateEducationResource {
 	public ResponseEntity<CandidateEducation> createCandidateEducation(
 			@RequestBody CandidateEducation candidateEducation) throws URISyntaxException {
 		log.debug("REST request to save CandidateEducation : {},{},{},{}", candidateEducation,
-				candidateEducation.getCollege(),candidateEducation.getCourse()
-				,candidateEducation.getQualification());
+				candidateEducation.getCollege(), candidateEducation.getCourse(), candidateEducation.getQualification());
 		if (candidateEducation.getId() != null) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
 					"A new candidateEducation cannot already have an ID")).body(null);
 		}
 		CandidateEducation result = candidateEducationService.createCandidateEducation(candidateEducation);
+		updateEducationDependentMetaForDisplay(result);
 		return ResponseEntity.created(new URI("/api/candidate-educations/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -116,6 +96,7 @@ public class CandidateEducationResource {
 			return createCandidateEducation(candidateEducation);
 		}
 		CandidateEducation result = candidateEducationService.updateCandidateEductaion(candidateEducation);
+		updateEducationDependentMetaForDisplay(candidateEducation);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateEducation.getId().toString()))
 				.body(result);
@@ -148,7 +129,7 @@ public class CandidateEducationResource {
 	public ResponseEntity<CandidateEducation> getCandidateEducation(@PathVariable Long id) {
 		log.debug("REST request to get CandidateEducation : {}", id);
 		CandidateEducation candidateEducation = candidateEducationService.getCandidateEducation(id);
-
+		updateEducationDependentMetaForDisplay(candidateEducation);
 		log.debug("Candidate Education reutrned is: {}", candidateEducation);
 
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateEducation));
@@ -168,6 +149,19 @@ public class CandidateEducationResource {
 	public List<CandidateEducation> getEducationByCandidateId(@PathVariable Long id) {
 		log.debug("REST request to get CandidateEducation : {}", id);
 		List<CandidateEducation> candidateEducations = candidateEducationService.getEducationByCandidateId(id);
+		candidateEducations.forEach(candidateEducation -> {
+			candidateEducation.getProjects().forEach(project -> {
+				project.setEducation(null);
+			});
+			;
+			candidateEducation.setCandidate(null);
+			if (candidateEducation.getCollege().getUniversity() != null) {
+				candidateEducation.getCollege().getUniversity().setCountry(null);
+			}
+			updateEducationDependentMetaForDisplay(candidateEducation);
+			log.debug("College data is {}", candidateEducation.getCollege());
+		});
+
 		log.debug("Candidate Education returned is: {}", candidateEducations);
 		return candidateEducations;
 	}
@@ -216,6 +210,31 @@ public class CandidateEducationResource {
 	public List<CandidateEducation> searchCandidateEducationsOrderedByToDate(@RequestParam String query) {
 		log.debug("REST request to search CandidateEducations for query {}", query);
 		return candidateEducationService.searchCandidateEducationsOrderedByToDate(query);
+
+	}
+
+	private void updateEducationDependentMetaForDisplay(CandidateEducation candidateEducation) {
+		if (candidateEducation == null)
+			return;
+		if (candidateEducation.getCollege() != null) {
+			candidateEducation.getCollege().setDisplay(candidateEducation.getCollege().getCollegeName());
+			candidateEducation.getCollege().setValue(candidateEducation.getCollege().getCollegeName());
+			if (candidateEducation.getCollege().getUniversity() != null) {
+				candidateEducation.getCollege().getUniversity()
+						.setDisplay(candidateEducation.getCollege().getUniversity().getUniversityName());
+				candidateEducation.getCollege().getUniversity()
+						.setValue(candidateEducation.getCollege().getUniversity().getUniversityName());
+			}
+		}
+		if (candidateEducation.getQualification() != null) {
+			candidateEducation.getQualification().setDisplay(candidateEducation.getQualification().getQualification());
+			candidateEducation.getQualification().setValue(candidateEducation.getQualification().getQualification());
+		}
+
+		if (candidateEducation.getCourse() != null) {
+			candidateEducation.getCourse().setDisplay(candidateEducation.getCourse().getCourse());
+			candidateEducation.getCourse().setValue(candidateEducation.getCourse().getCourse());
+		}
 
 	}
 

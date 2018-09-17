@@ -114,8 +114,44 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="candidates_id, jobs_id" tableName="candidate_job"/>
+          <addPrimaryKey columnNames="candidates_id, jobs_id" tableName="candidate_job"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+     <changeSet id="20171015094626-2" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="match_score" type="double"/>
+    		</addColumn>
+     </changeSet>
+     <changeSet id="20171015094626-3" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate">
+        		<column name="match_eligible" type="boolean"/>
+    		</addColumn>
+     </changeSet>
+     <changeSet id="20171015094626-4" author="abhinavp">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="education_match_score" type="double"/>
+    		</addColumn>
+    		<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="gender_match_score" type="double"/>
+    		</addColumn>
+    		<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="language_match_score" type="double"/>
+    		</addColumn>
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="total_eligible_score" type="double"/>
+    		</addColumn>
+     </changeSet>
 </databaseChangeLog>

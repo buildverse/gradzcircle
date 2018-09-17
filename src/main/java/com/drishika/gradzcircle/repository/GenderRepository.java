@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface GenderRepository extends JpaRepository<Gender, Long> {
+	
+	Gender findByGender(String gender);
 
 }

@@ -1,17 +1,25 @@
 package com.drishika.gradzcircle.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A Language.
@@ -34,11 +42,11 @@ public class Language implements Serializable {
     
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String value;
     
     @Transient
-    @JsonInclude
+    @JsonProperty
     private String display;
 
     @OneToMany(mappedBy = "language")
@@ -144,11 +152,11 @@ public class Language implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Language{" +
-            "id=" + getId() +
-            ", language='" + getLanguage() + "'" +
-            "}";
-    }
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Language [id=" + id + ", language=" + language + ", value=" + value + ", display=" + display + "]";
+	}
 }

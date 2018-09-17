@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.service;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,12 @@ import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.AddressRepository;
+import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
+import com.drishika.gradzcircle.repository.CandidateEducationRepository;
+import com.drishika.gradzcircle.repository.CandidateEmploymentRepository;
+import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
+import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
+import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
@@ -30,8 +38,8 @@ import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySe
 import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
-import com.drishika.gradzcircle.service.matching.CandidateMatcher;
 import com.drishika.gradzcircle.service.matching.Matcher;
+
 
 /**
  * Service to manage Candidate
@@ -39,7 +47,6 @@ import com.drishika.gradzcircle.service.matching.Matcher;
 
 @Service
 @Transactional
-
 public class CandidateService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CandidateService.class);
@@ -49,18 +56,30 @@ public class CandidateService {
 	private CandidateSearchRepository candidateSearchRepository;
 
 	private final CandidateEducationSearchRepository candidateEducationSearchRepository;
+	
+	private final CandidateEducationRepository candidateEducationRepository;
 
 	private final CandidateProjectSearchRepository candidateProjectSearchRepository;
+	
+	private final CandidateProjectRepository candidateProjectRepository;
+	
+	private final CandidateEmploymentRepository candidateEmploymentRepository;
 
 	private final CandidateEmploymentSearchRepository candidateEmploymentSearchRepository;
 
 	private final CandidateCertificationSearchRepository candidateCertificationSearchRepository;
+	
+	private final CandidateCertificationRepository candidateCertifcationRepository;
 
 	private final CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository;
+	
+	private final CandidateNonAcademicWorkRepository candidateNonAcademicRepository;
 
 	private final CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
 	
-	//private final Matcher<Candidate> jobMatcher;
+	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
+	
+	private final Matcher<Candidate> matcher;
 
 	// private final AddressSearchRepository addressSearchRepository;
 
@@ -74,7 +93,10 @@ public class CandidateService {
 			CandidateCertificationSearchRepository candidateCertificationSearchRepository,
 			CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository,
 			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository,
-			AddressRepository addressRepository) {
+			AddressRepository addressRepository,@Qualifier("CandidateGenderMatcher")Matcher<Candidate> matcher,
+			CandidateEducationRepository candidateEducationRepository,CandidateProjectRepository candidateProjectRepository,
+			CandidateNonAcademicWorkRepository candidateNonAcademicWorkRepository,CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
+			CandidateCertificationRepository candidateCertificationRepository,CandidateEmploymentRepository candidateEmploymentRepository) {
 		this.candidateRepository = candidateRepository;
 		this.candidateSearchRepository = candidateSearchRepository;
 		this.addressRepository = addressRepository;
@@ -85,12 +107,19 @@ public class CandidateService {
 		this.candidateProjectSearchRepository = candidateProjectSearchRepository;
 		this.candidateNonAcademicWorkSearchRepository = candidateNonAcademicWorkSearchRepository;
 		this.candidateLanguageProficiencySearchRepository = candidateLanguageProficiencySearchRepository;
-		//this.jobMatcher = jobMatcher;
+		this.candidateCertifcationRepository = candidateCertificationRepository;
+		this.candidateEducationRepository = candidateEducationRepository;
+		this.candidateEmploymentRepository = candidateEmploymentRepository;
+		this.candidateNonAcademicRepository = candidateNonAcademicWorkRepository;
+		this.candidateProjectRepository = candidateProjectRepository;
+		this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
+		this.matcher = matcher;
 	}
 
 	public void createCandidate(User user) {
 		Candidate candidate = new Candidate();
 		candidate.setLogin(user);
+		candidate.setMatchEligible(true);
 		candidateRepository.save(candidate);
 		candidateSearchRepository.save(candidate);
 		logger.debug("Created Information for candidate: {}", candidate);
@@ -98,22 +127,35 @@ public class CandidateService {
 
 	public Candidate createCandidate(Candidate candidate) {
 		logger.debug("REST request to save Candidate : {}", candidate);
-
+		candidate.setMatchEligible(true);
 		Candidate result = candidateRepository.save(candidate);
 		//Replace with Future
-		//jobMatcher.match(result);
-		candidateSearchRepository.save(result);
+		matcher.match(result);
+		//candidateSearchRepository.save(result);
 		return result;
 	}
 
 	public Candidate updateCandidate(Candidate candidate) {
-
 		logger.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
-		candidate.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(candidate));
+		Boolean enableMatch = false;
+		Candidate prevCandidate = candidateRepository.findOne(candidate.getId());
+		logger.debug("Egender from repo{}",prevCandidate.getGender());
+		logger.debug("Egender from request{}",candidate.getGender());
+		if(candidate.getGender()!=null) {
+			if(!candidate.getGender().equals(prevCandidate.getGender())) {
+				enableMatch = true;
+				candidate.setCandidateJobs(prevCandidate.getCandidateJobs());
+				logger.debug("Enabe Match is {}",enableMatch);
+			}
+		}
+		candidate.setEducations(prevCandidate.getEducations());
+		candidate.setCandidateJobs(prevCandidate.getCandidateJobs());
 		Candidate result = candidateRepository.save(candidate);
+		result.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(result));
 		//Replace with Future
-		//jobMatcher.match(result);
-		candidateSearchRepository.save(result);
+		if(enableMatch)
+			matcher.match(result);
+		//candidateSearchRepository.save(result);
 		return result;
 	}
 
@@ -127,9 +169,9 @@ public class CandidateService {
 		Candidate candidate = candidateRepository.findOneWithEagerRelationships(id);
 		if (candidate != null) {
 			Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-			addresses.forEach(candidateAddress -> {
+		/*	addresses.forEach(candidateAddress -> {
 				candidateAddress.setCandidate(null);
-			});
+			});*/
 			candidate.setAddresses(addresses);
 			logger.debug("Retruning candidate {}", candidate.getAddresses());
 		}
@@ -149,7 +191,7 @@ public class CandidateService {
 	public void deleteCandidate(Long id) {
 		logger.debug("REST request to delete Candidate : {}", id);
 		candidateRepository.delete(id);
-		candidateSearchRepository.delete(id);
+		//candidateSearchRepository.delete(id);
 	}
 
 	public List<Candidate> searchCandidates(String query) {
@@ -158,6 +200,38 @@ public class CandidateService {
 				.collect(Collectors.toList());
 	}
 
+	public Candidate getCandidatePublicProfile(Long id) {
+		logger.debug("REST request to get Candidate public profile for candidate {}", id);
+		Candidate candidate = candidateRepository.findOne(id);
+		if(candidate == null)
+			return candidate;
+		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
+		Set<CandidateEducation> candidateEducations = new HashSet<CandidateEducation>(candidateEducationRepository.findByCandidateId(candidate.getId()));
+		Set<CandidateEmployment> candidateEmployments = new HashSet<>(candidateEmploymentRepository.findByCandidateId(candidate.getId()));
+		if (candidateEducations != null & candidateEducations.size() > 0) {
+			candidateEducations.forEach(candidateEducation -> {
+				Set<CandidateProject> projects = candidateProjectRepository.findByEducation(candidateEducation);
+				candidateEducation.setProjects(projects);
+			});
+		}
+		if(candidateEmployments != null & candidateEmployments.size() > 0) {
+			candidateEmployments.forEach(candidateEmployment -> {
+				Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEmployment(candidateEmployment);
+				candidateEmployment.setProjects(candidateProjects);
+			});
+		}
+		Set<CandidateCertification> candidateCertifications = new HashSet<>(candidateCertifcationRepository.findCertificationsByCandidateId(candidate.getId()));
+		Set<CandidateNonAcademicWork> candidateNonAcademicWorks = new HashSet<>(candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId()));
+		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>(candidateLanguageProficiencyRepository.findCandidateLanguageProficienciesByCandidateId(candidate.getId()));
+		candidate.setAddresses(addresses);
+		candidate.setEducations(candidateEducations);
+		candidate.setEmployments(candidateEmployments);
+		candidate.setCertifications(candidateCertifications);
+		candidate.setNonAcademics(candidateNonAcademicWorks);
+		candidate.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
+		return candidate;
+	}
+	/* Fix this to go to DB not ES */
 	public Candidate retrieveCandidatePublicProfile(String query) {
 		logger.debug("REST request to get Candidate public profile for query {}", query);
 		Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));

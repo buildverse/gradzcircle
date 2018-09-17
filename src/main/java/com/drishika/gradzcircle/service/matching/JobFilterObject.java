@@ -34,7 +34,7 @@ public class JobFilterObject {
 	private String scoreType;
 	private String graduationDateType;
 	private Double gpa;
-	private Double percent;
+	private Double percentage;
 	
 	/**
 	 * @return the basic
@@ -226,14 +226,14 @@ public class JobFilterObject {
 	/**
 	 * @return the percent
 	 */
-	public Double getPercent() {
-		return percent;
+	public Double getPercentage() {
+		return percentage;
 	}
 	/**
 	 * @param percent the percent to set
 	 */
-	public void setPercent(Double percent) {
-		this.percent = percent;
+	public void setPercentage(Double percentage) {
+		this.percentage = percentage;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -253,7 +253,7 @@ public class JobFilterObject {
 		result = prime * result + ((graduationFromDate == null) ? 0 : graduationFromDate.hashCode());
 		result = prime * result + ((graduationToDate == null) ? 0 : graduationToDate.hashCode());
 		result = prime * result + ((languages == null) ? 0 : languages.hashCode());
-		result = prime * result + ((percent == null) ? 0 : percent.hashCode());
+		result = prime * result + ((percentage == null) ? 0 : percentage.hashCode());
 		result = prime * result + ((premium == null) ? 0 : premium.hashCode());
 		result = prime * result + ((qualifications == null) ? 0 : qualifications.hashCode());
 		result = prime * result + ((scoreType == null) ? 0 : scoreType.hashCode());
@@ -327,10 +327,10 @@ public class JobFilterObject {
 				return false;
 		} else if (!languages.equals(other.languages))
 			return false;
-		if (percent == null) {
-			if (other.percent != null)
+		if (percentage == null) {
+			if (other.percentage != null)
 				return false;
-		} else if (!percent.equals(other.percent))
+		} else if (!percentage.equals(other.percentage))
 			return false;
 		if (premium == null) {
 			if (other.premium != null)
@@ -365,7 +365,7 @@ public class JobFilterObject {
 				+ ", graduationDate=" + graduationDate + ", graduationFromDate=" + graduationFromDate
 				+ ", graduationToDate=" + graduationToDate + ", basic=" + basic + ", premium=" + premium + ", addOn="
 				+ addOn + ", scoreType=" + scoreType + ", graduationDateType=" + graduationDateType + ", gpa=" + gpa
-				+ ", percent=" + percent + "]";
+				+ ", percent=" + percentage + "]";
 	}
 	
 	

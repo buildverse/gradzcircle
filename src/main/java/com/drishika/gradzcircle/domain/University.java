@@ -48,7 +48,7 @@ public class University implements Serializable {
 	@Column(name = "website")
 	private String website;
 
-	@OneToMany(mappedBy = "university")
+	@OneToMany(mappedBy = "university",cascade= CascadeType.ALL)
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<College> colleges = new HashSet<>();
@@ -203,14 +203,12 @@ public class University implements Serializable {
 		return Objects.hashCode(getId());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "University{" + "id=" + getId() + ", universityName='" + getUniversityName() + "'" + ", universityType='"
-				+ getUniversityType() + "'" + ", website='" + getWebsite() + "'" + "}";
+		return "University [id=" + id + ", universityName=" + universityName + ", value=" + value + ", display="
+				+ display + ", universityType=" + universityType + ", website=" + website + "]";
 	}
 }
