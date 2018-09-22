@@ -19,11 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
@@ -64,7 +66,10 @@ import com.drishika.gradzcircle.service.JobService;
 public class JobMatcherIntTest {
 
 	private JobMatcher jobMatcher;
-
+	
+	@Autowired
+	private ApplicationEventPublisher applicationEventPublisher;
+	
 	@Autowired
 	private CandidateEducationService candidateEducationService;
 	@Autowired
@@ -170,7 +175,7 @@ public class JobMatcherIntTest {
 		MockitoAnnotations.initMocks(this);
 		jobMatcher = new JobMatcher(candidateEducationService, candidateLanguageService, jobFilterParser,
 				filterRepository, courseRepository, qualificationRepository, collegeRepository, universityRepository,
-				genderRepository, languageRepository,jobRepository,jobSearchRepository,matchUtils,candidateJobRepository,candidateRepository);	
+				genderRepository, languageRepository,jobRepository,jobSearchRepository,matchUtils,candidateJobRepository,candidateRepository,applicationEventPublisher);	
 		
 		filterRepository.deleteAll();
 		courseRepository.deleteAll();
