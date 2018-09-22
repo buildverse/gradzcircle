@@ -2,13 +2,13 @@ package com.drishika.gradzcircle.service.matching;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.drishika.gradzcircle.constants.ApplicationConstants;
@@ -30,6 +30,8 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.CandidateEducationService;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
+import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
+
 
 /**
  * @author abhinav 
@@ -47,6 +49,7 @@ public class JobMatcher implements Matcher<Job> {
 	private final JobRepository jobRepository;
 	private final CandidateRepository candidateRepository;
 	private final MatchUtils matchUtils;
+	private final ApplicationEventPublisher applicationEventPublisher;
 	
 	public JobMatcher(CandidateEducationService candidateEducationService,
 			CandidateLanguageService candidateLanguageService, JobFilterParser jobfilterParser,
@@ -54,23 +57,26 @@ public class JobMatcher implements Matcher<Job> {
 			QualificationRepository qualificationRepository, CollegeRepository collegeRepository,
 			UniversityRepository universityRepository, GenderRepository genderRepository,
 			LanguageRepository languageRepository, JobRepository jobRepository,JobSearchRepository jobSearchRepository,
-			MatchUtils matchUtils, CandidateJobRepository candidateJobRepository, CandidateRepository candidateRepository) {
+			MatchUtils matchUtils, CandidateJobRepository candidateJobRepository, CandidateRepository candidateRepository,
+			ApplicationEventPublisher applicationEventPublisher) {
 		this.candidateEducationService = candidateEducationService;
 		this.candidateLanguageService = candidateLanguageService;
 		this.jobRepository = jobRepository;
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
 	public void match(Job job) {
 		long startTime = System.currentTimeMillis();
 		matchUtils.populateJobFilterWeightMap();
-		//Job jobFromRepo = jobRepository.findOne(job.getId());
+		
 		JobFilterObject jobfilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
 		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject).parallel();
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		candidateJobs = candidateEducationStream.map(candidateEducation -> beginMatchingOnEducation(job,jobfilterObject, candidateEducation)).filter(candidateJob -> candidateJob!=null).collect(Collectors.toSet());
+		//Iterator<CandidateJob> candidateJobIterator = candidateJobs.iterator();
 		candidateJobs.forEach(matchedCandidateJob -> {
 			if(job.getCandidateJobs().contains(matchedCandidateJob)) {
 				job.getCandidateJobs().remove(matchedCandidateJob);
@@ -80,8 +86,21 @@ public class JobMatcher implements Matcher<Job> {
 			}
 		});
 		jobRepository.save(job);
-		//BROADCAST NOW
+	/*	Set<Double> matchScores = candidateJobs.stream().map(CandidateJob::getMatchScore).collect(Collectors.toSet());
+		Set<CandidateJob> deltaMatchSet = job.getCandidateJobs().stream().filter(candidateJob -> matchScores.contains(candidateJob.getMatchScore())).collect(Collectors.toSet());
+		Set<MatchActivityDTO> matchedActivityDTO = new HashSet<>();
+		deltaMatchSet.forEach(matchSet -> {
+			MatchActivityDTO dto = new MatchActivityDTO();
+			dto.setCandidateId(matchSet.getCandidate().getId());
+			dto.setJobId(matchSet.getJob().getId());
+			dto.setMatchScore(matchSet.getMatchScore());
+			dto.setCorporateId(matchSet.getJob().getCorporate().getId());
+			matchedActivityDTO.add(dto);
+		});
+		MatchEvent matchEvent = new MatchEvent(this, matchedActivityDTO);
+		applicationEventPublisher.publishEvent(matchEvent);*/
 		log.info("Job Matching completed in {} ms", (System.currentTimeMillis() - startTime));
+		
 	}
 
 	private Stream<CandidateLanguageProficiency> getAllLanguageProfienciesForActiveCandidates() {

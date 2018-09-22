@@ -2,7 +2,8 @@ import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {GradzcircleSharedModule} from '../../shared';
 import { FroalaEditorModule } from 'angular-froala-wysiwyg';
-
+//import { GradzcircleTrackerModule, MatchTrackerComponent } from '../match-tracker/';
+//import { MatchTrackerService } from '../match-tracker/match-tracker.service';
 import {
   JobService,
   JobPopupService,
@@ -50,6 +51,7 @@ const ENTITY_STATES = [
     JobRemovePopupComponent,
     JobViewComponent,
   JobViewPopupComponent
+  //MatchTrackerComponent
   ],
   entryComponents: [
     JobComponent,
@@ -64,10 +66,12 @@ const ENTITY_STATES = [
     JobRemovePopupComponent,
     JobViewComponent,
   JobViewPopupComponent
+//  MatchTrackerComponent
   ],
   providers: [
     JobService,
     JobPopupService,
+   // MatchTrackerService,
     JobPopupServiceNew
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

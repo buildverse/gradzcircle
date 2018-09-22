@@ -2,15 +2,15 @@ import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs/Rx';
 
-import { CSRFService } from '../auth/csrf.service';
-import { WindowRef } from './window.service';
-import { AuthServerProvider } from '../auth/auth-jwt.service';
+import { CSRFService } from '../../shared/auth/csrf.service';
+import { WindowRef } from '../../shared/tracker/window.service';
+import { AuthServerProvider } from '../../shared/auth/auth-jwt.service';
 
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 
 @Injectable()
-export class JhiTrackerService {
+export class MatchTrackerService {
     stompClient = null;
     subscriber = null;
     connection: Promise<any>;
@@ -37,8 +37,8 @@ export class JhiTrackerService {
         // building absolute path so that websocket doesn't fail when deploying with a context path
         const loc = this.$window.nativeWindow.location;
         let url;
-        //url = '//' + loc.host + loc.pathname + 'websocket/match';
-       url = '//' + loc.host + loc.pathname + 'websocket/tracker';
+        url = '//' + loc.host + loc.pathname + 'websocket/tracker';
+        console.log('the url created is '+JSON.stringify(url));
         const authToken = this.authServerProvider.getToken();
         if (authToken) {
             url += '?access_token=' + authToken;
@@ -49,7 +49,7 @@ export class JhiTrackerService {
         this.stompClient.connect(headers, () => {
            // this.connectedPromise('success');
             this.connectedPromise = null;
-            this.sendActivity();
+          //  this.sendActivity();
             if (!this.alreadyConnectedOnce) {
                 this.subscription = this.router.events.subscribe((event) => {
                   if (event instanceof NavigationEnd) {
@@ -80,8 +80,7 @@ export class JhiTrackerService {
     sendActivity() {
         if (this.stompClient !== null && this.stompClient.connected) {
             this.stompClient.send(
-               // '/topic/matchActivity', // destination
-               '/topic/activity', // destination
+                '/topic/matchActivity', // destination
                 JSON.stringify({'page': this.router.routerState.snapshot.url}), // body
                 {} // header
             );
@@ -89,11 +88,9 @@ export class JhiTrackerService {
     }
 
     subscribe() {
-      console.log('DID I CALL SUBSCRIBE');
         this.connection.then(() => {
-            //this.subscriber = this.stompClient.subscribe('/topic/match', (data) => {
-               this.subscriber = this.stompClient.subscribe('/topic/tracker', (data) => {
-              // console.log('DATA BODY IS '+JSON.stringify(data.body));
+            this.subscriber = this.stompClient.subscribe('/topic/match', (data) => {
+              console.log('DATA BODY IS '+JSON.stringify(data.body));
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });

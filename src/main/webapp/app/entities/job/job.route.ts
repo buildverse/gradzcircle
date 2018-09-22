@@ -3,7 +3,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActiva
 
 import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-
+//import { matchTrackerRoute } from '../match-tracker/';
 import { JobComponent } from './job.component';
 import { JobDetailComponent } from './job-detail.component';
 import { JobPopupComponent,JobPopupComponentNew } from './job-dialog.component';
@@ -11,6 +11,11 @@ import { JobViewComponent,JobViewPopupComponent} from './job-view.component';
 import { JobRemoveDialogComponent,JobRemovePopupComponent} from './job-remove-dialog.component'
 import { JobDeletePopupComponent } from './job-delete-dialog.component';
 import {JobEditMessageDialogComponent,JobEditMessagePopupComponent} from './job-edit-message-dialog.component';
+
+const TRACKER_ROUTE = [
+   //matchTrackerRoute
+];
+
 
 export const jobRoute: Routes = [
     {
@@ -29,7 +34,8 @@ export const jobRoute: Routes = [
             pageTitle: 'gradzcircleApp.job.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }
+    },
+ // matchTrackerRoute
 ];
 
 export const jobPopupRoute: Routes = [

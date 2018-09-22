@@ -21,6 +21,7 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
 /**
  * @author abhinav
@@ -68,6 +69,7 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 		}
 		log.debug("Languages before save are {}",candidate.getCandidateLanguageProficiencies());
 		candidateRepository.save(candidate);
+		
 		
 	}
 	

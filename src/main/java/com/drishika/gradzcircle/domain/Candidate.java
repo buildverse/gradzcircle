@@ -100,7 +100,7 @@ public class Candidate implements Serializable {
    // @JsonManagedReference
     private Set<Address> addresses = new HashSet<>();
 
-    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval=true,fetch=FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
    // @JsonManagedReference
     private Set<CandidateEducation> educations = new HashSet<>();

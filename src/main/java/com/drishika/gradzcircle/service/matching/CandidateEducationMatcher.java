@@ -23,6 +23,7 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
 /**
  * @author abhinav
@@ -76,6 +77,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		}
 		log.debug("Status of education in candidate before save {}",candidate.getEducations());
 		candidateRepository.save(candidate);
+	
 	}
 	
 	private CandidateJob beginMatching(Job job, Candidate candidate) {	

@@ -1,0 +1,25 @@
+<div>
+    <h2 jhiTranslate="tracker.title">Real-time user activities</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th >Corporate Id</th>
+                    <th >Job Id</th>
+                    <th >Candidate Id</th>
+                    <th >Match Score</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let activity of activities">
+                    <td>{{activity.userLogin}}</td>
+                    <td>{{activity.ipAddress}}</td>
+                    <td>{{activity.page}}</td>
+                    <td>{{activity.time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
