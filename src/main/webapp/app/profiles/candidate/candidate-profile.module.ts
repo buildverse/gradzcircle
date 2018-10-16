@@ -5,7 +5,7 @@ import { GradzcircleSharedModule } from '../../shared';
 import { GradzcircleAdminModule } from '../../admin/admin.module';
 import { GradzcircleCandidateModule } from '../../entities/candidate/candidate.module';
 import { GradzcircleCandidateLanguageProficiencyModule } from '../../entities/candidate-language-proficiency/candidate-language-proficiency.module';
-import { candidateProfileRoutes,candidateProfilePopupRoute } from './candidate-profile.route';
+import { candidateProfileRoutes,candidateProfilePopupRoute ,AppliedJobResolvePagingParams} from './candidate-profile.route';
 import { CandidateProfileAboutMeEditComponent } from './candidate-about-me-edit.component';
 import {CandidateProfileComponent } from './candidate-profile.component';
 import {CandidateResolverService} from './candidate-profile-account-resolver.service';
@@ -30,6 +30,7 @@ import { SafeHtml } from './image.pipe';
 import { GradzcircleCandidateEducationModule } from '../../entities/candidate-education/candidate-education.module';
 import { CandidatePublicProfilePopupComponent,CandidatePublicProfilePopupDialogComponent } from './candidate-public-profile-popup.component';
 import { CandidatePublicProfilePopupService } from './candidate-public-profile-popup.service';
+import { AppliedJobsComponent } from './applied-job-by-candidate.component'
 
 const ENTITY_STATES = [
     ...candidateProfileRoutes,
@@ -55,7 +56,8 @@ const ENTITY_STATES = [
         CandidateProfileLanguaugeEditComponent,
         SafeHtml,
         CandidatePublicProfilePopupComponent,
-        CandidatePublicProfilePopupDialogComponent
+        CandidatePublicProfilePopupDialogComponent,
+        AppliedJobsComponent
         
     ],
     providers :[
@@ -72,13 +74,15 @@ const ENTITY_STATES = [
         CandidateDetailResolverService,
         CandidateLanguageProficiencyResolverService,
        // ImageResolver,
-        CandidatePublicProfilePopupService
+        CandidatePublicProfilePopupService,
+        AppliedJobResolvePagingParams
 
     ],
     entryComponents: [
         CandidatePublicProfilePopupComponent,
-        CandidatePublicProfilePopupDialogComponent
+        CandidatePublicProfilePopupDialogComponent,
     ],
+   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class CandidateProfileModule {}

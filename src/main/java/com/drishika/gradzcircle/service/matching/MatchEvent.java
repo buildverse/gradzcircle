@@ -14,16 +14,16 @@ import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
  *
  */
 public class MatchEvent extends ApplicationEvent {
-	
-	private final Set<MatchActivityDTO> matchActivityDTO;
-	
-	public MatchEvent(Object source, Set<MatchActivityDTO> matchActivityDTO) {
-        super(source);
-        this.matchActivityDTO = matchActivityDTO;
-    }
 
-    public Set<MatchActivityDTO> getMatchingActivityDTO() {
-        return matchActivityDTO;
-    }
+	private final Set<MatchActivityDTO> matchActivityDTO;
+
+	public MatchEvent(Object source, Set<MatchActivityDTO> matchActivityDTO) {
+		super(source);
+		this.matchActivityDTO = matchActivityDTO;
+	}
+
+	public Set<MatchActivityDTO> getMatchingActivityDTO() {
+		return matchActivityDTO;
+	}
 
 }

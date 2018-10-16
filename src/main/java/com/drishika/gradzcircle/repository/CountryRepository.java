@@ -11,20 +11,20 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CountryRepository extends JpaRepository<Country,Long> {
+public interface CountryRepository extends JpaRepository<Country, Long> {
 
-    /**
-    *
-    * Use query Annotation to get enabled countris for Business
-    *
-    */
-    @Query("Select  c from Country c where enabled=true")
-    public List<Country> findEnabledCountries();
+	/**
+	 *
+	 * Use query Annotation to get enabled countris for Business
+	 *
+	 */
+	@Query("Select  c from Country c where enabled=true")
+	public List<Country> findEnabledCountries();
 
-    /**
-     * Reduced payload for meta data
-     */
-    @Query("Select c.id as id, c.countryNiceName as countryNiceName, c.phoneCode as phoneCode from Country c")
-    public List<Country> findCountries();
+	/**
+	 * Reduced payload for meta data
+	 */
+	@Query("Select c.id as id, c.countryNiceName as countryNiceName, c.phoneCode as phoneCode from Country c")
+	public List<Country> findCountries();
 
 }

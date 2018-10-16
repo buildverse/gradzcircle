@@ -1,33 +1,44 @@
 
 <div *ngIf="errorMessages">
-    <h2><span jhiTranslate="gradzcircleApp.errorMessages.detail.title">Error Messages</span> {{errorMessages.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.errorMessages.componentName">Component Name</span></dt>
-        <dd>
-            <span>{{errorMessages.componentName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.errorMessages.errorKey">Error Key</span></dt>
-        <dd>
-            <span>{{errorMessages.errorKey}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.errorMessages.errorMessage">Error Message</span></dt>
-        <dd>
-            <span>{{errorMessages.errorMessage}}</span>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.errorMessages.detail.title">Error
+			Messages</span> {{errorMessages.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.errorMessages.componentName">Component
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{errorMessages.componentName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.errorMessages.errorKey">Error
+				Key</span>
+		</dt>
+		<dd>
+			<span>{{errorMessages.errorKey}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.errorMessages.errorMessage">Error
+				Message</span>
+		</dt>
+		<dd>
+			<span>{{errorMessages.errorMessage}}</span>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

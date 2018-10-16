@@ -1,117 +1,175 @@
 
 <div *ngIf="candidate">
-    <h2><span jhiTranslate="gradzcircleApp.candidate.detail.title">Candidate</span> {{candidate.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.candidate.firstName">First Name</span></dt>
-        <dd>
-            <span>{{candidate.firstName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.lastName">Last Name</span></dt>
-        <dd>
-            <span>{{candidate.lastName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.middleName">Middle Name</span></dt>
-        <dd>
-            <span>{{candidate.middleName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span></dt>
-        <dd>
-            <span>{{candidate.facebook}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.linkedIn">Linked In</span></dt>
-        <dd>
-            <span>{{candidate.linkedIn}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</span></dt>
-        <dd>
-            <span>{{candidate.twitter}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.aboutMe">About Me</span></dt>
-        <dd>
-            <span>{{candidate.aboutMe}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.dateOfBirth">Date Of Birth</span></dt>
-        <dd>
-            <span>{{candidate.dateOfBirth | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.phoneCode">Phone Code</span></dt>
-        <dd>
-            <span>{{candidate.phoneCode}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone Number</span></dt>
-        <dd>
-            <span>{{candidate.phoneNumber}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.differentlyAbled">Differently Abled</span></dt>
-        <dd>
-            <span>{{candidate.differentlyAbled}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.availableForHiring">Available For Hiring</span></dt>
-        <dd>
-            <span>{{candidate.availableForHiring}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.openToRelocate">Open To Relocate</span></dt>
-        <dd>
-            <span>{{candidate.openToRelocate}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.matchEligible">Match Eligible</span></dt>
-        <dd>
-            <span>{{candidate.matchEligible}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.login">Login</span></dt>
-        <dd>
-            {{candidate.login?.id}}
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></dt>
-        <dd>
-            <div *ngIf="candidate.nationality">
-                <a [routerLink]="['/nationality', candidate.nationality?.id]">{{candidate.nationality?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></dt>
-        <dd>
-            <div *ngIf="candidate.gender">
-                <a [routerLink]="['/gender', candidate.gender?.id]">{{candidate.gender?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital Status</span></dt>
-        <dd>
-            <div *ngIf="candidate.maritalStatus">
-                <a [routerLink]="['/marital-status', candidate.maritalStatus?.id]">{{candidate.maritalStatus?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job Category</span></dt>
-        <dd>
-            <span *ngFor="let jobCategory of candidate.jobCategories; let last = last">
-                <a [routerLink]="['/job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last ? '' : ', '}}
-            </span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.job">Job</span></dt>
-        <dd>
-            <span *ngFor="let job of candidate.jobs; let last = last">
-                <a [routerLink]="['/job', job?.id ]">{{job.id}}</a>{{last ? '' : ', '}}
-            </span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa Type</span></dt>
-        <dd>
-            <div *ngIf="candidate.visaType">
-                <a [routerLink]="['/visa-type', candidate.visaType?.id]">{{candidate.visaType?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.candidate.detail.title">Candidate</span>
+		{{candidate.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.firstName">First
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{candidate.firstName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.lastName">Last
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{candidate.lastName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.middleName">Middle
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{candidate.middleName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span>
+		</dt>
+		<dd>
+			<span>{{candidate.facebook}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.linkedIn">Linked
+				In</span>
+		</dt>
+		<dd>
+			<span>{{candidate.linkedIn}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</span>
+		</dt>
+		<dd>
+			<span>{{candidate.twitter}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.aboutMe">About Me</span>
+		</dt>
+		<dd>
+			<span>{{candidate.aboutMe}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.dateOfBirth">Date
+				Of Birth</span>
+		</dt>
+		<dd>
+			<span>{{candidate.dateOfBirth | date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.phoneCode">Phone
+				Code</span>
+		</dt>
+		<dd>
+			<span>{{candidate.phoneCode}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone
+				Number</span>
+		</dt>
+		<dd>
+			<span>{{candidate.phoneNumber}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.differentlyAbled">Differently
+				Abled</span>
+		</dt>
+		<dd>
+			<span>{{candidate.differentlyAbled}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.availableForHiring">Available
+				For Hiring</span>
+		</dt>
+		<dd>
+			<span>{{candidate.availableForHiring}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.openToRelocate">Open
+				To Relocate</span>
+		</dt>
+		<dd>
+			<span>{{candidate.openToRelocate}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.matchEligible">Match
+				Eligible</span>
+		</dt>
+		<dd>
+			<span>{{candidate.matchEligible}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.login">Login</span>
+		</dt>
+		<dd>{{candidate.login?.id}}</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidate.nationality">
+				<a [routerLink]="['/nationality', candidate.nationality?.id]">{{candidate.nationality?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidate.gender">
+				<a [routerLink]="['/gender', candidate.gender?.id]">{{candidate.gender?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital
+				Status</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidate.maritalStatus">
+				<a [routerLink]="['/marital-status', candidate.maritalStatus?.id]">{{candidate.maritalStatus?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job
+				Category</span>
+		</dt>
+		<dd>
+			<span
+				*ngFor="let jobCategory of candidate.jobCategories; let last = last">
+				<a [routerLink]="['/job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last
+				? '' : ', '}}
+			</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.job">Job</span>
+		</dt>
+		<dd>
+			<span *ngFor="let job of candidate.jobs; let last = last"> <a
+				[routerLink]="['/job', job?.id ]">{{job.id}}</a>{{last ? '' : ', '}}
+			</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidate.visaType">Visa
+				Type</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidate.visaType">
+				<a [routerLink]="['/visa-type', candidate.visaType?.id]">{{candidate.visaType?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

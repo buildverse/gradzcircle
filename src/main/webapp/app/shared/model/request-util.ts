@@ -10,8 +10,8 @@ export const createRequestOption = (req?: any): BaseRequestOptions => {
             params.paramsMap.set('sort', req.sort);
         }
         params.set('query', req.query);
-
         options.params = params;
+      console.log('seeting this in prams '+JSON.stringify(params));
     }
     return options;
 };

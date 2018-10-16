@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 
-
 /**
  * Spring Data JPA repository for the JobFilter entity.
  */
@@ -18,5 +17,5 @@ import com.drishika.gradzcircle.domain.JobFilter;
 public interface JobFilterRepository extends JpaRepository<JobFilter, Long> {
 
 	JobFilter findByJob(Job job);
-	
+
 }

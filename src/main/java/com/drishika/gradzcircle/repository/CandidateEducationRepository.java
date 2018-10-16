@@ -17,8 +17,6 @@ import org.springframework.stereotype.Repository;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 
-
-
 /**
  * Spring Data JPA repository for the CandidateEducation entity.
  */
@@ -26,24 +24,27 @@ import com.drishika.gradzcircle.domain.CandidateEducation;
 @Repository
 public interface CandidateEducationRepository extends JpaRepository<CandidateEducation, Long> {
 
-    @Query("select candidateEducation from CandidateEducation candidateEducation where candidateEducation.candidate.id=:id order By candidateEducation.educationToDate desc")
-    List<CandidateEducation> findByCandidateId(@Param("id") Long id);
+	@Query("select candidateEducation from CandidateEducation candidateEducation where candidateEducation.candidate.id=:id order By candidateEducation.educationToDate desc")
+	List<CandidateEducation> findByCandidateId(@Param("id") Long id);
 
-    CandidateEducation findByCandidateAndHighestQualification(Candidate candidate,Boolean highestQualification);
-    
-    List<CandidateEducation> findByOrderByEducationToDateDesc();
-    
-    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-    Stream<CandidateEducation> findByEducationToDateAfterAndHighestQualification(LocalDate date, Boolean highestEducation);
-    
-    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-    Stream<CandidateEducation> findByEducationToDateBeforeAndHighestQualification(LocalDate date,Boolean highestEducation);
-    
-    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-    Stream<CandidateEducation> findByEducationToDateBetweenAndHighestQualification(LocalDate fromDate,LocalDate toDate,Boolean highestEducation);
-    
-    @Query("select cE from CandidateEducation cE inner join cE.candidate c where c.matchEligible=true and cE.highestQualification=true")
-    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-    Stream<CandidateEducation> findAllHighestCandidateEducationForMatchEligilbeCandidates();
+	CandidateEducation findByCandidateAndHighestQualification(Candidate candidate, Boolean highestQualification);
+
+	List<CandidateEducation> findByOrderByEducationToDateDesc();
+
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateEducation> findByEducationToDateAfterAndHighestQualification(LocalDate date,
+			Boolean highestEducation);
+
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateEducation> findByEducationToDateBeforeAndHighestQualification(LocalDate date,
+			Boolean highestEducation);
+
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateEducation> findByEducationToDateBetweenAndHighestQualification(LocalDate fromDate, LocalDate toDate,
+			Boolean highestEducation);
+
+	@Query("select cE from CandidateEducation cE inner join cE.candidate c where c.matchEligible=true and cE.highestQualification=true")
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateEducation> findAllHighestCandidateEducationForMatchEligilbeCandidates();
 
 }

@@ -23,27 +23,24 @@ import java.net.URISyntaxException;
 @RequestMapping("/api")
 public class ElasticsearchIndexResource {
 
-    private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexResource.class);
+	private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexResource.class);
 
-    private final ElasticsearchIndexService elasticsearchIndexService;
+	private final ElasticsearchIndexService elasticsearchIndexService;
 
-    public ElasticsearchIndexResource(ElasticsearchIndexService elasticsearchIndexService) {
-        this.elasticsearchIndexService = elasticsearchIndexService;
-    }
+	public ElasticsearchIndexResource(ElasticsearchIndexService elasticsearchIndexService) {
+		this.elasticsearchIndexService = elasticsearchIndexService;
+	}
 
-    /**
-     * POST  /elasticsearch/index -> Reindex all Elasticsearch documents
-     */
-    @RequestMapping(value = "/elasticsearch/index",
-        method = RequestMethod.POST,
-        produces = MediaType.TEXT_PLAIN_VALUE)
-    @Timed
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
-    public ResponseEntity<Void> reindexAll() throws URISyntaxException {
-        log.info("REST request to reindex Elasticsearch by user : {}", SecurityUtils.getCurrentUserLogin());
-        elasticsearchIndexService.reindexAll();
-        return ResponseEntity.accepted()
-            .headers(HeaderUtil.createAlert("elasticsearch.reindex.accepted", null))
-            .build();
-    }
+	/**
+	 * POST /elasticsearch/index -> Reindex all Elasticsearch documents
+	 */
+	@RequestMapping(value = "/elasticsearch/index", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@Timed
+	@PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
+	public ResponseEntity<Void> reindexAll() throws URISyntaxException {
+		log.info("REST request to reindex Elasticsearch by user : {}", SecurityUtils.getCurrentUserLogin());
+		elasticsearchIndexService.reindexAll();
+		return ResponseEntity.accepted().headers(HeaderUtil.createAlert("elasticsearch.reindex.accepted", null))
+				.build();
+	}
 }

@@ -30,81 +30,81 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Language implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "language")
-    private String language;
-    
-    
-    @Transient
-    @JsonProperty
-    private String value;
-    
-    @Transient
-    @JsonProperty
-    private String display;
+	@Column(name = "language")
+	private String language;
 
-    @OneToMany(mappedBy = "language")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
+	@Transient
+	@JsonProperty
+	private String value;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+	@Transient
+	@JsonProperty
+	private String display;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@OneToMany(mappedBy = "language")
+	@JsonIgnore
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
 
-    public String getLanguage() {
-        return language;
-    }
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
+	// remove
+	public Long getId() {
+		return id;
+	}
 
-    public Language language(String language) {
-        this.language = language;
-        return this;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public String getLanguage() {
+		return language;
+	}
 
-    public Set<CandidateLanguageProficiency> getCandidateLanguageProficiencies() {
-        return candidateLanguageProficiencies;
-    }
+	public Language language(String language) {
+		this.language = language;
+		return this;
+	}
 
-    public Language candidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
-        this.candidateLanguageProficiencies = candidateLanguageProficiencies;
-        return this;
-    }
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
-    public Language addCandidateLanguageProficiency(CandidateLanguageProficiency candidateLanguageProficiency) {
-        this.candidateLanguageProficiencies.add(candidateLanguageProficiency);
-        candidateLanguageProficiency.setLanguage(this);
-        return this;
-    }
+	public Set<CandidateLanguageProficiency> getCandidateLanguageProficiencies() {
+		return candidateLanguageProficiencies;
+	}
 
-    public Language removeCandidateLanguageProficiency(CandidateLanguageProficiency candidateLanguageProficiency) {
-        this.candidateLanguageProficiencies.remove(candidateLanguageProficiency);
-        candidateLanguageProficiency.setLanguage(null);
-        return this;
-    }
+	public Language candidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
+		this.candidateLanguageProficiencies = candidateLanguageProficiencies;
+		return this;
+	}
 
-    public void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
-        this.candidateLanguageProficiencies = candidateLanguageProficiencies;
-    }
-    
-    
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+	public Language addCandidateLanguageProficiency(CandidateLanguageProficiency candidateLanguageProficiency) {
+		this.candidateLanguageProficiencies.add(candidateLanguageProficiency);
+		candidateLanguageProficiency.setLanguage(this);
+		return this;
+	}
 
-    /**
+	public Language removeCandidateLanguageProficiency(CandidateLanguageProficiency candidateLanguageProficiency) {
+		this.candidateLanguageProficiencies.remove(candidateLanguageProficiency);
+		candidateLanguageProficiency.setLanguage(null);
+		return this;
+	}
+
+	public void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies) {
+		this.candidateLanguageProficiencies = candidateLanguageProficiencies;
+	}
+
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+	// setters here, do not remove
+
+	/**
 	 * @return the value
 	 */
 	public String getValue() {
@@ -112,7 +112,8 @@ public class Language implements Serializable {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;
@@ -126,33 +127,36 @@ public class Language implements Serializable {
 	}
 
 	/**
-	 * @param display the display to set
+	 * @param display
+	 *            the display to set
 	 */
 	public void setDisplay(String display) {
 		this.display = display;
 	}
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Language language = (Language) o;
-        if (language.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), language.getId());
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Language language = (Language) o;
+		if (language.getId() == null || getId() == null) {
+			return false;
+		}
+		return Objects.equals(getId(), language.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
 
-    /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

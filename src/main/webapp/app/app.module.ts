@@ -1,7 +1,7 @@
 import './vendor.ts';
 import 'froala-editor/js/froala_editor.pkgd.min.js';
 
-import { NgModule } from '@angular/core';
+import { NgModule,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Ng2Webstorage } from 'ng2-webstorage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,6 +57,7 @@ import {
         PaginationConfig,
         UserRouteAccessService
     ],
-    bootstrap: [ JhiMainComponent ]
+    bootstrap: [ JhiMainComponent ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleAppModule {}

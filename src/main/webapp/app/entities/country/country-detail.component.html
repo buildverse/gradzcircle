@@ -1,55 +1,78 @@
 
 <div *ngIf="country">
-    <h2><span jhiTranslate="gradzcircleApp.country.detail.title">Country</span> {{country.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.country.countryName">Country Name</span></dt>
-        <dd>
-            <span>{{country.countryName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.shortCode">Short Code</span></dt>
-        <dd>
-            <span>{{country.shortCode}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.shortCodeThreeChar">Short Code Three Char</span></dt>
-        <dd>
-            <span>{{country.shortCodeThreeChar}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.countryNiceName">Country Nice Name</span></dt>
-        <dd>
-            <span>{{country.countryNiceName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.numCode">Num Code</span></dt>
-        <dd>
-            <span>{{country.numCode}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.phoneCode">Phone Code</span></dt>
-        <dd>
-            <span>{{country.phoneCode}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.enabled">Enabled</span></dt>
-        <dd>
-            <span>{{country.enabled}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.country.nationality">Nationality</span></dt>
-        <dd>
-            <div *ngIf="country.nationality">
-                <a [routerLink]="['/nationality', country.nationality?.id]">{{country.nationality?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.country.detail.title">Country</span>
+		{{country.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.countryName">Country
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{country.countryName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.shortCode">Short
+				Code</span>
+		</dt>
+		<dd>
+			<span>{{country.shortCode}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.shortCodeThreeChar">Short
+				Code Three Char</span>
+		</dt>
+		<dd>
+			<span>{{country.shortCodeThreeChar}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.countryNiceName">Country
+				Nice Name</span>
+		</dt>
+		<dd>
+			<span>{{country.countryNiceName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.numCode">Num Code</span>
+		</dt>
+		<dd>
+			<span>{{country.numCode}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.phoneCode">Phone
+				Code</span>
+		</dt>
+		<dd>
+			<span>{{country.phoneCode}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.enabled">Enabled</span>
+		</dt>
+		<dd>
+			<span>{{country.enabled}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.country.nationality">Nationality</span>
+		</dt>
+		<dd>
+			<div *ngIf="country.nationality">
+				<a [routerLink]="['/nationality', country.nationality?.id]">{{country.nationality?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'country/'+ country.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'country/'+ country.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

@@ -1,4 +1,5 @@
 export * from './candidate.model';
+export * from './candidate-public-profile.model';
 export * from './candidate-popup.service';
 export * from './candidate.service';
 export * from './candidate-dialog.component';

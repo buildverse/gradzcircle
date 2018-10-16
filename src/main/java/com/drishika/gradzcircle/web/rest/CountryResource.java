@@ -29,148 +29,158 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RequestMapping("/api")
 public class CountryResource {
 
-    private final Logger log = LoggerFactory.getLogger(CountryResource.class);
+	private final Logger log = LoggerFactory.getLogger(CountryResource.class);
 
-    private static final String ENTITY_NAME = "country";
+	private static final String ENTITY_NAME = "country";
 
-    private final CountryRepository countryRepository;
+	private final CountryRepository countryRepository;
 
-    private final CountrySearchRepository countrySearchRepository;
+	private final CountrySearchRepository countrySearchRepository;
 
-    public CountryResource(CountryRepository countryRepository, CountrySearchRepository countrySearchRepository) {
-        this.countryRepository = countryRepository;
-        this.countrySearchRepository = countrySearchRepository;
-    }
+	public CountryResource(CountryRepository countryRepository, CountrySearchRepository countrySearchRepository) {
+		this.countryRepository = countryRepository;
+		this.countrySearchRepository = countrySearchRepository;
+	}
 
-    /**
-     * POST  /countries : Create a new country.
-     *
-     * @param country the country to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new country, or with status 400 (Bad Request) if the country has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/countries")
-    @Timed
-    public ResponseEntity<Country> createCountry(@RequestBody Country country) throws URISyntaxException {
-        log.debug("REST request to save Country : {}", country);
-        if (country.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new country cannot already have an ID")).body(null);
-        }
-        Country result = countryRepository.save(country);
-        countrySearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * POST /countries : Create a new country.
+	 *
+	 * @param country
+	 *            the country to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the new
+	 *         country, or with status 400 (Bad Request) if the country has already
+	 *         an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/countries")
+	@Timed
+	public ResponseEntity<Country> createCountry(@RequestBody Country country) throws URISyntaxException {
+		log.debug("REST request to save Country : {}", country);
+		if (country.getId() != null) {
+			return ResponseEntity.badRequest().headers(
+					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new country cannot already have an ID"))
+					.body(null);
+		}
+		Country result = countryRepository.save(country);
+		countrySearchRepository.save(result);
+		return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
 
-    /**
-     * PUT  /countries : Updates an existing country.
-     *
-     * @param country the country to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated country,
-     * or with status 400 (Bad Request) if the country is not valid,
-     * or with status 500 (Internal Server Error) if the country couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/countries")
-    @Timed
-    public ResponseEntity<Country> updateCountry(@RequestBody Country country) throws URISyntaxException {
-        log.debug("REST request to update Country : {}", country);
-        if (country.getId() == null) {
-            return createCountry(country);
-        }
-        Country result = countryRepository.save(country);
-        countrySearchRepository.save(result);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, country.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * PUT /countries : Updates an existing country.
+	 *
+	 * @param country
+	 *            the country to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         country, or with status 400 (Bad Request) if the country is not
+	 *         valid, or with status 500 (Internal Server Error) if the country
+	 *         couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/countries")
+	@Timed
+	public ResponseEntity<Country> updateCountry(@RequestBody Country country) throws URISyntaxException {
+		log.debug("REST request to update Country : {}", country);
+		if (country.getId() == null) {
+			return createCountry(country);
+		}
+		Country result = countryRepository.save(country);
+		countrySearchRepository.save(result);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, country.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * GET  /countries : get all the countries.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of countries in body
-     */
-    @GetMapping("/countries")
-    @Timed
-    public List<Country> getAllCountries() {
-        log.debug("REST request to get all Countries");
-        return countryRepository.findAll();
-    }
+	/**
+	 * GET /countries : get all the countries.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of countries in
+	 *         body
+	 */
+	@GetMapping("/countries")
+	@Timed
+	public List<Country> getAllCountries() {
+		log.debug("REST request to get all Countries");
+		return countryRepository.findAll();
+	}
 
-      /**
-     * GET  /countries : get all the countries.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of countries in body
-     */
-    @GetMapping("/countriesMetaData")
-    @Timed
-    public List<Country> getCountries() {
-        log.debug("REST request to get all Countries");
-        List<Country> countries = countryRepository.findCountries();
-        return countries;
-    }
+	/**
+	 * GET /countries : get all the countries.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of countries in
+	 *         body
+	 */
+	@GetMapping("/countriesMetaData")
+	@Timed
+	public List<Country> getCountries() {
+		log.debug("REST request to get all Countries");
+		List<Country> countries = countryRepository.findCountries();
+		return countries;
+	}
 
-    /**
-     * GET  /countries/:id : get the "id" country.
-     *
-     * @param id the id of the country to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the country, or with status 404 (Not Found)
-     */
-    @GetMapping("/countries/{id}")
-    @Timed
-    public ResponseEntity<Country> getCountry(@PathVariable Long id) {
-        log.debug("REST request to get Country : {}", id);
-        Country country = countryRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(country));
-    }
+	/**
+	 * GET /countries/:id : get the "id" country.
+	 *
+	 * @param id
+	 *            the id of the country to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the country, or
+	 *         with status 404 (Not Found)
+	 */
+	@GetMapping("/countries/{id}")
+	@Timed
+	public ResponseEntity<Country> getCountry(@PathVariable Long id) {
+		log.debug("REST request to get Country : {}", id);
+		Country country = countryRepository.findOne(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(country));
+	}
 
-    /**
-     * DELETE  /countries/:id : delete the "id" country.
-     *
-     * @param id the id of the country to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/countries/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
-        log.debug("REST request to delete Country : {}", id);
-        countryRepository.delete(id);
-        countrySearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+	/**
+	 * DELETE /countries/:id : delete the "id" country.
+	 *
+	 * @param id
+	 *            the id of the country to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/countries/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
+		log.debug("REST request to delete Country : {}", id);
+		countryRepository.delete(id);
+		countrySearchRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
 
-        /**
-     *
-     * Get Enabled countries : Countires where we will be live
-     *
-     */
+	/**
+	 *
+	 * Get Enabled countries : Countires where we will be live
+	 *
+	 */
 
-     @GetMapping("/countries/enabled")
-     @Timed
+	@GetMapping("/countries/enabled")
+	@Timed
 
-     public List <Country> getEnabledCountries(){
-         log.debug ("Call to get enabled countries");
-         List <Country> countries = countryRepository.findEnabledCountries();
-         return countries;
-     }
+	public List<Country> getEnabledCountries() {
+		log.debug("Call to get enabled countries");
+		List<Country> countries = countryRepository.findEnabledCountries();
+		return countries;
+	}
 
-
-
-    /**
-     * SEARCH  /_search/countries?query=:query : search for the country corresponding
-     * to the query.
-     *
-     * @param query the query of the country search
-     * @return the result of the search
-     */
-    @GetMapping("/_search/countries")
-    @Timed
-    public List<Country> searchCountries(@RequestParam String query) {
-        log.debug("REST request to search Countries for query {}", query);
-        return StreamSupport
-            .stream(countrySearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
-    }
+	/**
+	 * SEARCH /_search/countries?query=:query : search for the country corresponding
+	 * to the query.
+	 *
+	 * @param query
+	 *            the query of the country search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/countries")
+	@Timed
+	public List<Country> searchCountries(@RequestParam String query) {
+		log.debug("REST request to search Countries for query {}", query);
+		return StreamSupport.stream(countrySearchRepository.search(queryStringQuery(query)).spliterator(), false)
+				.collect(Collectors.toList());
+	}
 
 }

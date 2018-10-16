@@ -44,7 +44,8 @@
             "visaType": "Visa Type",
             "profilePic" : "Profile Pic",
             "careerInterests": "Carrer Interests",
-            "job": "Job"
+            "job": "Job",
+            "educationDescriptionShortForm": "Education Summary"
 
         }
     }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
 
-
 /**
  * Spring Data JPA repository for the College entity.
  */
@@ -13,5 +12,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface CollegeRepository extends JpaRepository<College, Long> {
 
-    public College findByCollegeName(String CollegeName);
+	public College findByCollegeName(String CollegeName);
 }

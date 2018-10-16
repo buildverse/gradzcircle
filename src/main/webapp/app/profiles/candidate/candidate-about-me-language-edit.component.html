@@ -1,13 +1,14 @@
 <div class="container my-4">
-    <form novalidate (ngSubmit)="save()" [formGroup]="candidateLanguageForm">
+	<form novalidate (ngSubmit)="save()"
+		[formGroup]="candidateLanguageForm">
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-profile">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card card-profile">
 
 
 
-                    <!--<div formArrayName="candidateLanguageProficiency" *ngFor="let candidateLanguage of candidateLanguageForm.controls.candidateLanguageProficiency.controls; let i=index">
+					<!--<div formArrayName="candidateLanguageProficiency" *ngFor="let candidateLanguage of candidateLanguageForm.controls.candidateLanguageProficiency.controls; let i=index">
 
                         <div [formGroupName]="i">
                             <div class="form-group row mx-4 my-4">
@@ -62,7 +63,7 @@
                             </div>
                         </div>
                     </div>-->
-                   <!--<div formArrayName="candidateLanguageProficiency">
+					<!--<div formArrayName="candidateLanguageProficiency">
                        <div *ngFor="let candidateLanguage of candidateLanguageProficiency.controls; let i=index" [formGroupName]="i" >
                            <div class="form-group row mx-4 my-4">
                                 <div [ngClass]="{'has-error': (candidateLanguage.controls.language.touched || 
@@ -116,57 +117,56 @@
                             </div>
                        </div>
                    </div>-->
-                
-                    <div class="form-group row mx-4 my-4">
-                                <div [ngClass]="{'has-error': (candidateLanguageForm.get('language').touched || 
+
+					<div class="form-group row mx-4 my-4">
+						<div
+							[ngClass]="{'has-error': (candidateLanguageForm.get('language').touched || 
                                                     candidateLanguageForm.get('language').touched.dirty) &&
                                                     !candidateLanguageForm.get('language').touched.valid }">
-                                </div>
-                                <ng-template #rt let-r="result" let-t="term">
-                                    {{ r.language}}
-                                </ng-template>
-                                <label for="language" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.language.language">Language</label>
-                                <div class="col-md-3">
-                                    <input class="form-control" type="text" placeholder="{{'gradzcircleApp.language.language' | translate}}" id="language"
-                                        formControlName="language" [ngbTypeahead]="searchLanguages" [resultTemplate]="rt" [inputFormatter]="languageFormatter">
-                                    <span class="help-block" *ngIf="(candidateLanguageForm.get('language').touched || 
+						</div>
+						<ng-template #rt let-r="result" let-t="term"> {{
+						r.language}} </ng-template>
+						<label for="language"
+							class="col-md-2 col-form-label font-weight-bold text-muted"
+							jhiTranslate="gradzcircleApp.language.language">Language</label>
+						<div class="col-md-3">
+							<input class="form-control" type="text"
+								placeholder="{{'gradzcircleApp.language.language' | translate}}"
+								id="language" formControlName="language"
+								[ngbTypeahead]="searchLanguages" [resultTemplate]="rt"
+								[inputFormatter]="languageFormatter"> <span
+								class="help-block"
+								*ngIf="(candidateLanguageForm.get('language').touched || 
                                                                 candidateLanguageForm.get('language').dirty) && 
                                                                candidateLanguageForm.get('language').errors">
-                                        <span *ngIf="candidateLanguageForm.get('language').errors.required">
-                                            Please add known languages.
-                                        </span>
-                                    </span>
-                                </div>
-                                 <div class="col-md-1 invisible"></div>
+								<span
+								*ngIf="candidateLanguageForm.get('language').errors.required">
+									Please add known languages. </span>
+							</span>
+						</div>
+						<div class="col-md-1 invisible"></div>
 
 
-                                <label for="languageProficiency" class="col-md-2 col-form-label font-weight-bold text-muted">Proficiency</label>
-                                <div class="col-md-1">
-                                    <label for="speak">
-                                        <input id="speak"
-                                            type="checkbox"
-                                            formControlName = "speakProficiency" >
-                                            Speak
-                                    </label>
-                                </div>
-                                <div class="col-md-1">
-                                    <label attr.for="read">
-                                        <input id="read"
-                                            type="checkbox"
-                                            formControlName = "readProficiency" >
-                                            Read
-                                    </label>
-                                </div>
-                                <div class="col-md-1">
-                                    <label attr.for="write">
-                                        <input id="write"
-                                            type="checkbox"
-                                            formControlName = "writeProficiency" >
-                                            Write
-                                    </label>
-                                </div>
-                    </div>
-                    <!--<div class="form-group row mx-4 my-4 justify-content-between">
+						<label for="languageProficiency"
+							class="col-md-2 col-form-label font-weight-bold text-muted">Proficiency</label>
+						<div class="col-md-1">
+							<label for="speak"> <input id="speak" type="checkbox"
+								formControlName="speakProficiency"> Speak
+							</label>
+						</div>
+						<div class="col-md-1">
+							<label attr.for="read"> <input id="read" type="checkbox"
+								formControlName="readProficiency"> Read
+							</label>
+						</div>
+						<div class="col-md-1">
+							<label attr.for="write"> <input id="write"
+								type="checkbox" formControlName="writeProficiency">
+								Write
+							</label>
+						</div>
+					</div>
+					<!--<div class="form-group row mx-4 my-4 justify-content-between">
                       
                             <button class="btn btn-sm btn-primary" type="button" (click)="addCandidateLanguageProficiency()">
                             <span class="icon  icon-circle-with-plus"></span>
@@ -183,19 +183,17 @@
                         </div>
                     </div>-->
 
-                    <div class="form-group row mx-4 my-4 justify-content-between">
-                       
-                            <button class="btn  btn-pill btn-warning" type="button">
-                                        <span class="icon icon-arrow-long-left"></span>
-                                        Back
-                                   </button>
-                    
-                            <button class="btn btn-pill btn-success" type="submit" [disabled]='!candidateLanguageForm.valid'>
-                                        <span class="icon icon-save"></span>
-                                        Update    
-                   
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+					<div class="form-group row mx-4 my-4 justify-content-between">
+
+						<button class="btn  btn-pill btn-warning" type="button">
+							<span class="icon icon-arrow-long-left"></span> Back
+						</button>
+
+						<button class="btn btn-pill btn-success" type="submit"
+							[disabled]='!candidateLanguageForm.valid'>
+							<span class="icon icon-save"></span> Update
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>

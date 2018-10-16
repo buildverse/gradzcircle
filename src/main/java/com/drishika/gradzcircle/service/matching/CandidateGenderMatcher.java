@@ -35,45 +35,49 @@ public class CandidateGenderMatcher implements Matcher<Candidate> {
 	private final MatchUtils matchUtils;
 	private final CandidateRepository candidateRepository;
 	private final CandidateEducationRepository candidateEducationRepository;
-	
-	public CandidateGenderMatcher(JobRepository jobRepository, MatchUtils matchUtils, CandidateRepository candidateRepository,
-			CandidateEducationRepository candidateEducationRepository) {
+
+	public CandidateGenderMatcher(JobRepository jobRepository, MatchUtils matchUtils,
+			CandidateRepository candidateRepository, CandidateEducationRepository candidateEducationRepository) {
 		this.jobRepository = jobRepository;
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
 		this.candidateEducationRepository = candidateEducationRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.drishika.gradzcircle.service.matching.Matcher#match(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.drishika.gradzcircle.service.matching.Matcher#match(java.lang.Object)
 	 */
 	@Override
 	public void match(Candidate candidate) {
-		CandidateEducation candidateEducation = candidateEducationRepository.findByCandidateAndHighestQualification(candidate, true);
-		if(candidateEducation != null) {
+		CandidateEducation candidateEducation = candidateEducationRepository
+				.findByCandidateAndHighestQualification(candidate, true);
+		if (candidateEducation != null) {
 			Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 			Set<CandidateJob> candidateJobs = null;
 			matchUtils.populateJobFilterWeightMap();
-			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate)).filter(candidateJob -> candidateJob!=null).collect(Collectors.toSet());
+			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
+					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 			candidateJobs.forEach(candidateJob -> {
-				if(candidate.getCandidateJobs().contains(candidateJob)) {
+				if (candidate.getCandidateJobs().contains(candidateJob)) {
 					candidate.getCandidateJobs().remove(candidateJob);
 					candidate.getCandidateJobs().add(candidateJob);
 				} else {
 					candidate.getCandidateJobs().add(candidateJob);
 				}
 			});
-			
-		}
-		else {
+
+		} else {
 			log.debug("Abort Matching as no Education saved");
 		}
 		candidateRepository.save(candidate);
-		
+
 	}
-	
-	private CandidateJob beginMatching(Job job, Candidate candidate) {	
-		log.debug("Matching on {}",job.getId());
+
+	private CandidateJob beginMatching(Job job, Candidate candidate) {
+		log.debug("Matching on {}", job.getId());
 		JobFilterObject jobFilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
 		CandidateJob candidateJob = null;
 		candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, false, false, true);

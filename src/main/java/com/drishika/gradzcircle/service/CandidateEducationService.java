@@ -60,7 +60,7 @@ public class CandidateEducationService {
 	private final CandidateEducationSearchRepository candidateEducationSearchRepository;
 	private final ElasticsearchTemplate elasticsearchTemplate;
 
-	//@Qualifier("CandidateEducationMatcher")
+	// @Qualifier("CandidateEducationMatcher")
 	private final Matcher<Candidate> matcher;
 
 	public CandidateEducationService(CandidateEducationRepository candidateEducationRepository,
@@ -68,9 +68,11 @@ public class CandidateEducationService {
 			CandidateProjectRepository candidateProjectRepository,
 			CandidateProjectSearchRepository candidateProjectSearchRepository, CollegeRepository collegeRepository,
 			QualificationRepository qualififcationRepository, CourseRepository courseRepository,
-			UniversityRepository universityRepository, @Qualifier("CandidateEducationMatcher")Matcher<Candidate> matcher,
-		
-			UniversitySearchRepository universitySearchRepository, ElasticsearchTemplate elasticsearchTemplate,CandidateRepository candidateRepository) {
+			UniversityRepository universityRepository,
+			@Qualifier("CandidateEducationMatcher") Matcher<Candidate> matcher,
+
+			UniversitySearchRepository universitySearchRepository, ElasticsearchTemplate elasticsearchTemplate,
+			CandidateRepository candidateRepository) {
 		this.candidateEducationRepository = candidateEducationRepository;
 		this.candidateEducationSearchRepository = candidateEducationSearchRepository;
 		this.candidateProjectRepository = candidateProjectRepository;
@@ -86,12 +88,12 @@ public class CandidateEducationService {
 	private void setGrade(CandidateEducation candidateEducation) {
 		String gradeMajorUnit = candidateEducation.getRoundOfGrade().toString();
 		String gradeMinorUnit = null;
-		if(candidateEducation.getGradeDecimal()!=null)
+		if (candidateEducation.getGradeDecimal() != null)
 			gradeMinorUnit = candidateEducation.getGradeDecimal().toString();
 		else {
 			gradeMinorUnit = "0";
 		}
-		log.debug("Grade Decimla is {}",gradeMinorUnit);
+		log.debug("Grade Decimla is {}", gradeMinorUnit);
 		candidateEducation.setGrade(new Double(gradeMajorUnit + "." + gradeMinorUnit));
 	}
 
@@ -103,70 +105,67 @@ public class CandidateEducationService {
 		injestQualificationInformation(candidateEducation);
 		log.info("Creating education for candidate, course,qualification {},{},{}", candidateEducation.getCandidate(),
 				candidateEducation.getCourse(), candidateEducation.getQualification());
-		setHighestEducation(candidateEducation,false);
+		setHighestEducation(candidateEducation, false);
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
-		log.debug("CandidateJobs post save candidateEducation is {}",result.getCandidate().getCandidateJobs());
-		log.debug("Highest Qulaification {}",result.getHighestQualification());
+		log.debug("CandidateJobs post save candidateEducation is {}", result.getCandidate().getCandidateJobs());
+		log.debug("Highest Qulaification {}", result.getHighestQualification());
 		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
-		if(result.getHighestQualification())
+		if (result.getHighestQualification())
 			matcher.match(candidate.addEducation(result));
-		//updateEducationDependentMetaForDisplay(result);
+		// updateEducationDependentMetaForDisplay(result);
 		return result;
 	}
-	
-	/*private List<CandidateEducation> setHighestEducation(CandidateEducation candidateEducation) {
-		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(candidateEducation.getCandidate().getId());
-		if(candidateEducations.size()>0)
-			candidateEducations.forEach(education->{
-				if(candidateEducation.getEducationToDate()!=null) {
-					if((education.getEducationToDate().isAfter(candidateEducation.getEducationToDate())) && !(candidateEducation.isHighestQualification())) {
-						education.setHighestQualification(true);
-						candidateEducation.setHighestQualification(false);
-					}				
-					else {
-						candidateEducation.setHighestQualification(true);
-						education.setHighestQualification(false);
-					}
-				} else if(candidateEducation.getIsPursuingEducation()) {
-					candidateEducation.setHighestQualification(true);
-					education.setHighestQualification(false);
-				}
-				
-					
-			});
-		else 
-			candidateEducation.setHighestQualification(true);
-		return candidateEducations;
-	}
-	*/
+
+	/*
+	 * private List<CandidateEducation> setHighestEducation(CandidateEducation
+	 * candidateEducation) { List<CandidateEducation> candidateEducations =
+	 * candidateEducationRepository.findByCandidateId(candidateEducation.
+	 * getCandidate().getId()); if(candidateEducations.size()>0)
+	 * candidateEducations.forEach(education->{
+	 * if(candidateEducation.getEducationToDate()!=null) {
+	 * if((education.getEducationToDate().isAfter(candidateEducation.
+	 * getEducationToDate())) && !(candidateEducation.isHighestQualification())) {
+	 * education.setHighestQualification(true);
+	 * candidateEducation.setHighestQualification(false); } else {
+	 * candidateEducation.setHighestQualification(true);
+	 * education.setHighestQualification(false); } } else
+	 * if(candidateEducation.getIsPursuingEducation()) {
+	 * candidateEducation.setHighestQualification(true);
+	 * education.setHighestQualification(false); }
+	 * 
+	 * 
+	 * }); else candidateEducation.setHighestQualification(true); return
+	 * candidateEducations; }
+	 */
 	private Set<CandidateEducation> setHighestEducation(CandidateEducation candidateEducation, Boolean isDelete) {
-		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(candidateEducation.getCandidate().getId());
-		if(isDelete) {
+		List<CandidateEducation> candidateEducations = candidateEducationRepository
+				.findByCandidateId(candidateEducation.getCandidate().getId());
+		if (isDelete) {
 			candidateEducations.remove(candidateEducation);
-			if(candidateEducations.size()>0) {
-				candidateEducations.sort((education1, education2)-> education1.getEducationToDate().compareTo(education2.getEducationToDate()));
-				candidateEducations.get(candidateEducations.size()-1).setHighestQualification(true);
-				log.debug("Soretd education by dates {}",candidateEducations);
+			if (candidateEducations.size() > 0) {
+				candidateEducations.sort((education1, education2) -> education1.getEducationToDate()
+						.compareTo(education2.getEducationToDate()));
+				candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
+				log.debug("Soretd education by dates {}", candidateEducations);
 			}
-		}
-		else {
-			if(candidateEducations.size()>0)
-				candidateEducations.forEach(education->{
-					if(candidateEducation.getEducationToDate()!=null) {
-						if((education.getEducationToDate().isAfter(candidateEducation.getEducationToDate())) && !(candidateEducation.isHighestQualification())) {
+		} else {
+			if (candidateEducations.size() > 0)
+				candidateEducations.forEach(education -> {
+					if (candidateEducation.getEducationToDate() != null) {
+						if ((education.getEducationToDate().isAfter(candidateEducation.getEducationToDate()))
+								&& !(candidateEducation.isHighestQualification())) {
 							education.setHighestQualification(true);
 							candidateEducation.setHighestQualification(false);
-						}				
-						else {
+						} else {
 							candidateEducation.setHighestQualification(true);
 							education.setHighestQualification(false);
 						}
-					} else if(candidateEducation.getIsPursuingEducation()) {
+					} else if (candidateEducation.getIsPursuingEducation()) {
 						candidateEducation.setHighestQualification(true);
 						education.setHighestQualification(false);
-					}	
+					}
 				});
-			else 
+			else
 				candidateEducation.setHighestQualification(true);
 		}
 		return new HashSet<>(candidateEducations);
@@ -266,15 +265,15 @@ public class CandidateEducationService {
 		 * log.debug("This candidate has a highest education already {}",
 		 * educationWithHighestQualification);
 		 */
-		candidateEducationRepository.save(setHighestEducation(candidateEducation,false));
+		candidateEducationRepository.save(setHighestEducation(candidateEducation, false));
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
-		//candidateEducationSearchRepository.save(result);
+		// candidateEducationSearchRepository.save(result);
 		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
 		candidate.addEducation(result);
 		// Replace with future
-		if(result.getHighestQualification())
+		if (result.getHighestQualification())
 			matcher.match(candidate);
-		//updateEducationDependentMetaForDisplay(result);
+		// updateEducationDependentMetaForDisplay(result);
 		return result;
 	}
 
@@ -289,7 +288,7 @@ public class CandidateEducationService {
 		if (candidateEducation != null) {
 			Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEducation(candidateEducation);
 			candidateEducation.setProjects(candidateProjects);
-		//	updateEducationDependentMetaForDisplay(candidateEducation);
+			// updateEducationDependentMetaForDisplay(candidateEducation);
 			log.debug("College data is {}", candidateEducation.getCollege());
 		}
 
@@ -310,14 +309,14 @@ public class CandidateEducationService {
 	}
 
 	public void deleteCandidateEducation(Long id) {
-		CandidateEducation education =  candidateEducationRepository.findOne(id);
-		Candidate candidate = education.getCandidate();	
-		log.debug("Canddtae from educaiton is {} ",candidate.getEducations());
+		CandidateEducation education = candidateEducationRepository.findOne(id);
+		Candidate candidate = education.getCandidate();
+		log.debug("Canddtae from educaiton is {} ", candidate.getEducations());
 		candidate.getEducations().remove(education);
-		log.debug("Educaiton set post removing education is {}",candidate.getEducations());
-		candidate.getEducations().addAll((setHighestEducation(education,true)));
+		log.debug("Educaiton set post removing education is {}", candidate.getEducations());
+		candidate.getEducations().addAll((setHighestEducation(education, true)));
 		matcher.match(candidate);
-		//candidateEducationSearchRepository.delete(id);
+		// candidateEducationSearchRepository.delete(id);
 	}
 
 	public List<CandidateEducation> searchCandidateEducations(String query) {
@@ -330,8 +329,6 @@ public class CandidateEducationService {
 	public List<CandidateEducation> searchCandidateEducationsOrderedByToDate(String query) {
 		return candidateEducationSearchRepository.findByCandidateIdOrderByEducationToDateDesc(query);
 	}
-
-	
 
 	private void updateUniversityIndex(University university) {
 		com.drishika.gradzcircle.domain.elastic.University universityElasticInstance = new com.drishika.gradzcircle.domain.elastic.University();
@@ -408,8 +405,9 @@ public class CandidateEducationService {
 						.suggest(new String[] { courseElasticInstance.getCourse() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 	}
-	
-	//If lnaguage is Other and saving new Language. Currently not suppoterd. And should be in Candidate LanguageService calss.
+
+	// If lnaguage is Other and saving new Language. Currently not suppoterd. And
+	// should be in Candidate LanguageService calss.
 	private void updateLanguageIndex(Language language) {
 		com.drishika.gradzcircle.domain.elastic.Language languageElasticInstance = new com.drishika.gradzcircle.domain.elastic.Language();
 		try {
@@ -423,25 +421,25 @@ public class CandidateEducationService {
 			// throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
 
 		}
-		elasticsearchTemplate
-				.index(new CourseEntityBuilder(languageElasticInstance.getId()).name(languageElasticInstance.getLanguage())
+		elasticsearchTemplate.index(
+				new CourseEntityBuilder(languageElasticInstance.getId()).name(languageElasticInstance.getLanguage())
 						.suggest(new String[] { languageElasticInstance.getLanguage() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Language.class);
 	}
-	
+
 	public Stream<CandidateEducation> getCandidateEducationBeforeSuppliedDate(LocalDate date) {
-		return candidateEducationRepository.findByEducationToDateBeforeAndHighestQualification(date,true);
+		return candidateEducationRepository.findByEducationToDateBeforeAndHighestQualification(date, true);
 	}
-	
+
 	public Stream<CandidateEducation> getCandidateEducationAfterSuppliedDate(LocalDate date) {
-		return candidateEducationRepository.findByEducationToDateAfterAndHighestQualification(date,true);
+		return candidateEducationRepository.findByEducationToDateAfterAndHighestQualification(date, true);
 	}
-	
-	public Stream<CandidateEducation> getCandidateEducationBetweenSuppliedDates(LocalDate fromDate,LocalDate toDate) {
-		return candidateEducationRepository.findByEducationToDateBetweenAndHighestQualification(fromDate, toDate,true);
+
+	public Stream<CandidateEducation> getCandidateEducationBetweenSuppliedDates(LocalDate fromDate, LocalDate toDate) {
+		return candidateEducationRepository.findByEducationToDateBetweenAndHighestQualification(fromDate, toDate, true);
 	}
-	
-	public Stream<CandidateEducation> getEducationForMatchEligibleCandidate(){
+
+	public Stream<CandidateEducation> getEducationForMatchEligibleCandidate() {
 		return candidateEducationRepository.findAllHighestCandidateEducationForMatchEligilbeCandidates();
 	}
 }

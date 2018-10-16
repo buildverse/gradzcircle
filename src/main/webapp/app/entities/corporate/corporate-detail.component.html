@@ -1,113 +1,176 @@
 
 <div *ngIf="corporate">
-    <h2><span jhiTranslate="gradzcircleApp.corporate.detail.title">Corporate</span> {{corporate.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.corporate.name">Corporate Name</span></dt>
-        <dd>
-            <span>{{corporate.name}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.address">Corporate Address</span></dt>
-        <dd>
-            <span>{{corporate.address}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.city">Corporate City</span></dt>
-        <dd>
-            <span>{{corporate.city}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.establishedSince">Established Since</span></dt>
-        <dd>
-            <span>{{corporate.establishedSince | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.email">Corporate Email</span></dt>
-        <dd>
-            <span>{{corporate.email}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.overview">Corporate Overview</span></dt>
-        <dd>
-            <span>{{corporate.overview}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.benefits">Corporate Benefits</span></dt>
-        <dd>
-            <span>{{corporate.benefits}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.escrowAmount">Corporate escrowAmount</span></dt>
-        <dd>
-            <span>{{corporate.escrowAmount}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.website">Corporate Website</span></dt>
-        <dd>
-            <span>{{corporate.website}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.facebook">Corporate Facebook</span></dt>
-        <dd>
-            <span>{{corporate.facebook}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.twitter">Corporate Twitter</span></dt>
-        <dd>
-            <span>{{corporate.twitter}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.instagram">Corporate Instagram</span></dt>
-        <dd>
-            <span>{{corporate.instagram}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.linkedIn">Corporate Linked In</span></dt>
-        <dd>
-            <span>{{corporate.linkedIn}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.culture">Corporate Culture</span></dt>
-        <dd>
-            <span>{{corporate.culture}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.contactPerson">Contact Person</span></dt>
-        <dd>
-            <span>{{corporate.contactPerson}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.phone">Corporate Phone</span></dt>
-        <dd>
-            <span>{{corporate.phone}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.phoneCode">Corporate Phone Code</span></dt>
-        <dd>
-            <span>{{corporate.phoneCode}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.personDesignation">Contact Person Designation</span></dt>
-        <dd>
-            <span>{{corporate.personDesignation}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.tagLine">Corporate Tag Line</span></dt>
-        <dd>
-            <span>{{corporate.tagLine}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.country">Country</span></dt>
-        <dd>
-            <div *ngIf="corporate.country">
-                <a [routerLink]="['/country', corporate.country?.id]">{{corporate.country?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.industry">Industry</span></dt>
-        <dd>
-            <div *ngIf="corporate.industry">
-                <a [routerLink]="['/industry', corporate.industry?.id]">{{corporate.industry?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.corporate.login">Login</span></dt>
-        <dd>
-            {{corporate.login?.id}}
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.corporate.detail.title">Corporate</span>
+		{{corporate.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.name">Corporate
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{corporate.name}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.address">Corporate
+				Address</span>
+		</dt>
+		<dd>
+			<span>{{corporate.address}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.city">Corporate
+				City</span>
+		</dt>
+		<dd>
+			<span>{{corporate.city}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.establishedSince">Established
+				Since</span>
+		</dt>
+		<dd>
+			<span>{{corporate.establishedSince | date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.email">Corporate
+				Email</span>
+		</dt>
+		<dd>
+			<span>{{corporate.email}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.overview">Corporate
+				Overview</span>
+		</dt>
+		<dd>
+			<span>{{corporate.overview}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.benefits">Corporate
+				Benefits</span>
+		</dt>
+		<dd>
+			<span>{{corporate.benefits}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.escrowAmount">Corporate
+				escrowAmount</span>
+		</dt>
+		<dd>
+			<span>{{corporate.escrowAmount}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.website">Corporate
+				Website</span>
+		</dt>
+		<dd>
+			<span>{{corporate.website}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.facebook">Corporate
+				Facebook</span>
+		</dt>
+		<dd>
+			<span>{{corporate.facebook}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.twitter">Corporate
+				Twitter</span>
+		</dt>
+		<dd>
+			<span>{{corporate.twitter}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.instagram">Corporate
+				Instagram</span>
+		</dt>
+		<dd>
+			<span>{{corporate.instagram}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.linkedIn">Corporate
+				Linked In</span>
+		</dt>
+		<dd>
+			<span>{{corporate.linkedIn}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.culture">Corporate
+				Culture</span>
+		</dt>
+		<dd>
+			<span>{{corporate.culture}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.contactPerson">Contact
+				Person</span>
+		</dt>
+		<dd>
+			<span>{{corporate.contactPerson}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.phone">Corporate
+				Phone</span>
+		</dt>
+		<dd>
+			<span>{{corporate.phone}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.phoneCode">Corporate
+				Phone Code</span>
+		</dt>
+		<dd>
+			<span>{{corporate.phoneCode}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.personDesignation">Contact
+				Person Designation</span>
+		</dt>
+		<dd>
+			<span>{{corporate.personDesignation}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.tagLine">Corporate
+				Tag Line</span>
+		</dt>
+		<dd>
+			<span>{{corporate.tagLine}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.country">Country</span>
+		</dt>
+		<dd>
+			<div *ngIf="corporate.country">
+				<a [routerLink]="['/country', corporate.country?.id]">{{corporate.country?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.industry">Industry</span>
+		</dt>
+		<dd>
+			<div *ngIf="corporate.industry">
+				<a [routerLink]="['/industry', corporate.industry?.id]">{{corporate.industry?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.corporate.login">Login</span>
+		</dt>
+		<dd>{{corporate.login?.id}}</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

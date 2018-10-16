@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Service
 public class JobFilterParser {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(JobFilterParser.class);
 
 	ObjectMapper mapper;
@@ -33,11 +33,11 @@ public class JobFilterParser {
 		try {
 			filterObject = mapper.readValue(filterDescription, JobFilterObject.class);
 		} catch (JsonParseException e) {
-			logger.error("Error creating JobfilterObject {}",e.fillInStackTrace());
+			logger.error("Error creating JobfilterObject {}", e.fillInStackTrace());
 		} catch (JsonMappingException e) {
-			logger.error("Error creating JobfilterObject {}",e.fillInStackTrace());
+			logger.error("Error creating JobfilterObject {}", e.fillInStackTrace());
 		} catch (IOException e) {
-			logger.error("Error creating JobfilterObject {}",e.fillInStackTrace());
+			logger.error("Error creating JobfilterObject {}", e.fillInStackTrace());
 		}
 		return filterObject;
 	}
@@ -45,6 +45,5 @@ public class JobFilterParser {
 	public String getFilterDescriptionAsString(JobFilterObject filterObject) {
 		return null;
 	}
-	
-	
+
 }

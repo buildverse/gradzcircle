@@ -45,59 +45,58 @@ import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 @SpringBootTest(classes = GradzcircleApp.class)
 public class UniversityResourceIntTest {
 
-    private static final String DEFAULT_UNIVERSITY_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_UNIVERSITY_NAME = "BBBBBBBBBB";
+	private static final String DEFAULT_UNIVERSITY_NAME = "AAAAAAAAAA";
+	private static final String UPDATED_UNIVERSITY_NAME = "BBBBBBBBBB";
 
-    @Autowired
-    private UniversityRepository universityRepository;
+	@Autowired
+	private UniversityRepository universityRepository;
 
-    @Autowired
-    private UniversitySearchRepository universitySearchRepository;
-    
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+	@Autowired
+	private UniversitySearchRepository universitySearchRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
 
-    private MockMvc restUniversityMockMvc;
+	@Autowired
+	private EntityManager em;
 
-    private University university;
-    
-    private com.drishika.gradzcircle.domain.elastic.University elasticUniversity;
+	private MockMvc restUniversityMockMvc;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final UniversityResource universityResource = new UniversityResource(universityRepository, universitySearchRepository,elasticsearchTemplate);
-        this.restUniversityMockMvc = MockMvcBuilders.standaloneSetup(universityResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
+	private University university;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static University createEntity(EntityManager em) {
-        University university = new University()
-            .universityName(DEFAULT_UNIVERSITY_NAME);
-        return university;
-    }
-    
-    /**
+	private com.drishika.gradzcircle.domain.elastic.University elasticUniversity;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final UniversityResource universityResource = new UniversityResource(universityRepository,
+				universitySearchRepository, elasticsearchTemplate);
+		this.restUniversityMockMvc = MockMvcBuilders.standaloneSetup(universityResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
+
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static University createEntity(EntityManager em) {
+		University university = new University().universityName(DEFAULT_UNIVERSITY_NAME);
+		return university;
+	}
+
+	/**
 	 * Create an entity for this test.
 	 *
 	 * This is a static method, as tests for other entities might also need it, if
@@ -108,208 +107,196 @@ public class UniversityResourceIntTest {
 		entityBuilder.name(university.getUniversityName());
 		return entityBuilder;
 	}
-    
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static com.drishika.gradzcircle.domain.elastic.University createElasticInstance(University university) {
-    	com.drishika.gradzcircle.domain.elastic.University elasticUniversity = new com.drishika.gradzcircle.domain.elastic.University();
-    	elasticUniversity.universityName(university.getUniversityName());
-        return elasticUniversity;
-    }
 
-    @Before
-    public void initTest() {
-        universitySearchRepository.deleteAll();
-        university = createEntity(em);
-        elasticUniversity = createElasticInstance(university);
-    }
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static com.drishika.gradzcircle.domain.elastic.University createElasticInstance(University university) {
+		com.drishika.gradzcircle.domain.elastic.University elasticUniversity = new com.drishika.gradzcircle.domain.elastic.University();
+		elasticUniversity.universityName(university.getUniversityName());
+		return elasticUniversity;
+	}
 
-    @Test
-    @Transactional
-    public void createUniversity() throws Exception {
-        int databaseSizeBeforeCreate = universityRepository.findAll().size();
+	@Before
+	public void initTest() {
+		universitySearchRepository.deleteAll();
+		university = createEntity(em);
+		elasticUniversity = createElasticInstance(university);
+	}
 
-        // Create the University
-        restUniversityMockMvc.perform(post("/api/universities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(university)))
-            .andExpect(status().isCreated());
+	@Test
+	@Transactional
+	public void createUniversity() throws Exception {
+		int databaseSizeBeforeCreate = universityRepository.findAll().size();
 
-        // Validate the University in the database
-        List<University> universityList = universityRepository.findAll();
-        assertThat(universityList).hasSize(databaseSizeBeforeCreate + 1);
-        University testUniversity = universityList.get(universityList.size() - 1);
-        assertThat(testUniversity.getUniversityName()).isEqualTo(DEFAULT_UNIVERSITY_NAME);
+		// Create the University
+		restUniversityMockMvc.perform(post("/api/universities").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(university))).andExpect(status().isCreated());
 
-        // Validate the University in Elasticsearch
-        University universityEs = universitySearchRepository.findOne(testUniversity.getId());
-        assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
-        assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
-        
-    }
+		// Validate the University in the database
+		List<University> universityList = universityRepository.findAll();
+		assertThat(universityList).hasSize(databaseSizeBeforeCreate + 1);
+		University testUniversity = universityList.get(universityList.size() - 1);
+		assertThat(testUniversity.getUniversityName()).isEqualTo(DEFAULT_UNIVERSITY_NAME);
 
-    @Test
-    @Transactional
-    public void createUniversityWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = universityRepository.findAll().size();
+		// Validate the University in Elasticsearch
+		University universityEs = universitySearchRepository.findOne(testUniversity.getId());
+		assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
+		assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
 
-        // Create the University with an existing ID
-        university.setId(1L);
+	}
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restUniversityMockMvc.perform(post("/api/universities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(university)))
-            .andExpect(status().isBadRequest());
+	@Test
+	@Transactional
+	public void createUniversityWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = universityRepository.findAll().size();
 
-        // Validate the University in the database
-        List<University> universityList = universityRepository.findAll();
-        assertThat(universityList).hasSize(databaseSizeBeforeCreate);
-    }
+		// Create the University with an existing ID
+		university.setId(1L);
 
-    @Test
-    @Transactional
-    public void getAllUniversities() throws Exception {
-        // Initialize the database
-        universityRepository.saveAndFlush(university);
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restUniversityMockMvc.perform(post("/api/universities").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(university))).andExpect(status().isBadRequest());
 
-        // Get all the universityList
-        restUniversityMockMvc.perform(get("/api/universities?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(university.getId().intValue())))
-            .andExpect(jsonPath("$.[*].universityName").value(hasItem(DEFAULT_UNIVERSITY_NAME.toString())));
-    }
+		// Validate the University in the database
+		List<University> universityList = universityRepository.findAll();
+		assertThat(universityList).hasSize(databaseSizeBeforeCreate);
+	}
 
-    @Test
-    @Transactional
-    public void getUniversity() throws Exception {
-        // Initialize the database
-        universityRepository.saveAndFlush(university);
+	@Test
+	@Transactional
+	public void getAllUniversities() throws Exception {
+		// Initialize the database
+		universityRepository.saveAndFlush(university);
 
-        // Get the university
-        restUniversityMockMvc.perform(get("/api/universities/{id}", university.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(university.getId().intValue()))
-            .andExpect(jsonPath("$.universityName").value(DEFAULT_UNIVERSITY_NAME.toString()));
-    }
+		// Get all the universityList
+		restUniversityMockMvc.perform(get("/api/universities?sort=id,desc")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(university.getId().intValue())))
+				.andExpect(jsonPath("$.[*].universityName").value(hasItem(DEFAULT_UNIVERSITY_NAME.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void getNonExistingUniversity() throws Exception {
-        // Get the university
-        restUniversityMockMvc.perform(get("/api/universities/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+	@Test
+	@Transactional
+	public void getUniversity() throws Exception {
+		// Initialize the database
+		universityRepository.saveAndFlush(university);
 
-    @Test
-    @Transactional
-    public void updateUniversity() throws Exception {
-        // Initialize the database
-        universityRepository.saveAndFlush(university);
-        elasticsearchTemplate.index(createEntityBuilder(university)
+		// Get the university
+		restUniversityMockMvc.perform(get("/api/universities/{id}", university.getId())).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(university.getId().intValue()))
+				.andExpect(jsonPath("$.universityName").value(DEFAULT_UNIVERSITY_NAME.toString()));
+	}
+
+	@Test
+	@Transactional
+	public void getNonExistingUniversity() throws Exception {
+		// Get the university
+		restUniversityMockMvc.perform(get("/api/universities/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	@Transactional
+	public void updateUniversity() throws Exception {
+		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		elasticsearchTemplate.index(createEntityBuilder(university)
 				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
-        int databaseSizeBeforeUpdate = universityRepository.findAll().size();
+		int databaseSizeBeforeUpdate = universityRepository.findAll().size();
 
-        // Update the university
-        University updatedUniversity = universityRepository.findOne(university.getId());
-        updatedUniversity
-            .universityName(UPDATED_UNIVERSITY_NAME);
+		// Update the university
+		University updatedUniversity = universityRepository.findOne(university.getId());
+		updatedUniversity.universityName(UPDATED_UNIVERSITY_NAME);
 
-        restUniversityMockMvc.perform(put("/api/universities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedUniversity)))
-            .andExpect(status().isOk());
+		restUniversityMockMvc.perform(put("/api/universities").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedUniversity))).andExpect(status().isOk());
 
-        // Validate the University in the database
-        List<University> universityList = universityRepository.findAll();
-        assertThat(universityList).hasSize(databaseSizeBeforeUpdate);
-        University testUniversity = universityList.get(universityList.size() - 1);
-        assertThat(testUniversity.getUniversityName()).isEqualTo(UPDATED_UNIVERSITY_NAME);
+		// Validate the University in the database
+		List<University> universityList = universityRepository.findAll();
+		assertThat(universityList).hasSize(databaseSizeBeforeUpdate);
+		University testUniversity = universityList.get(universityList.size() - 1);
+		assertThat(testUniversity.getUniversityName()).isEqualTo(UPDATED_UNIVERSITY_NAME);
 
-        // Validate the University in Elasticsearch
-        University universityEs = universitySearchRepository.findOne(testUniversity.getId());
-        assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
-        assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
-    }
+		// Validate the University in Elasticsearch
+		University universityEs = universitySearchRepository.findOne(testUniversity.getId());
+		assertThat(universityEs.getId()).isEqualTo(testUniversity.getId());
+		assertThat(universityEs.getUniversityName()).isEqualTo(testUniversity.getUniversityName());
+	}
 
-    @Test
-    @Transactional
-    public void updateNonExistingUniversity() throws Exception {
-        int databaseSizeBeforeUpdate = universityRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateNonExistingUniversity() throws Exception {
+		int databaseSizeBeforeUpdate = universityRepository.findAll().size();
 
-        // Create the University
+		// Create the University
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restUniversityMockMvc.perform(put("/api/universities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(university)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restUniversityMockMvc.perform(put("/api/universities").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(university))).andExpect(status().isCreated());
 
-        // Validate the University in the database
-        List<University> universityList = universityRepository.findAll();
-        assertThat(universityList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the University in the database
+		List<University> universityList = universityRepository.findAll();
+		assertThat(universityList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional
-    public void deleteUniversity() throws Exception {
-        // Initialize the database
-        universityRepository.saveAndFlush(university);
-        elasticsearchTemplate.index(createEntityBuilder(university)
+	@Test
+	@Transactional
+	public void deleteUniversity() throws Exception {
+		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		elasticsearchTemplate.index(createEntityBuilder(university)
 				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
-        int databaseSizeBeforeDelete = universityRepository.findAll().size();
+		int databaseSizeBeforeDelete = universityRepository.findAll().size();
 
-        // Get the university
-        restUniversityMockMvc.perform(delete("/api/universities/{id}", university.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// Get the university
+		restUniversityMockMvc
+				.perform(delete("/api/universities/{id}", university.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean universityExistsInEs = universitySearchRepository.exists(university.getId());
-        assertThat(universityExistsInEs).isFalse();
+		// Validate Elasticsearch is empty
+		boolean universityExistsInEs = universitySearchRepository.exists(university.getId());
+		assertThat(universityExistsInEs).isFalse();
 
-        // Validate the database is empty
-        List<University> universityList = universityRepository.findAll();
-        assertThat(universityList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the database is empty
+		List<University> universityList = universityRepository.findAll();
+		assertThat(universityList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-    @Test
-    @Transactional
-    public void searchUniversity() throws Exception {
-        // Initialize the database
-        universityRepository.saveAndFlush(university);
-        elasticsearchTemplate.index(createEntityBuilder(university)
+	@Test
+	@Transactional
+	public void searchUniversity() throws Exception {
+		// Initialize the database
+		universityRepository.saveAndFlush(university);
+		elasticsearchTemplate.index(createEntityBuilder(university)
 				.suggest(new String[] { createElasticInstance(university).getUniversityName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
 
-        // Search the university
-        restUniversityMockMvc.perform(get("/api/_search/universities?query=id:" + university.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(university.getId().intValue())))
-            .andExpect(jsonPath("$.[*].universityName").value(hasItem(DEFAULT_UNIVERSITY_NAME.toString())));
-    }
+		// Search the university
+		restUniversityMockMvc.perform(get("/api/_search/universities?query=id:" + university.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(university.getId().intValue())))
+				.andExpect(jsonPath("$.[*].universityName").value(hasItem(DEFAULT_UNIVERSITY_NAME.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(University.class);
-        University university1 = new University();
-        university1.setId(1L);
-        University university2 = new University();
-        university2.setId(university1.getId());
-        assertThat(university1).isEqualTo(university2);
-        university2.setId(2L);
-        assertThat(university1).isNotEqualTo(university2);
-        university1.setId(null);
-        assertThat(university1).isNotEqualTo(university2);
-    }
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(University.class);
+		University university1 = new University();
+		university1.setId(1L);
+		University university2 = new University();
+		university2.setId(university1.getId());
+		assertThat(university1).isEqualTo(university2);
+		university2.setId(2L);
+		assertThat(university1).isNotEqualTo(university2);
+		university1.setId(null);
+		assertThat(university1).isNotEqualTo(university2);
+	}
 }

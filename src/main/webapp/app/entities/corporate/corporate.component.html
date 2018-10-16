@@ -1,287 +1,322 @@
 <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-    <div class="profile-header profile-mybackground">
-        <div class="container-fluid">
-            <div class="container-inner" *ngIf="corporate">
-                <img class="rounded-circle media-object" [src]="noImage ? defaultImage : imageUrl " />
-                <h3 class="profile-header-user">Welcome {{corporate.name}}</h3>
-                <p class="profile-header-bio">
-                    {{corporate.tagLine}}
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <div class="card card-profile mb-3" *ngIf="corporate && uploader">
-                    <div class="form-group row mx-4 my-4 mb-0 pb-0">
-                        <label for="profilePic" class="col-md-2 col-form-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.corporate.uploadLogo">Logo</label>
+	<div class="profile-header profile-mybackground">
+		<div class="container-fluid">
+			<div class="container-inner" *ngIf="corporate">
+				<img class="rounded-circle media-object"
+					[src]="noImage ? defaultImage : imageUrl " />
+				<h3 class="profile-header-user">Welcome {{corporate.name}}</h3>
+				<p class="profile-header-bio">{{corporate.tagLine}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row mt-3">
+			<div class="col-md-12">
+				<div class="card card-profile mb-3" *ngIf="corporate && uploader">
+					<div class="form-group row mx-4 my-4 mb-0 pb-0">
+						<label for="profilePic"
+							class="col-md-2 col-form-label font-weight-bold text-muted"
+							jhiTranslate="gradzcircleApp.corporate.uploadLogo">Logo</label>
 
-                        <div class="col-md-5">
-                            <input #selectedPicture type="file" ng2FileSelect [uploader]="uploader" [disabled]="uploader.queue?.length==1" />
-                            <p class="text-danger" *ngIf="fileUploadErrorMessage">
-                                {{fileUploadErrorMessage}}
-                            </p>
-                            <p class="mb-0 profile-text-info small ml-1">Image size should be 256 x 256 px.</p>
-                            <p class="profile-text-info mt-0 small ml-1">Prefer using white background for your picture</p>
-                        </div>
-                        <div *ngIf="!noImage && uploader.queue?.length==0" class="clearfix">
-                            <button type="submit" class="btn btn-sm btn-pill btn-danger float-right" (click)="removeImage()">
-                                                        <span class="icon icon-trash"></span>&nbsp;<span >Remove</span>
-                                                </button>
-                        </div>
-                        <div *ngIf="uploader.queue?.length>0" class="col-md-5 justify-content-around">
-                            <div *ngFor="let item  of uploader.queue">
-                                <button class="btn btn-sm btn-pill btn-success" (click)="uploadImage(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
-                                                                <span class="icon icon-arrow-with-circle-up" style="color:white">Upload</span>
-                                                    </button>
-                                <button class="btn btn-sm btn-pill btn-danger" (click)="clearSelectedPicture()">
-                                                                <span class="icon icon-trash" style="color:white">Remove</span>
-                                                    </button>
-                            </div>
-                        </div>
-                    </div>
+						<div class="col-md-5">
+							<input #selectedPicture type="file" ng2FileSelect
+								[uploader]="uploader" [disabled]="uploader.queue?.length==1" />
+							<p class="text-danger" *ngIf="fileUploadErrorMessage">
+								{{fileUploadErrorMessage}}</p>
+							<p class="mb-0 profile-text-info small ml-1">Image size
+								should be 256 x 256 px.</p>
+							<p class="profile-text-info mt-0 small ml-1">Prefer using
+								white background for your picture</p>
+						</div>
+						<div *ngIf="!noImage && uploader.queue?.length==0"
+							class="clearfix">
+							<button type="submit"
+								class="btn btn-sm btn-pill btn-danger float-right"
+								(click)="removeImage()">
+								<span class="icon icon-trash"></span>&nbsp;<span>Remove</span>
+							</button>
+						</div>
+						<div *ngIf="uploader.queue?.length>0"
+							class="col-md-5 justify-content-around">
+							<div *ngFor="let item  of uploader.queue">
+								<button class="btn btn-sm btn-pill btn-success"
+									(click)="uploadImage(item)"
+									[disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
+									<span class="icon icon-arrow-with-circle-up"
+										style="color: white">Upload</span>
+								</button>
+								<button class="btn btn-sm btn-pill btn-danger"
+									(click)="clearSelectedPicture()">
+									<span class="icon icon-trash" style="color: white">Remove</span>
+								</button>
+							</div>
+						</div>
+					</div>
 
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.industry" class="font-weight-bold text-muted">Industry</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.industry?.industryName}}
-                        </div>
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.website" class="font-weight-bold text-muted">Website</span>
-                        </div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.industry"
+								class="font-weight-bold text-muted">Industry</span>
+						</div>
+						<div class="col-md-3">{{corporate.industry?.industryName}}</div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.website"
+								class="font-weight-bold text-muted">Website</span>
+						</div>
 
-                        <div class="col-md-3">
-                            {{corporate.website}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.email" class="font-weight-bold text-muted">Email</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.login?.email}}
-                        </div>
+						<div class="col-md-3">{{corporate.website}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.email"
+								class="font-weight-bold text-muted">Email</span>
+						</div>
+						<div class="col-md-3">{{corporate.login?.email}}</div>
 
 
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.establishedSince" class="font-weight-bold text-muted">Established Since</span>
-                        </div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.establishedSince"
+								class="font-weight-bold text-muted">Established Since</span>
+						</div>
 
-                        <div class="col-md-3">
-                            {{corporate.establishedSince| date:'mediumDate'}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.overview" class="font-weight-bold text-muted">About Us</span>
-                        </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.overview">
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.culture" class="font-weight-bold text-muted">Our Culture</span>
-                        </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.culture">
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.benefits" class="font-weight-bold text-muted">Employee Benefits</span>
-                        </div>
-                        <div class="col-md-10" [innerHtml]="corporate?.benefits">
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.linkedIn" class="font-weight-bold text-muted">LinkedIn</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.linkedIn}}
-                        </div>
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.twitter" class="font-weight-bold text-muted">Twitter</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.twitter}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.instagram" class="font-weight-bold text-muted">Instagram</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.instagram}}
-                        </div>
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.facebook" class="font-weight-bold text-muted">Facebook</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.facebook}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.contactPerson" class="font-weight-bold text-muted">ContactPerson</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.contactPerson}}
-                        </div>
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.personDesignation" class="font-weight-bold text-muted">Designation</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.personDesignation}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.address" class="font-weight-bold text-muted">Address</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.address}} {{corporate?.city}}
-                        </div>
-                        <div class="col-md-2 offset-md-1">
-                            <span jhiTranslate="gradzcircleApp.corporate.phone" class="font-weight-bold text-muted">Phone</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.phoneCode}}-{{corporate?.phone}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3">
-                        <div class="col-md-2 ">
-                            <span jhiTranslate="gradzcircleApp.corporate.country" class="font-weight-bold text-muted">Country</span>
-                        </div>
-                        <div class="col-md-3">
-                            {{corporate.country?.countryNiceName}}
-                        </div>
-                    </div>
-                    <div class="row mx-4 my-3 justify-content-end">
-                        <button type="submit" [routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate?.id + '/edit'} }]" replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
-                                                    <span class="icon icon-edit" jhiTranslate="entity.action.edit">Edit</span>
+						<div class="col-md-3">{{corporate.establishedSince|
+							date:'mediumDate'}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.overview"
+								class="font-weight-bold text-muted">About Us</span>
+						</div>
+						<div class="col-md-10" [innerHtml]="corporate?.overview"></div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.culture"
+								class="font-weight-bold text-muted">Our Culture</span>
+						</div>
+						<div class="col-md-10" [innerHtml]="corporate?.culture"></div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.benefits"
+								class="font-weight-bold text-muted">Employee Benefits</span>
+						</div>
+						<div class="col-md-10" [innerHtml]="corporate?.benefits"></div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.linkedIn"
+								class="font-weight-bold text-muted">LinkedIn</span>
+						</div>
+						<div class="col-md-3">{{corporate.linkedIn}}</div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.twitter"
+								class="font-weight-bold text-muted">Twitter</span>
+						</div>
+						<div class="col-md-3">{{corporate.twitter}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.instagram"
+								class="font-weight-bold text-muted">Instagram</span>
+						</div>
+						<div class="col-md-3">{{corporate.instagram}}</div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.facebook"
+								class="font-weight-bold text-muted">Facebook</span>
+						</div>
+						<div class="col-md-3">{{corporate.facebook}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.contactPerson"
+								class="font-weight-bold text-muted">ContactPerson</span>
+						</div>
+						<div class="col-md-3">{{corporate.contactPerson}}</div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.personDesignation"
+								class="font-weight-bold text-muted">Designation</span>
+						</div>
+						<div class="col-md-3">{{corporate.personDesignation}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.address"
+								class="font-weight-bold text-muted">Address</span>
+						</div>
+						<div class="col-md-3">{{corporate.address}}
+							{{corporate?.city}}</div>
+						<div class="col-md-2 offset-md-1">
+							<span jhiTranslate="gradzcircleApp.corporate.phone"
+								class="font-weight-bold text-muted">Phone</span>
+						</div>
+						<div class="col-md-3">
+							{{corporate.phoneCode}}-{{corporate?.phone}}</div>
+					</div>
+					<div class="row mx-4 my-3">
+						<div class="col-md-2 ">
+							<span jhiTranslate="gradzcircleApp.corporate.country"
+								class="font-weight-bold text-muted">Country</span>
+						</div>
+						<div class="col-md-3">
+							{{corporate.country?.countryNiceName}}</div>
+					</div>
+					<div class="row mx-4 my-3 justify-content-end">
+						<button type="submit"
+							[routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate?.id + '/edit'} }]"
+							replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
+							<span class="icon icon-edit" jhiTranslate="entity.action.edit">Edit</span>
 
-                                                </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="mt-5">
-    <h2>
-        <span jhiTranslate="gradzcircleApp.corporate.home.title">Corporates</span>
-        <button class="btn btn-primary float-right jh-create-entity create-corporate" [routerLink]="['/', { outlets: { popup: ['corporate-new'] } }]">
-            <span class="fa fa-plus"></span>
-            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.corporate.home.createLabel">
-            Create new Corporate
-            </span>
-        </button>
-    </h2>
-    <jhi-alert></jhi-alert>
-    <div class="row">
-        <div class="col-sm-12">
-            <form name="searchForm" class="form-inline">
-                <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.corporate.home.search' | translate }}">
-                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
-                        <span class="fa fa-search"></span>
-                    </button>
-                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
-                        <span class="fa fa-trash-o"></span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <br/>
-    <div class="table-responsive" *ngIf="corporates">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th><span jhiTranslate="global.field.id">ID</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.name">Corporate Name</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.address">Corporate Address</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.city">Corporate City</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.establishedSince">Established Since</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.email">Corporate Email</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.overview">Corporate Overview</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.benefits">Corporate Benefits</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.escrowAmount">Corporate EscrowAmount</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.website">Corporate Website</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.facebook">Corporate Facebook</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.twitter">Corporate Twitter</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.instagram">Corporate Instagram</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.linkedIn">Corporate Linked In</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.culture">Corporate Culture</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.contactPerson">Contact Person</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.phone">Corporate Phone</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.phoneCode">Corporate Phone Code</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.personDesignation">Contact Person Designation</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.tagLine">Corporate Tag Line</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.country">Country</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.industry">Industry</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.corporate.login">Login</span></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let corporate of corporates ;trackBy: trackId">
-                    <td><a [routerLink]="['../corporate', corporate.id ]">{{corporate.id}}</a></td>
-                    <td>{{corporate.name}}</td>
-                    <td>{{corporate.address}}</td>
-                    <td>{{corporate.city}}</td>
-                    <td>{{corporate.establishedSince | date:'mediumDate'}}</td>
-                    <td>{{corporate.email}}</td>
-                    <td>{{corporate.overview}}</td>
-                    <td>{{corporate.benefits}}</td>
-                    <td>{{corporate.escrowAmount}}</td>
-                    <td>{{corporate.website}}</td>
-                    <td>{{corporate.facebook}}</td>
-                    <td>{{corporate.twitter}}</td>
-                    <td>{{corporate.instagram}}</td>
-                    <td>{{corporate.linkedIn}}</td>
-                    <td>{{corporate.culture}}</td>
-                    <td>{{corporate.contactPerson}}</td>
-                    <td>{{corporate.phone}}</td>
-                    <td>{{corporate.phoneCode}}</td>
-                    <td>{{corporate.personDesignation}}</td>
-                    <td>{{corporate.tagLine}}</td>
-                    <td>
-                        <div *ngIf="corporate.country">
-                            <a [routerLink]="['../country', corporate.country?.id ]">{{corporate.country?.id}}</a>
-                        </div>
-                    </td>
-                    <td>
-                        <div *ngIf="corporate.industry">
-                            <a [routerLink]="['../industry', corporate.industry?.id ]">{{corporate.industry?.id}}</a>
-                        </div>
-                    </td>
-                    <td>
-                        {{corporate.login?.id}}
-                    </td>
-                    <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
-                            <button type="submit" [routerLink]="['../corporate', corporate.id ]" class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/edit'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/delete'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.corporate.home.title">Corporates</span>
+		<button
+			class="btn btn-primary float-right jh-create-entity create-corporate"
+			[routerLink]="['/', { outlets: { popup: ['corporate-new'] } }]">
+			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
+				jhiTranslate="gradzcircleApp.corporate.home.createLabel">
+				Create new Corporate </span>
+		</button>
+	</h2>
+	<jhi-alert></jhi-alert>
+	<div class="row">
+		<div class="col-sm-12">
+			<form name="searchForm" class="form-inline">
+				<div class="input-group w-100 mt-3">
+					<input type="text" class="form-control" [(ngModel)]="currentSearch"
+						id="currentSearch" name="currentSearch"
+						placeholder="{{ 'gradzcircleApp.corporate.home.search' | translate }}">
+					<button class="input-group-addon btn btn-info"
+						(click)="search(currentSearch)">
+						<span class="fa fa-search"></span>
+					</button>
+					<button class="input-group-addon btn btn-danger" (click)="clear()"
+						*ngIf="currentSearch">
+						<span class="fa fa-trash-o"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<br />
+	<div class="table-responsive" *ngIf="corporates">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><span jhiTranslate="global.field.id">ID</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.name">Corporate
+							Name</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.address">Corporate
+							Address</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.city">Corporate
+							City</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.corporate.establishedSince">Established
+							Since</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.email">Corporate
+							Email</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.overview">Corporate
+							Overview</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.benefits">Corporate
+							Benefits</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.escrowAmount">Corporate
+							EscrowAmount</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.website">Corporate
+							Website</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.facebook">Corporate
+							Facebook</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.twitter">Corporate
+							Twitter</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.instagram">Corporate
+							Instagram</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.linkedIn">Corporate
+							Linked In</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.culture">Corporate
+							Culture</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.corporate.contactPerson">Contact
+							Person</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.phone">Corporate
+							Phone</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.phoneCode">Corporate
+							Phone Code</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.corporate.personDesignation">Contact
+							Person Designation</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.tagLine">Corporate
+							Tag Line</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.country">Country</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.industry">Industry</span></th>
+					<th><span jhiTranslate="gradzcircleApp.corporate.login">Login</span></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let corporate of corporates ;trackBy: trackId">
+					<td><a [routerLink]="['../corporate', corporate.id ]">{{corporate.id}}</a></td>
+					<td>{{corporate.name}}</td>
+					<td>{{corporate.address}}</td>
+					<td>{{corporate.city}}</td>
+					<td>{{corporate.establishedSince | date:'mediumDate'}}</td>
+					<td>{{corporate.email}}</td>
+					<td>{{corporate.overview}}</td>
+					<td>{{corporate.benefits}}</td>
+					<td>{{corporate.escrowAmount}}</td>
+					<td>{{corporate.website}}</td>
+					<td>{{corporate.facebook}}</td>
+					<td>{{corporate.twitter}}</td>
+					<td>{{corporate.instagram}}</td>
+					<td>{{corporate.linkedIn}}</td>
+					<td>{{corporate.culture}}</td>
+					<td>{{corporate.contactPerson}}</td>
+					<td>{{corporate.phone}}</td>
+					<td>{{corporate.phoneCode}}</td>
+					<td>{{corporate.personDesignation}}</td>
+					<td>{{corporate.tagLine}}</td>
+					<td>
+						<div *ngIf="corporate.country">
+							<a [routerLink]="['../country', corporate.country?.id ]">{{corporate.country?.id}}</a>
+						</div>
+					</td>
+					<td>
+						<div *ngIf="corporate.industry">
+							<a [routerLink]="['../industry', corporate.industry?.id ]">{{corporate.industry?.id}}</a>
+						</div>
+					</td>
+					<td>{{corporate.login?.id}}</td>
+					<td class="text-right">
+						<div class="btn-group flex-btn-group-container">
+							<button type="submit"
+								[routerLink]="['../corporate', corporate.id ]"
+								class="btn btn-info btn-sm">
+								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
+									jhiTranslate="entity.action.view">View</span>
+							</button>
+							<button type="submit"
+								[routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/edit'} }]"
+								replaceUrl="true" class="btn btn-primary btn-sm">
+								<span class="fa fa-pencil"></span> <span
+									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+							</button>
+							<button type="submit"
+								[routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate.id + '/delete'} }]"
+								replaceUrl="true" class="btn btn-danger btn-sm">
+								<span class="fa fa-remove"></span> <span
+									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+							</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

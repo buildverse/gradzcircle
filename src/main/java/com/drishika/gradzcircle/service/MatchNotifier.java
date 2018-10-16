@@ -10,9 +10,9 @@ import com.drishika.gradzcircle.service.matching.Matcher;
  *
  */
 public interface MatchNotifier {
-	
-//	public void registerMatcher(Matcher matcher);
-	//public void removeMatcher(Matcher matcher);
+
+	// public void registerMatcher(Matcher matcher);
+	// public void removeMatcher(Matcher matcher);
 	public void notifyMatcher();
 
 }

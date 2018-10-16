@@ -6,7 +6,6 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.*;
 
-
 /**
  * Spring Data JPA repository for the Address entity.
  */
@@ -14,6 +13,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    public Set<Address> findAddressByCandidate(Candidate candiate);
+	public Set<Address> findAddressByCandidate(Candidate candiate);
 
 }

@@ -1,37 +1,49 @@
 
 <div *ngIf="audit">
-    <h2><span jhiTranslate="gradzcircleApp.audit.detail.title">Audit</span> {{audit.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.audit.createdBy">Created By</span></dt>
-        <dd>
-            <span>{{audit.createdBy}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.audit.updatedBy">Updated By</span></dt>
-        <dd>
-            <span>{{audit.updatedBy}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.audit.createdTime">Created Time</span></dt>
-        <dd>
-            <span>{{audit.createdTime | date:'medium'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.audit.updatedTime">Updated Time</span></dt>
-        <dd>
-            <span>{{audit.updatedTime | date:'medium'}}</span>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.audit.detail.title">Audit</span>
+		{{audit.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.audit.createdBy">Created By</span>
+		</dt>
+		<dd>
+			<span>{{audit.createdBy}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.audit.updatedBy">Updated By</span>
+		</dt>
+		<dd>
+			<span>{{audit.updatedBy}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.audit.createdTime">Created
+				Time</span>
+		</dt>
+		<dd>
+			<span>{{audit.createdTime | date:'medium'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.audit.updatedTime">Updated
+				Time</span>
+		</dt>
+		<dd>
+			<span>{{audit.updatedTime | date:'medium'}}</span>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'audit/'+ audit.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'audit/'+ audit.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

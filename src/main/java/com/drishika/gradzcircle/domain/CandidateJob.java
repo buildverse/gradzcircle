@@ -41,30 +41,33 @@ public class CandidateJob implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "jobs_id", insertable = false, updatable = false)
-	@JsonBackReference(value="jobToCandidate")
+	@JsonBackReference(value = "jobToCandidate")
 	private Job job;
 
 	@Column(name = "match_score")
 	private Double matchScore;
-	
+
 	@Column(name = "education_match_score")
 	private Double educationMatchScore;
-	
+
 	@Column(name = "gender_match_score")
 	private Double genderMatchScore;
-	
+
 	@Column(name = "language_match_score")
 	private Double languageMatchScore;
-	
+
 	@Column(name = "total_eligible_score")
 	private Double totalEligibleScore;
+
+	@Column(name = "reviewed")
+	private Boolean reviewed = false;
 
 	public CandidateJob(Candidate candidate, Job job) {
 		this.id = new CandidateJobId(candidate.getId(), job.getId());
 		this.candidate = candidate;
 		this.job = job;
 	}
-	
+
 	public CandidateJob() {
 
 	}
@@ -85,7 +88,7 @@ public class CandidateJob implements Serializable {
 	}
 
 	public int hashCode() {
-		return 31*(Objects.hashCode(getId().candidateId) + Objects.hashCode(getId().jobId));
+		return 31 * (Objects.hashCode(getId().candidateId) + Objects.hashCode(getId().jobId));
 	}
 
 	public boolean equals(Object obj) {
@@ -96,75 +99,13 @@ public class CandidateJob implements Serializable {
 			return false;
 		}
 		CandidateJob candidateJob = (CandidateJob) obj;
-		if (candidateJob.getId().candidateId == null || getId().candidateId == null || candidateJob.getId().jobId == null || getId().jobId==null) {
+		if (candidateJob.getId().candidateId == null || getId().candidateId == null
+				|| candidateJob.getId().jobId == null || getId().jobId == null) {
 			return false;
 		}
-		return Objects.equals(getId().candidateId, candidateJob.getId().candidateId) && Objects.equals(candidateJob.getId().jobId, getId().jobId);
+		return Objects.equals(getId().candidateId, candidateJob.getId().candidateId)
+				&& Objects.equals(candidateJob.getId().jobId, getId().jobId);
 	}
-	/*
-	 * @Id
-	 * 
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name="candidates_id")
-	 * 
-	 * @JsonBackReference private Candidate candidate;
-	 * 
-	 * @Id
-	 * 
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name="jobs_id")
-	 * 
-	 * @JsonBackReference private Job job;
-	 * 
-	 * @Column(name = "match_score") private Double matchScore;
-	 * 
-	 * public CandidateJob() { }
-	 * 
-	 * public CandidateJob(Candidate candidate, Job job, Double matchScore) {
-	 * this.candidate = candidate; this.job = job; this.matchScore = matchScore;
-	 * job.addCandidateJob(this); candidate.addCandidateJob(this); }
-	 * 
-	 * 
-	 * public Candidate getCandidate() { return candidate; }
-	 * 
-	 * 
-	 * public void setCandidate(Candidate candidate) { this.candidate = candidate; }
-	 * 
-	 * 
-	 * public Job getJob() { return job; }
-	 * 
-	 * 
-	 * public void setJob(Job job) { this.job = job; }
-	 * 
-	 * 
-	 * public Double getMatchScore() { return matchScore; }
-	 * 
-	 * 
-	 * public void setMatchScore(Double matchScore) { this.matchScore = matchScore;
-	 * }
-	 * 
-	 * 
-	 * @Override public int hashCode() { final int prime = 31; int result = 1;
-	 * result = prime * result + ((candidate == null) ? 0 : candidate.hashCode());
-	 * result = prime * result + ((job == null) ? 0 : job.getId().hashCode());
-	 * return result; }
-	 * 
-	 * 
-	 * @Override public boolean equals(Object obj) { if (this == obj) return true;
-	 * if (obj == null) return false; if (getClass() != obj.getClass()) return
-	 * false; CandidateJob other = (CandidateJob) obj; if (candidate == null) { if
-	 * (other.candidate != null) return false; } else if
-	 * (!candidate.equals(other.candidate)) return false; if (job == null) { if
-	 * (other.job != null) return false; } else if
-	 * (!job.getId().equals(other.job.getId())) return false; return true; }
-	 * 
-	 * 
-	 * @Override public String toString() { return "CandidateJob [candidate=" +
-	 * candidate + ", job=" + job + ", matchScore=" + matchScore + "]"; }
-	 * 
-	 */
 
 	/*
 	 * (non-Javadoc)
@@ -216,9 +157,7 @@ public class CandidateJob implements Serializable {
 	public void setMatchScore(Double matchScore) {
 		this.matchScore = matchScore;
 	}
-	
-	
-	
+
 	/**
 	 * @return the educationMatchScore
 	 */
@@ -227,7 +166,8 @@ public class CandidateJob implements Serializable {
 	}
 
 	/**
-	 * @param educationMatchScore the educationMatchScore to set
+	 * @param educationMatchScore
+	 *            the educationMatchScore to set
 	 */
 	public void setEducationMatchScore(Double educationMatchScore) {
 		this.educationMatchScore = educationMatchScore;
@@ -241,7 +181,8 @@ public class CandidateJob implements Serializable {
 	}
 
 	/**
-	 * @param genderMatchScore the genderMatchScore to set
+	 * @param genderMatchScore
+	 *            the genderMatchScore to set
 	 */
 	public void setGenderMatchScore(Double genderMatchScore) {
 		this.genderMatchScore = genderMatchScore;
@@ -255,13 +196,12 @@ public class CandidateJob implements Serializable {
 	}
 
 	/**
-	 * @param languageMatchScore the languageMatchScore to set
+	 * @param languageMatchScore
+	 *            the languageMatchScore to set
 	 */
 	public void setLanguageMatchScore(Double languageMatchScore) {
 		this.languageMatchScore = languageMatchScore;
 	}
-	
-	
 
 	/**
 	 * @return the totalEligibleScore
@@ -271,20 +211,39 @@ public class CandidateJob implements Serializable {
 	}
 
 	/**
-	 * @param totalEligibleScore the totalEligibleScore to set
+	 * @param totalEligibleScore
+	 *            the totalEligibleScore to set
 	 */
 	public void setTotalEligibleScore(Double totalEligibleScore) {
 		this.totalEligibleScore = totalEligibleScore;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @return the reviewed
+	 */
+	public Boolean getReviewed() {
+		return reviewed;
+	}
+
+	/**
+	 * @param reviewed
+	 *            the reviewed to set
+	 */
+	public void setReviewed(Boolean reviewed) {
+		this.reviewed = reviewed;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "CandidateJob [id=" + id + ", candidate=" + candidate + ", job=" + job + ", matchScore=" + matchScore
 				+ ", educationMatchScore=" + educationMatchScore + ", genderMatchScore=" + genderMatchScore
-				+ ", languageMatchScore=" + languageMatchScore + ", totalEligibleScore=" + totalEligibleScore + " hasCode="+this.hashCode()+"]";
+				+ ", languageMatchScore=" + languageMatchScore + ", totalEligibleScore=" + totalEligibleScore
+				+ ", reviewed=" + reviewed + "]";
 	}
 
 	@Embeddable
@@ -312,7 +271,7 @@ public class CandidateJob implements Serializable {
 		 */
 		@Override
 		public int hashCode() {
-			return 31 *(Objects.hashCode(candidateId) + Objects.hashCode(jobId));
+			return 31 * (Objects.hashCode(candidateId) + Objects.hashCode(jobId));
 		}
 
 		/*
@@ -322,17 +281,19 @@ public class CandidateJob implements Serializable {
 		 */
 		@Override
 		public boolean equals(Object obj) {
-			 if (this == obj) {
-		            return true;
-		        }
-		        if (obj == null || getClass() != obj.getClass()) {
-		            return false;
-		        }
-		        CandidateJobId candidateJobId = (CandidateJobId) obj;
-		        if (candidateJobId.candidateId == null || candidateId == null || candidateJobId.jobId == null || jobId == null) {
-		            return false;
-		        }
-		        return Objects.equals(candidateJobId.candidateId,candidateId) && Objects.equals(candidateJobId.jobId, jobId);
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+			CandidateJobId candidateJobId = (CandidateJobId) obj;
+			if (candidateJobId.candidateId == null || candidateId == null || candidateJobId.jobId == null
+					|| jobId == null) {
+				return false;
+			}
+			return Objects.equals(candidateJobId.candidateId, candidateId)
+					&& Objects.equals(candidateJobId.jobId, jobId);
 		}
 
 		/*
@@ -342,11 +303,10 @@ public class CandidateJob implements Serializable {
 		 */
 		@Override
 		public String toString() {
-			return "CandidateJobId [candidateId=" + candidateId + ", jobId=" + jobId + " abd hascode is"+ this.hashCode()+"]";
+			return "CandidateJobId [candidateId=" + candidateId + ", jobId=" + jobId + " abd hascode is"
+					+ this.hashCode() + "]";
 		}
 
 	}
-
-	
 
 }

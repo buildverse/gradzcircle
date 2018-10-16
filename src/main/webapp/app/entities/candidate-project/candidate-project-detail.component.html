@@ -1,65 +1,101 @@
 
 <div *ngIf="candidateProject">
-    <h2><span jhiTranslate="gradzcircleApp.candidateProject.detail.title">Candidate Project</span> {{candidateProject.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectTitle">Project Title</span></dt>
-        <dd>
-            <span>{{candidateProject.projectTitle}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Project Start Date</span></dt>
-        <dd>
-            <span>{{candidateProject.projectStartDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">Project End Date</span></dt>
-        <dd>
-            <span>{{candidateProject.projectEndDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span></dt>
-        <dd>
-            <span>{{candidateProject.projectDescription}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectDuration">Project Duration</span></dt>
-        <dd>
-            <span>{{candidateProject.projectDuration}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution In Project</span></dt>
-        <dd>
-            <span>{{candidateProject.contributionInProject}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject">Is Current Project</span></dt>
-        <dd>
-            <span>{{candidateProject.isCurrentProject}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.projectType">Project Type</span></dt>
-        <dd>
-            <span jhiTranslate="{{'gradzcircleApp.ProjectType.' + candidateProject.projectType}}">{{candidateProject.projectType}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.education">Education</span></dt>
-        <dd>
-            <div *ngIf="candidateProject.education">
-                <a [routerLink]="['/candidate-education', candidateProject.education?.id]">{{candidateProject.education?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateProject.employment">Employment</span></dt>
-        <dd>
-            <div *ngIf="candidateProject.employment">
-                <a [routerLink]="['/candidate-employment', candidateProject.employment?.id]">{{candidateProject.employment?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.candidateProject.detail.title">Candidate
+			Project</span> {{candidateProject.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.projectTitle">Project
+				Title</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.projectTitle}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Project
+				Start Date</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.projectStartDate |
+				date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">Project
+				End Date</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.projectEndDate | date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project
+				Description</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.projectDescription}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.projectDuration">Project
+				Duration</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.projectDuration}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution
+				In Project</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.contributionInProject}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject">Is
+				Current Project</span>
+		</dt>
+		<dd>
+			<span>{{candidateProject.isCurrentProject}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.projectType">Project
+				Type</span>
+		</dt>
+		<dd>
+			<span
+				jhiTranslate="{{'gradzcircleApp.ProjectType.' + candidateProject.projectType}}">{{candidateProject.projectType}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.education">Education</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateProject.education">
+				<a
+					[routerLink]="['/candidate-education', candidateProject.education?.id]">{{candidateProject.education?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateProject.employment">Employment</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateProject.employment">
+				<a
+					[routerLink]="['/candidate-employment', candidateProject.employment?.id]">{{candidateProject.employment?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

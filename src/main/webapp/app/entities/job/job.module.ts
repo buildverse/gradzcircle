@@ -1,7 +1,7 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {GradzcircleSharedModule} from '../../shared';
-import { FroalaEditorModule } from 'angular-froala-wysiwyg';
+import {FroalaEditorModule} from 'angular-froala-wysiwyg';
 //import { GradzcircleTrackerModule, MatchTrackerComponent } from '../match-tracker/';
 //import { MatchTrackerService } from '../match-tracker/match-tracker.service';
 import {
@@ -22,7 +22,13 @@ import {
   JobRemoveDialogComponent,
   JobRemovePopupComponent,
   JobViewComponent,
-  JobViewPopupComponent
+  JobViewPopupComponent,
+  CandidateListDialogComponent,
+  CandidateListPopupComponent,
+  JobResolvePagingParams,
+  MatchedCandidateListComponent,
+  AppliedCandidateListComponent
+
 } from './';
 
 
@@ -35,7 +41,7 @@ const ENTITY_STATES = [
   imports: [
     GradzcircleSharedModule,
     RouterModule.forRoot(ENTITY_STATES, {useHash: true}),
-     FroalaEditorModule.forRoot()
+    FroalaEditorModule.forRoot()
   ],
   declarations: [
     JobComponent,
@@ -50,8 +56,12 @@ const ENTITY_STATES = [
     JobRemoveDialogComponent,
     JobRemovePopupComponent,
     JobViewComponent,
-  JobViewPopupComponent
-  //MatchTrackerComponent
+    JobViewPopupComponent,
+    CandidateListDialogComponent,
+    CandidateListPopupComponent,
+    MatchedCandidateListComponent,
+    AppliedCandidateListComponent
+    //MatchTrackerComponent
   ],
   entryComponents: [
     JobComponent,
@@ -65,14 +75,21 @@ const ENTITY_STATES = [
     JobRemoveDialogComponent,
     JobRemovePopupComponent,
     JobViewComponent,
-  JobViewPopupComponent
-//  MatchTrackerComponent
+    JobViewPopupComponent,
+    CandidateListDialogComponent,
+    CandidateListPopupComponent,
+    MatchedCandidateListComponent,
+    AppliedCandidateListComponent
+    //  MatchTrackerComponent
   ],
   providers: [
     JobService,
     JobPopupService,
-   // MatchTrackerService,
-    JobPopupServiceNew
+    // MatchTrackerService,
+    JobPopupServiceNew,
+    JobResolvePagingParams
+
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

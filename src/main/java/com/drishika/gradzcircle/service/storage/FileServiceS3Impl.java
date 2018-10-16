@@ -1,7 +1,5 @@
 package com.drishika.gradzcircle.service.storage;
 
-
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -29,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  * Upload a file to an Amazon S3 bucket.
  *
@@ -38,90 +35,91 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 @Transactional
-public class FileServiceS3Impl implements FileServiceS3
-{
-    private UserRepository userRepository;
-    private UserService userService;
-    private  AmazonS3 amazonS3Client; 
-    
+public class FileServiceS3Impl implements FileServiceS3 {
+	private UserRepository userRepository;
+	private UserService userService;
+	private AmazonS3 amazonS3Client;
 
-    private static final Logger logger = LoggerFactory.getLogger(FileServiceS3.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileServiceS3.class);
 
-    private void init(){
-        ClientConfiguration configuration = new ClientConfiguration();
-        configuration.setConnectionTimeout(5000);
-        configuration.setMaxConnections(100);
-        amazonS3Client = AmazonS3ClientBuilder.standard().withClientConfiguration(configuration).withRegion(Constants.AWS_REGION).build();
-    }
+	private void init() {
+		ClientConfiguration configuration = new ClientConfiguration();
+		configuration.setConnectionTimeout(5000);
+		configuration.setMaxConnections(100);
+		amazonS3Client = AmazonS3ClientBuilder.standard().withClientConfiguration(configuration)
+				.withRegion(Constants.AWS_REGION).build();
+	}
 
-    public FileServiceS3Impl(UserRepository userRepository,UserService userService){
-        init();
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
+	public FileServiceS3Impl(UserRepository userRepository, UserService userService) {
+		init();
+		this.userRepository = userRepository;
+		this.userService = userService;
+	}
 
-    @Override
-	public List listObjects(String bucketName){
-        List objectList = amazonS3Client.listObjects(bucketName).getObjectSummaries();
-        logger.info("Listing objects {}",amazonS3Client.listObjects(bucketName));
-        return objectList;
-    }
+	@Override
+	public List listObjects(String bucketName) {
+		List objectList = amazonS3Client.listObjects(bucketName).getObjectSummaries();
+		logger.info("Listing objects {}", amazonS3Client.listObjects(bucketName));
+		return objectList;
+	}
 
 	@Override
 	public void uploadObject(String bucketName, String key, MultipartFile file) throws FileUploadException {
-        try {
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(file.getContentType());
-            PutObjectResult result = amazonS3Client.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(),objectMetadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-            User user  = userRepository.findOne(Long.parseLong(key));
-            user.setImageUrl(result.getETag());
-            userService.updateUser(user.getFirstName(),user.getLastName(),user.getEmail(),user.getLangKey(),user.getImageUrl());
-            logger.info("Uploaded file .. All Good!!");
-        } catch (AmazonServiceException asex) {
-            logger.error("Error occuured during upload...{}", asex);
-            throw new FileUploadException(asex.getErrorMessage());
-        } catch (Exception e){
-            logger.error("Error occuured during upload...{}", e);
-            throw new FileUploadException(e.getMessage());
-        }
+		try {
+			ObjectMetadata objectMetadata = new ObjectMetadata();
+			objectMetadata.setContentType(file.getContentType());
+			PutObjectResult result = amazonS3Client
+					.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), objectMetadata)
+							.withCannedAcl(CannedAccessControlList.PublicRead));
+			User user = userRepository.findOne(Long.parseLong(key));
+			user.setImageUrl(result.getETag());
+			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
+					user.getImageUrl());
+			logger.info("Uploaded file .. All Good!!");
+		} catch (AmazonServiceException asex) {
+			logger.error("Error occuured during upload...{}", asex);
+			throw new FileUploadException(asex.getErrorMessage());
+		} catch (Exception e) {
+			logger.error("Error occuured during upload...{}", e);
+			throw new FileUploadException(e.getMessage());
+		}
 
-
-    }
-    
-
+	}
 
 	@Override
-	public void deleteObject(String bucketName, String key) throws FileRemoveException{
+	public void deleteObject(String bucketName, String key) throws FileRemoveException {
 		try {
-            amazonS3Client.deleteObject(bucketName, key);
-            User user  = userRepository.findOne(Long.parseLong(key));
-            user.setImageUrl(null);
-            userService.updateUser(user.getFirstName(),user.getLastName(),user.getEmail(),user.getLangKey(),user.getImageUrl());
-            logger.info("Deleted file .. All Good!!");
-        } catch (AmazonServiceException asex) {
-            logger.error("Error occuured during delete...{ }", asex);
-            throw new FileRemoveException(asex.getErrorMessage());
-        }
-      
+			amazonS3Client.deleteObject(bucketName, key);
+			User user = userRepository.findOne(Long.parseLong(key));
+			user.setImageUrl(null);
+			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
+					user.getImageUrl());
+			logger.info("Deleted file .. All Good!!");
+		} catch (AmazonServiceException asex) {
+			logger.error("Error occuured during delete...{ }", asex);
+			throw new FileRemoveException(asex.getErrorMessage());
+		}
+
 	}
 
 	@Override
 	public Resource getObject(String bucketName, String key) throws FileRetrieveException {
-        Resource file = null;
-        try{
-                logger.debug("Key coming iin is {}", key);
-               S3Object s3Object = amazonS3Client.getObject(bucketName, key);
-               file = new Resource (s3Object,new Link(String.format("https://s3-%s.amazonaws.com/%s/%s", amazonS3Client.getBucketLocation(bucketName),
-                                s3Object.getBucketName(), s3Object.getKey())).withRel("url"));
-               logger.debug("Resource details are {}", file.getLinks());
-            } catch (Exception stex){
-                logger.error("Error while retreiving file { }", stex);
-                throw new FileRetrieveException(stex.getMessage());
-            }
-            if(file != null){
-               return file;
-           }
-            else return null;
+		Resource file = null;
+		try {
+			logger.debug("Key coming iin is {}", key);
+			S3Object s3Object = amazonS3Client.getObject(bucketName, key);
+			file = new Resource(s3Object,
+					new Link(String.format("https://s3-%s.amazonaws.com/%s/%s",
+							amazonS3Client.getBucketLocation(bucketName), s3Object.getBucketName(), s3Object.getKey()))
+									.withRel("url"));
+			logger.debug("Resource details are {}", file.getLinks());
+		} catch (Exception stex) {
+			logger.error("Error while retreiving file { }", stex);
+			throw new FileRetrieveException(stex.getMessage());
+		}
+		if (file != null) {
+			return file;
+		} else
+			return null;
 	}
 }

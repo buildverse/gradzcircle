@@ -309,7 +309,8 @@ public class CollegeResourceIntTest {
 				.suggest(new String[] { createElasticInstance(college).getCollegeName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
 		// Search the college
-		restCollegeMockMvc.perform(get("/api/_search/colleges?query=id:" + college.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		restCollegeMockMvc.perform(get("/api/_search/colleges?query=id:" + college.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.[*].id").value(hasItem(college.getId().intValue())))
 				.andExpect(jsonPath("$.[*].collegeName").value(hasItem(DEFAULT_COLLEGE_NAME.toString())))

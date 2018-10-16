@@ -8,12 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,11 +34,16 @@ import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.JobService;
+import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
+import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
+import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
 
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Job. IMPORTANT NOTE : WE AE NOT STROING THE JOB
@@ -56,15 +62,14 @@ public class JobResource {
 
 	private final JobSearchRepository jobSearchRepository;
 
-	//private final JobFilterRepository jobFilterRepository;
+	// private final JobFilterRepository jobFilterRepository;
 
 	private final JobService jobService;
 
-	public JobResource(JobRepository jobRepository, JobSearchRepository jobSearchRepository,
-			JobService jobService) {
+	public JobResource(JobRepository jobRepository, JobSearchRepository jobSearchRepository, JobService jobService) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
-		//this.jobFilterRepository = jobFilterRepository;
+		// this.jobFilterRepository = jobFilterRepository;
 		this.jobService = jobService;
 
 	}
@@ -94,10 +99,10 @@ public class JobResource {
 		} catch (BeanCopyException e) {
 			result = new Job();
 			result.jobDescription(e.getMessage());
-			log.error("Error creating job {} , {}",e.getMessage(),e.getCause());
-			
+			log.error("Error creating job {} , {}", e.getMessage(), e.getCause());
+
 		}
-		//JobsUtil.trimJobFromFilter(result);
+		// JobsUtil.trimJobFromFilter(result);
 		return ResponseEntity.created(new URI("/api/jobs/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -117,34 +122,35 @@ public class JobResource {
 	@PutMapping("/jobs")
 	@Timed
 	public ResponseEntity<Job> updateJob(@RequestBody Job job) throws URISyntaxException {
-		log.debug("REST request to update Job with JobFilter : {} , {}, {} ,{}", job,job.getEmploymentType(),job.getJobType(), job.getJobFilters());
+		log.debug("REST request to update Job with JobFilter : {} , {}, {} ,{}", job, job.getEmploymentType(),
+				job.getJobType(), job.getJobFilters());
 		if (job.getId() == null) {
 			return createJob(job);
 		}
 		Job result;
 		Job updatedJob = new Job();
-		
+
 		try {
 			result = jobService.updateJob(job);
-			//BeanUtils.copyProperties(updatedJob, result);
-			log.info("Updated job is {},{}",updatedJob,updatedJob.getJobFilters());
+			// BeanUtils.copyProperties(updatedJob, result);
+			log.info("Updated job is {},{}", updatedJob, updatedJob.getJobFilters());
 		} catch (BeanCopyException e) {
-			result=job;
+			result = job;
 			result.setJobDescription(e.getMessage());
-			log.error("Error updating job {} , {}",e.getMessage(),e.getCause());
+			log.error("Error updating job {} , {}", e.getMessage(), e.getCause());
 		} catch (JobEditException e) {
-			result=job;
+			result = job;
 			result.setJobDescription(e.getMessage());
-			log.error("Error updating job {} , {}",e.getMessage(),e.getCause());
+			log.error("Error updating job {} , {}", e.getMessage(), e.getCause());
 			throw new CustomParameterizedException(e.getMessage());
-		} catch(Exception ex) {
-			result=job;
+		} catch (Exception ex) {
+			result = job;
 			result.setJobDescription(ex.getMessage());
-			log.error("Error updating job {} , {}",ex.getMessage(),ex.getCause());
+			log.error("Error updating job {} , {}", ex.getMessage(), ex.getCause());
 			throw new CustomParameterizedException(ex.getMessage());
 		}
-		
-	//	JobsUtil.trimJobFromFilter(updatedJob);
+
+		// JobsUtil.trimJobFromFilter(updatedJob);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
 	}
@@ -156,21 +162,95 @@ public class JobResource {
 	 */
 	@GetMapping("/jobs")
 	@Timed
-	public List<Job> getAllJobs() {
+	public ResponseEntity<List<Job>> getAllJobs(@ApiParam Pageable pageable) {
 		log.debug("REST request to get all Jobs");
-		return jobRepository.findAll();
+		Page<Job> jobs = jobRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(jobs, "/api/jobs");
+		return new ResponseEntity<>(jobs.getContent(), headers, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * GET /activeJobs : get all the jobs.
+	 * GET /activeJobs for Corporates: get all the jobs.
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
-	@GetMapping("/activeJobs/{corporateId}")
+	@GetMapping("/activeJobsForCorporate/{corporateId}")
 	@Timed
-	public List<Job> getActiveJobs(@PathVariable Long corporateId) {
-		log.debug("REST request to get active Jobs");
-		return jobRepository.findByJobStatusGreaterThanAndCorporateId(-1,corporateId);
+	public ResponseEntity<List<CorporateJobDTO>> getActiveJobsListForCorporates(@ApiParam Pageable pageable,
+			@PathVariable Long corporateId) {
+		final Page<CorporateJobDTO> page = jobService.getActiveJobsListForCorporates(pageable, corporateId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsForCorporate");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /activeJobs for Candidates : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/newActiveJobsForCandidate/{candidateId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getNewActiveJobsListForCandidates(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId) {
+		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidates(pageable, candidateId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/newActiveJobsForCandidate");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /matchedCandiatesForJob : Matched candidates for Job
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/matchedCandiatesForJob/{jobId}")
+	@Timed
+	public ResponseEntity<List<CandidateProfileListDTO>> getMatchedCandidatesForJob(@ApiParam Pageable pageable,
+			@PathVariable Long jobId) {
+		final Page<CandidateProfileListDTO> page = jobService.getMatchedCandidatesForJob(pageable, jobId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/matchedCandiatesForJob");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /appliedCandiatesForJob : Applied candidates for Job
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/appliedCandiatesForJob/{jobId}")
+	@Timed
+	public ResponseEntity<List<CandidateProfileListDTO>> getAppliedCandidatesForJob(@ApiParam Pageable pageable,
+			@PathVariable Long jobId) {
+		final Page<CandidateProfileListDTO> page = jobService.getAppliedCandidatesForJob(pageable, jobId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedCandiatesForJob");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /appliedJobsByCandidate : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/appliedJobsByCandidate/{candidateId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getAppliedJobsByCandidate(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId) {
+		final Page<CandidateJobDTO> page = jobService.getAppliedJobsListForCandidates(pageable, candidateId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedJobsByCandidate");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * Apply for Job
+	 */
+
+	@GetMapping("/applyForJob/{jobId}/{loginId}")
+	@Timed
+	public ResponseEntity<Job> applyForJob(@PathVariable Long jobId, @PathVariable Long loginId)
+			throws URISyntaxException {
+		log.debug("REST request to ApplyForJob ");
+		Job result = jobService.applyJobForCandidate(jobId, loginId);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
+				.body(result);
 	}
 
 	/**
@@ -187,8 +267,8 @@ public class JobResource {
 		log.debug("REST request to get Job : {}", id);
 		Set<JobFilter> jobFilters = null;
 		Job job = jobRepository.findOne(id);
-		
-		if(job!=null) {
+
+		if (job != null) {
 			JobFilter jobFilter = jobService.getJobFilter(job);
 			if (jobFilter != null) {
 				jobFilters = new HashSet<JobFilter>();
@@ -196,13 +276,12 @@ public class JobResource {
 				job.setJobFilters(jobFilters);
 				JobsUtil.trimJobFromFilter(job);
 			}
-			
+
 			JobsUtil.trimCorporateFromJob(job);
-			
-			//log.debug("exiting for {} with filters {}", id, job.getJobFilters());
+
+			// log.debug("exiting for {} with filters {}", id, job.getJobFilters());
 		}
-		
-		
+
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(job));
 	}
 
@@ -221,7 +300,7 @@ public class JobResource {
 		jobSearchRepository.delete(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
-	
+
 	/**
 	 * Remove /deActivatejob/:id : Deactivate the "id" job.
 	 *
@@ -235,12 +314,13 @@ public class JobResource {
 		log.debug("REST request to remove Job : {}", id);
 		try {
 			jobService.deActivateJob(id);
-			
+
 		} catch (BeanCopyException e) {
-			log.error("Error creating job {} , {}",e.getMessage(),e.getCause());
-			return ResponseEntity.badRequest().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+			log.error("Error creating job {} , {}", e.getMessage(), e.getCause());
+			return ResponseEntity.badRequest().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString()))
+					.build();
 		}
-		
+
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -254,10 +334,12 @@ public class JobResource {
 	 */
 	@GetMapping("/_search/jobs")
 	@Timed
-	public List<Job> searchJobs(@RequestParam String query) {
+	public ResponseEntity<List<Job>> searchJobs(@RequestParam String query, @ApiParam Pageable pageable) {
 		log.debug("REST request to search Jobs for query {}", query);
-		return StreamSupport.stream(jobSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		Page<Job> page = jobSearchRepository.search(queryStringQuery(query), pageable);
+		HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/jobs");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+
 	}
 
 }

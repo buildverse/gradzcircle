@@ -11,3 +11,8 @@ export * from './job.constants';
 export * from './job-edit-message-dialog.component';
 export * from './job-remove-dialog.component';
 export * from './job-view.component';
+export * from '../candidate-list/candidate-list-dialog.component';
+export * from './matched-candidate-list.component';
+export * from './applied-candidate-list.component';
+
+

@@ -2,14 +2,21 @@ package com.drishika.gradzcircle.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
+import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
-
+import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
+import com.drishika.gradzcircle.service.util.DTOConverters;
 
 /**
  * Service class for managing users.
@@ -19,27 +26,31 @@ import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 
 public class CorporateService {
 
-    private final Logger logger = LoggerFactory.getLogger(CorporateService.class);
+	private final Logger logger = LoggerFactory.getLogger(CorporateService.class);
 
-    private CorporateRepository corporateRepository;
+	private final CorporateRepository corporateRepository;
 
-    private CorporateSearchRepository corporateSearchRepository;
+	private final CorporateSearchRepository corporateSearchRepository;
 
-    public CorporateService (CorporateRepository corporateRepository, CorporateSearchRepository corporateSearchRepository){
-        this.corporateRepository = corporateRepository;
-        this.corporateSearchRepository = corporateSearchRepository;
-    }
+	private final DTOConverters converter;
 
-    public void createCorporate (String corporateName,String phoneNumber,String country,User user ){
-        Corporate corporate = new Corporate();
-        corporate.setName(corporateName);
-        //corporate.setCorporatePhone(phoneNumber);
-        //corporate.setCorporateCountry (country);
-        corporate.setLogin(user);
-        corporateRepository.save(corporate);
-        corporateSearchRepository.save(corporate);
-        logger.debug("Information for created Corporate {} ",corporate);
-    }
+	public CorporateService(CorporateRepository corporateRepository,
+			CorporateSearchRepository corporateSearchRepository, DTOConverters converter) {
+		this.corporateRepository = corporateRepository;
+		this.corporateSearchRepository = corporateSearchRepository;
+		this.converter = converter;
+	}
+
+	public void createCorporate(String corporateName, String phoneNumber, String country, User user) {
+		Corporate corporate = new Corporate();
+		corporate.setName(corporateName);
+		// corporate.setCorporatePhone(phoneNumber);
+		// corporate.setCorporateCountry (country);
+		corporate.setLogin(user);
+		corporateRepository.save(corporate);
+		corporateSearchRepository.save(corporate);
+		logger.debug("Information for created Corporate {} ", corporate);
+	}
 
 	/**
 	 * @param id
@@ -56,8 +67,14 @@ public class CorporateService {
 	public void deleteCorporate(Long id) {
 		corporateRepository.delete(id);
 		corporateSearchRepository.delete(id);
-		
+
 	}
 
+	public Page<CandidateProfileListDTO> getLinkedCandidates(Pageable pageable, Long corporateId) {
+		Page<CorporateCandidate> candidatePage = corporateRepository.findLinkedCandidates(corporateId, pageable);
+		final Page<CandidateProfileListDTO> page = candidatePage.map(
+				corporateCandidate -> converter.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate()));
+		return page;
+	}
 
 }

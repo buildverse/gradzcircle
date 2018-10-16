@@ -62,14 +62,14 @@ import com.drishika.gradzcircle.service.JobService;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GradzcircleApp.class)
-@Transactional (isolation = Isolation.READ_UNCOMMITTED)
+@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 public class JobMatcherIntTest {
 
 	private JobMatcher jobMatcher;
-	
+
 	@Autowired
 	private ApplicationEventPublisher applicationEventPublisher;
-	
+
 	@Autowired
 	private CandidateEducationService candidateEducationService;
 	@Autowired
@@ -87,7 +87,7 @@ public class JobMatcherIntTest {
 	@Autowired
 	private LanguageRepository languageRepository;
 	@Autowired
-	private CandidateJobRepository candidateJobRepository; 
+	private CandidateJobRepository candidateJobRepository;
 	@Autowired
 	MatchUtils matchUtils;
 
@@ -102,9 +102,9 @@ public class JobMatcherIntTest {
 	private CourseRepository courseRepository;
 	@Autowired
 	private UniversityRepository universityRepository;
-	@Autowired 
+	@Autowired
 	private JobRepository jobRepository;
-	@Autowired 
+	@Autowired
 	private JobSearchRepository jobSearchRepository;
 	@Autowired
 	private JobService jobService;
@@ -159,15 +159,17 @@ public class JobMatcherIntTest {
 	private Candidate candidateA, candidateB, candidateC, candidateD, candidateE, candidateF, candidateG, candidateH;
 	private static Gender female, male;
 	private static Language english, hindi, marathi, punjabi, sanskrit;
-	//private static  College collegeIIM, collegeMIRANDAHOUSE, collegeAMITY, collegeA, collegeB, collegeABC, collegeStTHOMAS;
-	private static  University uniIIM, uniUNIVERSITY_OF_DELHI, uniUNIVERSITY_OF_MUMBAI, uniA, uniB, uniStTHOMAS, uniDoon,
+	// private static College collegeIIM, collegeMIRANDAHOUSE, collegeAMITY,
+	// collegeA, collegeB, collegeABC, collegeStTHOMAS;
+	private static University uniIIM, uniUNIVERSITY_OF_DELHI, uniUNIVERSITY_OF_MUMBAI, uniA, uniB, uniStTHOMAS, uniDoon,
 			uniAMITY, unia, unib;
-	private static  Course courseFOOD_TECH, courseMEDICAL, coursePHARMA, courseBUSINESS_ADM, courseCOMPUTER, courseICSE,
+	private static Course courseFOOD_TECH, courseMEDICAL, coursePHARMA, courseBUSINESS_ADM, courseCOMPUTER, courseICSE,
 			courseISC, courseENGG;
-	private  static Qualification qualBACHELORS, qualMASTERS, qualDOCTRATE, qualPG_DIPLOMA, qualDIPLOMA, qualISC, qualICSE;
-	private  static Set<Qualification> qualifications;
+	private static Qualification qualBACHELORS, qualMASTERS, qualDOCTRATE, qualPG_DIPLOMA, qualDIPLOMA, qualISC,
+			qualICSE;
+	private static Set<Qualification> qualifications;
 	private Corporate corporate;
-	private  static Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
+	private static Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 			universityFilter, qualificationFilter;
 
 	@Before
@@ -175,8 +177,9 @@ public class JobMatcherIntTest {
 		MockitoAnnotations.initMocks(this);
 		jobMatcher = new JobMatcher(candidateEducationService, candidateLanguageService, jobFilterParser,
 				filterRepository, courseRepository, qualificationRepository, collegeRepository, universityRepository,
-				genderRepository, languageRepository,jobRepository,jobSearchRepository,matchUtils,candidateJobRepository,candidateRepository,applicationEventPublisher);	
-		
+				genderRepository, languageRepository, jobRepository, jobSearchRepository, matchUtils,
+				candidateJobRepository, candidateRepository, applicationEventPublisher);
+
 		filterRepository.deleteAll();
 		courseRepository.deleteAll();
 		qualificationRepository.deleteAll();
@@ -201,13 +204,16 @@ public class JobMatcherIntTest {
 		unia = universityRepository.saveAndFlush(createUnia(em));
 		unib = universityRepository.saveAndFlush(createUnib(em));
 		uniAMITY = universityRepository.saveAndFlush(createUniAmity(em));
-		/*collegeIIM = collegeRepository.saveAndFlush(createABCCollege(em));
-		collegeMIRANDAHOUSE = collegeRepository.saveAndFlush(createMirandaCollege(em));
-		collegeAMITY = collegeRepository.saveAndFlush(createAmityCollege(em));
-		collegeA = collegeRepository.saveAndFlush(createACollege(em));
-		collegeB = collegeRepository.saveAndFlush(createBCollege(em));
-		collegeABC = collegeRepository.saveAndFlush(createABCCollege(em));
-		collegeStTHOMAS = collegeRepository.saveAndFlush(createStThomasCollege(em));*/
+		/*
+		 * collegeIIM = collegeRepository.saveAndFlush(createABCCollege(em));
+		 * collegeMIRANDAHOUSE =
+		 * collegeRepository.saveAndFlush(createMirandaCollege(em)); collegeAMITY =
+		 * collegeRepository.saveAndFlush(createAmityCollege(em)); collegeA =
+		 * collegeRepository.saveAndFlush(createACollege(em)); collegeB =
+		 * collegeRepository.saveAndFlush(createBCollege(em)); collegeABC =
+		 * collegeRepository.saveAndFlush(createABCCollege(em)); collegeStTHOMAS =
+		 * collegeRepository.saveAndFlush(createStThomasCollege(em));
+		 */
 		qualBACHELORS = qualificationRepository.saveAndFlush(createBacheloraQualification(em));
 		qualMASTERS = qualificationRepository.saveAndFlush(createMasterQualification(em));
 		qualDOCTRATE = qualificationRepository.saveAndFlush(createDoctrateQualification(em));
@@ -234,8 +240,8 @@ public class JobMatcherIntTest {
 		jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
-		//jobD = createJobD(em);
-		//jobE = createJobE(em);
+		// jobD = createJobD(em);
+		// jobE = createJobE(em);
 		jobF = createJobF(em);
 		jobG = createJobG(em);
 		jobZ = createJobZ(em);
@@ -250,8 +256,6 @@ public class JobMatcherIntTest {
 		// jobH = createJobH(em);
 		corporate = new Corporate();
 	}
-
-
 
 	public static Filter createGradDateFilter(EntityManager em) {
 		return new Filter().filterName("gradDate").matchWeight(0L);
@@ -406,6 +410,7 @@ public class JobMatcherIntTest {
 		set.add(new College().collegeName(AMITY).university(university));
 		return university.colleges(set);
 	}
+
 	public static Gender createMaleGender(EntityManager em) {
 		return new Gender().gender(MALE);
 	}
@@ -455,22 +460,22 @@ public class JobMatcherIntTest {
 		CandidateEducation education2 = new CandidateEducation().qualification(qualBACHELORS).course(courseCOMPUTER)
 				.grade(8.0).college(uniUNIVERSITY_OF_DELHI.getColleges().iterator().next()).candidate(candidateA);
 		CandidateEducation education3 = new CandidateEducation().qualification(qualICSE).course(courseICSE)
-				.percentage(89d).college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2001, 02, 25))
-				.educationToDate(LocalDate.of(2005, 02, 24)).candidate(candidateA);
+				.percentage(89d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2001, 02, 25)).educationToDate(LocalDate.of(2005, 02, 24))
+				.candidate(candidateA);
 		CandidateEducation education4 = new CandidateEducation().qualification(qualISC).course(courseISC)
-				.percentage(79d).college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
-				.educationToDate(LocalDate.of(2007, 02, 24)).candidate(candidateA);
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2007, 02, 24))
+				.candidate(candidateA);
 		candidateEducations.add(education1);
 		candidateEducations.add(education2);
 		candidateEducations.add(education3);
 		candidateEducations.add(education4);
 		candidateA.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
 		candidateA.setEducations(candidateEducations);
-	
+
 		return candidateA;
 	}
-	
-	
 
 	public static Candidate createCandidateBProfile(EntityManager em) {
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<CandidateLanguageProficiency>();
@@ -487,7 +492,8 @@ public class JobMatcherIntTest {
 		candidateLanguageProficiencies.add(languageProfC);
 		CandidateEducation education = new CandidateEducation().qualification(qualMASTERS).course(coursePHARMA)
 				.percentage(79d).highestQualification(true).educationFromDate(LocalDate.of(2016, 02, 25))
-				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniUNIVERSITY_OF_MUMBAI.getColleges().iterator().next()).candidate(candidateB);
+				.educationToDate(LocalDate.of(2018, 02, 24))
+				.college(uniUNIVERSITY_OF_MUMBAI.getColleges().iterator().next()).candidate(candidateB);
 		candidateEducations.add(education);
 		candidateB.setEducations(candidateEducations);
 		candidateB.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
@@ -499,7 +505,8 @@ public class JobMatcherIntTest {
 		Candidate candidateC = new Candidate().firstName(CANDIDATE_C).matchEligible(true);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualDOCTRATE).course(courseFOOD_TECH)
 				.percentage(80d).highestQualification(true).educationFromDate(LocalDate.of(2017, 02, 25))
-				.educationToDate(LocalDate.of(2018, 06, 24)).college(uniAMITY.getColleges().iterator().next()).candidate(candidateC);
+				.educationToDate(LocalDate.of(2018, 06, 24)).college(uniAMITY.getColleges().iterator().next())
+				.candidate(candidateC);
 		candidateEducations.add(education1);
 		candidateC.setEducations(candidateEducations);
 		return candidateC;
@@ -510,7 +517,8 @@ public class JobMatcherIntTest {
 		Candidate candidateD = new Candidate().firstName(CANDIDATE_D).matchEligible(true);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualMASTERS).course(courseFOOD_TECH)
 				.percentage(78d).highestQualification(true).educationFromDate(LocalDate.of(2017, 02, 25))
-				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniAMITY.getColleges().iterator().next()).candidate(candidateD);
+				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniAMITY.getColleges().iterator().next())
+				.candidate(candidateD);
 		candidateEducations.add(education1);
 		candidateD.setEducations(candidateEducations);
 		return candidateD;
@@ -521,10 +529,12 @@ public class JobMatcherIntTest {
 		Candidate candidateE = new Candidate().firstName(CANDIDATE_E).matchEligible(true);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualBACHELORS).course(coursePHARMA)
 				.percentage(68d).educationFromDate(LocalDate.of(2016, 02, 25))
-				.educationToDate(LocalDate.of(2017, 02, 24)).college(uniAMITY.getColleges().iterator().next()).candidate(candidateE);
+				.educationToDate(LocalDate.of(2017, 02, 24)).college(uniAMITY.getColleges().iterator().next())
+				.candidate(candidateE);
 		CandidateEducation education2 = new CandidateEducation().qualification(qualDOCTRATE).course(courseMEDICAL)
 				.percentage(70d).highestQualification(true).educationFromDate(LocalDate.of(2016, 02, 25))
-				.educationToDate(LocalDate.of(2017, 02, 24)).college(uniAMITY.getColleges().iterator().next()).candidate(candidateE);
+				.educationToDate(LocalDate.of(2017, 02, 24)).college(uniAMITY.getColleges().iterator().next())
+				.candidate(candidateE);
 		candidateEducations.add(education1);
 		candidateEducations.add(education2);
 		candidateE.setEducations(candidateEducations);
@@ -536,7 +546,8 @@ public class JobMatcherIntTest {
 		Candidate candidateF = new Candidate().firstName(CANDIDATE_F).matchEligible(true);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualICSE).course(courseICSE)
 				.percentage(50d).highestQualification(true).educationFromDate(LocalDate.of(2017, 02, 25))
-				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniDoon.getColleges().iterator().next()).candidate(candidateF);
+				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniDoon.getColleges().iterator().next())
+				.candidate(candidateF);
 		candidateEducations.add(education1);
 		candidateF.setEducations(candidateEducations);
 		return candidateF;
@@ -547,7 +558,8 @@ public class JobMatcherIntTest {
 		Candidate candidateG = new Candidate().firstName(CANDIDATE_G).matchEligible(true);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualMASTERS).course(courseENGG)
 				.percentage(68d).highestQualification(true).educationFromDate(LocalDate.of(2017, 02, 25))
-				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniA.getColleges().iterator().next()).candidate(candidateG);
+				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniA.getColleges().iterator().next())
+				.candidate(candidateG);
 		candidateEducations.add(education1);
 		candidateG.setEducations(candidateEducations);
 		return candidateG;
@@ -568,7 +580,8 @@ public class JobMatcherIntTest {
 		candidateLanguageProficiencies.add(languageProfC);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualMASTERS).course(courseCOMPUTER)
 				.percentage(80d).highestQualification(true).educationFromDate(LocalDate.of(2017, 02, 25))
-				.educationToDate(LocalDate.of(2018, 02, 24)).college(uniUNIVERSITY_OF_DELHI.getColleges().iterator().next()).candidate(candidateH);
+				.educationToDate(LocalDate.of(2018, 02, 24))
+				.college(uniUNIVERSITY_OF_DELHI.getColleges().iterator().next()).candidate(candidateH);
 		candidateEducations.add(education1);
 		candidateH.setEducations(candidateEducations);
 		candidateH.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
@@ -585,7 +598,7 @@ public class JobMatcherIntTest {
 		jobA.setJobFilters(jobFilters);
 		return jobA;
 	}
-	
+
 	public static Job createJobZ(EntityManager em) {
 		Job jobZ = new Job().jobTitle(JOB_Z);
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
@@ -607,7 +620,6 @@ public class JobMatcherIntTest {
 		jobB.setJobFilters(jobFilters);
 		return jobB;
 	}
-
 
 	public static Job createJobC(EntityManager em) {
 		Job jobE = new Job().jobTitle(JOB_E);
@@ -645,10 +657,11 @@ public class JobMatcherIntTest {
 
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public void testMatchingOnCreatingJobAWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndThreeLanguages() throws Exception {
+	public void testMatchingOnCreatingJobAWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndThreeLanguages()
+			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobA.setCorporate(corporateRepository.save(corporate));	
+		jobA.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobA);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
@@ -667,7 +680,7 @@ public class JobMatcherIntTest {
 		candidateJobs.add(candidateJob1);
 		jobA.setCandidateJobs(candidateJobs);
 		jobRepository.saveAndFlush(jobA);
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobA);
@@ -677,30 +690,36 @@ public class JobMatcherIntTest {
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
 		List<CandidateLanguageProficiency> candidateLanguageList = candidateLanguageService
 				.getAllCandidateLanguageProficiencies();
-	
+
 		assertThat(jobList).hasSize(jobDatabaseSizeBeforeCreate + 1);
 		assertThat(jobList).hasSize(1);
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(7);
 		assertThat(matchedJob.getCandidateJobs())
-			.extracting("candidate.firstName","matchScore","educationMatchScore","languageMatchScore","genderMatchScore","totalEligibleScore")
-			.contains(tuple(CANDIDATE_H,100.0,40.0,5.0,null,45.0),tuple(CANDIDATE_A,42.0,16.0,3.0,null,45.0),
-				tuple(CANDIDATE_B,42.0,16.0,3.0,null,45.0),tuple(CANDIDATE_C,36.0,16.0,0.0,null,45.0),tuple(CANDIDATE_D,33.0,15.0,0.0,null,45.0),
-				tuple(CANDIDATE_F,11.0,5.0,0.0,null,45.0),tuple(CANDIDATE_G,20.0,9.0,0.0,null,45.0));
+				.extracting("candidate.firstName", "matchScore", "educationMatchScore", "languageMatchScore",
+						"genderMatchScore", "totalEligibleScore", "reviewed")
+				.contains(tuple(CANDIDATE_H, 100.0, 40.0, 5.0, null, 45.0, false),
+						tuple(CANDIDATE_A, 42.0, 16.0, 3.0, null, 45.0, false),
+						tuple(CANDIDATE_B, 42.0, 16.0, 3.0, null, 45.0, false),
+						tuple(CANDIDATE_C, 36.0, 16.0, 0.0, null, 45.0, false),
+						tuple(CANDIDATE_D, 33.0, 15.0, 0.0, null, 45.0, false),
+						tuple(CANDIDATE_F, 11.0, 5.0, 0.0, null, 45.0, false),
+						tuple(CANDIDATE_G, 20.0, 9.0, 0.0, null, 45.0, false));
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 		assertThat(candidateList).hasSize(8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
 
 	}
-	
+
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public void testMatchingOnCreatingJobZWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndThreeLanguagesJobWithoutDateFilter() throws Exception {
+	public void testMatchingOnCreatingJobZWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndThreeLanguagesJobWithoutDateFilter()
+			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobZ.setCorporate(corporateRepository.save(corporate));	
-		//jobRepository.saveAndFlush(jobZ);
+		jobZ.setCorporate(corporateRepository.save(corporate));
+		// jobRepository.saveAndFlush(jobZ);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
 		candidateRepository.saveAndFlush(candidateC.gender(male));
@@ -709,52 +728,63 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateF.gender(male));
 		candidateRepository.saveAndFlush(candidateG.gender(male));
 		candidateRepository.saveAndFlush(candidateH.gender(male));
-	/*	CandidateJob candidateJob1 = new CandidateJob(candidateA, jobZ);
-		candidateJob1.setMatchScore(47.0);
-		candidateJob1.setEducationMatchScore(40.0);
-		candidateJob1.setLanguageMatchScore(3.0);
-		candidateJob1.setGenderMatchScore(4.0);
-		Set<CandidateJob> candidateJobs = new HashSet<>();
-		candidateJobs.add(candidateJob1);
-		jobZ.setCandidateJobs(candidateJobs);*/
+		/*
+		 * CandidateJob candidateJob1 = new CandidateJob(candidateA, jobZ);
+		 * candidateJob1.setMatchScore(47.0);
+		 * candidateJob1.setEducationMatchScore(40.0);
+		 * candidateJob1.setLanguageMatchScore(3.0);
+		 * candidateJob1.setGenderMatchScore(4.0); Set<CandidateJob> candidateJobs = new
+		 * HashSet<>(); candidateJobs.add(candidateJob1);
+		 * jobZ.setCandidateJobs(candidateJobs);
+		 */
 		jobRepository.saveAndFlush(jobZ);
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		assertThat(candidateRepository.findAll().size()).isEqualTo(8);
 		jobMatcher.match(jobZ);
-		//System.out.println("Returning from non wainting call");
+		// System.out.println("Returning from non wainting call");
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
 		List<CandidateLanguageProficiency> candidateLanguageList = candidateLanguageService
 				.getAllCandidateLanguageProficiencies();
-	
+
 		assertThat(jobList).hasSize(jobDatabaseSizeBeforeCreate + 1);
 		assertThat(jobList).hasSize(1);
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(8);
 		assertThat(matchedJob.getCandidateJobs())
-			.extracting("candidate.firstName","matchScore","educationMatchScore","languageMatchScore","genderMatchScore","totalEligibleScore")
-			.contains(tuple(CANDIDATE_H,100.0,40.0,5.0,null,45.0),tuple(CANDIDATE_A,42.0,16.0,3.0,null,45.0),
-					tuple(CANDIDATE_B,42.0,16.0,3.0,null,45.0),tuple(CANDIDATE_C,36.0,16.0,0.0,null,45.0),tuple(CANDIDATE_D,33.0,15.0,0.0,null,45.0),
-					tuple(CANDIDATE_F,11.0,5.0,0.0,null,45.0),tuple(CANDIDATE_G,20.0,9.0,0.0,null,45.0),tuple(CANDIDATE_E,18.0, 8.0,0.0,null,45.0));
-		/*	.contains(tuple(CANDIDATE_H,100.0,40.0,5.0,0.0,45.0),tuple(CANDIDATE_A,42.0,16.0,3.0,0.0,45.0),
-				tuple(CANDIDATE_B,42.0,16.0,3.0,0.0,45.0),tuple(CANDIDATE_C,36.0,16.0,0.0,0.0,45.0),tuple(CANDIDATE_D,33.0,15.0,0.0,0.0,45.0),
-				tuple(CANDIDATE_F,11.0,5.0,0.0,0.0,45.0),tuple(CANDIDATE_G,20.0,9.0,0.0,0.0,45.0),tuple(CANDIDATE_E,20.0,9.0,0.0,0.0,45.0));*/
+				.extracting("candidate.firstName", "matchScore", "educationMatchScore", "languageMatchScore",
+						"genderMatchScore", "totalEligibleScore")
+				.contains(tuple(CANDIDATE_H, 100.0, 40.0, 5.0, null, 45.0),
+						tuple(CANDIDATE_A, 42.0, 16.0, 3.0, null, 45.0),
+						tuple(CANDIDATE_B, 42.0, 16.0, 3.0, null, 45.0),
+						tuple(CANDIDATE_C, 36.0, 16.0, 0.0, null, 45.0),
+						tuple(CANDIDATE_D, 33.0, 15.0, 0.0, null, 45.0), tuple(CANDIDATE_F, 11.0, 5.0, 0.0, null, 45.0),
+						tuple(CANDIDATE_G, 20.0, 9.0, 0.0, null, 45.0), tuple(CANDIDATE_E, 18.0, 8.0, 0.0, null, 45.0));
+		/*
+		 * .contains(tuple(CANDIDATE_H,100.0,40.0,5.0,0.0,45.0),tuple(CANDIDATE_A,42.0,
+		 * 16.0,3.0,0.0,45.0),
+		 * tuple(CANDIDATE_B,42.0,16.0,3.0,0.0,45.0),tuple(CANDIDATE_C,36.0,16.0,0.0,0.0
+		 * ,45.0),tuple(CANDIDATE_D,33.0,15.0,0.0,0.0,45.0),
+		 * tuple(CANDIDATE_F,11.0,5.0,0.0,0.0,45.0),tuple(CANDIDATE_G,20.0,9.0,0.0,0.0,
+		 * 45.0),tuple(CANDIDATE_E,20.0,9.0,0.0,0.0,45.0));
+		 */
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 		assertThat(candidateList).hasSize(8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
 
 	}
-	
+
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public void testMatchingOnCreatingJobBWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndTwoLanguages() throws Exception {
+	public void testMatchingOnCreatingJobBWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndTwoLanguages()
+			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobB.setCorporate(corporateRepository.save(corporate));	
+		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobB);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
@@ -764,11 +794,11 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateF.gender(male));
 		candidateRepository.saveAndFlush(candidateG.gender(male));
 		candidateRepository.saveAndFlush(candidateH.gender(male));
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobB);
-		
+
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
@@ -781,19 +811,20 @@ public class JobMatcherIntTest {
 		assertThat(jobList).hasSize(1);
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(7);
-		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName","matchScore").contains(tuple(CANDIDATE_H,38.0),tuple(CANDIDATE_A,40.0),
-				tuple(CANDIDATE_B,80.0),tuple(CANDIDATE_C,29.0),tuple(CANDIDATE_D,31.0),tuple(CANDIDATE_F,18.0),tuple(CANDIDATE_G,13.0));
+		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName", "matchScore").contains(
+				tuple(CANDIDATE_H, 38.0), tuple(CANDIDATE_A, 40.0), tuple(CANDIDATE_B, 80.0), tuple(CANDIDATE_C, 29.0),
+				tuple(CANDIDATE_D, 31.0), tuple(CANDIDATE_F, 18.0), tuple(CANDIDATE_G, 13.0));
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 
-
 	}
-	
+
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public void testMatchingOnCreatingJobCWithMultipleCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndGender() throws Exception {
+	public void testMatchingOnCreatingJobCWithMultipleCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndGender()
+			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobB.setCorporate(corporateRepository.save(corporate));	
+		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobC);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
@@ -803,11 +834,11 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateF.gender(male));
 		candidateRepository.saveAndFlush(candidateG.gender(male));
 		candidateRepository.saveAndFlush(candidateH.gender(male));
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobC);
-		
+
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
@@ -820,19 +851,19 @@ public class JobMatcherIntTest {
 		assertThat(jobList).hasSize(1);
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(7);
-		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName","matchScore").contains(tuple(CANDIDATE_H,39.0),tuple(CANDIDATE_A,36.0),
-				tuple(CANDIDATE_B,70.0),tuple(CANDIDATE_C,36.0),tuple(CANDIDATE_D,39.0),tuple(CANDIDATE_F,16.0),tuple(CANDIDATE_G,57.0));
+		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName", "matchScore").contains(
+				tuple(CANDIDATE_H, 39.0), tuple(CANDIDATE_A, 36.0), tuple(CANDIDATE_B, 70.0), tuple(CANDIDATE_C, 36.0),
+				tuple(CANDIDATE_D, 39.0), tuple(CANDIDATE_F, 16.0), tuple(CANDIDATE_G, 57.0));
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 
-
 	}
-	
+
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void testFilterLessThanGraduationDate() throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobB.setCorporate(corporateRepository.save(corporate));	
+		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobF);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
@@ -842,11 +873,11 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateF.gender(male));
 		candidateRepository.saveAndFlush(candidateG.gender(male));
 		candidateRepository.saveAndFlush(candidateH.gender(male));
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobF);
-		
+
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
@@ -862,15 +893,14 @@ public class JobMatcherIntTest {
 		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName").contains(CANDIDATE_E);
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 
-
 	}
-	
+
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void testFilterWithinGraduationDateRange() throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
-		jobB.setCorporate(corporateRepository.save(corporate));	
+		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobG);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
@@ -880,11 +910,11 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateF.gender(male));
 		candidateRepository.saveAndFlush(candidateG.gender(male));
 		candidateRepository.saveAndFlush(candidateH.gender(male));
-		
+
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobG);
-		
+
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
@@ -897,12 +927,10 @@ public class JobMatcherIntTest {
 		assertThat(jobList).hasSize(1);
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(6);
-		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName").contains(CANDIDATE_H,CANDIDATE_A,
-				CANDIDATE_B,CANDIDATE_D,CANDIDATE_F,CANDIDATE_G);
+		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName").contains(CANDIDATE_H, CANDIDATE_A,
+				CANDIDATE_B, CANDIDATE_D, CANDIDATE_F, CANDIDATE_G);
 		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
 
-
 	}
-
 
 }

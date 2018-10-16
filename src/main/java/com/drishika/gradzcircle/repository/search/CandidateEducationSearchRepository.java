@@ -9,6 +9,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  */
 public interface CandidateEducationSearchRepository extends ElasticsearchRepository<CandidateEducation, Long> {
 
-    List<CandidateEducation> findByCandidateIdOrderByEducationToDateDesc(String id);
+	List<CandidateEducation> findByCandidateIdOrderByEducationToDateDesc(String id);
 
 }

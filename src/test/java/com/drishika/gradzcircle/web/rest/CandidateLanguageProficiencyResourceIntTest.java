@@ -65,60 +65,60 @@ import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 @SpringBootTest(classes = GradzcircleApp.class)
 public class CandidateLanguageProficiencyResourceIntTest {
 
-    private static final String DEFAULT_PROFICIENCY = "AAAAAAAAAA";
-    private static final String UPDATED_PROFICIENCY = "BBBBBBBBBB";
+	private static final String DEFAULT_PROFICIENCY = "AAAAAAAAAA";
+	private static final String UPDATED_PROFICIENCY = "BBBBBBBBBB";
 
-    @Autowired
-    private CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
+	@Autowired
+	private CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
 
-    @Autowired
-    private CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
-    
-    @Autowired
-    private CandidateLanguageService candidateLanguageService;
-    
-    @Autowired
-    private CandidateService candidateService;
-    
+	@Autowired
+	private CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
+
+	@Autowired
+	private CandidateLanguageService candidateLanguageService;
+
+	@Autowired
+	private CandidateService candidateService;
+
 	@Autowired
 	private JobRepository jobRepository;
-    
-    @Autowired
-    private CandidateRepository candidateRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private CandidateRepository candidateRepository;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-    
-    @Autowired
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
+
+	@Autowired
 	private FilterRepository filterRepository;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private EntityManager em;
 
-    private MockMvc restCandidateLanguageProficiencyMockMvc;
+	private MockMvc restCandidateLanguageProficiencyMockMvc;
 
-    private CandidateLanguageProficiency candidateLanguageProficiency;
-    
-    private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH;
-    
-    private Language hindiLanguage, englishLanguage, marathiLanguage;
-    
-    @Autowired
-    private GenderRepository genderRepository;
-    
-    @Autowired
-    private CandidateEducationRepository candidateEducationRepository;
-    
+	private CandidateLanguageProficiency candidateLanguageProficiency;
+
+	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH;
+
+	private Language hindiLanguage, englishLanguage, marathiLanguage;
+
+	@Autowired
+	private GenderRepository genderRepository;
+
+	@Autowired
+	private CandidateEducationRepository candidateEducationRepository;
+
 	@Autowired
 	private LanguageRepository languageRepository;
-    
-    private static final String JOB_A = "JOB_A";
+
+	private static final String JOB_A = "JOB_A";
 	private static final String JOB_B = "JOB_B";
 	private static final String JOB_C = "JOB_C";
 	private static final String JOB_D = "JOB_D";
@@ -132,20 +132,21 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	private final static String MALE = "MALE";
 	private final static String FEMALE = "FEMALE";
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
-	universityFilter, qualificationFilter;
+			universityFilter, qualificationFilter;
 	private Gender maleGender, femaleGender;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CandidateLanguageProficiencyResource candidateLanguageProficiencyResource = new CandidateLanguageProficiencyResource(candidateLanguageService);
-        this.restCandidateLanguageProficiencyMockMvc = MockMvcBuilders.standaloneSetup(candidateLanguageProficiencyResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
-    
-    public static Job createJobA(EntityManager em) {
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final CandidateLanguageProficiencyResource candidateLanguageProficiencyResource = new CandidateLanguageProficiencyResource(
+				candidateLanguageService);
+		this.restCandidateLanguageProficiencyMockMvc = MockMvcBuilders
+				.standaloneSetup(candidateLanguageProficiencyResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
+
+	public static Job createJobA(EntityManager em) {
 		Job jobA = new Job().jobTitle(JOB_A).jobStatus(1);
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
 		JobFilter jobFilter = new JobFilter();
@@ -204,7 +205,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		jobG.setJobFilters(jobFilters);
 		return jobG;
 	}
-	
+
 	public static Gender createMaleGender(EntityManager em) {
 		return new Gender().gender(MALE);
 	}
@@ -212,7 +213,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	public static Gender createFemaleGender(EntityManager em) {
 		return new Gender().gender(FEMALE);
 	}
-	
+
 	public static Language createHindiLanguae(EntityManager em) {
 		return new Language().language(HINDI);
 	}
@@ -224,7 +225,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	public static Language createEnglishLanguage(EntityManager em) {
 		return new Language().language(ENGLISH);
 	}
-	
+
 	public static Filter createGradDateFilter(EntityManager em) {
 		return new Filter().filterName("gradDate").matchWeight(0L);
 	}
@@ -257,26 +258,25 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		return new Filter().filterName("gender").matchWeight(4L);
 	}
 
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static CandidateLanguageProficiency createEntity(EntityManager em) {
+		CandidateLanguageProficiency candidateLanguageProficiency = new CandidateLanguageProficiency()
+				.proficiency(DEFAULT_PROFICIENCY);
+		return candidateLanguageProficiency;
+	}
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static CandidateLanguageProficiency createEntity(EntityManager em) {
-        CandidateLanguageProficiency candidateLanguageProficiency = new CandidateLanguageProficiency()
-            .proficiency(DEFAULT_PROFICIENCY);
-        return candidateLanguageProficiency;
-    }
-
-    @Before
-    public void initTest() {
-        candidateLanguageProficiencyRepository.deleteAll();
-        candidateLanguageProficiency = createEntity(em);
-        maleGender = createMaleGender(em);
+	@Before
+	public void initTest() {
+		candidateLanguageProficiencyRepository.deleteAll();
+		candidateLanguageProficiency = createEntity(em);
+		maleGender = createMaleGender(em);
 		femaleGender = createFemaleGender(em);
-        jobA = createJobA(em);
+		jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
 		jobF = createJobF(em);
@@ -292,439 +292,472 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		scoreFilter = createScoreFilter(em);
 		languageFilter = createLanguagefilter(em);
 		genderFilter = createGenderFilter(em);
-    }
+	}
 
-    @Test
-    @Transactional
-    public void createCandidateLanguageProficiencyAndNoEducationSaved() throws Exception {
-        int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
-        Candidate candidate = new Candidate().firstName("Abhinav");
-        candidateService.createCandidate(candidate);
-        candidateLanguageProficiency.candidate(candidate);
-        // Create the CandidateLanguageProficiency
-        restCandidateLanguageProficiencyMockMvc.perform(post("/api/candidate-language-proficiencies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
-            .andExpect(status().isCreated());
+	@Test
+	@Transactional
+	public void createCandidateLanguageProficiencyAndNoEducationSaved() throws Exception {
+		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		candidateService.createCandidate(candidate);
+		candidateLanguageProficiency.candidate(candidate);
+		// Create the CandidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+				.andExpect(status().isCreated());
 
-        // Validate the CandidateLanguageProficiency in the database
-        List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository.findAll();
-        
-        assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeCreate + 1);
-        CandidateLanguageProficiency testCandidateLanguageProficiency = candidateLanguageProficiencyList.get(candidateLanguageProficiencyList.size() - 1);
-        Candidate testCandidate = testCandidateLanguageProficiency.getCandidate();
-        assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(DEFAULT_PROFICIENCY);
-        assertThat(testCandidate).isEqualTo(candidate);
-        assertThat(testCandidate.getCandidateJobs()).hasSize(0);
-        // Validate the CandidateLanguageProficiency in Elasticsearch
-       // CandidateLanguageProficiency candidateLanguageProficiencyEs = candidateLanguageProficiencySearchRepository.findOne(testCandidateLanguageProficiency.getId());
-       // assertThat(candidateLanguageProficiencyEs).isEqualToComparingFieldByField(testCandidateLanguageProficiency);
-    }
+		// Validate the CandidateLanguageProficiency in the database
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
 
-    @Test
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void createCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet() throws Exception {
-    		Candidate candidate = new Candidate().firstName("Abhinav");
-    		
-    		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8).candidate(candidate);
-    		
-    		Set<CandidateJob> candidateJobs = new HashSet<>();
-    		jobRepository.saveAndFlush(jobA);
-    		jobRepository.saveAndFlush(jobB);
-    		//jobRepository.saveAndFlush(jobC);
-    		jobRepository.saveAndFlush(jobF);
-    		jobRepository.saveAndFlush(jobG);
-    		languageRepository.saveAndFlush(hindiLanguage);
-    		languageRepository.saveAndFlush(englishLanguage);
-    		languageRepository.saveAndFlush(marathiLanguage);
-    		filterRepository.saveAndFlush(qualificationFilter);
-    		filterRepository.saveAndFlush(courseFilter);
-    		filterRepository.saveAndFlush(gradDateFilter);
-    		filterRepository.saveAndFlush(genderFilter);
-    		filterRepository.saveAndFlush(collegeFilter);
-    		filterRepository.saveAndFlush(universityFilter);
-    		filterRepository.saveAndFlush(scoreFilter);
-    		filterRepository.saveAndFlush(languageFilter);
-    		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
-    		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
-    		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi);
-    		candidateRepository.saveAndFlush(candidate);
-    		CandidateJob candidateJob1 = new CandidateJob(candidate,jobA);
-    		CandidateJob candidateJob2 = new CandidateJob(candidate,jobB);
-    		CandidateJob candidateJob3 = new CandidateJob(candidate,jobF);
-    		CandidateJob candidateJob4 = new CandidateJob(candidate,jobG);
-    		candidateJob1.setLanguageMatchScore(2.0);
-    		candidateJob1.setGenderMatchScore(4.0);
-    		candidateJob1.setEducationMatchScore(30.0);
-    		candidateJob1.setTotalEligibleScore(45.0);
-    		candidateJob2.setLanguageMatchScore(2.0);
-    		candidateJob2.setGenderMatchScore(4.0);
-    		candidateJob2.setEducationMatchScore(30.0);
-    		candidateJob2.setTotalEligibleScore(45.0);
-    		candidateJob3.setLanguageMatchScore(2.0);
-    		candidateJob3.setGenderMatchScore(4.0);
-    		candidateJob3.setEducationMatchScore(30.0);
-    		candidateJob3.setTotalEligibleScore(45.0);
-    		candidateJob4.setLanguageMatchScore(2.0);
-    		candidateJob4.setGenderMatchScore(4.0);
-    		candidateJob4.setEducationMatchScore(30.0);
-    		candidateJob4.setTotalEligibleScore(45.0);
-    		candidateJobs.add(candidateJob4);
-    		candidateJobs.add(candidateJob3);
-    		candidateJobs.add(candidateJob2);
-    		candidateJobs.add(candidateJob1);
-    		candidate.getCandidateJobs().addAll(candidateJobs);
-    		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
-    		//
-    		Thread.sleep(10000);
-    		candidateLanguageProficiency.candidate(candidate).language(englishLanguage);
-    		restCandidateLanguageProficiencyMockMvc.perform(post("/api/candidate-language-proficiencies")
-    		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-    		            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
-    		            .andExpect(status().isCreated());
-    		
-    		List<Candidate> testCandidates = candidateRepository.findAll();
-    		assertThat(testCandidates).hasSize(1);
-    		Set<CandidateLanguageProficiency> testCandidateLanguageProficiencies = testCandidates.get(0).getCandidateLanguageProficiencies();
-    		assertThat(testCandidateLanguageProficiencies).hasSize(3);
-    		Candidate testCandidate = testCandidates.get(0);
-    		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
-    		assertThat(testCandidate.getCandidateJobs()).extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-						"languageMatchScore","totalEligibleScore", "candidate.firstName").contains(tuple(JOB_A,82.0,30.0,4.0,3.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_B,87.0,30.0,4.0,5.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_G,77.0,30.0,4.0,null,44.0,"Abhinav")).contains(tuple(JOB_F,77.0,30.0,4.0,null,44.0,"Abhinav"));
-    		
-    }
-    
-    
-    @Test
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void deleteCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet() throws Exception {
-    		Candidate candidate = new Candidate().firstName("Abhinav");
-    		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8).candidate(candidate);
-    		
-    		Set<CandidateJob> candidateJobs = new HashSet<>();
-    		jobRepository.saveAndFlush(jobA);
-    		jobRepository.saveAndFlush(jobB);
-    		//jobRepository.saveAndFlush(jobC);
-    		jobRepository.saveAndFlush(jobF);
-    		jobRepository.saveAndFlush(jobG);
-    		languageRepository.saveAndFlush(hindiLanguage);
-    		languageRepository.saveAndFlush(englishLanguage);
-    		languageRepository.saveAndFlush(marathiLanguage);
-    		filterRepository.saveAndFlush(qualificationFilter);
-    		filterRepository.saveAndFlush(courseFilter);
-    		filterRepository.saveAndFlush(gradDateFilter);
-    		filterRepository.saveAndFlush(genderFilter);
-    		filterRepository.saveAndFlush(collegeFilter);
-    		filterRepository.saveAndFlush(universityFilter);
-    		filterRepository.saveAndFlush(scoreFilter);
-    		filterRepository.saveAndFlush(languageFilter);
-    		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
-    		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
-    		candidateLanguageProficiency.language(englishLanguage);
-    	//	System.out.println("====================="+candidateLanguageProficiency.hashCode());
-    		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi).addCandidateLanguageProficiency(candidateLanguageProficiency);
-    		candidateRepository.saveAndFlush(candidate);
-    		CandidateJob candidateJob1 = new CandidateJob(candidate,jobA);
-    		CandidateJob candidateJob2 = new CandidateJob(candidate,jobB);
-    		CandidateJob candidateJob3 = new CandidateJob(candidate,jobF);
-    		CandidateJob candidateJob4 = new CandidateJob(candidate,jobG);
-    		candidateJob1.setLanguageMatchScore(3.0);
-    		candidateJob1.setGenderMatchScore(4.0);
-    		candidateJob1.setEducationMatchScore(30.0);
-    		candidateJob1.setTotalEligibleScore(45.0);
-    		candidateJob2.setLanguageMatchScore(5.0);
-    		candidateJob2.setGenderMatchScore(4.0);
-    		candidateJob2.setEducationMatchScore(30.0);
-    		candidateJob2.setTotalEligibleScore(45.0);
-    		candidateJob3.setLanguageMatchScore(0.0);
-    		candidateJob3.setGenderMatchScore(4.0);
-    		candidateJob3.setEducationMatchScore(30.0);
-    		candidateJob3.setTotalEligibleScore(44.0);
-    		candidateJob4.setLanguageMatchScore(0.0);
-    		candidateJob4.setGenderMatchScore(4.0);
-    		candidateJob4.setEducationMatchScore(30.0);
-    		candidateJob4.setTotalEligibleScore(44.0);
-    		candidateJobs.add(candidateJob4);
-    		candidateJobs.add(candidateJob3);
-    		candidateJobs.add(candidateJob2);
-    		candidateJobs.add(candidateJob1);
-    		candidate.getCandidateJobs().addAll(candidateJobs);
-    		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
-    		//
-    		
-    		 restCandidateLanguageProficiencyMockMvc.perform(delete("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId())
-    		            .accept(TestUtil.APPLICATION_JSON_UTF8))
-    		            .andExpect(status().isOk());
-    		
-    		List<Candidate> testCandidates = candidateRepository.findAll();
-    		List<CandidateLanguageProficiency> testLanguages = candidateLanguageProficiencyRepository.findAll();
-    		assertThat(testCandidates).hasSize(1);
-    		Candidate testCandidate = testCandidates.get(0);
-    		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
-    		assertThat(testCandidate.getCandidateJobs()).extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-						"languageMatchScore","totalEligibleScore", "candidate.firstName").contains(tuple(JOB_A,80.0,30.0,4.0,2.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_B,87.0,30.0,4.0,5.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_G,77.0,30.0,4.0,null,44.0,"Abhinav")).contains(tuple(JOB_F,77.0,30.0,4.0,null,44.0,"Abhinav"));
-    		assertThat(testCandidate.getCandidateLanguageProficiencies()).hasSize(2);
-    		assertThat(testCandidate.getCandidateLanguageProficiencies()).extracting("language.language").contains(HINDI).contains(MARATHI);
-    		assertThat(testLanguages).hasSize(2);
-    		assertThat(testLanguages).extracting("language.language","candidate.firstName").contains(tuple(HINDI,"Abhinav")).contains(tuple(MARATHI,"Abhinav"));
-    		
-    		
-    }
-    
-    @Test
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void deleteTheOnlyCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet() throws Exception {
-    		Candidate candidate = new Candidate().firstName("Abhinav");
-    		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8).candidate(candidate);
-    		
-    		Set<CandidateJob> candidateJobs = new HashSet<>();
-    		jobRepository.saveAndFlush(jobA);
-    		jobRepository.saveAndFlush(jobB);
-    		//jobRepository.saveAndFlush(jobC);
-    		jobRepository.saveAndFlush(jobF);
-    		jobRepository.saveAndFlush(jobG);
-    		languageRepository.saveAndFlush(hindiLanguage);
-    		languageRepository.saveAndFlush(englishLanguage);
-    		languageRepository.saveAndFlush(marathiLanguage);
-    		filterRepository.saveAndFlush(qualificationFilter);
-    		filterRepository.saveAndFlush(courseFilter);
-    		filterRepository.saveAndFlush(gradDateFilter);
-    		filterRepository.saveAndFlush(genderFilter);
-    		filterRepository.saveAndFlush(collegeFilter);
-    		filterRepository.saveAndFlush(universityFilter);
-    		filterRepository.saveAndFlush(scoreFilter);
-    		filterRepository.saveAndFlush(languageFilter);
-    		//CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage).candidate(candidate);
-    		//CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage).candidate(candidate);
-    		candidateLanguageProficiency.language(englishLanguage);
-    		candidate.addCandidateLanguageProficiency(candidateLanguageProficiency);
-    		candidateRepository.saveAndFlush(candidate);
-    		CandidateJob candidateJob1 = new CandidateJob(candidate,jobA);
-    		CandidateJob candidateJob2 = new CandidateJob(candidate,jobB);
-    		CandidateJob candidateJob3 = new CandidateJob(candidate,jobF);
-    		CandidateJob candidateJob4 = new CandidateJob(candidate,jobG);
-    		candidateJob1.setLanguageMatchScore(3.0);
-    		candidateJob1.setGenderMatchScore(4.0);
-    		candidateJob1.setEducationMatchScore(30.0);
-    		candidateJob1.setTotalEligibleScore(45.0);
-    		candidateJob2.setLanguageMatchScore(5.0);
-    		candidateJob2.setGenderMatchScore(4.0);
-    		candidateJob2.setEducationMatchScore(30.0);
-    		candidateJob2.setTotalEligibleScore(45.0);
-    		candidateJob3.setLanguageMatchScore(0.0);
-    		candidateJob3.setGenderMatchScore(4.0);
-    		candidateJob3.setEducationMatchScore(30.0);
-    		candidateJob3.setTotalEligibleScore(44.0);
-    		candidateJob4.setLanguageMatchScore(0.0);
-    		candidateJob4.setGenderMatchScore(4.0);
-    		candidateJob4.setEducationMatchScore(30.0);
-    		candidateJob4.setTotalEligibleScore(44.0);
-    		candidateJobs.add(candidateJob4);
-    		candidateJobs.add(candidateJob3);
-    		candidateJobs.add(candidateJob2);
-    		candidateJobs.add(candidateJob1);
-    		candidate.getCandidateJobs().addAll(candidateJobs);
-    		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
-    		//
-    		
-    		 restCandidateLanguageProficiencyMockMvc.perform(delete("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId())
-    		            .accept(TestUtil.APPLICATION_JSON_UTF8))
-    		            .andExpect(status().isOk());
-    		
-    		List<Candidate> testCandidates = candidateRepository.findAll();
-    		List<CandidateLanguageProficiency> testLanuages = candidateLanguageProficiencyRepository.findAll();
-    		assertThat(testCandidates).hasSize(1);
-    		Candidate testCandidate = testCandidates.get(0);
-    		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
-    		assertThat(testCandidate.getCandidateJobs()).extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-						"languageMatchScore","totalEligibleScore", "candidate.firstName").contains(tuple(JOB_A,76.0,30.0,4.0,0.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_B,76.0,30.0,4.0,0.0,45.0,"Abhinav"))
-    					.contains(tuple(JOB_G,77.0,30.0,4.0,null,44.0,"Abhinav")).contains(tuple(JOB_F,77.0,30.0,4.0,null,44.0,"Abhinav"));
-    		assertThat(testCandidate.getCandidateLanguageProficiencies()).hasSize(0);
-    		assertThat(testLanuages).hasSize(0);
-    		//assertThat(testCandidate.getCandidateLanguageProficiencies()).extracting("language.language").contains(HINDI).contains(MARATHI);
-    		
-    }
-    
-    
-    
-    @Test
-    @Transactional
-    public void createCandidateLanguageProficiencyWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
+		assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeCreate + 1);
+		CandidateLanguageProficiency testCandidateLanguageProficiency = candidateLanguageProficiencyList
+				.get(candidateLanguageProficiencyList.size() - 1);
+		Candidate testCandidate = testCandidateLanguageProficiency.getCandidate();
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(DEFAULT_PROFICIENCY);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		// Validate the CandidateLanguageProficiency in Elasticsearch
+		// CandidateLanguageProficiency candidateLanguageProficiencyEs =
+		// candidateLanguageProficiencySearchRepository.findOne(testCandidateLanguageProficiency.getId());
+		// assertThat(candidateLanguageProficiencyEs).isEqualToComparingFieldByField(testCandidateLanguageProficiency);
+	}
 
-        // Create the CandidateLanguageProficiency with an existing ID
-        candidateLanguageProficiency.setId(1L);
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void createCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet()
+			throws Exception {
+		Candidate candidate = new Candidate().firstName("Abhinav");
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restCandidateLanguageProficiencyMockMvc.perform(post("/api/candidate-language-proficiencies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
-            .andExpect(status().isBadRequest());
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
 
-        // Validate the CandidateLanguageProficiency in the database
-        List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository.findAll();
-        assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeCreate);
-    }
+		Set<CandidateJob> candidateJobs = new HashSet<>();
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		// jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
+		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
+		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi);
+		candidateRepository.saveAndFlush(candidate);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobA);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobB);
+		CandidateJob candidateJob3 = new CandidateJob(candidate, jobF);
+		CandidateJob candidateJob4 = new CandidateJob(candidate, jobG);
+		candidateJob1.setLanguageMatchScore(2.0);
+		candidateJob1.setGenderMatchScore(4.0);
+		candidateJob1.setEducationMatchScore(30.0);
+		candidateJob1.setTotalEligibleScore(45.0);
+		candidateJob2.setLanguageMatchScore(2.0);
+		candidateJob2.setGenderMatchScore(4.0);
+		candidateJob2.setEducationMatchScore(30.0);
+		candidateJob2.setTotalEligibleScore(45.0);
+		candidateJob3.setLanguageMatchScore(2.0);
+		candidateJob3.setGenderMatchScore(4.0);
+		candidateJob3.setEducationMatchScore(30.0);
+		candidateJob3.setTotalEligibleScore(45.0);
+		candidateJob4.setLanguageMatchScore(2.0);
+		candidateJob4.setGenderMatchScore(4.0);
+		candidateJob4.setEducationMatchScore(30.0);
+		candidateJob4.setTotalEligibleScore(45.0);
+		candidateJobs.add(candidateJob4);
+		candidateJobs.add(candidateJob3);
+		candidateJobs.add(candidateJob2);
+		candidateJobs.add(candidateJob1);
+		candidate.getCandidateJobs().addAll(candidateJobs);
+		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+		//
+		Thread.sleep(10000);
+		candidateLanguageProficiency.candidate(candidate).language(englishLanguage);
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+				.andExpect(status().isCreated());
 
-    @Test
-    @Transactional
-    public void getAllCandidateLanguageProficiencies() throws Exception {
-        // Initialize the database
-        candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		Set<CandidateLanguageProficiency> testCandidateLanguageProficiencies = testCandidates.get(0)
+				.getCandidateLanguageProficiencies();
+		assertThat(testCandidateLanguageProficiencies).hasSize(3);
+		Candidate testCandidate = testCandidates.get(0);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
+		assertThat(testCandidate.getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_A, 82.0, 30.0, 4.0, 3.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_B, 87.0, 30.0, 4.0, 5.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_G, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"))
+				.contains(tuple(JOB_F, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"));
 
-        // Get all the candidateLanguageProficiencyList
-        restCandidateLanguageProficiencyMockMvc.perform(get("/api/candidate-language-proficiencies?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(candidateLanguageProficiency.getId().intValue())))
-            .andExpect(jsonPath("$.[*].proficiency").value(hasItem(DEFAULT_PROFICIENCY.toString())));
-    }
+	}
 
-    @Test
-    @Transactional
-    public void getCandidateLanguageProficiency() throws Exception {
-        // Initialize the database
-        candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void deleteCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet()
+			throws Exception {
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
 
-        // Get the candidateLanguageProficiency
-        restCandidateLanguageProficiencyMockMvc.perform(get("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(candidateLanguageProficiency.getId().intValue()))
-            .andExpect(jsonPath("$.proficiency").value(DEFAULT_PROFICIENCY.toString()));
-    }
+		Set<CandidateJob> candidateJobs = new HashSet<>();
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		// jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
+		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
+		candidateLanguageProficiency.language(englishLanguage);
+		// System.out.println("====================="+candidateLanguageProficiency.hashCode());
+		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi)
+				.addCandidateLanguageProficiency(candidateLanguageProficiency);
+		candidateRepository.saveAndFlush(candidate);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobA);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobB);
+		CandidateJob candidateJob3 = new CandidateJob(candidate, jobF);
+		CandidateJob candidateJob4 = new CandidateJob(candidate, jobG);
+		candidateJob1.setLanguageMatchScore(3.0);
+		candidateJob1.setGenderMatchScore(4.0);
+		candidateJob1.setEducationMatchScore(30.0);
+		candidateJob1.setTotalEligibleScore(45.0);
+		candidateJob2.setLanguageMatchScore(5.0);
+		candidateJob2.setGenderMatchScore(4.0);
+		candidateJob2.setEducationMatchScore(30.0);
+		candidateJob2.setTotalEligibleScore(45.0);
+		candidateJob3.setLanguageMatchScore(0.0);
+		candidateJob3.setGenderMatchScore(4.0);
+		candidateJob3.setEducationMatchScore(30.0);
+		candidateJob3.setTotalEligibleScore(44.0);
+		candidateJob4.setLanguageMatchScore(0.0);
+		candidateJob4.setGenderMatchScore(4.0);
+		candidateJob4.setEducationMatchScore(30.0);
+		candidateJob4.setTotalEligibleScore(44.0);
+		candidateJobs.add(candidateJob4);
+		candidateJobs.add(candidateJob3);
+		candidateJobs.add(candidateJob2);
+		candidateJobs.add(candidateJob1);
+		candidate.getCandidateJobs().addAll(candidateJobs);
+		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+		//
 
-    @Test
-    @Transactional
-    public void getNonExistingCandidateLanguageProficiency() throws Exception {
-        // Get the candidateLanguageProficiency
-        restCandidateLanguageProficiencyMockMvc.perform(get("/api/candidate-language-proficiencies/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+		restCandidateLanguageProficiencyMockMvc
+				.perform(delete("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId())
+						.accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-    @Test
-    @Transactional
-    public void updateCandidateLanguageProficiencyAndNoEducationSaved() throws Exception {
-        // Initialize the database
-    		Candidate candidate = new Candidate ().firstName("Abhinav");
-    		candidateRepository.saveAndFlush(candidate);
-    		candidateLanguageProficiency.candidate(candidate);
-        candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
-        candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
-        int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		List<CandidateLanguageProficiency> testLanguages = candidateLanguageProficiencyRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		Candidate testCandidate = testCandidates.get(0);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
+		assertThat(testCandidate.getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_A, 80.0, 30.0, 4.0, 2.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_B, 87.0, 30.0, 4.0, 5.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_G, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"))
+				.contains(tuple(JOB_F, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"));
+		assertThat(testCandidate.getCandidateLanguageProficiencies()).hasSize(2);
+		assertThat(testCandidate.getCandidateLanguageProficiencies()).extracting("language.language").contains(HINDI)
+				.contains(MARATHI);
+		assertThat(testLanguages).hasSize(2);
+		assertThat(testLanguages).extracting("language.language", "candidate.firstName")
+				.contains(tuple(HINDI, "Abhinav")).contains(tuple(MARATHI, "Abhinav"));
 
-        // Update the candidateLanguageProficiency
-        CandidateLanguageProficiency updatedCandidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(candidateLanguageProficiency.getId());
-        updatedCandidateLanguageProficiency
-            .proficiency(UPDATED_PROFICIENCY);
+	}
 
-        restCandidateLanguageProficiencyMockMvc.perform(put("/api/candidate-language-proficiencies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCandidateLanguageProficiency)))
-            .andExpect(status().isOk());
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void deleteTheOnlyCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet()
+			throws Exception {
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
 
-        // Validate the CandidateLanguageProficiency in the database
-        List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository.findAll();
-        assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeUpdate);
-        CandidateLanguageProficiency testCandidateLanguageProficiency = candidateLanguageProficiencyList.get(candidateLanguageProficiencyList.size() - 1);
-        assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(UPDATED_PROFICIENCY);
-        assertThat(testCandidateLanguageProficiency.getCandidate().getCandidateJobs()).hasSize(0);
-        // Validate the CandidateLanguageProficiency in Elasticsearch
-       // CandidateLanguageProficiency candidateLanguageProficiencyEs = candidateLanguageProficiencySearchRepository.findOne(testCandidateLanguageProficiency.getId());
-       // assertThat(candidateLanguageProficiencyEs).isEqualToComparingFieldByField(testCandidateLanguageProficiency);
-    }
+		Set<CandidateJob> candidateJobs = new HashSet<>();
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		// jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		// CandidateLanguageProficiency profHindi = new
+		// CandidateLanguageProficiency().language(hindiLanguage).candidate(candidate);
+		// CandidateLanguageProficiency profMarathi = new
+		// CandidateLanguageProficiency().language(marathiLanguage).candidate(candidate);
+		candidateLanguageProficiency.language(englishLanguage);
+		candidate.addCandidateLanguageProficiency(candidateLanguageProficiency);
+		candidateRepository.saveAndFlush(candidate);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobA);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobB);
+		CandidateJob candidateJob3 = new CandidateJob(candidate, jobF);
+		CandidateJob candidateJob4 = new CandidateJob(candidate, jobG);
+		candidateJob1.setLanguageMatchScore(3.0);
+		candidateJob1.setGenderMatchScore(4.0);
+		candidateJob1.setEducationMatchScore(30.0);
+		candidateJob1.setTotalEligibleScore(45.0);
+		candidateJob2.setLanguageMatchScore(5.0);
+		candidateJob2.setGenderMatchScore(4.0);
+		candidateJob2.setEducationMatchScore(30.0);
+		candidateJob2.setTotalEligibleScore(45.0);
+		candidateJob3.setLanguageMatchScore(0.0);
+		candidateJob3.setGenderMatchScore(4.0);
+		candidateJob3.setEducationMatchScore(30.0);
+		candidateJob3.setTotalEligibleScore(44.0);
+		candidateJob4.setLanguageMatchScore(0.0);
+		candidateJob4.setGenderMatchScore(4.0);
+		candidateJob4.setEducationMatchScore(30.0);
+		candidateJob4.setTotalEligibleScore(44.0);
+		candidateJobs.add(candidateJob4);
+		candidateJobs.add(candidateJob3);
+		candidateJobs.add(candidateJob2);
+		candidateJobs.add(candidateJob1);
+		candidate.getCandidateJobs().addAll(candidateJobs);
+		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+		//
 
-    @Test
-    @Transactional
-    public void updateNonExistingCandidateLanguageProficiency() throws Exception {
-        int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
-        Candidate candidate = new Candidate ().firstName("Abhinav");
+		restCandidateLanguageProficiencyMockMvc
+				.perform(delete("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId())
+						.accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		List<CandidateLanguageProficiency> testLanuages = candidateLanguageProficiencyRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		Candidate testCandidate = testCandidates.get(0);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
+		assertThat(testCandidate.getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_A, 76.0, 30.0, 4.0, 0.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_B, 76.0, 30.0, 4.0, 0.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_G, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"))
+				.contains(tuple(JOB_F, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"));
+		assertThat(testCandidate.getCandidateLanguageProficiencies()).hasSize(0);
+		assertThat(testLanuages).hasSize(0);
+		// assertThat(testCandidate.getCandidateLanguageProficiencies()).extracting("language.language").contains(HINDI).contains(MARATHI);
+
+	}
+
+	@Test
+	@Transactional
+	public void createCandidateLanguageProficiencyWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
+
+		// Create the CandidateLanguageProficiency with an existing ID
+		candidateLanguageProficiency.setId(1L);
+
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+				.andExpect(status().isBadRequest());
+
+		// Validate the CandidateLanguageProficiency in the database
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+		assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeCreate);
+	}
+
+	@Test
+	@Transactional
+	public void getAllCandidateLanguageProficiencies() throws Exception {
+		// Initialize the database
+		candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+
+		// Get all the candidateLanguageProficiencyList
+		restCandidateLanguageProficiencyMockMvc.perform(get("/api/candidate-language-proficiencies?sort=id,desc"))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(candidateLanguageProficiency.getId().intValue())))
+				.andExpect(jsonPath("$.[*].proficiency").value(hasItem(DEFAULT_PROFICIENCY.toString())));
+	}
+
+	@Test
+	@Transactional
+	public void getCandidateLanguageProficiency() throws Exception {
+		// Initialize the database
+		candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+
+		// Get the candidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(get("/api/candidate-language-proficiencies/{id}", candidateLanguageProficiency.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(candidateLanguageProficiency.getId().intValue()))
+				.andExpect(jsonPath("$.proficiency").value(DEFAULT_PROFICIENCY.toString()));
+	}
+
+	@Test
+	@Transactional
+	public void getNonExistingCandidateLanguageProficiency() throws Exception {
+		// Get the candidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(get("/api/candidate-language-proficiencies/{id}", Long.MAX_VALUE))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@Transactional
+	public void updateCandidateLanguageProficiencyAndNoEducationSaved() throws Exception {
+		// Initialize the database
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(candidate);
+		candidateLanguageProficiency.candidate(candidate);
+		candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+		candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
+		int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
+
+		// Update the candidateLanguageProficiency
+		CandidateLanguageProficiency updatedCandidateLanguageProficiency = candidateLanguageProficiencyRepository
+				.findOne(candidateLanguageProficiency.getId());
+		updatedCandidateLanguageProficiency.proficiency(UPDATED_PROFICIENCY);
+
+		restCandidateLanguageProficiencyMockMvc
+				.perform(put("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(updatedCandidateLanguageProficiency)))
+				.andExpect(status().isOk());
+
+		// Validate the CandidateLanguageProficiency in the database
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+		assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeUpdate);
+		CandidateLanguageProficiency testCandidateLanguageProficiency = candidateLanguageProficiencyList
+				.get(candidateLanguageProficiencyList.size() - 1);
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(UPDATED_PROFICIENCY);
+		assertThat(testCandidateLanguageProficiency.getCandidate().getCandidateJobs()).hasSize(0);
+		// Validate the CandidateLanguageProficiency in Elasticsearch
+		// CandidateLanguageProficiency candidateLanguageProficiencyEs =
+		// candidateLanguageProficiencySearchRepository.findOne(testCandidateLanguageProficiency.getId());
+		// assertThat(candidateLanguageProficiencyEs).isEqualToComparingFieldByField(testCandidateLanguageProficiency);
+	}
+
+	@Test
+	@Transactional
+	public void updateNonExistingCandidateLanguageProficiency() throws Exception {
+		int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
+		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
 		candidateLanguageProficiency.candidate(candidate);
 
-        // Create the CandidateLanguageProficiency
+		// Create the CandidateLanguageProficiency
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restCandidateLanguageProficiencyMockMvc.perform(put("/api/candidate-language-proficiencies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restCandidateLanguageProficiencyMockMvc
+				.perform(put("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+				.andExpect(status().isCreated());
 
-        // Validate the CandidateLanguageProficiency in the database
-        List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository.findAll();
-        assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the CandidateLanguageProficiency in the database
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+		assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional(isolation=Isolation.READ_UNCOMMITTED)
-    public void deleteCandidateLanguageProficiency() throws Exception {
-        // Initialize the database
-    	languageRepository.saveAndFlush(hindiLanguage);
-    		Candidate candidate = new Candidate ().firstName("Abhinav");
-    		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
-    		candidateLanguageProficiencyRepository.saveAndFlush(profHindi);
-    		candidate.addCandidateLanguageProficiency(profHindi.language(hindiLanguage));
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void deleteCandidateLanguageProficiency() throws Exception {
+		// Initialize the database
+		languageRepository.saveAndFlush(hindiLanguage);
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
+		candidateLanguageProficiencyRepository.saveAndFlush(profHindi);
+		candidate.addCandidateLanguageProficiency(profHindi.language(hindiLanguage));
 		candidateRepository.saveAndFlush(candidate);
-       // candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
-      //  candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
-        int databaseSizeBeforeDelete = candidateLanguageProficiencyRepository.findAll().size();
-        
-        // Get the candidateLanguageProficiency
-        restCandidateLanguageProficiencyMockMvc.perform(delete("/api/candidate-language-proficiencies/{id}", profHindi.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+		// candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
+		int databaseSizeBeforeDelete = candidateLanguageProficiencyRepository.findAll().size();
 
-        // Validate Elasticsearch is empty
-       // boolean candidateLanguageProficiencyExistsInEs = candidateLanguageProficiencySearchRepository.exists(candidateLanguageProficiency.getId());
-      //  assertThat(candidateLanguageProficiencyExistsInEs).isFalse();
+		// Get the candidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(delete("/api/candidate-language-proficiencies/{id}", profHindi.getId())
+						.accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate the database is empty
-        List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository.findAll();
-        assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate Elasticsearch is empty
+		// boolean candidateLanguageProficiencyExistsInEs =
+		// candidateLanguageProficiencySearchRepository.exists(candidateLanguageProficiency.getId());
+		// assertThat(candidateLanguageProficiencyExistsInEs).isFalse();
 
-    @Test
-    @Transactional
-    @Ignore
-    public void searchCandidateLanguageProficiency() throws Exception {
-        // Initialize the database
-        candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
-        candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
+		// Validate the database is empty
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+		assertThat(candidateLanguageProficiencyList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-        // Search the candidateLanguageProficiency
-        restCandidateLanguageProficiencyMockMvc.perform(get("/api/_search/candidate-language-proficiencies?query=id:" + candidateLanguageProficiency.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(candidateLanguageProficiency.getId().intValue())))
-            .andExpect(jsonPath("$.[*].proficiency").value(hasItem(DEFAULT_PROFICIENCY.toString())));
-    }
+	@Test
+	@Transactional
+	@Ignore
+	public void searchCandidateLanguageProficiency() throws Exception {
+		// Initialize the database
+		candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+		candidateLanguageProficiencySearchRepository.save(candidateLanguageProficiency);
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CandidateLanguageProficiency.class);
-        CandidateLanguageProficiency candidateLanguageProficiency1 = new CandidateLanguageProficiency();
-        candidateLanguageProficiency1.setId(1L);
-        CandidateLanguageProficiency candidateLanguageProficiency2 = new CandidateLanguageProficiency();
-        candidateLanguageProficiency2.setId(candidateLanguageProficiency1.getId());
-        assertThat(candidateLanguageProficiency1).isEqualTo(candidateLanguageProficiency2);
-        candidateLanguageProficiency2.setId(2L);
-        assertThat(candidateLanguageProficiency1).isNotEqualTo(candidateLanguageProficiency2);
-        candidateLanguageProficiency1.setId(null);
-        assertThat(candidateLanguageProficiency1).isNotEqualTo(candidateLanguageProficiency2);
-    }
-    
-    @Test
+		// Search the candidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(get("/api/_search/candidate-language-proficiencies?query=id:"
+						+ candidateLanguageProficiency.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(candidateLanguageProficiency.getId().intValue())))
+				.andExpect(jsonPath("$.[*].proficiency").value(hasItem(DEFAULT_PROFICIENCY.toString())));
+	}
+
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(CandidateLanguageProficiency.class);
+		CandidateLanguageProficiency candidateLanguageProficiency1 = new CandidateLanguageProficiency();
+		candidateLanguageProficiency1.setId(1L);
+		CandidateLanguageProficiency candidateLanguageProficiency2 = new CandidateLanguageProficiency();
+		candidateLanguageProficiency2.setId(candidateLanguageProficiency1.getId());
+		assertThat(candidateLanguageProficiency1).isEqualTo(candidateLanguageProficiency2);
+		candidateLanguageProficiency2.setId(2L);
+		assertThat(candidateLanguageProficiency1).isNotEqualTo(candidateLanguageProficiency2);
+		candidateLanguageProficiency1.setId(null);
+		assertThat(candidateLanguageProficiency1).isNotEqualTo(candidateLanguageProficiency2);
+	}
+
+	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void createMatchSetWithLanguageAndGenderAndEducationThenDeleteLanguage() throws Exception {
-    	Candidate candidate = new Candidate().firstName("Abhinav");
-		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8).candidate(candidate);
-		
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
+
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
@@ -747,10 +780,10 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi);
 		candidate.setGender(femaleGender);
 		candidateRepository.saveAndFlush(candidate);
-		CandidateJob candidateJob1 = new CandidateJob(candidate,jobA);
-		CandidateJob candidateJob2 = new CandidateJob(candidate,jobB);
-		CandidateJob candidateJob3 = new CandidateJob(candidate,jobF);
-		CandidateJob candidateJob4 = new CandidateJob(candidate,jobG);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobA);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobB);
+		CandidateJob candidateJob3 = new CandidateJob(candidate, jobF);
+		CandidateJob candidateJob4 = new CandidateJob(candidate, jobG);
 		candidateJob1.setLanguageMatchScore(5.0);
 		candidateJob1.setGenderMatchScore(4.0);
 		candidateJob1.setEducationMatchScore(30.0);
@@ -774,32 +807,33 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidate.getCandidateJobs().addAll(candidateJobs);
 		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
 		//
-		
-		 restCandidateLanguageProficiencyMockMvc.perform(delete("/api/candidate-language-proficiencies/{id}", candidate
-				 .getCandidateLanguageProficiencies().stream()
-				 	.filter(lang->lang.getLanguage().getLanguage().equals(HINDI)).findFirst().get().getId())
-		            .accept(TestUtil.APPLICATION_JSON_UTF8))
-		            .andExpect(status().isOk()); 
-		 
+
+		restCandidateLanguageProficiencyMockMvc.perform(delete("/api/candidate-language-proficiencies/{id}",
+				candidate.getCandidateLanguageProficiencies().stream()
+						.filter(lang -> lang.getLanguage().getLanguage().equals(HINDI)).findFirst().get().getId())
+								.accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
+
 		List<Candidate> testCandidates = candidateRepository.findAll();
 		assertThat(testCandidates).hasSize(1);
 		Candidate testCandidate = testCandidates.get(0);
 		assertThat(testCandidate.getCandidateLanguageProficiencies()).hasSize(1);
 		assertThat(testCandidate.getCandidateLanguageProficiencies()).extracting("language.language").contains(MARATHI);
 		assertThat(testCandidate.getCandidateJobs()).hasSize(4);
-		assertThat(testCandidate.getCandidateJobs()).extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-					"languageMatchScore","totalEligibleScore", "candidate.firstName").contains(tuple(JOB_A,76.0,30.0,4.0,0.0,45.0,"Abhinav"))
-					.contains(tuple(JOB_B,82.0,30.0,4.0,3.0,45.0,"Abhinav"))
-					.contains(tuple(JOB_G,77.0,30.0,4.0,null,44.0,"Abhinav")).contains(tuple(JOB_F,77.0,30.0,4.0,null,44.0,"Abhinav"));
-		
-    	
-		
+		assertThat(testCandidate.getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_A, 76.0, 30.0, 4.0, 0.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_B, 82.0, 30.0, 4.0, 3.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_G, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"))
+				.contains(tuple(JOB_F, 77.0, 30.0, 4.0, null, 44.0, "Abhinav"));
+
 	}
-    
-    @Test
-   	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-   	public void createGenderAndEducationThenLanguage() throws Exception {
-    	jobRepository.saveAndFlush(jobA);
+
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void createGenderAndEducationThenLanguage() throws Exception {
+		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
 		genderRepository.saveAndFlush(femaleGender);
 		jobRepository.saveAndFlush(jobF);
@@ -815,18 +849,18 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-   		Candidate candidate = new Candidate().firstName("Abhinav").gender(femaleGender);
+		Candidate candidate = new Candidate().firstName("Abhinav").gender(femaleGender);
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);
 		candidate.addEducation(education);
 		candidateRepository.saveAndFlush(candidate);
-		CandidateJob candidateJob1 = new CandidateJob(candidate,jobB);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobB);
 		candidateJob1.setEducationMatchScore(0d);
 		candidateJob1.setGenderMatchScore(null);
 		candidateJob1.setLanguageMatchScore(null);
 		candidateJob1.setTotalEligibleScore(45d);
 		candidateJob1.setMatchScore(0d);
-		CandidateJob candidateJob2 = new CandidateJob(candidate,jobF);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobF);
 		candidateJob2.setEducationMatchScore(0d);
 		candidateJob2.setGenderMatchScore(4.0);
 		candidateJob2.setLanguageMatchScore(null);
@@ -835,34 +869,32 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidate.addCandidateJob(candidateJob2).addCandidateJob(candidateJob1);
 		candidateRepository.saveAndFlush(candidate);
 		Thread.sleep(10000);
-		 restCandidateLanguageProficiencyMockMvc.perform(post("/api/candidate-language-proficiencies")
-		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-		            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency.language(hindiLanguage).candidate(candidate))))
-		            .andExpect(status().isCreated());
-		 
-		 List<CandidateLanguageProficiency> languaaes = candidateLanguageProficiencyRepository.findAll();
-		 assertThat(languaaes).hasSize(1);
-		 assertThat(languaaes).extracting("language.language").contains(HINDI);
-		 assertThat(languaaes).extracting("candidate.firstName").contains("Abhinav");
-		 List<Candidate> testCandidates = candidateRepository.findAll();
-		 assertThat(testCandidates).hasSize(1);
-		 assertThat(testCandidates.get(0)).extracting("firstName").contains("Abhinav");
-		 assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(2);
-			assertThat(testCandidates.get(0).getCandidateJobs())
-					.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-							"languageMatchScore","totalEligibleScore", "candidate.firstName")
-					.contains(tuple(JOB_B, 7.0, 0.0, null, 3.0, 45.0,"Abhinav"))
-					.contains(tuple(JOB_F, 9.0, 0.0, 4.0, null,44.0, "Abhinav"));
-					
-					
-		 
-   		
-   	}
-    
-    @Test
-   	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-   	public void createEducationThenLanguage() throws Exception {
-    	jobRepository.saveAndFlush(jobA);
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(
+								candidateLanguageProficiency.language(hindiLanguage).candidate(candidate))))
+				.andExpect(status().isCreated());
+
+		List<CandidateLanguageProficiency> languaaes = candidateLanguageProficiencyRepository.findAll();
+		assertThat(languaaes).hasSize(1);
+		assertThat(languaaes).extracting("language.language").contains(HINDI);
+		assertThat(languaaes).extracting("candidate.firstName").contains("Abhinav");
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0)).extracting("firstName").contains("Abhinav");
+		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(2);
+		assertThat(testCandidates.get(0).getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_B, 7.0, 0.0, null, 3.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_F, 9.0, 0.0, 4.0, null, 44.0, "Abhinav"));
+
+	}
+
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void createEducationThenLanguage() throws Exception {
+		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
 		genderRepository.saveAndFlush(femaleGender);
 		jobRepository.saveAndFlush(jobF);
@@ -878,18 +910,18 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-   		Candidate candidate = new Candidate().firstName("Abhinav");
+		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);
 		candidate.addEducation(education);
 		candidateRepository.saveAndFlush(candidate);
-		CandidateJob candidateJob1 = new CandidateJob(candidate,jobB);
+		CandidateJob candidateJob1 = new CandidateJob(candidate, jobB);
 		candidateJob1.setEducationMatchScore(0d);
 		candidateJob1.setGenderMatchScore(null);
 		candidateJob1.setLanguageMatchScore(null);
 		candidateJob1.setTotalEligibleScore(45d);
 		candidateJob1.setMatchScore(0d);
-		CandidateJob candidateJob2 = new CandidateJob(candidate,jobF);
+		CandidateJob candidateJob2 = new CandidateJob(candidate, jobF);
 		candidateJob2.setEducationMatchScore(0d);
 		candidateJob2.setGenderMatchScore(0.0);
 		candidateJob2.setLanguageMatchScore(null);
@@ -897,25 +929,25 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidateJob2.setMatchScore(0d);
 		candidate.addCandidateJob(candidateJob2).addCandidateJob(candidateJob1);
 		candidateRepository.saveAndFlush(candidate);
-		 restCandidateLanguageProficiencyMockMvc.perform(post("/api/candidate-language-proficiencies")
-		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-		            .content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency.language(marathiLanguage).candidate(candidate))))
-		            .andExpect(status().isCreated());
-		 
-		 List<CandidateLanguageProficiency> languaaes = candidateLanguageProficiencyRepository.findAll();
-		 assertThat(languaaes).hasSize(1);
-		 assertThat(languaaes).extracting("language.language").contains(MARATHI);
-		 assertThat(languaaes).extracting("candidate.firstName").contains("Abhinav");
-		 List<Candidate> testCandidates = candidateRepository.findAll();
-		 assertThat(testCandidates).hasSize(1);
-		 assertThat(testCandidates.get(0)).extracting("firstName").contains("Abhinav");
-		 assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(2);
-			assertThat(testCandidates.get(0).getCandidateJobs())
-					.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
-							"languageMatchScore","totalEligibleScore", "candidate.firstName")
-					.contains(tuple(JOB_B, 7.0, 0.0, null, 3.0, 45.0,"Abhinav"))
-					.contains(tuple(JOB_F, 0.0, 0.0, 0.0, null,44.0, "Abhinav"));
-		 
-   		
-   	}
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(
+								candidateLanguageProficiency.language(marathiLanguage).candidate(candidate))))
+				.andExpect(status().isCreated());
+
+		List<CandidateLanguageProficiency> languaaes = candidateLanguageProficiencyRepository.findAll();
+		assertThat(languaaes).hasSize(1);
+		assertThat(languaaes).extracting("language.language").contains(MARATHI);
+		assertThat(languaaes).extracting("candidate.firstName").contains("Abhinav");
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0)).extracting("firstName").contains("Abhinav");
+		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(2);
+		assertThat(testCandidates.get(0).getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_B, 7.0, 0.0, null, 3.0, 45.0, "Abhinav"))
+				.contains(tuple(JOB_F, 0.0, 0.0, 0.0, null, 44.0, "Abhinav"));
+
+	}
 }

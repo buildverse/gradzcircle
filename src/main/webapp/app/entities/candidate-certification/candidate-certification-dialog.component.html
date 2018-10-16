@@ -1,96 +1,149 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	#editForm="ngForm">
 
-    <div class="modal-header modal-header-decorate">
-        <h6 class="modal-title" id="myCandidateCertificationLabel" jhiTranslate="gradzcircleApp.candidateCertification.home.createOrEditLabel">Create or edit a Candidate Certification</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
-    </div>
-    <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
-        <!--<jhi-alert-error></jhi-alert-error>-->
+	<div class="modal-header modal-header-decorate">
+		<h6 class="modal-title" id="myCandidateCertificationLabel"
+			jhiTranslate="gradzcircleApp.candidateCertification.home.createOrEditLabel">Create
+			or edit a Candidate Certification</h6>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
+		<!--<jhi-alert-error></jhi-alert-error>-->
 
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-3">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateCertification.home.title" for="field_certificationTitle">Certification Title</label>
-            </div>
-            <div class="col-md-9" [class.has-danger]="certificationTitle.invalid && certificationTitle.touched">
-                <input type="text" class="form-control" #certificationTitle="ngModel" required name="certificationTitle" id="field_certificationTitle" [(ngModel)]="candidateCertification.certificationTitle" />
-                <small class="form-text text-muted text-info">
-                    Provide certification name
-                </small>
-                <div *ngIf="certificationTitle.invalid && certificationTitle.touched" class="text-danger">
-                    <small> Please enter your Certification Name.</small>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-3">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails" for="field_certificationDetails">Certification Details</label>
-            </div>
-            <div class="col-md-9" [class.has-danger]="certificationDetails.invalid && certificationDetails.touched">
-                <textarea [froalaEditor]='options' class="form-control" #certificationDetails="ngModel" required name="certificationDetails" id="field_certificationDetails" [(ngModel)]="candidateCertification.certificationDetails" rows="20">
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-3">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateCertification.home.title"
+					for="field_certificationTitle">Certification Title</label>
+			</div>
+			<div class="col-md-9"
+				[class.has-danger]="certificationTitle.invalid && certificationTitle.touched">
+				<input type="text" class="form-control"
+					#certificationTitle="ngModel" required name="certificationTitle"
+					id="field_certificationTitle"
+					[(ngModel)]="candidateCertification.certificationTitle" /> <small
+					class="form-text text-muted text-info"> Provide
+					certification name </small>
+				<div
+					*ngIf="certificationTitle.invalid && certificationTitle.touched"
+					class="text-danger">
+					<small> Please enter your Certification Name.</small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-3">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails"
+					for="field_certificationDetails">Certification Details</label>
+			</div>
+			<div class="col-md-9"
+				[class.has-danger]="certificationDetails.invalid && certificationDetails.touched">
+				<textarea [froalaEditor]='options' class="form-control"
+					#certificationDetails="ngModel" required
+					name="certificationDetails" id="field_certificationDetails"
+					[(ngModel)]="candidateCertification.certificationDetails" rows="20">
                 </textarea>
-                <small class="form-text text-muted text-info">
-                    Provide overview of what you learnt and how this will help in improving your skills.
-                </small>
-                <div *ngIf="certificationDetails.invalid && certificationDetails.touched" class="text-danger">
-                    <small> Please enter your Certification details</small>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-3">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateCertification.certificationDate" for="field_certificationDate">Certification Date</label>
-            </div>
-            <div class="col-md-3" [class.has-danger]="certificationDate.invalid && certificationDate.touched">
-                <div class="input-group">
-                    <input id="field_certificationDate" #certificationDate="ngModel" required type="text" class="form-control text-muted" name="certificationDate" ngbDatepicker #certificationDateDp="ngbDatepicker" [(ngModel)]="candidateCertification.certificationDate" />
-                    <span class="input-group-addon " (click)="certificationDateDp.toggle()">
-                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
-                    </span>
-                </div>
-                <div *ngIf="certificationDate.invalid && certificationDate.touched" class="text-danger">
-                    <small>Please enter certification date</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!candidateCertification.id">
-            <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id" [(ngModel)]="candidateCertification.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle" for="field_certificationTitle">Certification Title</label>
-            <input type="text" class="form-control" name="certificationTitle" id="field_certificationTitle" [(ngModel)]="candidateCertification.certificationTitle" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateCertification.certificationDate" for="field_certificationDate">Certification Date</label>
-            <div class="input-group">
-                <input id="field_certificationDate" type="text" class="form-control" name="certificationDate" ngbDatepicker #certificationDateDp="ngbDatepicker" [(ngModel)]="candidateCertification.certificationDate" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" (click)="certificationDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails" for="field_certificationDetails">Certification Details</label>
-            <input type="text" class="form-control" name="certificationDetails" id="field_certificationDetails" [(ngModel)]="candidateCertification.certificationDetails" />
-        </div>
+				<small class="form-text text-muted text-info"> Provide
+					overview of what you learnt and how this will help in improving
+					your skills. </small>
+				<div
+					*ngIf="certificationDetails.invalid && certificationDetails.touched"
+					class="text-danger">
+					<small> Please enter your Certification details</small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-3">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateCertification.certificationDate"
+					for="field_certificationDate">Certification Date</label>
+			</div>
+			<div class="col-md-3"
+				[class.has-danger]="certificationDate.invalid && certificationDate.touched">
+				<div class="input-group">
+					<input id="field_certificationDate" #certificationDate="ngModel"
+						required type="text" class="form-control text-muted"
+						name="certificationDate" ngbDatepicker
+						#certificationDateDp="ngbDatepicker"
+						[(ngModel)]="candidateCertification.certificationDate" /> <span
+						class="input-group-addon " (click)="certificationDateDp.toggle()">
+						<img src="../../../content/images/calendar.png"
+						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+					</span>
+				</div>
+				<div *ngIf="certificationDate.invalid && certificationDate.touched"
+					class="text-danger">
+					<small>Please enter certification date</small>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" [hidden]="!candidateCertification.id">
+			<label for="id" jhiTranslate="global.field.id">ID</label> <input
+				type="text" class="form-control" id="id" name="id"
+				[(ngModel)]="candidateCertification.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle"
+				for="field_certificationTitle">Certification Title</label> <input
+				type="text" class="form-control" name="certificationTitle"
+				id="field_certificationTitle"
+				[(ngModel)]="candidateCertification.certificationTitle" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateCertification.certificationDate"
+				for="field_certificationDate">Certification Date</label>
+			<div class="input-group">
+				<input id="field_certificationDate" type="text" class="form-control"
+					name="certificationDate" ngbDatepicker
+					#certificationDateDp="ngbDatepicker"
+					[(ngModel)]="candidateCertification.certificationDate" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-default"
+						(click)="certificationDateDp.toggle()">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails"
+				for="field_certificationDetails">Certification Details</label> <input
+				type="text" class="form-control" name="certificationDetails"
+				id="field_certificationDetails"
+				[(ngModel)]="candidateCertification.certificationDetails" />
+		</div>
 
-        <div class="form-group">
-            <label jhiTranslate="gradzcircleApp.candidateCertification.candidate" for="field_candidate">Candidate</label>
-            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateCertification.candidate">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="candidateOption.id === candidateCertification.candidate?.id ? candidateCertification.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="modal-footer modal-footer-decorate">
-        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-        </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-        </button>
-    </div>
+		<div class="form-group">
+			<label jhiTranslate="gradzcircleApp.candidateCertification.candidate"
+				for="field_candidate">Candidate</label> <select class="form-control"
+				id="field_candidate" name="candidate"
+				[(ngModel)]="candidateCertification.candidate">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="candidateOption.id === candidateCertification.candidate?.id ? candidateCertification.candidate : candidateOption"
+					*ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="modal-footer modal-footer-decorate">
+		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+			data-dismiss="modal" (click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button>
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			class="btn btn-sm btn-pill btn-primary">
+			<span class="fa fa-save"></span>&nbsp;<span
+				jhiTranslate="entity.action.save">Save</span>
+		</button>
+	</div>
 </form>

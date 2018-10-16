@@ -38,252 +38,238 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = GradzcircleApp.class)
 public class ErrorMessagesResourceIntTest {
 
-    private static final String DEFAULT_COMPONENT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_COMPONENT_NAME = "BBBBBBBBBB";
+	private static final String DEFAULT_COMPONENT_NAME = "AAAAAAAAAA";
+	private static final String UPDATED_COMPONENT_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ERROR_KEY = "AAAAAAAAAA";
-    private static final String UPDATED_ERROR_KEY = "BBBBBBBBBB";
+	private static final String DEFAULT_ERROR_KEY = "AAAAAAAAAA";
+	private static final String UPDATED_ERROR_KEY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ERROR_MESSAGE = "AAAAAAAAAA";
-    private static final String UPDATED_ERROR_MESSAGE = "BBBBBBBBBB";
+	private static final String DEFAULT_ERROR_MESSAGE = "AAAAAAAAAA";
+	private static final String UPDATED_ERROR_MESSAGE = "BBBBBBBBBB";
 
-    @Autowired
-    private ErrorMessagesRepository errorMessagesRepository;
+	@Autowired
+	private ErrorMessagesRepository errorMessagesRepository;
 
-    @Autowired
-    private ErrorMessagesSearchRepository errorMessagesSearchRepository;
+	@Autowired
+	private ErrorMessagesSearchRepository errorMessagesSearchRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private EntityManager em;
 
-    private MockMvc restErrorMessagesMockMvc;
+	private MockMvc restErrorMessagesMockMvc;
 
-    private ErrorMessages errorMessages;
+	private ErrorMessages errorMessages;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final ErrorMessagesResource errorMessagesResource = new ErrorMessagesResource(errorMessagesRepository, errorMessagesSearchRepository);
-        this.restErrorMessagesMockMvc = MockMvcBuilders.standaloneSetup(errorMessagesResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final ErrorMessagesResource errorMessagesResource = new ErrorMessagesResource(errorMessagesRepository,
+				errorMessagesSearchRepository);
+		this.restErrorMessagesMockMvc = MockMvcBuilders.standaloneSetup(errorMessagesResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static ErrorMessages createEntity(EntityManager em) {
-        ErrorMessages errorMessages = new ErrorMessages()
-            .componentName(DEFAULT_COMPONENT_NAME)
-            .errorKey(DEFAULT_ERROR_KEY)
-            .errorMessage(DEFAULT_ERROR_MESSAGE);
-        return errorMessages;
-    }
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static ErrorMessages createEntity(EntityManager em) {
+		ErrorMessages errorMessages = new ErrorMessages().componentName(DEFAULT_COMPONENT_NAME)
+				.errorKey(DEFAULT_ERROR_KEY).errorMessage(DEFAULT_ERROR_MESSAGE);
+		return errorMessages;
+	}
 
-    @Before
-    public void initTest() {
-        errorMessagesSearchRepository.deleteAll();
-        errorMessages = createEntity(em);
-    }
+	@Before
+	public void initTest() {
+		errorMessagesSearchRepository.deleteAll();
+		errorMessages = createEntity(em);
+	}
 
-    @Test
-    @Transactional
-    public void createErrorMessages() throws Exception {
-        int databaseSizeBeforeCreate = errorMessagesRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createErrorMessages() throws Exception {
+		int databaseSizeBeforeCreate = errorMessagesRepository.findAll().size();
 
-        // Create the ErrorMessages
-        restErrorMessagesMockMvc.perform(post("/api/error-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(errorMessages)))
-            .andExpect(status().isCreated());
+		// Create the ErrorMessages
+		restErrorMessagesMockMvc.perform(post("/api/error-messages").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(errorMessages))).andExpect(status().isCreated());
 
-        // Validate the ErrorMessages in the database
-        List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeCreate + 1);
-        ErrorMessages testErrorMessages = errorMessagesList.get(errorMessagesList.size() - 1);
-        assertThat(testErrorMessages.getComponentName()).isEqualTo(DEFAULT_COMPONENT_NAME);
-        assertThat(testErrorMessages.getErrorKey()).isEqualTo(DEFAULT_ERROR_KEY);
-        assertThat(testErrorMessages.getErrorMessage()).isEqualTo(DEFAULT_ERROR_MESSAGE);
+		// Validate the ErrorMessages in the database
+		List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
+		assertThat(errorMessagesList).hasSize(databaseSizeBeforeCreate + 1);
+		ErrorMessages testErrorMessages = errorMessagesList.get(errorMessagesList.size() - 1);
+		assertThat(testErrorMessages.getComponentName()).isEqualTo(DEFAULT_COMPONENT_NAME);
+		assertThat(testErrorMessages.getErrorKey()).isEqualTo(DEFAULT_ERROR_KEY);
+		assertThat(testErrorMessages.getErrorMessage()).isEqualTo(DEFAULT_ERROR_MESSAGE);
 
-        // Validate the ErrorMessages in Elasticsearch
-        ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
-        assertThat(errorMessagesEs).isEqualToComparingFieldByField(testErrorMessages);
-    }
+		// Validate the ErrorMessages in Elasticsearch
+		ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
+		assertThat(errorMessagesEs).isEqualToComparingFieldByField(testErrorMessages);
+	}
 
-    @Test
-    @Transactional
-    public void createErrorMessagesWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = errorMessagesRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createErrorMessagesWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = errorMessagesRepository.findAll().size();
 
-        // Create the ErrorMessages with an existing ID
-        errorMessages.setId(1L);
+		// Create the ErrorMessages with an existing ID
+		errorMessages.setId(1L);
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restErrorMessagesMockMvc.perform(post("/api/error-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(errorMessages)))
-            .andExpect(status().isBadRequest());
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restErrorMessagesMockMvc.perform(post("/api/error-messages").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(errorMessages))).andExpect(status().isBadRequest());
 
-        // Validate the ErrorMessages in the database
-        List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeCreate);
-    }
+		// Validate the ErrorMessages in the database
+		List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
+		assertThat(errorMessagesList).hasSize(databaseSizeBeforeCreate);
+	}
 
-    @Test
-    @Transactional
-    public void getAllErrorMessages() throws Exception {
-        // Initialize the database
-        errorMessagesRepository.saveAndFlush(errorMessages);
+	@Test
+	@Transactional
+	public void getAllErrorMessages() throws Exception {
+		// Initialize the database
+		errorMessagesRepository.saveAndFlush(errorMessages);
 
-        // Get all the errorMessagesList
-        restErrorMessagesMockMvc.perform(get("/api/error-messages?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(errorMessages.getId().intValue())))
-            .andExpect(jsonPath("$.[*].componentName").value(hasItem(DEFAULT_COMPONENT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].errorKey").value(hasItem(DEFAULT_ERROR_KEY.toString())))
-            .andExpect(jsonPath("$.[*].errorMessage").value(hasItem(DEFAULT_ERROR_MESSAGE.toString())));
-    }
+		// Get all the errorMessagesList
+		restErrorMessagesMockMvc.perform(get("/api/error-messages?sort=id,desc")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(errorMessages.getId().intValue())))
+				.andExpect(jsonPath("$.[*].componentName").value(hasItem(DEFAULT_COMPONENT_NAME.toString())))
+				.andExpect(jsonPath("$.[*].errorKey").value(hasItem(DEFAULT_ERROR_KEY.toString())))
+				.andExpect(jsonPath("$.[*].errorMessage").value(hasItem(DEFAULT_ERROR_MESSAGE.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void getErrorMessages() throws Exception {
-        // Initialize the database
-        errorMessagesRepository.saveAndFlush(errorMessages);
+	@Test
+	@Transactional
+	public void getErrorMessages() throws Exception {
+		// Initialize the database
+		errorMessagesRepository.saveAndFlush(errorMessages);
 
-        // Get the errorMessages
-        restErrorMessagesMockMvc.perform(get("/api/error-messages/{id}", errorMessages.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(errorMessages.getId().intValue()))
-            .andExpect(jsonPath("$.componentName").value(DEFAULT_COMPONENT_NAME.toString()))
-            .andExpect(jsonPath("$.errorKey").value(DEFAULT_ERROR_KEY.toString()))
-            .andExpect(jsonPath("$.errorMessage").value(DEFAULT_ERROR_MESSAGE.toString()));
-    }
+		// Get the errorMessages
+		restErrorMessagesMockMvc.perform(get("/api/error-messages/{id}", errorMessages.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(errorMessages.getId().intValue()))
+				.andExpect(jsonPath("$.componentName").value(DEFAULT_COMPONENT_NAME.toString()))
+				.andExpect(jsonPath("$.errorKey").value(DEFAULT_ERROR_KEY.toString()))
+				.andExpect(jsonPath("$.errorMessage").value(DEFAULT_ERROR_MESSAGE.toString()));
+	}
 
-    @Test
-    @Transactional
-    public void getNonExistingErrorMessages() throws Exception {
-        // Get the errorMessages
-        restErrorMessagesMockMvc.perform(get("/api/error-messages/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+	@Test
+	@Transactional
+	public void getNonExistingErrorMessages() throws Exception {
+		// Get the errorMessages
+		restErrorMessagesMockMvc.perform(get("/api/error-messages/{id}", Long.MAX_VALUE))
+				.andExpect(status().isNotFound());
+	}
 
-    @Test
-    @Transactional
-    public void updateErrorMessages() throws Exception {
-        // Initialize the database
-        errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
-        int databaseSizeBeforeUpdate = errorMessagesRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateErrorMessages() throws Exception {
+		// Initialize the database
+		errorMessagesRepository.saveAndFlush(errorMessages);
+		errorMessagesSearchRepository.save(errorMessages);
+		int databaseSizeBeforeUpdate = errorMessagesRepository.findAll().size();
 
-        // Update the errorMessages
-        ErrorMessages updatedErrorMessages = errorMessagesRepository.findOne(errorMessages.getId());
-        updatedErrorMessages
-            .componentName(UPDATED_COMPONENT_NAME)
-            .errorKey(UPDATED_ERROR_KEY)
-            .errorMessage(UPDATED_ERROR_MESSAGE);
+		// Update the errorMessages
+		ErrorMessages updatedErrorMessages = errorMessagesRepository.findOne(errorMessages.getId());
+		updatedErrorMessages.componentName(UPDATED_COMPONENT_NAME).errorKey(UPDATED_ERROR_KEY)
+				.errorMessage(UPDATED_ERROR_MESSAGE);
 
-        restErrorMessagesMockMvc.perform(put("/api/error-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedErrorMessages)))
-            .andExpect(status().isOk());
+		restErrorMessagesMockMvc.perform(put("/api/error-messages").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedErrorMessages))).andExpect(status().isOk());
 
-        // Validate the ErrorMessages in the database
-        List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate);
-        ErrorMessages testErrorMessages = errorMessagesList.get(errorMessagesList.size() - 1);
-        assertThat(testErrorMessages.getComponentName()).isEqualTo(UPDATED_COMPONENT_NAME);
-        assertThat(testErrorMessages.getErrorKey()).isEqualTo(UPDATED_ERROR_KEY);
-        assertThat(testErrorMessages.getErrorMessage()).isEqualTo(UPDATED_ERROR_MESSAGE);
+		// Validate the ErrorMessages in the database
+		List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
+		assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate);
+		ErrorMessages testErrorMessages = errorMessagesList.get(errorMessagesList.size() - 1);
+		assertThat(testErrorMessages.getComponentName()).isEqualTo(UPDATED_COMPONENT_NAME);
+		assertThat(testErrorMessages.getErrorKey()).isEqualTo(UPDATED_ERROR_KEY);
+		assertThat(testErrorMessages.getErrorMessage()).isEqualTo(UPDATED_ERROR_MESSAGE);
 
-        // Validate the ErrorMessages in Elasticsearch
-        ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
-        assertThat(errorMessagesEs).isEqualToComparingFieldByField(testErrorMessages);
-    }
+		// Validate the ErrorMessages in Elasticsearch
+		ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
+		assertThat(errorMessagesEs).isEqualToComparingFieldByField(testErrorMessages);
+	}
 
-    @Test
-    @Transactional
-    public void updateNonExistingErrorMessages() throws Exception {
-        int databaseSizeBeforeUpdate = errorMessagesRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateNonExistingErrorMessages() throws Exception {
+		int databaseSizeBeforeUpdate = errorMessagesRepository.findAll().size();
 
-        // Create the ErrorMessages
+		// Create the ErrorMessages
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restErrorMessagesMockMvc.perform(put("/api/error-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(errorMessages)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restErrorMessagesMockMvc.perform(put("/api/error-messages").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(errorMessages))).andExpect(status().isCreated());
 
-        // Validate the ErrorMessages in the database
-        List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the ErrorMessages in the database
+		List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
+		assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional
-    public void deleteErrorMessages() throws Exception {
-        // Initialize the database
-        errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
-        int databaseSizeBeforeDelete = errorMessagesRepository.findAll().size();
+	@Test
+	@Transactional
+	public void deleteErrorMessages() throws Exception {
+		// Initialize the database
+		errorMessagesRepository.saveAndFlush(errorMessages);
+		errorMessagesSearchRepository.save(errorMessages);
+		int databaseSizeBeforeDelete = errorMessagesRepository.findAll().size();
 
-        // Get the errorMessages
-        restErrorMessagesMockMvc.perform(delete("/api/error-messages/{id}", errorMessages.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// Get the errorMessages
+		restErrorMessagesMockMvc.perform(
+				delete("/api/error-messages/{id}", errorMessages.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean errorMessagesExistsInEs = errorMessagesSearchRepository.exists(errorMessages.getId());
-        assertThat(errorMessagesExistsInEs).isFalse();
+		// Validate Elasticsearch is empty
+		boolean errorMessagesExistsInEs = errorMessagesSearchRepository.exists(errorMessages.getId());
+		assertThat(errorMessagesExistsInEs).isFalse();
 
-        // Validate the database is empty
-        List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the database is empty
+		List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
+		assertThat(errorMessagesList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-    @Test
-    @Transactional
-    public void searchErrorMessages() throws Exception {
-        // Initialize the database
-        errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
+	@Test
+	@Transactional
+	public void searchErrorMessages() throws Exception {
+		// Initialize the database
+		errorMessagesRepository.saveAndFlush(errorMessages);
+		errorMessagesSearchRepository.save(errorMessages);
 
-        // Search the errorMessages
-        restErrorMessagesMockMvc.perform(get("/api/_search/error-messages?query=id:" + errorMessages.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(errorMessages.getId().intValue())))
-            .andExpect(jsonPath("$.[*].componentName").value(hasItem(DEFAULT_COMPONENT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].errorKey").value(hasItem(DEFAULT_ERROR_KEY.toString())))
-            .andExpect(jsonPath("$.[*].errorMessage").value(hasItem(DEFAULT_ERROR_MESSAGE.toString())));
-    }
+		// Search the errorMessages
+		restErrorMessagesMockMvc.perform(get("/api/_search/error-messages?query=id:" + errorMessages.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(errorMessages.getId().intValue())))
+				.andExpect(jsonPath("$.[*].componentName").value(hasItem(DEFAULT_COMPONENT_NAME.toString())))
+				.andExpect(jsonPath("$.[*].errorKey").value(hasItem(DEFAULT_ERROR_KEY.toString())))
+				.andExpect(jsonPath("$.[*].errorMessage").value(hasItem(DEFAULT_ERROR_MESSAGE.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(ErrorMessages.class);
-        ErrorMessages errorMessages1 = new ErrorMessages();
-        errorMessages1.setId(1L);
-        ErrorMessages errorMessages2 = new ErrorMessages();
-        errorMessages2.setId(errorMessages1.getId());
-        assertThat(errorMessages1).isEqualTo(errorMessages2);
-        errorMessages2.setId(2L);
-        assertThat(errorMessages1).isNotEqualTo(errorMessages2);
-        errorMessages1.setId(null);
-        assertThat(errorMessages1).isNotEqualTo(errorMessages2);
-    }
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(ErrorMessages.class);
+		ErrorMessages errorMessages1 = new ErrorMessages();
+		errorMessages1.setId(1L);
+		ErrorMessages errorMessages2 = new ErrorMessages();
+		errorMessages2.setId(errorMessages1.getId());
+		assertThat(errorMessages1).isEqualTo(errorMessages2);
+		errorMessages2.setId(2L);
+		assertThat(errorMessages1).isNotEqualTo(errorMessages2);
+		errorMessages1.setId(null);
+		assertThat(errorMessages1).isNotEqualTo(errorMessages2);
+	}
 }

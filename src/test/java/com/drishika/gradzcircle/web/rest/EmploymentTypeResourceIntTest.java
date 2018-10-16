@@ -38,242 +38,231 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = GradzcircleApp.class)
 public class EmploymentTypeResourceIntTest {
 
-    private static final String DEFAULT_EMPLOYMENT_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_EMPLOYMENT_TYPE = "BBBBBBBBBB";
+	private static final String DEFAULT_EMPLOYMENT_TYPE = "AAAAAAAAAA";
+	private static final String UPDATED_EMPLOYMENT_TYPE = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_EMPLOYMENT_TYPE_COST = 1D;
-    private static final Double UPDATED_EMPLOYMENT_TYPE_COST = 2D;
+	private static final Double DEFAULT_EMPLOYMENT_TYPE_COST = 1D;
+	private static final Double UPDATED_EMPLOYMENT_TYPE_COST = 2D;
 
-    @Autowired
-    private EmploymentTypeRepository employmentTypeRepository;
+	@Autowired
+	private EmploymentTypeRepository employmentTypeRepository;
 
-    @Autowired
-    private EmploymentTypeSearchRepository employmentTypeSearchRepository;
+	@Autowired
+	private EmploymentTypeSearchRepository employmentTypeSearchRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private EntityManager em;
 
-    private MockMvc restEmploymentTypeMockMvc;
+	private MockMvc restEmploymentTypeMockMvc;
 
-    private EmploymentType employmentType;
+	private EmploymentType employmentType;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository, employmentTypeSearchRepository);
-        this.restEmploymentTypeMockMvc = MockMvcBuilders.standaloneSetup(employmentTypeResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository,
+				employmentTypeSearchRepository);
+		this.restEmploymentTypeMockMvc = MockMvcBuilders.standaloneSetup(employmentTypeResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static EmploymentType createEntity(EntityManager em) {
-        EmploymentType employmentType = new EmploymentType()
-            .employmentType(DEFAULT_EMPLOYMENT_TYPE)
-            .employmentTypeCost(DEFAULT_EMPLOYMENT_TYPE_COST);
-        return employmentType;
-    }
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static EmploymentType createEntity(EntityManager em) {
+		EmploymentType employmentType = new EmploymentType().employmentType(DEFAULT_EMPLOYMENT_TYPE)
+				.employmentTypeCost(DEFAULT_EMPLOYMENT_TYPE_COST);
+		return employmentType;
+	}
 
-    @Before
-    public void initTest() {
-        employmentTypeSearchRepository.deleteAll();
-        employmentType = createEntity(em);
-    }
+	@Before
+	public void initTest() {
+		employmentTypeSearchRepository.deleteAll();
+		employmentType = createEntity(em);
+	}
 
-    @Test
-    @Transactional
-    public void createEmploymentType() throws Exception {
-        int databaseSizeBeforeCreate = employmentTypeRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createEmploymentType() throws Exception {
+		int databaseSizeBeforeCreate = employmentTypeRepository.findAll().size();
 
-        // Create the EmploymentType
-        restEmploymentTypeMockMvc.perform(post("/api/employment-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(employmentType)))
-            .andExpect(status().isCreated());
+		// Create the EmploymentType
+		restEmploymentTypeMockMvc.perform(post("/api/employment-types").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(employmentType))).andExpect(status().isCreated());
 
-        // Validate the EmploymentType in the database
-        List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeCreate + 1);
-        EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
-        assertThat(testEmploymentType.getEmploymentType()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE);
-        assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE_COST);
+		// Validate the EmploymentType in the database
+		List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
+		assertThat(employmentTypeList).hasSize(databaseSizeBeforeCreate + 1);
+		EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
+		assertThat(testEmploymentType.getEmploymentType()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE);
+		assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE_COST);
 
-        // Validate the EmploymentType in Elasticsearch
-        EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
-        assertThat(employmentTypeEs).isEqualToComparingFieldByField(testEmploymentType);
-    }
+		// Validate the EmploymentType in Elasticsearch
+		EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
+		assertThat(employmentTypeEs).isEqualToComparingFieldByField(testEmploymentType);
+	}
 
-    @Test
-    @Transactional
-    public void createEmploymentTypeWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = employmentTypeRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createEmploymentTypeWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = employmentTypeRepository.findAll().size();
 
-        // Create the EmploymentType with an existing ID
-        employmentType.setId(1L);
+		// Create the EmploymentType with an existing ID
+		employmentType.setId(1L);
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restEmploymentTypeMockMvc.perform(post("/api/employment-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(employmentType)))
-            .andExpect(status().isBadRequest());
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restEmploymentTypeMockMvc.perform(post("/api/employment-types").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(employmentType))).andExpect(status().isBadRequest());
 
-        // Validate the EmploymentType in the database
-        List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeCreate);
-    }
+		// Validate the EmploymentType in the database
+		List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
+		assertThat(employmentTypeList).hasSize(databaseSizeBeforeCreate);
+	}
 
-    @Test
-    @Transactional
-    public void getAllEmploymentTypes() throws Exception {
-        // Initialize the database
-        employmentTypeRepository.saveAndFlush(employmentType);
+	@Test
+	@Transactional
+	public void getAllEmploymentTypes() throws Exception {
+		// Initialize the database
+		employmentTypeRepository.saveAndFlush(employmentType);
 
-        // Get all the employmentTypeList
-        restEmploymentTypeMockMvc.perform(get("/api/employment-types?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].employmentTypeCost").value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
-    }
+		// Get all the employmentTypeList
+		restEmploymentTypeMockMvc.perform(get("/api/employment-types?sort=id,desc")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
+				.andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
+				.andExpect(jsonPath("$.[*].employmentTypeCost")
+						.value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
+	}
 
-    @Test
-    @Transactional
-    public void getEmploymentType() throws Exception {
-        // Initialize the database
-        employmentTypeRepository.saveAndFlush(employmentType);
+	@Test
+	@Transactional
+	public void getEmploymentType() throws Exception {
+		// Initialize the database
+		employmentTypeRepository.saveAndFlush(employmentType);
 
-        // Get the employmentType
-        restEmploymentTypeMockMvc.perform(get("/api/employment-types/{id}", employmentType.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(employmentType.getId().intValue()))
-            .andExpect(jsonPath("$.employmentType").value(DEFAULT_EMPLOYMENT_TYPE.toString()))
-            .andExpect(jsonPath("$.employmentTypeCost").value(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue()));
-    }
+		// Get the employmentType
+		restEmploymentTypeMockMvc.perform(get("/api/employment-types/{id}", employmentType.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(employmentType.getId().intValue()))
+				.andExpect(jsonPath("$.employmentType").value(DEFAULT_EMPLOYMENT_TYPE.toString()))
+				.andExpect(jsonPath("$.employmentTypeCost").value(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue()));
+	}
 
-    @Test
-    @Transactional
-    public void getNonExistingEmploymentType() throws Exception {
-        // Get the employmentType
-        restEmploymentTypeMockMvc.perform(get("/api/employment-types/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+	@Test
+	@Transactional
+	public void getNonExistingEmploymentType() throws Exception {
+		// Get the employmentType
+		restEmploymentTypeMockMvc.perform(get("/api/employment-types/{id}", Long.MAX_VALUE))
+				.andExpect(status().isNotFound());
+	}
 
-    @Test
-    @Transactional
-    public void updateEmploymentType() throws Exception {
-        // Initialize the database
-        employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
-        int databaseSizeBeforeUpdate = employmentTypeRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateEmploymentType() throws Exception {
+		// Initialize the database
+		employmentTypeRepository.saveAndFlush(employmentType);
+		employmentTypeSearchRepository.save(employmentType);
+		int databaseSizeBeforeUpdate = employmentTypeRepository.findAll().size();
 
-        // Update the employmentType
-        EmploymentType updatedEmploymentType = employmentTypeRepository.findOne(employmentType.getId());
-        updatedEmploymentType
-            .employmentType(UPDATED_EMPLOYMENT_TYPE)
-            .employmentTypeCost(UPDATED_EMPLOYMENT_TYPE_COST);
+		// Update the employmentType
+		EmploymentType updatedEmploymentType = employmentTypeRepository.findOne(employmentType.getId());
+		updatedEmploymentType.employmentType(UPDATED_EMPLOYMENT_TYPE).employmentTypeCost(UPDATED_EMPLOYMENT_TYPE_COST);
 
-        restEmploymentTypeMockMvc.perform(put("/api/employment-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEmploymentType)))
-            .andExpect(status().isOk());
+		restEmploymentTypeMockMvc.perform(put("/api/employment-types").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedEmploymentType))).andExpect(status().isOk());
 
-        // Validate the EmploymentType in the database
-        List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate);
-        EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
-        assertThat(testEmploymentType.getEmploymentType()).isEqualTo(UPDATED_EMPLOYMENT_TYPE);
-        assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(UPDATED_EMPLOYMENT_TYPE_COST);
+		// Validate the EmploymentType in the database
+		List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
+		assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate);
+		EmploymentType testEmploymentType = employmentTypeList.get(employmentTypeList.size() - 1);
+		assertThat(testEmploymentType.getEmploymentType()).isEqualTo(UPDATED_EMPLOYMENT_TYPE);
+		assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(UPDATED_EMPLOYMENT_TYPE_COST);
 
-        // Validate the EmploymentType in Elasticsearch
-        EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
-        assertThat(employmentTypeEs).isEqualToComparingFieldByField(testEmploymentType);
-    }
+		// Validate the EmploymentType in Elasticsearch
+		EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
+		assertThat(employmentTypeEs).isEqualToComparingFieldByField(testEmploymentType);
+	}
 
-    @Test
-    @Transactional
-    public void updateNonExistingEmploymentType() throws Exception {
-        int databaseSizeBeforeUpdate = employmentTypeRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateNonExistingEmploymentType() throws Exception {
+		int databaseSizeBeforeUpdate = employmentTypeRepository.findAll().size();
 
-        // Create the EmploymentType
+		// Create the EmploymentType
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restEmploymentTypeMockMvc.perform(put("/api/employment-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(employmentType)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restEmploymentTypeMockMvc.perform(put("/api/employment-types").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(employmentType))).andExpect(status().isCreated());
 
-        // Validate the EmploymentType in the database
-        List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the EmploymentType in the database
+		List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
+		assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional
-    public void deleteEmploymentType() throws Exception {
-        // Initialize the database
-        employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
-        int databaseSizeBeforeDelete = employmentTypeRepository.findAll().size();
+	@Test
+	@Transactional
+	public void deleteEmploymentType() throws Exception {
+		// Initialize the database
+		employmentTypeRepository.saveAndFlush(employmentType);
+		employmentTypeSearchRepository.save(employmentType);
+		int databaseSizeBeforeDelete = employmentTypeRepository.findAll().size();
 
-        // Get the employmentType
-        restEmploymentTypeMockMvc.perform(delete("/api/employment-types/{id}", employmentType.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// Get the employmentType
+		restEmploymentTypeMockMvc.perform(
+				delete("/api/employment-types/{id}", employmentType.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean employmentTypeExistsInEs = employmentTypeSearchRepository.exists(employmentType.getId());
-        assertThat(employmentTypeExistsInEs).isFalse();
+		// Validate Elasticsearch is empty
+		boolean employmentTypeExistsInEs = employmentTypeSearchRepository.exists(employmentType.getId());
+		assertThat(employmentTypeExistsInEs).isFalse();
 
-        // Validate the database is empty
-        List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the database is empty
+		List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
+		assertThat(employmentTypeList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-    @Test
-    @Transactional
-    public void searchEmploymentType() throws Exception {
-        // Initialize the database
-        employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
+	@Test
+	@Transactional
+	public void searchEmploymentType() throws Exception {
+		// Initialize the database
+		employmentTypeRepository.saveAndFlush(employmentType);
+		employmentTypeSearchRepository.save(employmentType);
 
-        // Search the employmentType
-        restEmploymentTypeMockMvc.perform(get("/api/_search/employment-types?query=id:" + employmentType.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].employmentTypeCost").value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
-    }
+		// Search the employmentType
+		restEmploymentTypeMockMvc.perform(get("/api/_search/employment-types?query=id:" + employmentType.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(employmentType.getId().intValue())))
+				.andExpect(jsonPath("$.[*].employmentType").value(hasItem(DEFAULT_EMPLOYMENT_TYPE.toString())))
+				.andExpect(jsonPath("$.[*].employmentTypeCost")
+						.value(hasItem(DEFAULT_EMPLOYMENT_TYPE_COST.doubleValue())));
+	}
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EmploymentType.class);
-        EmploymentType employmentType1 = new EmploymentType();
-        employmentType1.setId(1L);
-        EmploymentType employmentType2 = new EmploymentType();
-        employmentType2.setId(employmentType1.getId());
-        assertThat(employmentType1).isEqualTo(employmentType2);
-        employmentType2.setId(2L);
-        assertThat(employmentType1).isNotEqualTo(employmentType2);
-        employmentType1.setId(null);
-        assertThat(employmentType1).isNotEqualTo(employmentType2);
-    }
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(EmploymentType.class);
+		EmploymentType employmentType1 = new EmploymentType();
+		employmentType1.setId(1L);
+		EmploymentType employmentType2 = new EmploymentType();
+		employmentType2.setId(employmentType1.getId());
+		assertThat(employmentType1).isEqualTo(employmentType2);
+		employmentType2.setId(2L);
+		assertThat(employmentType1).isNotEqualTo(employmentType2);
+		employmentType1.setId(null);
+		assertThat(employmentType1).isNotEqualTo(employmentType2);
+	}
 }

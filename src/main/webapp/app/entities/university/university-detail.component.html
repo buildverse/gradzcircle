@@ -1,39 +1,51 @@
 
 <div *ngIf="university">
-    <h2><span jhiTranslate="gradzcircleApp.university.detail.title">University</span> {{university.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.university.universityName">University Name</span></dt>
-        <dd>
-            <span>{{university.universityName}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.university.universityType">University Type</span></dt>
-        <dd>
-            <span>{{university.universityType}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.university.website">Website</span></dt>
-        <dd>
-            <span>{{university.website}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.university.country">Country</span></dt>
-        <dd>
-            <div *ngIf="university.country">
-                <a [routerLink]="['/country', university.country?.id]">{{university.country?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.university.detail.title">University</span>
+		{{university.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.university.universityName">University
+				Name</span>
+		</dt>
+		<dd>
+			<span>{{university.universityName}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.university.universityType">University
+				Type</span>
+		</dt>
+		<dd>
+			<span>{{university.universityType}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.university.website">Website</span>
+		</dt>
+		<dd>
+			<span>{{university.website}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.university.country">Country</span>
+		</dt>
+		<dd>
+			<div *ngIf="university.country">
+				<a [routerLink]="['/country', university.country?.id]">{{university.country?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'university/'+ university.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'university/'+ university.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

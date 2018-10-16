@@ -32,10 +32,8 @@ import com.drishika.gradzcircle.service.CandidateEducationService;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
 import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
-
 /**
- * @author abhinav 
- * Matcher that will be called whenever a job's filter is
+ * @author abhinav Matcher that will be called whenever a job's filter is
  *         amended or new job is created.
  */
 @Service
@@ -50,15 +48,15 @@ public class JobMatcher implements Matcher<Job> {
 	private final CandidateRepository candidateRepository;
 	private final MatchUtils matchUtils;
 	private final ApplicationEventPublisher applicationEventPublisher;
-	
+
 	public JobMatcher(CandidateEducationService candidateEducationService,
 			CandidateLanguageService candidateLanguageService, JobFilterParser jobfilterParser,
 			FilterRepository filterRepository, CourseRepository courseRepository,
 			QualificationRepository qualificationRepository, CollegeRepository collegeRepository,
 			UniversityRepository universityRepository, GenderRepository genderRepository,
-			LanguageRepository languageRepository, JobRepository jobRepository,JobSearchRepository jobSearchRepository,
-			MatchUtils matchUtils, CandidateJobRepository candidateJobRepository, CandidateRepository candidateRepository,
-			ApplicationEventPublisher applicationEventPublisher) {
+			LanguageRepository languageRepository, JobRepository jobRepository, JobSearchRepository jobSearchRepository,
+			MatchUtils matchUtils, CandidateJobRepository candidateJobRepository,
+			CandidateRepository candidateRepository, ApplicationEventPublisher applicationEventPublisher) {
 		this.candidateEducationService = candidateEducationService;
 		this.candidateLanguageService = candidateLanguageService;
 		this.jobRepository = jobRepository;
@@ -71,14 +69,17 @@ public class JobMatcher implements Matcher<Job> {
 	public void match(Job job) {
 		long startTime = System.currentTimeMillis();
 		matchUtils.populateJobFilterWeightMap();
-		
+
 		JobFilterObject jobfilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
-		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject).parallel();
+		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject)
+				.parallel();
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		candidateJobs = candidateEducationStream.map(candidateEducation -> beginMatchingOnEducation(job,jobfilterObject, candidateEducation)).filter(candidateJob -> candidateJob!=null).collect(Collectors.toSet());
-		//Iterator<CandidateJob> candidateJobIterator = candidateJobs.iterator();
+		candidateJobs = candidateEducationStream
+				.map(candidateEducation -> beginMatchingOnEducation(job, jobfilterObject, candidateEducation))
+				.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
+		// Iterator<CandidateJob> candidateJobIterator = candidateJobs.iterator();
 		candidateJobs.forEach(matchedCandidateJob -> {
-			if(job.getCandidateJobs().contains(matchedCandidateJob)) {
+			if (job.getCandidateJobs().contains(matchedCandidateJob)) {
 				job.getCandidateJobs().remove(matchedCandidateJob);
 				job.getCandidateJobs().add(matchedCandidateJob);
 			} else {
@@ -86,27 +87,28 @@ public class JobMatcher implements Matcher<Job> {
 			}
 		});
 		jobRepository.save(job);
-	/*	Set<Double> matchScores = candidateJobs.stream().map(CandidateJob::getMatchScore).collect(Collectors.toSet());
-		Set<CandidateJob> deltaMatchSet = job.getCandidateJobs().stream().filter(candidateJob -> matchScores.contains(candidateJob.getMatchScore())).collect(Collectors.toSet());
-		Set<MatchActivityDTO> matchedActivityDTO = new HashSet<>();
-		deltaMatchSet.forEach(matchSet -> {
-			MatchActivityDTO dto = new MatchActivityDTO();
-			dto.setCandidateId(matchSet.getCandidate().getId());
-			dto.setJobId(matchSet.getJob().getId());
-			dto.setMatchScore(matchSet.getMatchScore());
-			dto.setCorporateId(matchSet.getJob().getCorporate().getId());
-			matchedActivityDTO.add(dto);
-		});
-		MatchEvent matchEvent = new MatchEvent(this, matchedActivityDTO);
-		applicationEventPublisher.publishEvent(matchEvent);*/
+		/*
+		 * Set<Double> matchScores =
+		 * candidateJobs.stream().map(CandidateJob::getMatchScore).collect(Collectors.
+		 * toSet()); Set<CandidateJob> deltaMatchSet =
+		 * job.getCandidateJobs().stream().filter(candidateJob ->
+		 * matchScores.contains(candidateJob.getMatchScore())).collect(Collectors.toSet(
+		 * )); Set<MatchActivityDTO> matchedActivityDTO = new HashSet<>();
+		 * deltaMatchSet.forEach(matchSet -> { MatchActivityDTO dto = new
+		 * MatchActivityDTO(); dto.setCandidateId(matchSet.getCandidate().getId());
+		 * dto.setJobId(matchSet.getJob().getId());
+		 * dto.setMatchScore(matchSet.getMatchScore());
+		 * dto.setCorporateId(matchSet.getJob().getCorporate().getId());
+		 * matchedActivityDTO.add(dto); }); MatchEvent matchEvent = new MatchEvent(this,
+		 * matchedActivityDTO); applicationEventPublisher.publishEvent(matchEvent);
+		 */
 		log.info("Job Matching completed in {} ms", (System.currentTimeMillis() - startTime));
-		
+
 	}
 
 	private Stream<CandidateLanguageProficiency> getAllLanguageProfienciesForActiveCandidates() {
 		return candidateLanguageService.getAllLanguageProfienciesForActiveCandidates();
 	}
-	
 
 	/**
 	 * First try to filter the candidates by graduation date and prepare data set to
@@ -143,17 +145,17 @@ public class JobMatcher implements Matcher<Job> {
 
 	}
 
-	private CandidateJob beginMatchingOnEducation(Job job, JobFilterObject jobfilterObject, CandidateEducation candidateEducation) {
-		log.debug("Begin Matching for job {} and education {}",jobfilterObject,candidateEducation);
+	private CandidateJob beginMatchingOnEducation(Job job, JobFilterObject jobfilterObject,
+			CandidateEducation candidateEducation) {
+		log.debug("Begin Matching for job {} and education {}", jobfilterObject, candidateEducation);
 		CandidateJob candidateJob = null;
-		if(jobfilterObject == null || candidateEducation == null)
+		if (jobfilterObject == null || candidateEducation == null)
 			return candidateJob;
 		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
-		log.debug("Candidate from reprositry while begin matching on education {} and {}",candidate);
+		log.debug("Candidate from reprositry while begin matching on education {} and {}", candidate);
 		candidate.addEducation(candidateEducation);
-		candidateJob = matchUtils.matchCandidateAndJob(jobfilterObject, candidate, job,true,true,true);
+		candidateJob = matchUtils.matchCandidateAndJob(jobfilterObject, candidate, job, true, true, true);
 		return candidateJob;
 	}
-	
-	
+
 }

@@ -22,24 +22,24 @@ import com.drishika.gradzcircle.domain.Job;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GradzcircleApp.class)
 public class CandidateJobUnitTest {
-	
+
 	private CandidateJob candidateJob;
 	private Candidate candidate;
 	private Job job;
 	private CandidateJob.CandidateJobId candidateJobId;
-	
+
 	@Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        candidate = new Candidate();
-        job = new Job();
-        candidateJobId = new CandidateJob.CandidateJobId();
-        candidateJob = new CandidateJob();
-    }
-	
-	@Test 
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		candidate = new Candidate();
+		job = new Job();
+		candidateJobId = new CandidateJob.CandidateJobId();
+		candidateJob = new CandidateJob();
+	}
+
+	@Test
 	public void testCandidateJobEquality() throws Exception {
-		
+
 	}
 
 }

@@ -5,15 +5,21 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.constants.ApplicationConstants;
+import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
+import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Job;
@@ -22,6 +28,7 @@ import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
+import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.JobFilterRepository;
@@ -31,7 +38,11 @@ import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.repository.search.JobFilterSearchRepository;
 import com.drishika.gradzcircle.repository.search.JobHistorySearchRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
+import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
+import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
+import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
+import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 
 @Service
@@ -55,14 +66,19 @@ public class JobService {
 
 	private final CorporateRepository corporateRepository;
 
+	private final CandidateRepository candidateRepository;
+
 	private final CorporateSearchRepository corporateSearchRepository;
+
+	private final DTOConverters converter;
 
 	public JobService(JobRepository jobRepository, JobSearchRepository jobSearchRepository,
 			JobFilterRepository jobFilterRepository, JobFilterSearchRepository jobFilterSearchRepository,
 			CorporateRepository corporateRepository, CacheManager cacheManager,
 			CorporateSearchRepository corporateSearchRepository, JobHistoryRepository jobHistoryRepository,
 			JobHistorySearchRepository jobHistorySearchRepository,
-			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher) {
+			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher,
+			CandidateRepository candidateRepository, DTOConverters converter) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
 		this.corporateRepository = corporateRepository;
@@ -72,7 +88,8 @@ public class JobService {
 		this.jobHistorySearchRepository = jobHistorySearchRepository;
 		this.jobFilterRepository = jobFilterRepository;
 		this.matcher = matcher;
-
+		this.candidateRepository = candidateRepository;
+		this.converter = converter;
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
@@ -82,7 +99,7 @@ public class JobService {
 		job.setCreateDate(dateTime);
 		job.setCanEdit(Boolean.TRUE);
 		Job savedJob = jobRepository.save(job);
-		//matcher.match(savedJob);
+		// matcher.match(savedJob);
 		return savedJob;
 	}
 
@@ -91,28 +108,26 @@ public class JobService {
 		if (!job.getCanEdit())
 			throw new JobEditException("Cannot Edit job anymmore");
 		Job prevJob = getJob(job.getId());
-		if (!(job.equals(prevJob) 
-				&& (job.getJobDescription().equals(prevJob.getJobDescription())
-						&& (job.getSalary().equals(prevJob.getSalary()) && (job.getJobTitle().equals(prevJob.getJobTitle()))
-								&& (job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job) ))))) {
+		if (!(job.equals(prevJob) && (job.getJobDescription().equals(prevJob.getJobDescription())
+				&& (job.getSalary().equals(prevJob.getSalary()) && (job.getJobTitle().equals(prevJob.getJobTitle()))
+						&& (job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job)))))) {
 			updateJobMetaActions(job, prevJob);
 			setJob(job, prevJob);
 			setJobFilters(job, prevJob);
-			
+
 			log.info("Updating job");
 		}
-		//jobSearchRepository.save(jobRepository.save(job));
-		
-		
+		// jobSearchRepository.save(jobRepository.save(job));
+
 		job = jobRepository.save(job);
-		log.info("Job updated {} ,{}",job,job.getJobFilters());
+		log.info("Job updated {} ,{}", job, job.getJobFilters());
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
 			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
 			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
-			//corporateSearchRepository.save(corporateRepository.save(corporate));
+			// corporateSearchRepository.save(corporateRepository.save(corporate));
 			corporateRepository.save(corporate);
 		}
-		if(job.getJobFilters() != null && job.getJobFilters().size()>0)
+		if (job.getJobFilters() != null && job.getJobFilters().size() > 0)
 			matcher.match(job);
 		log.info("TRIGGER MATHCING ASYNCH");
 		return job;
@@ -216,4 +231,45 @@ public class JobService {
 		return job;
 	}
 
+	public Page<CorporateJobDTO> getActiveJobsListForCorporates(Pageable pageable, Long corporateId) {
+		Page<Job> jobPage = jobRepository.findByActiveJobAndCorporateId(corporateId, pageable);
+		final Page<CorporateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCorporate(job));
+		return page;
+	}
+
+	public Page<CandidateJobDTO> getNewActiveJobsListForCandidates(Pageable pageable, Long candidateId) {
+		Page<Job> jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedForCandidate(candidateId, pageable);
+		final Page<CandidateJobDTO> page = jobPage
+				.map(job -> converter.convertToJobListingForCandidate(job, candidateId, false));
+		return page;
+	}
+
+	public Page<CandidateJobDTO> getAppliedJobsListForCandidates(Pageable pageable, Long candidateId) {
+		Page<Job> jobPage = jobRepository.findAppliedJobByCandidate(candidateId, pageable);
+		final Page<CandidateJobDTO> page = jobPage
+				.map(job -> converter.convertToJobListingForCandidate(job, candidateId, false));
+		return page;
+	}
+
+	public Page<CandidateProfileListDTO> getAppliedCandidatesForJob(Pageable pageable, Long jobId) {
+		Page<CandidateAppliedJobs> candidatePage = jobRepository.findByAppliedCandidates(jobId, pageable);
+		final Page<CandidateProfileListDTO> page = candidatePage
+				.map(candidateAppliedJob -> converter.convertToCandidateProfileListingDTO(candidateAppliedJob,
+						candidateRepository.findOne(candidateAppliedJob.getId().getCandidateId())));
+		return page;
+	}
+
+	public Page<CandidateProfileListDTO> getMatchedCandidatesForJob(Pageable pageable, Long jobId) {
+		Page<CandidateJob> candidatePage = jobRepository.findMatchedCandidatesForJob(jobId, pageable);
+		final Page<CandidateProfileListDTO> page = candidatePage.map(candidateJob -> converter
+				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob));
+		return page;
+	}
+
+	public Job applyJobForCandidate(Long jobId, Long loginId) {
+		Job job = jobRepository.findOne(jobId);
+		Candidate candidate = candidateRepository.findByLoginId(loginId);
+		job.addAppliedCandidate(candidate);
+		return jobRepository.save(job);
+	}
 }

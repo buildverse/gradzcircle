@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class IndexReinitializer {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+	@Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
 
-    @PostConstruct
-    public void resetIndex() {
-        long t = currentTimeMillis();
-        elasticsearchTemplate.deleteIndex("_all");
-        t = currentTimeMillis() - t;
-        logger.debug("Elasticsearch indexes reset in {} ms", t);
-    }
+	@PostConstruct
+	public void resetIndex() {
+		long t = currentTimeMillis();
+		elasticsearchTemplate.deleteIndex("_all");
+		t = currentTimeMillis() - t;
+		logger.debug("Elasticsearch indexes reset in {} ms", t);
+	}
 }

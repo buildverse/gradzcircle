@@ -54,7 +54,7 @@ public class JobsUtil {
 		}
 
 	}
-	
+
 	public static void populateHistories(Object destination, Object source) throws BeanCopyException {
 		try {
 			BeanUtils.copyProperties(destination, source);

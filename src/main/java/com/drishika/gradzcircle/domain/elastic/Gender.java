@@ -4,14 +4,13 @@ import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.completion.Completion;
 
-
 @Document(indexName = "gender")
-public class Gender extends com.drishika.gradzcircle.domain.Gender{
+public class Gender extends com.drishika.gradzcircle.domain.Gender {
 
-    @CompletionField(maxInputLength = 100)
-    private Completion suggest;
+	@CompletionField(maxInputLength = 100)
+	private Completion suggest;
 
-    public Completion getSuggest() {
+	public Completion getSuggest() {
 		return suggest;
 	}
 

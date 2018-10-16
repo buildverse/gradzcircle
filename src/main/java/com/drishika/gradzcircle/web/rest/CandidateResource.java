@@ -28,6 +28,9 @@ import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.service.CandidateService;
+import com.drishika.gradzcircle.service.dto.CandidateDTO;
+import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
+import com.drishika.gradzcircle.service.dto.UserDTO;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -102,6 +105,55 @@ public class CandidateResource {
 	}
 
 	/**
+	 * PUT /candidates_apply : Candidate Applies to Job
+	 *
+	 * @param candidate
+	 *            the candidate to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         candidate, or with status 400 (Bad Request) if the candidate is not
+	 *         valid, or with status 500 (Internal Server Error) if the candidate
+	 *         couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/candidate-apply")
+	@Timed
+	public ResponseEntity<Candidate> applyJob(@RequestBody Candidate candidate) throws URISyntaxException {
+		log.debug("REST request to apply for job {} for Candidate : {}", candidate.getAppliedJobs(), candidate);
+		if (candidate.getAppliedJobs() == null) {
+			return null;
+		}
+		Candidate result = candidateService.applyJob(candidate);
+
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidate.getId().toString())).body(result);
+	}
+
+	/**
+	 * PUT /candidates_shortlist : Corporate shortlists Candidate for a Job
+	 *
+	 * @param candidate
+	 *            the candidate to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         candidate, or with status 400 (Bad Request) if the candidate is not
+	 *         valid, or with status 500 (Internal Server Error) if the candidate
+	 *         couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@GetMapping("/candidate-corporate-link/{candidateId}/{jobId}/{corporateId}")
+	@Timed
+	public ResponseEntity<Candidate> shortListCandidateForJob(@PathVariable("candidateId") Long candidateId,
+			@PathVariable("jobId") Long jobId, @PathVariable("corporateId") Long corporateId)
+			throws URISyntaxException {
+		log.debug("REST request to shortlist candidate {} for job {} by corporate : {}", candidateId, jobId,
+				corporateId);
+		Candidate result = candidateService.shortListCandidateForJob(candidateId, jobId, corporateId);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
+				.body(result);
+	}
+
+	/**
 	 * GET /candidates : get all the candidates.
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of candidates in
@@ -127,7 +179,7 @@ public class CandidateResource {
 	public ResponseEntity<Candidate> getCandidate(@PathVariable Long id) {
 		log.debug("REST request to get Candidate : {}", id);
 		Candidate candidate = candidateService.getCandidate(id);
-		if(candidate!= null)
+		if (candidate != null)
 			trimCandidateAddressData(candidate.getAddresses());
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
 	}
@@ -142,10 +194,20 @@ public class CandidateResource {
 	 */
 	@GetMapping("/candidateByLogin/{id}")
 	@Timed
-	public ResponseEntity<Candidate> getCandidateByLoginId(@PathVariable Long id) {
+	public ResponseEntity<CandidateDTO> getCandidateByLoginId(@PathVariable Long id) {
 		log.debug("REST request to get Candidate : {}", id);
 		Candidate candidate = candidateService.getCandidateByLoginId(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(convertCandidateToCandidateDTO(candidate)));
+	}
+
+	private CandidateDTO convertCandidateToCandidateDTO(Candidate candidate) {
+
+		CandidateDTO candidateDTO = new CandidateDTO();
+		candidateDTO.setId(candidate.getId());
+		candidateDTO.setFirstName(candidate.getFirstName());
+		candidateDTO.setLastName(candidate.getLastName());
+		candidateDTO.setLogin(candidate.getLogin());
+		return candidateDTO;
 	}
 
 	/**
@@ -177,20 +239,24 @@ public class CandidateResource {
 		log.debug("REST request to search Candidates for query {}", query);
 		return candidateService.searchCandidates(query);
 	}
-	
-	@GetMapping("/candidatePublicProfile/{id}")
+
+	@GetMapping("/candidates/candidatePublicProfile/{candidateId}/{jobId}/{corporateId}")
 	@Timed
-	public ResponseEntity<Candidate>getCandidatePubliProfile(@PathVariable Long id) {
+	public ResponseEntity<CandidatePublicProfileDTO> getCandidatePubliProfile(@PathVariable Long candidateId,
+			@PathVariable Long jobId, @PathVariable Long corporateId) {
 		log.debug("REquest to get Candidate Public Profile non ElasticSearch");
-		Candidate candidate = candidateService.getCandidatePublicProfile(id);
-		trimCandidateAddressData(candidate.getAddresses());
-		trimCandidateEducationData(candidate.getEducations());
-		trimCandidateEmploymentData(candidate.getEmployments());
-		trimCandidateCertifications(candidate.getCertifications());
-		trimCandidateLanguageProficienies(candidate.getCandidateLanguageProficiencies());
-		trimCandidateNonAcademics(candidate.getNonAcademics());
+		CandidatePublicProfileDTO candidate = candidateService.getCandidatePublicProfile(candidateId, jobId,
+				corporateId);
+		/*
+		 * trimCandidateAddressData(candidate.getAddresses());
+		 * trimCandidateEducationData(candidate.getEducations());
+		 * trimCandidateEmploymentData(candidate.getEmployments());
+		 * trimCandidateCertifications(candidate.getCertifications());
+		 * trimCandidateLanguageProficienies(candidate.getCandidateLanguageProficiencies
+		 * ()); trimCandidateNonAcademics(candidate.getNonAcademics());
+		 */
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
-		
+
 	}
 
 	/**
@@ -203,53 +269,40 @@ public class CandidateResource {
 	 */
 	@GetMapping("/candidates/public-profile")
 	@Timed
+	@Deprecated
 	public ResponseEntity<Candidate> retrieveCandidatePublicProfile(@RequestParam String query) {
 		log.debug("REST request to get Candidate public profile for query {}", query);
 		Candidate candidate = candidateService.retrieveCandidatePublicProfile(query);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
 
 	}
-	
-	private void trimCandidateCertifications(Set<CandidateCertification> certifications) {
-		certifications.forEach(certification -> {
-			certification.setCandidate(null);
-		});
-	}
 
-	private void trimCandidateNonAcademics(Set<CandidateNonAcademicWork> nonAcademicWorks) {
-		nonAcademicWorks.forEach(nonAcademicWork -> {
-			nonAcademicWork.setCandidate(null);
-		});
-	}
-
-	private void trimCandidateLanguageProficienies(Set<CandidateLanguageProficiency> languageProficiencies) {
-		languageProficiencies.forEach(languageProficiency -> {
-			languageProficiency.setCandidate(null);
-		});
-	}
-
-	private void trimCandidateEmploymentData(Set<CandidateEmployment> candidateEmployments) {
-		candidateEmployments.forEach(candidateEmployment -> {
-			candidateEmployment.setCandidate(null);
-			if (candidateEmployment.getProjects() != null) {
-				candidateEmployment.getProjects().forEach(candidateProject -> {
-					candidateProject.setEmployment(null);
-				});
-			}
-		});
-	}
-
-	private void trimCandidateEducationData(Set<CandidateEducation> candidateEducations) {
-		candidateEducations.forEach(candidateEducation -> {
-			candidateEducation.setCandidate(null);
-			if (candidateEducation.getProjects() != null) {
-				candidateEducation.getProjects().forEach(candidateProject -> {
-					candidateProject.setEducation(null);
-				});
-			}
-		});
-	}
-
+	/*
+	 * private void trimCandidateCertifications(Set<CandidateCertification>
+	 * certifications) { certifications.forEach(certification -> {
+	 * certification.setCandidate(null); }); }
+	 * 
+	 * private void trimCandidateNonAcademics(Set<CandidateNonAcademicWork>
+	 * nonAcademicWorks) { nonAcademicWorks.forEach(nonAcademicWork -> {
+	 * nonAcademicWork.setCandidate(null); }); }
+	 * 
+	 * private void
+	 * trimCandidateLanguageProficienies(Set<CandidateLanguageProficiency>
+	 * languageProficiencies) { languageProficiencies.forEach(languageProficiency ->
+	 * { languageProficiency.setCandidate(null); }); }
+	 * 
+	 * private void trimCandidateEmploymentData(Set<CandidateEmployment>
+	 * candidateEmployments) { candidateEmployments.forEach(candidateEmployment -> {
+	 * candidateEmployment.setCandidate(null); if (candidateEmployment.getProjects()
+	 * != null) { candidateEmployment.getProjects().forEach(candidateProject -> {
+	 * candidateProject.setEmployment(null); }); } }); }
+	 * 
+	 * private void trimCandidateEducationData(Set<CandidateEducation>
+	 * candidateEducations) { candidateEducations.forEach(candidateEducation -> {
+	 * candidateEducation.setCandidate(null); if (candidateEducation.getProjects()
+	 * != null) { candidateEducation.getProjects().forEach(candidateProject -> {
+	 * candidateProject.setEducation(null); }); } }); }
+	 */
 	private void trimCandidateAddressData(Set<Address> addresses) {
 
 		if (addresses != null) {

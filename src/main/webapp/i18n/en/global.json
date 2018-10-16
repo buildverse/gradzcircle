@@ -88,6 +88,7 @@
                 "dashboard" : "Dashboard",
                 "profile" : "Profile",
                 "jobs" :  "Jobs",
+                "linkedCandidates": "My Candidates",
                 "job": {
                      "post" : "Post a Job",
                      "allJobs" : "All Jobs"

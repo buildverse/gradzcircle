@@ -112,4 +112,19 @@
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    <changeSet id="20171015094651-2" author="abhinav">
+	     <createTable tableName="corporate_candidate">
+			<column name="corporate_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="candidate_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="job_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+         <addPrimaryKey columnNames="corporate_id, candidate_id, job_id" tableName="corporate_candidate"/>
+    </changeSet>
 </databaseChangeLog>

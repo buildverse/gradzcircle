@@ -26,80 +26,82 @@ import org.slf4j.LoggerFactory;
 
 public class FileUploadResource {
 
-    private final Logger log = LoggerFactory.getLogger(FileUploadResource.class);
+	private final Logger log = LoggerFactory.getLogger(FileUploadResource.class);
 
-    private final StorageService storageService;
+	private final StorageService storageService;
 
-    private final FileServiceS3 fileServiceS3;
+	private final FileServiceS3 fileServiceS3;
 
-    @Transient
-    private File file;
+	@Transient
+	private File file;
 
-    @Autowired
-    public FileUploadResource(StorageService storageService, FileServiceS3 fileServiceS3) {
-        this.fileServiceS3 = fileServiceS3;
-        this.storageService = storageService;
-    }
+	@Autowired
+	public FileUploadResource(StorageService storageService, FileServiceS3 fileServiceS3) {
+		this.fileServiceS3 = fileServiceS3;
+		this.storageService = storageService;
+	}
 
-    @GetMapping("/fileList/{bucket}")
-    @Timed
-    public List listObjects(@PathVariable String bucket) {
-        return fileServiceS3.listObjects(bucket);
+	@GetMapping("/fileList/{bucket}")
+	@Timed
+	public List listObjects(@PathVariable String bucket) {
+		return fileServiceS3.listObjects(bucket);
 
-    }
+	}
 
-    @GetMapping("/files/{id}")
-    @ResponseBody
-    @Timed
-    public ResponseEntity<List<Link>> serveFile(@PathVariable String id) {
-        Resource resource = null;
-        try {
-            resource = fileServiceS3.getObject("gradzcircle-assets", id);
-            log.debug("Resource is {}", resource);
-        } catch (Exception e) {
-            log.error("There was an error getting image {}", e);
-        }
-        if (resource != null)
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.hasLinks() + "\"")
-                    .body(resource.getLinks());
-        else
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "File not Found").body(null);
+	@GetMapping("/files/{id}")
+	@ResponseBody
+	@Timed
+	public ResponseEntity<List<Link>> serveFile(@PathVariable String id) {
+		Resource resource = null;
+		try {
+			resource = fileServiceS3.getObject("gradzcircle-assets", id);
+			log.debug("Resource is {}", resource);
+		} catch (Exception e) {
+			log.error("There was an error getting image {}", e);
+		}
+		if (resource != null)
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.hasLinks() + "\"")
+					.body(resource.getLinks());
+		else
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "File not Found").body(null);
 
-    }
+	}
 
-    @PostMapping("/upload/{id}")
-    @ResponseBody
-    @Timed
-    public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @PathVariable Long id) {
-        log.info("User id passesd is {} ", id);
-        // storageService.store(file, id);
-        try {
-            fileServiceS3.uploadObject("gradzcircle-assets", id.toString(), multiPartFile);
-        } catch (Exception e) {
-            log.error("Error while uploading file { }", e);
-            return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("Problem uploading image ", id.toString())).build();
-        }
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert("Uploaded Image for ", id.toString())).build();
-    }
+	@PostMapping("/upload/{id}")
+	@ResponseBody
+	@Timed
+	public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @PathVariable Long id) {
+		log.info("User id passesd is {} ", id);
+		// storageService.store(file, id);
+		try {
+			fileServiceS3.uploadObject("gradzcircle-assets", id.toString(), multiPartFile);
+		} catch (Exception e) {
+			log.error("Error while uploading file { }", e);
+			return ResponseEntity.badRequest()
+					.headers(HeaderUtil.createAlert("Problem uploading image ", id.toString())).build();
+		}
+		return ResponseEntity.ok().headers(HeaderUtil.createAlert("Uploaded Image for ", id.toString())).build();
+	}
 
-    @DeleteMapping("/remove/{id}")
-    @Timed
-    public ResponseEntity removeImage(@PathVariable Long id) {
-        log.info("User id passesd for removing image is {} ", id);
-        //storageService.delete(id);
-        try {
-            fileServiceS3.deleteObject("gradzcircle-assets", id.toString());
-        } catch (Exception e) {
-            log.error("Error while removing file { }", e);
-            return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("Problem Deleting image ", id.toString())).build();
-        }
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert("Removed Image for ", id.toString())).build();
-    }
+	@DeleteMapping("/remove/{id}")
+	@Timed
+	public ResponseEntity removeImage(@PathVariable Long id) {
+		log.info("User id passesd for removing image is {} ", id);
+		// storageService.delete(id);
+		try {
+			fileServiceS3.deleteObject("gradzcircle-assets", id.toString());
+		} catch (Exception e) {
+			log.error("Error while removing file { }", e);
+			return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("Problem Deleting image ", id.toString()))
+					.build();
+		}
+		return ResponseEntity.ok().headers(HeaderUtil.createAlert("Removed Image for ", id.toString())).build();
+	}
 
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
-    }
+	@ExceptionHandler(StorageFileNotFoundException.class)
+	public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
+		return ResponseEntity.notFound().build();
+	}
 
 }

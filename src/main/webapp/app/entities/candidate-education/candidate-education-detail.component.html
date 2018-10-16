@@ -1,105 +1,169 @@
 
 <div *ngIf="candidateEducation">
-    <h2><span jhiTranslate="gradzcircleApp.candidateEducation.detail.title">Candidate Education</span> {{candidateEducation.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.grade">Grade</span></dt>
-        <dd>
-            <span>{{candidateEducation.grade}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate">Education From Date</span></dt>
-        <dd>
-            <span>{{candidateEducation.educationFromDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.educationToDate">Education To Date</span></dt>
-        <dd>
-            <span>{{candidateEducation.educationToDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.isPursuingEducation">Is Pursuing Education</span></dt>
-        <dd>
-            <span>{{candidateEducation.isPursuingEducation}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.gradeScale">Grade Scale</span></dt>
-        <dd>
-            <span>{{candidateEducation.gradeScale}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.highestQualification">Highest Qualification</span></dt>
-        <dd>
-            <span>{{candidateEducation.highestQualification}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.roundOfGrade">Round Of Grade</span></dt>
-        <dd>
-            <span>{{candidateEducation.roundOfGrade}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.gradeDecimal">Grade Decimal</span></dt>
-        <dd>
-            <span>{{candidateEducation.gradeDecimal}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse">Captured Course</span></dt>
-        <dd>
-            <span>{{candidateEducation.capturedCourse}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification">Captured Qualification</span></dt>
-        <dd>
-            <span>{{candidateEducation.capturedQualification}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege">Captured College</span></dt>
-        <dd>
-            <span>{{candidateEducation.capturedCollege}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity">Captured University</span></dt>
-        <dd>
-            <span>{{candidateEducation.capturedUniversity}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.percentage">Percentage</span></dt>
-        <dd>
-            <span>{{candidateEducation.percentage}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.scoreType">Score Type</span></dt>
-        <dd>
-            <span>{{candidateEducation.scoreType}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.educationDuration">Education Duration</span></dt>
-        <dd>
-            <span>{{candidateEducation.educationDuration}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.candidate">Candidate</span></dt>
-        <dd>
-            <div *ngIf="candidateEducation.candidate">
-                <a [routerLink]="['/candidate', candidateEducation.candidate?.id]">{{candidateEducation.candidate?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.qualification">Qualification</span></dt>
-        <dd>
-            <div *ngIf="candidateEducation.qualification">
-                <a [routerLink]="['/qualification', candidateEducation.qualification?.id]">{{candidateEducation.qualification?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.course">Course</span></dt>
-        <dd>
-            <div *ngIf="candidateEducation.course">
-                <a [routerLink]="['/course', candidateEducation.course?.id]">{{candidateEducation.course?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateEducation.college">College</span></dt>
-        <dd>
-            <div *ngIf="candidateEducation.college">
-                <a [routerLink]="['/college', candidateEducation.college?.id]">{{candidateEducation.college?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.candidateEducation.detail.title">Candidate
+			Education</span> {{candidateEducation.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.grade">Grade</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.grade}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate">Education
+				From Date</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.educationFromDate |
+				date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.educationToDate">Education
+				To Date</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.educationToDate |
+				date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.isPursuingEducation">Is
+				Pursuing Education</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.isPursuingEducation}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.gradeScale">Grade
+				Scale</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.gradeScale}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.highestQualification">Highest
+				Qualification</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.highestQualification}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.roundOfGrade">Round
+				Of Grade</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.roundOfGrade}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.gradeDecimal">Grade
+				Decimal</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.gradeDecimal}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse">Captured
+				Course</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.capturedCourse}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification">Captured
+				Qualification</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.capturedQualification}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege">Captured
+				College</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.capturedCollege}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity">Captured
+				University</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.capturedUniversity}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.percentage">Percentage</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.percentage}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.scoreType">Score
+				Type</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.scoreType}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateEducation.educationDuration">Education
+				Duration</span>
+		</dt>
+		<dd>
+			<span>{{candidateEducation.educationDuration}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.candidate">Candidate</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateEducation.candidate">
+				<a [routerLink]="['/candidate', candidateEducation.candidate?.id]">{{candidateEducation.candidate?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.qualification">Qualification</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateEducation.qualification">
+				<a
+					[routerLink]="['/qualification', candidateEducation.qualification?.id]">{{candidateEducation.qualification?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.course">Course</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateEducation.course">
+				<a [routerLink]="['/course', candidateEducation.course?.id]">{{candidateEducation.course?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.candidateEducation.college">College</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateEducation.college">
+				<a [routerLink]="['/college', candidateEducation.college?.id]">{{candidateEducation.college?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'candidate-education/'+ candidateEducation.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

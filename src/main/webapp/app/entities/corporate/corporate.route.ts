@@ -3,11 +3,29 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActiva
 
 import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { LinkedCandidatesComponent } from './corporate-linked-candidates.component';
 import { CorporateComponent } from './corporate.component';
 import { CorporateDetailComponent } from './corporate-detail.component';
 import { CorporatePopupComponent } from './corporate-dialog.component';
 import { CorporateDeletePopupComponent } from './corporate-delete-dialog.component';
+
+
+
+@Injectable()
+export class LinkedCandidatesResolvePagingParams implements Resolve<any> {
+
+    constructor(private paginationUtil: JhiPaginationUtil) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
+        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
+        return {
+            page: this.paginationUtil.parsePage(page),
+            predicate: this.paginationUtil.parsePredicate(sort),
+            ascending: this.paginationUtil.parseAscending(sort)
+      };
+    }
+}
 
 export const corporateRoute: Routes = [
     {
@@ -21,6 +39,18 @@ export const corporateRoute: Routes = [
     }, {
         path: 'corporate/:id',
         component: CorporateDetailComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.corporate.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+  {
+        path: 'linkedCandidatesForCorporate/:id',
+        component: LinkedCandidatesComponent,
+        resolve: {
+            'pagingParams': LinkedCandidatesResolvePagingParams
+        },
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.home.title'

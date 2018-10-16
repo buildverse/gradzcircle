@@ -20,24 +20,23 @@ import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
 import com.drishika.gradzcircle.service.matching.Matcher;
 
-
-
 @Service
 @Transactional
-public class CandidateLanguageService  {
+public class CandidateLanguageService {
 
 	private final Logger log = LoggerFactory.getLogger(CandidateLanguageService.class);
-	
+
 	private final Matcher<Candidate> matcher;
 
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
-	
+
 	private final CandidateRepository candidateRepository;
 
 	private final CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
 
 	public CandidateLanguageService(CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
-			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository, @Qualifier("CandidateLanguageMatcher")Matcher<Candidate> matcher,
+			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository,
+			@Qualifier("CandidateLanguageMatcher") Matcher<Candidate> matcher,
 			CandidateRepository candidateRepository) {
 		this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
 		this.candidateLanguageProficiencySearchRepository = candidateLanguageProficiencySearchRepository;
@@ -47,9 +46,10 @@ public class CandidateLanguageService  {
 
 	public CandidateLanguageProficiency createCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
-		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.saveAndFlush(candidateLanguageProficiency);
+		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository
+				.saveAndFlush(candidateLanguageProficiency);
 		Candidate candidate = candidateRepository.findOne(result.getCandidate().getId());
-		log.debug("I have these pre in candidate {}",candidate.getCandidateLanguageProficiencies());
+		log.debug("I have these pre in candidate {}", candidate.getCandidateLanguageProficiencies());
 		candidate.addCandidateLanguageProficiency(result);
 		matcher.match(candidate);
 		return result;
@@ -58,10 +58,11 @@ public class CandidateLanguageService  {
 	public CandidateLanguageProficiency updateCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
 		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency);
-		//Candidate candidate = candidateRepository.findOne(result.getCandidate().getId());
-	//	//candidate.addCandidateLanguageProficiency(result);
-		//matcher.match(candidate);
-		//log.debug("The result post update language proficicency{}", result);
+		// Candidate candidate =
+		// candidateRepository.findOne(result.getCandidate().getId());
+		// //candidate.addCandidateLanguageProficiency(result);
+		// matcher.match(candidate);
+		// log.debug("The result post update language proficicency{}", result);
 		return result;
 
 	}
@@ -84,15 +85,15 @@ public class CandidateLanguageService  {
 				.findCandidateLanguageProficienciesByCandidateId(id);
 		return candidateLanguageProficiencies;
 	}
-	
+
 	public Stream<CandidateLanguageProficiency> getAllLanguageProfienciesForActiveCandidates() {
 		return candidateLanguageProficiencyRepository.findCandidateLanguageProficienciesForActiveCandidates();
 	}
 
 	public void deleteCandidateLanguageProficiency(Long id) {
-		log.debug("REST request to delete CandidateLanguageProficiency : {}", id);	
-		CandidateLanguageProficiency candidateLanguageProficiency =  candidateLanguageProficiencyRepository.findOne(id);
-		Candidate candidate = candidateLanguageProficiency.getCandidate();	
+		log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
+		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(id);
+		Candidate candidate = candidateLanguageProficiency.getCandidate();
 		candidate.removeCandidateLanguageProficiency(candidateLanguageProficiency);
 		matcher.match(candidate);
 	}
@@ -106,5 +107,4 @@ public class CandidateLanguageService  {
 		return candidateLanguageProficiencies;
 	}
 
-	
 }

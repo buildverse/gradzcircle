@@ -29,118 +29,133 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RequestMapping("/api")
 public class CaptureQualificationResource {
 
-    private final Logger log = LoggerFactory.getLogger(CaptureQualificationResource.class);
+	private final Logger log = LoggerFactory.getLogger(CaptureQualificationResource.class);
 
-    private static final String ENTITY_NAME = "captureQualification";
+	private static final String ENTITY_NAME = "captureQualification";
 
-    private final CaptureQualificationRepository captureQualificationRepository;
+	private final CaptureQualificationRepository captureQualificationRepository;
 
-    private final CaptureQualificationSearchRepository captureQualificationSearchRepository;
+	private final CaptureQualificationSearchRepository captureQualificationSearchRepository;
 
-    public CaptureQualificationResource(CaptureQualificationRepository captureQualificationRepository, CaptureQualificationSearchRepository captureQualificationSearchRepository) {
-        this.captureQualificationRepository = captureQualificationRepository;
-        this.captureQualificationSearchRepository = captureQualificationSearchRepository;
-    }
+	public CaptureQualificationResource(CaptureQualificationRepository captureQualificationRepository,
+			CaptureQualificationSearchRepository captureQualificationSearchRepository) {
+		this.captureQualificationRepository = captureQualificationRepository;
+		this.captureQualificationSearchRepository = captureQualificationSearchRepository;
+	}
 
-    /**
-     * POST  /capture-qualifications : Create a new captureQualification.
-     *
-     * @param captureQualification the captureQualification to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new captureQualification, or with status 400 (Bad Request) if the captureQualification has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/capture-qualifications")
-    @Timed
-    public ResponseEntity<CaptureQualification> createCaptureQualification(@RequestBody CaptureQualification captureQualification) throws URISyntaxException {
-        log.debug("REST request to save CaptureQualification : {}", captureQualification);
-        if (captureQualification.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new captureQualification cannot already have an ID")).body(null);
-        }
-        CaptureQualification result = captureQualificationRepository.save(captureQualification);
-        captureQualificationSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/capture-qualifications/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * POST /capture-qualifications : Create a new captureQualification.
+	 *
+	 * @param captureQualification
+	 *            the captureQualification to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the new
+	 *         captureQualification, or with status 400 (Bad Request) if the
+	 *         captureQualification has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/capture-qualifications")
+	@Timed
+	public ResponseEntity<CaptureQualification> createCaptureQualification(
+			@RequestBody CaptureQualification captureQualification) throws URISyntaxException {
+		log.debug("REST request to save CaptureQualification : {}", captureQualification);
+		if (captureQualification.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
+					"A new captureQualification cannot already have an ID")).body(null);
+		}
+		CaptureQualification result = captureQualificationRepository.save(captureQualification);
+		captureQualificationSearchRepository.save(result);
+		return ResponseEntity.created(new URI("/api/capture-qualifications/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
 
-    /**
-     * PUT  /capture-qualifications : Updates an existing captureQualification.
-     *
-     * @param captureQualification the captureQualification to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated captureQualification,
-     * or with status 400 (Bad Request) if the captureQualification is not valid,
-     * or with status 500 (Internal Server Error) if the captureQualification couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/capture-qualifications")
-    @Timed
-    public ResponseEntity<CaptureQualification> updateCaptureQualification(@RequestBody CaptureQualification captureQualification) throws URISyntaxException {
-        log.debug("REST request to update CaptureQualification : {}", captureQualification);
-        if (captureQualification.getId() == null) {
-            return createCaptureQualification(captureQualification);
-        }
-        CaptureQualification result = captureQualificationRepository.save(captureQualification);
-        captureQualificationSearchRepository.save(result);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, captureQualification.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * PUT /capture-qualifications : Updates an existing captureQualification.
+	 *
+	 * @param captureQualification
+	 *            the captureQualification to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         captureQualification, or with status 400 (Bad Request) if the
+	 *         captureQualification is not valid, or with status 500 (Internal
+	 *         Server Error) if the captureQualification couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/capture-qualifications")
+	@Timed
+	public ResponseEntity<CaptureQualification> updateCaptureQualification(
+			@RequestBody CaptureQualification captureQualification) throws URISyntaxException {
+		log.debug("REST request to update CaptureQualification : {}", captureQualification);
+		if (captureQualification.getId() == null) {
+			return createCaptureQualification(captureQualification);
+		}
+		CaptureQualification result = captureQualificationRepository.save(captureQualification);
+		captureQualificationSearchRepository.save(result);
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, captureQualification.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * GET  /capture-qualifications : get all the captureQualifications.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of captureQualifications in body
-     */
-    @GetMapping("/capture-qualifications")
-    @Timed
-    public List<CaptureQualification> getAllCaptureQualifications() {
-        log.debug("REST request to get all CaptureQualifications");
-        return captureQualificationRepository.findAll();
-        }
+	/**
+	 * GET /capture-qualifications : get all the captureQualifications.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of
+	 *         captureQualifications in body
+	 */
+	@GetMapping("/capture-qualifications")
+	@Timed
+	public List<CaptureQualification> getAllCaptureQualifications() {
+		log.debug("REST request to get all CaptureQualifications");
+		return captureQualificationRepository.findAll();
+	}
 
-    /**
-     * GET  /capture-qualifications/:id : get the "id" captureQualification.
-     *
-     * @param id the id of the captureQualification to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the captureQualification, or with status 404 (Not Found)
-     */
-    @GetMapping("/capture-qualifications/{id}")
-    @Timed
-    public ResponseEntity<CaptureQualification> getCaptureQualification(@PathVariable Long id) {
-        log.debug("REST request to get CaptureQualification : {}", id);
-        CaptureQualification captureQualification = captureQualificationRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(captureQualification));
-    }
+	/**
+	 * GET /capture-qualifications/:id : get the "id" captureQualification.
+	 *
+	 * @param id
+	 *            the id of the captureQualification to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         captureQualification, or with status 404 (Not Found)
+	 */
+	@GetMapping("/capture-qualifications/{id}")
+	@Timed
+	public ResponseEntity<CaptureQualification> getCaptureQualification(@PathVariable Long id) {
+		log.debug("REST request to get CaptureQualification : {}", id);
+		CaptureQualification captureQualification = captureQualificationRepository.findOne(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(captureQualification));
+	}
 
-    /**
-     * DELETE  /capture-qualifications/:id : delete the "id" captureQualification.
-     *
-     * @param id the id of the captureQualification to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/capture-qualifications/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteCaptureQualification(@PathVariable Long id) {
-        log.debug("REST request to delete CaptureQualification : {}", id);
-        captureQualificationRepository.delete(id);
-        captureQualificationSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+	/**
+	 * DELETE /capture-qualifications/:id : delete the "id" captureQualification.
+	 *
+	 * @param id
+	 *            the id of the captureQualification to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/capture-qualifications/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteCaptureQualification(@PathVariable Long id) {
+		log.debug("REST request to delete CaptureQualification : {}", id);
+		captureQualificationRepository.delete(id);
+		captureQualificationSearchRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
 
-    /**
-     * SEARCH  /_search/capture-qualifications?query=:query : search for the captureQualification corresponding
-     * to the query.
-     *
-     * @param query the query of the captureQualification search
-     * @return the result of the search
-     */
-    @GetMapping("/_search/capture-qualifications")
-    @Timed
-    public List<CaptureQualification> searchCaptureQualifications(@RequestParam String query) {
-        log.debug("REST request to search CaptureQualifications for query {}", query);
-        return StreamSupport
-            .stream(captureQualificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
-    }
+	/**
+	 * SEARCH /_search/capture-qualifications?query=:query : search for the
+	 * captureQualification corresponding to the query.
+	 *
+	 * @param query
+	 *            the query of the captureQualification search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/capture-qualifications")
+	@Timed
+	public List<CaptureQualification> searchCaptureQualifications(@RequestParam String query) {
+		log.debug("REST request to search CaptureQualifications for query {}", query);
+		return StreamSupport
+				.stream(captureQualificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+				.collect(Collectors.toList());
+	}
 
 }

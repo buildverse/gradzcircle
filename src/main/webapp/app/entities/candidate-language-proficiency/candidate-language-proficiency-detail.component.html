@@ -1,37 +1,51 @@
 
 <div *ngIf="candidateLanguageProficiency">
-    <h2><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.detail.title">Candidate Language Proficiency</span> {{candidateLanguageProficiency.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.proficiency">Proficiency</span></dt>
-        <dd>
-            <span>{{candidateLanguageProficiency.proficiency}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate">Candidate</span></dt>
-        <dd>
-            <div *ngIf="candidateLanguageProficiency.candidate">
-                <a [routerLink]="['/candidate', candidateLanguageProficiency.candidate?.id]">{{candidateLanguageProficiency.candidate?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span></dt>
-        <dd>
-            <div *ngIf="candidateLanguageProficiency.language">
-                <a [routerLink]="['/language', candidateLanguageProficiency.language?.id]">{{candidateLanguageProficiency.language?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span
+			jhiTranslate="gradzcircleApp.candidateLanguageProficiency.detail.title">Candidate
+			Language Proficiency</span> {{candidateLanguageProficiency.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateLanguageProficiency.proficiency">Proficiency</span>
+		</dt>
+		<dd>
+			<span>{{candidateLanguageProficiency.proficiency}}</span>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateLanguageProficiency.candidate">Candidate</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateLanguageProficiency.candidate">
+				<a
+					[routerLink]="['/candidate', candidateLanguageProficiency.candidate?.id]">{{candidateLanguageProficiency.candidate?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span
+				jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span>
+		</dt>
+		<dd>
+			<div *ngIf="candidateLanguageProficiency.language">
+				<a
+					[routerLink]="['/language', candidateLanguageProficiency.language?.id]">{{candidateLanguageProficiency.language?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

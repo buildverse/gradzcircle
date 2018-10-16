@@ -8,19 +8,18 @@ import java.util.stream.Stream;
 
 public interface StorageService {
 
-    void init();
+	void init();
 
-    void store(MultipartFile file,Long id);
+	void store(MultipartFile file, Long id);
 
-    Stream<Path> loadAll();
+	Stream<Path> loadAll();
 
-    Path load(String filename);
+	Path load(String filename);
 
-    Resource loadAsResource(String filename) throws StorageFileNotFoundException;
+	Resource loadAsResource(String filename) throws StorageFileNotFoundException;
 
-    void deleteAll();
+	void deleteAll();
 
-    void delete(Long filname);
+	void delete(Long filname);
 
 }
-

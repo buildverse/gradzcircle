@@ -17,22 +17,22 @@ import java.time.Instant;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findOneByActivationKey(String activationKey);
+	Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
+	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
 
-    Optional<User> findOneByResetKey(String resetKey);
+	Optional<User> findOneByResetKey(String resetKey);
 
-    Optional<User> findOneByEmailIgnoreCase(String email);
+	Optional<User> findOneByEmailIgnoreCase(String email);
 
-    Optional<User> findOneByLogin(String login);
+	Optional<User> findOneByLogin(String login);
 
-    @EntityGraph(attributePaths = "authorities")
-    User findOneWithAuthoritiesById(Long id);
+	@EntityGraph(attributePaths = "authorities")
+	User findOneWithAuthoritiesById(Long id);
 
-    @EntityGraph(attributePaths = "authorities")
-    @Cacheable(cacheNames="users")
-    Optional<User> findOneWithAuthoritiesByLogin(String login);
+	@EntityGraph(attributePaths = "authorities")
+	@Cacheable(cacheNames = "users")
+	Optional<User> findOneWithAuthoritiesByLogin(String login);
 
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
+	Page<User> findAllByLoginNot(Pageable pageable, String login);
 }

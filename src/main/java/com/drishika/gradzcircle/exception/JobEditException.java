@@ -8,17 +8,17 @@ package com.drishika.gradzcircle.exception;
  *
  */
 public class JobEditException extends Exception {
-	
+
 	public JobEditException() {
 		super();
 	}
-	
+
 	public JobEditException(String message) {
 		super(message);
 	}
-	
-	public JobEditException(String message, Throwable cause){
-		super(message,cause);
+
+	public JobEditException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

@@ -10,7 +10,9 @@ import { CandidateEmployment } from '../candidate-employment/candidate-employmen
 import { CandidateLanguageProficiency } from '../candidate-language-proficiency/candidate-language-proficiency.model'
 import { JobCategory } from '../job-category/job-category.model';
 import { VisaType } from '../visa-type/visa-type.model';
-import { Job } from '../job/job.model'
+import { Job } from '../job/job.model';
+import { Corporate } from '../corporate/corporate.model';
+
 
 export class Candidate implements BaseEntity {
     constructor(
@@ -29,6 +31,9 @@ export class Candidate implements BaseEntity {
         public availableForHiring?: boolean,
         public openToRelocate?: boolean,
         public matchEligible?: boolean,
+        public qualificationWithHighestCourse?: string,
+        //public job?: Job,
+        //public corporate?: Corporate,
         public login?: User,
         public gender?: Gender,
         public maritalStatus?: MaritalStatus,

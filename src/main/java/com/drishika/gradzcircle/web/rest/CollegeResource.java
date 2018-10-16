@@ -38,168 +38,185 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RequestMapping("/api")
 public class CollegeResource {
 
-    private final Logger log = LoggerFactory.getLogger(CollegeResource.class);
+	private final Logger log = LoggerFactory.getLogger(CollegeResource.class);
 
-    private static final String ENTITY_NAME = "college";
+	private static final String ENTITY_NAME = "college";
 
-    private final CollegeRepository collegeRepository;
+	private final CollegeRepository collegeRepository;
 
-    private final CollegeSearchRepository collegeSearchRepository;
+	private final CollegeSearchRepository collegeSearchRepository;
 
-    private final ElasticsearchTemplate elasticsearchTemplate;
+	private final ElasticsearchTemplate elasticsearchTemplate;
 
-    public CollegeResource(CollegeRepository collegeRepository, CollegeSearchRepository collegeSearchRepository,
-            ElasticsearchTemplate elasticsearchTemplate) {
-        this.collegeRepository = collegeRepository;
-        this.collegeSearchRepository = collegeSearchRepository;
-        this.elasticsearchTemplate = elasticsearchTemplate;
-    }
+	public CollegeResource(CollegeRepository collegeRepository, CollegeSearchRepository collegeSearchRepository,
+			ElasticsearchTemplate elasticsearchTemplate) {
+		this.collegeRepository = collegeRepository;
+		this.collegeSearchRepository = collegeSearchRepository;
+		this.elasticsearchTemplate = elasticsearchTemplate;
+	}
 
-    /**
-     * POST  /colleges : Create a new college.
-     *
-     * @param college the college to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new college, or with status 400 (Bad Request) if the college has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/colleges")
-    @Timed
-    public ResponseEntity<College> createCollege(@RequestBody College college) throws URISyntaxException {
-        log.debug("REST request to save College : {}", college);
-        if (college.getId() != null) {
-            return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new college cannot already have an ID"))
-                    .body(null);
-        }
-        College result = collegeRepository.save(college);
-        // collegeSearchRepository.save(result);
+	/**
+	 * POST /colleges : Create a new college.
+	 *
+	 * @param college
+	 *            the college to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the new
+	 *         college, or with status 400 (Bad Request) if the college has already
+	 *         an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/colleges")
+	@Timed
+	public ResponseEntity<College> createCollege(@RequestBody College college) throws URISyntaxException {
+		log.debug("REST request to save College : {}", college);
+		if (college.getId() != null) {
+			return ResponseEntity.badRequest().headers(
+					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new college cannot already have an ID"))
+					.body(null);
+		}
+		College result = collegeRepository.save(college);
+		// collegeSearchRepository.save(result);
 
-        elasticsearchTemplate.index(new CollegeEntityBuilder(result.getId()).name(result.getCollegeName())
-                .suggest(new String[] { result.getCollegeName() }).buildIndex());
-        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
-        return ResponseEntity.created(new URI("/api/colleges/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
-    }
+		elasticsearchTemplate.index(new CollegeEntityBuilder(result.getId()).name(result.getCollegeName())
+				.suggest(new String[] { result.getCollegeName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+		return ResponseEntity.created(new URI("/api/colleges/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
 
-    /**
-     * PUT  /colleges : Updates an existing college.
-     * @param college the college to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated college,
-     * or with status 400 (Bad Request) if the college is not valid,
-     * or with status 500 (Internal Server Error) if the college couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
+	/**
+	 * PUT /colleges : Updates an existing college.
+	 * 
+	 * @param college
+	 *            the college to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         college, or with status 400 (Bad Request) if the college is not
+	 *         valid, or with status 500 (Internal Server Error) if the college
+	 *         couldn't be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
 
-    @PutMapping("/colleges")
-    @Timed
-    public ResponseEntity<College> updateCollege(@RequestBody College college) throws URISyntaxException {
-        log.debug("REST request to update College : {}", college);
-        if (college.getId() == null) {
-            return createCollege(college);
-        }
-        College result = collegeRepository.save(college);
-        com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
-        try {
+	@PutMapping("/colleges")
+	@Timed
+	public ResponseEntity<College> updateCollege(@RequestBody College college) throws URISyntaxException {
+		log.debug("REST request to update College : {}", college);
+		if (college.getId() == null) {
+			return createCollege(college);
+		}
+		College result = collegeRepository.save(college);
+		com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
+		try {
 			BeanUtils.copyProperties(collegeElasticInstance, result);
 		} catch (IllegalAccessException e) {
-            log.error("Error copying bean for college elastic instance", e);
-            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
+			log.error("Error copying bean for college elastic instance", e);
+			throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
 		} catch (InvocationTargetException e) {
-            log.error("Error copying bean for college elastic instance", e);
-            throw new URISyntaxException(e.getMessage(),e.getLocalizedMessage());
-			
-        }
-        elasticsearchTemplate.index(new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
-            .suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
-        elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, college.getId().toString()))
-                .body(result);
-    }
+			log.error("Error copying bean for college elastic instance", e);
+			throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
 
-    /**
-     * GET  /colleges : get all the colleges.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of colleges in body
-     */
-    @GetMapping("/colleges")
-    @Timed
-    public List<College> getAllColleges() {
-        log.debug("REST request to get all Colleges");
-        return collegeRepository.findAll();
-    }
+		}
+		elasticsearchTemplate.index(
+				new CollegeEntityBuilder(collegeElasticInstance.getId()).name(collegeElasticInstance.getCollegeName())
+						.suggest(new String[] { collegeElasticInstance.getCollegeName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, college.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * GET  /colleges/:id : get the "id" college.
-     *
-     * @param id the id of the college to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the college, or with status 404 (Not Found)
-     */
-    @GetMapping("/colleges/{id}")
-    @Timed
-    public ResponseEntity<College> getCollege(@PathVariable Long id) {
-        log.debug("REST request to get College : {}", id);
-        College college = collegeRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(college));
-    }
+	/**
+	 * GET /colleges : get all the colleges.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of colleges in
+	 *         body
+	 */
+	@GetMapping("/colleges")
+	@Timed
+	public List<College> getAllColleges() {
+		log.debug("REST request to get all Colleges");
+		return collegeRepository.findAll();
+	}
 
-    /**
-     * DELETE  /colleges/:id : delete the "id" college.
-     *
-     * @param id the id of the college to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/colleges/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteCollege(@PathVariable Long id) {
-        log.debug("REST request to delete College : {}", id);
-        collegeRepository.delete(id);
-        collegeSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+	/**
+	 * GET /colleges/:id : get the "id" college.
+	 *
+	 * @param id
+	 *            the id of the college to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the college, or
+	 *         with status 404 (Not Found)
+	 */
+	@GetMapping("/colleges/{id}")
+	@Timed
+	public ResponseEntity<College> getCollege(@PathVariable Long id) {
+		log.debug("REST request to get College : {}", id);
+		College college = collegeRepository.findOne(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(college));
+	}
 
-    /**
-     * SEARCH  /_search/colleges?query=:query : search for the college corresponding
-     * to the query.
-     *
-     * @param query the query of the college search
-     * @return the result of the search
-     */
-    @GetMapping("/_search/collegesBySuggest")
-    @Timed
-    public String searchCollegesBySuggest(@RequestParam String query) {
-        log.debug("REST request to search Colleges for query {}", query);
-        String suggest=null;
-        CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("college-suggest").text(query).field("suggest");
-        SuggestResponse  suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder, com.drishika.gradzcircle.domain.elastic.College.class);
-        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("college-suggest");
-        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
-        List <GenericElasticSuggest> colleges = new ArrayList<GenericElasticSuggest>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        options.forEach(option->{
-            colleges.add(new GenericElasticSuggest(option.getText().string(),option.getText().string()));
-            //colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
-        });
-        try {
+	/**
+	 * DELETE /colleges/:id : delete the "id" college.
+	 *
+	 * @param id
+	 *            the id of the college to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/colleges/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteCollege(@PathVariable Long id) {
+		log.debug("REST request to delete College : {}", id);
+		collegeRepository.delete(id);
+		collegeSearchRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
+
+	/**
+	 * SEARCH /_search/colleges?query=:query : search for the college corresponding
+	 * to the query.
+	 *
+	 * @param query
+	 *            the query of the college search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/collegesBySuggest")
+	@Timed
+	public String searchCollegesBySuggest(@RequestParam String query) {
+		log.debug("REST request to search Colleges for query {}", query);
+		String suggest = null;
+		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+				.completionSuggestion("college-suggest").text(query).field("suggest");
+		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
+				com.drishika.gradzcircle.domain.elastic.College.class);
+		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("college-suggest");
+		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+		List<GenericElasticSuggest> colleges = new ArrayList<GenericElasticSuggest>();
+		ObjectMapper objectMapper = new ObjectMapper();
+		options.forEach(option -> {
+			colleges.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
+			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+		});
+		try {
 			suggest = objectMapper.writeValueAsString(colleges);
 		} catch (JsonProcessingException e) {
-			log.error("Error parsing object to JSON {},{}",e.getMessage(),e);
+			log.error("Error parsing object to JSON {},{}", e.getMessage(), e);
 		}
-       return suggest;
-    }
+		return suggest;
+	}
 
-     /**
-     * SEARCH  /_search/colleges?query=:query : search for the college corresponding
-     * to the query.
-     *
-     * @param query the query of the college search
-     * @return the result of the search
-     */
-    @GetMapping("/_search/colleges")
-    @Timed
-    public List<com.drishika.gradzcircle.domain.elastic.College> searchColleges(@RequestParam String query) {
-        log.debug("REST request to search Colleges for query {}", query);
-        return StreamSupport.stream(collegeSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toList());
-    }
+	/**
+	 * SEARCH /_search/colleges?query=:query : search for the college corresponding
+	 * to the query.
+	 *
+	 * @param query
+	 *            the query of the college search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/colleges")
+	@Timed
+	public List<com.drishika.gradzcircle.domain.elastic.College> searchColleges(@RequestParam String query) {
+		log.debug("REST request to search Colleges for query {}", query);
+		return StreamSupport.stream(collegeSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+				.collect(Collectors.toList());
+	}
 
 }

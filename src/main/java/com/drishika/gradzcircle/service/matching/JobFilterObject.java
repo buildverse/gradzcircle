@@ -3,7 +3,6 @@
  */
 package com.drishika.gradzcircle.service.matching;
 
-
 import java.util.List;
 
 import com.drishika.gradzcircle.domain.College;
@@ -18,9 +17,9 @@ import com.drishika.gradzcircle.domain.University;
  *
  */
 public class JobFilterObject {
-	
+
 	private List<Language> languages;
-	private List <College> colleges;
+	private List<College> colleges;
 	private List<University> universities;
 	private List<Qualification> qualifications;
 	private List<Course> courses;
@@ -35,207 +34,253 @@ public class JobFilterObject {
 	private String graduationDateType;
 	private Double gpa;
 	private Double percentage;
-	
+
 	/**
 	 * @return the basic
 	 */
 	public Boolean getBasic() {
 		return basic;
 	}
+
 	/**
-	 * @param basic the basic to set
+	 * @param basic
+	 *            the basic to set
 	 */
 	public void setBasic(Boolean basic) {
 		this.basic = basic;
 	}
+
 	/**
 	 * @return the premium
 	 */
 	public Boolean getPremium() {
 		return premium;
 	}
+
 	/**
-	 * @param premium the premium to set
+	 * @param premium
+	 *            the premium to set
 	 */
 	public void setPremium(Boolean premium) {
 		this.premium = premium;
 	}
+
 	/**
 	 * @return the addOn
 	 */
 	public Boolean getAddOn() {
 		return addOn;
 	}
+
 	/**
-	 * @param addOn the addOn to set
+	 * @param addOn
+	 *            the addOn to set
 	 */
 	public void setAddOn(Boolean addOn) {
 		this.addOn = addOn;
 	}
+
 	/**
 	 * @return the scoreType
 	 */
 	public String getScoreType() {
 		return scoreType;
 	}
+
 	/**
-	 * @param scoreType the scoreType to set
+	 * @param scoreType
+	 *            the scoreType to set
 	 */
 	public void setScoreType(String scoreType) {
 		this.scoreType = scoreType;
 	}
+
 	/**
 	 * @return the graduationDateType
 	 */
 	public String getGraduationDateType() {
 		return graduationDateType;
 	}
+
 	/**
-	 * @param graduationDateType the graduationDateType to set
+	 * @param graduationDateType
+	 *            the graduationDateType to set
 	 */
 	public void setGraduationDateType(String graduationDateType) {
 		this.graduationDateType = graduationDateType;
 	}
+
 	/**
 	 * @return the languages
 	 */
 	public List<Language> getLanguages() {
 		return languages;
 	}
+
 	/**
-	 * @param languages the languages to set
+	 * @param languages
+	 *            the languages to set
 	 */
 	public void setLanguages(List<Language> languages) {
 		this.languages = languages;
 	}
+
 	/**
 	 * @return the colleges
 	 */
 	public List<College> getColleges() {
 		return colleges;
 	}
+
 	/**
-	 * @param colleges the colleges to set
+	 * @param colleges
+	 *            the colleges to set
 	 */
 	public void setColleges(List<College> colleges) {
 		this.colleges = colleges;
 	}
+
 	/**
 	 * @return the universities
 	 */
 	public List<University> getUniversities() {
 		return universities;
 	}
+
 	/**
-	 * @param universities the universities to set
+	 * @param universities
+	 *            the universities to set
 	 */
 	public void setUniversities(List<University> universities) {
 		this.universities = universities;
 	}
+
 	/**
 	 * @return the qualifications
 	 */
 	public List<Qualification> getQualifications() {
 		return qualifications;
 	}
+
 	/**
-	 * @param qualifications the qualifications to set
+	 * @param qualifications
+	 *            the qualifications to set
 	 */
 	public void setQualifications(List<Qualification> qualifications) {
 		this.qualifications = qualifications;
 	}
+
 	/**
 	 * @return the gender
 	 */
 	public Gender getGender() {
 		return gender;
 	}
+
 	/**
-	 * @param gender the gender to set
+	 * @param gender
+	 *            the gender to set
 	 */
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
+
 	/**
-	
-	/**
+	 * 
+	 * /**
+	 * 
 	 * @return the graduationFromDate
 	 */
 	public GraduationDate getGraduationFromDate() {
 		return graduationFromDate;
 	}
+
 	/**
-	 * @param graduationFromDate the graduationFromDate to set
+	 * @param graduationFromDate
+	 *            the graduationFromDate to set
 	 */
 	public void setGraduationFromDate(GraduationDate graduationFromDate) {
 		this.graduationFromDate = graduationFromDate;
 	}
+
 	/**
 	 * @return the graduationToDate
 	 */
 	public GraduationDate getGraduationToDate() {
 		return graduationToDate;
 	}
+
 	/**
-	 * @param graduationToDate the graduationToDate to set
+	 * @param graduationToDate
+	 *            the graduationToDate to set
 	 */
 	public void setGraduationToDate(GraduationDate graduationToDate) {
 		this.graduationToDate = graduationToDate;
 	}
-	
-	
+
 	/**
 	 * @return the graduationDate
 	 */
 	public GraduationDate getGraduationDate() {
 		return graduationDate;
 	}
+
 	/**
-	 * @param graduationDate the graduationDate to set
+	 * @param graduationDate
+	 *            the graduationDate to set
 	 */
 	public void setGraduationDate(GraduationDate graduationDate) {
 		this.graduationDate = graduationDate;
 	}
+
 	/**
 	 * @return the courses
 	 */
 	public List<Course> getCourses() {
 		return courses;
 	}
+
 	/**
-	 * @param courses the courses to set
+	 * @param courses
+	 *            the courses to set
 	 */
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
 	}
-	
-	
-	
+
 	/**
 	 * @return the gpa
 	 */
 	public Double getGpa() {
 		return gpa;
 	}
+
 	/**
-	 * @param gpa the gpa to set
+	 * @param gpa
+	 *            the gpa to set
 	 */
 	public void setGpa(Double gpa) {
 		this.gpa = gpa;
 	}
+
 	/**
 	 * @return the percent
 	 */
 	public Double getPercentage() {
 		return percentage;
 	}
+
 	/**
-	 * @param percent the percent to set
+	 * @param percent
+	 *            the percent to set
 	 */
 	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -260,7 +305,10 @@ public class JobFilterObject {
 		result = prime * result + ((universities == null) ? 0 : universities.hashCode());
 		return result;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -354,20 +402,21 @@ public class JobFilterObject {
 			return false;
 		return true;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "JobFilterObject [languages=" + languages + ", colleges=" + colleges + ", universities=" + universities
 				+ ", qualifications=" + qualifications + ", courses=" + courses + ", gender=" + gender
-				
+
 				+ ", graduationDate=" + graduationDate + ", graduationFromDate=" + graduationFromDate
 				+ ", graduationToDate=" + graduationToDate + ", basic=" + basic + ", premium=" + premium + ", addOn="
 				+ addOn + ", scoreType=" + scoreType + ", graduationDateType=" + graduationDateType + ", gpa=" + gpa
 				+ ", percent=" + percentage + "]";
 	}
-	
-	
 
 }

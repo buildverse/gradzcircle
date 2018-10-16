@@ -1,95 +1,122 @@
 <div>
-    <h2>
-        <span jhiTranslate="gradzcircleApp.candidateProject.home.title">Candidate Projects</span>
-        <button class="btn btn-primary float-right jh-create-entity create-candidate-project" [routerLink]="['/', { outlets: { popup: ['candidate-project-new'] } }]">
-            <span class="fa fa-plus"></span>
-            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.candidateProject.home.createLabel">
-            Create new Candidate Project
-            </span>
-        </button>
-    </h2>
-    <jhi-alert></jhi-alert>
-    <div class="row">
-        <div class="col-sm-12">
-            <form name="searchForm" class="form-inline">
-                <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.candidateProject.home.search' | translate }}">
-                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
-                        <span class="fa fa-search"></span>
-                    </button>
-                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
-                        <span class="fa fa-trash-o"></span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <br/>
-    <div class="table-responsive" *ngIf="candidateProjects">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectTitle">Project Title</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Project Start Date</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">Project End Date</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectDuration">Project Duration</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution In Project</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject">Is Current Project</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.projectType">Project Type</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.education">Education</span></th>
-            <th><span jhiTranslate="gradzcircleApp.candidateProject.employment">Employment</span></th>
-            <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let candidateProject of candidateProjects ;trackBy: trackId">
-                <td><a [routerLink]="['../candidate-project', candidateProject.id ]">{{candidateProject.id}}</a></td>
-                <td>{{candidateProject.projectTitle}}</td>
-                <td>{{candidateProject.projectStartDate | date:'mediumDate'}}</td>
-                <td>{{candidateProject.projectEndDate | date:'mediumDate'}}</td>
-                <td>{{candidateProject.projectDescription}}</td>
-                <td>{{candidateProject.projectDuration}}</td>
-                <td>{{candidateProject.contributionInProject}}</td>
-                <td>{{candidateProject.isCurrentProject}}</td>
-                <td jhiTranslate="{{'gradzcircleApp.ProjectType.' + candidateProject.projectType}}">{{candidateProject.projectType}}</td>
-                <td>
-                    <div *ngIf="candidateProject.education">
-                        <a [routerLink]="['../candidate-education', candidateProject.education?.id ]" >{{candidateProject.education?.id}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="candidateProject.employment">
-                        <a [routerLink]="['../candidate-employment', candidateProject.employment?.id ]" >{{candidateProject.employment?.id}}</a>
-                    </div>
-                </td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['../candidate-project', candidateProject.id ]"
-                                class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]"
-                                replaceUrl="true"
-                                class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]"
-                                replaceUrl="true"
-                                class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.candidateProject.home.title">Candidate
+			Projects</span>
+		<button
+			class="btn btn-primary float-right jh-create-entity create-candidate-project"
+			[routerLink]="['/', { outlets: { popup: ['candidate-project-new'] } }]">
+			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
+				jhiTranslate="gradzcircleApp.candidateProject.home.createLabel">
+				Create new Candidate Project </span>
+		</button>
+	</h2>
+	<jhi-alert></jhi-alert>
+	<div class="row">
+		<div class="col-sm-12">
+			<form name="searchForm" class="form-inline">
+				<div class="input-group w-100 mt-3">
+					<input type="text" class="form-control" [(ngModel)]="currentSearch"
+						id="currentSearch" name="currentSearch"
+						placeholder="{{ 'gradzcircleApp.candidateProject.home.search' | translate }}">
+					<button class="input-group-addon btn btn-info"
+						(click)="search(currentSearch)">
+						<span class="fa fa-search"></span>
+					</button>
+					<button class="input-group-addon btn btn-danger" (click)="clear()"
+						*ngIf="currentSearch">
+						<span class="fa fa-trash-o"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<br />
+	<div class="table-responsive" *ngIf="candidateProjects">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><span jhiTranslate="global.field.id">ID</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectTitle">Project
+							Title</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Project
+							Start Date</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">Project
+							End Date</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project
+							Description</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectDuration">Project
+							Duration</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution
+							In Project</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject">Is
+							Current Project</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.projectType">Project
+							Type</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.education">Education</span></th>
+					<th><span
+						jhiTranslate="gradzcircleApp.candidateProject.employment">Employment</span></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					*ngFor="let candidateProject of candidateProjects ;trackBy: trackId">
+					<td><a
+						[routerLink]="['../candidate-project', candidateProject.id ]">{{candidateProject.id}}</a></td>
+					<td>{{candidateProject.projectTitle}}</td>
+					<td>{{candidateProject.projectStartDate | date:'mediumDate'}}</td>
+					<td>{{candidateProject.projectEndDate | date:'mediumDate'}}</td>
+					<td>{{candidateProject.projectDescription}}</td>
+					<td>{{candidateProject.projectDuration}}</td>
+					<td>{{candidateProject.contributionInProject}}</td>
+					<td>{{candidateProject.isCurrentProject}}</td>
+					<td
+						jhiTranslate="{{'gradzcircleApp.ProjectType.' + candidateProject.projectType}}">{{candidateProject.projectType}}</td>
+					<td>
+						<div *ngIf="candidateProject.education">
+							<a
+								[routerLink]="['../candidate-education', candidateProject.education?.id ]">{{candidateProject.education?.id}}</a>
+						</div>
+					</td>
+					<td>
+						<div *ngIf="candidateProject.employment">
+							<a
+								[routerLink]="['../candidate-employment', candidateProject.employment?.id ]">{{candidateProject.employment?.id}}</a>
+						</div>
+					</td>
+					<td class="text-right">
+						<div class="btn-group flex-btn-group-container">
+							<button type="submit"
+								[routerLink]="['../candidate-project', candidateProject.id ]"
+								class="btn btn-info btn-sm">
+								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
+									jhiTranslate="entity.action.view">View</span>
+							</button>
+							<button type="submit"
+								[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]"
+								replaceUrl="true" class="btn btn-primary btn-sm">
+								<span class="fa fa-pencil"></span> <span
+									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+							</button>
+							<button type="submit"
+								[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]"
+								replaceUrl="true" class="btn btn-danger btn-sm">
+								<span class="fa fa-remove"></span> <span
+									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+							</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

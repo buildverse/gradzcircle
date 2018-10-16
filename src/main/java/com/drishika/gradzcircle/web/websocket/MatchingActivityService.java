@@ -19,35 +19,35 @@ import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.service.matching.MatchEvent;
 import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
-
 /**
  * @author abhinav
  *
  */
 @Controller
 public class MatchingActivityService implements ApplicationListener<MatchEvent> {
-	 private static final Logger log = LoggerFactory.getLogger(MatchingActivityService.class);
+	private static final Logger log = LoggerFactory.getLogger(MatchingActivityService.class);
 
-	    private final SimpMessageSendingOperations messagingTemplate;
+	private final SimpMessageSendingOperations messagingTemplate;
 
-	    public MatchingActivityService(SimpMessageSendingOperations messagingTemplate) {
-	        this.messagingTemplate = messagingTemplate;
-	    }
+	public MatchingActivityService(SimpMessageSendingOperations messagingTemplate) {
+		this.messagingTemplate = messagingTemplate;
+	}
 
-	    @SubscribeMapping("/topic/matchActivity")
-	    @SendTo("/topic/match")
-	    public void sendActivity(@Payload MatchActivityDTO matchActivityDTO, StompHeaderAccessor stompHeaderAccessor, CandidateJob candidateJob) {
-	    	log.debug(">>>>>>>>>>>>>>>>Client sending data works<<<<<<<<<<<<<<<<<");
-	       return;
-	        //log.debug("Sending matched data {}", matchActivityDTO);
-	       
-	    }
+	@SubscribeMapping("/topic/matchActivity")
+	@SendTo("/topic/match")
+	public void sendActivity(@Payload MatchActivityDTO matchActivityDTO, StompHeaderAccessor stompHeaderAccessor,
+			CandidateJob candidateJob) {
+		log.debug(">>>>>>>>>>>>>>>>Client sending data works<<<<<<<<<<<<<<<<<");
+		return;
+		// log.debug("Sending matched data {}", matchActivityDTO);
 
-	    @Override
-	    public void onApplicationEvent(MatchEvent event) {
-	    	Set<MatchActivityDTO> dtos = event.getMatchingActivityDTO();
-	    	log.debug("Am rececing match event to publish data {}",dtos);
-	    	 messagingTemplate.convertAndSend("/topic/match", dtos);
-	    }
-	   
+	}
+
+	@Override
+	public void onApplicationEvent(MatchEvent event) {
+		Set<MatchActivityDTO> dtos = event.getMatchingActivityDTO();
+		log.debug("Am rececing match event to publish data {}", dtos);
+		messagingTemplate.convertAndSend("/topic/match", dtos);
+	}
+
 }

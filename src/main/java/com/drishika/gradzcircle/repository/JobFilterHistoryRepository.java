@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
 
-
 /**
  * Spring Data JPA repository for the JobFilterHistory entity.
  */
@@ -17,6 +16,7 @@ import com.drishika.gradzcircle.domain.JobFilterHistory;
 public interface JobFilterHistoryRepository extends JpaRepository<JobFilterHistory, Long> {
 
 	JobFilterHistory findByJobFilter(JobFilter jobFilter);
-	List<JobFilterHistory>  findByJobFilterOrderByIdDesc(JobFilter jobFilter);
-	
+
+	List<JobFilterHistory> findByJobFilterOrderByIdDesc(JobFilter jobFilter);
+
 }

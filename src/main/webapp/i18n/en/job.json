@@ -75,9 +75,13 @@
 			"editHeader": "Cannot Edit Job",
 			"noCandidateShortlisted": "No Candidtaes Shortlisted",
 			"noAmountPaid": "No Payment Yet",
-			"payUpfront" : "Plan - Pay Upfront",
-			"payAsYouGo" : "Plan - Pay When you Like The Candidate",
-			"paymentPlan" : "Payment Plan"
+			"payUpfront": "Plan - Pay Upfront",
+			"payAsYouGo": "Plan - Pay When you Like The Candidate",
+			"paymentPlan": "Payment Plan",
+			"noOfMatchedApplicants": "Matched Candidates",
+			"apply": "Apply",
+			"matchScore": " Match Score",
+			"noOfCandidatesApplied": "Candidates Applied"
 		}
 	}
 }

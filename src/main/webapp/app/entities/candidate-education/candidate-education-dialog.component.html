@@ -1,18 +1,23 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	#editForm="ngForm">
 
-    <div class="modal-header modal-header-decorate">
-        <h6 class="modal-title" id="myCandidateEducationLabel" jhiTranslate="gradzcircleApp.candidateEducation.home.createOrEditLabel">Create or edit a Candidate Education</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
-    </div>
-    <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
-        <!--<jhi-alert-error></jhi-alert-error>
+	<div class="modal-header modal-header-decorate">
+		<h6 class="modal-title" id="myCandidateEducationLabel"
+			jhiTranslate="gradzcircleApp.candidateEducation.home.createOrEditLabel">Create
+			or edit a Candidate Education</h6>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
+		<!--<jhi-alert-error></jhi-alert-error>
         <div class="form-group" [hidden]="!candidateEducation.id">
             <label for="id" jhiTranslate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                    [(ngModel)]="candidateEducation.id" readonly />
-        </div>-->{{candidateEducation|json}}
-        <div class="form-group row mx-4 my-4">
-            <!--  <ng-template #rtQualification let-r="result" let-t="term">
+        </div>-->
+		{{candidateEducation|json}}
+		<div class="form-group row mx-4 my-4">
+			<!--  <ng-template #rtQualification let-r="result" let-t="term">
                 {{ r.qualification}}
             </ng-template>
             <div class="col-md-2">
@@ -22,45 +27,60 @@
                 <input required name="qualifications" #qualification="ngModel" type="text" class="form-control text-muted" [(ngModel)]="candidateEducation.qualification" id="field_qualification" placeholder="{{'gradzcircleApp.candidateEducation.qualification' | translate}}"
                     [ngbTypeahead]="searchQualification" [resultTemplate]="rtQualification" (ngModelChange)="isQualificationOther($event)" [inputFormatter]="qualificationFormatter" [editable]="false" />
                     -->
-             <div class="col-md-2">
-                <label jhiTranslate="gradzcircleApp.candidateEducation.qualification" for="field_qualification" class="form-control-label font-weight-bold text-muted">Qualification</label>
-            </div>
-             <div class="col-md-4" [class.has-danger]="qualification.invalid && qualification.touched">
-              		<tag-input name="qualifications" [(ngModel)]="candidateEducation.qualification" theme='bootstrap' #qualification="ngModel" required
-						[onlyFromAutocomplete]="true" [placeholder]="'Qualification+'"
-						[onTextChangeDebounce]="500" id="field_qualification"
-						[secondaryPlaceholder]="'Enter your qualification'"
-						(onAdd) ="isQualificationOther()"
-						[maxItems]='1'> 
-						
-						<tag-input-dropdown
-						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
-						
-					</tag-input>
-	                <div *ngIf="qualification.invalid && qualification.touched" class="text-danger">
-	                    <small> Please select a Qualification.</small>
-	                </div>
-            </div>
+			<div class="col-md-2">
+				<label
+					jhiTranslate="gradzcircleApp.candidateEducation.qualification"
+					for="field_qualification"
+					class="form-control-label font-weight-bold text-muted">Qualification</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="qualification.invalid && qualification.touched">
+				<tag-input name="qualifications"
+					[(ngModel)]="candidateEducation.qualification" theme='bootstrap'
+					#qualification="ngModel" required [onlyFromAutocomplete]="true"
+					[placeholder]="'Qualification+'" [onTextChangeDebounce]="500"
+					id="field_qualification"
+					[secondaryPlaceholder]="'Enter your qualification'"
+					(onAdd)="isQualificationOther()" [maxItems]='1'> <tag-input-dropdown
+					[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
 
-            <div *ngIf="showQualificationTextArea" class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification" for="field_capturedQualification">Captured Qualification</label>
-            </div>
-            <div *ngIf="showQualificationTextArea" class="col-md-4" [class.has-danger]="capturedQualification.invalid && capturedQualification.touched">
-                <input type="text" class="form-control text-muted" name="capturedQualification" id="field_capturedQualification" #capturedQualification="ngModel" required [(ngModel)]="candidateEducation.capturedQualification" />
-                <div *ngIf="capturedQualification.invalid && capturedQualification.touched" class="text-danger">
-                    <small>Please enter your qualification.</small>
-                </div>
-                <small class="form-text text-muted profile-text-info">
-                    <span class="icon icon-emoji-sad" style="color:#F1AA06"></span> <small> Sorry! Please type in your qualification.</small>
-                </small>
-            </div>
+				</tag-input>
+				<div *ngIf="qualification.invalid && qualification.touched"
+					class="text-danger">
+					<small> Please select a Qualification.</small>
+				</div>
+			</div>
 
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2 ">
-                <label jhiTranslate="gradzcircleApp.candidateEducation.course" for="field_course" class="form-control-label font-weight-bold text-muted">Course</label>
-            </div>
-            <!--div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
+			<div *ngIf="showQualificationTextArea" class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification"
+					for="field_capturedQualification">Captured Qualification</label>
+			</div>
+			<div *ngIf="showQualificationTextArea" class="col-md-4"
+				[class.has-danger]="capturedQualification.invalid && capturedQualification.touched">
+				<input type="text" class="form-control text-muted"
+					name="capturedQualification" id="field_capturedQualification"
+					#capturedQualification="ngModel" required
+					[(ngModel)]="candidateEducation.capturedQualification" />
+				<div
+					*ngIf="capturedQualification.invalid && capturedQualification.touched"
+					class="text-danger">
+					<small>Please enter your qualification.</small>
+				</div>
+				<small class="form-text text-muted profile-text-info"> <span
+					class="icon icon-emoji-sad" style="color: #F1AA06"></span> <small>
+						Sorry! Please type in your qualification.</small>
+				</small>
+			</div>
+
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2 ">
+				<label jhiTranslate="gradzcircleApp.candidateEducation.course"
+					for="field_course"
+					class="form-control-label font-weight-bold text-muted">Course</label>
+			</div>
+			<!--div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
                 <ng-template #rtCourse let-r="result" let-t="term">
                     {{ r.course}}
                 </ng-template>
@@ -71,102 +91,122 @@
                 </div>
 
             </div-->
-           <div class="col-md-4" [class.has-danger]="course.invalid && course.touched">
-           		<tag-input name="courses" [(ngModel)]="candidateEducation.course" theme='bootstrap' #course="ngModel" required
-						[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
-						[onTextChangeDebounce]="500" id="field_qualification"
-						[secondaryPlaceholder]="'Enter the course'"
-						(onAdd) ="isCourseOther()"
-						
-						[maxItems]='1'> 
-						
-						<tag-input-dropdown [autocompleteObservable]='requestCourseData'>
-						</tag-input-dropdown>
-						
-					</tag-input>
-					<div *ngIf="course.invalid && course.touched" class="text-danger">
-                 	   <small>Please select a Course.</small>
-                		</div>
-           </div>
-            <div class="col-md-2" *ngIf="showCourseTextArea">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse" for="field_capturedCourse">Captured Course</label>
-            </div>
-            <div class="col-md-4" *ngIf="showCourseTextArea" [class.has-danger]="capturedCourse.invalid && capturedCourse.touched">
-                <input type="text" class="form-control text-muted" name="capturedCourse" required #capturedCourse="ngModel" id="field_capturedCourse" [(ngModel)]="candidateEducation.capturedCourse" />
-                <div *ngIf="capturedCourse.invalid && capturedCourse.touched" class="text-danger">
-                    <small>Please enter your course name.</small>
-                </div>
-                <small class="form-text text-muted profile-text-info">
-                    <span class="icon icon-emoji-sad" style="color:#F1AA06"></span><small> Sorry! Please type in your Course.</small>
-                </small>
-            </div>
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.grade" for="field_grade">Grade</label>
-            </div>
-            <div class="col-md-4 form-check justify-content-around">
-                <label class="form-check-label">
-                                <input type="radio"
-                                       name="scoreType"
-                                       value="percent"
-                                       [(ngModel)]="candidateEducation.scoreType"
-                                       class="form-check-input"
-                                       (change)="setScoreControl()">
-                                       Percentage
-                            </label>
-                <label class="form-check-label ">
-                                <input type="radio"
-                                       name="scoreType"
-                                       [(ngModel)]="candidateEducation.scoreType"
-                                       value="gpa"
-                                       (change)="setScoreControl()"
-                                       class="form-check-input">
-                                       GPA
-                            </label>
-            </div>
-            <div *ngIf="enablePercent" class="col-md-2 ">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.percentage" for="field_grade"> Percentage</label>
-            </div>
-            <div *ngIf="enablePercent" class="col-md-4" [class.has-danger]="percent.invalid && percent.touched">
-                <input required pattern="^[0-9]+(\.[0-9]{1,2})?$" #percent="ngModel" type="number" class="form-control" name="percentage" id="field_percentage" [(ngModel)]="candidateEducation.percentage" (ngModelChange)="isPercentValid($event)" />
-                <div *ngIf="percent.invalid && percent.touched" class="text-danger">
-                    <small> Please enter valid score, upto 2 decimals</small>
-                </div>
-                <div *ngIf="!validPercentScore && percent.touched" class="text-danger">
-                    <small>Percentage cannot be greater than 100</small>
-                </div>
-            </div>
-            <div *ngIf="enableGpa" class="col-md-2 ">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.gpa" for="field_grade">GPA</label>
-            </div>
-            <div *ngIf="enableGpa" class="col-md-2" [class.has-danger]="roundOfGrade.invalid && roundOfGrade.touched">
-                <select class="form-control text-muted" name="roundOfGrade" #roundOfGrade="ngModel" required [(ngModel)]="candidateEducation.roundOfGrade" (change)="shouldDisableDecimal()">
-                   <!--   <option [ngValue]="null"></option>-->
-                    <option [ngValue]="score" *ngFor="let score of gpaValues;">{{score}}</option>
-                </select>
-                <div *ngIf="roundOfGrade.invalid && roundOfGrade.touched" class="text-danger">
-                    <small> Please enter GPA</small>
-                </div>
-            </div>
-            <div *ngIf="enableGpa" required class="col-md-2" [class.has-danger]="gradeDecimal.invalid && gradeDecimal.touched">
-                <select class="form-control text-muted" name="gradeDecimal" #gradeDecimal="ngModel" [(ngModel)]="candidateEducation.gradeDecimal" [disabled]="!enableDecimal">
-                    <!--  option [ngValue]="null"></option-->
-                    <option [ngValue]="score" *ngFor="let score of gpaDecimalValues;">.{{score}}</option>
-                </select>
-                <div *ngIf="gradeDecimal.invalid && gradeDecimal.touched" class="text-danger">
-                    <small> Please select GPA</small>
-                </div>
-            </div>
-        </div>
+			<div class="col-md-4"
+				[class.has-danger]="course.invalid && course.touched">
+				<tag-input name="courses" [(ngModel)]="candidateEducation.course"
+					theme='bootstrap' #course="ngModel" required
+					[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
+					[onTextChangeDebounce]="500" id="field_qualification"
+					[secondaryPlaceholder]="'Enter the course'"
+					(onAdd)="isCourseOther()" [maxItems]='1'> <tag-input-dropdown
+					[autocompleteObservable]='requestCourseData'>
+				</tag-input-dropdown> </tag-input>
+				<div *ngIf="course.invalid && course.touched" class="text-danger">
+					<small>Please select a Course.</small>
+				</div>
+			</div>
+			<div class="col-md-2" *ngIf="showCourseTextArea">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse"
+					for="field_capturedCourse">Captured Course</label>
+			</div>
+			<div class="col-md-4" *ngIf="showCourseTextArea"
+				[class.has-danger]="capturedCourse.invalid && capturedCourse.touched">
+				<input type="text" class="form-control text-muted"
+					name="capturedCourse" required #capturedCourse="ngModel"
+					id="field_capturedCourse"
+					[(ngModel)]="candidateEducation.capturedCourse" />
+				<div *ngIf="capturedCourse.invalid && capturedCourse.touched"
+					class="text-danger">
+					<small>Please enter your course name.</small>
+				</div>
+				<small class="form-text text-muted profile-text-info"> <span
+					class="icon icon-emoji-sad" style="color: #F1AA06"></span><small>
+						Sorry! Please type in your Course.</small>
+				</small>
+			</div>
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.grade"
+					for="field_grade">Grade</label>
+			</div>
+			<div class="col-md-4 form-check justify-content-around">
+				<label class="form-check-label"> <input type="radio"
+					name="scoreType" value="percent"
+					[(ngModel)]="candidateEducation.scoreType" class="form-check-input"
+					(change)="setScoreControl()"> Percentage
+				</label> <label class="form-check-label "> <input type="radio"
+					name="scoreType" [(ngModel)]="candidateEducation.scoreType"
+					value="gpa" (change)="setScoreControl()" class="form-check-input">
+					GPA
+				</label>
+			</div>
+			<div *ngIf="enablePercent" class="col-md-2 ">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.percentage"
+					for="field_grade"> Percentage</label>
+			</div>
+			<div *ngIf="enablePercent" class="col-md-4"
+				[class.has-danger]="percent.invalid && percent.touched">
+				<input required pattern="^[0-9]+(\.[0-9]{1,2})?$" #percent="ngModel"
+					type="number" class="form-control" name="percentage"
+					id="field_percentage" [(ngModel)]="candidateEducation.percentage"
+					(ngModelChange)="isPercentValid($event)" />
+				<div *ngIf="percent.invalid && percent.touched" class="text-danger">
+					<small> Please enter valid score, upto 2 decimals</small>
+				</div>
+				<div *ngIf="!validPercentScore && percent.touched"
+					class="text-danger">
+					<small>Percentage cannot be greater than 100</small>
+				</div>
+			</div>
+			<div *ngIf="enableGpa" class="col-md-2 ">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.gpa"
+					for="field_grade">GPA</label>
+			</div>
+			<div *ngIf="enableGpa" class="col-md-2"
+				[class.has-danger]="roundOfGrade.invalid && roundOfGrade.touched">
+				<select class="form-control text-muted" name="roundOfGrade"
+					#roundOfGrade="ngModel" required
+					[(ngModel)]="candidateEducation.roundOfGrade"
+					(change)="shouldDisableDecimal()">
+					<!--   <option [ngValue]="null"></option>-->
+					<option [ngValue]="score" *ngFor="let score of gpaValues;">{{score}}</option>
+				</select>
+				<div *ngIf="roundOfGrade.invalid && roundOfGrade.touched"
+					class="text-danger">
+					<small> Please enter GPA</small>
+				</div>
+			</div>
+			<div *ngIf="enableGpa" required class="col-md-2"
+				[class.has-danger]="gradeDecimal.invalid && gradeDecimal.touched">
+				<select class="form-control text-muted" name="gradeDecimal"
+					#gradeDecimal="ngModel"
+					[(ngModel)]="candidateEducation.gradeDecimal"
+					[disabled]="!enableDecimal">
+					<!--  option [ngValue]="null"></option-->
+					<option [ngValue]="score" *ngFor="let score of gpaDecimalValues;">.{{score}}</option>
+				</select>
+				<div *ngIf="gradeDecimal.invalid && gradeDecimal.touched"
+					class="text-danger">
+					<small> Please select GPA</small>
+				</div>
+			</div>
+		</div>
 
-        <div class="form-group row mx-4 my-4">
+		<div class="form-group row mx-4 my-4">
 
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.college" for="field_college">College</label>
-            </div>
-            <div class="col-md-10" [class.has-danger]="college.invalid && college.touched">
-                <!--  <ng-template #rtCollege let-r="result" let-t="term">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.college"
+					for="field_college">College</label>
+			</div>
+			<div class="col-md-10"
+				[class.has-danger]="college.invalid && college.touched">
+				<!--  <ng-template #rtCollege let-r="result" let-t="term">
                     {{r.collegeName}}
                 </ng-template>
                 <input name="colleges" #college="ngModel" required class="form-control text-muted" type="text" placeholder="{{'gradzcircleApp.candidateEducation.college' | translate}}" id="field_college" [(ngModel)]="candidateEducation.college" [ngbTypeahead]="searchCollege"
@@ -174,230 +214,353 @@
                 <div *ngIf="college.invalid && college.touched" class="text-danger">
                     <small>Please select your College.</small>
                 </div>-->
-                <tag-input name="colleges" [(ngModel)]="candidateEducation.college" theme='bootstrap' #college="ngModel" required
-						[onlyFromAutocomplete]="true" [placeholder]="'College+'"
-						[onTextChangeDebounce]="500" id="field_college"
-						[secondaryPlaceholder]="'Enter college name'"
-						(onAdd) ="isCollegeOther()"
-						[maxItems]='1'> 
-						
-						<tag-input-dropdown
-						[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
-						
-					</tag-input>
-					<div *ngIf="college.invalid && college.touched" class="text-danger">
-                    <small>Please select your College.</small>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="showCollegeTextArea" class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege" for="field_capturedCollege">Captured College</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="captureCollege.invalid && captureCollege.touched">
-                <input type="text" required #captureCollege="ngModel" class="form-control text-muted" name="capturedCollege" id="field_capturedCollege" [(ngModel)]="candidateEducation.capturedCollege" />
-                <div *ngIf="captureCollege.invalid && captureCollege.touched" class="text-danger">
-                    <small>Please enter your College name.</small>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity" for="field_capturedUniversity">Captured University</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="captureUniversity.invalid && captureUniversity.touched">
-                <input type="text" required #captureUniversity="ngModel" class="form-control text-muted" name="capturedUniversity" id="field_capturedUniversity" [(ngModel)]="candidateEducation.capturedUniversity" />
-                <div *ngIf="captureUniversity.invalid && captureUniversity.touched" class="text-danger">
-                    <small>Please enter your University name.</small>
-                </div>
-            </div>
-            <div class="col-md-8 offset-md-2">
-                <small class="form-text text-muted profile-text-info">
-                        <span class="icon icon-emoji-sad" style="color:#F1AA06"></span><small> Sorry! Please type in your College and University.</small>
-                </small>
-            </div>
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate" for="field_educationFromDate">Education From Date</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="fromDate.invalid && fromDate.touched">
-                <div class="input-group">
-                    <input id="field_educationFromDate" #fromDate="ngModel" required type="text" class="form-control text-muted" name="educationFromDate" ngbDatepicker #educationFromDateDp="ngbDatepicker" [(ngModel)]="candidateEducation.educationFromDate" (ngModelChange)="validateDates()"
-                    />
-                    <span class="input-group-addon " (click)="educationFromDateDp.toggle()">
-                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
-                    </span>
-                </div>
-                <div *ngIf="fromDate.invalid && fromDate.touched" class="text-danger">
-                    <small>Please enter Start Date</small>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEducation.educationToDate" for="field_educationToDate">Education To Date</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="toDate.invalid && toDate.touched">
-                <div class="input-group">
-                    <input id="field_educationToDate" #toDate="ngModel" required type="text" class="form-control text-muted" [disabled]="endDateControl" name="educationToDate" ngbDatepicker #educationToDateDp="ngbDatepicker" [(ngModel)]="candidateEducation.educationToDate"
-                        (ngModelChange)="validateDates()" />
-                    <button class="input-group-addon " (click)="educationToDateDp.toggle()" type="button" [disabled]="endDateControl">
-                        <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-                    </button>
-                </div>
-                <div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
-                    <small>Please enter End Date</small>
-                </div>
-                <div *ngIf="endDateLesser" class="text-danger">
-                    <small>End date cannot be before start date.</small>
-                </div>
-            </div>
+				<tag-input name="colleges" [(ngModel)]="candidateEducation.college"
+					theme='bootstrap' #college="ngModel" required
+					[onlyFromAutocomplete]="true" [placeholder]="'College+'"
+					[onTextChangeDebounce]="500" id="field_college"
+					[secondaryPlaceholder]="'Enter college name'"
+					(onAdd)="isCollegeOther()" [maxItems]='1'> <tag-input-dropdown
+					[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
 
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-6 form-check">
-                <label class="form-check-label" for="field_isPursuingEducation">
+				</tag-input>
+				<div *ngIf="college.invalid && college.touched" class="text-danger">
+					<small>Please select your College.</small>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="showCollegeTextArea" class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege"
+					for="field_capturedCollege">Captured College</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="captureCollege.invalid && captureCollege.touched">
+				<input type="text" required #captureCollege="ngModel"
+					class="form-control text-muted" name="capturedCollege"
+					id="field_capturedCollege"
+					[(ngModel)]="candidateEducation.capturedCollege" />
+				<div *ngIf="captureCollege.invalid && captureCollege.touched"
+					class="text-danger">
+					<small>Please enter your College name.</small>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity"
+					for="field_capturedUniversity">Captured University</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="captureUniversity.invalid && captureUniversity.touched">
+				<input type="text" required #captureUniversity="ngModel"
+					class="form-control text-muted" name="capturedUniversity"
+					id="field_capturedUniversity"
+					[(ngModel)]="candidateEducation.capturedUniversity" />
+				<div *ngIf="captureUniversity.invalid && captureUniversity.touched"
+					class="text-danger">
+					<small>Please enter your University name.</small>
+				</div>
+			</div>
+			<div class="col-md-8 offset-md-2">
+				<small class="form-text text-muted profile-text-info"> <span
+					class="icon icon-emoji-sad" style="color: #F1AA06"></span><small>
+						Sorry! Please type in your College and University.</small>
+				</small>
+			</div>
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate"
+					for="field_educationFromDate">Education From Date</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="fromDate.invalid && fromDate.touched">
+				<div class="input-group">
+					<input id="field_educationFromDate" #fromDate="ngModel" required
+						type="text" class="form-control text-muted"
+						name="educationFromDate" ngbDatepicker
+						#educationFromDateDp="ngbDatepicker"
+						[(ngModel)]="candidateEducation.educationFromDate"
+						(ngModelChange)="validateDates()" /> <span
+						class="input-group-addon " (click)="educationFromDateDp.toggle()">
+						<img src="../../../content/images/calendar.png"
+						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+					</span>
+				</div>
+				<div *ngIf="fromDate.invalid && fromDate.touched"
+					class="text-danger">
+					<small>Please enter Start Date</small>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateEducation.educationToDate"
+					for="field_educationToDate">Education To Date</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="toDate.invalid && toDate.touched">
+				<div class="input-group">
+					<input id="field_educationToDate" #toDate="ngModel" required
+						type="text" class="form-control text-muted"
+						[disabled]="endDateControl" name="educationToDate" ngbDatepicker
+						#educationToDateDp="ngbDatepicker"
+						[(ngModel)]="candidateEducation.educationToDate"
+						(ngModelChange)="validateDates()" />
+					<button class="input-group-addon "
+						(click)="educationToDateDp.toggle()" type="button"
+						[disabled]="endDateControl">
+						<img src="../../../content/images/calendar.png"
+							style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+					</button>
+				</div>
+				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+					<small>Please enter End Date</small>
+				</div>
+				<div *ngIf="endDateLesser" class="text-danger">
+					<small>End date cannot be before start date.</small>
+				</div>
+			</div>
 
-                    <input class="form-check-input font-weight-bold text-muted" type="checkbox" name="isPursuingEducation" id="field_isPursuingEducation"  (change)="manageEndDateControl()"
-                    [(ngModel)]="candidateEducation.isPursuingEducation"/>
-                    I am still studying
-                </label>
-            </div>
-            <div class="col-md-6 form-check">
-                <label class="form-check-label" for="field_highestQualification">
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-6 form-check">
+				<label class="form-check-label" for="field_isPursuingEducation">
 
-                    <input class="form-check-input font-weight-bold text-muted" type="checkbox" name="highestQualification" id="field_highestQualification"
-                    [(ngModel)]="candidateEducation.highestQualification"/>
-                    <span jhiTranslate="gradzcircleApp.candidateEducation.highestQualification"></span>
-                </label>
-            </div>
+					<input class="form-check-input font-weight-bold text-muted"
+					type="checkbox" name="isPursuingEducation"
+					id="field_isPursuingEducation" (change)="manageEndDateControl()"
+					[(ngModel)]="candidateEducation.isPursuingEducation" /> I am still
+					studying
+				</label>
+			</div>
+			<div class="col-md-6 form-check">
+				<label class="form-check-label" for="field_highestQualification">
 
-        </div>
+					<input class="form-check-input font-weight-bold text-muted"
+					type="checkbox" name="highestQualification"
+					id="field_highestQualification"
+					[(ngModel)]="candidateEducation.highestQualification" /> <span
+					jhiTranslate="gradzcircleApp.candidateEducation.highestQualification"></span>
+				</label>
+			</div>
 
-        <div class="form-group row mx-4">
-            <div class="col-md-11 ">
-                <small class="form-text  profile-text-info">
-                    Type 'Other', if can't find your desired entry for qualifications, college or course
-                </small>
-            </div>
-        </div>
+		</div>
+
+		<div class="form-group row mx-4">
+			<div class="col-md-11 ">
+				<small class="form-text  profile-text-info"> Type 'Other',
+					if can't find your desired entry for qualifications, college or
+					course </small>
+			</div>
+		</div>
 
 
-    </div>
+	</div>
 
-    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
+	<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
 
 
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!candidateEducation.id">
-            <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id" [(ngModel)]="candidateEducation.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.grade" for="field_grade">Grade</label>
-            <input type="number" class="form-control" name="grade" id="field_grade" [(ngModel)]="candidateEducation.grade" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate" for="field_educationFromDate">Education From Date</label>
-            <div class="input-group">
-                <input id="field_educationFromDate" type="text" class="form-control" name="educationFromDate" ngbDatepicker #educationFromDateDp="ngbDatepicker" [(ngModel)]="candidateEducation.educationFromDate" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-secondary" (click)="educationFromDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.educationToDate" for="field_educationToDate">Education To Date</label>
-            <div class="input-group">
-                <input id="field_educationToDate" type="text" class="form-control" name="educationToDate" ngbDatepicker #educationToDateDp="ngbDatepicker" [(ngModel)]="candidateEducation.educationToDate" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-secondary" (click)="educationToDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.isPursuingEducation" for="field_isPursuingEducation">Is Pursuing Education</label>
-            <input type="checkbox" class="form-control" name="isPursuingEducation" id="field_isPursuingEducation" [(ngModel)]="candidateEducation.isPursuingEducation" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.gradeScale" for="field_gradeScale">Grade Scale</label>
-            <input type="number" class="form-control" name="gradeScale" id="field_gradeScale" [(ngModel)]="candidateEducation.gradeScale" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.highestQualification" for="field_highestQualification">Highest Qualification</label>
-            <input type="checkbox" class="form-control" name="highestQualification" id="field_highestQualification" [(ngModel)]="candidateEducation.highestQualification" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.roundOfGrade" for="field_roundOfGrade">Round Of Grade</label>
-            <input type="number" class="form-control" name="roundOfGrade" id="field_roundOfGrade" [(ngModel)]="candidateEducation.roundOfGrade" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.gradeDecimal" for="field_gradeDecimal">Grade Decimal</label>
-            <input type="number" class="form-control" name="gradeDecimal" id="field_gradeDecimal" [(ngModel)]="candidateEducation.gradeDecimal" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse" for="field_capturedCourse">Captured Course</label>
-            <input type="text" class="form-control" name="capturedCourse" id="field_capturedCourse" [(ngModel)]="candidateEducation.capturedCourse" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification" for="field_capturedQualification">Captured Qualification</label>
-            <input type="text" class="form-control" name="capturedQualification" id="field_capturedQualification" [(ngModel)]="candidateEducation.capturedQualification" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege" for="field_capturedCollege">Captured College</label>
-            <input type="text" class="form-control" name="capturedCollege" id="field_capturedCollege" [(ngModel)]="candidateEducation.capturedCollege" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity" for="field_capturedUniversity">Captured University</label>
-            <input type="text" class="form-control" name="capturedUniversity" id="field_capturedUniversity" [(ngModel)]="candidateEducation.capturedUniversity" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.percentage" for="field_percentage">Percentage</label>
-            <input type="number" class="form-control" name="percentage" id="field_percentage" [(ngModel)]="candidateEducation.percentage" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.scoreType" for="field_scoreType">Score Type</label>
-            <input type="text" class="form-control" name="scoreType" id="field_scoreType" [(ngModel)]="candidateEducation.scoreType" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.educationDuration" for="field_educationDuration">Education Duration</label>
-            <input type="number" class="form-control" name="educationDuration" id="field_educationDuration" [(ngModel)]="candidateEducation.educationDuration" />
-        </div>
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" [hidden]="!candidateEducation.id">
+			<label for="id" jhiTranslate="global.field.id">ID</label> <input
+				type="text" class="form-control" id="id" name="id"
+				[(ngModel)]="candidateEducation.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.grade"
+				for="field_grade">Grade</label> <input type="number"
+				class="form-control" name="grade" id="field_grade"
+				[(ngModel)]="candidateEducation.grade" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate"
+				for="field_educationFromDate">Education From Date</label>
+			<div class="input-group">
+				<input id="field_educationFromDate" type="text" class="form-control"
+					name="educationFromDate" ngbDatepicker
+					#educationFromDateDp="ngbDatepicker"
+					[(ngModel)]="candidateEducation.educationFromDate" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-secondary"
+						(click)="educationFromDateDp.toggle()">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.educationToDate"
+				for="field_educationToDate">Education To Date</label>
+			<div class="input-group">
+				<input id="field_educationToDate" type="text" class="form-control"
+					name="educationToDate" ngbDatepicker
+					#educationToDateDp="ngbDatepicker"
+					[(ngModel)]="candidateEducation.educationToDate" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-secondary"
+						(click)="educationToDateDp.toggle()">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.isPursuingEducation"
+				for="field_isPursuingEducation">Is Pursuing Education</label> <input
+				type="checkbox" class="form-control" name="isPursuingEducation"
+				id="field_isPursuingEducation"
+				[(ngModel)]="candidateEducation.isPursuingEducation" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.gradeScale"
+				for="field_gradeScale">Grade Scale</label> <input type="number"
+				class="form-control" name="gradeScale" id="field_gradeScale"
+				[(ngModel)]="candidateEducation.gradeScale" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.highestQualification"
+				for="field_highestQualification">Highest Qualification</label> <input
+				type="checkbox" class="form-control" name="highestQualification"
+				id="field_highestQualification"
+				[(ngModel)]="candidateEducation.highestQualification" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.roundOfGrade"
+				for="field_roundOfGrade">Round Of Grade</label> <input type="number"
+				class="form-control" name="roundOfGrade" id="field_roundOfGrade"
+				[(ngModel)]="candidateEducation.roundOfGrade" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.gradeDecimal"
+				for="field_gradeDecimal">Grade Decimal</label> <input type="number"
+				class="form-control" name="gradeDecimal" id="field_gradeDecimal"
+				[(ngModel)]="candidateEducation.gradeDecimal" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedCourse"
+				for="field_capturedCourse">Captured Course</label> <input
+				type="text" class="form-control" name="capturedCourse"
+				id="field_capturedCourse"
+				[(ngModel)]="candidateEducation.capturedCourse" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedQualification"
+				for="field_capturedQualification">Captured Qualification</label> <input
+				type="text" class="form-control" name="capturedQualification"
+				id="field_capturedQualification"
+				[(ngModel)]="candidateEducation.capturedQualification" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedCollege"
+				for="field_capturedCollege">Captured College</label> <input
+				type="text" class="form-control" name="capturedCollege"
+				id="field_capturedCollege"
+				[(ngModel)]="candidateEducation.capturedCollege" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.capturedUniversity"
+				for="field_capturedUniversity">Captured University</label> <input
+				type="text" class="form-control" name="capturedUniversity"
+				id="field_capturedUniversity"
+				[(ngModel)]="candidateEducation.capturedUniversity" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.percentage"
+				for="field_percentage">Percentage</label> <input type="number"
+				class="form-control" name="percentage" id="field_percentage"
+				[(ngModel)]="candidateEducation.percentage" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.scoreType"
+				for="field_scoreType">Score Type</label> <input type="text"
+				class="form-control" name="scoreType" id="field_scoreType"
+				[(ngModel)]="candidateEducation.scoreType" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.educationDuration"
+				for="field_educationDuration">Education Duration</label> <input
+				type="number" class="form-control" name="educationDuration"
+				id="field_educationDuration"
+				[(ngModel)]="candidateEducation.educationDuration" />
+		</div>
 
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.candidate" for="field_candidate">Candidate</label>
-            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateEducation.candidate">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="candidateOption.id === candidateEducation.candidate?.id ? candidateEducation.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.qualification" for="field_qualification">Qualification</label>
-            <select class="form-control" id="field_qualification" name="qualification" [(ngModel)]="candidateEducation.qualification">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="qualificationOption.id === candidateEducation.qualification?.id ? candidateEducation.qualification : qualificationOption" *ngFor="let qualificationOption of qualifications; trackBy: trackQualificationById">{{qualificationOption.id}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.course" for="field_course">Course</label>
-            <select class="form-control" id="field_course" name="course" [(ngModel)]="candidateEducation.course">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="courseOption.id === candidateEducation.course?.id ? candidateEducation.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.id}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateEducation.college" for="field_college">College</label>
-            <select class="form-control" id="field_college" name="college" [(ngModel)]="candidateEducation.college">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="collegeOption.id === candidateEducation.college?.id ? candidateEducation.college : collegeOption" *ngFor="let collegeOption of colleges; trackBy: trackCollegeById">{{collegeOption.id}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="modal-footer modal-footer-decorate">
-        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-        </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill  btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-        </button>
-    </div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.candidate"
+				for="field_candidate">Candidate</label> <select class="form-control"
+				id="field_candidate" name="candidate"
+				[(ngModel)]="candidateEducation.candidate">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="candidateOption.id === candidateEducation.candidate?.id ? candidateEducation.candidate : candidateOption"
+					*ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.qualification"
+				for="field_qualification">Qualification</label> <select
+				class="form-control" id="field_qualification" name="qualification"
+				[(ngModel)]="candidateEducation.qualification">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="qualificationOption.id === candidateEducation.qualification?.id ? candidateEducation.qualification : qualificationOption"
+					*ngFor="let qualificationOption of qualifications; trackBy: trackQualificationById">{{qualificationOption.id}}</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.course"
+				for="field_course">Course</label> <select class="form-control"
+				id="field_course" name="course"
+				[(ngModel)]="candidateEducation.course">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="courseOption.id === candidateEducation.course?.id ? candidateEducation.course : courseOption"
+					*ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.id}}</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateEducation.college"
+				for="field_college">College</label> <select class="form-control"
+				id="field_college" name="college"
+				[(ngModel)]="candidateEducation.college">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="collegeOption.id === candidateEducation.college?.id ? candidateEducation.college : collegeOption"
+					*ngFor="let collegeOption of colleges; trackBy: trackCollegeById">{{collegeOption.id}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="modal-footer modal-footer-decorate">
+		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+			data-dismiss="modal" (click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button>
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			class="btn btn-sm btn-pill  btn-primary">
+			<span class="fa fa-save"></span>&nbsp;<span
+				jhiTranslate="entity.action.save">Save</span>
+		</button>
+	</div>
 </form>
 <!--<br>Dirty: {{ editForm.dirty }}
 <br>Touched: {{ editForm.touched }}

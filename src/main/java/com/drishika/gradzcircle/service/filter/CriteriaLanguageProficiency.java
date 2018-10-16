@@ -15,7 +15,7 @@ public class CriteriaLanguageProficiency implements Criteria<Candidate> {
 
 	@Override
 	public List<Candidate> meetCriteria(List<Candidate> candidates) {
-		//List<Candidate> 
+		// List<Candidate>
 		return null;
 	}
 

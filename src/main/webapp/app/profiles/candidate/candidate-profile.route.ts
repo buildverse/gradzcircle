@@ -24,6 +24,23 @@ import { CandidateEmploymentComponent } from '../../entities/candidate-employmen
 import { CandidateCertificationComponent } from '../../entities/candidate-certification/candidate-certification.component';
 import { CandidateNonAcademicWorkComponent } from '../../entities/candidate-non-academic-work/candidate-non-academic-work.component';
 import { CandidatePublicProfilePopupComponent } from './candidate-public-profile-popup.component';
+import { AppliedJobsComponent } from './applied-job-by-candidate.component';
+
+@Injectable()
+export class AppliedJobResolvePagingParams implements Resolve<any> {
+
+    constructor(private paginationUtil: JhiPaginationUtil) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
+        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
+        return {
+            page: this.paginationUtil.parsePage(page),
+            predicate: this.paginationUtil.parsePredicate(sort),
+            ascending: this.paginationUtil.parseAscending(sort)
+      };
+    }
+}
 
 export const candidateProfileRoutes: Routes = [
     {
@@ -36,7 +53,6 @@ export const candidateProfileRoutes: Routes = [
         canActivate: [UserRouteAccessService],
         resolve: {
             candidate: CandidateResolverService
-        
         },
         children: [
             {
@@ -148,17 +164,30 @@ export const candidateProfileRoutes: Routes = [
             // }
         ]
     },
-];
-
-export const candidateProfilePopupRoute: Routes = [
     {
-        path : 'candidate-public-profile/:id',
-        component : CandidatePublicProfilePopupComponent,
+       path: 'appliedJobs/:id',
+        component: AppliedJobsComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
-        outlet: 'popup'
+        resolve: {
+            'pagingParams': AppliedJobResolvePagingParams
+        },
     }
+];
+
+export const candidateProfilePopupRoute: Routes = [
+    {
+        path : 'candidate-public-profile/:id/:jobId/:corporateId',
+        component : CandidatePublicProfilePopupComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE','ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+
 ]

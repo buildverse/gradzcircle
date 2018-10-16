@@ -1,72 +1,90 @@
 <div class="container-fill-height">
 
-    <div class="container-content-middle">
-        <form role="form" class="mx-auto text-center app-login-form" id="needs-validation" novalidate (ngSubmit)="login()" [formGroup]="loginForm">
+	<div class="container-content-middle">
+		<form role="form" class="mx-auto text-center app-login-form"
+			id="needs-validation" novalidate (ngSubmit)="login()"
+			[formGroup]="loginForm">
 
 
-            <img class="app-brand mb-5" src="../../../content/images/brand.png" alt="brand">
-            
-             <div class="text-danger" *ngIf="authenticationError" jhiTranslate="login.messages.error.authentication">
-                <strong>Failed to sign in!</strong> Please check your credentials and try again.
-            </div>
+			<img class="app-brand mb-5" src="../../../content/images/brand.png"
+				alt="brand">
 
-            <fieldset>
-                <div class="form-group" [ngClass]="{'has-danger':  (loginForm.get('login').touched || 
+			<div class="text-danger" *ngIf="authenticationError"
+				jhiTranslate="login.messages.error.authentication">
+				<strong>Failed to sign in!</strong> Please check your credentials
+				and try again.
+			</div>
+
+			<fieldset>
+				<div class="form-group"
+					[ngClass]="{'has-danger':  (loginForm.get('login').touched || 
                                                                   loginForm.get('login').dirty) &&
                                                                   !loginForm.get('login').valid }">
-                    <div class="input-group">
-                        <span class="input-group-addon icon icon-user" id="basic-addon1"></span>
-                        <input class="form-control" placeholder="{{'global.form.username' | translate}}" formControlName="login"  aria-describedby="basic-addon1">
-                    </div>
-                    <div>
-                        <span class="form-text text-left" *ngIf="(loginForm.get('login').touched || 
+					<div class="input-group">
+						<span class="input-group-addon icon icon-user" id="basic-addon1"></span>
+						<input class="form-control"
+							placeholder="{{'global.form.username' | translate}}"
+							formControlName="login" aria-describedby="basic-addon1">
+					</div>
+					<div>
+						<span class="form-text text-left"
+							*ngIf="(loginForm.get('login').touched || 
                                                          loginForm.get('login').dirty) && 
                                                          loginForm.get('login').errors">
-                          <div class="form-control-feedback" *ngIf="loginForm.get('login').errors.required">
-                                Please enter your user name.
-                            </div>            
-                    </span>
-                    </div>
-                </div>
+							<div class="form-control-feedback"
+								*ngIf="loginForm.get('login').errors.required">Please
+								enter your user name.</div>
+						</span>
+					</div>
+				</div>
 
 
-                <div class="form-group mb-3" [ngClass]="{'has-danger':  (loginForm.get('password').touched || 
+				<div class="form-group mb-3"
+					[ngClass]="{'has-danger':  (loginForm.get('password').touched || 
                                                                   loginForm.get('password').dirty) &&
                                                                   !loginForm.get('password').valid }">
-                    <div class="input-group">
-                        <span class="input-group-addon icon icon-key" id="basic-addon2"></span>
-                        <input type="password" class="form-control" placeholder="{{'login.form.password' | translate}}" formControlName="password" 
-                            aria-describedby="basic-addon2">
-                    </div>
-                    <div>
-                        <span class="form-text text-left" *ngIf="(loginForm.get('password').touched || 
+					<div class="input-group">
+						<span class="input-group-addon icon icon-key" id="basic-addon2"></span>
+						<input type="password" class="form-control"
+							placeholder="{{'login.form.password' | translate}}"
+							formControlName="password" aria-describedby="basic-addon2">
+					</div>
+					<div>
+						<span class="form-text text-left"
+							*ngIf="(loginForm.get('password').touched || 
                                                          loginForm.get('password').dirty) && 
                                                          loginForm.get('password').errors">
-                          <div class="form-control-feedback" *ngIf="loginForm.get('password').errors.required">
-                                Please enter your password.
-                          </div>
-                          
-                  </div>
-                </div>
-          
-                <div class="form-group">
-                    <label class="form-check-label" for="rememberMe">
-                            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe">
-                            <span jhiTranslate="login.form.rememberme">Remember me</span>
-                    </label>
-                </div>
-                <div class="mb-5">
-                    <button class="btn btn-primary" jhiTranslate="login.form.button">Log In</button>
-                </div>
-            </fieldset>
-            <footer class="screen-login">
-                <a class="text-muted" (click)="requestResetPassword()" jhiTranslate="login.password.forgot">Forgot Password</a>
-                <!-- <a href="#" class="text-muted">Forgot password</a>-->
-            </footer>
-        </form>
-    </div>
+							<div class="form-control-feedback"
+								*ngIf="loginForm.get('password').errors.required">Please
+								enter your password.</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="form-check-label" for="rememberMe"> <input
+						class="form-check-input" type="checkbox" name="rememberMe"
+						id="rememberMe" formControlName="rememberMe"> <span
+						jhiTranslate="login.form.rememberme">Remember me</span>
+					</label>
+				</div>
+				<div class="mb-5">
+					<button class="btn btn-primary" jhiTranslate="login.form.button">Log
+						In</button>
+				</div>
+			</fieldset>
+			<footer class="screen-login">
+				<a class="text-muted" (click)="requestResetPassword()"
+					jhiTranslate="login.password.forgot">Forgot Password</a>
+				<!-- <a href="#" class="text-muted">Forgot password</a>-->
+			</footer>
+		</form>
+	</div>
 </div>
- <br>Dirty: {{ loginForm.dirty }}
-<br>Touched: {{ loginForm.touched }}
-<br>Valid: {{ loginForm.valid }}
-<br>Value: {{ loginForm.value | json }} 
+<br>
+Dirty: {{ loginForm.dirty }}
+<br>
+Touched: {{ loginForm.touched }}
+<br>
+Valid: {{ loginForm.valid }}
+<br>
+Value: {{ loginForm.value | json }}

@@ -1,104 +1,124 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute,Router } from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
-import { Principal,UserService } from '../../shared';
-import { Candidate } from '../../entities/candidate/candidate.model';
-import { CandidateService } from '../../entities/candidate/candidate.service';
-import { CandidatePublicProfilePopupService } from './candidate-public-profile-popup.service';
-import { Observable } from 'rxjs/Observable';
+import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
+import {Principal, UserService} from '../../shared';
+import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-profile.model';
+import {CandidateService} from '../../entities/candidate/candidate.service';
+import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
+import {Candidate} from '../../entities/candidate/candidate.model';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
-    selector: 'jhi-candidate-public-profile-dialog',
-    templateUrl: './candidate-public-profile.html',
-    styleUrls: ['candidate.css']
+  selector: 'jhi-candidate-public-profile-dialog',
+  templateUrl: './candidate-public-profile.html',
+  styleUrls: ['candidate.css']
 })
 export class CandidatePublicProfilePopupDialogComponent implements OnInit {
 
-    candidate: Candidate;
-    defaultImage = require("../../../content/images/no-image.png");
-    userImage: any;
-    noImage:boolean;
-  
-    constructor(
-        private candidateService: CandidateService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager,
-        private principal: Principal,
-        private userService: UserService,
-        private router: Router
-    ) {
-    }
+  candidate: CandidatePublicProfile;
+  defaultImage = require('../../../content/images/no-image.png');
+  userImage: any;
+  noImage: boolean;
+  jobId: number;
+  corporateId: number;
+  errorMessage: String;
+  isSaving: boolean;
 
-    ngOnInit() {
-        this.reloadUserImage();
-    }
+  constructor(
+    private candidateService: CandidateService,
+    public activeModal: NgbActiveModal,
+    private eventManager: JhiEventManager,
+    private principal: Principal,
+    private userService: UserService,
+    private router: Router
+  ) {
+  }
 
-    reloadUserImage(){
-        this.noImage = false;
-        this.principal.identity().then((user)=>{
-            if(user){
-                if(user.imageUrl){
-                    this.userService.getImageData(user.id).subscribe(response =>{
-                        let responseJson = response.json()
-                        this.userImage = responseJson[0].href+'?t='+Math.random().toString();
-                    },(error: any )=> {
-                        console.log (`${error}`);
-                        this.router.navigate(['/error']);
-                        return Observable.of(null);
-                    });
-                }
-                else
-                    this.noImage = true;
-            }    
-        });     
-    }
+  ngOnInit() {
+    this.reloadUserImage();
+  }
 
-    private getWidth(candidateLanguageProficiency){
-        if(candidateLanguageProficiency==='Beginner')
-            return '33%';
-        else if(candidateLanguageProficiency==='Intermediate')
-            return '66%';
-        else if (candidateLanguageProficiency==='Expert')
-            return '100%';
-    }
+  reloadUserImage() {
+    this.noImage = false;
+    this.principal.identity().then((user) => {
+      if (user) {
+        if (user.imageUrl) {
+          this.userService.getImageData(user.id).subscribe(response => {
+            let responseJson = response.json()
+            this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
+          }, (error: any) => {
+            console.log(`${error}`);
+            this.router.navigate(['/error']);
+            return Observable.of(null);
+          });
+        }
+        else {
+          this.noImage = true;
+        }
+      }
+    });
+  }
 
-    // private checkImageData(){
-    //     this.noImage = false;
-    //     if(!this.imageData._body){
-    //         this.noImage = true;
-    //     }
-    // }
+  private getWidth(candidateLanguageProficiency) {
+    if (candidateLanguageProficiency === 'Beginner')
+      return '33%';
+    else if (candidateLanguageProficiency === 'Intermediate')
+      return '66%';
+    else if (candidateLanguageProficiency === 'Expert')
+      return '100%';
+  }
 
+  save() {
+    this.isSaving = true;
  
+     this.subscribeToSaveResponse(this.candidateService.linkCandidateAndCorporateForJob(this.candidate.candidateDetails.id, this.jobId, this.corporateId));
 
-    clear() {
-        this.activeModal.dismiss('cancel');
+  }
+  
+   private subscribeToSaveResponse(result: Observable<Candidate>) {
+        result.subscribe((res: Candidate) =>
+            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
+
+   private onSaveSuccess(result: Candidate) {
+        this.eventManager.broadcast({ name: 'matchedListModification', content: 'OK'});
+        this.isSaving = false;
+     console.log('Save is a success ??');
+        this.activeModal.dismiss(result);
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
+    }
+
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 }
 
 @Component({
-    selector: 'jhi-candidate-public-profile-popup',
-    template: ''
+  selector: 'jhi-candidate-public-profile-popup',
+  template: ''
 })
 export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
 
-    routeSub: any;
+  routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private candidatePublicProfilePopupService: CandidatePublicProfilePopupService
-    ) {}
+  constructor(
+    private route: ActivatedRoute,
+    private candidatePublicProfilePopupService: CandidatePublicProfilePopupService
+  ) {}
 
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.candidatePublicProfilePopupService
-                .open(CandidatePublicProfilePopupDialogComponent as Component, params['id']);
-        });
-    }
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe((params) => {
+      this.candidatePublicProfilePopupService
+        .open(CandidatePublicProfilePopupDialogComponent as Component, params['id'], params['jobId'], params['corporateId']);
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }

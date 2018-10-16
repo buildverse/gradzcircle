@@ -1,95 +1,114 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { SERVER_API_URL } from '../../app.constants';
+import {Injectable} from '@angular/core';
+import {Http, Response} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
+import {SERVER_API_URL} from '../../app.constants';
 
-import { JhiDateUtils } from 'ng-jhipster';
-
-import { Corporate } from './corporate.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import {JhiDateUtils} from 'ng-jhipster';
+import {CandidateList} from '../job/candidate-list.model';
+import {Corporate} from './corporate.model';
+import {ResponseWrapper, createRequestOption} from '../../shared';
 
 @Injectable()
 export class CorporateService {
 
-    private resourceUrl = SERVER_API_URL + 'api/corporates';
-    private resourceSearchUrl = SERVER_API_URL + 'api/_search/corporates';
-    private findByLoginIdresourceUrl = SERVER_API_URL + 'api/corporateByLoginId';
+  private resourceUrl = SERVER_API_URL + 'api/corporates';
+  private resourceSearchUrl = SERVER_API_URL + 'api/_search/corporates';
+  private findByLoginIdresourceUrl = SERVER_API_URL + 'api/corporateByLoginId';
+  private resourceLinkedCandidatesForCorporateUrl = SERVER_API_URL + 'api/linkedCandidates';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+  constructor(private http: Http, private dateUtils: JhiDateUtils) {}
 
-    create(corporate: Corporate): Observable<Corporate> {
-        const copy = this.convert(corporate);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+  create(corporate: Corporate): Observable<Corporate> {
+    const copy = this.convert(corporate);
+    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  update(corporate: Corporate): Observable<Corporate> {
+    const copy = this.convert(corporate);
+    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  find(id: number): Observable<Corporate> {
+    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  findCorporateByLoginId(id: number): Observable<Corporate> {
+    return this.http.get(`${this.findByLoginIdresourceUrl}/${id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      this.convertItemFromServer(jsonResponse);
+      return jsonResponse;
+    });
+  }
+
+  queryLinkedCandidates(req?: any): Observable<ResponseWrapper> {
+    const options = createRequestOption(req);
+    return this.http.get(`${this.resourceLinkedCandidatesForCorporateUrl}/${req.id}`, options)
+      .map((res: Response) => this.convertCandidateListResponse(res));
+  }
+
+  query(req?: any): Observable<ResponseWrapper> {
+    const options = createRequestOption(req);
+    return this.http.get(this.resourceUrl, options)
+      .map((res: Response) => this.convertResponse(res));
+  }
+
+  delete(id: number): Observable<Response> {
+    return this.http.delete(`${this.resourceUrl}/${id}`);
+  }
+
+  search(req?: any): Observable<ResponseWrapper> {
+    const options = createRequestOption(req);
+    return this.http.get(this.resourceSearchUrl, options)
+      .map((res: any) => this.convertResponse(res));
+  }
+
+  private convertResponse(res: Response): ResponseWrapper {
+    const jsonResponse = res.json();
+    const result = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      result.push(this.convertItemFromServer(jsonResponse[i]));
     }
+    return new ResponseWrapper(res.headers, result, res.status);
+  }
 
-    update(corporate: Corporate): Observable<Corporate> {
-        const copy = this.convert(corporate);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
-    }
+  /**
+   * Convert a returned JSON object to Corporate.
+   */
+  private convertItemFromServer(json: any): Corporate {
+    const entity: Corporate = Object.assign(new Corporate(), json);
+    entity.establishedSince = this.dateUtils
+      .convertLocalDateFromServer(json.establishedSince);
+    return entity;
+  }
 
-    find(id: number): Observable<Corporate> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
-    }
+  /**
+   * Convert a Corporate to a JSON which can be sent to the server.
+   */
+  private convert(corporate: Corporate): Corporate {
+    const copy: Corporate = Object.assign({}, corporate);
+    copy.establishedSince = this.dateUtils
+      .convertLocalDateToServer(corporate.establishedSince);
+    return copy;
+  }
 
-	findCorporateByLoginId(id: number): Observable<Corporate> {
-        return this.http.get(`${this.findByLoginIdresourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            this.convertItemFromServer(jsonResponse);
-            return jsonResponse;
-        });
+  private convertCandidateListResponse(res: Response): ResponseWrapper {
+    const jsonResponse = res.json();
+    // console.log('esponse from server is '+JSON.stringify(jsonResponse));
+    const result = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      const entity: CandidateList = Object.assign(new CandidateList(), jsonResponse[i]);
+      result.push(entity);
     }
+    return new ResponseWrapper(res.headers, result, res.status);
+  }
 
-    query(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
-    }
-
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
-    }
-
-    search(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
-
-    /**
-     * Convert a returned JSON object to Corporate.
-     */
-    private convertItemFromServer(json: any): Corporate {
-        const entity: Corporate = Object.assign(new Corporate(), json);
-        entity.establishedSince = this.dateUtils
-            .convertLocalDateFromServer(json.establishedSince);
-        return entity;
-    }
-
-    /**
-     * Convert a Corporate to a JSON which can be sent to the server.
-     */
-    private convert(corporate: Corporate): Corporate {
-        const copy: Corporate = Object.assign({}, corporate);
-        copy.establishedSince = this.dateUtils
-            .convertLocalDateToServer(corporate.establishedSince);
-        return copy;
-    }
 }

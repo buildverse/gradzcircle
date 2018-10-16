@@ -1,136 +1,163 @@
 <div class="container-fill-height">
-    <div class="container-content-middle">
+	<div class="container-content-middle">
 
-        <form role="form" class="mx-auto text-center app-login-form"
-            novalidate (ngSubmit)="register()" [formGroup]="registerForm">
+		<form role="form" class="mx-auto text-center app-login-form"
+			novalidate (ngSubmit)="register()" [formGroup]="registerForm">
 
 
-            <img class="app-brand mb-5" src="../../../content/images/brand.png" alt="brand">
-             <div style="color: #3097D1" *ngIf="success" jhiTranslate="register.messages.success">
-                <strong>Thanks for interest in Gradzcircle!</strong> Please check your email and click the verification link to complete registration.
-            </div>
+			<img class="app-brand mb-5" src="../../../content/images/brand.png"
+				alt="brand">
+			<div style="color: #3097D1" *ngIf="success"
+				jhiTranslate="register.messages.success">
+				<strong>Thanks for interest in Gradzcircle!</strong> Please check
+				your email and click the verification link to complete registration.
+			</div>
 
-            <div class="text-danger" *ngIf="error" jhiTranslate="register.messages.error.fail">
-                <strong>Registration failed!</strong> Please try again later.
-            </div>
+			<div class="text-danger" *ngIf="error"
+				jhiTranslate="register.messages.error.fail">
+				<strong>Registration failed!</strong> Please try again later.
+			</div>
 
-            <div class="text-danger" *ngIf="errorUserExists" jhiTranslate="register.messages.error.userexists">
-                <strong>Login name already registered!</strong> <br> Please choose another one.
-            </div>
+			<div class="text-danger" *ngIf="errorUserExists"
+				jhiTranslate="register.messages.error.userexists">
+				<strong>Login name already registered!</strong> <br> Please
+				choose another one.
+			</div>
 
-            <div class="text-danger" *ngIf="errorEmailExists" jhiTranslate="register.messages.error.emailexists">
-                <strong>Email is already in use!</strong> Please choose another one.
-            </div>
+			<div class="text-danger" *ngIf="errorEmailExists"
+				jhiTranslate="register.messages.error.emailexists">
+				<strong>Email is already in use!</strong> Please choose another one.
+			</div>
 
-            <fieldset>
-                <div class="form-group" [ngClass]="{'has-danger':  (registerForm.get('login').touched ||
+			<fieldset>
+				<div class="form-group"
+					[ngClass]="{'has-danger':  (registerForm.get('login').touched ||
                                                                   registerForm.get('login').dirty) &&
                                                                   !registerForm.get('login').valid }">
-                  <div class="input-group">
-                      <span class="input-group-addon icon icon-user" id="basic-addon1"></span>
-                    <input class="form-control" placeholder="{{'global.form.username.placeholder' | translate}}" formControlName="login" id="username"  aria-describedby="basic-addon1">
-                  </div>
-                  <div>
-                    <span class="form-text text-left" *ngIf="(registerForm.get('login').touched ||
+					<div class="input-group">
+						<span class="input-group-addon icon icon-user" id="basic-addon1"></span>
+						<input class="form-control"
+							placeholder="{{'global.form.username.placeholder' | translate}}"
+							formControlName="login" id="username"
+							aria-describedby="basic-addon1">
+					</div>
+					<div>
+						<span class="form-text text-left"
+							*ngIf="(registerForm.get('login').touched ||
                                                          registerForm.get('login').dirty) &&
                                                          registerForm.get('login').errors">
-                          <div class="form-control-feedback" *ngIf="registerForm.get('login').errors.required">
-                                Please enter your user name.
-                            </div>
-                            <div class="form-control-feedback"  *ngIf="registerForm.get('login').errors.minlength">
-                                The first name must be longer than 6 characters.
-                            </div>
-                    </span>
-                  </div>
-                </div>
+							<div class="form-control-feedback"
+								*ngIf="registerForm.get('login').errors.required">Please
+								enter your user name.</div>
+							<div class="form-control-feedback"
+								*ngIf="registerForm.get('login').errors.minlength">The
+								first name must be longer than 6 characters.</div>
+						</span>
+					</div>
+				</div>
 
-                <div class="form-group" [ngClass]="{'has-danger': (registerForm.get('email').touched ||
+				<div class="form-group"
+					[ngClass]="{'has-danger': (registerForm.get('email').touched ||
                                                                   registerForm.get('email').dirty) &&
                                                                   !registerForm.get('email').valid }">
-                <div class="input-group">
-                      <span class="input-group-addon icon icon-mail" id="basic-addon2" ></span>
-                      <input class="form-control" placeholder="{{'global.form.email.placeholder' | translate}}" formControlName="email" aria-describedby="basic-addon2">
-                  </div>
-                  <div>
-                     <span class="form-text text-left" *ngIf="(registerForm.get('email').touched ||
+					<div class="input-group">
+						<span class="input-group-addon icon icon-mail" id="basic-addon2"></span>
+						<input class="form-control"
+							placeholder="{{'global.form.email.placeholder' | translate}}"
+							formControlName="email" aria-describedby="basic-addon2">
+					</div>
+					<div>
+						<span class="form-text text-left"
+							*ngIf="(registerForm.get('email').touched ||
                                                          registerForm.get('email').dirty) &&
                                                          registerForm.get('email').errors">
-                                <div class="form-control-feedback" *ngIf="registerForm.get('email').errors.required">
-                                Please enter your email address.
-                            </div>
-                            <div class="form-control-feedback" *ngIf="registerForm.get('email').errors.pattern">
-                                Please enter a valid email address
-                            </div>
-                    </span>
-                  </div>
-                </div>
+							<div class="form-control-feedback"
+								*ngIf="registerForm.get('email').errors.required">Please
+								enter your email address.</div>
+							<div class="form-control-feedback"
+								*ngIf="registerForm.get('email').errors.pattern">Please
+								enter a valid email address</div>
+						</span>
+					</div>
+				</div>
 
-                <div formGroupName="passwordGroup" [ngClass]="{'has-danger': registerForm.get('passwordGroup').errors}">
+				<div formGroupName="passwordGroup"
+					[ngClass]="{'has-danger': registerForm.get('passwordGroup').errors}">
 
-                    <div class="form-group mb-3" [ngClass]="{'has-danger': (registerForm.get('passwordGroup.password').touched ||
+					<div class="form-group mb-3"
+						[ngClass]="{'has-danger': (registerForm.get('passwordGroup.password').touched ||
                                                                             registerForm.get('passwordGroup.password').dirty) &&
                                                                             !registerForm.get('passwordGroup.password').valid}">
-                        <div class="input-group">
-                            <span class="input-group-addon icon icon-key" id="basic-addon3" ></span>
-                            <input type="password" class="form-control" placeholder="{{'global.form.newpassword.placeholder' | translate}}" formControlName="password" aria-describedby="basic-addon3">
-                        </div>
+						<div class="input-group">
+							<span class="input-group-addon icon icon-key" id="basic-addon3"></span>
+							<input type="password" class="form-control"
+								placeholder="{{'global.form.newpassword.placeholder' | translate}}"
+								formControlName="password" aria-describedby="basic-addon3">
+						</div>
 
 
-                        <div>
-                            <span class="form-text text-left" *ngIf="(registerForm.get('passwordGroup.password').touched ||
+						<div>
+							<span class="form-text text-left"
+								*ngIf="(registerForm.get('passwordGroup.password').touched ||
                                                                         registerForm.get('passwordGroup.password').dirty) &&
                                                                         (registerForm.get('passwordGroup.password').errors)">
 
-                                <div class="form-control-feedback" *ngIf="registerForm.get('passwordGroup.password').errors.required">
-                                    Please confirm your password.
-                                </div>
-                                 <div class="form-control-feedback" *ngIf="registerForm.get('passwordGroup.password').errors.minlength">
-                                    Passwords should be atleast 8 characters.
-                                </div>
-                            </span>
-                        </div>
-                    </div>
-                     <!--jhi-password-strength-bar [passwordToCheck]="registerForm.get('passwordGroup.password')"></jhi-password-strength-bar-->
+								<div class="form-control-feedback"
+									*ngIf="registerForm.get('passwordGroup.password').errors.required">
+									Please confirm your password.</div>
+								<div class="form-control-feedback"
+									*ngIf="registerForm.get('passwordGroup.password').errors.minlength">
+									Passwords should be atleast 8 characters.</div>
+							</span>
+						</div>
+					</div>
+					<!--jhi-password-strength-bar [passwordToCheck]="registerForm.get('passwordGroup.password')"></jhi-password-strength-bar-->
 
-                    <div class="form-group mb-3" [ngClass]="{'has-danger': (registerForm.get('passwordGroup.confirmPassword').touched ||
+					<div class="form-group mb-3"
+						[ngClass]="{'has-danger': (registerForm.get('passwordGroup.confirmPassword').touched ||
                                                                             registerForm.get('passwordGroup.confirmPassword').dirty) &&
                                                                             !registerForm.get('passwordGroup.confirmPassword').valid }">
 
-                        <div class="input-group">
-                            <span class="input-group-addon icon icon-key" id="basic-addon4" ></span>
-                            <input type="password" class="form-control" placeholder="{{'global.form.confirmpassword.placeholder' | translate}}" formControlName="confirmPassword" aria-describedby="basic-addon4">
-                        </div>
+						<div class="input-group">
+							<span class="input-group-addon icon icon-key" id="basic-addon4"></span>
+							<input type="password" class="form-control"
+								placeholder="{{'global.form.confirmpassword.placeholder' | translate}}"
+								formControlName="confirmPassword"
+								aria-describedby="basic-addon4">
+						</div>
 
-                            <div>
-                                <span class="form-text text-left" *ngIf="(registerForm.get('passwordGroup.confirmPassword').touched ||
+						<div>
+							<span class="form-text text-left"
+								*ngIf="(registerForm.get('passwordGroup.confirmPassword').touched ||
                                                                             registerForm.get('passwordGroup.confirmPassword').dirty) &&
                                                                         (registerForm.get('passwordGroup.confirmPassword').errors ||
                                                                         registerForm.get('passwordGroup').errors)">
 
-                                    <div class="form-control-feedback" *ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.required">
-                                        Please confirm your password.
-                                    </div>
-                                    <div class="form-control-feedback" *ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.minlength">
-                                        Passwords should be atleast 8 characters.
-                                    </div>
-                                    <div class="form-control-feedback" *ngIf="registerForm.get('passwordGroup').errors?.match">
-                                        Passwords do not match.
-                                    </div>
-                                </span>
-                            </div>
-                    </div>
+								<div class="form-control-feedback"
+									*ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.required">
+									Please confirm your password.</div>
+								<div class="form-control-feedback"
+									*ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.minlength">
+									Passwords should be atleast 8 characters.</div>
+								<div class="form-control-feedback"
+									*ngIf="registerForm.get('passwordGroup').errors?.match">
+									Passwords do not match.</div>
+							</span>
+						</div>
+					</div>
 
-                </div>
+				</div>
 
-                <div class="mb-5">
-                    <button class="btn btn-primary" type="submit" [disabled] ="!registerForm.valid">Sign up</button>
-                </div>
+				<div class="mb-5">
+					<button class="btn btn-primary" type="submit"
+						[disabled]="!registerForm.valid">Sign up</button>
+				</div>
 
-                <footer class="screen-login">
-                    <br/>
+				<footer class="screen-login">
+					<br />
 
-                </footer>
-            </fieldset>
-        </form>
-    </div>
+				</footer>
+			</fieldset>
+		</form>
+	</div>
 </div>

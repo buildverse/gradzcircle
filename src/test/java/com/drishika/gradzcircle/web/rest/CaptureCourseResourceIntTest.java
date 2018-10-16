@@ -38,232 +38,220 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = GradzcircleApp.class)
 public class CaptureCourseResourceIntTest {
 
-    private static final String DEFAULT_COURSE_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_COURSE_NAME = "BBBBBBBBBB";
+	private static final String DEFAULT_COURSE_NAME = "AAAAAAAAAA";
+	private static final String UPDATED_COURSE_NAME = "BBBBBBBBBB";
 
-    @Autowired
-    private CaptureCourseRepository captureCourseRepository;
+	@Autowired
+	private CaptureCourseRepository captureCourseRepository;
 
-    @Autowired
-    private CaptureCourseSearchRepository captureCourseSearchRepository;
+	@Autowired
+	private CaptureCourseSearchRepository captureCourseSearchRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private EntityManager em;
 
-    private MockMvc restCaptureCourseMockMvc;
+	private MockMvc restCaptureCourseMockMvc;
 
-    private CaptureCourse captureCourse;
+	private CaptureCourse captureCourse;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CaptureCourseResource captureCourseResource = new CaptureCourseResource(captureCourseRepository, captureCourseSearchRepository);
-        this.restCaptureCourseMockMvc = MockMvcBuilders.standaloneSetup(captureCourseResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final CaptureCourseResource captureCourseResource = new CaptureCourseResource(captureCourseRepository,
+				captureCourseSearchRepository);
+		this.restCaptureCourseMockMvc = MockMvcBuilders.standaloneSetup(captureCourseResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static CaptureCourse createEntity(EntityManager em) {
-        CaptureCourse captureCourse = new CaptureCourse()
-            .courseName(DEFAULT_COURSE_NAME);
-        return captureCourse;
-    }
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static CaptureCourse createEntity(EntityManager em) {
+		CaptureCourse captureCourse = new CaptureCourse().courseName(DEFAULT_COURSE_NAME);
+		return captureCourse;
+	}
 
-    @Before
-    public void initTest() {
-        captureCourseSearchRepository.deleteAll();
-        captureCourse = createEntity(em);
-    }
+	@Before
+	public void initTest() {
+		captureCourseSearchRepository.deleteAll();
+		captureCourse = createEntity(em);
+	}
 
-    @Test
-    @Transactional
-    public void createCaptureCourse() throws Exception {
-        int databaseSizeBeforeCreate = captureCourseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createCaptureCourse() throws Exception {
+		int databaseSizeBeforeCreate = captureCourseRepository.findAll().size();
 
-        // Create the CaptureCourse
-        restCaptureCourseMockMvc.perform(post("/api/capture-courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureCourse)))
-            .andExpect(status().isCreated());
+		// Create the CaptureCourse
+		restCaptureCourseMockMvc.perform(post("/api/capture-courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(captureCourse))).andExpect(status().isCreated());
 
-        // Validate the CaptureCourse in the database
-        List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeCreate + 1);
-        CaptureCourse testCaptureCourse = captureCourseList.get(captureCourseList.size() - 1);
-        assertThat(testCaptureCourse.getCourseName()).isEqualTo(DEFAULT_COURSE_NAME);
+		// Validate the CaptureCourse in the database
+		List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
+		assertThat(captureCourseList).hasSize(databaseSizeBeforeCreate + 1);
+		CaptureCourse testCaptureCourse = captureCourseList.get(captureCourseList.size() - 1);
+		assertThat(testCaptureCourse.getCourseName()).isEqualTo(DEFAULT_COURSE_NAME);
 
-        // Validate the CaptureCourse in Elasticsearch
-        CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
-        assertThat(captureCourseEs).isEqualToComparingFieldByField(testCaptureCourse);
-    }
+		// Validate the CaptureCourse in Elasticsearch
+		CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
+		assertThat(captureCourseEs).isEqualToComparingFieldByField(testCaptureCourse);
+	}
 
-    @Test
-    @Transactional
-    public void createCaptureCourseWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = captureCourseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void createCaptureCourseWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = captureCourseRepository.findAll().size();
 
-        // Create the CaptureCourse with an existing ID
-        captureCourse.setId(1L);
+		// Create the CaptureCourse with an existing ID
+		captureCourse.setId(1L);
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restCaptureCourseMockMvc.perform(post("/api/capture-courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureCourse)))
-            .andExpect(status().isBadRequest());
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restCaptureCourseMockMvc.perform(post("/api/capture-courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(captureCourse))).andExpect(status().isBadRequest());
 
-        // Validate the CaptureCourse in the database
-        List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeCreate);
-    }
+		// Validate the CaptureCourse in the database
+		List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
+		assertThat(captureCourseList).hasSize(databaseSizeBeforeCreate);
+	}
 
-    @Test
-    @Transactional
-    public void getAllCaptureCourses() throws Exception {
-        // Initialize the database
-        captureCourseRepository.saveAndFlush(captureCourse);
+	@Test
+	@Transactional
+	public void getAllCaptureCourses() throws Exception {
+		// Initialize the database
+		captureCourseRepository.saveAndFlush(captureCourse);
 
-        // Get all the captureCourseList
-        restCaptureCourseMockMvc.perform(get("/api/capture-courses?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(captureCourse.getId().intValue())))
-            .andExpect(jsonPath("$.[*].courseName").value(hasItem(DEFAULT_COURSE_NAME.toString())));
-    }
+		// Get all the captureCourseList
+		restCaptureCourseMockMvc.perform(get("/api/capture-courses?sort=id,desc")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(captureCourse.getId().intValue())))
+				.andExpect(jsonPath("$.[*].courseName").value(hasItem(DEFAULT_COURSE_NAME.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void getCaptureCourse() throws Exception {
-        // Initialize the database
-        captureCourseRepository.saveAndFlush(captureCourse);
+	@Test
+	@Transactional
+	public void getCaptureCourse() throws Exception {
+		// Initialize the database
+		captureCourseRepository.saveAndFlush(captureCourse);
 
-        // Get the captureCourse
-        restCaptureCourseMockMvc.perform(get("/api/capture-courses/{id}", captureCourse.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(captureCourse.getId().intValue()))
-            .andExpect(jsonPath("$.courseName").value(DEFAULT_COURSE_NAME.toString()));
-    }
+		// Get the captureCourse
+		restCaptureCourseMockMvc.perform(get("/api/capture-courses/{id}", captureCourse.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(captureCourse.getId().intValue()))
+				.andExpect(jsonPath("$.courseName").value(DEFAULT_COURSE_NAME.toString()));
+	}
 
-    @Test
-    @Transactional
-    public void getNonExistingCaptureCourse() throws Exception {
-        // Get the captureCourse
-        restCaptureCourseMockMvc.perform(get("/api/capture-courses/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+	@Test
+	@Transactional
+	public void getNonExistingCaptureCourse() throws Exception {
+		// Get the captureCourse
+		restCaptureCourseMockMvc.perform(get("/api/capture-courses/{id}", Long.MAX_VALUE))
+				.andExpect(status().isNotFound());
+	}
 
-    @Test
-    @Transactional
-    public void updateCaptureCourse() throws Exception {
-        // Initialize the database
-        captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
-        int databaseSizeBeforeUpdate = captureCourseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateCaptureCourse() throws Exception {
+		// Initialize the database
+		captureCourseRepository.saveAndFlush(captureCourse);
+		captureCourseSearchRepository.save(captureCourse);
+		int databaseSizeBeforeUpdate = captureCourseRepository.findAll().size();
 
-        // Update the captureCourse
-        CaptureCourse updatedCaptureCourse = captureCourseRepository.findOne(captureCourse.getId());
-        updatedCaptureCourse
-            .courseName(UPDATED_COURSE_NAME);
+		// Update the captureCourse
+		CaptureCourse updatedCaptureCourse = captureCourseRepository.findOne(captureCourse.getId());
+		updatedCaptureCourse.courseName(UPDATED_COURSE_NAME);
 
-        restCaptureCourseMockMvc.perform(put("/api/capture-courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCaptureCourse)))
-            .andExpect(status().isOk());
+		restCaptureCourseMockMvc.perform(put("/api/capture-courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCaptureCourse))).andExpect(status().isOk());
 
-        // Validate the CaptureCourse in the database
-        List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate);
-        CaptureCourse testCaptureCourse = captureCourseList.get(captureCourseList.size() - 1);
-        assertThat(testCaptureCourse.getCourseName()).isEqualTo(UPDATED_COURSE_NAME);
+		// Validate the CaptureCourse in the database
+		List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
+		assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate);
+		CaptureCourse testCaptureCourse = captureCourseList.get(captureCourseList.size() - 1);
+		assertThat(testCaptureCourse.getCourseName()).isEqualTo(UPDATED_COURSE_NAME);
 
-        // Validate the CaptureCourse in Elasticsearch
-        CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
-        assertThat(captureCourseEs).isEqualToComparingFieldByField(testCaptureCourse);
-    }
+		// Validate the CaptureCourse in Elasticsearch
+		CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
+		assertThat(captureCourseEs).isEqualToComparingFieldByField(testCaptureCourse);
+	}
 
-    @Test
-    @Transactional
-    public void updateNonExistingCaptureCourse() throws Exception {
-        int databaseSizeBeforeUpdate = captureCourseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateNonExistingCaptureCourse() throws Exception {
+		int databaseSizeBeforeUpdate = captureCourseRepository.findAll().size();
 
-        // Create the CaptureCourse
+		// Create the CaptureCourse
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restCaptureCourseMockMvc.perform(put("/api/capture-courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureCourse)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restCaptureCourseMockMvc.perform(put("/api/capture-courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(captureCourse))).andExpect(status().isCreated());
 
-        // Validate the CaptureCourse in the database
-        List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the CaptureCourse in the database
+		List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
+		assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional
-    public void deleteCaptureCourse() throws Exception {
-        // Initialize the database
-        captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
-        int databaseSizeBeforeDelete = captureCourseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void deleteCaptureCourse() throws Exception {
+		// Initialize the database
+		captureCourseRepository.saveAndFlush(captureCourse);
+		captureCourseSearchRepository.save(captureCourse);
+		int databaseSizeBeforeDelete = captureCourseRepository.findAll().size();
 
-        // Get the captureCourse
-        restCaptureCourseMockMvc.perform(delete("/api/capture-courses/{id}", captureCourse.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// Get the captureCourse
+		restCaptureCourseMockMvc.perform(
+				delete("/api/capture-courses/{id}", captureCourse.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean captureCourseExistsInEs = captureCourseSearchRepository.exists(captureCourse.getId());
-        assertThat(captureCourseExistsInEs).isFalse();
+		// Validate Elasticsearch is empty
+		boolean captureCourseExistsInEs = captureCourseSearchRepository.exists(captureCourse.getId());
+		assertThat(captureCourseExistsInEs).isFalse();
 
-        // Validate the database is empty
-        List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the database is empty
+		List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
+		assertThat(captureCourseList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-    @Test
-    @Transactional
-    public void searchCaptureCourse() throws Exception {
-        // Initialize the database
-        captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
+	@Test
+	@Transactional
+	public void searchCaptureCourse() throws Exception {
+		// Initialize the database
+		captureCourseRepository.saveAndFlush(captureCourse);
+		captureCourseSearchRepository.save(captureCourse);
 
-        // Search the captureCourse
-        restCaptureCourseMockMvc.perform(get("/api/_search/capture-courses?query=id:" + captureCourse.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(captureCourse.getId().intValue())))
-            .andExpect(jsonPath("$.[*].courseName").value(hasItem(DEFAULT_COURSE_NAME.toString())));
-    }
+		// Search the captureCourse
+		restCaptureCourseMockMvc.perform(get("/api/_search/capture-courses?query=id:" + captureCourse.getId()))
+				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(captureCourse.getId().intValue())))
+				.andExpect(jsonPath("$.[*].courseName").value(hasItem(DEFAULT_COURSE_NAME.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CaptureCourse.class);
-        CaptureCourse captureCourse1 = new CaptureCourse();
-        captureCourse1.setId(1L);
-        CaptureCourse captureCourse2 = new CaptureCourse();
-        captureCourse2.setId(captureCourse1.getId());
-        assertThat(captureCourse1).isEqualTo(captureCourse2);
-        captureCourse2.setId(2L);
-        assertThat(captureCourse1).isNotEqualTo(captureCourse2);
-        captureCourse1.setId(null);
-        assertThat(captureCourse1).isNotEqualTo(captureCourse2);
-    }
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(CaptureCourse.class);
+		CaptureCourse captureCourse1 = new CaptureCourse();
+		captureCourse1.setId(1L);
+		CaptureCourse captureCourse2 = new CaptureCourse();
+		captureCourse2.setId(captureCourse1.getId());
+		assertThat(captureCourse1).isEqualTo(captureCourse2);
+		captureCourse2.setId(2L);
+		assertThat(captureCourse1).isNotEqualTo(captureCourse2);
+		captureCourse1.setId(null);
+		assertThat(captureCourse1).isNotEqualTo(captureCourse2);
+	}
 }

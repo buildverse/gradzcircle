@@ -16,6 +16,8 @@ import {
     CorporateDeleteDialogComponent,
     corporateRoute,
     corporatePopupRoute,
+    LinkedCandidatesComponent,
+    LinkedCandidatesResolvePagingParams
 } from './';
 
 const ENTITY_STATES = [
@@ -39,6 +41,7 @@ const ENTITY_STATES = [
         CorporateDeleteDialogComponent,
         CorporatePopupComponent,
         CorporateDeletePopupComponent,
+        LinkedCandidatesComponent
     ],
     entryComponents: [
         CorporateComponent,
@@ -46,10 +49,12 @@ const ENTITY_STATES = [
         CorporatePopupComponent,
         CorporateDeleteDialogComponent,
         CorporateDeletePopupComponent,
+        LinkedCandidatesComponent
     ],
     providers: [
         CorporateService,
         CorporatePopupService,
+        LinkedCandidatesResolvePagingParams
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

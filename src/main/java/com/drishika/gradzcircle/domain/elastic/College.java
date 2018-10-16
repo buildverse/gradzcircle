@@ -5,12 +5,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.completion.Completion;
 
 @Document(indexName = "college")
-public class College extends com.drishika.gradzcircle.domain.College{
+public class College extends com.drishika.gradzcircle.domain.College {
 
-    @CompletionField(maxInputLength = 100)
-    private Completion suggest;
+	@CompletionField(maxInputLength = 100)
+	private Completion suggest;
 
-    public Completion getSuggest() {
+	public Completion getSuggest() {
 		return suggest;
 	}
 

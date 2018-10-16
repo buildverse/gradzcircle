@@ -10,8 +10,8 @@ import { BaseEntity } from '../../shared/model/base-entity';
 export class CandidateDetailResolverService implements Resolve<Candidate> {
     constructor (private candidateService: CandidateService,private router: Router){}
 
-    resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Candidate>{
-        let candidateId = route.parent.data['candidate'].id;
+    resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Candidate> {
+        const candidateId = route.parent.data['candidate'].id;
         return this.candidateService.find(candidateId).catch((error: any) => {
             console.log(`${error}`);
             this.router.navigate(['/error']);

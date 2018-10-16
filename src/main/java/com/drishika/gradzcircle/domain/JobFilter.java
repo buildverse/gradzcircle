@@ -37,7 +37,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Table(name = "job_filter")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "jobfilter")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class JobFilter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -53,7 +54,7 @@ public class JobFilter implements Serializable {
 	@JsonSerialize(using = CustomeJobFilterSerialize.class)
 	private String filterDescription;
 
-	@OneToMany(mappedBy = "jobFilter",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "jobFilter", cascade = CascadeType.ALL)
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<JobFilterHistory> histories = new HashSet<>();
@@ -137,7 +138,8 @@ public class JobFilter implements Serializable {
 		if (jobFilter.getId() == null || getId() == null) {
 			return false;
 		}
-		return Objects.equals(getId(), jobFilter.getId()) && Objects.equals(getFilterDescription(), jobFilter.getFilterDescription());
+		return Objects.equals(getId(), jobFilter.getId())
+				&& Objects.equals(getFilterDescription(), jobFilter.getFilterDescription());
 	}
 
 	@Override
@@ -147,6 +149,7 @@ public class JobFilter implements Serializable {
 
 	@Override
 	public String toString() {
-		return "JobFilter{" + "id=" + getId() + ", filterDescription='" + getFilterDescription() + "'" + "} and job is "+getJob();
+		return "JobFilter{" + "id=" + getId() + ", filterDescription='" + getFilterDescription() + "'" + "} and job is "
+				+ getJob();
 	}
 }

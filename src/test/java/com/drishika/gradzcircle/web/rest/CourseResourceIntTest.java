@@ -45,59 +45,58 @@ import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 @SpringBootTest(classes = GradzcircleApp.class)
 public class CourseResourceIntTest {
 
-    private static final String DEFAULT_COURSE = "AAAAAAAAAA";
-    private static final String UPDATED_COURSE = "BBBBBBBBBB";
+	private static final String DEFAULT_COURSE = "AAAAAAAAAA";
+	private static final String UPDATED_COURSE = "BBBBBBBBBB";
 
-    @Autowired
-    private CourseRepository courseRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 
-    @Autowired
-    private CourseSearchRepository courseSearchRepository;
+	@Autowired
+	private CourseSearchRepository courseSearchRepository;
 
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-    
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+	@Autowired
+	private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
+	@Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
 
-    private MockMvc restCourseMockMvc;
+	@Autowired
+	private EntityManager em;
 
-    private Course course;
-    
-    private com.drishika.gradzcircle.domain.elastic.Course elasticCourse;
+	private MockMvc restCourseMockMvc;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CourseResource courseResource = new CourseResource(courseRepository, courseSearchRepository,elasticsearchTemplate);
-        this.restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
+	private Course course;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Course createEntity(EntityManager em) {
-        Course course = new Course()
-            .course(DEFAULT_COURSE);
-        return course;
-    }
-    
-    /**
+	private com.drishika.gradzcircle.domain.elastic.Course elasticCourse;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final CourseResource courseResource = new CourseResource(courseRepository, courseSearchRepository,
+				elasticsearchTemplate);
+		this.restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
+				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+				.setMessageConverters(jacksonMessageConverter).build();
+	}
+
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static Course createEntity(EntityManager em) {
+		Course course = new Course().course(DEFAULT_COURSE);
+		return course;
+	}
+
+	/**
 	 * Create an entity for this test.
 	 *
 	 * This is a static method, as tests for other entities might also need it, if
@@ -108,207 +107,194 @@ public class CourseResourceIntTest {
 		entityBuilder.name(course.getCourse());
 		return entityBuilder;
 	}
-    
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static com.drishika.gradzcircle.domain.elastic.Course createElasticInstance(Course course) {
-    	com.drishika.gradzcircle.domain.elastic.Course elasticCourse = new com.drishika.gradzcircle.domain.elastic.Course();
-    	elasticCourse.setId(course.getId());
-    	elasticCourse.course(course.getCourse());
-        return elasticCourse;
-    }
 
-    @Before
-    public void initTest() {
-        courseSearchRepository.deleteAll();
-        course = createEntity(em);
-    }
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static com.drishika.gradzcircle.domain.elastic.Course createElasticInstance(Course course) {
+		com.drishika.gradzcircle.domain.elastic.Course elasticCourse = new com.drishika.gradzcircle.domain.elastic.Course();
+		elasticCourse.setId(course.getId());
+		elasticCourse.course(course.getCourse());
+		return elasticCourse;
+	}
 
-    @Test
-    @Transactional
-    public void createCourse() throws Exception {
-        int databaseSizeBeforeCreate = courseRepository.findAll().size();
+	@Before
+	public void initTest() {
+		courseSearchRepository.deleteAll();
+		course = createEntity(em);
+	}
 
-        // Create the Course
-        restCourseMockMvc.perform(post("/api/courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(course)))
-            .andExpect(status().isCreated());
+	@Test
+	@Transactional
+	public void createCourse() throws Exception {
+		int databaseSizeBeforeCreate = courseRepository.findAll().size();
 
-        // Validate the Course in the database
-        List<Course> courseList = courseRepository.findAll();
-        assertThat(courseList).hasSize(databaseSizeBeforeCreate + 1);
-        Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getCourse()).isEqualTo(DEFAULT_COURSE);
+		// Create the Course
+		restCourseMockMvc.perform(post("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(course))).andExpect(status().isCreated());
 
-        // Validate the Course in Elasticsearch
-        com.drishika.gradzcircle.domain.elastic.Course courseEs = courseSearchRepository.findOne(testCourse.getId());
-        assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
-        assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
-    }
+		// Validate the Course in the database
+		List<Course> courseList = courseRepository.findAll();
+		assertThat(courseList).hasSize(databaseSizeBeforeCreate + 1);
+		Course testCourse = courseList.get(courseList.size() - 1);
+		assertThat(testCourse.getCourse()).isEqualTo(DEFAULT_COURSE);
 
-    @Test
-    @Transactional
-    public void createCourseWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = courseRepository.findAll().size();
+		// Validate the Course in Elasticsearch
+		com.drishika.gradzcircle.domain.elastic.Course courseEs = courseSearchRepository.findOne(testCourse.getId());
+		assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
+		assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
+	}
 
-        // Create the Course with an existing ID
-        course.setId(1L);
+	@Test
+	@Transactional
+	public void createCourseWithExistingId() throws Exception {
+		int databaseSizeBeforeCreate = courseRepository.findAll().size();
 
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restCourseMockMvc.perform(post("/api/courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(course)))
-            .andExpect(status().isBadRequest());
+		// Create the Course with an existing ID
+		course.setId(1L);
 
-        // Validate the Course in the database
-        List<Course> courseList = courseRepository.findAll();
-        assertThat(courseList).hasSize(databaseSizeBeforeCreate);
-    }
+		// An entity with an existing ID cannot be created, so this API call must fail
+		restCourseMockMvc.perform(post("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(course))).andExpect(status().isBadRequest());
 
-    @Test
-    @Transactional
-    public void getAllCourses() throws Exception {
-        // Initialize the database
-        courseRepository.saveAndFlush(course);
+		// Validate the Course in the database
+		List<Course> courseList = courseRepository.findAll();
+		assertThat(courseList).hasSize(databaseSizeBeforeCreate);
+	}
 
-        // Get all the courseList
-        restCourseMockMvc.perform(get("/api/courses?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
-            .andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())));
-    }
+	@Test
+	@Transactional
+	public void getAllCourses() throws Exception {
+		// Initialize the database
+		courseRepository.saveAndFlush(course);
 
-    @Test
-    @Transactional
-    public void getCourse() throws Exception {
-        // Initialize the database
-        courseRepository.saveAndFlush(course);
+		// Get all the courseList
+		restCourseMockMvc.perform(get("/api/courses?sort=id,desc")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
+				.andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())));
+	}
 
-        // Get the course
-        restCourseMockMvc.perform(get("/api/courses/{id}", course.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(course.getId().intValue()))
-            .andExpect(jsonPath("$.course").value(DEFAULT_COURSE.toString()));
-    }
+	@Test
+	@Transactional
+	public void getCourse() throws Exception {
+		// Initialize the database
+		courseRepository.saveAndFlush(course);
 
-    @Test
-    @Transactional
-    public void getNonExistingCourse() throws Exception {
-        // Get the course
-        restCourseMockMvc.perform(get("/api/courses/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
-    }
+		// Get the course
+		restCourseMockMvc.perform(get("/api/courses/{id}", course.getId())).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.id").value(course.getId().intValue()))
+				.andExpect(jsonPath("$.course").value(DEFAULT_COURSE.toString()));
+	}
 
-    @Test
-    @Transactional
-    public void updateCourse() throws Exception {
-        // Initialize the database
-        courseRepository.saveAndFlush(course);
-        elasticsearchTemplate.index(createEntityBuilder(course)
+	@Test
+	@Transactional
+	public void getNonExistingCourse() throws Exception {
+		// Get the course
+		restCourseMockMvc.perform(get("/api/courses/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	@Transactional
+	public void updateCourse() throws Exception {
+		// Initialize the database
+		courseRepository.saveAndFlush(course);
+		elasticsearchTemplate.index(createEntityBuilder(course)
 				.suggest(new String[] { createElasticInstance(course).getCourse() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
-        int databaseSizeBeforeUpdate = courseRepository.findAll().size();
+		int databaseSizeBeforeUpdate = courseRepository.findAll().size();
 
-        // Update the course
-        Course updatedCourse = courseRepository.findOne(course.getId());
-        updatedCourse
-            .course(UPDATED_COURSE);
+		// Update the course
+		Course updatedCourse = courseRepository.findOne(course.getId());
+		updatedCourse.course(UPDATED_COURSE);
 
-        restCourseMockMvc.perform(put("/api/courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCourse)))
-            .andExpect(status().isOk());
+		restCourseMockMvc.perform(put("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCourse))).andExpect(status().isOk());
 
-        // Validate the Course in the database
-        List<Course> courseList = courseRepository.findAll();
-        assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
-        Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getCourse()).isEqualTo(UPDATED_COURSE);
+		// Validate the Course in the database
+		List<Course> courseList = courseRepository.findAll();
+		assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
+		Course testCourse = courseList.get(courseList.size() - 1);
+		assertThat(testCourse.getCourse()).isEqualTo(UPDATED_COURSE);
 
-        // Validate the Course in Elasticsearch
-        Course courseEs = courseSearchRepository.findOne(testCourse.getId());
-        assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
-        assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
-    }
+		// Validate the Course in Elasticsearch
+		Course courseEs = courseSearchRepository.findOne(testCourse.getId());
+		assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
+		assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
+	}
 
-    @Test
-    @Transactional
-    public void updateNonExistingCourse() throws Exception {
-        int databaseSizeBeforeUpdate = courseRepository.findAll().size();
+	@Test
+	@Transactional
+	public void updateNonExistingCourse() throws Exception {
+		int databaseSizeBeforeUpdate = courseRepository.findAll().size();
 
-        // Create the Course
+		// Create the Course
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restCourseMockMvc.perform(put("/api/courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(course)))
-            .andExpect(status().isCreated());
+		// If the entity doesn't have an ID, it will be created instead of just being
+		// updated
+		restCourseMockMvc.perform(put("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(course))).andExpect(status().isCreated());
 
-        // Validate the Course in the database
-        List<Course> courseList = courseRepository.findAll();
-        assertThat(courseList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
+		// Validate the Course in the database
+		List<Course> courseList = courseRepository.findAll();
+		assertThat(courseList).hasSize(databaseSizeBeforeUpdate + 1);
+	}
 
-    @Test
-    @Transactional
-    public void deleteCourse() throws Exception {
-        // Initialize the database
-        courseRepository.saveAndFlush(course);
-        elasticsearchTemplate.index(createEntityBuilder(course)
+	@Test
+	@Transactional
+	public void deleteCourse() throws Exception {
+		// Initialize the database
+		courseRepository.saveAndFlush(course);
+		elasticsearchTemplate.index(createEntityBuilder(course)
 				.suggest(new String[] { createElasticInstance(course).getCourse() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
-        int databaseSizeBeforeDelete = courseRepository.findAll().size();
+		int databaseSizeBeforeDelete = courseRepository.findAll().size();
 
-        // Get the course
-        restCourseMockMvc.perform(delete("/api/courses/{id}", course.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+		// Get the course
+		restCourseMockMvc.perform(delete("/api/courses/{id}", course.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean courseExistsInEs = courseSearchRepository.exists(course.getId());
-        assertThat(courseExistsInEs).isFalse();
+		// Validate Elasticsearch is empty
+		boolean courseExistsInEs = courseSearchRepository.exists(course.getId());
+		assertThat(courseExistsInEs).isFalse();
 
-        // Validate the database is empty
-        List<Course> courseList = courseRepository.findAll();
-        assertThat(courseList).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the database is empty
+		List<Course> courseList = courseRepository.findAll();
+		assertThat(courseList).hasSize(databaseSizeBeforeDelete - 1);
+	}
 
-    @Test
-    @Transactional
-    public void searchCourse() throws Exception {
-        // Initialize the database
-        courseRepository.saveAndFlush(course);
-        elasticsearchTemplate.index(createEntityBuilder(course)
+	@Test
+	@Transactional
+	public void searchCourse() throws Exception {
+		// Initialize the database
+		courseRepository.saveAndFlush(course);
+		elasticsearchTemplate.index(createEntityBuilder(course)
 				.suggest(new String[] { createElasticInstance(course).getCourse() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 
-        // Search the course
-        restCourseMockMvc.perform(get("/api/_search/courses?query=id:" + course.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
-            .andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())));
-    }
+		// Search the course
+		restCourseMockMvc.perform(get("/api/_search/courses?query=id:" + course.getId())).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
+				.andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())));
+	}
 
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Course.class);
-        Course course1 = new Course();
-        course1.setId(1L);
-        Course course2 = new Course();
-        course2.setId(course1.getId());
-        assertThat(course1).isEqualTo(course2);
-        course2.setId(2L);
-        assertThat(course1).isNotEqualTo(course2);
-        course1.setId(null);
-        assertThat(course1).isNotEqualTo(course2);
-    }
+	@Test
+	@Transactional
+	public void equalsVerifier() throws Exception {
+		TestUtil.equalsVerifier(Course.class);
+		Course course1 = new Course();
+		course1.setId(1L);
+		Course course2 = new Course();
+		course2.setId(course1.getId());
+		assertThat(course1).isEqualTo(course2);
+		course2.setId(2L);
+		assertThat(course1).isNotEqualTo(course2);
+		course1.setId(null);
+		assertThat(course1).isNotEqualTo(course2);
+	}
 }

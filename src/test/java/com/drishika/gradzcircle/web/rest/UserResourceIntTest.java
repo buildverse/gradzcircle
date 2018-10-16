@@ -459,7 +459,7 @@ public class UserResourceIntTest {
 		Corporate corp = new Corporate();
 		corp.setLogin(user);
 		corporateRepository.saveAndFlush(corp);
-		
+
 		int databaseSizeBeforeDelete = userRepository.findAll().size();
 		int corporateDatabaseSixeBeforeDelete = corporateRepository.findAll().size();
 
@@ -483,7 +483,7 @@ public class UserResourceIntTest {
 		Candidate candidiate = new Candidate();
 		candidiate.setLogin(user);
 		candidateRepository.saveAndFlush(candidiate);
-		
+
 		int databaseSizeBeforeDelete = userRepository.findAll().size();
 		int candidateDatabaseSixeBeforeDelete = candidateRepository.findAll().size();
 

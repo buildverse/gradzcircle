@@ -13,7 +13,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface CandidateEmploymentRepository extends JpaRepository<CandidateEmployment, Long> {
-    @Query("select candidateEmployment from CandidateEmployment candidateEmployment where candidateEmployment.candidate.id=:id order By candidateEmployment.employmentEndDate desc")
-    List<CandidateEmployment> findByCandidateId(@Param("id") Long id);
+	@Query("select candidateEmployment from CandidateEmployment candidateEmployment where candidateEmployment.candidate.id=:id order By candidateEmployment.employmentEndDate desc")
+	List<CandidateEmployment> findByCandidateId(@Param("id") Long id);
 
 }

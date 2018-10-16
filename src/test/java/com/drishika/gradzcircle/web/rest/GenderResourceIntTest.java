@@ -108,7 +108,7 @@ public class GenderResourceIntTest {
 		elasticGender.gender(gender.getGender());
 		return elasticGender;
 	}
-	
+
 	/**
 	 * Create an entity for this test.
 	 *
@@ -120,7 +120,6 @@ public class GenderResourceIntTest {
 		entityBuilder.name(gender.getGender());
 		return entityBuilder;
 	}
-
 
 	@Before
 	public void initTest() {

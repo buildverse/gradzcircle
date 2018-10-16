@@ -154,4 +154,21 @@
         		<column name="total_eligible_score" type="double"/>
     		</addColumn>
      </changeSet>
+     <changeSet id="20171015094626-5" author="abhinav">
+   		  <addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="reviewed" type="boolean"/>
+    		</addColumn>
+     </changeSet>
+     <changeSet id="20171015094626-6" author="abhinav">
+   		    <createTable tableName="candidate_applied_jobs">
+            <column name="job_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidate_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+     </changeSet>
 </databaseChangeLog>

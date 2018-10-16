@@ -1,175 +1,271 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	#editForm="ngForm">
 
-    <div class="modal-header modal-header-decorate">
-        <h6 class="modal-title" id="myCandidateNonAcademicWorkLabel" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.createOrEditLabel">Create or edit a Candidate Non Academic Work</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
-    </div>
-    <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
-        <!-- <jhi-alert-error></jhi-alert-error> -->
-        <!-- <div class="form-group" [hidden]="!candidateNonAcademicWork.id">
+	<div class="modal-header modal-header-decorate">
+		<h6 class="modal-title" id="myCandidateNonAcademicWorkLabel"
+			jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.createOrEditLabel">Create
+			or edit a Candidate Non Academic Work</h6>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
+		<jhi-alert-error></jhi-alert-error>
+		<!-- <jhi-alert-error></jhi-alert-error> -->
+		<!-- <div class="form-group" [hidden]="!candidateNonAcademicWork.id">
                      <label for="id" jhiTranslate="global.field.id">ID</label>
                      <input type="text" class="form-control" id="id" name="id"
                             [(ngModel)]="candidateNonAcademicWork.id" readonly />
                  </div> -->
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle" for="field_nonAcademicInitiativeTitle">Title</label>
-            </div>
-            <div class="col-md-10" [class.has-danger]="nonAcademicTitle.invalid && nonAcademicTitle.touched">
-                <input type="text" class="form-control" #nonAcademicTitle="ngModel" required name="nonAcademicTitle" id="field_nonAcademicInitiativeTitle" [(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeTitle" />
-                <small class="form-text text-muted text-info">
-                             Provide extra curricular activtiy name could be sports, dramatics, community service etc.
-                         </small>
-                <div *ngIf="nonAcademicTitle.invalid && nonAcademicTitle.touched" class="text-danger">
-                    <small> Please enter name.</small>
-                </div>
-            </div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle"
+					for="field_nonAcademicInitiativeTitle">Title</label>
+			</div>
+			<div class="col-md-10"
+				[class.has-danger]="nonAcademicTitle.invalid && nonAcademicTitle.touched">
+				<input type="text" class="form-control" #nonAcademicTitle="ngModel"
+					required name="nonAcademicTitle"
+					id="field_nonAcademicInitiativeTitle"
+					[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeTitle" />
+				<small class="form-text text-muted text-info"> Provide extra
+					curricular activtiy name could be sports, dramatics, community
+					service etc. </small>
+				<div *ngIf="nonAcademicTitle.invalid && nonAcademicTitle.touched"
+					class="text-danger">
+					<small> Please enter name.</small>
+				</div>
+			</div>
 
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription" for="field_nonAcademicInitiativeDescription">Activity Details</label>
-            </div>
-            <div class="col-md-10" [class.has-danger]="activityDetails.invalid && activityDetails.touched">
-                <textarea [froalaEditor]='options' class="form-control" #activityDetails="ngModel" required name="activityDetails" id="field_certificationDetails" [(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription" rows="20">
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription"
+					for="field_nonAcademicInitiativeDescription">Activity
+					Details</label>
+			</div>
+			<div class="col-md-10"
+				[class.has-danger]="activityDetails.invalid && activityDetails.touched">
+				<textarea [froalaEditor]='options' class="form-control"
+					#activityDetails="ngModel" required name="activityDetails"
+					id="field_certificationDetails"
+					[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription"
+					rows="20">
                          </textarea>
-                <small class="form-text text-muted text-info">
-                             Provide overview of the activity, what you learnt and how this will help in improving your skills.
-                         </small>
-                <div *ngIf="activityDetails.invalid && activityDetails.touched" class="text-danger">
-                    <small> Please enter your Activity details</small>
-                </div>
-            </div>
+				<small class="form-text text-muted text-info"> Provide
+					overview of the activity, what you learnt and how this will help in
+					improving your skills. </small>
+				<div *ngIf="activityDetails.invalid && activityDetails.touched"
+					class="text-danger">
+					<small> Please enter your Activity details</small>
+				</div>
+			</div>
 
-        </div>
+		</div>
 
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative" for="field_roleInInitiative">Activity Details</label>
-            </div>
-            <div class="col-md-10" [class.has-danger]="roleDetails.invalid && roleDetails.touched">
-                <textarea [froalaEditor]='options' class="form-control" #roleDetails="ngModel" name="roleDetails" id="field_roleInInitiative" [(ngModel)]="candidateNonAcademicWork.roleInInitiative" rows="5">
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative"
+					for="field_roleInInitiative">Activity Details</label>
+			</div>
+			<div class="col-md-10"
+				[class.has-danger]="roleDetails.invalid && roleDetails.touched">
+				<textarea [froalaEditor]='options' class="form-control"
+					#roleDetails="ngModel" name="roleDetails"
+					id="field_roleInInitiative"
+					[(ngModel)]="candidateNonAcademicWork.roleInInitiative" rows="5">
                          </textarea>
-                <small class="form-text text-muted text-info">
-                             What was you role in the activity
-                         </small>
-                <!-- <div *ngIf="roleDetails.invalid && roleDetails.touched" class="text-danger">
+				<small class="form-text text-muted text-info"> What was you
+					role in the activity </small>
+				<!-- <div *ngIf="roleDetails.invalid && roleDetails.touched" class="text-danger">
                              <small> Please enter your Activity details</small>
                          </div> -->
-            </div>
-            <!-- <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative" for="field_roleInInitiative">Role In Initiative</label>
+			</div>
+			<!-- <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative" for="field_roleInInitiative">Role In Initiative</label>
                      <input type="text" class="form-control" name="roleInInitiative" id="field_roleInInitiative"
                          [(ngModel)]="candidateNonAcademicWork.roleInInitiative"  /> -->
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate" for="field_nonAcademicWorkFromDate">From Date</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="fromDate.invalid && fromDate.touched">
-                <div class="input-group">
-                    <input id="field_nonAcademicWorkFromDate" #fromDate="ngModel" required type="text" class="form-control text-muted" name="nonAcademicFromDate" ngbDatepicker #nonAcademicFromDateDp="ngbDatepicker" [(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
-                        (ngModelChange)="validateDates()" />
-                    <span class="input-group-addon " (click)="nonAcademicFromDateDp.toggle()">
-                                 <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
-                             </span>
-                </div>
-                <div *ngIf="fromDate.invalid && fromDate.touched" class="text-danger">
-                    <small>Please enter Start Date</small>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <label class="form-control-label font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate" for="field_nonAcademicWorkEndDate">Education To Date</label>
-            </div>
-            <div class="col-md-4" [class.has-danger]="toDate.invalid && toDate.touched">
-                <div class="input-group">
-                    <input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required type="text" class="form-control text-muted" [disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker #nonAcademicToDateDp="ngbDatepicker" [(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
-                        (ngModelChange)="validateDates()" />
-                    <button class="input-group-addon " (click)="nonAcademicToDateDp.toggle()" type="button" [disabled]="endDateControl">
-                                 <img src="../../../content/images/calendar.png" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
-                             </button>
-                </div>
-                <div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
-                    <small>Please enter End Date</small>
-                </div>
-                <div *ngIf="endDateLesser" class="text-danger">
-                    <small>End date cannot be before start date.</small>
-                </div>
-            </div>
-        </div>
-        <div class="form-group row mx-4 my-4">
-            <div class="col-md-6 form-check">
-                <label class="form-check-label" for="field_isCurrentActivity">
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate"
+					for="field_nonAcademicWorkFromDate">From Date</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="fromDate.invalid && fromDate.touched">
+				<div class="input-group">
+					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
+						required type="text" class="form-control text-muted"
+						name="nonAcademicFromDate" ngbDatepicker
+						#nonAcademicFromDateDp="ngbDatepicker"
+						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
+						(ngModelChange)="validateDates()" /> <span
+						class="input-group-addon "
+						(click)="nonAcademicFromDateDp.toggle()"> <img
+						src="../../../content/images/calendar.png"
+						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+					</span>
+				</div>
+				<div *ngIf="fromDate.invalid && fromDate.touched"
+					class="text-danger">
+					<small>Please enter Start Date</small>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<label class="form-control-label font-weight-bold text-muted"
+					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate"
+					for="field_nonAcademicWorkEndDate">Education To Date</label>
+			</div>
+			<div class="col-md-4"
+				[class.has-danger]="toDate.invalid && toDate.touched">
+				<div class="input-group">
+					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required
+						type="text" class="form-control text-muted"
+						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker
+						#nonAcademicToDateDp="ngbDatepicker"
+						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
+						(ngModelChange)="validateDates()" />
+					<button class="input-group-addon "
+						(click)="nonAcademicToDateDp.toggle()" type="button"
+						[disabled]="endDateControl">
+						<img src="../../../content/images/calendar.png"
+							style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+					</button>
+				</div>
+				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+					<small>Please enter End Date</small>
+				</div>
+				<div *ngIf="endDateLesser" class="text-danger">
+					<small>End date cannot be before start date.</small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row mx-4 my-4">
+			<div class="col-md-6 form-check">
+				<label class="form-check-label" for="field_isCurrentActivity">
 
-                                <input class="form-check-input font-weight-bold text-muted" type="checkbox" name="isCurrentActivity" id="field_isCurrentActivity"  (change)="manageEndDateControl()"
-                                [(ngModel)]="candidateNonAcademicWork.isCurrentActivity"/>
-                                I am still actively doing this activity
-                            </label>
-            </div>
+					<input class="form-check-input font-weight-bold text-muted"
+					type="checkbox" name="isCurrentActivity"
+					id="field_isCurrentActivity" (change)="manageEndDateControl()"
+					[(ngModel)]="candidateNonAcademicWork.isCurrentActivity" /> I am
+					still actively doing this activity
+				</label>
+			</div>
 
-        </div>
-    </div>
-    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
+		</div>
+	</div>
+	<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
 
 
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!candidateNonAcademicWork.id">
-            <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id" [(ngModel)]="candidateNonAcademicWork.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle" for="field_nonAcademicInitiativeTitle">Non Academic Initiative Title</label>
-            <input type="text" class="form-control" name="nonAcademicInitiativeTitle" id="field_nonAcademicInitiativeTitle" [(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeTitle" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription" for="field_nonAcademicInitiativeDescription">Non Academic Initiative Description</label>
-            <input type="text" class="form-control" name="nonAcademicInitiativeDescription" id="field_nonAcademicInitiativeDescription" [(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.duration" for="field_duration">Duration</label>
-            <input type="number" class="form-control" name="duration" id="field_duration" [(ngModel)]="candidateNonAcademicWork.duration" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.isCurrentActivity" for="field_isCurrentActivity">Is Current Activity</label>
-            <input type="checkbox" class="form-control" name="isCurrentActivity" id="field_isCurrentActivity" [(ngModel)]="candidateNonAcademicWork.isCurrentActivity" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative" for="field_roleInInitiative">Role In Initiative</label>
-            <input type="text" class="form-control" name="roleInInitiative" id="field_roleInInitiative" [(ngModel)]="candidateNonAcademicWork.roleInInitiative" />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate" for="field_nonAcademicWorkStartDate">Non Academic Work Start Date</label>
-            <div class="input-group">
-                <input id="field_nonAcademicWorkStartDate" type="text" class="form-control" name="nonAcademicWorkStartDate" ngbDatepicker #nonAcademicWorkStartDateDp="ngbDatepicker" [(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-secondary" (click)="nonAcademicWorkStartDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate" for="field_nonAcademicWorkEndDate">Non Academic Work End Date</label>
-            <div class="input-group">
-                <input id="field_nonAcademicWorkEndDate" type="text" class="form-control" name="nonAcademicWorkEndDate" ngbDatepicker #nonAcademicWorkEndDateDp="ngbDatepicker" [(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate" />
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-secondary" (click)="nonAcademicWorkEndDateDp.toggle()"><i class="fa fa-calendar"></i></button>
-                </span>
-            </div>
-        </div>
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" [hidden]="!candidateNonAcademicWork.id">
+			<label for="id" jhiTranslate="global.field.id">ID</label> <input
+				type="text" class="form-control" id="id" name="id"
+				[(ngModel)]="candidateNonAcademicWork.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle"
+				for="field_nonAcademicInitiativeTitle">Non Academic
+				Initiative Title</label> <input type="text" class="form-control"
+				name="nonAcademicInitiativeTitle"
+				id="field_nonAcademicInitiativeTitle"
+				[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeTitle" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription"
+				for="field_nonAcademicInitiativeDescription">Non Academic
+				Initiative Description</label> <input type="text" class="form-control"
+				name="nonAcademicInitiativeDescription"
+				id="field_nonAcademicInitiativeDescription"
+				[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.duration"
+				for="field_duration">Duration</label> <input type="number"
+				class="form-control" name="duration" id="field_duration"
+				[(ngModel)]="candidateNonAcademicWork.duration" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.isCurrentActivity"
+				for="field_isCurrentActivity">Is Current Activity</label> <input
+				type="checkbox" class="form-control" name="isCurrentActivity"
+				id="field_isCurrentActivity"
+				[(ngModel)]="candidateNonAcademicWork.isCurrentActivity" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative"
+				for="field_roleInInitiative">Role In Initiative</label> <input
+				type="text" class="form-control" name="roleInInitiative"
+				id="field_roleInInitiative"
+				[(ngModel)]="candidateNonAcademicWork.roleInInitiative" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate"
+				for="field_nonAcademicWorkStartDate">Non Academic Work Start
+				Date</label>
+			<div class="input-group">
+				<input id="field_nonAcademicWorkStartDate" type="text"
+					class="form-control" name="nonAcademicWorkStartDate" ngbDatepicker
+					#nonAcademicWorkStartDateDp="ngbDatepicker"
+					[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-secondary"
+						(click)="nonAcademicWorkStartDateDp.toggle()">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate"
+				for="field_nonAcademicWorkEndDate">Non Academic Work End
+				Date</label>
+			<div class="input-group">
+				<input id="field_nonAcademicWorkEndDate" type="text"
+					class="form-control" name="nonAcademicWorkEndDate" ngbDatepicker
+					#nonAcademicWorkEndDateDp="ngbDatepicker"
+					[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-secondary"
+						(click)="nonAcademicWorkEndDateDp.toggle()">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
 
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.candidate" for="field_candidate">Candidate</label>
-            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateNonAcademicWork.candidate">
-                <option [ngValue]="null"></option>
-                <option [ngValue]="candidateOption.id === candidateNonAcademicWork.candidate?.id ? candidateNonAcademicWork.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="modal-footer modal-footer-decorate">
-        <button type="button" class="btn btn-sm btn-pill btn-secondary" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-        </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-sm btn-pill btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-        </button>
-    </div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.candidate"
+				for="field_candidate">Candidate</label> <select class="form-control"
+				id="field_candidate" name="candidate"
+				[(ngModel)]="candidateNonAcademicWork.candidate">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="candidateOption.id === candidateNonAcademicWork.candidate?.id ? candidateNonAcademicWork.candidate : candidateOption"
+					*ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="modal-footer modal-footer-decorate">
+		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+			data-dismiss="modal" (click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button>
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			class="btn btn-sm btn-pill btn-primary">
+			<span class="fa fa-save"></span>&nbsp;<span
+				jhiTranslate="entity.action.save">Save</span>
+		</button>
+	</div>
 </form>

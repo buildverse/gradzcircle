@@ -16,18 +16,17 @@ import org.springframework.stereotype.Repository;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 
-
 /**
  * Spring Data JPA repository for the CandidateLanguageProficiency entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CandidateLanguageProficiencyRepository extends JpaRepository<CandidateLanguageProficiency,Long> {
+public interface CandidateLanguageProficiencyRepository extends JpaRepository<CandidateLanguageProficiency, Long> {
 
-    @Query("select candidateLanguageProficiency from CandidateLanguageProficiency candidateLanguageProficiency where candidateLanguageProficiency.candidate.id=:id")
-    List<CandidateLanguageProficiency> findCandidateLanguageProficienciesByCandidateId (@Param("id") Long id);
-    
-    @Query("select cLP from CandidateLanguageProficiency cLP inner join cLP.candidate c where c.matchEligible=true ")
-    @QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-    Stream<CandidateLanguageProficiency> findCandidateLanguageProficienciesForActiveCandidates ();
+	@Query("select candidateLanguageProficiency from CandidateLanguageProficiency candidateLanguageProficiency where candidateLanguageProficiency.candidate.id=:id")
+	List<CandidateLanguageProficiency> findCandidateLanguageProficienciesByCandidateId(@Param("id") Long id);
+
+	@Query("select cLP from CandidateLanguageProficiency cLP inner join cLP.candidate c where c.matchEligible=true ")
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateLanguageProficiency> findCandidateLanguageProficienciesForActiveCandidates();
 }

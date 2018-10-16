@@ -21,217 +21,214 @@ import com.drishika.gradzcircle.domain.enumeration.ProjectType;
 @Document(indexName = "candidateproject")
 public class CandidateProject implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "project_title")
-    private String projectTitle;
+	@Column(name = "project_title")
+	private String projectTitle;
 
-    @Column(name = "project_start_date")
-    private LocalDate projectStartDate;
+	@Column(name = "project_start_date")
+	private LocalDate projectStartDate;
 
-    @Column(name = "project_end_date")
-    private LocalDate projectEndDate;
+	@Column(name = "project_end_date")
+	private LocalDate projectEndDate;
 
-    @Size(max = 10000)
-    @Column(name = "project_description", length = 10000)
-    private String projectDescription;
+	@Size(max = 10000)
+	@Column(name = "project_description", length = 10000)
+	private String projectDescription;
 
-    @Column(name = "project_duration")
-    private Integer projectDuration;
+	@Column(name = "project_duration")
+	private Integer projectDuration;
 
-    @Column(name = "contribution_in_project")
-    private String contributionInProject;
+	@Column(name = "contribution_in_project")
+	private String contributionInProject;
 
-    @Column(name = "is_current_project")
-    private Boolean isCurrentProject;
+	@Column(name = "is_current_project")
+	private Boolean isCurrentProject;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "project_type")
-    private ProjectType projectType;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "project_type")
+	private ProjectType projectType;
 
-    @ManyToOne
-    private CandidateEducation education;
+	@ManyToOne
+	private CandidateEducation education;
 
-    @ManyToOne
-    private CandidateEmployment employment;
+	@ManyToOne
+	private CandidateEmployment employment;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
+	// remove
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getProjectTitle() {
-        return projectTitle;
-    }
+	public String getProjectTitle() {
+		return projectTitle;
+	}
 
-    public CandidateProject projectTitle(String projectTitle) {
-        this.projectTitle = projectTitle;
-        return this;
-    }
+	public CandidateProject projectTitle(String projectTitle) {
+		this.projectTitle = projectTitle;
+		return this;
+	}
 
-    public void setProjectTitle(String projectTitle) {
-        this.projectTitle = projectTitle;
-    }
+	public void setProjectTitle(String projectTitle) {
+		this.projectTitle = projectTitle;
+	}
 
-    public LocalDate getProjectStartDate() {
-        return projectStartDate;
-    }
+	public LocalDate getProjectStartDate() {
+		return projectStartDate;
+	}
 
-    public CandidateProject projectStartDate(LocalDate projectStartDate) {
-        this.projectStartDate = projectStartDate;
-        return this;
-    }
+	public CandidateProject projectStartDate(LocalDate projectStartDate) {
+		this.projectStartDate = projectStartDate;
+		return this;
+	}
 
-    public void setProjectStartDate(LocalDate projectStartDate) {
-        this.projectStartDate = projectStartDate;
-    }
+	public void setProjectStartDate(LocalDate projectStartDate) {
+		this.projectStartDate = projectStartDate;
+	}
 
-    public LocalDate getProjectEndDate() {
-        return projectEndDate;
-    }
+	public LocalDate getProjectEndDate() {
+		return projectEndDate;
+	}
 
-    public CandidateProject projectEndDate(LocalDate projectEndDate) {
-        this.projectEndDate = projectEndDate;
-        return this;
-    }
+	public CandidateProject projectEndDate(LocalDate projectEndDate) {
+		this.projectEndDate = projectEndDate;
+		return this;
+	}
 
-    public void setProjectEndDate(LocalDate projectEndDate) {
-        this.projectEndDate = projectEndDate;
-    }
+	public void setProjectEndDate(LocalDate projectEndDate) {
+		this.projectEndDate = projectEndDate;
+	}
 
-    public String getProjectDescription() {
-        return projectDescription;
-    }
+	public String getProjectDescription() {
+		return projectDescription;
+	}
 
-    public CandidateProject projectDescription(String projectDescription) {
-        this.projectDescription = projectDescription;
-        return this;
-    }
+	public CandidateProject projectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+		return this;
+	}
 
-    public void setProjectDescription(String projectDescription) {
-        this.projectDescription = projectDescription;
-    }
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
 
-    public Integer getProjectDuration() {
-        return projectDuration;
-    }
+	public Integer getProjectDuration() {
+		return projectDuration;
+	}
 
-    public CandidateProject projectDuration(Integer projectDuration) {
-        this.projectDuration = projectDuration;
-        return this;
-    }
+	public CandidateProject projectDuration(Integer projectDuration) {
+		this.projectDuration = projectDuration;
+		return this;
+	}
 
-    public void setProjectDuration(Integer projectDuration) {
-        this.projectDuration = projectDuration;
-    }
+	public void setProjectDuration(Integer projectDuration) {
+		this.projectDuration = projectDuration;
+	}
 
-    public String getContributionInProject() {
-        return contributionInProject;
-    }
+	public String getContributionInProject() {
+		return contributionInProject;
+	}
 
-    public CandidateProject contributionInProject(String contributionInProject) {
-        this.contributionInProject = contributionInProject;
-        return this;
-    }
+	public CandidateProject contributionInProject(String contributionInProject) {
+		this.contributionInProject = contributionInProject;
+		return this;
+	}
 
-    public void setContributionInProject(String contributionInProject) {
-        this.contributionInProject = contributionInProject;
-    }
+	public void setContributionInProject(String contributionInProject) {
+		this.contributionInProject = contributionInProject;
+	}
 
-    public Boolean isIsCurrentProject() {
-        return isCurrentProject;
-    }
+	public Boolean isIsCurrentProject() {
+		return isCurrentProject;
+	}
 
-    public CandidateProject isCurrentProject(Boolean isCurrentProject) {
-        this.isCurrentProject = isCurrentProject;
-        return this;
-    }
+	public CandidateProject isCurrentProject(Boolean isCurrentProject) {
+		this.isCurrentProject = isCurrentProject;
+		return this;
+	}
 
-    public void setIsCurrentProject(Boolean isCurrentProject) {
-        this.isCurrentProject = isCurrentProject;
-    }
+	public void setIsCurrentProject(Boolean isCurrentProject) {
+		this.isCurrentProject = isCurrentProject;
+	}
 
-    public ProjectType getProjectType() {
-        return projectType;
-    }
+	public ProjectType getProjectType() {
+		return projectType;
+	}
 
-    public CandidateProject projectType(ProjectType projectType) {
-        this.projectType = projectType;
-        return this;
-    }
+	public CandidateProject projectType(ProjectType projectType) {
+		this.projectType = projectType;
+		return this;
+	}
 
-    public void setProjectType(ProjectType projectType) {
-        this.projectType = projectType;
-    }
+	public void setProjectType(ProjectType projectType) {
+		this.projectType = projectType;
+	}
 
-    public CandidateEducation getEducation() {
-        return education;
-    }
+	public CandidateEducation getEducation() {
+		return education;
+	}
 
-    public CandidateProject education(CandidateEducation candidateEducation) {
-        this.education = candidateEducation;
-        return this;
-    }
+	public CandidateProject education(CandidateEducation candidateEducation) {
+		this.education = candidateEducation;
+		return this;
+	}
 
-    public void setEducation(CandidateEducation candidateEducation) {
-        this.education = candidateEducation;
-    }
+	public void setEducation(CandidateEducation candidateEducation) {
+		this.education = candidateEducation;
+	}
 
-    public CandidateEmployment getEmployment() {
-        return employment;
-    }
+	public CandidateEmployment getEmployment() {
+		return employment;
+	}
 
-    public CandidateProject employment(CandidateEmployment candidateEmployment) {
-        this.employment = candidateEmployment;
-        return this;
-    }
+	public CandidateProject employment(CandidateEmployment candidateEmployment) {
+		this.employment = candidateEmployment;
+		return this;
+	}
 
-    public void setEmployment(CandidateEmployment candidateEmployment) {
-        this.employment = candidateEmployment;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+	public void setEmployment(CandidateEmployment candidateEmployment) {
+		this.employment = candidateEmployment;
+	}
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+	// setters here, do not remove
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        CandidateProject candidateProject = (CandidateProject) o;
-        if (candidateProject.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), candidateProject.getId());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CandidateProject candidateProject = (CandidateProject) o;
+		if (candidateProject.getId() == null || getId() == null) {
+			return false;
+		}
+		return Objects.equals(getId(), candidateProject.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
 
-    @Override
-    public String toString() {
-        return "CandidateProject{" +
-            "id=" + getId() +
-            ", projectTitle='" + getProjectTitle() + "'" +
-            ", projectStartDate='" + getProjectStartDate() + "'" +
-            ", projectEndDate='" + getProjectEndDate() + "'" +
-            ", projectDescription='" + getProjectDescription() + "'" +
-            ", projectDuration='" + getProjectDuration() + "'" +
-            ", contributionInProject='" + getContributionInProject() + "'" +
-            ", isCurrentProject='" + isIsCurrentProject() + "'" +
-            ", projectType='" + getProjectType() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "CandidateProject{" + "id=" + getId() + ", projectTitle='" + getProjectTitle() + "'"
+				+ ", projectStartDate='" + getProjectStartDate() + "'" + ", projectEndDate='" + getProjectEndDate()
+				+ "'" + ", projectDescription='" + getProjectDescription() + "'" + ", projectDuration='"
+				+ getProjectDuration() + "'" + ", contributionInProject='" + getContributionInProject() + "'"
+				+ ", isCurrentProject='" + isIsCurrentProject() + "'" + ", projectType='" + getProjectType() + "'"
+				+ "}";
+	}
 }

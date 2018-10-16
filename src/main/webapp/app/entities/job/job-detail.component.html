@@ -1,143 +1,220 @@
 
 <div *ngIf="job">
-    <h2><span jhiTranslate="gradzcircleApp.job.detail.title">Job</span> {{job.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span></dt>
-        <dd>
-            <span>{{job.jobTitle}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.jobDescription">Job Description</span></dt>
-        <dd>
-            <span>{{job.jobDescription}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.noOfApplicants">No Of Applicants</span></dt>
-        <dd>
-            <span>{{job.noOfApplicants}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.salary">Salary</span></dt>
-        <dd>
-            <span>{{job.salary}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span></dt>
-        <dd>
-            <span>{{job.jobStatus}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.createDate">Create Date</span></dt>
-        <dd>
-            <span>{{job.createDate | date:'medium'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.originalJobCost">Original Job Cost</span></dt>
-        <dd>
-            <span>{{job.originalJobCost}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.jobCost">Job Cost</span></dt>
-        <dd>
-            <span>{{job.jobCost}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.amountPaid">Amount Paid</span></dt>
-        <dd>
-            <span>{{job.amountPaid}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.totalAmountPaid">Total Amount Paid</span></dt>
-        <dd>
-            <span>{{job.totalAmountPaid}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.noOfApplicantsBought">No Of Applicants Bought</span></dt>
-        <dd>
-            <span>{{job.noOfApplicantsBought}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed Filter Amount</span></dt>
-        <dd>
-            <span>{{job.removedFilterAmount}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.additionalFilterAmount">Additional Filter Amount</span></dt>
-        <dd>
-            <span>{{job.additionalFilterAmount}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.adminCharge">Admin Charge</span></dt>
-        <dd>
-            <span>{{job.adminCharge}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.adminChargeRate">Admin Charge Rate</span></dt>
-        <dd>
-            <span>{{job.adminChargeRate}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.upfrontDiscountRate">Upfront Discount Rate</span></dt>
-        <dd>
-            <span>{{job.upfrontDiscountRate}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.upfrontDiscountAmount">Upfront Discount Amount</span></dt>
-        <dd>
-            <span>{{job.upfrontDiscountAmount}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow Amount Used</span></dt>
-        <dd>
-            <span>{{job.escrowAmountUsed}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.escrowAmountAdded">Escrow Amount Added</span></dt>
-        <dd>
-            <span>{{job.escrowAmountAdded}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.paymentType">Payment Type</span></dt>
-        <dd>
-            <span jhiTranslate="{{'gradzcircleApp.PaymentType.' + job.paymentType}}">{{job.paymentType}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.hasBeenEdited">Has Been Edited</span></dt>
-        <dd>
-            <span>{{job.hasBeenEdited}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.everActive">Ever Active</span></dt>
-        <dd>
-            <span>{{job.everActive}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.canEdit">Can Edit</span></dt>
-        <dd>
-            <span>{{job.canEdit}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.updateDate">Update Date</span></dt>
-        <dd>
-            <span>{{job.updateDate | date:'medium'}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.createdBy">Created By</span></dt>
-        <dd>
-            <span>{{job.createdBy}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.updatedBy">Updated By</span></dt>
-        <dd>
-            <span>{{job.updatedBy}}</span>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></dt>
-        <dd>
-            <div *ngIf="job.jobType">
-                <a [routerLink]="['/job-type', job.jobType?.id]">{{job.jobType?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></dt>
-        <dd>
-            <div *ngIf="job.employmentType">
-                <a [routerLink]="['/employment-type', job.employmentType?.id]">{{job.employmentType?.id}}</a>
-            </div>
-        </dd>
-        <dt><span jhiTranslate="gradzcircleApp.job.corporate">Corporate</span></dt>
-        <dd>
-            <div *ngIf="job.corporate">
-                <a [routerLink]="['/corporate', job.corporate?.id]">{{job.corporate?.id}}</a>
-            </div>
-        </dd>
-    </dl>
+	<h2>
+		<span jhiTranslate="gradzcircleApp.job.detail.title">Job</span>
+		{{job.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="row-md jh-entity-details">
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span>
+		</dt>
+		<dd>
+			<span>{{job.jobTitle}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.jobDescription">Job
+				Description</span>
+		</dt>
+		<dd>
+			<span>{{job.jobDescription}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.noOfApplicants">No Of
+				Applicants</span>
+		</dt>
+		<dd>
+			<span>{{job.noOfApplicants}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.salary">Salary</span>
+		</dt>
+		<dd>
+			<span>{{job.salary}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span>
+		</dt>
+		<dd>
+			<span>{{job.jobStatus}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.createDate">Create Date</span>
+		</dt>
+		<dd>
+			<span>{{job.createDate | date:'medium'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.originalJobCost">Original
+				Job Cost</span>
+		</dt>
+		<dd>
+			<span>{{job.originalJobCost}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.jobCost">Job Cost</span>
+		</dt>
+		<dd>
+			<span>{{job.jobCost}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.amountPaid">Amount Paid</span>
+		</dt>
+		<dd>
+			<span>{{job.amountPaid}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.totalAmountPaid">Total
+				Amount Paid</span>
+		</dt>
+		<dd>
+			<span>{{job.totalAmountPaid}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.noOfApplicantsBought">No
+				Of Applicants Bought</span>
+		</dt>
+		<dd>
+			<span>{{job.noOfApplicantsBought}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.removedFilterAmount">Removed
+				Filter Amount</span>
+		</dt>
+		<dd>
+			<span>{{job.removedFilterAmount}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.additionalFilterAmount">Additional
+				Filter Amount</span>
+		</dt>
+		<dd>
+			<span>{{job.additionalFilterAmount}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.adminCharge">Admin
+				Charge</span>
+		</dt>
+		<dd>
+			<span>{{job.adminCharge}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.adminChargeRate">Admin
+				Charge Rate</span>
+		</dt>
+		<dd>
+			<span>{{job.adminChargeRate}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.upfrontDiscountRate">Upfront
+				Discount Rate</span>
+		</dt>
+		<dd>
+			<span>{{job.upfrontDiscountRate}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.upfrontDiscountAmount">Upfront
+				Discount Amount</span>
+		</dt>
+		<dd>
+			<span>{{job.upfrontDiscountAmount}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.escrowAmountUsed">Escrow
+				Amount Used</span>
+		</dt>
+		<dd>
+			<span>{{job.escrowAmountUsed}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.escrowAmountAdded">Escrow
+				Amount Added</span>
+		</dt>
+		<dd>
+			<span>{{job.escrowAmountAdded}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.paymentType">Payment
+				Type</span>
+		</dt>
+		<dd>
+			<span
+				jhiTranslate="{{'gradzcircleApp.PaymentType.' + job.paymentType}}">{{job.paymentType}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.hasBeenEdited">Has Been
+				Edited</span>
+		</dt>
+		<dd>
+			<span>{{job.hasBeenEdited}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.everActive">Ever Active</span>
+		</dt>
+		<dd>
+			<span>{{job.everActive}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.canEdit">Can Edit</span>
+		</dt>
+		<dd>
+			<span>{{job.canEdit}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.updateDate">Update Date</span>
+		</dt>
+		<dd>
+			<span>{{job.updateDate | date:'medium'}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.createdBy">Created By</span>
+		</dt>
+		<dd>
+			<span>{{job.createdBy}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.updatedBy">Updated By</span>
+		</dt>
+		<dd>
+			<span>{{job.updatedBy}}</span>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.jobType">Job Type</span>
+		</dt>
+		<dd>
+			<div *ngIf="job.jobType">
+				<a [routerLink]="['/job-type', job.jobType?.id]">{{job.jobType?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.employmentType">Employment
+				Type</span>
+		</dt>
+		<dd>
+			<div *ngIf="job.employmentType">
+				<a [routerLink]="['/employment-type', job.employmentType?.id]">{{job.employmentType?.id}}</a>
+			</div>
+		</dd>
+		<dt>
+			<span jhiTranslate="gradzcircleApp.job.corporate">Corporate</span>
+		</dt>
+		<dd>
+			<div *ngIf="job.corporate">
+				<a [routerLink]="['/corporate', job.corporate?.id]">{{job.corporate?.id}}</a>
+			</div>
+		</dd>
+	</dl>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+	<button type="submit" (click)="previousState()" class="btn btn-info">
+		<span class="fa fa-arrow-left"></span>&nbsp;<span
+			jhiTranslate="entity.action.back"> Back</span>
+	</button>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+	<button type="button"
+		[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
+		replaceUrl="true" class="btn btn-primary">
+		<span class="fa fa-pencil"></span>&nbsp;<span
+			jhiTranslate="entity.action.edit"> Edit</span>
+	</button>
 </div>

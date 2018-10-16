@@ -17,115 +17,113 @@ import java.util.Objects;
 @Document(indexName = "filter")
 public class Filter implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "filter_name")
-    private String filterName;
+	@Column(name = "filter_name")
+	private String filterName;
 
-    @Column(name = "filter_cost")
-    private Double filterCost;
+	@Column(name = "filter_cost")
+	private Double filterCost;
 
-    @Column(name = "comments")
-    private String comments;
+	@Column(name = "comments")
+	private String comments;
 
-    @Column(name = "match_weight")
-    private Long matchWeight;
+	@Column(name = "match_weight")
+	private Long matchWeight;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
+	// remove
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getFilterName() {
-        return filterName;
-    }
+	public String getFilterName() {
+		return filterName;
+	}
 
-    public Filter filterName(String filterName) {
-        this.filterName = filterName;
-        return this;
-    }
+	public Filter filterName(String filterName) {
+		this.filterName = filterName;
+		return this;
+	}
 
-    public void setFilterName(String filterName) {
-        this.filterName = filterName;
-    }
+	public void setFilterName(String filterName) {
+		this.filterName = filterName;
+	}
 
-    public Double getFilterCost() {
-        return filterCost;
-    }
+	public Double getFilterCost() {
+		return filterCost;
+	}
 
-    public Filter filterCost(Double filterCost) {
-        this.filterCost = filterCost;
-        return this;
-    }
+	public Filter filterCost(Double filterCost) {
+		this.filterCost = filterCost;
+		return this;
+	}
 
-    public void setFilterCost(Double filterCost) {
-        this.filterCost = filterCost;
-    }
+	public void setFilterCost(Double filterCost) {
+		this.filterCost = filterCost;
+	}
 
-    public String getComments() {
-        return comments;
-    }
+	public String getComments() {
+		return comments;
+	}
 
-    public Filter comments(String comments) {
-        this.comments = comments;
-        return this;
-    }
+	public Filter comments(String comments) {
+		this.comments = comments;
+		return this;
+	}
 
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
-    public Long getMatchWeight() {
-        return matchWeight;
-    }
+	public Long getMatchWeight() {
+		return matchWeight;
+	}
 
-    public Filter matchWeight(Long matchWeight) {
-        this.matchWeight = matchWeight;
-        return this;
-    }
+	public Filter matchWeight(Long matchWeight) {
+		this.matchWeight = matchWeight;
+		return this;
+	}
 
-    public void setMatchWeight(Long matchWeight) {
-        this.matchWeight = matchWeight;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+	public void setMatchWeight(Long matchWeight) {
+		this.matchWeight = matchWeight;
+	}
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+	// setters here, do not remove
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Filter filter = (Filter) o;
-        if (filter.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), filter.getId());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Filter filter = (Filter) o;
+		if (filter.getId() == null || getId() == null) {
+			return false;
+		}
+		return Objects.equals(getId(), filter.getId());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
 
-    @Override
-    public String toString() {
-        return "Filter{" +
-            "id=" + getId() +
-            ", filterName='" + getFilterName() + "'" +
-            ", filterCost='" + getFilterCost() + "'" +
-            ", comments='" + getComments() + "'" +
-            ", matchWeight='" + getMatchWeight() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "Filter{" + "id=" + getId() + ", filterName='" + getFilterName() + "'" + ", filterCost='"
+				+ getFilterCost() + "'" + ", comments='" + getComments() + "'" + ", matchWeight='" + getMatchWeight()
+				+ "'" + "}";
+	}
 }

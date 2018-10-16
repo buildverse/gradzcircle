@@ -1,52 +1,71 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	#editForm="ngForm">
 
-    <div class="modal-header">
-        <h4 class="modal-title" id="myCollegeLabel" jhiTranslate="gradzcircleApp.college.home.createOrEditLabel">Create or edit a College</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
-    </div>
-    <div class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!college.id">
-            <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="college.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.collegeName" for="field_collegeName">College Name</label>
-            <input type="text" class="form-control" name="collegeName" id="field_collegeName"
-                [(ngModel)]="college.collegeName"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.domainName" for="field_domainName">Domain Name</label>
-            <input type="text" class="form-control" name="domainName" id="field_domainName"
-                [(ngModel)]="college.domainName"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.affiliation" for="field_affiliation">Affiliation</label>
-            <input type="text" class="form-control" name="affiliation" id="field_affiliation"
-                [(ngModel)]="college.affiliation"  />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.status" for="field_status">Status</label>
-            <input type="number" class="form-control" name="status" id="field_status"
-                [(ngModel)]="college.status"  />
-        </div>
+	<div class="modal-header">
+		<h4 class="modal-title" id="myCollegeLabel"
+			jhiTranslate="gradzcircleApp.college.home.createOrEditLabel">Create
+			or edit a College</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div class="modal-body">
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" [hidden]="!college.id">
+			<label for="id" jhiTranslate="global.field.id">ID</label> <input
+				type="text" class="form-control" id="id" name="id"
+				[(ngModel)]="college.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.college.collegeName"
+				for="field_collegeName">College Name</label> <input type="text"
+				class="form-control" name="collegeName" id="field_collegeName"
+				[(ngModel)]="college.collegeName" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.college.domainName"
+				for="field_domainName">Domain Name</label> <input type="text"
+				class="form-control" name="domainName" id="field_domainName"
+				[(ngModel)]="college.domainName" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.college.affiliation"
+				for="field_affiliation">Affiliation</label> <input type="text"
+				class="form-control" name="affiliation" id="field_affiliation"
+				[(ngModel)]="college.affiliation" />
+		</div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.college.status" for="field_status">Status</label>
+			<input type="number" class="form-control" name="status"
+				id="field_status" [(ngModel)]="college.status" />
+		</div>
 
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="gradzcircleApp.college.university" for="field_university">University</label>
-            <select class="form-control" id="field_university" name="university" [(ngModel)]="college.university" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="universityOption.id === college.university?.id ? college.university : universityOption" *ngFor="let universityOption of universities; trackBy: trackUniversityById">{{universityOption.id}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
-            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-        </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
-            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-        </button>
-    </div>
+		<div class="form-group">
+			<label class="form-control-label"
+				jhiTranslate="gradzcircleApp.college.university"
+				for="field_university">University</label> <select
+				class="form-control" id="field_university" name="university"
+				[(ngModel)]="college.university">
+				<option [ngValue]="null"></option>
+				<option
+					[ngValue]="universityOption.id === college.university?.id ? college.university : universityOption"
+					*ngFor="let universityOption of universities; trackBy: trackUniversityById">{{universityOption.id}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal"
+			(click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button>
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			class="btn btn-primary">
+			<span class="fa fa-save"></span>&nbsp;<span
+				jhiTranslate="entity.action.save">Save</span>
+		</button>
+	</div>
 </form>
