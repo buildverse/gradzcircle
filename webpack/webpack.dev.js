@@ -32,7 +32,10 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
             ],
             target: 'ws://127.0.0.1:8080',
             ws: true
-        }]
+        }],
+        watchOptions: {
+            ignored: /node_modules/
+        }
     },
     entry: {
         polyfills: './src/main/webapp/app/polyfills',
@@ -67,6 +70,15 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         {
             test: /(vendor\.css|global\.css)/,
             loaders: ['style-loader', 'css-loader']
+        },
+        {
+            test: /\.scss$/,
+            loaders: ['to-string-loader', 'css-loader', 'sass-loader'],
+            exclude: /(vendor\.scss|global\.scss)/
+        },
+        {
+            test: /(vendor\.scss|global\.scss)/,
+            loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
         }]
     },
     plugins: [

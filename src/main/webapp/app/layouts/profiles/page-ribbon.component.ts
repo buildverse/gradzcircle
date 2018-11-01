@@ -6,7 +6,7 @@ import { ProfileInfo } from './profile-info.model';
     selector: 'jhi-page-ribbon',
     template: `<div class="ribbon" *ngIf="ribbonEnv"><a href="" jhiTranslate="global.ribbon.{{ribbonEnv}}">{{ribbonEnv}}</a></div>`,
     styleUrls: [
-        'page-ribbon.css'
+        'page-ribbon.scss'
     ]
 })
 export class PageRibbonComponent implements OnInit {
@@ -17,7 +17,7 @@ export class PageRibbonComponent implements OnInit {
     constructor(private profileService: ProfileService) {}
 
     ngOnInit() {
-        this.profileService.getProfileInfo().subscribe((profileInfo) => {
+         this.profileService.getProfileInfo().then((profileInfo) => {
             this.profileInfo = profileInfo;
             this.ribbonEnv = profileInfo.ribbonEnv;
         });

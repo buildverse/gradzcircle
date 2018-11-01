@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit {
 
   inProduction: boolean;
   isNavbarCollapsed: boolean;
+  prevNavbarState: boolean;
   languages: any[];
   swaggerEnabled: boolean;
   modalRef: NgbModalRef;
@@ -54,18 +55,41 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+     this.isNavbarCollapsed = true;
     //this.authorities = ['ROLE_CORPORATE'];
     //if (this.principal.hasAnyAuthorityDirect(this.authorities)) {
+      
+    this.loadId();
+
+    //}
+    this.languageHelper.getAll().then((languages) => {
+      this.languages = languages;
+    });
+    this.reloadUserImage();
+     this.profileService.getProfileInfo().then((profileInfo) => {
+            this.inProduction = profileInfo.inProduction;
+            this.swaggerEnabled = profileInfo.swaggerEnabled;
+        });
+    this.registerChangeInImage();
+    this.registerSuccessfulLogin();
+  }
+
+  registerSuccessfulLogin() {
+      this.eventSubscriber = this.eventManager.subscribe('authenticationSuccess', (response) => this.loadId());
+  }
+  
+  loadId() {
+    console.log('Am I being called');
       this.principal.identity(true).then((user) => {
-        if (user.authorities.indexOf('ROLE_CORPORATE')>-1) {
+        if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
           this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
-            this.corporateId = response.id;
+            this.corporateId = response.body.id;
           });
         } else {
-           if (user.authorities.indexOf('ROLE_CANDIDATE')>-1) {
+           if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
           this.candidateService.getCandidateByLoginId(user.id).subscribe((response) => {
            // this.candidateId = response.id;
-            this.candidate = response;
+            this.candidate = response.body;
             this.candidateId = this.candidate.id;
 
             //console.log('Candidate in nav bar is '+JSON.stringify(this.candidate));
@@ -73,19 +97,8 @@ export class NavbarComponent implements OnInit {
         }
         }
       });
-
-    //}
-    this.languageHelper.getAll().then((languages) => {
-      this.languages = languages;
-    });
-    this.reloadUserImage();
-    this.profileService.getProfileInfo().subscribe((profileInfo) => {
-      this.inProduction = profileInfo.inProduction;
-      this.swaggerEnabled = profileInfo.swaggerEnabled;
-    });
-    this.registerChangeInImage();
   }
-
+  
   changeLanguage(languageKey: string) {
     this.languageService.changeLanguage(languageKey);
   }
@@ -110,7 +123,7 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleNavbar() {
-    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+      this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
   getImageUrl() {
@@ -136,10 +149,14 @@ export class NavbarComponent implements OnInit {
       if (user) {
         if (user.imageUrl !== undefined) {
           this.userService.getImageData(user.id).subscribe((response) => {
-            if(response!==undefined) {
+            if(response !== undefined) {
             //  console.log(JSON.stringify('------------'+response));
-              const responseJson = response.json();
-              this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
+              const responseJson = response.body;
+              if(responseJson) {
+                  this.userImage = responseJson[0].href + '?t=' + Math.random().toString();  
+              } else {
+                this.noImage = true;
+              }
             }
           });
         } else {

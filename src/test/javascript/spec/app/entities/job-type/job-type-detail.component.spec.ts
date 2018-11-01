@@ -1,12 +1,9 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+
 import { GradzcircleTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
 import { JobTypeDetailComponent } from '../../../../../../main/webapp/app/entities/job-type/job-type-detail.component';
 import { JobTypeService } from '../../../../../../main/webapp/app/entities/job-type/job-type.service';
 import { JobType } from '../../../../../../main/webapp/app/entities/job-type/job-type.model';
@@ -23,17 +20,10 @@ describe('Component Tests', () => {
                 imports: [GradzcircleTestModule],
                 declarations: [JobTypeDetailComponent],
                 providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    JobTypeService,
-                    JhiEventManager
+                    JobTypeService
                 ]
-            }).overrideTemplate(JobTypeDetailComponent, '')
+            })
+            .overrideTemplate(JobTypeDetailComponent, '')
             .compileComponents();
         }));
 
@@ -45,16 +35,18 @@ describe('Component Tests', () => {
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new JobType(10)));
+                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
+                    body: new JobType(123)
+                })));
 
-            // WHEN
-            comp.ngOnInit();
+                // WHEN
+                comp.ngOnInit();
 
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.jobType).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(service.find).toHaveBeenCalledWith(123);
+                expect(comp.jobType).toEqual(jasmine.objectContaining({id: 123}));
             });
         });
     });

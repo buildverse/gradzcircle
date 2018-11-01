@@ -3,10 +3,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CandidateList} from './candidate-list.model';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-matched-candidate-list',
@@ -91,11 +92,8 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.jobId
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        //this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
+       (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 

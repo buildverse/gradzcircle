@@ -5,7 +5,8 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobConstants} from './job.constants';
 import {Job} from './job.model';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CandidateService} from '../candidate/candidate.service';
@@ -57,7 +58,8 @@ export class JobComponent implements OnInit, OnDestroy {
       this.reverse = data['pagingParams'].ascending;
       this.predicate = data['pagingParams'].predicate;
     });
-    this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
   }
 
   loadAll() {
@@ -73,8 +75,8 @@ export class JobComponent implements OnInit, OnDestroy {
           size: this.itemsPerPage,
           sort: this.sort()
         }).subscribe(
-          (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
-          (res: ResponseWrapper) => this.onError(res.json)
+           (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
+           (res: HttpResponse<any>) => this.onError(res.body)
           );
         return;
       }
@@ -84,11 +86,11 @@ export class JobComponent implements OnInit, OnDestroy {
         size: this.itemsPerPage,
         sort: this.sort()
       }).subscribe(
-        (res: ResponseWrapper) => {
-          this.onSuccess(res.json, res.headers),
+           (res: HttpResponse<Job[]>) => {
+            this.jobs = res.body;
             this.currentSearch = '';
         },
-        (res: ResponseWrapper) => this.onError(res.json)
+        (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
   }
@@ -134,11 +136,8 @@ export class JobComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.corporateId
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
+       (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 
@@ -149,12 +148,12 @@ export class JobComponent implements OnInit, OnDestroy {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
         this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-          this.corporateId = response.id;
+          this.corporateId = response.body.id;
           this.loadActiveJobs();
         });
       } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
         this.candidateService.getCandidateByLoginId(account.id).subscribe((response) => {
-          this.candidateId = response.id;
+          this.candidateId = response.body.id;
           this.loadActiveAndMatchedJobsForCandidates();
         });
       } else {
@@ -204,11 +203,8 @@ export class JobComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.candidateId
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
+       (res: HttpResponse<any>) => this.onError(res.body)
       );
 
   }

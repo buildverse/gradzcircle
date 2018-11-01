@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CaptureUniversity e2e test', () => {
 
     let navBarPage: NavBarPage;
     let captureUniversityDialogPage: CaptureUniversityDialogPage;
     let captureUniversityComponentsPage: CaptureUniversityComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CaptureUniversity e2e test', () => {
     it('should load CaptureUniversities', () => {
         navBarPage.goToEntity('capture-university');
         captureUniversityComponentsPage = new CaptureUniversityComponentsPage();
-        expect(captureUniversityComponentsPage.getTitle()).toMatch(/gradzcircleApp.captureUniversity.home.title/);
+        expect(captureUniversityComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.captureUniversity.home.title/);
 
     });
 
     it('should load create CaptureUniversity dialog', () => {
         captureUniversityComponentsPage.clickOnCreateButton();
         captureUniversityDialogPage = new CaptureUniversityDialogPage();
-        expect(captureUniversityDialogPage.getModalTitle()).toMatch(/gradzcircleApp.captureUniversity.home.createOrEditLabel/);
+        expect(captureUniversityDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.captureUniversity.home.createOrEditLabel/);
         captureUniversityDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('CaptureUniversity e2e test', () => {
         captureUniversityDialogPage.capturecollegeSelectLastOption();
         captureUniversityDialogPage.save();
         expect(captureUniversityDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class CaptureUniversityDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setUniversityNameInput = function (universityName) {
+    setUniversityNameInput = function(universityName) {
         this.universityNameInput.sendKeys(universityName);
-    }
+    };
 
-    getUniversityNameInput = function () {
+    getUniversityNameInput = function() {
         return this.universityNameInput.getAttribute('value');
-    }
+    };
 
-    capturecollegeSelectLastOption = function () {
+    capturecollegeSelectLastOption = function() {
         this.capturecollegeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    capturecollegeSelectOption = function (option) {
+    capturecollegeSelectOption = function(option) {
         this.capturecollegeSelect.sendKeys(option);
-    }
+    };
 
-    getCapturecollegeSelect = function () {
+    getCapturecollegeSelect = function() {
         return this.capturecollegeSelect;
-    }
+    };
 
-    getCapturecollegeSelectedOption = function () {
+    getCapturecollegeSelectedOption = function() {
         return this.capturecollegeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

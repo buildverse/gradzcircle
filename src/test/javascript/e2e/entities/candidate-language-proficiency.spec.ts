@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CandidateLanguageProficiency e2e test', () => {
 
     let navBarPage: NavBarPage;
     let candidateLanguageProficiencyDialogPage: CandidateLanguageProficiencyDialogPage;
     let candidateLanguageProficiencyComponentsPage: CandidateLanguageProficiencyComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CandidateLanguageProficiency e2e test', () => {
     it('should load CandidateLanguageProficiencies', () => {
         navBarPage.goToEntity('candidate-language-proficiency');
         candidateLanguageProficiencyComponentsPage = new CandidateLanguageProficiencyComponentsPage();
-        expect(candidateLanguageProficiencyComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateLanguageProficiency.home.title/);
+        expect(candidateLanguageProficiencyComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.candidateLanguageProficiency.home.title/);
 
     });
 
     it('should load create CandidateLanguageProficiency dialog', () => {
         candidateLanguageProficiencyComponentsPage.clickOnCreateButton();
         candidateLanguageProficiencyDialogPage = new CandidateLanguageProficiencyDialogPage();
-        expect(candidateLanguageProficiencyDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateLanguageProficiency.home.createOrEditLabel/);
+        expect(candidateLanguageProficiencyDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.candidateLanguageProficiency.home.createOrEditLabel/);
         candidateLanguageProficiencyDialogPage.close();
     });
 
@@ -41,7 +39,7 @@ describe('CandidateLanguageProficiency e2e test', () => {
         candidateLanguageProficiencyDialogPage.languageSelectLastOption();
         candidateLanguageProficiencyDialogPage.save();
         expect(candidateLanguageProficiencyDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -73,45 +71,45 @@ export class CandidateLanguageProficiencyDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setProficiencyInput = function (proficiency) {
+    setProficiencyInput = function(proficiency) {
         this.proficiencyInput.sendKeys(proficiency);
-    }
+    };
 
-    getProficiencyInput = function () {
+    getProficiencyInput = function() {
         return this.proficiencyInput.getAttribute('value');
-    }
+    };
 
-    candidateSelectLastOption = function () {
+    candidateSelectLastOption = function() {
         this.candidateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateSelectOption = function (option) {
+    candidateSelectOption = function(option) {
         this.candidateSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateSelect = function () {
+    getCandidateSelect = function() {
         return this.candidateSelect;
-    }
+    };
 
-    getCandidateSelectedOption = function () {
+    getCandidateSelectedOption = function() {
         return this.candidateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    languageSelectLastOption = function () {
+    languageSelectLastOption = function() {
         this.languageSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    languageSelectOption = function (option) {
+    languageSelectOption = function(option) {
         this.languageSelect.sendKeys(option);
-    }
+    };
 
-    getLanguageSelect = function () {
+    getLanguageSelect = function() {
         return this.languageSelect;
-    }
+    };
 
-    getLanguageSelectedOption = function () {
+    getLanguageSelectedOption = function() {
         return this.languageSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

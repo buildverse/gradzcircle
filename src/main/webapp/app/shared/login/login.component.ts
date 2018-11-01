@@ -103,19 +103,20 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     });
 
     //   this.redirectAfterLogin ();
+   
   }
 
   redirectAfterLogin() {
     const redirectTo = null;
     this.principal.identity().then((value) => {
       if (value.authorities.indexOf('ROLE_CANDIDATE') > -1) {
-        this.router.navigate(['/candidate-profile']);
+        this.router.navigate(['/job']);
       } else if (value.authorities.indexOf('ROLE_CORPORATE') > -1) {
         this.router.navigate(['/job']);
       } else if (value.authorities.indexOf('ROLE_ADMIN') > -1) {
         this.router.navigate(['']);
       }
-    });
+   });
   }
 
   register() {

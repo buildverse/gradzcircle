@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { CaptureCollege } from './capture-college.model';
@@ -31,9 +32,10 @@ export class CaptureCollegeDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.captureCollegeService.find(id).subscribe((captureCollege) => {
-            this.captureCollege = captureCollege;
-        });
+        this.captureCollegeService.find(id)
+            .subscribe((captureCollegeResponse: HttpResponse<CaptureCollege>) => {
+                this.captureCollege = captureCollegeResponse.body;
+            });
     }
     previousState() {
         window.history.back();

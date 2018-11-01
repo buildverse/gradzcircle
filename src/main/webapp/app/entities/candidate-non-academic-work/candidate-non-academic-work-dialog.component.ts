@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService,JhiDateUtils } from 'ng-jhipster'
 import { CandidateNonAcademicWorkPopupServiceNew } from './candidate-non-academic-work-popup-new.service'
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkPopupService } from './candidate-non-academic-work-popup.service';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
 import { Candidate, CandidateService } from '../candidate';
-import { ResponseWrapper, EditorProperties } from '../../shared';
+import { EditorProperties } from '../../shared';
 
 
 @Component({
@@ -47,7 +47,7 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         this.options = new EditorProperties().options;
 
         this.candidateService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
     validateDates() {
         this.endDateLesser = false;
@@ -92,9 +92,9 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<CandidateNonAcademicWork>) {
-        result.subscribe((res: CandidateNonAcademicWork) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateNonAcademicWork>>) {
+        result.subscribe((res: HttpResponse<CandidateNonAcademicWork>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CandidateNonAcademicWork) {

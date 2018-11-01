@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { CaptureUniversity } from './capture-university.model';
@@ -31,9 +32,10 @@ export class CaptureUniversityDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.captureUniversityService.find(id).subscribe((captureUniversity) => {
-            this.captureUniversity = captureUniversity;
-        });
+        this.captureUniversityService.find(id)
+            .subscribe((captureUniversityResponse: HttpResponse<CaptureUniversity>) => {
+                this.captureUniversity = captureUniversityResponse.body;
+            });
     }
     previousState() {
         window.history.back();

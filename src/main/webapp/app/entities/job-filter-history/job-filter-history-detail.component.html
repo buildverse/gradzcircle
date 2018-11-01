@@ -1,40 +1,32 @@
 
 <div *ngIf="jobFilterHistory">
-	<h2>
-		<span jhiTranslate="gradzcircleApp.jobFilterHistory.detail.title">Job
-			Filter History</span> {{jobFilterHistory.id}}
-	</h2>
-	<hr>
-	<jhi-alert-error></jhi-alert-error>
-	<dl class="row-md jh-entity-details">
-		<dt>
-			<span
-				jhiTranslate="gradzcircleApp.jobFilterHistory.filterDescription">Filter
-				Description</span>
-		</dt>
-		<dd>
-			<span>{{jobFilterHistory.filterDescription}}</span>
-		</dd>
-		<dt>
-			<span jhiTranslate="gradzcircleApp.jobFilterHistory.jobFilter">Job
-				Filter</span>
-		</dt>
-		<dd>
-			<div *ngIf="jobFilterHistory.jobFilter">
-				<a [routerLink]="['/job-filter', jobFilterHistory.jobFilter?.id]">{{jobFilterHistory.jobFilter?.id}}</a>
-			</div>
-		</dd>
-	</dl>
+    <h2><span jhiTranslate="gradzcircleApp.jobFilterHistory.detail.title">Job Filter History</span> {{jobFilterHistory.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.jobFilterHistory.filterDescription">Filter Description</span></dt>
+        <dd>
+            <span>{{jobFilterHistory.filterDescription}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobFilterHistory.jobFilter">Job Filter</span></dt>
+        <dd>
+            <div *ngIf="jobFilterHistory.jobFilter">
+                <a [routerLink]="['/job-filter', jobFilterHistory.jobFilter?.id]">{{jobFilterHistory.jobFilter?.id}}</a>
+            </div>
+        </dd>
+    </dl>
 
-	<button type="submit" (click)="previousState()" class="btn btn-info">
-		<span class="fa fa-arrow-left"></span>&nbsp;<span
-			jhiTranslate="entity.action.back"> Back</span>
-	</button>
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
 
-	<button type="button"
-		[routerLink]="['/', { outlets: { popup: 'job-filter-history/'+ jobFilterHistory.id + '/edit'} }]"
-		replaceUrl="true" class="btn btn-primary">
-		<span class="fa fa-pencil"></span>&nbsp;<span
-			jhiTranslate="entity.action.edit"> Edit</span>
-	</button>
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'job-filter-history/'+ jobFilterHistory.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
 </div>

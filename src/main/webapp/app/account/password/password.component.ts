@@ -5,7 +5,8 @@ import { PasswordService } from './password.service';
 
 @Component({
     selector: 'jhi-password',
-    templateUrl: './password.component.html'
+    templateUrl: './password.component.html',
+    styleUrls: ['password.css']
 })
 export class PasswordComponent implements OnInit {
     doNotMatch: string;

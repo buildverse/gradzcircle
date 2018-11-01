@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { FilterCategory } from './filter-category.model';
@@ -31,9 +32,10 @@ export class FilterCategoryDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.filterCategoryService.find(id).subscribe((filterCategory) => {
-            this.filterCategory = filterCategory;
-        });
+        this.filterCategoryService.find(id)
+            .subscribe((filterCategoryResponse: HttpResponse<FilterCategory>) => {
+                this.filterCategory = filterCategoryResponse.body;
+            });
     }
     previousState() {
         window.history.back();

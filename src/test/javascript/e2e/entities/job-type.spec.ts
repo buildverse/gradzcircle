@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('JobType e2e test', () => {
 
     let navBarPage: NavBarPage;
     let jobTypeDialogPage: JobTypeDialogPage;
     let jobTypeComponentsPage: JobTypeComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('JobType e2e test', () => {
     it('should load JobTypes', () => {
         navBarPage.goToEntity('job-type');
         jobTypeComponentsPage = new JobTypeComponentsPage();
-        expect(jobTypeComponentsPage.getTitle()).toMatch(/gradzcircleApp.jobType.home.title/);
+        expect(jobTypeComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.jobType.home.title/);
 
     });
 
     it('should load create JobType dialog', () => {
         jobTypeComponentsPage.clickOnCreateButton();
         jobTypeDialogPage = new JobTypeDialogPage();
-        expect(jobTypeDialogPage.getModalTitle()).toMatch(/gradzcircleApp.jobType.home.createOrEditLabel/);
+        expect(jobTypeDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.jobType.home.createOrEditLabel/);
         jobTypeDialogPage.close();
     });
 
@@ -41,7 +39,7 @@ describe('JobType e2e test', () => {
         expect(jobTypeDialogPage.getJobTypeCostInput()).toMatch('5');
         jobTypeDialogPage.save();
         expect(jobTypeDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -72,21 +70,21 @@ export class JobTypeDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setJobTypeInput = function (jobType) {
+    setJobTypeInput = function(jobType) {
         this.jobTypeInput.sendKeys(jobType);
-    }
+    };
 
-    getJobTypeInput = function () {
+    getJobTypeInput = function() {
         return this.jobTypeInput.getAttribute('value');
-    }
+    };
 
-    setJobTypeCostInput = function (jobTypeCost) {
+    setJobTypeCostInput = function(jobTypeCost) {
         this.jobTypeCostInput.sendKeys(jobTypeCost);
-    }
+    };
 
-    getJobTypeCostInput = function () {
+    getJobTypeCostInput = function() {
         return this.jobTypeCostInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

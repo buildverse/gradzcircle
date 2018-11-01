@@ -1,3 +1,4 @@
+export * from './constants/error.constants';
 export * from './constants/pagination.constants';
 export * from './alert/alert.component';
 export * from './alert/alert-error.component';
@@ -19,7 +20,7 @@ export * from './user/account.model';
 export * from './user/user.model';
 export * from './user/user.service';
 //xport * from './helper/user-image.pipe';
-export * from './model/response-wrapper.model';
+//export * from './model/response-wrapper.model';
 export * from './model/request-util';
 export * from './model/base-entity';
 export * from './social/social.service';

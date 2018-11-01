@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { ErrorMessagesComponent } from './error-messages.component';
 import { ErrorMessagesDetailComponent } from './error-messages-detail.component';
 import { ErrorMessagesPopupComponent } from './error-messages-dialog.component';

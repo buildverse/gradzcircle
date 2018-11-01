@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Language e2e test', () => {
 
     let navBarPage: NavBarPage;
     let languageDialogPage: LanguageDialogPage;
     let languageComponentsPage: LanguageComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Language e2e test', () => {
     it('should load Languages', () => {
         navBarPage.goToEntity('language');
         languageComponentsPage = new LanguageComponentsPage();
-        expect(languageComponentsPage.getTitle()).toMatch(/gradzcircleApp.language.home.title/);
+        expect(languageComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.language.home.title/);
 
     });
 
     it('should load create Language dialog', () => {
         languageComponentsPage.clickOnCreateButton();
         languageDialogPage = new LanguageDialogPage();
-        expect(languageDialogPage.getModalTitle()).toMatch(/gradzcircleApp.language.home.createOrEditLabel/);
+        expect(languageDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.language.home.createOrEditLabel/);
         languageDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('Language e2e test', () => {
         expect(languageDialogPage.getLanguageInput()).toMatch('language');
         languageDialogPage.save();
         expect(languageDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class LanguageDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setLanguageInput = function (language) {
+    setLanguageInput = function(language) {
         this.languageInput.sendKeys(language);
-    }
+    };
 
-    getLanguageInput = function () {
+    getLanguageInput = function() {
         return this.languageInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

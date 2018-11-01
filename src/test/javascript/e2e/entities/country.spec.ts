@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Country e2e test', () => {
 
     let navBarPage: NavBarPage;
     let countryDialogPage: CountryDialogPage;
     let countryComponentsPage: CountryComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Country e2e test', () => {
     it('should load Countries', () => {
         navBarPage.goToEntity('country');
         countryComponentsPage = new CountryComponentsPage();
-        expect(countryComponentsPage.getTitle()).toMatch(/gradzcircleApp.country.home.title/);
+        expect(countryComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.country.home.title/);
 
     });
 
     it('should load create Country dialog', () => {
         countryComponentsPage.clickOnCreateButton();
         countryDialogPage = new CountryDialogPage();
-        expect(countryDialogPage.getModalTitle()).toMatch(/gradzcircleApp.country.home.createOrEditLabel/);
+        expect(countryDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.country.home.createOrEditLabel/);
         countryDialogPage.close();
     });
 
@@ -47,7 +45,7 @@ describe('Country e2e test', () => {
         expect(countryDialogPage.getNumCodeInput()).toMatch('5');
         countryDialogPage.setPhoneCodeInput('5');
         expect(countryDialogPage.getPhoneCodeInput()).toMatch('5');
-        countryDialogPage.getEnabledInput().isSelected().then(function (selected) {
+        countryDialogPage.getEnabledInput().isSelected().then((selected) => {
             if (selected) {
                 countryDialogPage.getEnabledInput().click();
                 expect(countryDialogPage.getEnabledInput().isSelected()).toBeFalsy();
@@ -59,7 +57,7 @@ describe('Country e2e test', () => {
         countryDialogPage.nationalitySelectLastOption();
         countryDialogPage.save();
         expect(countryDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -96,72 +94,72 @@ export class CountryDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCountryNameInput = function (countryName) {
+    setCountryNameInput = function(countryName) {
         this.countryNameInput.sendKeys(countryName);
-    }
+    };
 
-    getCountryNameInput = function () {
+    getCountryNameInput = function() {
         return this.countryNameInput.getAttribute('value');
-    }
+    };
 
-    setShortCodeInput = function (shortCode) {
+    setShortCodeInput = function(shortCode) {
         this.shortCodeInput.sendKeys(shortCode);
-    }
+    };
 
-    getShortCodeInput = function () {
+    getShortCodeInput = function() {
         return this.shortCodeInput.getAttribute('value');
-    }
+    };
 
-    setShortCodeThreeCharInput = function (shortCodeThreeChar) {
+    setShortCodeThreeCharInput = function(shortCodeThreeChar) {
         this.shortCodeThreeCharInput.sendKeys(shortCodeThreeChar);
-    }
+    };
 
-    getShortCodeThreeCharInput = function () {
+    getShortCodeThreeCharInput = function() {
         return this.shortCodeThreeCharInput.getAttribute('value');
-    }
+    };
 
-    setCountryNiceNameInput = function (countryNiceName) {
+    setCountryNiceNameInput = function(countryNiceName) {
         this.countryNiceNameInput.sendKeys(countryNiceName);
-    }
+    };
 
-    getCountryNiceNameInput = function () {
+    getCountryNiceNameInput = function() {
         return this.countryNiceNameInput.getAttribute('value');
-    }
+    };
 
-    setNumCodeInput = function (numCode) {
+    setNumCodeInput = function(numCode) {
         this.numCodeInput.sendKeys(numCode);
-    }
+    };
 
-    getNumCodeInput = function () {
+    getNumCodeInput = function() {
         return this.numCodeInput.getAttribute('value');
-    }
+    };
 
-    setPhoneCodeInput = function (phoneCode) {
+    setPhoneCodeInput = function(phoneCode) {
         this.phoneCodeInput.sendKeys(phoneCode);
-    }
+    };
 
-    getPhoneCodeInput = function () {
+    getPhoneCodeInput = function() {
         return this.phoneCodeInput.getAttribute('value');
-    }
+    };
 
-    getEnabledInput = function () {
+    getEnabledInput = function() {
         return this.enabledInput;
-    }
-    nationalitySelectLastOption = function () {
+    };
+    nationalitySelectLastOption = function() {
         this.nationalitySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    nationalitySelectOption = function (option) {
+    nationalitySelectOption = function(option) {
         this.nationalitySelect.sendKeys(option);
-    }
+    };
 
-    getNationalitySelect = function () {
+    getNationalitySelect = function() {
         return this.nationalitySelect;
-    }
+    };
 
-    getNationalitySelectedOption = function () {
+    getNationalitySelectedOption = function() {
         return this.nationalitySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

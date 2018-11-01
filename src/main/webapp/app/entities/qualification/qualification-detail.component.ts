@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Qualification } from './qualification.model';
@@ -31,9 +32,10 @@ export class QualificationDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.qualificationService.find(id).subscribe((qualification) => {
-            this.qualification = qualification;
-        });
+        this.qualificationService.find(id)
+            .subscribe((qualificationResponse: HttpResponse<Qualification>) => {
+                this.qualification = qualificationResponse.body;
+            });
     }
     previousState() {
         window.history.back();

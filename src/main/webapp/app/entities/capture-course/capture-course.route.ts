@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { CaptureCourseComponent } from './capture-course.component';
 import { CaptureCourseDetailComponent } from './capture-course-detail.component';
 import { CaptureCoursePopupComponent } from './capture-course-dialog.component';

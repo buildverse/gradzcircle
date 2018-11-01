@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {SERVER_API_URL} from '../../app.constants';
 
 import {JhiDateUtils} from 'ng-jhipster';
 import {CandidateList} from '../job/candidate-list.model';
 import {Corporate} from './corporate.model';
-import {ResponseWrapper, createRequestOption} from '../../shared';
+import {createRequestOption} from '../../shared';
+
+export type EntityResponseType = HttpResponse<Corporate>;
+export type EntityResponseTypeCandidateList = HttpResponse<CandidateList>;
 
 @Injectable()
 export class CorporateService {
@@ -16,78 +19,67 @@ export class CorporateService {
   private findByLoginIdresourceUrl = SERVER_API_URL + 'api/corporateByLoginId';
   private resourceLinkedCandidatesForCorporateUrl = SERVER_API_URL + 'api/linkedCandidates';
 
-  constructor(private http: Http, private dateUtils: JhiDateUtils) {}
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
-  create(corporate: Corporate): Observable<Corporate> {
+  create(corporate: Corporate): Observable<EntityResponseType> {
     const copy = this.convert(corporate);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.post<Corporate>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  update(corporate: Corporate): Observable<Corporate> {
+  update(corporate: Corporate): Observable<EntityResponseType> {
     const copy = this.convert(corporate);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.put<Corporate>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  find(id: number): Observable<Corporate> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+  find(id: number): Observable<EntityResponseType> {
+    return this.http.get<Corporate>(`${this.resourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  findCorporateByLoginId(id: number): Observable<Corporate> {
-    return this.http.get(`${this.findByLoginIdresourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      this.convertItemFromServer(jsonResponse);
-      return jsonResponse;
-    });
+  findCorporateByLoginId(id: number): Observable<EntityResponseType> {
+    return this.http.get<Corporate>(`${this.findByLoginIdresourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  queryLinkedCandidates(req?: any): Observable<ResponseWrapper> {
+  queryLinkedCandidates(req?: any): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceLinkedCandidatesForCorporateUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertCandidateListResponse(res));
+    return this.http.get<CandidateList[]>(`${this.resourceLinkedCandidatesForCorporateUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateList[]>) => this.convertArrayResponseForCandidateList(res));
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
+  query(req?: any): Observable<HttpResponse<Corporate[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<Corporate[]>(this.resourceUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res));
   }
 
-  delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
 
-  search(req?: any): Observable<ResponseWrapper> {
+
+
+  search(req?: any): Observable<HttpResponse<Corporate[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceSearchUrl, options)
-      .map((res: any) => this.convertResponse(res));
+    return this.http.get<Corporate[]>(this.resourceSearchUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res));
   }
 
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    const result = [];
-    for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
-    }
-    return new ResponseWrapper(res.headers, result, res.status);
+  private convertResponse(res: EntityResponseType): EntityResponseType {
+    const body: Corporate = this.convertItemFromServer(res.body);
+    return res.clone({body});
   }
 
   /**
    * Convert a returned JSON object to Corporate.
    */
-  private convertItemFromServer(json: any): Corporate {
-    const entity: Corporate = Object.assign(new Corporate(), json);
-    entity.establishedSince = this.dateUtils
-      .convertLocalDateFromServer(json.establishedSince);
-    return entity;
+  private convertItemFromServer(corporate: Corporate): Corporate {
+    const copy: Corporate = Object.assign({}, corporate);
+    copy.establishedSince = this.dateUtils
+      .convertLocalDateFromServer(corporate.establishedSince);
+    return copy;
   }
 
   /**
@@ -100,15 +92,23 @@ export class CorporateService {
     return copy;
   }
 
-  private convertCandidateListResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    // console.log('esponse from server is '+JSON.stringify(jsonResponse));
-    const result = [];
+  private convertArrayResponseForCorporate(res: HttpResponse<Corporate[]>): HttpResponse<Corporate[]> {
+    const jsonResponse: Corporate[] = res.body;
+    const body: Corporate[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      const entity: CandidateList = Object.assign(new CandidateList(), jsonResponse[i]);
-      result.push(entity);
+      body.push(this.convertItemFromServer(jsonResponse[i]));
     }
-    return new ResponseWrapper(res.headers, result, res.status);
+    return res.clone({body});
   }
 
+  private convertArrayResponseForCandidateList(res: HttpResponse<CandidateList[]>): HttpResponse<CandidateList[]> {
+    const jsonResponse: CandidateList[] = res.body;
+    const body: CandidateList[] = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      body.push(this.convertItemFromServer(jsonResponse[i]));
+    }
+    return res.clone({body});
+  }
+
+  
 }

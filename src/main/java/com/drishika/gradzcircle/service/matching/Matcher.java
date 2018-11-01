@@ -18,7 +18,7 @@ import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
  */
 @Service
 public interface Matcher<T> {
-	@Async
+//	@Async
 	@Transactional
 	public void match(T t);
 

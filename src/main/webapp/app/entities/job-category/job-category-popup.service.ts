@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { JobCategory } from './job-category.model';
 import { JobCategoryService } from './job-category.service';
 
@@ -25,10 +26,12 @@ export class JobCategoryPopupService {
             }
 
             if (id) {
-                this.jobCategoryService.find(id).subscribe((jobCategory) => {
-                    this.ngbModalRef = this.jobCategoryModalRef(component, jobCategory);
-                    resolve(this.ngbModalRef);
-                });
+                this.jobCategoryService.find(id)
+                    .subscribe((jobCategoryResponse: HttpResponse<JobCategory>) => {
+                        const jobCategory: JobCategory = jobCategoryResponse.body;
+                        this.ngbModalRef = this.jobCategoryModalRef(component, jobCategory);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class JobCategoryPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.jobCategory = jobCategory;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

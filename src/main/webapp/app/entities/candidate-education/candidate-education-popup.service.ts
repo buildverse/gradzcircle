@@ -7,6 +7,7 @@ import { College } from '../../entities/college/college.model';
 import { Course } from '../../entities/course/course.model';
 import { Qualification } from '../../entities/qualification/qualification.model';
 import { Candidate } from '../candidate/candidate.model';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class CandidateEducationPopupService {
@@ -31,7 +32,9 @@ export class CandidateEducationPopupService {
             }
 
             if (id) {
-                this.candidateEducationService.find(id).subscribe((candidateEducation) => {
+                this.candidateEducationService.find(id)
+                  .subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>)=>{
+                    const candidateEducation: CandidateEducation = candidateEducationResponse.body;
                     if (candidateEducation.educationFromDate) {
                         candidateEducation.educationFromDate = {
                             year: candidateEducation.educationFromDate.getFullYear(),
@@ -71,10 +74,10 @@ export class CandidateEducationPopupService {
         modalRef.componentInstance.courses = courses;
 
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+           this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

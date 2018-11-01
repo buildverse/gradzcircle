@@ -1,13 +1,9 @@
 package com.drishika.gradzcircle.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -66,9 +63,8 @@ public class CandidateLanguageProficiencyResource {
 			@RequestBody CandidateLanguageProficiency candidateLanguageProficiency) throws URISyntaxException {
 		log.debug("REST request to save CandidateLanguageProficiency : {}", candidateLanguageProficiency);
 		if (candidateLanguageProficiency.getId() != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
-					"A new candidateLanguageProficiency cannot already have an ID")).body(null);
-		}
+            throw new BadRequestAlertException("A new candidateLanguageProficiency cannot already have an ID", ENTITY_NAME, "idexists");
+        }
 		CandidateLanguageProficiency result = candidateLanguageService
 				.createCandidateLanguageProficiency(candidateLanguageProficiency);
 

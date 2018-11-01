@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { JobHistory } from './job-history.model';
 import { JobHistoryPopupService } from './job-history-popup.service';
 import { JobHistoryService } from './job-history.service';
 import { Job, JobService } from '../job';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-job-history-dialog',
@@ -35,7 +34,7 @@ export class JobHistoryDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.jobService.query()
-            .subscribe((res: ResponseWrapper) => { this.jobs = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Job[]>) => { this.jobs = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -53,9 +52,9 @@ export class JobHistoryDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<JobHistory>) {
-        result.subscribe((res: JobHistory) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<JobHistory>>) {
+        result.subscribe((res: HttpResponse<JobHistory>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: JobHistory) {

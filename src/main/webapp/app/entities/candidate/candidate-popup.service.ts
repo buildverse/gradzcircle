@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Candidate } from './candidate.model';
 import { CandidateService } from './candidate.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class CandidatePopupService {
@@ -25,7 +26,9 @@ export class CandidatePopupService {
             }
 
             if (id) {
-                this.candidateService.find(id).subscribe((candidate) => {
+                this.candidateService.find(id)
+                  .subscribe((candidateResponse: HttpResponse<Candidate>)=> {
+                     const candidate: Candidate = candidateResponse.body;
                     if (candidate.dateOfBirth) {
                         candidate.dateOfBirth = {
                             year: candidate.dateOfBirth.getFullYear(),
@@ -50,10 +53,10 @@ export class CandidatePopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.candidate = candidate;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+             this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

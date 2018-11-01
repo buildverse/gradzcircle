@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('University e2e test', () => {
 
     let navBarPage: NavBarPage;
     let universityDialogPage: UniversityDialogPage;
     let universityComponentsPage: UniversityComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('University e2e test', () => {
     it('should load Universities', () => {
         navBarPage.goToEntity('university');
         universityComponentsPage = new UniversityComponentsPage();
-        expect(universityComponentsPage.getTitle()).toMatch(/gradzcircleApp.university.home.title/);
+        expect(universityComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.university.home.title/);
 
     });
 
     it('should load create University dialog', () => {
         universityComponentsPage.clickOnCreateButton();
         universityDialogPage = new UniversityDialogPage();
-        expect(universityDialogPage.getModalTitle()).toMatch(/gradzcircleApp.university.home.createOrEditLabel/);
+        expect(universityDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.university.home.createOrEditLabel/);
         universityDialogPage.close();
     });
 
@@ -44,7 +42,7 @@ describe('University e2e test', () => {
         universityDialogPage.countrySelectLastOption();
         universityDialogPage.save();
         expect(universityDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -77,45 +75,45 @@ export class UniversityDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setUniversityNameInput = function (universityName) {
+    setUniversityNameInput = function(universityName) {
         this.universityNameInput.sendKeys(universityName);
-    }
+    };
 
-    getUniversityNameInput = function () {
+    getUniversityNameInput = function() {
         return this.universityNameInput.getAttribute('value');
-    }
+    };
 
-    setUniversityTypeInput = function (universityType) {
+    setUniversityTypeInput = function(universityType) {
         this.universityTypeInput.sendKeys(universityType);
-    }
+    };
 
-    getUniversityTypeInput = function () {
+    getUniversityTypeInput = function() {
         return this.universityTypeInput.getAttribute('value');
-    }
+    };
 
-    setWebsiteInput = function (website) {
+    setWebsiteInput = function(website) {
         this.websiteInput.sendKeys(website);
-    }
+    };
 
-    getWebsiteInput = function () {
+    getWebsiteInput = function() {
         return this.websiteInput.getAttribute('value');
-    }
+    };
 
-    countrySelectLastOption = function () {
+    countrySelectLastOption = function() {
         this.countrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    countrySelectOption = function (option) {
+    countrySelectOption = function(option) {
         this.countrySelect.sendKeys(option);
-    }
+    };
 
-    getCountrySelect = function () {
+    getCountrySelect = function() {
         return this.countrySelect;
-    }
+    };
 
-    getCountrySelectedOption = function () {
+    getCountrySelectedOption = function() {
         return this.countrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

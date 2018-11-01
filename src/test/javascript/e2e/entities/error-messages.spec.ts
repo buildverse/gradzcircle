@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('ErrorMessages e2e test', () => {
 
     let navBarPage: NavBarPage;
     let errorMessagesDialogPage: ErrorMessagesDialogPage;
     let errorMessagesComponentsPage: ErrorMessagesComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('ErrorMessages e2e test', () => {
     it('should load ErrorMessages', () => {
         navBarPage.goToEntity('error-messages');
         errorMessagesComponentsPage = new ErrorMessagesComponentsPage();
-        expect(errorMessagesComponentsPage.getTitle()).toMatch(/gradzcircleApp.errorMessages.home.title/);
+        expect(errorMessagesComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.errorMessages.home.title/);
 
     });
 
     it('should load create ErrorMessages dialog', () => {
         errorMessagesComponentsPage.clickOnCreateButton();
         errorMessagesDialogPage = new ErrorMessagesDialogPage();
-        expect(errorMessagesDialogPage.getModalTitle()).toMatch(/gradzcircleApp.errorMessages.home.createOrEditLabel/);
+        expect(errorMessagesDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.errorMessages.home.createOrEditLabel/);
         errorMessagesDialogPage.close();
     });
 
@@ -43,7 +41,7 @@ describe('ErrorMessages e2e test', () => {
         expect(errorMessagesDialogPage.getErrorMessageInput()).toMatch('errorMessage');
         errorMessagesDialogPage.save();
         expect(errorMessagesDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -75,29 +73,29 @@ export class ErrorMessagesDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setComponentNameInput = function (componentName) {
+    setComponentNameInput = function(componentName) {
         this.componentNameInput.sendKeys(componentName);
-    }
+    };
 
-    getComponentNameInput = function () {
+    getComponentNameInput = function() {
         return this.componentNameInput.getAttribute('value');
-    }
+    };
 
-    setErrorKeyInput = function (errorKey) {
+    setErrorKeyInput = function(errorKey) {
         this.errorKeyInput.sendKeys(errorKey);
-    }
+    };
 
-    getErrorKeyInput = function () {
+    getErrorKeyInput = function() {
         return this.errorKeyInput.getAttribute('value');
-    }
+    };
 
-    setErrorMessageInput = function (errorMessage) {
+    setErrorMessageInput = function(errorMessage) {
         this.errorMessageInput.sendKeys(errorMessage);
-    }
+    };
 
-    getErrorMessageInput = function () {
+    getErrorMessageInput = function() {
         return this.errorMessageInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

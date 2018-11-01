@@ -83,10 +83,10 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
     //         this.messages.push(validationMessageArray[i].errorKey,validationMessageArray[i].errorMessage);
     //     console.log("messages are "+ JSON.stringify(this.validationMessages));
         
-    // }
+    // }res: HttpResponse<Filter[]
 
     ngOnInit() {
-       this.route.data.subscribe((data:{countries: Country[]})=>this.countries = data.countries);
+       this.route.data.subscribe((data: {countries: Country[]}) => this.countries = data.countries);
      //  this.route.data.subscribe((data:{validationMessages: ErrorMessages[]})=> this.setValidationMessages(data.validationMessages));
      //  console.log("Error messages "+ JSON.stringify(this.validationMessages));
        this.corporateRegisterForm = this.formBuilder.group({

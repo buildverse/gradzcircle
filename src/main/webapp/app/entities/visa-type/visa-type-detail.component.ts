@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { VisaType } from './visa-type.model';
@@ -31,9 +32,10 @@ export class VisaTypeDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.visaTypeService.find(id).subscribe((visaType) => {
-            this.visaType = visaType;
-        });
+        this.visaTypeService.find(id)
+            .subscribe((visaTypeResponse: HttpResponse<VisaType>) => {
+                this.visaType = visaTypeResponse.body;
+            });
     }
     previousState() {
         window.history.back();

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('JobFilterHistory e2e test', () => {
 
     let navBarPage: NavBarPage;
     let jobFilterHistoryDialogPage: JobFilterHistoryDialogPage;
     let jobFilterHistoryComponentsPage: JobFilterHistoryComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('JobFilterHistory e2e test', () => {
     it('should load JobFilterHistories', () => {
         navBarPage.goToEntity('job-filter-history');
         jobFilterHistoryComponentsPage = new JobFilterHistoryComponentsPage();
-        expect(jobFilterHistoryComponentsPage.getTitle()).toMatch(/gradzcircleApp.jobFilterHistory.home.title/);
+        expect(jobFilterHistoryComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.jobFilterHistory.home.title/);
 
     });
 
     it('should load create JobFilterHistory dialog', () => {
         jobFilterHistoryComponentsPage.clickOnCreateButton();
         jobFilterHistoryDialogPage = new JobFilterHistoryDialogPage();
-        expect(jobFilterHistoryDialogPage.getModalTitle()).toMatch(/gradzcircleApp.jobFilterHistory.home.createOrEditLabel/);
+        expect(jobFilterHistoryDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.jobFilterHistory.home.createOrEditLabel/);
         jobFilterHistoryDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('JobFilterHistory e2e test', () => {
         jobFilterHistoryDialogPage.jobFilterSelectLastOption();
         jobFilterHistoryDialogPage.save();
         expect(jobFilterHistoryDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class JobFilterHistoryDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setFilterDescriptionInput = function (filterDescription) {
+    setFilterDescriptionInput = function(filterDescription) {
         this.filterDescriptionInput.sendKeys(filterDescription);
-    }
+    };
 
-    getFilterDescriptionInput = function () {
+    getFilterDescriptionInput = function() {
         return this.filterDescriptionInput.getAttribute('value');
-    }
+    };
 
-    jobFilterSelectLastOption = function () {
+    jobFilterSelectLastOption = function() {
         this.jobFilterSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobFilterSelectOption = function (option) {
+    jobFilterSelectOption = function(option) {
         this.jobFilterSelect.sendKeys(option);
-    }
+    };
 
-    getJobFilterSelect = function () {
+    getJobFilterSelect = function() {
         return this.jobFilterSelect;
-    }
+    };
 
-    getJobFilterSelectedOption = function () {
+    getJobFilterSelectedOption = function() {
         return this.jobFilterSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

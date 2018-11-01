@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Industry e2e test', () => {
 
     let navBarPage: NavBarPage;
     let industryDialogPage: IndustryDialogPage;
     let industryComponentsPage: IndustryComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Industry e2e test', () => {
     it('should load Industries', () => {
         navBarPage.goToEntity('industry');
         industryComponentsPage = new IndustryComponentsPage();
-        expect(industryComponentsPage.getTitle()).toMatch(/gradzcircleApp.industry.home.title/);
+        expect(industryComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.industry.home.title/);
 
     });
 
     it('should load create Industry dialog', () => {
         industryComponentsPage.clickOnCreateButton();
         industryDialogPage = new IndustryDialogPage();
-        expect(industryDialogPage.getModalTitle()).toMatch(/gradzcircleApp.industry.home.createOrEditLabel/);
+        expect(industryDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.industry.home.createOrEditLabel/);
         industryDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('Industry e2e test', () => {
         expect(industryDialogPage.getIndustryNameInput()).toMatch('industryName');
         industryDialogPage.save();
         expect(industryDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class IndustryDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setIndustryNameInput = function (industryName) {
+    setIndustryNameInput = function(industryName) {
         this.industryNameInput.sendKeys(industryName);
-    }
+    };
 
-    getIndustryNameInput = function () {
+    getIndustryNameInput = function() {
         return this.industryNameInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

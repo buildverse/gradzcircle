@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
 import {of} from 'rxjs/observable/of';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -14,7 +13,7 @@ import {JobType, JobTypeService} from '../job-type';
 import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
-import {ResponseWrapper,EditorProperties} from '../../shared';
+import {EditorProperties} from '../../shared';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Qualification, QualificationService} from '../qualification';
@@ -32,7 +31,7 @@ import {JobFilter} from '../job-filter/index';
 import * as equal from 'fast-deep-equal';
 import {AppConfig} from '../app-config/app-config.model';
 import {AppConfigService} from '../app-config/app-config.service';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 function deepcopy<T>(o: T): T {
   return JSON.parse(JSON.stringify(o));
@@ -160,12 +159,11 @@ export class JobDialogComponent implements OnInit {
     this.basic = true;
     this.options = new EditorProperties().options;
     this.jobTypeService.query()
-      .subscribe((res: ResponseWrapper) => {this.jobtypes = res.json;}, (res: ResponseWrapper) => this.onError(res.json));
+        .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.employmentTypeService.query()
-      .subscribe((res: ResponseWrapper) => {this.employmentTypes = res.json;}, (res: ResponseWrapper) => this.onError(res.json));
+      .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmentTypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.appConfigService.query()
-      .subscribe((res: ResponseWrapper) => {
-        this.appConfigs = res.json;
+      .subscribe((res: HttpResponse<AppConfig[]>) => { this.appConfigs = res.body; 
         this.appConfigs.forEach((appConfig) => {
           if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1) {
             this.businessPlanEnabled = appConfig.configValue;
@@ -173,10 +171,10 @@ export class JobDialogComponent implements OnInit {
           }
         });
       }
-      , (res: ResponseWrapper) => this.onError(res.json));
+      , (res: HttpErrorResponse) => this.onError(res.message));
 
     this.genderService.query()
-      .subscribe((res: ResponseWrapper) => {this.genders = res.json;}, (res: ResponseWrapper) => this.onError(res.json));
+      .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     this.gpaDecimalValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     this.useEscrow = false;
@@ -252,8 +250,8 @@ export class JobDialogComponent implements OnInit {
     this.prevJobType = this.job.jobType;
     this.prevNoOfApplicants = this.job.noOfApplicants;
     this.filterService.query()
-      .subscribe((res: ResponseWrapper) => {
-        this.filters = res.json;
+      .subscribe((res: HttpResponse<Filter[]>) => {   
+         this.filters = res.body; 
         //console.log('filter data b4 ' + JSON.stringify(this.filters));
         this.filters.forEach((filter) => {
           if (filter.filterName.indexOf('grad') > -1) {
@@ -336,7 +334,7 @@ export class JobDialogComponent implements OnInit {
           });
         }
         this.prevFilterCost = this.filterCost;
-      }, (res: ResponseWrapper) => this.onError(res.json));
+      },  (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   setScoreControl(initialize?) {
@@ -1084,9 +1082,9 @@ export class JobDialogComponent implements OnInit {
     job.createDate = undefined;
     job.updateDate = undefined;
   }
-  private subscribeToSaveResponse(result: Observable<Job>, saveType) {
-    result.subscribe((res: Job) =>
-      this.onSaveSuccess(res, saveType), (res: Response) => this.onSaveError(res));
+  private subscribeToSaveResponse(result: Observable<HttpResponse<Job>>, saveType) {
+    result.subscribe((res: HttpResponse<Job>) =>
+            this.onSaveSuccess(res.body,saveType), (res: HttpErrorResponse) => this.onSaveError(res));
   }
 
   private onSaveSuccess(result: Job, saveType) {
@@ -1137,31 +1135,31 @@ export class JobDialogComponent implements OnInit {
   requestCollegeData = (text: string): Observable<Response> => {
     return this.collegeService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body);
   }
 
   requestQualificationData = (text: string): Observable<Response> => {
     return this.qualificationService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body);
   }
 
   requestCourseData = (text: string): Observable<Response> => {
     return this.courseService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body);
   }
 
   requestLanguageData = (text: string): Observable<Response> => {
     return this.languageService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body);
   }
 
   requestUniversityData = (text: string): Observable<Response> => {
     return this.universityService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body);
   }
 
 

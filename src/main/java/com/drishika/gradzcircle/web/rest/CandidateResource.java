@@ -22,15 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Address;
 import com.drishika.gradzcircle.domain.Candidate;
-import com.drishika.gradzcircle.domain.CandidateCertification;
-import com.drishika.gradzcircle.domain.CandidateEducation;
-import com.drishika.gradzcircle.domain.CandidateEmployment;
-import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
-import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.service.CandidateService;
 import com.drishika.gradzcircle.service.dto.CandidateDTO;
+import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
-import com.drishika.gradzcircle.service.dto.UserDTO;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -195,9 +190,25 @@ public class CandidateResource {
 	@GetMapping("/candidateByLogin/{id}")
 	@Timed
 	public ResponseEntity<CandidateDTO> getCandidateByLoginId(@PathVariable Long id) {
-		log.debug("REST request to get Candidate : {}", id);
+		log.debug("REST request to get Candidate by Login id for : {}", id);
 		Candidate candidate = candidateService.getCandidateByLoginId(id);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(convertCandidateToCandidateDTO(candidate)));
+	}
+	
+	/**
+	 * GET /candidates/:id : get the "id" candidate.
+	 *
+	 * @param id
+	 *            the id of the candidate to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the candidate,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/candidateById/{id}")
+	@Timed
+	public ResponseEntity<CandidateDetailDTO> getCandidateDetailsById(@PathVariable Long id) {
+		log.debug("REST request to get Candidate by Id for  : {}", id);
+		Candidate candidate = candidateService.getCandidate(id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.convertToCandidateDetailDTO(candidate)));
 	}
 
 	private CandidateDTO convertCandidateToCandidateDTO(Candidate candidate) {

@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { CaptureUniversity } from './capture-university.model';
 import { CaptureUniversityService } from './capture-university.service';
 
@@ -25,10 +26,12 @@ export class CaptureUniversityPopupService {
             }
 
             if (id) {
-                this.captureUniversityService.find(id).subscribe((captureUniversity) => {
-                    this.ngbModalRef = this.captureUniversityModalRef(component, captureUniversity);
-                    resolve(this.ngbModalRef);
-                });
+                this.captureUniversityService.find(id)
+                    .subscribe((captureUniversityResponse: HttpResponse<CaptureUniversity>) => {
+                        const captureUniversity: CaptureUniversity = captureUniversityResponse.body;
+                        this.ngbModalRef = this.captureUniversityModalRef(component, captureUniversity);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class CaptureUniversityPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.captureUniversity = captureUniversity;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

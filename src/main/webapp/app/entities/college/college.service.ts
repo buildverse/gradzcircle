@@ -1,81 +1,85 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-import { of } from 'rxjs/observable/of';
+
 import { College } from './college.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<College>;
 
 @Injectable()
 export class CollegeService {
 
-    private resourceUrl = SERVER_API_URL + 'api/colleges';
+    private resourceUrl =  SERVER_API_URL + 'api/colleges';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/colleges';
     private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/collegesBySuggest';
+    constructor(private http: HttpClient) { }
 
-    constructor(private http: Http) { }
-
-    create(college: College): Observable<College> {
+    create(college: College): Observable<EntityResponseType> {
         const copy = this.convert(college);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<College>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(college: College): Observable<College> {
+    update(college: College): Observable<EntityResponseType> {
         const copy = this.convert(college);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<College>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<College> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<College>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<College[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<College[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<College[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<College[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));
     }
-
-    searchRemote(req?: any): Observable<Response> {
+  
+   /* searchRemote(req?: any): Observable<HttpResponse<College[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchSuggestUrl, options);
+        return this.http.get<College[]>(this.resourceSearchSuggestUrl, { params: options, observe: 'response' })
+                .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));
+    }
+*/
+  searchRemote(req?: any): Observable<HttpResponse<any>> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
 
     }
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: College = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
 
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertArrayResponse(res: HttpResponse<College[]>): HttpResponse<College[]> {
+        const jsonResponse: College[] = res.body;
+        const body: College[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to College.
      */
-    private convertItemFromServer(json: any): College {
-        const entity: College = Object.assign(new College(), json);
-        return entity;
+    private convertItemFromServer(college: College): College {
+        const copy: College = Object.assign({}, college);
+        return copy;
     }
 
     /**

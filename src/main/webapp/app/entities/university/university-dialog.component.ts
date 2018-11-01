@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { University } from './university.model';
 import { UniversityPopupService } from './university-popup.service';
 import { UniversityService } from './university.service';
 import { Country, CountryService } from '../country';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-university-dialog',
@@ -35,7 +34,7 @@ export class UniversityDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.countryService.query()
-            .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -53,9 +52,9 @@ export class UniversityDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<University>) {
-        result.subscribe((res: University) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<University>>) {
+        result.subscribe((res: HttpResponse<University>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: University) {

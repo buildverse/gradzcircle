@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class CandidateEmploymentPopupService {
@@ -25,7 +26,9 @@ export class CandidateEmploymentPopupService {
             }
 
             if (id) {
-                this.candidateEmploymentService.find(id).subscribe((candidateEmployment) => {
+                this.candidateEmploymentService.find(id)
+                  .subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) =>  {
+                     const candidateEmployment: CandidateEmployment = candidateEmploymentResponse.body;
                     if (candidateEmployment.employmentStartDate) {
                         candidateEmployment.employmentStartDate = {
                             year: candidateEmployment.employmentStartDate.getFullYear(),
@@ -57,10 +60,10 @@ export class CandidateEmploymentPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.candidateEmployment = candidateEmployment;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

@@ -1,6 +1,7 @@
 package com.drishika.gradzcircle.repository;
 
 import com.drishika.gradzcircle.domain.User;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,22 +18,30 @@ import java.time.Instant;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findOneByActivationKey(String activationKey);
+    String USERS_BY_LOGIN_CACHE = "usersByLogin";
 
-	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
+    String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
-	Optional<User> findOneByResetKey(String resetKey);
+    Optional<User> findOneByActivationKey(String activationKey);
 
-	Optional<User> findOneByEmailIgnoreCase(String email);
+    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
 
-	Optional<User> findOneByLogin(String login);
+    Optional<User> findOneByResetKey(String resetKey);
 
-	@EntityGraph(attributePaths = "authorities")
-	User findOneWithAuthoritiesById(Long id);
+    Optional<User> findOneByEmailIgnoreCase(String email);
 
-	@EntityGraph(attributePaths = "authorities")
-	@Cacheable(cacheNames = "users")
-	Optional<User> findOneWithAuthoritiesByLogin(String login);
+    Optional<User> findOneByLogin(String login);
 
-	Page<User> findAllByLoginNot(Pageable pageable, String login);
+    @EntityGraph(attributePaths = "authorities")
+    Optional<User> findOneWithAuthoritiesById(Long id);
+
+    @EntityGraph(attributePaths = "authorities")
+    @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
+    Optional<User> findOneWithAuthoritiesByLogin(String login);
+
+    @EntityGraph(attributePaths = "authorities")
+    @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
+    Optional<User> findOneWithAuthoritiesByEmail(String email);
+
+    Page<User> findAllByLoginNot(Pageable pageable, String login);
 }

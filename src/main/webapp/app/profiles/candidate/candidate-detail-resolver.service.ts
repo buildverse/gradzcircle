@@ -11,8 +11,9 @@ export class CandidateDetailResolverService implements Resolve<Candidate> {
     constructor (private candidateService: CandidateService,private router: Router){}
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Candidate> {
-        const candidateId = route.parent.data['candidate'].id;
-        return this.candidateService.find(candidateId).catch((error: any) => {
+        const candidateId = route.parent.data['candidate'].body.id;
+      console.log('Candidate id in second resolver is '+candidateId);
+        return this.candidateService.getCandidateByCandidateId(candidateId).catch((error: any) => {
             console.log(`${error}`);
             this.router.navigate(['/error']);
             return Observable.of(null);

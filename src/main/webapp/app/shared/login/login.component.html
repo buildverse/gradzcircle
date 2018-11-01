@@ -21,38 +21,36 @@
 		</div>
 
 		<fieldset>
-			<div class=" mt-5 form-group"
-				[ngClass]="{'has-danger':  (loginForm.get('login').touched ||
-                            loginForm.get('login').dirty) &&
-                            !loginForm.get('login').valid }">
+			<div class=" mt-5 form-group">
 				<div class="input-group">
-					<span class="input-group-addon icon icon-user" id="basic-addon1"></span>
+					<div class="input-group-prepend">
+						<span class="input-group-text icon icon-user" id="basic-addon1"></span>
+					</div>
 					<input class="form-control"
 						placeholder="{{'global.form.username' | translate}}"
 						formControlName="login" aria-describedby="basic-addon1">
 				</div>
-				<div>
+				<!--  >div>
 					<span class="form-text text-left"
 						*ngIf="(loginForm.get('login').touched ||
                                             loginForm.get('login').dirty) &&
                                             loginForm.get('login').errors">
-						<div class="form-control-feedback"
+						<div class="invalid-feedback"
 							*ngIf="loginForm.get('login').errors.required">Please enter
 							your user name.</div>
 					</span>
-				</div>
+				</div-->
 			</div>
-			<div class="form-group mb-3"
-				[ngClass]="{'has-danger':  (loginForm.get('password').touched ||
-                            loginForm.get('password').dirty) &&
-                            !loginForm.get('password').valid }">
+			<div class="form-group mb-3">
 				<div class="input-group">
-					<span class="input-group-addon icon icon-key" id="basic-addon2"></span>
+					<div class="input-group-prepend">
+						<span class="input-group-text icon icon-key" id="basic-addon2"></span>
+					</div>
 					<input type="password" class="form-control"
 						placeholder="{{'login.form.password' | translate}}"
 						formControlName="password" aria-describedby="basic-addon2">
 				</div>
-				<div>
+				<!--  div>
 					<span class="form-text text-left"
 						*ngIf="(loginForm.get('password').touched ||
                                             loginForm.get('password').dirty) &&
@@ -62,7 +60,7 @@
 							enter your password.</div>
 
 					</span>
-				</div>
+				</div-->
 			</div>
 			<div class="form-group mt-4">
 				<label class="form-check-label" for="rememberMe"> <input

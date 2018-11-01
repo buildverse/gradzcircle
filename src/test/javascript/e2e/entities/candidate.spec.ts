@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Candidate e2e test', () => {
 
     let navBarPage: NavBarPage;
     let candidateDialogPage: CandidateDialogPage;
     let candidateComponentsPage: CandidateComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Candidate e2e test', () => {
     it('should load Candidates', () => {
         navBarPage.goToEntity('candidate');
         candidateComponentsPage = new CandidateComponentsPage();
-        expect(candidateComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidate.home.title/);
+        expect(candidateComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.candidate.home.title/);
 
     });
 
     it('should load create Candidate dialog', () => {
         candidateComponentsPage.clickOnCreateButton();
         candidateDialogPage = new CandidateDialogPage();
-        expect(candidateDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidate.home.createOrEditLabel/);
+        expect(candidateDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.candidate.home.createOrEditLabel/);
         candidateDialogPage.close();
     });
 
@@ -55,7 +53,7 @@ describe('Candidate e2e test', () => {
         expect(candidateDialogPage.getPhoneCodeInput()).toMatch('phoneCode');
         candidateDialogPage.setPhoneNumberInput('phoneNumber');
         expect(candidateDialogPage.getPhoneNumberInput()).toMatch('phoneNumber');
-        candidateDialogPage.getDifferentlyAbledInput().isSelected().then(function (selected) {
+        candidateDialogPage.getDifferentlyAbledInput().isSelected().then((selected) => {
             if (selected) {
                 candidateDialogPage.getDifferentlyAbledInput().click();
                 expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeFalsy();
@@ -64,7 +62,7 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeTruthy();
             }
         });
-        candidateDialogPage.getAvailableForHiringInput().isSelected().then(function (selected) {
+        candidateDialogPage.getAvailableForHiringInput().isSelected().then((selected) => {
             if (selected) {
                 candidateDialogPage.getAvailableForHiringInput().click();
                 expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeFalsy();
@@ -73,7 +71,7 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeTruthy();
             }
         });
-        candidateDialogPage.getOpenToRelocateInput().isSelected().then(function (selected) {
+        candidateDialogPage.getOpenToRelocateInput().isSelected().then((selected) => {
             if (selected) {
                 candidateDialogPage.getOpenToRelocateInput().click();
                 expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeFalsy();
@@ -82,7 +80,7 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeTruthy();
             }
         });
-        candidateDialogPage.getMatchEligibleInput().isSelected().then(function (selected) {
+        candidateDialogPage.getMatchEligibleInput().isSelected().then((selected) => {
             if (selected) {
                 candidateDialogPage.getMatchEligibleInput().click();
                 expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeFalsy();
@@ -100,7 +98,7 @@ describe('Candidate e2e test', () => {
         candidateDialogPage.visaTypeSelectLastOption();
         candidateDialogPage.save();
         expect(candidateDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -150,209 +148,209 @@ export class CandidateDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setFirstNameInput = function (firstName) {
+    setFirstNameInput = function(firstName) {
         this.firstNameInput.sendKeys(firstName);
-    }
+    };
 
-    getFirstNameInput = function () {
+    getFirstNameInput = function() {
         return this.firstNameInput.getAttribute('value');
-    }
+    };
 
-    setLastNameInput = function (lastName) {
+    setLastNameInput = function(lastName) {
         this.lastNameInput.sendKeys(lastName);
-    }
+    };
 
-    getLastNameInput = function () {
+    getLastNameInput = function() {
         return this.lastNameInput.getAttribute('value');
-    }
+    };
 
-    setMiddleNameInput = function (middleName) {
+    setMiddleNameInput = function(middleName) {
         this.middleNameInput.sendKeys(middleName);
-    }
+    };
 
-    getMiddleNameInput = function () {
+    getMiddleNameInput = function() {
         return this.middleNameInput.getAttribute('value');
-    }
+    };
 
-    setFacebookInput = function (facebook) {
+    setFacebookInput = function(facebook) {
         this.facebookInput.sendKeys(facebook);
-    }
+    };
 
-    getFacebookInput = function () {
+    getFacebookInput = function() {
         return this.facebookInput.getAttribute('value');
-    }
+    };
 
-    setLinkedInInput = function (linkedIn) {
+    setLinkedInInput = function(linkedIn) {
         this.linkedInInput.sendKeys(linkedIn);
-    }
+    };
 
-    getLinkedInInput = function () {
+    getLinkedInInput = function() {
         return this.linkedInInput.getAttribute('value');
-    }
+    };
 
-    setTwitterInput = function (twitter) {
+    setTwitterInput = function(twitter) {
         this.twitterInput.sendKeys(twitter);
-    }
+    };
 
-    getTwitterInput = function () {
+    getTwitterInput = function() {
         return this.twitterInput.getAttribute('value');
-    }
+    };
 
-    setAboutMeInput = function (aboutMe) {
+    setAboutMeInput = function(aboutMe) {
         this.aboutMeInput.sendKeys(aboutMe);
-    }
+    };
 
-    getAboutMeInput = function () {
+    getAboutMeInput = function() {
         return this.aboutMeInput.getAttribute('value');
-    }
+    };
 
-    setDateOfBirthInput = function (dateOfBirth) {
+    setDateOfBirthInput = function(dateOfBirth) {
         this.dateOfBirthInput.sendKeys(dateOfBirth);
-    }
+    };
 
-    getDateOfBirthInput = function () {
+    getDateOfBirthInput = function() {
         return this.dateOfBirthInput.getAttribute('value');
-    }
+    };
 
-    setPhoneCodeInput = function (phoneCode) {
+    setPhoneCodeInput = function(phoneCode) {
         this.phoneCodeInput.sendKeys(phoneCode);
-    }
+    };
 
-    getPhoneCodeInput = function () {
+    getPhoneCodeInput = function() {
         return this.phoneCodeInput.getAttribute('value');
-    }
+    };
 
-    setPhoneNumberInput = function (phoneNumber) {
+    setPhoneNumberInput = function(phoneNumber) {
         this.phoneNumberInput.sendKeys(phoneNumber);
-    }
+    };
 
-    getPhoneNumberInput = function () {
+    getPhoneNumberInput = function() {
         return this.phoneNumberInput.getAttribute('value');
-    }
+    };
 
-    getDifferentlyAbledInput = function () {
+    getDifferentlyAbledInput = function() {
         return this.differentlyAbledInput;
-    }
-    getAvailableForHiringInput = function () {
+    };
+    getAvailableForHiringInput = function() {
         return this.availableForHiringInput;
-    }
-    getOpenToRelocateInput = function () {
+    };
+    getOpenToRelocateInput = function() {
         return this.openToRelocateInput;
-    }
-    getMatchEligibleInput = function () {
+    };
+    getMatchEligibleInput = function() {
         return this.matchEligibleInput;
-    }
-    loginSelectLastOption = function () {
+    };
+    loginSelectLastOption = function() {
         this.loginSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    loginSelectOption = function (option) {
+    loginSelectOption = function(option) {
         this.loginSelect.sendKeys(option);
-    }
+    };
 
-    getLoginSelect = function () {
+    getLoginSelect = function() {
         return this.loginSelect;
-    }
+    };
 
-    getLoginSelectedOption = function () {
+    getLoginSelectedOption = function() {
         return this.loginSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    nationalitySelectLastOption = function () {
+    nationalitySelectLastOption = function() {
         this.nationalitySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    nationalitySelectOption = function (option) {
+    nationalitySelectOption = function(option) {
         this.nationalitySelect.sendKeys(option);
-    }
+    };
 
-    getNationalitySelect = function () {
+    getNationalitySelect = function() {
         return this.nationalitySelect;
-    }
+    };
 
-    getNationalitySelectedOption = function () {
+    getNationalitySelectedOption = function() {
         return this.nationalitySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    genderSelectLastOption = function () {
+    genderSelectLastOption = function() {
         this.genderSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    genderSelectOption = function (option) {
+    genderSelectOption = function(option) {
         this.genderSelect.sendKeys(option);
-    }
+    };
 
-    getGenderSelect = function () {
+    getGenderSelect = function() {
         return this.genderSelect;
-    }
+    };
 
-    getGenderSelectedOption = function () {
+    getGenderSelectedOption = function() {
         return this.genderSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    maritalStatusSelectLastOption = function () {
+    maritalStatusSelectLastOption = function() {
         this.maritalStatusSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    maritalStatusSelectOption = function (option) {
+    maritalStatusSelectOption = function(option) {
         this.maritalStatusSelect.sendKeys(option);
-    }
+    };
 
-    getMaritalStatusSelect = function () {
+    getMaritalStatusSelect = function() {
         return this.maritalStatusSelect;
-    }
+    };
 
-    getMaritalStatusSelectedOption = function () {
+    getMaritalStatusSelectedOption = function() {
         return this.maritalStatusSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    jobCategorySelectLastOption = function () {
+    jobCategorySelectLastOption = function() {
         this.jobCategorySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobCategorySelectOption = function (option) {
+    jobCategorySelectOption = function(option) {
         this.jobCategorySelect.sendKeys(option);
-    }
+    };
 
-    getJobCategorySelect = function () {
+    getJobCategorySelect = function() {
         return this.jobCategorySelect;
-    }
+    };
 
-    getJobCategorySelectedOption = function () {
+    getJobCategorySelectedOption = function() {
         return this.jobCategorySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    jobSelectLastOption = function () {
+    jobSelectLastOption = function() {
         this.jobSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobSelectOption = function (option) {
+    jobSelectOption = function(option) {
         this.jobSelect.sendKeys(option);
-    }
+    };
 
-    getJobSelect = function () {
+    getJobSelect = function() {
         return this.jobSelect;
-    }
+    };
 
-    getJobSelectedOption = function () {
+    getJobSelectedOption = function() {
         return this.jobSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    visaTypeSelectLastOption = function () {
+    visaTypeSelectLastOption = function() {
         this.visaTypeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    visaTypeSelectOption = function (option) {
+    visaTypeSelectOption = function(option) {
         this.visaTypeSelect.sendKeys(option);
-    }
+    };
 
-    getVisaTypeSelect = function () {
+    getVisaTypeSelect = function() {
         return this.visaTypeSelect;
-    }
+    };
 
-    getVisaTypeSelectedOption = function () {
+    getVisaTypeSelectedOption = function() {
         return this.visaTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

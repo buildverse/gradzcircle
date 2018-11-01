@@ -1,15 +1,15 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Corporate} from './corporate.model';
 import {CorporateService} from './corporate.service';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper, UserService} from '../../shared';
+import {ITEMS_PER_PAGE, Principal, UserService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileSelectDirective, FileUploader, FileLikeObject} from 'ng2-file-upload';
-import {Log, Level} from 'ng2-logger';
 import {SERVER_API_URL} from '../../app.constants';
 
 @Component({
@@ -30,13 +30,12 @@ export class CorporateComponent implements OnInit, OnDestroy {
   corporateId: number;
   imageUrl: any;
   noImage: boolean;
-  defaultImage = require("../../../content/images/no-image.png");
+  defaultImage = require('../../../content/images/no-image.png');
   fileUploadErrorMessage: string;
   allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
   maxFileSize = 100 * 1024;
   imageDataNotAvailable: boolean;
   uploader: FileUploader;
-  log = Log.create('corporateComponent');
   queueLimit = 1;
 
   constructor(
@@ -50,8 +49,8 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private sessionStorage: SessionStorageService,
     private router: Router,
   ) {
-    this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
-    this.log.color = 'blue';
+   this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
   }
 
   loadAll() {
@@ -59,27 +58,26 @@ export class CorporateComponent implements OnInit, OnDestroy {
       this.corporateService.search({
         query: this.currentSearch,
       }).subscribe(
-        (res: ResponseWrapper) => this.corporates = res.json,
-        (res: ResponseWrapper) => this.onError(res.json)
+        (res: HttpResponse<Corporate[]>) => this.corporates = res.body,
+        (res: HttpErrorResponse) => this.onError(res.message)
+
         );
       return;
     }
     this.corporateService.query().subscribe(
-      (res: ResponseWrapper) => {
-        this.corporates = res.json;
+      (res: HttpResponse<Corporate[]>) => {
+        this.corporates = res.body;
         this.currentSearch = '';
       },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpErrorResponse) => this.onError(res.message)
     );
   }
 
   /*LOAD one corp  that is being edited.*/
   loadCorporate() {
-    this.corporateService.search({
-      query: this.currentCorporate,
-    }).subscribe(
-      (res: ResponseWrapper) => this.corporate = res.json[0],
-      (res: ResponseWrapper) => this.onError(res.json)
+    this.corporateService.find(this.corporate.id).subscribe(
+     (res: HttpResponse<Corporate>) => this.corporate = res.body,
+     (res: HttpErrorResponse) => this.onError(res.message)
       );
   }
 
@@ -111,7 +109,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
         this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-          this.corporate = response;
+          this.corporate = response.body;
           this.currentCorporate = this.corporate.id.toString();
           const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
           this.uploader = new FileUploader({
@@ -219,7 +217,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
       if (user) {
         if (user.imageUrl) {
           this.userService.getImageData(user.id).subscribe(response => {
-            let responseJson = response.json()
+            let responseJson = response.body;
             this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
           });
           this.noImage = false;

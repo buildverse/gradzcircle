@@ -1,12 +1,9 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async, inject } from '@angular/core/testing';
-import { OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+
 import { GradzcircleTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
 import { CandidateLanguageProficiencyDetailComponent } from '../../../../../../main/webapp/app/entities/candidate-language-proficiency/candidate-language-proficiency-detail.component';
 import { CandidateLanguageProficiencyService } from '../../../../../../main/webapp/app/entities/candidate-language-proficiency/candidate-language-proficiency.service';
 import { CandidateLanguageProficiency } from '../../../../../../main/webapp/app/entities/candidate-language-proficiency/candidate-language-proficiency.model';
@@ -23,17 +20,10 @@ describe('Component Tests', () => {
                 imports: [GradzcircleTestModule],
                 declarations: [CandidateLanguageProficiencyDetailComponent],
                 providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    CandidateLanguageProficiencyService,
-                    JhiEventManager
+                    CandidateLanguageProficiencyService
                 ]
-            }).overrideTemplate(CandidateLanguageProficiencyDetailComponent, '')
+            })
+            .overrideTemplate(CandidateLanguageProficiencyDetailComponent, '')
             .compileComponents();
         }));
 
@@ -45,16 +35,18 @@ describe('Component Tests', () => {
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-            // GIVEN
+                // GIVEN
 
-            spyOn(service, 'find').and.returnValue(Observable.of(new CandidateLanguageProficiency(10)));
+                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
+                    body: new CandidateLanguageProficiency(123)
+                })));
 
-            // WHEN
-            comp.ngOnInit();
+                // WHEN
+                comp.ngOnInit();
 
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.candidateLanguageProficiency).toEqual(jasmine.objectContaining({id: 10}));
+                // THEN
+                expect(service.find).toHaveBeenCalledWith(123);
+                expect(comp.candidateLanguageProficiency).toEqual(jasmine.objectContaining({id: 123}));
             });
         });
     });

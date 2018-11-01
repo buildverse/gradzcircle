@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {JhiDateUtils} from 'ng-jhipster';
@@ -9,6 +9,7 @@ import {JobPopupService} from './job-popup.service';
 import {JobService} from './job.service';
 import {of} from 'rxjs/observable/of';
 import {Observable} from 'rxjs/Rx';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-job-view',
@@ -61,9 +62,9 @@ export class JobViewComponent implements OnInit {
     this.subscribeToSaveResponse(this.jobService.applyforJob(this.job.id,this.currentAccount.id));
   }
 
-  private subscribeToSaveResponse(result: Observable<Job>) {
-    result.subscribe((res: Job) =>
-      this.onSaveSuccess(res), (res: Response) => this.onSaveError(res));
+  private subscribeToSaveResponse(result: Observable<HttpResponse<Job>>) {
+    result.subscribe((res: HttpResponse<Job>) =>
+      this.onSaveSuccess(res.body), (res: Response) => this.onSaveError(res));
   }
 
   private onSaveSuccess(result: Job) {

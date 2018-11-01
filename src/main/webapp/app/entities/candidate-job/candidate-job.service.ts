@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import {HttpResponse,HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {SERVER_API_URL} from '../../app.constants';
 
 import {JhiDateUtils} from 'ng-jhipster';
 
 import {CandidateJob} from './candidate-job.model';
-import {ResponseWrapper, createRequestOption} from '../../shared';
+import {createRequestOption} from '../../shared';
+
+export type EntityResponseType = HttpResponse<CandidateJob>;
 
 @Injectable()
 export class CandidateJobService {
@@ -14,24 +16,22 @@ export class CandidateJobService {
   private resourceUrlForCandidate = SERVER_API_URL + 'api/candidateJobsByCandidate';
   private resourceUrlForCorporate = SERVER_API_URL + 'api/candidateJobsByJob';
 
-  constructor(private http: Http, private dateUtils: JhiDateUtils) {}
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
 
-  queryActiveJobsForCandidates(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(`${this.resourceUrlForCandidate}/${req.id}`, options)
-      .map((res: Response) => this.convertResponse(res));
+  queryActiveJobsForCandidates(req?: any): Observable<HttpResponse<CandidateJob[]>> {
+    //const options = createRequestOption(req);
+    return this.http.get<CandidateJob[]>(`${this.resourceUrlForCandidate}/${req.id}`, {observe: 'response'})
+         .map((res: HttpResponse<CandidateJob[]>) => this.convertJobArrayResponse(res));
   }
-
-
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    // console.log('esponse from server is '+JSON.stringify(jsonResponse));
-    const result = [];
+  
+  private convertJobArrayResponse(res: HttpResponse<CandidateJob[]>): HttpResponse<CandidateJob[]> {
+    const jsonResponse: CandidateJob[] = res.body;
+    const body: CandidateJob[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
+      body.push(this.convertItemFromServer(jsonResponse[i]));
     }
-    return new ResponseWrapper(res.headers, result, res.status);
+    return res.clone({body});
   }
 
   /**
@@ -45,9 +45,9 @@ export class CandidateJobService {
   /**
    * Convert a Job to a JSON which can be sent to the server.
    */
-  private convert(candidateJob: CandidateJob): CandidateJob {
-    const copy: CandidateJob = Object.assign({}, candidateJob);
-    return copy;
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+    const body: CandidateJob = this.convertItemFromServer(res.body);
+    return res.clone({body});
   }
 
 }

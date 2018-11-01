@@ -1,84 +1,77 @@
 <div>
-	<h2>
-		<span jhiTranslate="gradzcircleApp.captureCourse.home.title">Capture
-			Courses</span>
-		<button
-			class="btn btn-primary float-right jh-create-entity create-capture-course"
-			[routerLink]="['/', { outlets: { popup: ['capture-course-new'] } }]">
-			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
-				jhiTranslate="gradzcircleApp.captureCourse.home.createLabel">
-				Create new Capture Course </span>
-		</button>
-	</h2>
-	<jhi-alert></jhi-alert>
-	<div class="row">
-		<div class="col-sm-12">
-			<form name="searchForm" class="form-inline">
-				<div class="input-group w-100 mt-3">
-					<input type="text" class="form-control" [(ngModel)]="currentSearch"
-						id="currentSearch" name="currentSearch"
-						placeholder="{{ 'gradzcircleApp.captureCourse.home.search' | translate }}">
-					<button class="input-group-addon btn btn-info"
-						(click)="search(currentSearch)">
-						<span class="fa fa-search"></span>
-					</button>
-					<button class="input-group-addon btn btn-danger" (click)="clear()"
-						*ngIf="currentSearch">
-						<span class="fa fa-trash-o"></span>
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<br />
-	<div class="table-responsive" *ngIf="captureCourses">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th><span jhiTranslate="global.field.id">ID</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.captureCourse.courseName">Course
-							Name</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.captureCourse.candidateEducation">Candidate
-							Education</span></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let captureCourse of captureCourses ;trackBy: trackId">
-					<td><a [routerLink]="['../capture-course', captureCourse.id ]">{{captureCourse.id}}</a></td>
-					<td>{{captureCourse.courseName}}</td>
-					<td>
-						<div *ngIf="captureCourse.candidateEducation">
-							<a
-								[routerLink]="['../candidate-education', captureCourse.candidateEducation?.id ]">{{captureCourse.candidateEducation?.id}}</a>
-						</div>
-					</td>
-					<td class="text-right">
-						<div class="btn-group flex-btn-group-container">
-							<button type="submit"
-								[routerLink]="['../capture-course', captureCourse.id ]"
-								class="btn btn-info btn-sm">
-								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
-									jhiTranslate="entity.action.view">View</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'capture-course/'+ captureCourse.id + '/edit'} }]"
-								replaceUrl="true" class="btn btn-primary btn-sm">
-								<span class="fa fa-pencil"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'capture-course/'+ captureCourse.id + '/delete'} }]"
-								replaceUrl="true" class="btn btn-danger btn-sm">
-								<span class="fa fa-remove"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-							</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <h2>
+        <span jhiTranslate="gradzcircleApp.captureCourse.home.title">Capture Courses</span>
+        <button class="btn btn-primary float-right jh-create-entity create-capture-course" [routerLink]="['/', { outlets: { popup: ['capture-course-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.captureCourse.home.createLabel">
+            Create new Capture Course
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.captureCourse.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="captureCourses">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gradzcircleApp.captureCourse.courseName">Course Name</span></th>
+            <th><span jhiTranslate="gradzcircleApp.captureCourse.candidateEducation">Candidate Education</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let captureCourse of captureCourses ;trackBy: trackId">
+                <td><a [routerLink]="['../capture-course', captureCourse.id ]">{{captureCourse.id}}</a></td>
+                <td>{{captureCourse.courseName}}</td>
+                <td>
+                    <div *ngIf="captureCourse.candidateEducation">
+                        <a [routerLink]="['../candidate-education', captureCourse.candidateEducation?.id ]" >{{captureCourse.candidateEducation?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../capture-course', captureCourse.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'capture-course/'+ captureCourse.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'capture-course/'+ captureCourse.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

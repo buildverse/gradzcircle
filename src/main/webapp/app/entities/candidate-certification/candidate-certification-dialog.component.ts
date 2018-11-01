@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
-
 import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationPopupService } from './candidate-certification-popup.service';
 import { CandidateCertificationService } from './candidate-certification.service';
 import { Candidate, CandidateService } from '../candidate';
 import { CandidateCertificationPopupServiceNew } from './candidate-certification-popup-new.service';
-import { ResponseWrapper,EditorProperties } from '../../shared';
+import { EditorProperties } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate-certification-dialog',
@@ -39,7 +37,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
                 this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;
         this.candidateService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -57,9 +55,9 @@ export class CandidateCertificationDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<CandidateCertification>) {
-        result.subscribe((res: CandidateCertification) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+     private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateCertification>>) {
+        result.subscribe((res: HttpResponse<CandidateCertification>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CandidateCertification) {

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CaptureCourse e2e test', () => {
 
     let navBarPage: NavBarPage;
     let captureCourseDialogPage: CaptureCourseDialogPage;
     let captureCourseComponentsPage: CaptureCourseComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CaptureCourse e2e test', () => {
     it('should load CaptureCourses', () => {
         navBarPage.goToEntity('capture-course');
         captureCourseComponentsPage = new CaptureCourseComponentsPage();
-        expect(captureCourseComponentsPage.getTitle()).toMatch(/gradzcircleApp.captureCourse.home.title/);
+        expect(captureCourseComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.captureCourse.home.title/);
 
     });
 
     it('should load create CaptureCourse dialog', () => {
         captureCourseComponentsPage.clickOnCreateButton();
         captureCourseDialogPage = new CaptureCourseDialogPage();
-        expect(captureCourseDialogPage.getModalTitle()).toMatch(/gradzcircleApp.captureCourse.home.createOrEditLabel/);
+        expect(captureCourseDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.captureCourse.home.createOrEditLabel/);
         captureCourseDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('CaptureCourse e2e test', () => {
         captureCourseDialogPage.candidateEducationSelectLastOption();
         captureCourseDialogPage.save();
         expect(captureCourseDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class CaptureCourseDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCourseNameInput = function (courseName) {
+    setCourseNameInput = function(courseName) {
         this.courseNameInput.sendKeys(courseName);
-    }
+    };
 
-    getCourseNameInput = function () {
+    getCourseNameInput = function() {
         return this.courseNameInput.getAttribute('value');
-    }
+    };
 
-    candidateEducationSelectLastOption = function () {
+    candidateEducationSelectLastOption = function() {
         this.candidateEducationSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateEducationSelectOption = function (option) {
+    candidateEducationSelectOption = function(option) {
         this.candidateEducationSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateEducationSelect = function () {
+    getCandidateEducationSelect = function() {
         return this.candidateEducationSelect;
-    }
+    };
 
-    getCandidateEducationSelectedOption = function () {
+    getCandidateEducationSelectedOption = function() {
         return this.candidateEducationSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

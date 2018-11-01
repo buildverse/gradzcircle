@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { MaritalStatus } from './marital-status.model';
@@ -31,9 +32,10 @@ export class MaritalStatusDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.maritalStatusService.find(id).subscribe((maritalStatus) => {
-            this.maritalStatus = maritalStatus;
-        });
+        this.maritalStatusService.find(id)
+            .subscribe((maritalStatusResponse: HttpResponse<MaritalStatus>) => {
+                this.maritalStatus = maritalStatusResponse.body;
+            });
     }
     previousState() {
         window.history.back();

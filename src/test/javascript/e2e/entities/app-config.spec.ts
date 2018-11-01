@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('AppConfig e2e test', () => {
 
     let navBarPage: NavBarPage;
     let appConfigDialogPage: AppConfigDialogPage;
     let appConfigComponentsPage: AppConfigComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('AppConfig e2e test', () => {
     it('should load AppConfigs', () => {
         navBarPage.goToEntity('app-config');
         appConfigComponentsPage = new AppConfigComponentsPage();
-        expect(appConfigComponentsPage.getTitle()).toMatch(/gradzcircleApp.appConfig.home.title/);
+        expect(appConfigComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.appConfig.home.title/);
 
     });
 
     it('should load create AppConfig dialog', () => {
         appConfigComponentsPage.clickOnCreateButton();
         appConfigDialogPage = new AppConfigDialogPage();
-        expect(appConfigDialogPage.getModalTitle()).toMatch(/gradzcircleApp.appConfig.home.createOrEditLabel/);
+        expect(appConfigDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.appConfig.home.createOrEditLabel/);
         appConfigDialogPage.close();
     });
 
@@ -37,7 +35,7 @@ describe('AppConfig e2e test', () => {
         appConfigComponentsPage.clickOnCreateButton();
         appConfigDialogPage.setConfigNameInput('configName');
         expect(appConfigDialogPage.getConfigNameInput()).toMatch('configName');
-        appConfigDialogPage.getConfigValueInput().isSelected().then(function (selected) {
+        appConfigDialogPage.getConfigValueInput().isSelected().then((selected) => {
             if (selected) {
                 appConfigDialogPage.getConfigValueInput().click();
                 expect(appConfigDialogPage.getConfigValueInput().isSelected()).toBeFalsy();
@@ -48,7 +46,7 @@ describe('AppConfig e2e test', () => {
         });
         appConfigDialogPage.save();
         expect(appConfigDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -79,17 +77,17 @@ export class AppConfigDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setConfigNameInput = function (configName) {
+    setConfigNameInput = function(configName) {
         this.configNameInput.sendKeys(configName);
-    }
+    };
 
-    getConfigNameInput = function () {
+    getConfigNameInput = function() {
         return this.configNameInput.getAttribute('value');
-    }
+    };
 
-    getConfigValueInput = function () {
+    getConfigValueInput = function() {
         return this.configValueInput;
-    }
+    };
     save() {
         this.saveButton.click();
     }

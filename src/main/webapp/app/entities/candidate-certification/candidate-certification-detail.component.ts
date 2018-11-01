@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
 
@@ -31,9 +31,11 @@ export class CandidateCertificationDetailComponent implements OnInit, OnDestroy 
     }
 
     load(id) {
-        this.candidateCertificationService.find(id).subscribe((candidateCertification) => {
-            this.candidateCertification = candidateCertification;
-        });
+         this.candidateCertificationService.find(id)
+            .subscribe((candidateCertificationResponse: HttpResponse<CandidateCertification>) => {
+                this.candidateCertification = candidateCertificationResponse.body;
+            });
+
     }
     previousState() {
         window.history.back();

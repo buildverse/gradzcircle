@@ -13,6 +13,12 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+logging:
+    level:
+        ROOT: DEBUG
+        com.drishika.gradzcircle: DEBUG
+        io.github.jhipster: DEBUG
+
 spring:
     profiles:
         active: dev
@@ -38,10 +44,10 @@ spring:
             hibernate.cache.use_second_level_cache: true
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
-            hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+            hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
     data:
         elasticsearch:
-           # cluster-name: 3c324b76257b9c008f22f0a038088ec1
+            #cluster-name: 3c324b76257b9c008f22f0a038088ec1
             #cluster-nodes: 3c324b76257b9c008f22f0a038088ec1.us-east-1.aws.found.io:9243 
             properties:
                 path:
@@ -49,9 +55,7 @@ spring:
                     data: build/elasticsearch/data
                 http:
                     enabled: true
-        
-            
-
+                 
     mail:
         host: localhost
         port: 25
@@ -79,8 +83,8 @@ liquibase:
 #    ssl:
 #        key-store: keystore.p12
 #        key-store-password: <your-password>
-#        keyStoreType: PKCS12
-#        keyAlias: gradzcircle
+#        key-store-type: PKCS12
+#        key-alias: gradzcircle
 # ===================================================================
 server:
     port: 8080
@@ -103,7 +107,7 @@ jhipster:
         allowed-origins: "*"
         allowed-methods: "*"
         allowed-headers: "*"
-        exposed-headers: "Authorization"
+        exposed-headers: "Authorization,Link,X-Total-Count"
         allow-credentials: true
         max-age: 1800
     security:

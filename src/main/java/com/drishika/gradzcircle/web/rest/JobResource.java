@@ -38,6 +38,7 @@ import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.util.JobsUtil;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
@@ -88,11 +89,9 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<Job> createJob(@RequestBody Job job) throws URISyntaxException {
 		log.debug("REST request to save Job with JobFilter : {} , {}", job, job.getJobFilters());
-		if (job.getId() != null) {
-			return ResponseEntity.badRequest().headers(
-					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new job cannot already have an ID"))
-					.body(null);
-		}
+		 if (job.getId() != null) {
+	            throw new BadRequestAlertException("A new job cannot already have an ID", ENTITY_NAME, "idexists");
+		 }
 		Job result;
 		try {
 			result = jobService.createJob(job);

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Nationality e2e test', () => {
 
     let navBarPage: NavBarPage;
     let nationalityDialogPage: NationalityDialogPage;
     let nationalityComponentsPage: NationalityComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Nationality e2e test', () => {
     it('should load Nationalities', () => {
         navBarPage.goToEntity('nationality');
         nationalityComponentsPage = new NationalityComponentsPage();
-        expect(nationalityComponentsPage.getTitle()).toMatch(/gradzcircleApp.nationality.home.title/);
+        expect(nationalityComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.nationality.home.title/);
 
     });
 
     it('should load create Nationality dialog', () => {
         nationalityComponentsPage.clickOnCreateButton();
         nationalityDialogPage = new NationalityDialogPage();
-        expect(nationalityDialogPage.getModalTitle()).toMatch(/gradzcircleApp.nationality.home.createOrEditLabel/);
+        expect(nationalityDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.nationality.home.createOrEditLabel/);
         nationalityDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('Nationality e2e test', () => {
         expect(nationalityDialogPage.getNationalityInput()).toMatch('nationality');
         nationalityDialogPage.save();
         expect(nationalityDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class NationalityDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setNationalityInput = function (nationality) {
+    setNationalityInput = function(nationality) {
         this.nationalityInput.sendKeys(nationality);
-    }
+    };
 
-    getNationalityInput = function () {
+    getNationalityInput = function() {
         return this.nationalityInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

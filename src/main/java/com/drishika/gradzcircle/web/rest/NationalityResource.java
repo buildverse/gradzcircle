@@ -1,26 +1,35 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.Nationality;
-
-import com.drishika.gradzcircle.repository.NationalityRepository;
-import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.Nationality;
+import com.drishika.gradzcircle.repository.NationalityRepository;
+import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Nationality.
@@ -60,9 +69,8 @@ public class NationalityResource {
 			throws URISyntaxException {
 		log.debug("REST request to save Nationality : {}", nationality);
 		if (nationality.getId() != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
-					"A new nationality cannot already have an ID")).body(null);
-		}
+            throw new BadRequestAlertException("A new nationality cannot already have an ID", ENTITY_NAME, "idexists");
+        }
 		Nationality result = nationalityRepository.save(nationality);
 		nationalitySearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/nationalities/" + result.getId()))

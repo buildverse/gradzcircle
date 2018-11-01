@@ -77,7 +77,8 @@ public class UserService {
 			user.setActivated(true);
 			user.setActivationKey(null);
 			userSearchRepository.save(user);
-			cacheManager.getCache("users").evict(user.getLogin());
+			cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 			log.debug("Activated user: {}", user);
 			return user;
 		});
@@ -91,7 +92,8 @@ public class UserService {
 					user.setPassword(passwordEncoder.encode(newPassword));
 					user.setResetKey(null);
 					user.setResetDate(null);
-					cacheManager.getCache("users").evict(user.getLogin());
+					cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+	                cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 					return user;
 				});
 	}
@@ -100,12 +102,13 @@ public class UserService {
 		return userRepository.findOneByEmailIgnoreCase(mail).filter(User::getActivated).map(user -> {
 			user.setResetKey(RandomUtil.generateResetKey());
 			user.setResetDate(Instant.now());
-			cacheManager.getCache("users").evict(user.getLogin());
+			cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 			return user;
 		});
 	}
 
-	public User createUser(String login, String password, String firstName, String lastName, String email,
+	public User registerUser(String login, String password, String firstName, String lastName, String email,
 			String imageUrl, String langKey, Set<String> incomingAuthorities, String corporateName, String country,
 			String phoneNumber) {
 		User newUser = new User();
@@ -129,6 +132,8 @@ public class UserService {
 		newUser.setAuthorities(authorities);
 		userRepository.save(newUser);
 		userSearchRepository.save(newUser);
+        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(newUser.getLogin());
+        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(newUser.getEmail());
 		userExtensionCreator(corporateName, phoneNumber, country, authority.getName(), newUser);
 		log.debug("Created Information for User: {}", newUser);
 		return newUser;
@@ -168,6 +173,8 @@ public class UserService {
 		user.setActivated(true);
 		userRepository.save(user);
 		userSearchRepository.save(user);
+		cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 		log.debug("Created Information for User: {}", user);
 		return user;
 	}
@@ -188,16 +195,20 @@ public class UserService {
 	 *            image URL of user
 	 */
 	public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-		userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(user -> {
-			user.setFirstName(firstName);
-			user.setLastName(lastName);
-			user.setEmail(email);
-			user.setLangKey(langKey);
-			user.setImageUrl(imageUrl);
-			userSearchRepository.save(user);
-			cacheManager.getCache("users").evict(user.getLogin());
-			log.debug("Changed Information for User: {}", user);
-		});
+		SecurityUtils.getCurrentUserLogin()
+        .flatMap(userRepository::findOneByLogin)
+        .ifPresent(user -> {
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setLangKey(langKey);
+            user.setImageUrl(imageUrl);
+            userSearchRepository.save(user);
+            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+            log.debug("Changed Information for User: {}", user);
+        });
+
 	}
 
 	/**
@@ -220,7 +231,8 @@ public class UserService {
 			managedAuthorities.clear();
 			userDTO.getAuthorities().stream().map(authorityRepository::findOne).forEach(managedAuthorities::add);
 			userSearchRepository.save(user);
-			cacheManager.getCache("users").evict(user.getLogin());
+			cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+             cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 			log.debug("Changed Information for User: {}", user);
 			return user;
 		}).map(UserDTO::new);
@@ -238,18 +250,23 @@ public class UserService {
 			}
 			userRepository.delete(user);
 			userSearchRepository.delete(user);
-			cacheManager.getCache("users").evict(login);
+			cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 			log.debug("Deleted User: {}", user);
 		});
 	}
 
 	public void changePassword(String password) {
-		userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(user -> {
-			String encryptedPassword = passwordEncoder.encode(password);
-			user.setPassword(encryptedPassword);
-			cacheManager.getCache("users").evict(user.getLogin());
-			log.debug("Changed password for User: {}", user);
-		});
+		SecurityUtils.getCurrentUserLogin()
+        .flatMap(userRepository::findOneByLogin)
+        .ifPresent(user -> {
+            String encryptedPassword = passwordEncoder.encode(password);
+            user.setPassword(encryptedPassword);
+            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+            log.debug("Changed password for User: {}", user);
+        });
+
 	}
 
 	@Transactional(readOnly = true)
@@ -263,13 +280,13 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public User getUserWithAuthorities(Long id) {
+	public Optional<User> getUserWithAuthorities(Long id) {
 		return userRepository.findOneWithAuthoritiesById(id);
 	}
 
 	@Transactional(readOnly = true)
-	public User getUserWithAuthorities() {
-		return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
+	public Optional<User> getUserWithAuthorities() {
+		return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
 	}
 
 	/**
@@ -285,7 +302,8 @@ public class UserService {
 			log.debug("Deleting not activated user {}", user.getLogin());
 			userRepository.delete(user);
 			userSearchRepository.delete(user);
-			cacheManager.getCache("users").evict(user.getLogin());
+			cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
 		}
 	}
 

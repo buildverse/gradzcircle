@@ -201,12 +201,12 @@ public class CandidateService {
 			candidate.setAddresses(addresses);
 			logger.debug("Retruning candidate {}", candidate.getAddresses());
 		}
-		return candidate;
+		 return candidate;
 	}
 
 	public Candidate getCandidateByLoginId(Long id) {
 		logger.debug("REST request to get Candidate : {}", id);
-		Candidate candidate = candidateRepository.findByLoginId(new Long(id).longValue());
+		Candidate candidate = candidateRepository.findByLoginId(id);
 		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
 		if (candidate != null)
 			candidate.setAddresses(addresses);
@@ -464,6 +464,31 @@ public class CandidateService {
 		candidateDetailDTO.setTwitter(candidate.getTwitter());
 		dto.setCandidateDetails(candidateDetailDTO);
 	}
+	
+	/**
+	 * @param candidate
+	 * @return
+	 */
+	public CandidateDetailDTO convertToCandidateDetailDTO(Candidate candidate) {
+		CandidateDetailDTO candidateDetailDTO = new CandidateDetailDTO();
+		candidateDetailDTO.setId(candidate.getId());
+		candidateDetailDTO.setFirstName(candidate.getFirstName());
+		candidateDetailDTO.setLastName(candidate.getLastName());
+		candidateDetailDTO.setAboutMe(candidate.getAboutMe());
+		candidateDetailDTO.setAvailableForHiring(candidate.isAvailableForHiring());
+		candidateDetailDTO.setDateOfBirth(candidate.getDateOfBirth());
+		candidateDetailDTO.setDifferentlyAbled(candidate.isDifferentlyAbled());
+		candidateDetailDTO.setFacebook(candidate.getFacebook());
+		candidateDetailDTO.setLinkedIn(candidate.getLinkedIn());
+		candidateDetailDTO.setLogin(candidate.getLogin());
+		candidateDetailDTO.setMiddleName(candidate.getMiddleName());
+		candidateDetailDTO.setOpenToRelocate(candidate.isOpenToRelocate());
+		candidateDetailDTO.setPhoneCode(candidate.getPhoneCode());
+		candidateDetailDTO.setPhoneNumber(candidate.getPhoneNumber());
+		candidateDetailDTO.setTwitter(candidate.getTwitter());
+		return candidateDetailDTO;
+	}
+
 
 	public Candidate applyJob(Candidate candidate) {
 		return candidateRepository.save(candidate);

@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CaptureUniversity } from './capture-university.model';
 import { CaptureUniversityPopupService } from './capture-university-popup.service';
 import { CaptureUniversityService } from './capture-university.service';
 import { CaptureCollege, CaptureCollegeService } from '../capture-college';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-capture-university-dialog',
@@ -36,17 +35,17 @@ export class CaptureUniversityDialogComponent implements OnInit {
         this.isSaving = false;
         this.captureCollegeService
             .query({filter: 'captureuniversity-is-null'})
-            .subscribe((res: ResponseWrapper) => {
+            .subscribe((res: HttpResponse<CaptureCollege[]>) => {
                 if (!this.captureUniversity.capturecollege || !this.captureUniversity.capturecollege.id) {
-                    this.capturecolleges = res.json;
+                    this.capturecolleges = res.body;
                 } else {
                     this.captureCollegeService
                         .find(this.captureUniversity.capturecollege.id)
-                        .subscribe((subRes: CaptureCollege) => {
-                            this.capturecolleges = [subRes].concat(res.json);
-                        }, (subRes: ResponseWrapper) => this.onError(subRes.json));
+                        .subscribe((subRes: HttpResponse<CaptureCollege>) => {
+                            this.capturecolleges = [subRes.body].concat(res.body);
+                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
                 }
-            }, (res: ResponseWrapper) => this.onError(res.json));
+            }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -64,9 +63,9 @@ export class CaptureUniversityDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<CaptureUniversity>) {
-        result.subscribe((res: CaptureUniversity) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<CaptureUniversity>>) {
+        result.subscribe((res: HttpResponse<CaptureUniversity>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CaptureUniversity) {

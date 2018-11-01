@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CaptureCollege e2e test', () => {
 
     let navBarPage: NavBarPage;
     let captureCollegeDialogPage: CaptureCollegeDialogPage;
     let captureCollegeComponentsPage: CaptureCollegeComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CaptureCollege e2e test', () => {
     it('should load CaptureColleges', () => {
         navBarPage.goToEntity('capture-college');
         captureCollegeComponentsPage = new CaptureCollegeComponentsPage();
-        expect(captureCollegeComponentsPage.getTitle()).toMatch(/gradzcircleApp.captureCollege.home.title/);
+        expect(captureCollegeComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.captureCollege.home.title/);
 
     });
 
     it('should load create CaptureCollege dialog', () => {
         captureCollegeComponentsPage.clickOnCreateButton();
         captureCollegeDialogPage = new CaptureCollegeDialogPage();
-        expect(captureCollegeDialogPage.getModalTitle()).toMatch(/gradzcircleApp.captureCollege.home.createOrEditLabel/);
+        expect(captureCollegeDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.captureCollege.home.createOrEditLabel/);
         captureCollegeDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('CaptureCollege e2e test', () => {
         captureCollegeDialogPage.candidateEducationSelectLastOption();
         captureCollegeDialogPage.save();
         expect(captureCollegeDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class CaptureCollegeDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCollegeNameInput = function (collegeName) {
+    setCollegeNameInput = function(collegeName) {
         this.collegeNameInput.sendKeys(collegeName);
-    }
+    };
 
-    getCollegeNameInput = function () {
+    getCollegeNameInput = function() {
         return this.collegeNameInput.getAttribute('value');
-    }
+    };
 
-    candidateEducationSelectLastOption = function () {
+    candidateEducationSelectLastOption = function() {
         this.candidateEducationSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateEducationSelectOption = function (option) {
+    candidateEducationSelectOption = function(option) {
         this.candidateEducationSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateEducationSelect = function () {
+    getCandidateEducationSelect = function() {
         return this.candidateEducationSelect;
-    }
+    };
 
-    getCandidateEducationSelectedOption = function () {
+    getCandidateEducationSelectedOption = function() {
         return this.candidateEducationSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

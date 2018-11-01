@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { JhiDateUtils } from 'ng-jhipster';
 import { SERVER_API_URL } from '../../app.constants';
 import { CandidateCertification } from './candidate-certification.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+
+export type EntityResponseType = HttpResponse<CandidateCertification>;
 
 @Injectable()
 export class CandidateCertificationService {
@@ -13,76 +15,78 @@ export class CandidateCertificationService {
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/candidate-certifications';
     private resourceSearchUrlAdmin = SERVER_API_URL + 'api/_search/candidate-certifications';
     private resourceUrlCertificationByCandidate = SERVER_API_URL + 'api/candidate-cert-by-id';
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    
+    
+    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
 
-    create(candidateCertification: CandidateCertification): Observable<CandidateCertification> {
+    create(candidateCertification: CandidateCertification): Observable<EntityResponseType> {
         const copy = this.convert(candidateCertification);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<CandidateCertification>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
+
     }
 
-    update(candidateCertification: CandidateCertification): Observable<CandidateCertification> {
+    update(candidateCertification: CandidateCertification): Observable<EntityResponseType> {
         const copy = this.convert(candidateCertification);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<CandidateCertification>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    findCertificationsByCandidateId(id: number): Observable<ResponseWrapper> {
-          return this.http.get(`${this.resourceUrlCertificationByCandidate}/${id}`)
-            .map((res: Response) => this.convertResponse(res));
+    findCertificationsByCandidateId(id: number): Observable<HttpResponse<CandidateCertification[]>> {
+          return this.http.get<CandidateCertification[]>(`${this.resourceUrlCertificationByCandidate}/${id}`, {observe: 'response' })
+            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
     }
 
-    find(id: number): Observable<CandidateCertification> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<CandidateCertification>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<CandidateCertification[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+         return this.http.get<CandidateCertification[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+     delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<CandidateCertification[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<CandidateCertification[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
     }
 
-    searchForAdmin(req?: any): Observable<ResponseWrapper> {
+    searchForAdmin(req?: any): Observable<HttpResponse<CandidateCertification[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrlAdmin, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<CandidateCertification[]>(this.resourceSearchUrlAdmin, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
     }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
+  
+    private convertArrayResponse(res: HttpResponse<CandidateCertification[]>): HttpResponse<CandidateCertification[]> {
+      const jsonResponse: CandidateCertification[] = res.body;
+      const body: CandidateCertification[] = [];
+      for (let i = 0; i < jsonResponse.length; i++) {
+        body.push(this.convertItemFromServer(jsonResponse[i]));
+      }
+      return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to CandidateCertification.
      */
-    private convertItemFromServer(json: any): CandidateCertification {
-        const entity: CandidateCertification = Object.assign(new CandidateCertification(), json);
-        entity.certificationDate = this.dateUtils
-            .convertLocalDateFromServer(json.certificationDate);
-        return entity;
+    private convertItemFromServer(candidateCertification: CandidateCertification): CandidateCertification {
+        const copy: CandidateCertification = Object.assign({}, candidateCertification);
+        copy.certificationDate = this.dateUtils
+            .convertLocalDateFromServer(candidateCertification.certificationDate);
+        return copy;
     }
+  
+  private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: CandidateCertification = this.convertItemFromServer(res.body);
+        return res.clone({body});
+  }
 
     /**
      * Convert a CandidateCertification to a JSON which can be sent to the server.

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Job e2e test', () => {
 
     let navBarPage: NavBarPage;
     let jobDialogPage: JobDialogPage;
     let jobComponentsPage: JobComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Job e2e test', () => {
     it('should load Jobs', () => {
         navBarPage.goToEntity('job');
         jobComponentsPage = new JobComponentsPage();
-        expect(jobComponentsPage.getTitle()).toMatch(/gradzcircleApp.job.home.title/);
+        expect(jobComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.job.home.title/);
 
     });
 
     it('should load create Job dialog', () => {
         jobComponentsPage.clickOnCreateButton();
         jobDialogPage = new JobDialogPage();
-        expect(jobDialogPage.getModalTitle()).toMatch(/gradzcircleApp.job.home.createOrEditLabel/);
+        expect(jobDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.job.home.createOrEditLabel/);
         jobDialogPage.close();
     });
 
@@ -74,7 +72,7 @@ describe('Job e2e test', () => {
         jobDialogPage.setEscrowAmountAddedInput('5');
         expect(jobDialogPage.getEscrowAmountAddedInput()).toMatch('5');
         jobDialogPage.paymentTypeSelectLastOption();
-        jobDialogPage.getHasBeenEditedInput().isSelected().then(function (selected) {
+        jobDialogPage.getHasBeenEditedInput().isSelected().then((selected) => {
             if (selected) {
                 jobDialogPage.getHasBeenEditedInput().click();
                 expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeFalsy();
@@ -83,7 +81,7 @@ describe('Job e2e test', () => {
                 expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeTruthy();
             }
         });
-        jobDialogPage.getEverActiveInput().isSelected().then(function (selected) {
+        jobDialogPage.getEverActiveInput().isSelected().then((selected) => {
             if (selected) {
                 jobDialogPage.getEverActiveInput().click();
                 expect(jobDialogPage.getEverActiveInput().isSelected()).toBeFalsy();
@@ -92,7 +90,7 @@ describe('Job e2e test', () => {
                 expect(jobDialogPage.getEverActiveInput().isSelected()).toBeTruthy();
             }
         });
-        jobDialogPage.getCanEditInput().isSelected().then(function (selected) {
+        jobDialogPage.getCanEditInput().isSelected().then((selected) => {
             if (selected) {
                 jobDialogPage.getCanEditInput().click();
                 expect(jobDialogPage.getCanEditInput().isSelected()).toBeFalsy();
@@ -112,7 +110,7 @@ describe('Job e2e test', () => {
         jobDialogPage.corporateSelectLastOption();
         jobDialogPage.save();
         expect(jobDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -170,249 +168,249 @@ export class JobDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setJobTitleInput = function (jobTitle) {
+    setJobTitleInput = function(jobTitle) {
         this.jobTitleInput.sendKeys(jobTitle);
-    }
+    };
 
-    getJobTitleInput = function () {
+    getJobTitleInput = function() {
         return this.jobTitleInput.getAttribute('value');
-    }
+    };
 
-    setJobDescriptionInput = function (jobDescription) {
+    setJobDescriptionInput = function(jobDescription) {
         this.jobDescriptionInput.sendKeys(jobDescription);
-    }
+    };
 
-    getJobDescriptionInput = function () {
+    getJobDescriptionInput = function() {
         return this.jobDescriptionInput.getAttribute('value');
-    }
+    };
 
-    setNoOfApplicantsInput = function (noOfApplicants) {
+    setNoOfApplicantsInput = function(noOfApplicants) {
         this.noOfApplicantsInput.sendKeys(noOfApplicants);
-    }
+    };
 
-    getNoOfApplicantsInput = function () {
+    getNoOfApplicantsInput = function() {
         return this.noOfApplicantsInput.getAttribute('value');
-    }
+    };
 
-    setSalaryInput = function (salary) {
+    setSalaryInput = function(salary) {
         this.salaryInput.sendKeys(salary);
-    }
+    };
 
-    getSalaryInput = function () {
+    getSalaryInput = function() {
         return this.salaryInput.getAttribute('value');
-    }
+    };
 
-    setJobStatusInput = function (jobStatus) {
+    setJobStatusInput = function(jobStatus) {
         this.jobStatusInput.sendKeys(jobStatus);
-    }
+    };
 
-    getJobStatusInput = function () {
+    getJobStatusInput = function() {
         return this.jobStatusInput.getAttribute('value');
-    }
+    };
 
-    setCreateDateInput = function (createDate) {
+    setCreateDateInput = function(createDate) {
         this.createDateInput.sendKeys(createDate);
-    }
+    };
 
-    getCreateDateInput = function () {
+    getCreateDateInput = function() {
         return this.createDateInput.getAttribute('value');
-    }
+    };
 
-    setOriginalJobCostInput = function (originalJobCost) {
+    setOriginalJobCostInput = function(originalJobCost) {
         this.originalJobCostInput.sendKeys(originalJobCost);
-    }
+    };
 
-    getOriginalJobCostInput = function () {
+    getOriginalJobCostInput = function() {
         return this.originalJobCostInput.getAttribute('value');
-    }
+    };
 
-    setJobCostInput = function (jobCost) {
+    setJobCostInput = function(jobCost) {
         this.jobCostInput.sendKeys(jobCost);
-    }
+    };
 
-    getJobCostInput = function () {
+    getJobCostInput = function() {
         return this.jobCostInput.getAttribute('value');
-    }
+    };
 
-    setAmountPaidInput = function (amountPaid) {
+    setAmountPaidInput = function(amountPaid) {
         this.amountPaidInput.sendKeys(amountPaid);
-    }
+    };
 
-    getAmountPaidInput = function () {
+    getAmountPaidInput = function() {
         return this.amountPaidInput.getAttribute('value');
-    }
+    };
 
-    setTotalAmountPaidInput = function (totalAmountPaid) {
+    setTotalAmountPaidInput = function(totalAmountPaid) {
         this.totalAmountPaidInput.sendKeys(totalAmountPaid);
-    }
+    };
 
-    getTotalAmountPaidInput = function () {
+    getTotalAmountPaidInput = function() {
         return this.totalAmountPaidInput.getAttribute('value');
-    }
+    };
 
-    setNoOfApplicantsBoughtInput = function (noOfApplicantsBought) {
+    setNoOfApplicantsBoughtInput = function(noOfApplicantsBought) {
         this.noOfApplicantsBoughtInput.sendKeys(noOfApplicantsBought);
-    }
+    };
 
-    getNoOfApplicantsBoughtInput = function () {
+    getNoOfApplicantsBoughtInput = function() {
         return this.noOfApplicantsBoughtInput.getAttribute('value');
-    }
+    };
 
-    setRemovedFilterAmountInput = function (removedFilterAmount) {
+    setRemovedFilterAmountInput = function(removedFilterAmount) {
         this.removedFilterAmountInput.sendKeys(removedFilterAmount);
-    }
+    };
 
-    getRemovedFilterAmountInput = function () {
+    getRemovedFilterAmountInput = function() {
         return this.removedFilterAmountInput.getAttribute('value');
-    }
+    };
 
-    setAdditionalFilterAmountInput = function (additionalFilterAmount) {
+    setAdditionalFilterAmountInput = function(additionalFilterAmount) {
         this.additionalFilterAmountInput.sendKeys(additionalFilterAmount);
-    }
+    };
 
-    getAdditionalFilterAmountInput = function () {
+    getAdditionalFilterAmountInput = function() {
         return this.additionalFilterAmountInput.getAttribute('value');
-    }
+    };
 
-    setAdminChargeInput = function (adminCharge) {
+    setAdminChargeInput = function(adminCharge) {
         this.adminChargeInput.sendKeys(adminCharge);
-    }
+    };
 
-    getAdminChargeInput = function () {
+    getAdminChargeInput = function() {
         return this.adminChargeInput.getAttribute('value');
-    }
+    };
 
-    setAdminChargeRateInput = function (adminChargeRate) {
+    setAdminChargeRateInput = function(adminChargeRate) {
         this.adminChargeRateInput.sendKeys(adminChargeRate);
-    }
+    };
 
-    getAdminChargeRateInput = function () {
+    getAdminChargeRateInput = function() {
         return this.adminChargeRateInput.getAttribute('value');
-    }
+    };
 
-    setUpfrontDiscountRateInput = function (upfrontDiscountRate) {
+    setUpfrontDiscountRateInput = function(upfrontDiscountRate) {
         this.upfrontDiscountRateInput.sendKeys(upfrontDiscountRate);
-    }
+    };
 
-    getUpfrontDiscountRateInput = function () {
+    getUpfrontDiscountRateInput = function() {
         return this.upfrontDiscountRateInput.getAttribute('value');
-    }
+    };
 
-    setUpfrontDiscountAmountInput = function (upfrontDiscountAmount) {
+    setUpfrontDiscountAmountInput = function(upfrontDiscountAmount) {
         this.upfrontDiscountAmountInput.sendKeys(upfrontDiscountAmount);
-    }
+    };
 
-    getUpfrontDiscountAmountInput = function () {
+    getUpfrontDiscountAmountInput = function() {
         return this.upfrontDiscountAmountInput.getAttribute('value');
-    }
+    };
 
-    setEscrowAmountUsedInput = function (escrowAmountUsed) {
+    setEscrowAmountUsedInput = function(escrowAmountUsed) {
         this.escrowAmountUsedInput.sendKeys(escrowAmountUsed);
-    }
+    };
 
-    getEscrowAmountUsedInput = function () {
+    getEscrowAmountUsedInput = function() {
         return this.escrowAmountUsedInput.getAttribute('value');
-    }
+    };
 
-    setEscrowAmountAddedInput = function (escrowAmountAdded) {
+    setEscrowAmountAddedInput = function(escrowAmountAdded) {
         this.escrowAmountAddedInput.sendKeys(escrowAmountAdded);
-    }
+    };
 
-    getEscrowAmountAddedInput = function () {
+    getEscrowAmountAddedInput = function() {
         return this.escrowAmountAddedInput.getAttribute('value');
-    }
+    };
 
-    setPaymentTypeSelect = function (paymentType) {
+    setPaymentTypeSelect = function(paymentType) {
         this.paymentTypeSelect.sendKeys(paymentType);
-    }
+    };
 
-    getPaymentTypeSelect = function () {
+    getPaymentTypeSelect = function() {
         return this.paymentTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    paymentTypeSelectLastOption = function () {
+    paymentTypeSelectLastOption = function() {
         this.paymentTypeSelect.all(by.tagName('option')).last().click();
-    }
-    getHasBeenEditedInput = function () {
+    };
+    getHasBeenEditedInput = function() {
         return this.hasBeenEditedInput;
-    }
-    getEverActiveInput = function () {
+    };
+    getEverActiveInput = function() {
         return this.everActiveInput;
-    }
-    getCanEditInput = function () {
+    };
+    getCanEditInput = function() {
         return this.canEditInput;
-    }
-    setUpdateDateInput = function (updateDate) {
+    };
+    setUpdateDateInput = function(updateDate) {
         this.updateDateInput.sendKeys(updateDate);
-    }
+    };
 
-    getUpdateDateInput = function () {
+    getUpdateDateInput = function() {
         return this.updateDateInput.getAttribute('value');
-    }
+    };
 
-    setCreatedByInput = function (createdBy) {
+    setCreatedByInput = function(createdBy) {
         this.createdByInput.sendKeys(createdBy);
-    }
+    };
 
-    getCreatedByInput = function () {
+    getCreatedByInput = function() {
         return this.createdByInput.getAttribute('value');
-    }
+    };
 
-    setUpdatedByInput = function (updatedBy) {
+    setUpdatedByInput = function(updatedBy) {
         this.updatedByInput.sendKeys(updatedBy);
-    }
+    };
 
-    getUpdatedByInput = function () {
+    getUpdatedByInput = function() {
         return this.updatedByInput.getAttribute('value');
-    }
+    };
 
-    jobTypeSelectLastOption = function () {
+    jobTypeSelectLastOption = function() {
         this.jobTypeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobTypeSelectOption = function (option) {
+    jobTypeSelectOption = function(option) {
         this.jobTypeSelect.sendKeys(option);
-    }
+    };
 
-    getJobTypeSelect = function () {
+    getJobTypeSelect = function() {
         return this.jobTypeSelect;
-    }
+    };
 
-    getJobTypeSelectedOption = function () {
+    getJobTypeSelectedOption = function() {
         return this.jobTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    employmentTypeSelectLastOption = function () {
+    employmentTypeSelectLastOption = function() {
         this.employmentTypeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    employmentTypeSelectOption = function (option) {
+    employmentTypeSelectOption = function(option) {
         this.employmentTypeSelect.sendKeys(option);
-    }
+    };
 
-    getEmploymentTypeSelect = function () {
+    getEmploymentTypeSelect = function() {
         return this.employmentTypeSelect;
-    }
+    };
 
-    getEmploymentTypeSelectedOption = function () {
+    getEmploymentTypeSelectedOption = function() {
         return this.employmentTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    corporateSelectLastOption = function () {
+    corporateSelectLastOption = function() {
         this.corporateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    corporateSelectOption = function (option) {
+    corporateSelectOption = function(option) {
         this.corporateSelect.sendKeys(option);
-    }
+    };
 
-    getCorporateSelect = function () {
+    getCorporateSelect = function() {
         return this.corporateSelect;
-    }
+    };
 
-    getCorporateSelectedOption = function () {
+    getCorporateSelectedOption = function() {
         return this.corporateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

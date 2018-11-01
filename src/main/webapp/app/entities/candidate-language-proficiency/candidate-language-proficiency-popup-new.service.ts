@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
-import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { JhiAlertService } from 'ng-jhipster';
 import { Candidate } from '../../entities/candidate/candidate.model';

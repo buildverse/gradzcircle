@@ -1,64 +1,49 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()"
-	#editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
-	<div class="modal-header">
-		<h4 class="modal-title" id="myAuditLabel"
-			jhiTranslate="gradzcircleApp.audit.home.createOrEditLabel">Create
-			or edit a Audit</h4>
-		<button type="button" class="close" data-dismiss="modal"
-			aria-hidden="true" (click)="clear()">&times;</button>
-	</div>
-	<div class="modal-body">
-		<jhi-alert-error></jhi-alert-error>
-		<div class="form-group" [hidden]="!audit.id">
-			<label for="id" jhiTranslate="global.field.id">ID</label> <input
-				type="text" class="form-control" id="id" name="id"
-				[(ngModel)]="audit.id" readonly />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.audit.createdBy" for="field_createdBy">Created
-				By</label> <input type="number" class="form-control" name="createdBy"
-				id="field_createdBy" [(ngModel)]="audit.createdBy" />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.audit.updatedBy" for="field_updatedBy">Updated
-				By</label> <input type="number" class="form-control" name="updatedBy"
-				id="field_updatedBy" [(ngModel)]="audit.updatedBy" />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.audit.createdTime"
-				for="field_createdTime">Created Time</label>
-			<div class="d-flex">
-				<input id="field_createdTime" type="datetime-local"
-					class="form-control" name="createdTime"
-					[(ngModel)]="audit.createdTime" />
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.audit.updatedTime"
-				for="field_updatedTime">Updated Time</label>
-			<div class="d-flex">
-				<input id="field_updatedTime" type="datetime-local"
-					class="form-control" name="updatedTime"
-					[(ngModel)]="audit.updatedTime" />
-			</div>
-		</div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myAuditLabel" jhiTranslate="gradzcircleApp.audit.home.createOrEditLabel">Create or edit a Audit</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!audit.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="audit.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.audit.createdBy" for="field_createdBy">Created By</label>
+            <input type="number" class="form-control" name="createdBy" id="field_createdBy"
+                [(ngModel)]="audit.createdBy" />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.audit.updatedBy" for="field_updatedBy">Updated By</label>
+            <input type="number" class="form-control" name="updatedBy" id="field_updatedBy"
+                [(ngModel)]="audit.updatedBy" />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.audit.createdTime" for="field_createdTime">Created Time</label>
+            <div class="d-flex">
+                <input id="field_createdTime" type="datetime-local" class="form-control" name="createdTime" [(ngModel)]="audit.createdTime"
+                />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.audit.updatedTime" for="field_updatedTime">Updated Time</label>
+            <div class="d-flex">
+                <input id="field_updatedTime" type="datetime-local" class="form-control" name="updatedTime" [(ngModel)]="audit.updatedTime"
+                />
+            </div>
+        </div>
 
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal"
-			(click)="clear()">
-			<span class="fa fa-ban"></span>&nbsp;<span
-				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
-		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
-			class="btn btn-primary">
-			<span class="fa fa-save"></span>&nbsp;<span
-				jhiTranslate="entity.action.save">Save</span>
-		</button>
-	</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
 </form>

@@ -1,5 +1,5 @@
 # gradzcircle
-This application was generated using JHipster 4.9.0, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.9.0](http://www.jhipster.tech/documentation-archive/v4.9.0).
+This application was generated using JHipster 4.14.5, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.14.5](http://www.jhipster.tech/documentation-archive/v4.14.5).
 
 ## Development
 
@@ -35,7 +35,8 @@ The `yarn run` command will list all of the scripts available to run for this pr
 Service workers are commented by default, to enable them please uncomment the following code.
 
 * The service worker registering script in index.html
-```
+
+```html
 <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -44,11 +45,8 @@ Service workers are commented by default, to enable them please uncomment the fo
     }
 </script>
 ```
-* The copy file option in webpack-common.js
-```js
-{ from: './src/main/webapp/sw.js', to: 'sw.js' },
-```
-Note: Add the respective scripts/assets in `sw.js` that is needed to be cached.
+
+Note: workbox creates the respective service worker and dynamically generate the `sw.js`
 
 ### Managing dependencies
 
@@ -61,7 +59,6 @@ To benefit from TypeScript type definitions from [DefinitelyTyped][] repository 
     yarn add --dev --exact @types/leaflet
 
 Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-
 Edit [src/main/webapp/app/vendor.ts](src/main/webapp/app/vendor.ts) file:
 ~~~
 import 'leaflet/dist/leaflet.js';
@@ -71,7 +68,6 @@ Edit [src/main/webapp/content/css/vendor.css](src/main/webapp/content/css/vendor
 ~~~
 @import '~leaflet/dist/leaflet.css';
 ~~~
-
 Note: there are still few other things remaining to do for Leaflet that we won't detail here.
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
@@ -131,6 +127,7 @@ For more information, refer to the [Running tests page][].
 ## Using Docker to simplify development (optional)
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+
 For example, to start a postgresql database in a docker container, run:
 
     docker-compose -f src/main/docker/postgresql.yml up -d
@@ -155,13 +152,13 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [JHipster Homepage and latest documentation]: http://www.jhipster.tech
-[JHipster 4.9.0 archive]: http://www.jhipster.tech/documentation-archive/v4.9.0
+[JHipster 4.14.5 archive]: http://www.jhipster.tech/documentation-archive/v4.14.5
 
-[Using JHipster in development]: http://www.jhipster.tech/documentation-archive/v4.9.0/development/
-[Using Docker and Docker-Compose]: http://www.jhipster.tech/documentation-archive/v4.9.0/docker-compose
-[Using JHipster in production]: http://www.jhipster.tech/documentation-archive/v4.9.0/production/
-[Running tests page]: http://www.jhipster.tech/documentation-archive/v4.9.0/running-tests/
-[Setting up Continuous Integration]: http://www.jhipster.tech/documentation-archive/v4.9.0/setting-up-ci/
+[Using JHipster in development]: http://www.jhipster.tech/documentation-archive/v4.14.5/development/
+[Using Docker and Docker-Compose]: http://www.jhipster.tech/documentation-archive/v4.14.5/docker-compose
+[Using JHipster in production]: http://www.jhipster.tech/documentation-archive/v4.14.5/production/
+[Running tests page]: http://www.jhipster.tech/documentation-archive/v4.14.5/running-tests/
+[Setting up Continuous Integration]: http://www.jhipster.tech/documentation-archive/v4.14.5/setting-up-ci/
 
 [Gatling]: http://gatling.io/
 [Node.js]: https://nodejs.org/

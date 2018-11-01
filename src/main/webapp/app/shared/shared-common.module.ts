@@ -1,6 +1,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-
+import { registerLocaleData } from '@angular/common';
+import locale from '@angular/common/locales/en';
 import { WindowRef } from './tracker/window.service';
 import {
     GradzcircleSharedLibsModule,
@@ -35,4 +36,8 @@ import {
         JhiAlertErrorComponent
     ]
 })
-export class GradzcircleSharedCommonModule {}
+export class GradzcircleSharedCommonModule {
+    constructor() {
+        registerLocaleData(locale);
+    }
+}

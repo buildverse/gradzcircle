@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Address } from './address.model';
@@ -31,9 +32,10 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.addressService.find(id).subscribe((address) => {
-            this.address = address;
-        });
+        this.addressService.find(id)
+            .subscribe((addressResponse: HttpResponse<Address>) => {
+                this.address = addressResponse.body;
+            });
     }
     previousState() {
         window.history.back();

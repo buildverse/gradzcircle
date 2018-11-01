@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { Language } from './language.model';
 import { LanguageService } from './language.service';
 
@@ -25,10 +26,12 @@ export class LanguagePopupService {
             }
 
             if (id) {
-                this.languageService.find(id).subscribe((language) => {
-                    this.ngbModalRef = this.languageModalRef(component, language);
-                    resolve(this.ngbModalRef);
-                });
+                this.languageService.find(id)
+                    .subscribe((languageResponse: HttpResponse<Language>) => {
+                        const language: Language = languageResponse.body;
+                        this.ngbModalRef = this.languageModalRef(component, language);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class LanguagePopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.language = language;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

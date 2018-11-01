@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
 
@@ -31,9 +31,10 @@ export class CandidateEducationDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.candidateEducationService.find(id).subscribe((candidateEducation) => {
-            this.candidateEducation = candidateEducation;
-        });
+         this.candidateEducationService.find(id)
+            .subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>) => {
+                this.candidateEducation = candidateEducationResponse.body;
+            });
     }
     previousState() {
         window.history.back();

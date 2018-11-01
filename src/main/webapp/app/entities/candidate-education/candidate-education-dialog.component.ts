@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Response} from '@angular/http';
 
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -18,8 +18,7 @@ import {CandidateEducationPopupServiceNew} from './candidate-education-popup-new
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Principal} from '../../shared';
 import {JhiDateUtils} from 'ng-jhipster';
-import {ResponseWrapper} from '../../shared';
-import {EducationCollegeService} from './education-college.service';
+//import {EducationCollegeService} from './education-college.service';
 
 @Component({
   selector: 'jhi-candidate-education-dialog',
@@ -68,7 +67,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     private collegeService: CollegeService,
     private universityService: UniversityService,
     private eventManager: JhiEventManager,
-    private educationCollegeService: EducationCollegeService,
+   // private educationCollegeService: EducationCollegeService,
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private dateUtils: JhiDateUtils
@@ -76,28 +75,28 @@ export class CandidateEducationDialogComponent implements OnInit {
   ) {
   }
 
-  requestCollegeData = (text: string): Observable<Response> => {
+  requestCollegeData = (text: string): Observable<HttpResponse<any>> => {
     return this.collegeService.searchRemote({
       query: text
-    }).map((data) => data.json() === '' ? '' : data.json());
+    }).map((data) => data.body === '' ? '' : data.body);
   }
 
-  requestQualificationData = (text: string): Observable<Response> => {
+  requestQualificationData = (text: string): Observable<HttpResponse<any>> => {
     return this.qualificationService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body === '' ? '' : data.body);;
   }
 
-  requestCourseData = (text: string): Observable<Response> => {
+  requestCourseData = (text: string): Observable<HttpResponse<any>> => {
     return this.courseService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body === '' ? '' : data.body);
   }
 
-  requestUniversityData = (text: string): Observable<Response> => {
+  requestUniversityData = (text: string): Observable<HttpResponse<any>> => {
     return this.universityService.searchRemote({
       query: text
-    }).map((data) => data.json());
+    }).map((data) => data.body === '' ? '' : data.body);
   }
 
 
@@ -199,7 +198,8 @@ export class CandidateEducationDialogComponent implements OnInit {
 
     if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.ADMIN])) {
       this.candidateService.query().subscribe(
-        (res: Response) => {this.candidates = res.json();}, (res: Response) => this.onError(res.json()));
+       (res: HttpResponse<Candidate[]>) => this.candidates = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message));
       /* this.qualificationService.query().subscribe(
          (res: Response) => {this.qualifications = res.json();}, (res: Response) => this.onError(res.json()));
        this.courseService.query().subscribe(
@@ -318,10 +318,10 @@ export class CandidateEducationDialogComponent implements OnInit {
 
   }
 
-  private subscribeToSaveResponse(result: Observable<CandidateEducation>) {
-    result.subscribe((res: CandidateEducation) =>
-      this.onSaveSuccess(res), (res: Response) => this.onSaveError());
-  }
+   private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateEducation>>) {
+        result.subscribe((res: HttpResponse<CandidateEducation>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+    }
 
   private onSaveSuccess(result: CandidateEducation) {
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});

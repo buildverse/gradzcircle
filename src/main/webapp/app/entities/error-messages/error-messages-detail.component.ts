@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { ErrorMessages } from './error-messages.model';
@@ -31,9 +32,10 @@ export class ErrorMessagesDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.errorMessagesService.find(id).subscribe((errorMessages) => {
-            this.errorMessages = errorMessages;
-        });
+        this.errorMessagesService.find(id)
+            .subscribe((errorMessagesResponse: HttpResponse<ErrorMessages>) => {
+                this.errorMessages = errorMessagesResponse.body;
+            });
     }
     previousState() {
         window.history.back();

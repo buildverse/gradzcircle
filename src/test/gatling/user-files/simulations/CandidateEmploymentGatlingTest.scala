@@ -17,7 +17,7 @@ class CandidateEmploymentGatlingTest extends Simulation {
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://127.0.0.1:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8080"""
 
     val httpConf = http
         .baseURL(baseURL)
@@ -68,7 +68,7 @@ class CandidateEmploymentGatlingTest extends Simulation {
             .exec(http("Create new candidateEmployment")
             .post("/api/candidate-employments")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "location":"0", "jobTitle":"SAMPLE_TEXT", "employerName":"SAMPLE_TEXT", "employmentStartDate":"2020-01-01T00:00:00.000Z", "employmentEndDate":"2020-01-01T00:00:00.000Z", "employmentDuration":"0", "employmentPeriod":"SAMPLE_TEXT", "isCurrentEmployment":null, "jobDescription":"SAMPLE_TEXT", "roleAndResponsibilities":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "location":"0", "jobTitle":"SAMPLE_TEXT", "employerName":"SAMPLE_TEXT", "employmentStartDate":"2020-01-01T00:00:00.000Z", "employmentEndDate":"2020-01-01T00:00:00.000Z", "employmentDuration":"0", "isCurrentEmployment":null, "jobDescription":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_candidateEmployment_url"))).exitHereIfFailed
             .pause(10)

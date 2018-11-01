@@ -34,6 +34,7 @@ import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.service.CorporateService;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
 
@@ -80,10 +81,8 @@ public class CorporateResource {
 			throws URISyntaxException {
 		log.debug("REST request to save Corporate : {}", corporate);
 		if (corporate.getId() != null) {
-			return ResponseEntity.badRequest().headers(
-					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new corporate cannot already have an ID"))
-					.body(null);
-		}
+            throw new BadRequestAlertException("A new corporate cannot already have an ID", ENTITY_NAME, "idexists");
+        }
 		Corporate result = corporateRepository.save(corporate);
 		corporateSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/corporates/" + result.getId()))

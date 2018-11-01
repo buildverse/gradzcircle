@@ -13,6 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @ContextConfiguration(classes = GradzcircleApp.class)
 public abstract class StepDefs {
 
-	protected ResultActions actions;
+    protected ResultActions actions;
 
 }

@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
+import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
@@ -27,13 +27,14 @@ candidateNonAcademicWorks: CandidateNonAcademicWork[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
     }
           /*To be removed once undertsand Elastic */
           loadExtraCurricularForCandidate() {
             this.candidateNonAcademicWorkService.findNonAcademicWorkByCandidateId(this.candidateId).subscribe(
-                (res: ResponseWrapper) => this.candidateNonAcademicWorks = res.json,
-                (res: ResponseWrapper) => this.onError(res.json)
+                 (res: HttpResponse<CandidateNonAcademicWork[]>) => this.candidateNonAcademicWorks = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
             );
             return;
         }
@@ -43,17 +44,18 @@ candidateNonAcademicWorks: CandidateNonAcademicWork[];
             this.candidateNonAcademicWorkService.search({
                 query: this.currentSearch,
                 }).subscribe(
-                    (res: ResponseWrapper) => this.candidateNonAcademicWorks = res.json,
-                    (res: ResponseWrapper) => this.onError(res.json)
+                   (res: HttpResponse<CandidateNonAcademicWork[]>) => this.candidateNonAcademicWorks = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
        }
         this.candidateNonAcademicWorkService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.candidateNonAcademicWorks = res.json;
+             (res: HttpResponse<CandidateNonAcademicWork[]>) => {
+                this.candidateNonAcademicWorks = res.body;
+
                 this.currentSearch = '';
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
 

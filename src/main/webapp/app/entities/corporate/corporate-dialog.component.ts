@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute,Router } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +12,7 @@ import { CorporateService } from './corporate.service';
 import { Country, CountryService } from '../country';
 import { Industry, IndustryService } from '../industry';
 import { User, UserService } from '../../shared';
-import { ResponseWrapper ,EditorProperties} from '../../shared';
+import { EditorProperties} from '../../shared';
 
 
 @Component({
@@ -46,11 +46,11 @@ export class CorporateDialogComponent implements OnInit {
         this.isSaving = false;
         this.options = new EditorProperties().options;
         this.countryService.query()
-            .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.industryService.query()
-            .subscribe((res: ResponseWrapper) => { this.industries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+           .subscribe((res: HttpResponse<Industry[]>) => { this.industries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.userService.query()
-            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<User[]>) => { this.users = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -68,9 +68,9 @@ export class CorporateDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<Corporate>) {
-        result.subscribe((res: Corporate) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<Corporate>>) {
+        result.subscribe((res: HttpResponse<Corporate>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Corporate) {

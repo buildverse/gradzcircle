@@ -3,9 +3,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import {AuthoritiesConstants} from '../../shared/authorities.constant';
+import{ HttpResponse } from '@angular/common/http';
 import {CandidateList} from './candidate-list.model';
 
 @Component({
@@ -92,11 +92,8 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
       id: this.jobId,
       score: this.score
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        //this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
+       (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 

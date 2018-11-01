@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { MaritalStatusComponent } from './marital-status.component';
 import { MaritalStatusDetailComponent } from './marital-status-detail.component';
 import { MaritalStatusPopupComponent } from './marital-status-dialog.component';

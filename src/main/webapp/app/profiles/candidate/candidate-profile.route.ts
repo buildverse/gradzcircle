@@ -44,16 +44,16 @@ export class AppliedJobResolvePagingParams implements Resolve<any> {
 
 export const candidateProfileRoutes: Routes = [
     {
-        path: 'candidate-profile',
+         path: 'candidate-profile',
         component: CandidateProfileComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
-        canActivate: [UserRouteAccessService],
         resolve: {
             candidate: CandidateResolverService
         },
+        canActivate: [UserRouteAccessService],
         children: [
             {
                 path: '',

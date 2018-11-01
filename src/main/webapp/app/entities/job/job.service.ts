@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import {SERVER_API_URL} from '../../app.constants';
-
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JhiDateUtils} from 'ng-jhipster';
 
 import {Job} from './job.model';
 import {CandidateList} from './candidate-list.model';
-import {ResponseWrapper, createRequestOption} from '../../shared';
+import {createRequestOption} from '../../shared';
 
+export type EntityResponseType = HttpResponse<Job>;
 
 @Injectable()
 export class JobService {
@@ -23,135 +23,124 @@ export class JobService {
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/jobs';
   private resourceAppliedJobsByCandidateUrl = SERVER_API_URL + 'api/appliedJobsByCandidate';
 
-  constructor(private http: Http, private dateUtils: JhiDateUtils) {}
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
-  create(job: Job): Observable<Job> {
+  create(job: Job): Observable<EntityResponseType> {
     const copy = this.convert(job);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.post<Job>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  update(job: Job): Observable<Job> {
+  update(job: Job): Observable<EntityResponseType> {
     const copy = this.convert(job);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.put<Job>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  applyforJob(jobId: number, loginId: number): Observable<Job> {
-    return this.http.get(`${this.resourceApplyForJobByCandidateUrl}/${jobId}/${loginId}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+  applyforJob(jobId: number, loginId: number): Observable<EntityResponseType> {
+    return this.http.get<Job>(`${this.resourceApplyForJobByCandidateUrl}/${jobId}/${loginId}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  find(id: number): Observable<Job> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-
-      return this.convertItemFromServer(jsonResponse);
-    });
+  find(id: number): Observable<EntityResponseType> {
+    return this.http.get<Job>(`${this.resourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
+  query(req?: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<Job[]>(this.resourceUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  queryActiveJobs(req?: any): Observable<ResponseWrapper> {
+  queryActiveJobs(req?: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceActiveJobsUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<Job[]>(`${this.resourceActiveJobsUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  queryMatchedCandidatesForJob(req?: any): Observable<ResponseWrapper> {
+  queryMatchedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceMatchedCandidatedForJobUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertCandidateListResponse(res));
+    return this.http.get<CandidateList[]>(`${this.resourceMatchedCandidatedForJobUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
   }
 
-  queryAppliedCandidatesForJob(req?: any): Observable<ResponseWrapper> {
+  queryAppliedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceAppliedCandidatesForJobUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertCandidateListResponse(res));
+    return this.http.get<CandidateList[]>(`${this.resourceAppliedCandidatesForJobUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
   }
 
-  queryActiveJobsForCandidates(req: any): Observable<ResponseWrapper> {
+  queryActiveJobsForCandidates(req: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceActiveJobsForCandidateUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<Job[]>(`${this.resourceActiveJobsForCandidateUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  queryAppliedJobsByCandidate(req: any): Observable<ResponseWrapper> {
+  queryAppliedJobsByCandidate(req: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
-    return this.http.get(`${this.resourceAppliedJobsByCandidateUrl}/${req.id}`, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get(`${this.resourceAppliedJobsByCandidateUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
 
-  remove(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceDeActivateJobsUrl}/${id}`);
+  remove(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceDeActivateJobsUrl}/${id}`, {observe: 'response'});
   }
 
 
-  search(req?: any): Observable<ResponseWrapper> {
+  search(req?: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceSearchUrl, options)
-      .map((res: any) => this.convertResponse(res));
+    return this.http.get<Job[]>(this.resourceSearchUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    // console.log('esponse from server is '+JSON.stringify(jsonResponse));
-    const result = [];
+  private convertResponse(res: EntityResponseType): EntityResponseType {
+    const body: Job = this.convertItemFromServer(res.body);
+    return res.clone({body});
+  }
+
+  private convertJobArrayResponse(res: HttpResponse<Job[]>): HttpResponse<Job[]> {
+    const jsonResponse: Job[] = res.body;
+    const body: Job[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
+      body.push(this.convertItemFromServer(jsonResponse[i]));
     }
-    return new ResponseWrapper(res.headers, result, res.status);
+    return res.clone({body});
   }
 
-  private convertCandidateListResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    // console.log('esponse from server is '+JSON.stringify(jsonResponse));
-    const result = [];
+  private convertCandidateListArrayResponse(res: HttpResponse<CandidateList[]>): HttpResponse<CandidateList[]> {
+    const jsonResponse: CandidateList[] = res.body;
+    const body: CandidateList[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      const entity: CandidateList = Object.assign(new CandidateList(), jsonResponse[i]);
-      result.push(entity);
+      body.push(this.convertItemFromServer(jsonResponse[i]));
     }
-    return new ResponseWrapper(res.headers, result, res.status);
+    return res.clone({body});
   }
-
-
 
   /**
    * Convert a returned JSON object to Job.
    */
-  private convertItemFromServer(json: any): Job {
-    const entity: Job = Object.assign(new Job(), json);
-    entity.createDate = this.dateUtils
-      .convertDateTimeFromServer(json.createDate);
-    entity.updateDate = this.dateUtils
-      .convertDateTimeFromServer(json.updateDate);
-    return entity;
+  private convertItemFromServer(job: Job): Job {
+    const copy: Job = Object.assign({}, job);
+    copy.createDate = this.dateUtils
+      .convertDateTimeFromServer(job.createDate);
+    copy.updateDate = this.dateUtils
+      .convertDateTimeFromServer(job.updateDate);
+    return copy;
   }
+
 
   /**
    * Convert a Job to a JSON which can be sent to the server.
    */
   private convert(job: Job): Job {
     const copy: Job = Object.assign({}, job);
-    copy.createDate = this.dateUtils
-      .toDate(job.createDate);
-    copy.updateDate = this.dateUtils
-      .toDate(job.updateDate);
-
+    copy.createDate = this.dateUtils.toDate(job.createDate);
+    copy.updateDate = this.dateUtils.toDate(job.updateDate);
     return copy;
   }
 

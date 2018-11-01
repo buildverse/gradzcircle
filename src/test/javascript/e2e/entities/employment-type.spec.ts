@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('EmploymentType e2e test', () => {
 
     let navBarPage: NavBarPage;
     let employmentTypeDialogPage: EmploymentTypeDialogPage;
     let employmentTypeComponentsPage: EmploymentTypeComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('EmploymentType e2e test', () => {
     it('should load EmploymentTypes', () => {
         navBarPage.goToEntity('employment-type');
         employmentTypeComponentsPage = new EmploymentTypeComponentsPage();
-        expect(employmentTypeComponentsPage.getTitle()).toMatch(/gradzcircleApp.employmentType.home.title/);
+        expect(employmentTypeComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.employmentType.home.title/);
 
     });
 
     it('should load create EmploymentType dialog', () => {
         employmentTypeComponentsPage.clickOnCreateButton();
         employmentTypeDialogPage = new EmploymentTypeDialogPage();
-        expect(employmentTypeDialogPage.getModalTitle()).toMatch(/gradzcircleApp.employmentType.home.createOrEditLabel/);
+        expect(employmentTypeDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.employmentType.home.createOrEditLabel/);
         employmentTypeDialogPage.close();
     });
 
@@ -41,7 +39,7 @@ describe('EmploymentType e2e test', () => {
         expect(employmentTypeDialogPage.getEmploymentTypeCostInput()).toMatch('5');
         employmentTypeDialogPage.save();
         expect(employmentTypeDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -72,21 +70,21 @@ export class EmploymentTypeDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setEmploymentTypeInput = function (employmentType) {
+    setEmploymentTypeInput = function(employmentType) {
         this.employmentTypeInput.sendKeys(employmentType);
-    }
+    };
 
-    getEmploymentTypeInput = function () {
+    getEmploymentTypeInput = function() {
         return this.employmentTypeInput.getAttribute('value');
-    }
+    };
 
-    setEmploymentTypeCostInput = function (employmentTypeCost) {
+    setEmploymentTypeCostInput = function(employmentTypeCost) {
         this.employmentTypeCostInput.sendKeys(employmentTypeCost);
-    }
+    };
 
-    getEmploymentTypeCostInput = function () {
+    getEmploymentTypeCostInput = function() {
         return this.employmentTypeCostInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

@@ -1,10 +1,12 @@
 package com.drishika.gradzcircle.web.rest;
 
 import com.drishika.gradzcircle.GradzcircleApp;
-import com.drishika.gradzcircle.config.audit.AuditEventConverter;
-import com.drishika.gradzcircle.domain.PersistentAuditEvent;
-import com.drishika.gradzcircle.repository.PersistenceAuditEventRepository;
-import com.drishika.gradzcircle.service.AuditEventService;
+
+import com.drishika.gradzcircle.domain.Audit;
+import com.drishika.gradzcircle.repository.AuditRepository;
+import com.drishika.gradzcircle.repository.search.AuditSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,11 +21,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.util.List;
 
+import static com.drishika.gradzcircle.web.rest.TestUtil.sameInstant;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -34,109 +42,271 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GradzcircleApp.class)
-@Transactional
 public class AuditResourceIntTest {
 
-	private static final String SAMPLE_PRINCIPAL = "SAMPLE_PRINCIPAL";
-	private static final String SAMPLE_TYPE = "SAMPLE_TYPE";
-	private static final Instant SAMPLE_TIMESTAMP = Instant.parse("2015-08-04T10:11:30Z");
-	private static final long SECONDS_PER_DAY = 60 * 60 * 24;
+    private static final Integer DEFAULT_CREATED_BY = 1;
+    private static final Integer UPDATED_CREATED_BY = 2;
 
-	@Autowired
-	private PersistenceAuditEventRepository auditEventRepository;
+    private static final Integer DEFAULT_UPDATED_BY = 1;
+    private static final Integer UPDATED_UPDATED_BY = 2;
 
-	@Autowired
-	private AuditEventConverter auditEventConverter;
+    private static final ZonedDateTime DEFAULT_CREATED_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-	@Autowired
-	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+    private static final ZonedDateTime DEFAULT_UPDATED_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_UPDATED_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-	@Autowired
-	private FormattingConversionService formattingConversionService;
+    @Autowired
+    private AuditRepository auditRepository;
 
-	@Autowired
-	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+    @Autowired
+    private AuditSearchRepository auditSearchRepository;
 
-	private PersistentAuditEvent auditEvent;
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-	private MockMvc restAuditMockMvc;
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		AuditEventService auditEventService = new AuditEventService(auditEventRepository, auditEventConverter);
-		AuditResource auditResource = new AuditResource(auditEventService);
-		this.restAuditMockMvc = MockMvcBuilders.standaloneSetup(auditResource)
-				.setCustomArgumentResolvers(pageableArgumentResolver).setConversionService(formattingConversionService)
-				.setMessageConverters(jacksonMessageConverter).build();
-	}
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
-	@Before
-	public void initTest() {
-		auditEventRepository.deleteAll();
-		auditEvent = new PersistentAuditEvent();
-		auditEvent.setAuditEventType(SAMPLE_TYPE);
-		auditEvent.setPrincipal(SAMPLE_PRINCIPAL);
-		auditEvent.setAuditEventDate(SAMPLE_TIMESTAMP);
-	}
+    @Autowired
+    private EntityManager em;
 
-	@Test
-	public void getAllAudits() throws Exception {
-		// Initialize the database
-		auditEventRepository.save(auditEvent);
+    private MockMvc restAuditMockMvc;
 
-		// Get all the audits
-		restAuditMockMvc.perform(get("/management/audits")).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
-	}
+    private Audit audit;
 
-	@Test
-	public void getAudit() throws Exception {
-		// Initialize the database
-		auditEventRepository.save(auditEvent);
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        final AuditResource auditResource = new AuditResource(auditRepository, auditSearchRepository);
+        this.restAuditMockMvc = MockMvcBuilders.standaloneSetup(auditResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+    }
 
-		// Get the audit
-		restAuditMockMvc.perform(get("/management/audits/{id}", auditEvent.getId())).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.principal").value(SAMPLE_PRINCIPAL));
-	}
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Audit createEntity(EntityManager em) {
+        Audit audit = new Audit()
+            .createdBy(DEFAULT_CREATED_BY)
+            .updatedBy(DEFAULT_UPDATED_BY)
+            .createdTime(DEFAULT_CREATED_TIME)
+            .updatedTime(DEFAULT_UPDATED_TIME);
+        return audit;
+    }
 
-	@Test
-	public void getAuditsByDate() throws Exception {
-		// Initialize the database
-		auditEventRepository.save(auditEvent);
+    @Before
+    public void initTest() {
+        auditSearchRepository.deleteAll();
+        audit = createEntity(em);
+    }
 
-		// Generate dates for selecting audits by date, making sure the period will
-		// contain the audit
-		String fromDate = SAMPLE_TIMESTAMP.minusSeconds(SECONDS_PER_DAY).toString().substring(0, 10);
-		String toDate = SAMPLE_TIMESTAMP.plusSeconds(SECONDS_PER_DAY).toString().substring(0, 10);
+    @Test
+    @Transactional
+    public void createAudit() throws Exception {
+        int databaseSizeBeforeCreate = auditRepository.findAll().size();
 
-		// Get the audit
-		restAuditMockMvc.perform(get("/management/audits?fromDate=" + fromDate + "&toDate=" + toDate))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
-	}
+        // Create the Audit
+        restAuditMockMvc.perform(post("/api/audits")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(audit)))
+            .andExpect(status().isCreated());
 
-	@Test
-	public void getNonExistingAuditsByDate() throws Exception {
-		// Initialize the database
-		auditEventRepository.save(auditEvent);
+        // Validate the Audit in the database
+        List<Audit> auditList = auditRepository.findAll();
+        assertThat(auditList).hasSize(databaseSizeBeforeCreate + 1);
+        Audit testAudit = auditList.get(auditList.size() - 1);
+        assertThat(testAudit.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testAudit.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testAudit.getCreatedTime()).isEqualTo(DEFAULT_CREATED_TIME);
+        assertThat(testAudit.getUpdatedTime()).isEqualTo(DEFAULT_UPDATED_TIME);
 
-		// Generate dates for selecting audits by date, making sure the period will not
-		// contain the sample audit
-		String fromDate = SAMPLE_TIMESTAMP.minusSeconds(2 * SECONDS_PER_DAY).toString().substring(0, 10);
-		String toDate = SAMPLE_TIMESTAMP.minusSeconds(SECONDS_PER_DAY).toString().substring(0, 10);
+        // Validate the Audit in Elasticsearch
+        Audit auditEs = auditSearchRepository.findOne(testAudit.getId());
+        assertThat(testAudit.getCreatedTime()).isEqualTo(testAudit.getCreatedTime());
+        assertThat(testAudit.getUpdatedTime()).isEqualTo(testAudit.getUpdatedTime());
+        assertThat(auditEs).isEqualToIgnoringGivenFields(testAudit, "createdTime", "updatedTime");
+    }
 
-		// Query audits but expect no results
-		restAuditMockMvc.perform(get("/management/audits?fromDate=" + fromDate + "&toDate=" + toDate))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(header().string("X-Total-Count", "0"));
-	}
+    @Test
+    @Transactional
+    public void createAuditWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = auditRepository.findAll().size();
 
-	@Test
-	public void getNonExistingAudit() throws Exception {
-		// Get the audit
-		restAuditMockMvc.perform(get("/management/audits/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
-	}
+        // Create the Audit with an existing ID
+        audit.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restAuditMockMvc.perform(post("/api/audits")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(audit)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Audit in the database
+        List<Audit> auditList = auditRepository.findAll();
+        assertThat(auditList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAudits() throws Exception {
+        // Initialize the database
+        auditRepository.saveAndFlush(audit);
+
+        // Get all the auditList
+        restAuditMockMvc.perform(get("/api/audits?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(audit.getId().intValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
+            .andExpect(jsonPath("$.[*].createdTime").value(hasItem(sameInstant(DEFAULT_CREATED_TIME))))
+            .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(sameInstant(DEFAULT_UPDATED_TIME))));
+    }
+
+    @Test
+    @Transactional
+    public void getAudit() throws Exception {
+        // Initialize the database
+        auditRepository.saveAndFlush(audit);
+
+        // Get the audit
+        restAuditMockMvc.perform(get("/api/audits/{id}", audit.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(audit.getId().intValue()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
+            .andExpect(jsonPath("$.createdTime").value(sameInstant(DEFAULT_CREATED_TIME)))
+            .andExpect(jsonPath("$.updatedTime").value(sameInstant(DEFAULT_UPDATED_TIME)));
+    }
+
+    @Test
+    @Transactional
+    public void getNonExistingAudit() throws Exception {
+        // Get the audit
+        restAuditMockMvc.perform(get("/api/audits/{id}", Long.MAX_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateAudit() throws Exception {
+        // Initialize the database
+        auditRepository.saveAndFlush(audit);
+        auditSearchRepository.save(audit);
+        int databaseSizeBeforeUpdate = auditRepository.findAll().size();
+
+        // Update the audit
+        Audit updatedAudit = auditRepository.findOne(audit.getId());
+        // Disconnect from session so that the updates on updatedAudit are not directly saved in db
+        em.detach(updatedAudit);
+        updatedAudit
+            .createdBy(UPDATED_CREATED_BY)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .createdTime(UPDATED_CREATED_TIME)
+            .updatedTime(UPDATED_UPDATED_TIME);
+
+        restAuditMockMvc.perform(put("/api/audits")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedAudit)))
+            .andExpect(status().isOk());
+
+        // Validate the Audit in the database
+        List<Audit> auditList = auditRepository.findAll();
+        assertThat(auditList).hasSize(databaseSizeBeforeUpdate);
+        Audit testAudit = auditList.get(auditList.size() - 1);
+        assertThat(testAudit.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAudit.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testAudit.getCreatedTime()).isEqualTo(UPDATED_CREATED_TIME);
+        assertThat(testAudit.getUpdatedTime()).isEqualTo(UPDATED_UPDATED_TIME);
+
+        // Validate the Audit in Elasticsearch
+        Audit auditEs = auditSearchRepository.findOne(testAudit.getId());
+        assertThat(testAudit.getCreatedTime()).isEqualTo(testAudit.getCreatedTime());
+        assertThat(testAudit.getUpdatedTime()).isEqualTo(testAudit.getUpdatedTime());
+        assertThat(auditEs).isEqualToIgnoringGivenFields(testAudit, "createdTime", "updatedTime");
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingAudit() throws Exception {
+        int databaseSizeBeforeUpdate = auditRepository.findAll().size();
+
+        // Create the Audit
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restAuditMockMvc.perform(put("/api/audits")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(audit)))
+            .andExpect(status().isCreated());
+
+        // Validate the Audit in the database
+        List<Audit> auditList = auditRepository.findAll();
+        assertThat(auditList).hasSize(databaseSizeBeforeUpdate + 1);
+    }
+
+    @Test
+    @Transactional
+    public void deleteAudit() throws Exception {
+        // Initialize the database
+        auditRepository.saveAndFlush(audit);
+        auditSearchRepository.save(audit);
+        int databaseSizeBeforeDelete = auditRepository.findAll().size();
+
+        // Get the audit
+        restAuditMockMvc.perform(delete("/api/audits/{id}", audit.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        // Validate Elasticsearch is empty
+        boolean auditExistsInEs = auditSearchRepository.exists(audit.getId());
+        assertThat(auditExistsInEs).isFalse();
+
+        // Validate the database is empty
+        List<Audit> auditList = auditRepository.findAll();
+        assertThat(auditList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void searchAudit() throws Exception {
+        // Initialize the database
+        auditRepository.saveAndFlush(audit);
+        auditSearchRepository.save(audit);
+
+        // Search the audit
+        restAuditMockMvc.perform(get("/api/_search/audits?query=id:" + audit.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(audit.getId().intValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
+            .andExpect(jsonPath("$.[*].createdTime").value(hasItem(sameInstant(DEFAULT_CREATED_TIME))))
+            .andExpect(jsonPath("$.[*].updatedTime").value(hasItem(sameInstant(DEFAULT_UPDATED_TIME))));
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Audit.class);
+        Audit audit1 = new Audit();
+        audit1.setId(1L);
+        Audit audit2 = new Audit();
+        audit2.setId(audit1.getId());
+        assertThat(audit1).isEqualTo(audit2);
+        audit2.setId(2L);
+        assertThat(audit1).isNotEqualTo(audit2);
+        audit1.setId(null);
+        assertThat(audit1).isNotEqualTo(audit2);
+    }
 }

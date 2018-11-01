@@ -32,7 +32,7 @@ const ENTITY_STATES = [
         MultiselectDropdownModule,
         FileUploadModule,
         FroalaEditorModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
+        RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [
         CorporateComponent,

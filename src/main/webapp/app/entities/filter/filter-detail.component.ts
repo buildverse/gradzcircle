@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Filter } from './filter.model';
@@ -31,9 +32,10 @@ export class FilterDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.filterService.find(id).subscribe((filter) => {
-            this.filter = filter;
-        });
+        this.filterService.find(id)
+            .subscribe((filterResponse: HttpResponse<Filter>) => {
+                this.filter = filterResponse.body;
+            });
     }
     previousState() {
         window.history.back();

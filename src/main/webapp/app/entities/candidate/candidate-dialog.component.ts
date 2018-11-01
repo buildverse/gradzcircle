@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -16,7 +16,6 @@ import { MaritalStatus, MaritalStatusService } from '../marital-status';
 import { JobCategory, JobCategoryService } from '../job-category';
 import { Job, JobService } from '../job';
 import { VisaType, VisaTypeService } from '../visa-type';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate-dialog',
@@ -60,19 +59,19 @@ export class CandidateDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.userService.query()
-            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<User[]>) => { this.users = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.nationalityService.query()
-            .subscribe((res: ResponseWrapper) => { this.nationalities = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Nationality[]>) => { this.nationalities = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.genderService.query()
-            .subscribe((res: ResponseWrapper) => { this.genders = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.maritalStatusService.query()
-            .subscribe((res: ResponseWrapper) => { this.maritalstatuses = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<MaritalStatus[]>) => { this.maritalstatuses = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.jobCategoryService.query()
-            .subscribe((res: ResponseWrapper) => { this.jobcategories = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<JobCategory[]>) => { this.jobcategories = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.jobService.query()
-            .subscribe((res: ResponseWrapper) => { this.jobs = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Job[]>) => { this.jobs = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.visaTypeService.query()
-            .subscribe((res: ResponseWrapper) => { this.visatypes = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<VisaType[]>) => { this.visatypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -90,10 +89,10 @@ export class CandidateDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<Candidate>) {
-        result.subscribe((res: Candidate) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
-    }
+  private subscribeToSaveResponse(result: Observable<HttpResponse<Candidate>>) {
+        result.subscribe((res: HttpResponse<Candidate>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+  }
 
     private onSaveSuccess(result: Candidate) {
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK'});

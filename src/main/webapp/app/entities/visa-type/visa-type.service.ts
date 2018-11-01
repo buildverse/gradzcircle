@@ -1,73 +1,74 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
 
 import { VisaType } from './visa-type.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<VisaType>;
 
 @Injectable()
 export class VisaTypeService {
 
-    private resourceUrl = SERVER_API_URL + 'api/visa-types';
+    private resourceUrl =  SERVER_API_URL + 'api/visa-types';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/visa-types';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
-    create(visaType: VisaType): Observable<VisaType> {
+    create(visaType: VisaType): Observable<EntityResponseType> {
         const copy = this.convert(visaType);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<VisaType>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(visaType: VisaType): Observable<VisaType> {
+    update(visaType: VisaType): Observable<EntityResponseType> {
         const copy = this.convert(visaType);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<VisaType>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<VisaType> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<VisaType>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<VisaType[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<VisaType[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<VisaType[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<VisaType[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<VisaType[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<VisaType[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: VisaType = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
+
+    private convertArrayResponse(res: HttpResponse<VisaType[]>): HttpResponse<VisaType[]> {
+        const jsonResponse: VisaType[] = res.body;
+        const body: VisaType[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to VisaType.
      */
-    private convertItemFromServer(json: any): VisaType {
-        const entity: VisaType = Object.assign(new VisaType(), json);
-        return entity;
+    private convertItemFromServer(visaType: VisaType): VisaType {
+        const copy: VisaType = Object.assign({}, visaType);
+        return copy;
     }
 
     /**

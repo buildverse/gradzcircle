@@ -1,36 +1,25 @@
-@import 'toolkit.css';
+@import 'toolkit.min.css';
+
+@import 'fonts.css';
 
 /*=======================================================================
 ADDED BY ABHINAV TO FIX FOOTER - FOOTER COMMENTED ABOVE FROM JHIPSTER
 =========================================================================*/
-
 html {
-    position: relative;
-    min-height: 100%;
+	position: relative;
+	min-height: 100%;
 }
 
 body {
-    /* Margin bottom by footer height */
-    padding-top: 3.5rem;
-    margin-bottom: 60px;
-    /*font-family: "Helvetica";*/
+    padding-top: 0;
+    margin-bottom: 120px;
+    /* font-family: "Helvetica"; */
     font-family: 'Proxima Nova', sans-serif;
     font-style: normal;
+    padding-bottom: 40vh;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 60px;
-    line-height: 60px;
-    /* Vertically center the text there */
-    background-color: #f5f5f5;
-}
-
-
-/*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/ 
+/*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
 /*.table-responsive{
 overflow-y:visible;
 overflow-x:visible;
@@ -48,553 +37,500 @@ overflow-x:visible;
     width: 100%;
   }
 */
-
 .logo .logo-img {
-    height: 28px;
-    display: inline-block;
-    vertical-align: middle;
-    width: 70px;
+	height: 28px;
+	display: inline-block;
+	vertical-align: middle;
+	width: 70px;
 }
 
 .logo-img {
-    height: 100%;
-    background: url("../images/brand-white.png") no-repeat center center;
-    background-size: contain;
-    width: 100%;
+	height: 100%;
+	background: url("../images/brand-white.png") no-repeat center center;
+	background-size: contain;
+	width: 100%;
 }
+
 ng2-dropdown-menu {
-    z-index: 9999 !important;
-  }
-  ng2-dropdown-menu .ng2-dropdown-menu {
-    z-index: 9999 !important;
-  }
-  ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
-    z-index: 9999 !important;
-  }
-  
-.footer>.container {
-    padding-right: 15px;
-    padding-left: 15px;
+	z-index: 9999 !important;
+}
+
+ng2-dropdown-menu .ng2-dropdown-menu {
+	z-index: 9999 !important;
+}
+
+ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
+	z-index: 9999 !important;
 }
 
 .classic-title {
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-    font-weight: 300;
+	margin-bottom: 16px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #eee;
+	font-weight: 300;
 }
 
 .profile-text-info {
-    color: #3097D1
+	color: #3097D1
 }
 
 .btn-danger {
 	background-color: #D32F2F;
-    color: white;
+	color: white;
 }
 
 .btn-warning {
 	background-color: #FF5722;
 	color: white;
 }
+
 .modal-header-decorate {
-    background-color: #3097D1;
-    color: white;
+	background-color: #3097D1;
+	color: white;
 }
 
 .modal-footer-decorate {
-    background-color: rgb(243, 241, 241)
+	background-color: rgb(243, 241, 241)
 }
 
 .modal-header-decorate-delete {
-    background-color: #3097D1;
-    color: white;
-    height: 40px;
+	background-color: #3097D1;
+	color: white;
+	height: 40px;
 }
 
 .modal-footer-decorate-delete {
-    height: 40px;
-    background-color: #E0E0E0
+	height: 40px;
+	background-color: #E0E0E0
 }
-
 
 /* ==============================================================
 Bootstrap tweaks
 ===============================================================*/
-
-body,
-h1,
-h2,
-h3,
-h4 {
-    font-weight: 400;
+body, h1, h2, h3, h4 {
+	font-weight: 400;
 }
-
 
 /* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */
-
 .browserupgrade {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+	margin: 0.2em 0;
+	background: #ccc;
+	color: #000;
+	padding: 0.2em 0;
 }
-
 
 /* ==========================================================================
 Generic styles
 ========================================================================== */
 
-
 /* Error highlight on input fields */
-
-.ng-valid[required],
-.ng-valid.required {
-    /* border-left: 5px solid green;*/
+.ng-valid[required], .ng-valid.required {
+	/* border-left: 5px solid green;*/
+	
 }
 
 .ng-invalid:not(form) {
-    /*border-left: 5px solid red;*/
+	/*border-left: 5px solid red;*/
+	
 }
 
 hr.split {
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0),
+		rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
 
 .underline-headers span {
-    padding-bottom: 8px;
-    border-bottom: 1px solid;
-    font-weight: 400;
-    border-bottom-color: #3097D1;
+	padding-bottom: 8px;
+	border-bottom: 1px solid;
+	font-weight: 400;
+	border-bottom-color: #3097D1;
 }
 
-
 /* other generic styles */
-
 .jh-card {
-    padding: 1.5%;
-    margin-top: 20px;
-    border: none;
+	padding: 1.5%;
+	margin-top: 20px;
+	border: none;
 }
 
 .error {
-    color: white;
-    background-color: red;
+	color: white;
+	background-color: red;
 }
 
 .pad {
-    padding: 10px;
+	padding: 10px;
 }
 
 .w-40 {
-    width: 40% !important;
+	width: 40% !important;
 }
 
 .w-60 {
-    width: 60% !important;
+	width: 60% !important;
 }
 
 .break {
-    white-space: normal;
-    word-break: break-all;
+	white-space: normal;
+	word-break: break-all;
 }
 
 .readonly {
-    background-color: #eee;
-    opacity: 1;
+	background-color: #eee;
+	opacity: 1;
 }
 
-
 /*FIXME this is to support grids in table class; */
-
-table td[class*=col-],
-table th[class*=col-] {
-    position: static;
-    display: table-cell;
-    float: none;
+table td[class*=col-], table th[class*=col-] {
+	position: static;
+	display: table-cell;
+	float: none;
 }
 
 .footer {
-    border-top: 1px solid rgba(0, 0, 0, .125);
+	border-top: 1px solid rgba(0, 0, 0, .125);
 }
 
 hr.seperator {
-    border-top: 1px solid #8c8b8b;
+	border-top: 1px solid #8c8b8b;
 }
 
 hr.blue {
-    border-top: 1px solid #0000FF;
+	border-top: 1px solid #0000FF;
 }
 
 ul.square {
-    list-style-type: square;
+	list-style-type: square;
 }
-
 
 /* ==========================================================================
 CSS for timleines 
 ========================================================================== */
-
 .timeline {
-    position: relative;
-    padding: 21px 15px 10px;
-    margin-top: 4px;
-    margin-bottom: 30px;
+	position: relative;
+	padding: 21px 15px 10px;
+	margin-top: 4px;
+	margin-bottom: 30px;
 }
 
 .timeline .line {
-    position: absolute;
-    width: 4px;
-    display: block;
-    background: currentColor;
-    color: #3097D1;
-    top: 0px;
-    bottom: 0px;
-    margin-left: 30px;
+	position: absolute;
+	width: 4px;
+	display: block;
+	background: currentColor;
+	color: #3097D1;
+	top: 0px;
+	bottom: 0px;
+	margin-left: 30px;
 }
 
 .timeline .separator {
-    border-top: 1px solid currentColor;
-    padding: 5px;
-    padding-left: 40px;
-    font-style: italic;
-    font-size: .9em;
-    margin-left: 30px;
+	border-top: 1px solid currentColor;
+	padding: 5px;
+	padding-left: 40px;
+	font-style: italic;
+	font-size: .9em;
+	margin-left: 30px;
 }
 
 .timeline .line::before {
-    top: -4px;
+	top: -4px;
 }
 
 .timeline .line::after {
-    bottom: -4px;
+	bottom: -4px;
 }
 
-.timeline .line::before,
-.timeline .line::after {
-    content: '';
-    position: absolute;
-    left: -4px;
-    width: 12px;
-    height: 12px;
-    display: block;
-    border-radius: 50%;
-    background: currentColor;
+.timeline .line::before, .timeline .line::after {
+	content: '';
+	position: absolute;
+	left: -4px;
+	width: 12px;
+	height: 12px;
+	display: block;
+	border-radius: 50%;
+	background: currentColor;
 }
 
 .timeline .card {
-    position: relative;
-    margin: 10px 0px 21px 70px;
-    clear: both;
+	position: relative;
+	margin: 10px 0px 21px 70px;
+	clear: both;
 }
 
 .timeline .card::before {
-    position: absolute;
-    display: block;
-    top: 8px;
-    left: -24px;
-    content: '';
-    width: 0px;
-    height: 0px;
-    border: inherit;
-    border-width: 12px;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
+	position: absolute;
+	display: block;
+	top: 8px;
+	left: -24px;
+	content: '';
+	width: 0px;
+	height: 0px;
+	border: inherit;
+	border-width: 12px;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
 }
 
 .timeline .card .card-header.icon * {
-    font-size: 20px;
-    vertical-align: middle;
-    line-height: 40px;
+	font-size: 20px;
+	vertical-align: middle;
+	line-height: 40px;
 }
 
 .timeline .card .card-header.icon {
-    position: absolute;
-    left: -59px;
-    display: block;
-    width: 40px;
-    height: 40px;
-    padding: 0px;
-    background-color: #3097D1;
-    border-radius: 50%;
-    text-align: center;
-    float: left;
+	position: absolute;
+	left: -59px;
+	display: block;
+	width: 40px;
+	height: 40px;
+	padding: 0px;
+	background-color: #3097D1;
+	border-radius: 50%;
+	text-align: center;
+	float: left;
 }
 
 .timeline .card-outline {
-    border-color: transparent;
-    background: transparent;
-    box-shadow: none;
+	border-color: transparent;
+	background: transparent;
+	box-shadow: none;
 }
 
 .timeline .card-outline .card-block {
-    padding: 10px 0px;
+	padding: 10px 0px;
 }
 
-.timeline .card-outline .card-header:not(.icon),
-.timeline .card-outline .card-footer {
-    display: none;
+.timeline .card-outline .card-header:not (.icon ), .timeline .card-outline .card-footer
+	{
+	display: none;
 }
 
 .p-upper {
-    margin-top: -0.5em;
+	margin-top: -0.5em;
 }
 
 .p-lower {
-    margin-top: -0.5em;
-    margin-bottom: -1em;
+	margin-top: -0.5em;
+	margin-bottom: -1em;
 }
 
 .p-lower-right {
-    margin-top: -.25em;
-    margin-bottom: -0.5em;
+	margin-top: -.25em;
+	margin-bottom: -0.5em;
 }
 
 .p-lower-lower {
-    margin-bottom: -0.25em;
+	margin-bottom: -0.25em;
 }
 
 .time-period {
-    font-style: italic;
-    font-size: .9em;
+	font-style: italic;
+	font-size: .9em;
 }
-
 
 /*========================================================
 picture overlay to edit
 ==========================================================*/
-
 .glyphicon {
-    position: absolute;
-    top: 20px;
-    left: 40px;
-    font-size: 40px;
-    color: white;
+	position: absolute;
+	top: 20px;
+	left: 40px;
+	font-size: 40px;
+	color: white;
 }
-
 
 /* ==========================================================================
 make sure browsers use the pointer cursor for anchors, even with no href
 ========================================================================== */
-
 a:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .hand {
-    cursor: pointer;
+	cursor: pointer;
 }
-
 
 /* ==========================================================================
 Custom alerts for notification
 ========================================================================== */
-
 .alerts .alert {
-    text-overflow: ellipsis;
+	text-overflow: ellipsis;
 }
 
 .alert pre {
-    background: none;
-    border: none;
-    font: inherit;
-    color: inherit;
-    padding: 0;
-    margin: 0;
+	background: none;
+	border: none;
+	font: inherit;
+	color: inherit;
+	padding: 0;
+	margin: 0;
 }
 
 .alert .popover pre {
-    font-size: 10px;
+	font-size: 10px;
 }
 
 .alerts .toast {
-    position: fixed;
-    width: 100%;
+	position: fixed;
+	width: 100%;
 }
 
 .alerts .toast.left {
-    left: 5px;
+	left: 5px;
 }
 
 .alerts .toast.right {
-    right: 5px;
+	right: 5px;
 }
 
 .alerts .toast.top {
-    top: 55px;
+	top: 55px;
 }
 
 .alerts .toast.bottom {
-    bottom: 55px;
+	bottom: 55px;
 }
 
 @media screen and (min-width: 480px) {
-    .alerts .toast {
-        width: 50%;
-    }
+	.alerts .toast {
+		width: 50%;
+	}
 }
-
 
 /*CENTER CONTENT for FORMS like login, register, password reset etc */
-
 .app-login-form {
-    max-width: 580px;
-    margin-top: -60px;
+	max-width: 580px;
+	margin-top: -60px;
 }
-
 
 /* ==========================================================================
 entity tables helpers
 ========================================================================== */
 
-
 /* Remove Bootstrap padding from the element
    http://stackoverflow.com/questions/19562903/remove-padding-from-columns-in-bootstrap-3 */
-
 .no-padding-left {
-    padding-left: 0 !important;
+	padding-left: 0 !important;
 }
 
 .no-padding-right {
-    padding-right: 0 !important;
+	padding-right: 0 !important;
 }
 
 .no-padding-top {
-    padding-top: 0 !important;
+	padding-top: 0 !important;
 }
 
 .no-padding-bottom {
-    padding-bottom: 0 !important;
+	padding-bottom: 0 !important;
 }
 
 .no-padding {
-    padding: 0 !important;
+	padding: 0 !important;
 }
-
 
 /* bootstrap 3 input-group 100% width
    http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
-
 .width-min {
-    width: 1% !important;
+	width: 1% !important;
 }
-
 
 /* Makes toolbar not wrap on smaller screens
  http://www.sketchingwithcss.com/samplechapter/cheatsheet.html#right */
-
 .flex-btn-group-container {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: row;
-    flex-direction: row;
-    -webkit-justify-content: flex-end;
-    justify-content: flex-end;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
 }
-
 
 /* ==========================================================================
 entity detail page css
 ========================================================================== */
-
 .row.jh-entity-details>dd {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 @media screen and (min-width: 768px) {
-    .row.jh-entity-details>dt {
-        margin-bottom: 15px;
-    }
-    .row.jh-entity-details>dd {
-        border-bottom: 1px solid #eee;
-        padding-left: 180px;
-        margin-left: 0;
-    }
+	.row.jh-entity-details>dt {
+		margin-bottom: 15px;
+	}
+	.row.jh-entity-details>dd {
+		border-bottom: 1px solid #eee;
+		padding-left: 180px;
+		margin-left: 0;
+	}
 }
-
 
 /* ==========================================================================
 ui bootstrap tweaks
 ========================================================================== */
-
-.nav,
-.pagination,
-.carousel,
-.panel-title a {
-    cursor: pointer;
+.nav, .pagination, .carousel, .panel-title a {
+	cursor: pointer;
 }
 
 .datetime-picker-dropdown>li.date-picker-menu div>table .btn-default,
-.uib-datepicker-popup>li>div.uib-datepicker>table .btn-default {
-    border: 0;
+	.uib-datepicker-popup>li>div.uib-datepicker>table .btn-default {
+	border: 0;
 }
 
 .datetime-picker-dropdown>li.date-picker-menu div>table:focus,
-.uib-datepicker-popup>li>div.uib-datepicker>table:focus {
-    outline: none;
+	.uib-datepicker-popup>li>div.uib-datepicker>table:focus {
+	outline: none;
 }
-
 
 /* ==========================================================================
 Social Buttons
 ========================================================================== */
-
 .jh-btn-social {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .jh-btn-google {
-    background-color: #dd4b39;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+	background-color: #dd4b39;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
 
-.jh-btn-google:hover,
-.jh-btn-google:focus,
-.jh-btn-google:active,
-.jh-btn-google.active,
-.open>.dropdown-toggle.jh-btn-google {
-    background-color: #c23321;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+.jh-btn-google:hover, .jh-btn-google:focus, .jh-btn-google:active,
+	.jh-btn-google.active, .open>.dropdown-toggle.jh-btn-google {
+	background-color: #c23321;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
 
 .jh-btn-facebook {
-    background-color: #3b5998;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+	background-color: #3b5998;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
 
-.jh-btn-facebook:hover,
-.jh-btn-facebook:focus,
-.jh-btn-facebook:active,
-.jh-btn-facebook.active,
-.open>.dropdown-toggle.jh-btn-facebook {
-    background-color: #2d4373;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+.jh-btn-facebook:hover, .jh-btn-facebook:focus, .jh-btn-facebook:active,
+	.jh-btn-facebook.active, .open>.dropdown-toggle.jh-btn-facebook {
+	background-color: #2d4373;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
 
 .jh-btn-twitter {
-    background-color: #55acee;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+	background-color: #55acee;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
 
-.jh-btn-twitter:hover,
-.jh-btn-twitter:focus,
-.jh-btn-twitter:active,
-.jh-btn-twitter.active,
-.open>.dropdown-toggle.jh-btn-twitter {
-    background-color: #2795e9;
-    border-color: rgba(0, 0, 0, 0.2);
-    color: #fff;
+.jh-btn-twitter:hover, .jh-btn-twitter:focus, .jh-btn-twitter:active,
+	.jh-btn-twitter.active, .open>.dropdown-toggle.jh-btn-twitter {
+	background-color: #2795e9;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #fff;
 }
-
 
 /* jhipster-needle-css-add-main JHipster will add new css style */

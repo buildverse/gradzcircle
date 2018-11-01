@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 
 import { JobCategory } from '../entities/job-category/job-category.model';
@@ -26,7 +26,8 @@ import 'rxjs/add/observable/of';
 
 export class ProfileHelperService {
 
-    constructor (private http: Http) {}
+
+  constructor(private http: HttpClient) { }
 
     getCareerInterests(): Observable<JobCategory[]> {
         return this.http.get('api/job-categories').map(this.extractData)
@@ -98,11 +99,11 @@ export class ProfileHelperService {
     }
     
     handleError(error: Response): Observable<any>{
-        return Observable.throw(error.json().error || 'Server error');
+        return Observable.throw(error.body || 'Server error');
     }
 
     private extractData(response: Response) {
-        let body = response.json();
+        let body = response.body;
        // console.log("Body is :"+JSON.stringify(body));
         return body || {};
     }

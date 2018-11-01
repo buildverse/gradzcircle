@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
 import { Corporate } from './corporate.model';
 import { CorporateService } from './corporate.service';
 
@@ -31,9 +31,10 @@ export class CorporateDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.corporateService.find(id).subscribe((corporate) => {
-            this.corporate = corporate;
-        });
+         this.corporateService.find(id)
+            .subscribe((corporateResponse: HttpResponse<Corporate>) => {
+                this.corporate = corporateResponse.body;
+            });
     }
     previousState() {
         window.history.back();

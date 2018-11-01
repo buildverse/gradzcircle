@@ -2,8 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FroalaEditorModule } from 'angular-froala-wysiwyg';
 import { GradzcircleSharedModule } from '../../shared';
-import {HttpModule} from '@angular/http';
-import { JsonpModule } from '@angular/http';
+
 
 import {
     CandidateEducationService,
@@ -16,12 +15,11 @@ import {
     CandidateEducationDeleteDialogComponent,
     candidateEducationRoute,
     candidateEducationPopupRoute,
-    CollegeResolverService,
-    CourseResolverService,
-    QualificationResolverService,
+   // CollegeResolverService,
+   // CourseResolverService,
+   // QualificationResolverService,
     CandidateEducationPopupComponentNew,
     CandidateEducationPopupServiceNew,
-    EducationCollegeService
 
 } from './';
 
@@ -33,9 +31,7 @@ const ENTITY_STATES = [
 @NgModule({
     imports: [
         GradzcircleSharedModule,
-        HttpModule,
-        JsonpModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true }),
+        RouterModule.forChild(ENTITY_STATES),
         FroalaEditorModule.forRoot()
 
     ],
@@ -60,10 +56,9 @@ const ENTITY_STATES = [
         CandidateEducationService,
         CandidateEducationPopupService,
         CandidateEducationPopupServiceNew,
-        CollegeResolverService,
-        CourseResolverService,
-        QualificationResolverService,
-        EducationCollegeService,
+       // CollegeResolverService,
+      //  CourseResolverService,
+      //  QualificationResolverService
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

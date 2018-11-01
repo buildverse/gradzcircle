@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Course e2e test', () => {
 
     let navBarPage: NavBarPage;
     let courseDialogPage: CourseDialogPage;
     let courseComponentsPage: CourseComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Course e2e test', () => {
     it('should load Courses', () => {
         navBarPage.goToEntity('course');
         courseComponentsPage = new CourseComponentsPage();
-        expect(courseComponentsPage.getTitle()).toMatch(/gradzcircleApp.course.home.title/);
+        expect(courseComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.course.home.title/);
 
     });
 
     it('should load create Course dialog', () => {
         courseComponentsPage.clickOnCreateButton();
         courseDialogPage = new CourseDialogPage();
-        expect(courseDialogPage.getModalTitle()).toMatch(/gradzcircleApp.course.home.createOrEditLabel/);
+        expect(courseDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.course.home.createOrEditLabel/);
         courseDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('Course e2e test', () => {
         expect(courseDialogPage.getCourseInput()).toMatch('course');
         courseDialogPage.save();
         expect(courseDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class CourseDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCourseInput = function (course) {
+    setCourseInput = function(course) {
         this.courseInput.sendKeys(course);
-    }
+    };
 
-    getCourseInput = function () {
+    getCourseInput = function() {
         return this.courseInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

@@ -31,7 +31,7 @@ import {
 @NgModule({
     imports: [
         GradzcircleSharedModule,
-        RouterModule.forRoot(accountState, { useHash: true })
+        RouterModule.forChild(accountState)
     ],
     declarations: [
         CorporateRegisterComponent,

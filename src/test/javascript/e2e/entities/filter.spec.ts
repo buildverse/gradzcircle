@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Filter e2e test', () => {
 
     let navBarPage: NavBarPage;
     let filterDialogPage: FilterDialogPage;
     let filterComponentsPage: FilterComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Filter e2e test', () => {
     it('should load Filters', () => {
         navBarPage.goToEntity('filter');
         filterComponentsPage = new FilterComponentsPage();
-        expect(filterComponentsPage.getTitle()).toMatch(/gradzcircleApp.filter.home.title/);
+        expect(filterComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.filter.home.title/);
 
     });
 
     it('should load create Filter dialog', () => {
         filterComponentsPage.clickOnCreateButton();
         filterDialogPage = new FilterDialogPage();
-        expect(filterDialogPage.getModalTitle()).toMatch(/gradzcircleApp.filter.home.createOrEditLabel/);
+        expect(filterDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.filter.home.createOrEditLabel/);
         filterDialogPage.close();
     });
 
@@ -45,7 +43,7 @@ describe('Filter e2e test', () => {
         expect(filterDialogPage.getMatchWeightInput()).toMatch('5');
         filterDialogPage.save();
         expect(filterDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -78,37 +76,37 @@ export class FilterDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setFilterNameInput = function (filterName) {
+    setFilterNameInput = function(filterName) {
         this.filterNameInput.sendKeys(filterName);
-    }
+    };
 
-    getFilterNameInput = function () {
+    getFilterNameInput = function() {
         return this.filterNameInput.getAttribute('value');
-    }
+    };
 
-    setFilterCostInput = function (filterCost) {
+    setFilterCostInput = function(filterCost) {
         this.filterCostInput.sendKeys(filterCost);
-    }
+    };
 
-    getFilterCostInput = function () {
+    getFilterCostInput = function() {
         return this.filterCostInput.getAttribute('value');
-    }
+    };
 
-    setCommentsInput = function (comments) {
+    setCommentsInput = function(comments) {
         this.commentsInput.sendKeys(comments);
-    }
+    };
 
-    getCommentsInput = function () {
+    getCommentsInput = function() {
         return this.commentsInput.getAttribute('value');
-    }
+    };
 
-    setMatchWeightInput = function (matchWeight) {
+    setMatchWeightInput = function(matchWeight) {
         this.matchWeightInput.sendKeys(matchWeight);
-    }
+    };
 
-    getMatchWeightInput = function () {
+    getMatchWeightInput = function() {
         return this.matchWeightInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

@@ -1,25 +1,7 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.University;
-import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
-import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
-import com.drishika.gradzcircle.repository.UniversityRepository;
-import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +11,37 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
+import com.drishika.gradzcircle.repository.UniversityRepository;
+import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing University.
@@ -71,9 +83,8 @@ public class UniversityResource {
 	public ResponseEntity<University> createUniversity(@RequestBody University university) throws URISyntaxException {
 		log.debug("REST request to save University : {}", university);
 		if (university.getId() != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
-					"A new university cannot already have an ID")).body(null);
-		}
+            throw new BadRequestAlertException("A new university cannot already have an ID", ENTITY_NAME, "idexists");
+        }
 		University result = universityRepository.save(university);
 		// universitySearchRepository.save(result);
 		elasticsearchTemplate.index(new UniversityEntityBuilder(result.getId()).name(result.getUniversityName())

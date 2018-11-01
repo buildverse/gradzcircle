@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { AppConfig } from './app-config.model';
@@ -31,9 +32,10 @@ export class AppConfigDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.appConfigService.find(id).subscribe((appConfig) => {
-            this.appConfig = appConfig;
-        });
+        this.appConfigService.find(id)
+            .subscribe((appConfigResponse: HttpResponse<AppConfig>) => {
+                this.appConfig = appConfigResponse.body;
+            });
     }
     previousState() {
         window.history.back();

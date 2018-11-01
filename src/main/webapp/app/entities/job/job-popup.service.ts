@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Job} from './job.model';
 import {JobService} from './job.service';
-
+import { HttpResponse } from '@angular/common/http';
 
 
 @Injectable()
@@ -27,7 +27,9 @@ export class JobPopupService {
       }
 
       if (id) {
-        this.jobService.find(id).subscribe((job) => {
+        this.jobService.find(id)
+          .subscribe((jobResponse: HttpResponse<Job>) => {
+          const job: Job = jobResponse.body;
           if (job.createDate) {
             job.createDate = {
               year: job.createDate.getFullYear(),
@@ -60,10 +62,10 @@ jobModalRef(component: Component, job: Job,hasCandidateApplied?: boolean): NgbMo
   modalRef.componentInstance.job = job;
   modalRef.componentInstance.hasCandidateApplied = hasCandidateApplied;
   modalRef.result.then((result) => {
-    this.router.navigate([{outlets: {popup: null}}], {replaceUrl: true});
+    this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
     this.ngbModalRef = null;
   }, (reason) => {
-    this.router.navigate([{outlets: {popup: null}}], {replaceUrl: true});
+      this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
     this.ngbModalRef = null;
   });
   return modalRef;

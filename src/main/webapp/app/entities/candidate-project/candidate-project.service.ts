@@ -1,78 +1,80 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils } from 'ng-jhipster';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
+
+import { JhiDateUtils } from 'ng-jhipster';
+
 import { CandidateProject } from './candidate-project.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<CandidateProject>;
 
 @Injectable()
 export class CandidateProjectService {
 
-    private resourceUrl = SERVER_API_URL + 'api/candidate-projects';
+    private resourceUrl =  SERVER_API_URL + 'api/candidate-projects';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/candidate-projects';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
 
-    create(candidateProject: CandidateProject): Observable<CandidateProject> {
+    create(candidateProject: CandidateProject): Observable<EntityResponseType> {
         const copy = this.convert(candidateProject);
-        //console.log("Project in create "+ JSON.stringify(copy));
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<CandidateProject>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(candidateProject: CandidateProject): Observable<CandidateProject> {
+    update(candidateProject: CandidateProject): Observable<EntityResponseType> {
         const copy = this.convert(candidateProject);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<CandidateProject>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<CandidateProject> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<CandidateProject>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<CandidateProject[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<CandidateProject[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateProject[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<CandidateProject[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<CandidateProject[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateProject[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: CandidateProject = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
+
+    private convertArrayResponse(res: HttpResponse<CandidateProject[]>): HttpResponse<CandidateProject[]> {
+        const jsonResponse: CandidateProject[] = res.body;
+        const body: CandidateProject[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to CandidateProject.
      */
-    private convertItemFromServer(json: any): CandidateProject {
-        const entity: CandidateProject = Object.assign(new CandidateProject(), json);
-        entity.projectStartDate = this.dateUtils
-            .convertLocalDateFromServer(json.projectStartDate);
-        entity.projectEndDate = this.dateUtils
-            .convertLocalDateFromServer(json.projectEndDate);
-        return entity;
+    private convertItemFromServer(candidateProject: CandidateProject): CandidateProject {
+        const copy: CandidateProject = Object.assign({}, candidateProject);
+        copy.projectStartDate = this.dateUtils
+            .convertLocalDateFromServer(candidateProject.projectStartDate);
+        copy.projectEndDate = this.dateUtils
+            .convertLocalDateFromServer(candidateProject.projectEndDate);
+        return copy;
     }
 
     /**

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('MaritalStatus e2e test', () => {
 
     let navBarPage: NavBarPage;
     let maritalStatusDialogPage: MaritalStatusDialogPage;
     let maritalStatusComponentsPage: MaritalStatusComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('MaritalStatus e2e test', () => {
     it('should load MaritalStatuses', () => {
         navBarPage.goToEntity('marital-status');
         maritalStatusComponentsPage = new MaritalStatusComponentsPage();
-        expect(maritalStatusComponentsPage.getTitle()).toMatch(/gradzcircleApp.maritalStatus.home.title/);
+        expect(maritalStatusComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.maritalStatus.home.title/);
 
     });
 
     it('should load create MaritalStatus dialog', () => {
         maritalStatusComponentsPage.clickOnCreateButton();
         maritalStatusDialogPage = new MaritalStatusDialogPage();
-        expect(maritalStatusDialogPage.getModalTitle()).toMatch(/gradzcircleApp.maritalStatus.home.createOrEditLabel/);
+        expect(maritalStatusDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.maritalStatus.home.createOrEditLabel/);
         maritalStatusDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('MaritalStatus e2e test', () => {
         expect(maritalStatusDialogPage.getStatusInput()).toMatch('status');
         maritalStatusDialogPage.save();
         expect(maritalStatusDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class MaritalStatusDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setStatusInput = function (status) {
+    setStatusInput = function(status) {
         this.statusInput.sendKeys(status);
-    }
+    };
 
-    getStatusInput = function () {
+    getStatusInput = function() {
         return this.statusInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

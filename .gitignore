@@ -1,8 +1,10 @@
 ######################
 # Project Specific
 ######################
+/src/main/webapp/content/css/main.css
 /build/www/**
 /src/test/javascript/coverage/
+/src/test/javascript/PhantomJS*/
 
 ######################
 # Node
@@ -11,6 +13,7 @@
 node_tmp/
 node_modules/
 npm-debug.log.*
+/.awcache/*
 
 ######################
 # SASS
@@ -115,7 +118,7 @@ Desktop.ini
 ######################
 # Logs
 ######################
-*.log
+*.log*
 
 ######################
 # Others

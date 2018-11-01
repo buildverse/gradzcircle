@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CandidateCertification e2e test', () => {
 
     let navBarPage: NavBarPage;
     let candidateCertificationDialogPage: CandidateCertificationDialogPage;
     let candidateCertificationComponentsPage: CandidateCertificationComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CandidateCertification e2e test', () => {
     it('should load CandidateCertifications', () => {
         navBarPage.goToEntity('candidate-certification');
         candidateCertificationComponentsPage = new CandidateCertificationComponentsPage();
-        expect(candidateCertificationComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateCertification.home.title/);
+        expect(candidateCertificationComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.candidateCertification.home.title/);
 
     });
 
     it('should load create CandidateCertification dialog', () => {
         candidateCertificationComponentsPage.clickOnCreateButton();
         candidateCertificationDialogPage = new CandidateCertificationDialogPage();
-        expect(candidateCertificationDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateCertification.home.createOrEditLabel/);
+        expect(candidateCertificationDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.candidateCertification.home.createOrEditLabel/);
         candidateCertificationDialogPage.close();
     });
 
@@ -44,7 +42,7 @@ describe('CandidateCertification e2e test', () => {
         candidateCertificationDialogPage.candidateSelectLastOption();
         candidateCertificationDialogPage.save();
         expect(candidateCertificationDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -77,45 +75,45 @@ export class CandidateCertificationDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCertificationTitleInput = function (certificationTitle) {
+    setCertificationTitleInput = function(certificationTitle) {
         this.certificationTitleInput.sendKeys(certificationTitle);
-    }
+    };
 
-    getCertificationTitleInput = function () {
+    getCertificationTitleInput = function() {
         return this.certificationTitleInput.getAttribute('value');
-    }
+    };
 
-    setCertificationDateInput = function (certificationDate) {
+    setCertificationDateInput = function(certificationDate) {
         this.certificationDateInput.sendKeys(certificationDate);
-    }
+    };
 
-    getCertificationDateInput = function () {
+    getCertificationDateInput = function() {
         return this.certificationDateInput.getAttribute('value');
-    }
+    };
 
-    setCertificationDetailsInput = function (certificationDetails) {
+    setCertificationDetailsInput = function(certificationDetails) {
         this.certificationDetailsInput.sendKeys(certificationDetails);
-    }
+    };
 
-    getCertificationDetailsInput = function () {
+    getCertificationDetailsInput = function() {
         return this.certificationDetailsInput.getAttribute('value');
-    }
+    };
 
-    candidateSelectLastOption = function () {
+    candidateSelectLastOption = function() {
         this.candidateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateSelectOption = function (option) {
+    candidateSelectOption = function(option) {
         this.candidateSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateSelect = function () {
+    getCandidateSelect = function() {
         return this.candidateSelect;
-    }
+    };
 
-    getCandidateSelectedOption = function () {
+    getCandidateSelectedOption = function() {
         return this.candidateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

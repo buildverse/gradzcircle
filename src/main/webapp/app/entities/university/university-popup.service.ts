@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { University } from './university.model';
 import { UniversityService } from './university.service';
 
@@ -25,10 +26,12 @@ export class UniversityPopupService {
             }
 
             if (id) {
-                this.universityService.find(id).subscribe((university) => {
-                    this.ngbModalRef = this.universityModalRef(component, university);
-                    resolve(this.ngbModalRef);
-                });
+                this.universityService.find(id)
+                    .subscribe((universityResponse: HttpResponse<University>) => {
+                        const university: University = universityResponse.body;
+                        this.ngbModalRef = this.universityModalRef(component, university);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class UniversityPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.university = university;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

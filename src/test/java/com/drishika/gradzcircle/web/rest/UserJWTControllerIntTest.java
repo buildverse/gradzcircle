@@ -5,6 +5,7 @@ import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.security.jwt.TokenProvider;
 import com.drishika.gradzcircle.web.rest.vm.LoginVM;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Test class for the UserJWTController REST controller.
@@ -30,73 +35,91 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = GradzcircleApp.class)
 public class UserJWTControllerIntTest {
 
-	@Autowired
-	private TokenProvider tokenProvider;
+    @Autowired
+    private TokenProvider tokenProvider;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	private MockMvc mockMvc;
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
-	@Before
-	public void setup() {
-		UserJWTController userJWTController = new UserJWTController(tokenProvider, authenticationManager);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(userJWTController).build();
-	}
+    private MockMvc mockMvc;
 
-	@Test
-	@Transactional
-	public void testAuthorize() throws Exception {
-		User user = new User();
-		user.setLogin("user-jwt-controller");
-		user.setEmail("user-jwt-controller@example.com");
-		user.setActivated(true);
-		user.setPassword(passwordEncoder.encode("test"));
+    @Before
+    public void setup() {
+        UserJWTController userJWTController = new UserJWTController(tokenProvider, authenticationManager);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(userJWTController)
+            .setControllerAdvice(exceptionTranslator)
+            .build();
+    }
 
-		userRepository.saveAndFlush(user);
+    @Test
+    @Transactional
+    public void testAuthorize() throws Exception {
+        User user = new User();
+        user.setLogin("user-jwt-controller");
+        user.setEmail("user-jwt-controller@example.com");
+        user.setActivated(true);
+        user.setPassword(passwordEncoder.encode("test"));
 
-		LoginVM login = new LoginVM();
-		login.setUsername("user-jwt-controller");
-		login.setPassword("test");
-		mockMvc.perform(post("/api/authenticate").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(login))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.id_token").isString()).andExpect(jsonPath("$.id_token").isNotEmpty());
-	}
+        userRepository.saveAndFlush(user);
 
-	@Test
-	@Transactional
-	public void testAuthorizeWithRememberMe() throws Exception {
-		User user = new User();
-		user.setLogin("user-jwt-controller-remember-me");
-		user.setEmail("user-jwt-controller-remember-me@example.com");
-		user.setActivated(true);
-		user.setPassword(passwordEncoder.encode("test"));
+        LoginVM login = new LoginVM();
+        login.setUsername("user-jwt-controller");
+        login.setPassword("test");
+        mockMvc.perform(post("/api/authenticate")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(login)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id_token").isString())
+            .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(header().string("Authorization", not(nullValue())))
+            .andExpect(header().string("Authorization", not(isEmptyString())));
+    }
 
-		userRepository.saveAndFlush(user);
+    @Test
+    @Transactional
+    public void testAuthorizeWithRememberMe() throws Exception {
+        User user = new User();
+        user.setLogin("user-jwt-controller-remember-me");
+        user.setEmail("user-jwt-controller-remember-me@example.com");
+        user.setActivated(true);
+        user.setPassword(passwordEncoder.encode("test"));
 
-		LoginVM login = new LoginVM();
-		login.setUsername("user-jwt-controller-remember-me");
-		login.setPassword("test");
-		login.setRememberMe(true);
-		mockMvc.perform(post("/api/authenticate").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(login))).andExpect(status().isOk())
-				.andExpect(jsonPath("$.id_token").isString()).andExpect(jsonPath("$.id_token").isNotEmpty());
-	}
+        userRepository.saveAndFlush(user);
 
-	@Test
-	@Transactional
-	public void testAuthorizeFails() throws Exception {
-		LoginVM login = new LoginVM();
-		login.setUsername("wrong-user");
-		login.setPassword("wrong password");
-		mockMvc.perform(post("/api/authenticate").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(login))).andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("$.id_token").doesNotExist());
-	}
+        LoginVM login = new LoginVM();
+        login.setUsername("user-jwt-controller-remember-me");
+        login.setPassword("test");
+        login.setRememberMe(true);
+        mockMvc.perform(post("/api/authenticate")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(login)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id_token").isString())
+            .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(header().string("Authorization", not(nullValue())))
+            .andExpect(header().string("Authorization", not(isEmptyString())));
+    }
+
+    @Test
+    @Transactional
+    public void testAuthorizeFails() throws Exception {
+        LoginVM login = new LoginVM();
+        login.setUsername("wrong-user");
+        login.setPassword("wrong password");
+        mockMvc.perform(post("/api/authenticate")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(login)))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.id_token").doesNotExist())
+            .andExpect(header().doesNotExist("Authorization"));
+    }
 }

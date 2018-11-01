@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { JhiDateUtils } from 'ng-jhipster';
 import { SERVER_API_URL } from '../../app.constants';
 import { CandidateEmployment } from './candidate-employment.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<CandidateEmployment>;
 
 @Injectable()
 export class CandidateEmploymentService {
@@ -14,74 +16,75 @@ export class CandidateEmploymentService {
     private resourceUrlByCandidate = SERVER_API_URL + 'api/employment-by-candidate'
 
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
 
-    create(candidateEmployment: CandidateEmployment): Observable<CandidateEmployment> {
+  
+
+   create(candidateEmployment: CandidateEmployment): Observable<EntityResponseType> {
         const copy = this.convert(candidateEmployment);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+         return this.http.post<CandidateEmployment>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
+
     }
 
-    update(candidateEmployment: CandidateEmployment): Observable<CandidateEmployment> {
+   update(candidateEmployment: CandidateEmployment): Observable<EntityResponseType> {
         const copy = this.convert(candidateEmployment);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+         return this.http.put<CandidateEmployment>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<CandidateEmployment> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+     find(id: number): Observable<EntityResponseType> {
+        return this.http.get<CandidateEmployment>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
 
-    findEmploymentsByCandidateId(id?: number): Observable<ResponseWrapper> {
+    findEmploymentsByCandidateId(id?: number): Observable<HttpResponse<CandidateEmployment[]>> {
         //const options = this.createRequestOption(req);
-        return this.http.get(`${this.resourceUrlByCandidate}/${id}`)
-            .map((res: Response) => this.convertResponse(res));
-
+        return this.http.get(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response'})
+           .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<CandidateEmployment[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+         return this.http.get<CandidateEmployment[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<CandidateEmployment[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<CandidateEmployment[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: CandidateEmployment = this.convertItemFromServer(res.body);
+        return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to CandidateEmployment.
      */
-    private convertItemFromServer(json: any): CandidateEmployment {
-        const entity: CandidateEmployment = Object.assign(new CandidateEmployment(), json);
-        entity.employmentStartDate = this.dateUtils
-            .convertLocalDateFromServer(json.employmentStartDate);
-        entity.employmentEndDate = this.dateUtils
-            .convertLocalDateFromServer(json.employmentEndDate);
-        return entity;
+    private convertItemFromServer(candidateEmployment: CandidateEmployment): CandidateEmployment {
+        const copy: CandidateEmployment = Object.assign({}, candidateEmployment);
+        copy.employmentStartDate = this.dateUtils
+            .convertLocalDateFromServer(candidateEmployment.employmentStartDate);
+        copy.employmentEndDate = this.dateUtils
+            .convertLocalDateFromServer(candidateEmployment.employmentEndDate);
+        return copy;
+    }
+  
+    private convertArrayResponse(res: HttpResponse<CandidateEmployment[]>): HttpResponse<CandidateEmployment[]> {
+      const jsonResponse: CandidateEmployment[] = res.body;
+      const body: CandidateEmployment[] = [];
+      for (let i = 0; i < jsonResponse.length; i++) {
+        body.push(this.convertItemFromServer(jsonResponse[i]));
+      }
+      return res.clone({body});
     }
 
     /**

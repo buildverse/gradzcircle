@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { JobFilterHistory } from './job-filter-history.model';
 import { JobFilterHistoryPopupService } from './job-filter-history-popup.service';
 import { JobFilterHistoryService } from './job-filter-history.service';
 import { JobFilter, JobFilterService } from '../job-filter';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-job-filter-history-dialog',
@@ -35,7 +34,7 @@ export class JobFilterHistoryDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.jobFilterService.query()
-            .subscribe((res: ResponseWrapper) => { this.jobfilters = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<JobFilter[]>) => { this.jobfilters = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -53,9 +52,9 @@ export class JobFilterHistoryDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<JobFilterHistory>) {
-        result.subscribe((res: JobFilterHistory) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<JobFilterHistory>>) {
+        result.subscribe((res: HttpResponse<JobFilterHistory>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: JobFilterHistory) {

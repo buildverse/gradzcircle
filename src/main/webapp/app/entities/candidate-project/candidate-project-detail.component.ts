@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
-import { EditorProperties } from '../../shared';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
+import { JhiEventManager } from 'ng-jhipster';
+
 import { CandidateProject } from './candidate-project.model';
 import { CandidateProjectService } from './candidate-project.service';
 
@@ -31,9 +32,10 @@ export class CandidateProjectDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.candidateProjectService.find(id).subscribe((candidateProject) => {
-            this.candidateProject = candidateProject;
-        });
+        this.candidateProjectService.find(id)
+            .subscribe((candidateProjectResponse: HttpResponse<CandidateProject>) => {
+                this.candidateProject = candidateProjectResponse.body;
+            });
     }
     previousState() {
         window.history.back();

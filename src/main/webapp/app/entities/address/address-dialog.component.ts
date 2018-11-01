@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Address } from './address.model';
@@ -11,7 +11,6 @@ import { AddressPopupService } from './address-popup.service';
 import { AddressService } from './address.service';
 import { Candidate, CandidateService } from '../candidate';
 import { Country, CountryService } from '../country';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-address-dialog',
@@ -39,9 +38,9 @@ export class AddressDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.candidateService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.countryService.query()
-            .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -59,9 +58,9 @@ export class AddressDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<Address>) {
-        result.subscribe((res: Address) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<Address>>) {
+        result.subscribe((res: HttpResponse<Address>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Address) {

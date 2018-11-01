@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs/Rx';
 
@@ -24,6 +24,7 @@ export class JhiTrackerService {
         private router: Router,
         private authServerProvider: AuthServerProvider,
         private $window: WindowRef,
+        // tslint:disable-next-line: no-unused-variable
         private csrfService: CSRFService
     ) {
         this.connection = this.createConnection();
@@ -37,8 +38,7 @@ export class JhiTrackerService {
         // building absolute path so that websocket doesn't fail when deploying with a context path
         const loc = this.$window.nativeWindow.location;
         let url;
-        //url = '//' + loc.host + loc.pathname + 'websocket/match';
-       url = '//' + loc.host + loc.pathname + 'websocket/tracker';
+        url = '//' + loc.host + loc.pathname + 'websocket/tracker';
         const authToken = this.authServerProvider.getToken();
         if (authToken) {
             url += '?access_token=' + authToken;
@@ -47,7 +47,7 @@ export class JhiTrackerService {
         this.stompClient = Stomp.over(socket);
         const headers = {};
         this.stompClient.connect(headers, () => {
-           // this.connectedPromise('success');
+            this.connectedPromise('success');
             this.connectedPromise = null;
             this.sendActivity();
             if (!this.alreadyConnectedOnce) {
@@ -80,8 +80,7 @@ export class JhiTrackerService {
     sendActivity() {
         if (this.stompClient !== null && this.stompClient.connected) {
             this.stompClient.send(
-               // '/topic/matchActivity', // destination
-               '/topic/activity', // destination
+                '/topic/activity', // destination
                 JSON.stringify({'page': this.router.routerState.snapshot.url}), // body
                 {} // header
             );
@@ -89,11 +88,8 @@ export class JhiTrackerService {
     }
 
     subscribe() {
-      console.log('DID I CALL SUBSCRIBE');
         this.connection.then(() => {
-            //this.subscriber = this.stompClient.subscribe('/topic/match', (data) => {
-               this.subscriber = this.stompClient.subscribe('/topic/tracker', (data) => {
-              // console.log('DATA BODY IS '+JSON.stringify(data.body));
+            this.subscriber = this.stompClient.subscribe('/topic/tracker', (data) => {
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });

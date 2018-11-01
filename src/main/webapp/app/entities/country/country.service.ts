@@ -1,78 +1,80 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
+
 import { Country } from './country.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<Country>;
 
 @Injectable()
 export class CountryService {
 
-    private resourceUrl = SERVER_API_URL + 'api/countries';
+    private resourceUrl =  SERVER_API_URL + 'api/countries';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/countries';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
-    create(country: Country): Observable<Country> {
+    create(country: Country): Observable<EntityResponseType> {
         const copy = this.convert(country);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<Country>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(country: Country): Observable<Country> {
+    update(country: Country): Observable<EntityResponseType> {
         const copy = this.convert(country);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<Country>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<Country> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<Country>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<Country[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<Country[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<Country[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<Country[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: Country = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
+
+    private convertArrayResponse(res: HttpResponse<Country[]>): HttpResponse<Country[]> {
+        const jsonResponse: Country[] = res.body;
+        const body: Country[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
+    }
+  
+    getEnabledCountries(): Observable<HttpResponse<Country[]>>{
+        //console.log("Called getEnableCountires");
+        return this.http.get<Country[]>(this.resourceUrl+'/enabled',{ observe: 'response' })
+          .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
     }
 
     /**
      * Convert a returned JSON object to Country.
      */
-    private convertItemFromServer(json: any): Country {
-        const entity: Country = Object.assign(new Country(), json);
-        return entity;
-    }
-
- getEnabledCountries(): Observable<Country[]>{
-        //console.log("Called getEnableCountires");
-        return this.http.get(this.resourceUrl+'/enabled').map((response:Response)=>
-                    <Country[]>response.json()).do(response => console.log('response from acountry call is ',JSON.stringify(response)));
+    private convertItemFromServer(country: Country): Country {
+        const copy: Country = Object.assign({}, country);
+        return copy;
     }
 
     /**

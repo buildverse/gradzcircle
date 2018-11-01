@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager} from 'ng-jhipster';
 import {Principal, UserService} from '../../shared';
@@ -46,7 +46,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
       if (user) {
         if (user.imageUrl) {
           this.userService.getImageData(user.id).subscribe(response => {
-            let responseJson = response.json()
+            let responseJson = response.body;
             this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
           }, (error: any) => {
             console.log(`${error}`);
@@ -77,9 +77,9 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
 
   }
   
-   private subscribeToSaveResponse(result: Observable<Candidate>) {
-        result.subscribe((res: Candidate) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+   private subscribeToSaveResponse(result: Observable<HttpResponse<Candidate>>) {
+        result.subscribe((res: HttpResponse<Candidate>) =>
+            this.onSaveSuccess(res.body), (res: Response) => this.onSaveError());
     }
 
    private onSaveSuccess(result: Candidate) {

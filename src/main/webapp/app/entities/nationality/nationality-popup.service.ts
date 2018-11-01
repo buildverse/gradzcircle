@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { Nationality } from './nationality.model';
 import { NationalityService } from './nationality.service';
 
@@ -25,10 +26,12 @@ export class NationalityPopupService {
             }
 
             if (id) {
-                this.nationalityService.find(id).subscribe((nationality) => {
-                    this.ngbModalRef = this.nationalityModalRef(component, nationality);
-                    resolve(this.ngbModalRef);
-                });
+                this.nationalityService.find(id)
+                    .subscribe((nationalityResponse: HttpResponse<Nationality>) => {
+                        const nationality: Nationality = nationalityResponse.body;
+                        this.ngbModalRef = this.nationalityModalRef(component, nationality);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class NationalityPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.nationality = nationality;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

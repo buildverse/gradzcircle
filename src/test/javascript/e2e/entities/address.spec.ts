@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Address e2e test', () => {
 
     let navBarPage: NavBarPage;
     let addressDialogPage: AddressDialogPage;
     let addressComponentsPage: AddressComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Address e2e test', () => {
     it('should load Addresses', () => {
         navBarPage.goToEntity('address');
         addressComponentsPage = new AddressComponentsPage();
-        expect(addressComponentsPage.getTitle()).toMatch(/gradzcircleApp.address.home.title/);
+        expect(addressComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.address.home.title/);
 
     });
 
     it('should load create Address dialog', () => {
         addressComponentsPage.clickOnCreateButton();
         addressDialogPage = new AddressDialogPage();
-        expect(addressDialogPage.getModalTitle()).toMatch(/gradzcircleApp.address.home.createOrEditLabel/);
+        expect(addressDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.address.home.createOrEditLabel/);
         addressDialogPage.close();
     });
 
@@ -49,7 +47,7 @@ describe('Address e2e test', () => {
         addressDialogPage.countrySelectLastOption();
         addressDialogPage.save();
         expect(addressDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -85,77 +83,77 @@ export class AddressDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setAddressLineOneInput = function (addressLineOne) {
+    setAddressLineOneInput = function(addressLineOne) {
         this.addressLineOneInput.sendKeys(addressLineOne);
-    }
+    };
 
-    getAddressLineOneInput = function () {
+    getAddressLineOneInput = function() {
         return this.addressLineOneInput.getAttribute('value');
-    }
+    };
 
-    setAddressLineTwoInput = function (addressLineTwo) {
+    setAddressLineTwoInput = function(addressLineTwo) {
         this.addressLineTwoInput.sendKeys(addressLineTwo);
-    }
+    };
 
-    getAddressLineTwoInput = function () {
+    getAddressLineTwoInput = function() {
         return this.addressLineTwoInput.getAttribute('value');
-    }
+    };
 
-    setCityInput = function (city) {
+    setCityInput = function(city) {
         this.cityInput.sendKeys(city);
-    }
+    };
 
-    getCityInput = function () {
+    getCityInput = function() {
         return this.cityInput.getAttribute('value');
-    }
+    };
 
-    setStateInput = function (state) {
+    setStateInput = function(state) {
         this.stateInput.sendKeys(state);
-    }
+    };
 
-    getStateInput = function () {
+    getStateInput = function() {
         return this.stateInput.getAttribute('value');
-    }
+    };
 
-    setZipInput = function (zip) {
+    setZipInput = function(zip) {
         this.zipInput.sendKeys(zip);
-    }
+    };
 
-    getZipInput = function () {
+    getZipInput = function() {
         return this.zipInput.getAttribute('value');
-    }
+    };
 
-    candidateSelectLastOption = function () {
+    candidateSelectLastOption = function() {
         this.candidateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateSelectOption = function (option) {
+    candidateSelectOption = function(option) {
         this.candidateSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateSelect = function () {
+    getCandidateSelect = function() {
         return this.candidateSelect;
-    }
+    };
 
-    getCandidateSelectedOption = function () {
+    getCandidateSelectedOption = function() {
         return this.candidateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    countrySelectLastOption = function () {
+    countrySelectLastOption = function() {
         this.countrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    countrySelectOption = function (option) {
+    countrySelectOption = function(option) {
         this.countrySelect.sendKeys(option);
-    }
+    };
 
-    getCountrySelect = function () {
+    getCountrySelect = function() {
         return this.countrySelect;
-    }
+    };
 
-    getCountrySelectedOption = function () {
+    getCountrySelectedOption = function() {
         return this.countrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

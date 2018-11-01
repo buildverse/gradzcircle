@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { VisaType } from './visa-type.model';
 import { VisaTypePopupService } from './visa-type-popup.service';
 import { VisaTypeService } from './visa-type.service';
 import { Country, CountryService } from '../country';
-import { ResponseWrapper } from '../../shared';
 
 @Component({
     selector: 'jhi-visa-type-dialog',
@@ -35,7 +34,7 @@ export class VisaTypeDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.countryService.query()
-            .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -53,9 +52,9 @@ export class VisaTypeDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<VisaType>) {
-        result.subscribe((res: VisaType) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<VisaType>>) {
+        result.subscribe((res: HttpResponse<VisaType>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: VisaType) {

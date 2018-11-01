@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Audit } from './audit.model';
@@ -31,9 +32,10 @@ export class AuditDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.auditService.find(id).subscribe((audit) => {
-            this.audit = audit;
-        });
+        this.auditService.find(id)
+            .subscribe((auditResponse: HttpResponse<Audit>) => {
+                this.audit = auditResponse.body;
+            });
     }
     previousState() {
         window.history.back();

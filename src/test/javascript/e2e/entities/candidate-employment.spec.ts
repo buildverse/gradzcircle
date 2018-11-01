@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CandidateEmployment e2e test', () => {
 
     let navBarPage: NavBarPage;
     let candidateEmploymentDialogPage: CandidateEmploymentDialogPage;
     let candidateEmploymentComponentsPage: CandidateEmploymentComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CandidateEmployment e2e test', () => {
     it('should load CandidateEmployments', () => {
         navBarPage.goToEntity('candidate-employment');
         candidateEmploymentComponentsPage = new CandidateEmploymentComponentsPage();
-        expect(candidateEmploymentComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateEmployment.home.title/);
+        expect(candidateEmploymentComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.candidateEmployment.home.title/);
 
     });
 
     it('should load create CandidateEmployment dialog', () => {
         candidateEmploymentComponentsPage.clickOnCreateButton();
         candidateEmploymentDialogPage = new CandidateEmploymentDialogPage();
-        expect(candidateEmploymentDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateEmployment.home.createOrEditLabel/);
+        expect(candidateEmploymentDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.candidateEmployment.home.createOrEditLabel/);
         candidateEmploymentDialogPage.close();
     });
 
@@ -47,9 +45,7 @@ describe('CandidateEmployment e2e test', () => {
         expect(candidateEmploymentDialogPage.getEmploymentEndDateInput()).toMatch('2000-12-31');
         candidateEmploymentDialogPage.setEmploymentDurationInput('5');
         expect(candidateEmploymentDialogPage.getEmploymentDurationInput()).toMatch('5');
-        candidateEmploymentDialogPage.setEmploymentPeriodInput('employmentPeriod');
-        expect(candidateEmploymentDialogPage.getEmploymentPeriodInput()).toMatch('employmentPeriod');
-        candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected().then(function (selected) {
+        candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected().then((selected) => {
             if (selected) {
                 candidateEmploymentDialogPage.getIsCurrentEmploymentInput().click();
                 expect(candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected()).toBeFalsy();
@@ -60,15 +56,13 @@ describe('CandidateEmployment e2e test', () => {
         });
         candidateEmploymentDialogPage.setJobDescriptionInput('jobDescription');
         expect(candidateEmploymentDialogPage.getJobDescriptionInput()).toMatch('jobDescription');
-        candidateEmploymentDialogPage.setRoleAndResponsibilitiesInput('roleAndResponsibilities');
-        expect(candidateEmploymentDialogPage.getRoleAndResponsibilitiesInput()).toMatch('roleAndResponsibilities');
         candidateEmploymentDialogPage.candidateSelectLastOption();
         candidateEmploymentDialogPage.employmentTypeSelectLastOption();
         candidateEmploymentDialogPage.countrySelectLastOption();
         candidateEmploymentDialogPage.jobTypeSelectLastOption();
         candidateEmploymentDialogPage.save();
         expect(candidateEmploymentDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -98,10 +92,8 @@ export class CandidateEmploymentDialogPage {
     employmentStartDateInput = element(by.css('input#field_employmentStartDate'));
     employmentEndDateInput = element(by.css('input#field_employmentEndDate'));
     employmentDurationInput = element(by.css('input#field_employmentDuration'));
-    employmentPeriodInput = element(by.css('input#field_employmentPeriod'));
     isCurrentEmploymentInput = element(by.css('input#field_isCurrentEmployment'));
     jobDescriptionInput = element(by.css('input#field_jobDescription'));
-    roleAndResponsibilitiesInput = element(by.css('input#field_roleAndResponsibilities'));
     candidateSelect = element(by.css('select#field_candidate'));
     employmentTypeSelect = element(by.css('select#field_employmentType'));
     countrySelect = element(by.css('select#field_country'));
@@ -111,144 +103,128 @@ export class CandidateEmploymentDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setLocationInput = function (location) {
+    setLocationInput = function(location) {
         this.locationInput.sendKeys(location);
-    }
+    };
 
-    getLocationInput = function () {
+    getLocationInput = function() {
         return this.locationInput.getAttribute('value');
-    }
+    };
 
-    setJobTitleInput = function (jobTitle) {
+    setJobTitleInput = function(jobTitle) {
         this.jobTitleInput.sendKeys(jobTitle);
-    }
+    };
 
-    getJobTitleInput = function () {
+    getJobTitleInput = function() {
         return this.jobTitleInput.getAttribute('value');
-    }
+    };
 
-    setEmployerNameInput = function (employerName) {
+    setEmployerNameInput = function(employerName) {
         this.employerNameInput.sendKeys(employerName);
-    }
+    };
 
-    getEmployerNameInput = function () {
+    getEmployerNameInput = function() {
         return this.employerNameInput.getAttribute('value');
-    }
+    };
 
-    setEmploymentStartDateInput = function (employmentStartDate) {
+    setEmploymentStartDateInput = function(employmentStartDate) {
         this.employmentStartDateInput.sendKeys(employmentStartDate);
-    }
+    };
 
-    getEmploymentStartDateInput = function () {
+    getEmploymentStartDateInput = function() {
         return this.employmentStartDateInput.getAttribute('value');
-    }
+    };
 
-    setEmploymentEndDateInput = function (employmentEndDate) {
+    setEmploymentEndDateInput = function(employmentEndDate) {
         this.employmentEndDateInput.sendKeys(employmentEndDate);
-    }
+    };
 
-    getEmploymentEndDateInput = function () {
+    getEmploymentEndDateInput = function() {
         return this.employmentEndDateInput.getAttribute('value');
-    }
+    };
 
-    setEmploymentDurationInput = function (employmentDuration) {
+    setEmploymentDurationInput = function(employmentDuration) {
         this.employmentDurationInput.sendKeys(employmentDuration);
-    }
+    };
 
-    getEmploymentDurationInput = function () {
+    getEmploymentDurationInput = function() {
         return this.employmentDurationInput.getAttribute('value');
-    }
+    };
 
-    setEmploymentPeriodInput = function (employmentPeriod) {
-        this.employmentPeriodInput.sendKeys(employmentPeriod);
-    }
-
-    getEmploymentPeriodInput = function () {
-        return this.employmentPeriodInput.getAttribute('value');
-    }
-
-    getIsCurrentEmploymentInput = function () {
+    getIsCurrentEmploymentInput = function() {
         return this.isCurrentEmploymentInput;
-    }
-    setJobDescriptionInput = function (jobDescription) {
+    };
+    setJobDescriptionInput = function(jobDescription) {
         this.jobDescriptionInput.sendKeys(jobDescription);
-    }
+    };
 
-    getJobDescriptionInput = function () {
+    getJobDescriptionInput = function() {
         return this.jobDescriptionInput.getAttribute('value');
-    }
+    };
 
-    setRoleAndResponsibilitiesInput = function (roleAndResponsibilities) {
-        this.roleAndResponsibilitiesInput.sendKeys(roleAndResponsibilities);
-    }
-
-    getRoleAndResponsibilitiesInput = function () {
-        return this.roleAndResponsibilitiesInput.getAttribute('value');
-    }
-
-    candidateSelectLastOption = function () {
+    candidateSelectLastOption = function() {
         this.candidateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateSelectOption = function (option) {
+    candidateSelectOption = function(option) {
         this.candidateSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateSelect = function () {
+    getCandidateSelect = function() {
         return this.candidateSelect;
-    }
+    };
 
-    getCandidateSelectedOption = function () {
+    getCandidateSelectedOption = function() {
         return this.candidateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    employmentTypeSelectLastOption = function () {
+    employmentTypeSelectLastOption = function() {
         this.employmentTypeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    employmentTypeSelectOption = function (option) {
+    employmentTypeSelectOption = function(option) {
         this.employmentTypeSelect.sendKeys(option);
-    }
+    };
 
-    getEmploymentTypeSelect = function () {
+    getEmploymentTypeSelect = function() {
         return this.employmentTypeSelect;
-    }
+    };
 
-    getEmploymentTypeSelectedOption = function () {
+    getEmploymentTypeSelectedOption = function() {
         return this.employmentTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    countrySelectLastOption = function () {
+    countrySelectLastOption = function() {
         this.countrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    countrySelectOption = function (option) {
+    countrySelectOption = function(option) {
         this.countrySelect.sendKeys(option);
-    }
+    };
 
-    getCountrySelect = function () {
+    getCountrySelect = function() {
         return this.countrySelect;
-    }
+    };
 
-    getCountrySelectedOption = function () {
+    getCountrySelectedOption = function() {
         return this.countrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    jobTypeSelectLastOption = function () {
+    jobTypeSelectLastOption = function() {
         this.jobTypeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobTypeSelectOption = function (option) {
+    jobTypeSelectOption = function(option) {
         this.jobTypeSelect.sendKeys(option);
-    }
+    };
 
-    getJobTypeSelect = function () {
+    getJobTypeSelect = function() {
         return this.jobTypeSelect;
-    }
+    };
 
-    getJobTypeSelectedOption = function () {
+    getJobTypeSelectedOption = function() {
         return this.jobTypeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

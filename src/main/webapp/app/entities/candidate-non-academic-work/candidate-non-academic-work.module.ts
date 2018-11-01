@@ -27,7 +27,7 @@ const ENTITY_STATES = [
 @NgModule({
     imports: [
         GradzcircleSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true }),
+       RouterModule.forChild(ENTITY_STATES),
         FroalaEditorModule.forRoot()
 
     ],

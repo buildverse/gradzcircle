@@ -115,9 +115,36 @@ Navbar
 	vertical-align: middle;
 }
 
+.top_header {
+	padding: 5.5px 0px;
+	overflow: hidden;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	background-color: #3eaae6;
+}
+
 /* ==========================================================================
 Logo styles
 ========================================================================== */
 .navbar-brand.logo {
 	padding: 5px 15px;
+}
+
+.li .ul .dropdown-item .li {
+	border-bottom: 1px solid #e6e6e6;
+	margin: 0;
+	padding: 10px;
+	font-size: 14px;
+}
+
+.dropdown-menu {
+	right: 0;
+	left: auto !important;
+	width: 50px;
+	top: 50px !important;
+	transform: none !important;
+	padding: 0;
+	max-height: 350px;
+	overflow-y: auto;
+	overflow: visible !important;
+	border: 1px solid #e6e6e6;
 }

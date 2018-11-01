@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { EmploymentType } from './employment-type.model';
@@ -31,9 +32,10 @@ export class EmploymentTypeDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.employmentTypeService.find(id).subscribe((employmentType) => {
-            this.employmentType = employmentType;
-        });
+        this.employmentTypeService.find(id)
+            .subscribe((employmentTypeResponse: HttpResponse<EmploymentType>) => {
+                this.employmentType = employmentTypeResponse.body;
+            });
     }
     previousState() {
         window.history.back();

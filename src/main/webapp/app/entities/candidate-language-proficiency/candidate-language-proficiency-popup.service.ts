@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class CandidateLanguageProficiencyPopupService {
@@ -25,7 +26,9 @@ export class CandidateLanguageProficiencyPopupService {
             }
 
             if (id) {
-                this.candidateLanguageProficiencyService.find(id).subscribe((candidateLanguageProficiency) => {
+                this.candidateLanguageProficiencyService.find(id)
+                   .subscribe((candidateLanguageProficiencyResponse: HttpResponse<CandidateLanguageProficiency>) => {
+                       const candidateLanguageProficiency: CandidateLanguageProficiency = candidateLanguageProficiencyResponse.body;
                     this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, candidateLanguageProficiency,languageLocked);
                     resolve(this.ngbModalRef);
                 });
@@ -44,10 +47,10 @@ export class CandidateLanguageProficiencyPopupService {
         modalRef.componentInstance.candidateLanguageProficiency = candidateLanguageProficiency;
         modalRef.componentInstance.languageLocked = languageLocked;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+             this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

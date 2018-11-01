@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CaptureQualification e2e test', () => {
 
     let navBarPage: NavBarPage;
     let captureQualificationDialogPage: CaptureQualificationDialogPage;
     let captureQualificationComponentsPage: CaptureQualificationComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CaptureQualification e2e test', () => {
     it('should load CaptureQualifications', () => {
         navBarPage.goToEntity('capture-qualification');
         captureQualificationComponentsPage = new CaptureQualificationComponentsPage();
-        expect(captureQualificationComponentsPage.getTitle()).toMatch(/gradzcircleApp.captureQualification.home.title/);
+        expect(captureQualificationComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.captureQualification.home.title/);
 
     });
 
     it('should load create CaptureQualification dialog', () => {
         captureQualificationComponentsPage.clickOnCreateButton();
         captureQualificationDialogPage = new CaptureQualificationDialogPage();
-        expect(captureQualificationDialogPage.getModalTitle()).toMatch(/gradzcircleApp.captureQualification.home.createOrEditLabel/);
+        expect(captureQualificationDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.captureQualification.home.createOrEditLabel/);
         captureQualificationDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('CaptureQualification e2e test', () => {
         captureQualificationDialogPage.candidateEducationSelectLastOption();
         captureQualificationDialogPage.save();
         expect(captureQualificationDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class CaptureQualificationDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setQualificationNameInput = function (qualificationName) {
+    setQualificationNameInput = function(qualificationName) {
         this.qualificationNameInput.sendKeys(qualificationName);
-    }
+    };
 
-    getQualificationNameInput = function () {
+    getQualificationNameInput = function() {
         return this.qualificationNameInput.getAttribute('value');
-    }
+    };
 
-    candidateEducationSelectLastOption = function () {
+    candidateEducationSelectLastOption = function() {
         this.candidateEducationSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateEducationSelectOption = function (option) {
+    candidateEducationSelectOption = function(option) {
         this.candidateEducationSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateEducationSelect = function () {
+    getCandidateEducationSelect = function() {
         return this.candidateEducationSelect;
-    }
+    };
 
-    getCandidateEducationSelectedOption = function () {
+    getCandidateEducationSelectedOption = function() {
         return this.candidateEducationSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

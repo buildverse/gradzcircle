@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('JobCategory e2e test', () => {
 
     let navBarPage: NavBarPage;
     let jobCategoryDialogPage: JobCategoryDialogPage;
     let jobCategoryComponentsPage: JobCategoryComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('JobCategory e2e test', () => {
     it('should load JobCategories', () => {
         navBarPage.goToEntity('job-category');
         jobCategoryComponentsPage = new JobCategoryComponentsPage();
-        expect(jobCategoryComponentsPage.getTitle()).toMatch(/gradzcircleApp.jobCategory.home.title/);
+        expect(jobCategoryComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.jobCategory.home.title/);
 
     });
 
     it('should load create JobCategory dialog', () => {
         jobCategoryComponentsPage.clickOnCreateButton();
         jobCategoryDialogPage = new JobCategoryDialogPage();
-        expect(jobCategoryDialogPage.getModalTitle()).toMatch(/gradzcircleApp.jobCategory.home.createOrEditLabel/);
+        expect(jobCategoryDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.jobCategory.home.createOrEditLabel/);
         jobCategoryDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('JobCategory e2e test', () => {
         expect(jobCategoryDialogPage.getJobCategoryInput()).toMatch('jobCategory');
         jobCategoryDialogPage.save();
         expect(jobCategoryDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class JobCategoryDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setJobCategoryInput = function (jobCategory) {
+    setJobCategoryInput = function(jobCategory) {
         this.jobCategoryInput.sendKeys(jobCategory);
-    }
+    };
 
-    getJobCategoryInput = function () {
+    getJobCategoryInput = function() {
         return this.jobCategoryInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

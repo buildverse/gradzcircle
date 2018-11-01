@@ -17,7 +17,7 @@ class CandidateProjectGatlingTest extends Simulation {
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://127.0.0.1:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://localhost:8080"""
 
     val httpConf = http
         .baseURL(baseURL)
@@ -68,7 +68,7 @@ class CandidateProjectGatlingTest extends Simulation {
             .exec(http("Create new candidateProject")
             .post("/api/candidate-projects")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "projectTitle":"SAMPLE_TEXT", "projectStartDate":"2020-01-01T00:00:00.000Z", "projectEndDate":"2020-01-01T00:00:00.000Z", "projectDescription":"SAMPLE_TEXT", "projectDuration":"0", "projectPeriod":"SAMPLE_TEXT", "contributionInProject":"SAMPLE_TEXT", "isCurrentProject":null, "projectType":null}""")).asJSON
+            .body(StringBody("""{"id":null, "projectTitle":"SAMPLE_TEXT", "projectStartDate":"2020-01-01T00:00:00.000Z", "projectEndDate":"2020-01-01T00:00:00.000Z", "projectDescription":"SAMPLE_TEXT", "projectDuration":"0", "contributionInProject":"SAMPLE_TEXT", "isCurrentProject":null, "projectType":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_candidateProject_url"))).exitHereIfFailed
             .pause(10)

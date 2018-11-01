@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('CandidateEducation e2e test', () => {
 
     let navBarPage: NavBarPage;
     let candidateEducationDialogPage: CandidateEducationDialogPage;
     let candidateEducationComponentsPage: CandidateEducationComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('CandidateEducation e2e test', () => {
     it('should load CandidateEducations', () => {
         navBarPage.goToEntity('candidate-education');
         candidateEducationComponentsPage = new CandidateEducationComponentsPage();
-        expect(candidateEducationComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateEducation.home.title/);
+        expect(candidateEducationComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.candidateEducation.home.title/);
 
     });
 
     it('should load create CandidateEducation dialog', () => {
         candidateEducationComponentsPage.clickOnCreateButton();
         candidateEducationDialogPage = new CandidateEducationDialogPage();
-        expect(candidateEducationDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateEducation.home.createOrEditLabel/);
+        expect(candidateEducationDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.candidateEducation.home.createOrEditLabel/);
         candidateEducationDialogPage.close();
     });
 
@@ -41,7 +39,7 @@ describe('CandidateEducation e2e test', () => {
         expect(candidateEducationDialogPage.getEducationFromDateInput()).toMatch('2000-12-31');
         candidateEducationDialogPage.setEducationToDateInput('2000-12-31');
         expect(candidateEducationDialogPage.getEducationToDateInput()).toMatch('2000-12-31');
-        candidateEducationDialogPage.getIsPursuingEducationInput().isSelected().then(function (selected) {
+        candidateEducationDialogPage.getIsPursuingEducationInput().isSelected().then((selected) => {
             if (selected) {
                 candidateEducationDialogPage.getIsPursuingEducationInput().click();
                 expect(candidateEducationDialogPage.getIsPursuingEducationInput().isSelected()).toBeFalsy();
@@ -52,7 +50,7 @@ describe('CandidateEducation e2e test', () => {
         });
         candidateEducationDialogPage.setGradeScaleInput('5');
         expect(candidateEducationDialogPage.getGradeScaleInput()).toMatch('5');
-        candidateEducationDialogPage.getHighestQualificationInput().isSelected().then(function (selected) {
+        candidateEducationDialogPage.getHighestQualificationInput().isSelected().then((selected) => {
             if (selected) {
                 candidateEducationDialogPage.getHighestQualificationInput().click();
                 expect(candidateEducationDialogPage.getHighestQualificationInput().isSelected()).toBeFalsy();
@@ -85,7 +83,7 @@ describe('CandidateEducation e2e test', () => {
         candidateEducationDialogPage.collegeSelectLastOption();
         candidateEducationDialogPage.save();
         expect(candidateEducationDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -133,179 +131,179 @@ export class CandidateEducationDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setGradeInput = function (grade) {
+    setGradeInput = function(grade) {
         this.gradeInput.sendKeys(grade);
-    }
+    };
 
-    getGradeInput = function () {
+    getGradeInput = function() {
         return this.gradeInput.getAttribute('value');
-    }
+    };
 
-    setEducationFromDateInput = function (educationFromDate) {
+    setEducationFromDateInput = function(educationFromDate) {
         this.educationFromDateInput.sendKeys(educationFromDate);
-    }
+    };
 
-    getEducationFromDateInput = function () {
+    getEducationFromDateInput = function() {
         return this.educationFromDateInput.getAttribute('value');
-    }
+    };
 
-    setEducationToDateInput = function (educationToDate) {
+    setEducationToDateInput = function(educationToDate) {
         this.educationToDateInput.sendKeys(educationToDate);
-    }
+    };
 
-    getEducationToDateInput = function () {
+    getEducationToDateInput = function() {
         return this.educationToDateInput.getAttribute('value');
-    }
+    };
 
-    getIsPursuingEducationInput = function () {
+    getIsPursuingEducationInput = function() {
         return this.isPursuingEducationInput;
-    }
-    setGradeScaleInput = function (gradeScale) {
+    };
+    setGradeScaleInput = function(gradeScale) {
         this.gradeScaleInput.sendKeys(gradeScale);
-    }
+    };
 
-    getGradeScaleInput = function () {
+    getGradeScaleInput = function() {
         return this.gradeScaleInput.getAttribute('value');
-    }
+    };
 
-    getHighestQualificationInput = function () {
+    getHighestQualificationInput = function() {
         return this.highestQualificationInput;
-    }
-    setRoundOfGradeInput = function (roundOfGrade) {
+    };
+    setRoundOfGradeInput = function(roundOfGrade) {
         this.roundOfGradeInput.sendKeys(roundOfGrade);
-    }
+    };
 
-    getRoundOfGradeInput = function () {
+    getRoundOfGradeInput = function() {
         return this.roundOfGradeInput.getAttribute('value');
-    }
+    };
 
-    setGradeDecimalInput = function (gradeDecimal) {
+    setGradeDecimalInput = function(gradeDecimal) {
         this.gradeDecimalInput.sendKeys(gradeDecimal);
-    }
+    };
 
-    getGradeDecimalInput = function () {
+    getGradeDecimalInput = function() {
         return this.gradeDecimalInput.getAttribute('value');
-    }
+    };
 
-    setCapturedCourseInput = function (capturedCourse) {
+    setCapturedCourseInput = function(capturedCourse) {
         this.capturedCourseInput.sendKeys(capturedCourse);
-    }
+    };
 
-    getCapturedCourseInput = function () {
+    getCapturedCourseInput = function() {
         return this.capturedCourseInput.getAttribute('value');
-    }
+    };
 
-    setCapturedQualificationInput = function (capturedQualification) {
+    setCapturedQualificationInput = function(capturedQualification) {
         this.capturedQualificationInput.sendKeys(capturedQualification);
-    }
+    };
 
-    getCapturedQualificationInput = function () {
+    getCapturedQualificationInput = function() {
         return this.capturedQualificationInput.getAttribute('value');
-    }
+    };
 
-    setCapturedCollegeInput = function (capturedCollege) {
+    setCapturedCollegeInput = function(capturedCollege) {
         this.capturedCollegeInput.sendKeys(capturedCollege);
-    }
+    };
 
-    getCapturedCollegeInput = function () {
+    getCapturedCollegeInput = function() {
         return this.capturedCollegeInput.getAttribute('value');
-    }
+    };
 
-    setCapturedUniversityInput = function (capturedUniversity) {
+    setCapturedUniversityInput = function(capturedUniversity) {
         this.capturedUniversityInput.sendKeys(capturedUniversity);
-    }
+    };
 
-    getCapturedUniversityInput = function () {
+    getCapturedUniversityInput = function() {
         return this.capturedUniversityInput.getAttribute('value');
-    }
+    };
 
-    setPercentageInput = function (percentage) {
+    setPercentageInput = function(percentage) {
         this.percentageInput.sendKeys(percentage);
-    }
+    };
 
-    getPercentageInput = function () {
+    getPercentageInput = function() {
         return this.percentageInput.getAttribute('value');
-    }
+    };
 
-    setScoreTypeInput = function (scoreType) {
+    setScoreTypeInput = function(scoreType) {
         this.scoreTypeInput.sendKeys(scoreType);
-    }
+    };
 
-    getScoreTypeInput = function () {
+    getScoreTypeInput = function() {
         return this.scoreTypeInput.getAttribute('value');
-    }
+    };
 
-    setEducationDurationInput = function (educationDuration) {
+    setEducationDurationInput = function(educationDuration) {
         this.educationDurationInput.sendKeys(educationDuration);
-    }
+    };
 
-    getEducationDurationInput = function () {
+    getEducationDurationInput = function() {
         return this.educationDurationInput.getAttribute('value');
-    }
+    };
 
-    candidateSelectLastOption = function () {
+    candidateSelectLastOption = function() {
         this.candidateSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    candidateSelectOption = function (option) {
+    candidateSelectOption = function(option) {
         this.candidateSelect.sendKeys(option);
-    }
+    };
 
-    getCandidateSelect = function () {
+    getCandidateSelect = function() {
         return this.candidateSelect;
-    }
+    };
 
-    getCandidateSelectedOption = function () {
+    getCandidateSelectedOption = function() {
         return this.candidateSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    qualificationSelectLastOption = function () {
+    qualificationSelectLastOption = function() {
         this.qualificationSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    qualificationSelectOption = function (option) {
+    qualificationSelectOption = function(option) {
         this.qualificationSelect.sendKeys(option);
-    }
+    };
 
-    getQualificationSelect = function () {
+    getQualificationSelect = function() {
         return this.qualificationSelect;
-    }
+    };
 
-    getQualificationSelectedOption = function () {
+    getQualificationSelectedOption = function() {
         return this.qualificationSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    courseSelectLastOption = function () {
+    courseSelectLastOption = function() {
         this.courseSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    courseSelectOption = function (option) {
+    courseSelectOption = function(option) {
         this.courseSelect.sendKeys(option);
-    }
+    };
 
-    getCourseSelect = function () {
+    getCourseSelect = function() {
         return this.courseSelect;
-    }
+    };
 
-    getCourseSelectedOption = function () {
+    getCourseSelectedOption = function() {
         return this.courseSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    collegeSelectLastOption = function () {
+    collegeSelectLastOption = function() {
         this.collegeSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    collegeSelectOption = function (option) {
+    collegeSelectOption = function(option) {
         this.collegeSelect.sendKeys(option);
-    }
+    };
 
-    getCollegeSelect = function () {
+    getCollegeSelect = function() {
         return this.collegeSelect;
-    }
+    };
 
-    getCollegeSelectedOption = function () {
+    getCollegeSelectedOption = function() {
         return this.collegeSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

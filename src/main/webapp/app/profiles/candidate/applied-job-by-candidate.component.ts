@@ -4,10 +4,10 @@ import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-applied-job-list',
@@ -92,11 +92,8 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.candidateId
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        //this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+      (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
+      (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 

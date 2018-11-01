@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Job } from './job.model';
@@ -31,9 +32,10 @@ export class JobDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.jobService.find(id).subscribe((job) => {
-            this.job = job;
-        });
+        this.jobService.find(id)
+            .subscribe((jobResponse: HttpResponse<Job>) => {
+                this.job = jobResponse.body;
+            });
     }
     previousState() {
         window.history.back();

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('VisaType e2e test', () => {
 
     let navBarPage: NavBarPage;
     let visaTypeDialogPage: VisaTypeDialogPage;
     let visaTypeComponentsPage: VisaTypeComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('VisaType e2e test', () => {
     it('should load VisaTypes', () => {
         navBarPage.goToEntity('visa-type');
         visaTypeComponentsPage = new VisaTypeComponentsPage();
-        expect(visaTypeComponentsPage.getTitle()).toMatch(/gradzcircleApp.visaType.home.title/);
+        expect(visaTypeComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.visaType.home.title/);
 
     });
 
     it('should load create VisaType dialog', () => {
         visaTypeComponentsPage.clickOnCreateButton();
         visaTypeDialogPage = new VisaTypeDialogPage();
-        expect(visaTypeDialogPage.getModalTitle()).toMatch(/gradzcircleApp.visaType.home.createOrEditLabel/);
+        expect(visaTypeDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.visaType.home.createOrEditLabel/);
         visaTypeDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('VisaType e2e test', () => {
         visaTypeDialogPage.countrySelectLastOption();
         visaTypeDialogPage.save();
         expect(visaTypeDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class VisaTypeDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setVisaInput = function (visa) {
+    setVisaInput = function(visa) {
         this.visaInput.sendKeys(visa);
-    }
+    };
 
-    getVisaInput = function () {
+    getVisaInput = function() {
         return this.visaInput.getAttribute('value');
-    }
+    };
 
-    countrySelectLastOption = function () {
+    countrySelectLastOption = function() {
         this.countrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    countrySelectOption = function (option) {
+    countrySelectOption = function(option) {
         this.countrySelect.sendKeys(option);
-    }
+    };
 
-    getCountrySelect = function () {
+    getCountrySelect = function() {
         return this.countrySelect;
-    }
+    };
 
-    getCountrySelectedOption = function () {
+    getCountrySelectedOption = function() {
         return this.countrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

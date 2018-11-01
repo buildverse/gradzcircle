@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {JhiDateUtils} from 'ng-jhipster';
-import {SERVER_API_URL, ENABLE_ELASTIC} from '../../app.constants';
+import {SERVER_API_URL} from '../../app.constants';
 import {CandidateEducation} from './candidate-education.model';
-import {ResponseWrapper, createRequestOption} from '../../shared';
+import {createRequestOption} from '../../shared';
 import {College} from '../college/college.model';
 import {University} from '../university/university.model';
 import {Qualification} from '../qualification/qualification.model';
 import {Course} from '../course/course.model';
+
+export type EntityResponseType = HttpResponse<CandidateEducation>;
 
 @Injectable()
 export class CandidateEducationService {
@@ -18,91 +20,79 @@ export class CandidateEducationService {
   private resourceUrlByCandidate = SERVER_API_URL + 'api/education-by-candidate';
 
 
-  constructor(private http: Http, private dateUtils: JhiDateUtils) {}
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
-  create(candidateEducation: CandidateEducation): Observable<CandidateEducation> {
+  create(candidateEducation: CandidateEducation): Observable<EntityResponseType> {
     const copy = this.convert(candidateEducation);
-    console.log("Seding in create" + JSON.stringify(copy));
+    return this.http.post<CandidateEducation>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
 
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
   }
 
-  update(candidateEducation: CandidateEducation): Observable<CandidateEducation> {
+  update(candidateEducation: CandidateEducation): Observable<EntityResponseType> {
     const copy = this.convert(candidateEducation);
-    console.log('data sent to server ' + copy);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.put<CandidateEducation>(this.resourceUrl, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
-  find(id: number): Observable<CandidateEducation> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+  find(id: number): Observable<EntityResponseType> {
+    return this.http.get<CandidateEducation>(`${this.resourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
   }
 
 
-
-  findEducationByCandidateId(id?: number): Observable<ResponseWrapper> {
+  findEducationByCandidateId(id?: number): Observable<HttpResponse<CandidateEducation[]>> {
     //const options = this.createRequestOption(req);
-    return this.http.get(`${this.resourceUrlByCandidate}/${id}`)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<CandidateEducation[]>(`${this.resourceUrlByCandidate}/${id}`, {observe: 'response'})
+            .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
+
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
+  query(req?: any): Observable<HttpResponse<CandidateEducation[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get<CandidateEducation[]>(this.resourceUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
   }
 
-  delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
 
-  search(req?: any): Observable<ResponseWrapper> {
+  search(req?: any): Observable<HttpResponse<CandidateEducation[]>> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceSearchUrl, options)
-      .map((res: any) => this.convertResponse(res));
-
+    return this.http.get<CandidateEducation[]>(this.resourceSearchUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
   }
 
-  searchEducationOrderByToDate(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceSearchUrl, options)
-      .map((res: any) => this.convertResponse(res));
-
-  }
-
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    const result = [];
-    for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
-    }
-    return new ResponseWrapper(res.headers, result, res.status);
+  private convertResponse(res: EntityResponseType): EntityResponseType {
+    const body: CandidateEducation = this.convertItemFromServer(res.body);
+    return res.clone({body});
   }
 
   /**
-   * Convert a returned JSON object to CandidateEducation.
+   * Convert a returned JSON object to CandidateEmployment.
    */
-  private convertItemFromServer(json: any): CandidateEducation {
-    const entity: CandidateEducation = Object.assign(new CandidateEducation(), json);
-    entity.educationFromDate = this.dateUtils
-      .convertLocalDateFromServer(json.educationFromDate);
-    entity.educationToDate = this.dateUtils
-      .convertLocalDateFromServer(json.educationToDate);
-    this.convertEducationMetaForDisplay(entity);
-    console.log('After conversion ' + JSON.stringify(entity));
-    return entity;
+  private convertItemFromServer(candidateEducation: CandidateEducation): CandidateEducation {
+    const copy: CandidateEducation = Object.assign({}, candidateEducation);
+    copy.educationFromDate = this.dateUtils
+      .convertLocalDateFromServer(candidateEducation.educationFromDate);
+    copy.educationToDate = this.dateUtils
+      .convertLocalDateFromServer(candidateEducation.educationToDate);
+    this.convertEducationMetaForDisplay(copy);
+    return copy;
+  }
+
+  private convertArrayResponse(res: HttpResponse<CandidateEducation[]>): HttpResponse<CandidateEducation[]> {
+    const jsonResponse: CandidateEducation[] = res.body;
+    const body: CandidateEducation[] = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      body.push(this.convertItemFromServer(jsonResponse[i]));
+    }
+    return res.clone({body});
   }
 
   /**
-   * Convert a CandidateEducation to a JSON which can be sent to the server.
+   * Convert a CandidateEmployment to a JSON which can be sent to the server.
    */
   private convert(candidateEducation: CandidateEducation): CandidateEducation {
     const copy: CandidateEducation = Object.assign({}, candidateEducation);
@@ -113,6 +103,15 @@ export class CandidateEducationService {
     this.convertEducationMetaForServer(copy);
     return copy;
   }
+
+
+  searchEducationOrderByToDate(req?: any): Observable<HttpResponse<CandidateEducation[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<CandidateEducation[]>(this.resourceSearchUrl, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
+
+  }
+
 
   //CONVERT SERVER RESPONSE TO ARAY BASED FOR NGX DISPLAY
 

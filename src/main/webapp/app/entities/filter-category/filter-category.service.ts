@@ -1,73 +1,74 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
 
 import { FilterCategory } from './filter-category.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<FilterCategory>;
 
 @Injectable()
 export class FilterCategoryService {
 
-    private resourceUrl = SERVER_API_URL + 'api/filter-categories';
+    private resourceUrl =  SERVER_API_URL + 'api/filter-categories';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/filter-categories';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
 
-    create(filterCategory: FilterCategory): Observable<FilterCategory> {
+    create(filterCategory: FilterCategory): Observable<EntityResponseType> {
         const copy = this.convert(filterCategory);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<FilterCategory>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(filterCategory: FilterCategory): Observable<FilterCategory> {
+    update(filterCategory: FilterCategory): Observable<EntityResponseType> {
         const copy = this.convert(filterCategory);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.put<FilterCategory>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    find(id: number): Observable<FilterCategory> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<FilterCategory>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<HttpResponse<FilterCategory[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<FilterCategory[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<FilterCategory[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+    delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+    search(req?: any): Observable<HttpResponse<FilterCategory[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+        return this.http.get<FilterCategory[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<FilterCategory[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: FilterCategory = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
+
+    private convertArrayResponse(res: HttpResponse<FilterCategory[]>): HttpResponse<FilterCategory[]> {
+        const jsonResponse: FilterCategory[] = res.body;
+        const body: FilterCategory[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
     }
 
     /**
      * Convert a returned JSON object to FilterCategory.
      */
-    private convertItemFromServer(json: any): FilterCategory {
-        const entity: FilterCategory = Object.assign(new FilterCategory(), json);
-        return entity;
+    private convertItemFromServer(filterCategory: FilterCategory): FilterCategory {
+        const copy: FilterCategory = Object.assign({}, filterCategory);
+        return copy;
     }
 
     /**

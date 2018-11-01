@@ -5,6 +5,7 @@ import com.drishika.gradzcircle.domain.Authority;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.AuthorityRepository;
 import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
 import com.drishika.gradzcircle.repository.search.UserSearchRepository;
 import com.drishika.gradzcircle.service.MailService;
 
@@ -32,294 +33,367 @@ import static org.mockito.Mockito.*;
 @Transactional
 public class SocialServiceIntTest {
 
-	@Autowired
-	private AuthorityRepository authorityRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private UserSearchRepository userSearchRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserSearchRepository userSearchRepository;
 
-	@Mock
-	private MailService mockMailService;
 
-	@Mock
-	private UsersConnectionRepository mockUsersConnectionRepository;
+    @Mock
+    private MailService mockMailService;
 
-	@Mock
-	private ConnectionRepository mockConnectionRepository;
+    @Mock
+    private UsersConnectionRepository mockUsersConnectionRepository;
 
-	private SocialService socialService;
+    @Mock
+    private ConnectionRepository mockConnectionRepository;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		doNothing().when(mockMailService).sendSocialRegistrationValidationEmail(anyObject(), anyString());
-		doNothing().when(mockConnectionRepository).addConnection(anyObject());
-		when(mockUsersConnectionRepository.createConnectionRepository(anyString()))
-				.thenReturn(mockConnectionRepository);
+    private SocialService socialService;
 
-		socialService = new SocialService(mockUsersConnectionRepository, authorityRepository, passwordEncoder,
-				userRepository, mockMailService, userSearchRepository);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        doNothing().when(mockMailService).sendSocialRegistrationValidationEmail(anyObject(), anyString());
+        doNothing().when(mockConnectionRepository).addConnection(anyObject());
+        when(mockUsersConnectionRepository.createConnectionRepository(anyString())).thenReturn(mockConnectionRepository);
 
-	@Test
-	public void testDeleteUserSocialConnection() throws Exception {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
-		socialService.createSocialUser(connection, "fr");
-		MultiValueMap<String, Connection<?>> connectionsByProviderId = new LinkedMultiValueMap<>();
-		connectionsByProviderId.put("PROVIDER", null);
-		when(mockConnectionRepository.findAllConnections()).thenReturn(connectionsByProviderId);
+        socialService = new SocialService(mockUsersConnectionRepository, authorityRepository,
+                passwordEncoder, userRepository, mockMailService, userSearchRepository);
+    }
 
-		// Exercise
-		socialService.deleteUserSocialConnection("@LOGIN");
+    @Test
+    public void testDeleteUserSocialConnection() throws Exception {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
+        socialService.createSocialUser(connection, "fr");
+        MultiValueMap<String, Connection<?>> connectionsByProviderId = new LinkedMultiValueMap<>();
+        connectionsByProviderId.put("PROVIDER", null);
+        when(mockConnectionRepository.findAllConnections()).thenReturn(connectionsByProviderId);
 
-		// Verify
-		verify(mockConnectionRepository, times(1)).removeConnections("PROVIDER");
-	}
+        // Exercise
+        socialService.deleteUserSocialConnection("LOGIN");
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateSocialUserShouldThrowExceptionIfConnectionIsNull() {
-		// Exercise
-		socialService.createSocialUser(null, "fr");
-	}
+        // Verify
+        verify(mockConnectionRepository, times(1)).removeConnections("PROVIDER");
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndNoLogin() {
-		// Setup
-		Connection<?> connection = createConnection("", "", "FIRST_NAME", "LAST_NAME", "IMAGE_URL", "PROVIDER");
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateSocialUserShouldThrowExceptionIfConnectionIsNull() {
+        // Exercise
+        socialService.createSocialUser(null, "fr");
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndNoLogin() {
+        // Setup
+        Connection<?> connection = createConnection("",
+            "",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndLoginAlreadyExist() {
-		// Setup
-		User user = createExistingUser("@LOGIN", "mail@mail.com", "OTHER_FIRST_NAME", "OTHER_LAST_NAME",
-				"OTHER_IMAGE_URL");
-		Connection<?> connection = createConnection("@LOGIN", "", "FIRST_NAME", "LAST_NAME", "IMAGE_URL", "PROVIDER");
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
+    }
 
-		// Exercise
-		try {
-			// Exercise
-			socialService.createSocialUser(connection, "fr");
-		} finally {
-			// Teardown
-			userRepository.delete(user);
-		}
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndLoginAlreadyExist() {
+        // Setup
+        User user = createExistingUser("login",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL");
+        Connection<?> connection = createConnection("LOGIN",
+            "",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-	@Test
-	public void testCreateSocialUserShouldCreateUserIfNotExist() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Exercise
+        try {
+            // Exercise
+            socialService.createSocialUser(connection, "fr");
+        } finally {
+            // Teardown
+            userRepository.delete(user);
+        }
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateUserIfNotExist() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		final Optional<User> user = userRepository.findOneByEmailIgnoreCase("mail@mail.com");
-		assertThat(user).isPresent();
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user.get());
-	}
+        // Verify
+        final Optional<User> user = userRepository.findOneByEmailIgnoreCase("mail@mail.com");
+        assertThat(user).isPresent();
 
-	@Test
-	public void testCreateSocialUserShouldCreateUserWithSocialInformation() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        userRepository.delete(user.get());
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateUserWithSocialInformation() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(user.getFirstName()).isEqualTo("FIRST_NAME");
-		assertThat(user.getLastName()).isEqualTo("LAST_NAME");
-		assertThat(user.getImageUrl()).isEqualTo("IMAGE_URL");
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user);
-	}
+        //Verify
+        User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(user.getFirstName()).isEqualTo("FIRST_NAME");
+        assertThat(user.getLastName()).isEqualTo("LAST_NAME");
+        assertThat(user.getImageUrl()).isEqualTo("IMAGE_URL");
 
-	@Test
-	public void testCreateSocialUserShouldCreateActivatedUserWithRoleUserAndPassword() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        userRepository.delete(user);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateActivatedUserWithRoleUserAndPassword() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(user.getActivated()).isEqualTo(true);
-		assertThat(user.getPassword()).isNotEmpty();
-		Authority userAuthority = authorityRepository.findOne("ROLE_USER");
-		assertThat(user.getAuthorities().toArray()).containsExactly(userAuthority);
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user);
-	}
+        //Verify
+        User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(user.getActivated()).isEqualTo(true);
+        assertThat(user.getPassword()).isNotEmpty();
+        Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
+        assertThat(user.getAuthorities().toArray()).containsExactly(userAuthority);
 
-	@Test
-	public void testCreateSocialUserShouldCreateUserWithExactLangKey() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        userRepository.delete(user);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateUserWithExactLangKey() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		final User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(user.getLangKey()).isEqualTo("fr");
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user);
-	}
+        //Verify
+        final User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(user.getLangKey()).isEqualTo("fr");
 
-	@Test
-	public void testCreateSocialUserShouldCreateUserWithLoginSameAsEmailIfNotTwitter() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER_OTHER_THAN_TWITTER");
+        // Teardown
+        userRepository.delete(user);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateUserWithLoginSameAsEmailIfNotTwitter() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER_OTHER_THAN_TWITTER");
 
-		// Verify
-		User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(user.getLogin()).isEqualTo("mail@mail.com");
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user);
-	}
+        //Verify
+        User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(user.getLogin()).isEqualTo("first_name_last_name");
 
-	@Test
-	public void testCreateSocialUserShouldCreateUserWithSocialLoginWhenIsTwitter() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"twitter");
+        // Teardown
+        userRepository.delete(user);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateUserWithSocialLoginWhenIsTwitter() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "twitter");
 
-		// Verify
-		User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(user.getLogin()).isEqualToIgnoringCase("@LOGIN");
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		userRepository.delete(user);
-	}
+        //Verify
+        User user = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(user.getLogin()).isEqualToIgnoringCase("login");
 
-	@Test
-	public void testCreateSocialUserShouldCreateSocialConnection() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        userRepository.delete(user);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldCreateSocialConnection() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		verify(mockConnectionRepository, times(1)).addConnection(connection);
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		userRepository.delete(userToDelete);
-	}
+        //Verify
+        verify(mockConnectionRepository, times(1)).addConnection(connection);
 
-	@Test
-	public void testCreateSocialUserShouldNotCreateUserIfEmailAlreadyExist() {
-		// Setup
-		createExistingUser("@OTHER_LOGIN", "mail@mail.com", "OTHER_FIRST_NAME", "OTHER_LAST_NAME", "OTHER_IMAGE_URL");
-		long initialUserCount = userRepository.count();
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        userRepository.delete(userToDelete);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldNotCreateUserIfEmailAlreadyExist() {
+        // Setup
+        createExistingUser("other_login",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL");
+        long initialUserCount = userRepository.count();
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		assertThat(userRepository.count()).isEqualTo(initialUserCount);
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		userRepository.delete(userToDelete);
-	}
+        //Verify
+        assertThat(userRepository.count()).isEqualTo(initialUserCount);
 
-	@Test
-	public void testCreateSocialUserShouldNotChangeUserIfEmailAlreadyExist() {
-		// Setup
-		createExistingUser("@OTHER_LOGIN", "mail@mail.com", "OTHER_FIRST_NAME", "OTHER_LAST_NAME", "OTHER_IMAGE_URL");
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        // Teardown
+        User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        userRepository.delete(userToDelete);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldNotChangeUserIfEmailAlreadyExist() {
+        // Setup
+        createExistingUser("other_login",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL");
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		User userToVerify = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		assertThat(userToVerify.getLogin()).isEqualTo("@other_login");
-		assertThat(userToVerify.getFirstName()).isEqualTo("OTHER_FIRST_NAME");
-		assertThat(userToVerify.getLastName()).isEqualTo("OTHER_LAST_NAME");
-		assertThat(userToVerify.getImageUrl()).isEqualTo("OTHER_IMAGE_URL");
-		// Teardown
-		userRepository.delete(userToVerify);
-	}
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-	@Test
-	public void testCreateSocialUserShouldSendRegistrationValidationEmail() {
-		// Setup
-		Connection<?> connection = createConnection("@LOGIN", "mail@mail.com", "FIRST_NAME", "LAST_NAME", "IMAGE_URL",
-				"PROVIDER");
+        //Verify
+        User userToVerify = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        assertThat(userToVerify.getLogin()).isEqualTo("other_login");
+        assertThat(userToVerify.getFirstName()).isEqualTo("OTHER_FIRST_NAME");
+        assertThat(userToVerify.getLastName()).isEqualTo("OTHER_LAST_NAME");
+        assertThat(userToVerify.getImageUrl()).isEqualTo("OTHER_IMAGE_URL");
+        // Teardown
+        userRepository.delete(userToVerify);
+    }
 
-		// Exercise
-		socialService.createSocialUser(connection, "fr");
+    @Test
+    public void testCreateSocialUserShouldSendRegistrationValidationEmail() {
+        // Setup
+        Connection<?> connection = createConnection("LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER");
 
-		// Verify
-		verify(mockMailService, times(1)).sendSocialRegistrationValidationEmail(anyObject(), anyString());
+        // Exercise
+        socialService.createSocialUser(connection, "fr");
 
-		// Teardown
-		User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
-		userRepository.delete(userToDelete);
-	}
+        //Verify
+        verify(mockMailService, times(1)).sendSocialRegistrationValidationEmail(anyObject(), anyString());
 
-	private Connection<?> createConnection(String login, String email, String firstName, String lastName,
-			String imageUrl, String providerId) {
-		UserProfile userProfile = mock(UserProfile.class);
-		when(userProfile.getEmail()).thenReturn(email);
-		when(userProfile.getUsername()).thenReturn(login);
-		when(userProfile.getFirstName()).thenReturn(firstName);
-		when(userProfile.getLastName()).thenReturn(lastName);
+        // Teardown
+        User userToDelete = userRepository.findOneByEmailIgnoreCase("mail@mail.com").get();
+        userRepository.delete(userToDelete);
+    }
 
-		Connection<?> connection = mock(Connection.class);
-		ConnectionKey key = new ConnectionKey(providerId, "PROVIDER_USER_ID");
-		when(connection.fetchUserProfile()).thenReturn(userProfile);
-		when(connection.getKey()).thenReturn(key);
-		when(connection.getImageUrl()).thenReturn(imageUrl);
+    private Connection<?> createConnection(String login,
+                                           String email,
+                                           String firstName,
+                                           String lastName,
+                                           String imageUrl,
+                                           String providerId) {
+        UserProfile userProfile = mock(UserProfile.class);
+        when(userProfile.getEmail()).thenReturn(email);
+        when(userProfile.getUsername()).thenReturn(login);
+        when(userProfile.getFirstName()).thenReturn(firstName);
+        when(userProfile.getLastName()).thenReturn(lastName);
 
-		return connection;
-	}
+        Connection<?> connection = mock(Connection.class);
+        ConnectionKey key = new ConnectionKey(providerId, "PROVIDER_USER_ID");
+        when(connection.fetchUserProfile()).thenReturn(userProfile);
+        when(connection.getKey()).thenReturn(key);
+        when(connection.getImageUrl()).thenReturn(imageUrl);
 
-	private User createExistingUser(String login, String email, String firstName, String lastName, String imageUrl) {
-		User user = new User();
-		user.setLogin(login);
-		user.setPassword(passwordEncoder.encode("password"));
-		user.setEmail(email);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setImageUrl(imageUrl);
-		return userRepository.saveAndFlush(user);
-	}
+        return connection;
+    }
+
+    private User createExistingUser(String login,
+                                    String email,
+                                    String firstName,
+                                    String lastName,
+                                    String imageUrl) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setImageUrl(imageUrl);
+        return userRepository.saveAndFlush(user);
+    }
 }

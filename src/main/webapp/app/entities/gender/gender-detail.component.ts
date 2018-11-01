@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Gender } from './gender.model';
@@ -31,9 +32,10 @@ export class GenderDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.genderService.find(id).subscribe((gender) => {
-            this.gender = gender;
-        });
+        this.genderService.find(id)
+            .subscribe((genderResponse: HttpResponse<Gender>) => {
+                this.gender = genderResponse.body;
+            });
     }
     previousState() {
         window.history.back();

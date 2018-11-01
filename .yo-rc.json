@@ -4,7 +4,7 @@
       "packageName": "com.drishika.gradzcircle",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "4.9.0",
+    "jhipsterVersion": "4.14.5",
     "baseName": "gradzcircle",
     "packageName": "com.drishika.gradzcircle",
     "packageFolder": "com/drishika/gradzcircle",
@@ -24,7 +24,7 @@
     "enableSwaggerCodegen": false,
     "jwtSecretKey": "b3ff855e8e1e9bedd42bfdac3e2b9873ceca10f0",
     "clientFramework": "angularX",
-    "useSass": true,
+    "useSass": false,
     "clientPackageManager": "yarn",
     "applicationType": "monolith",
     "testFrameworks": [
@@ -39,6 +39,8 @@
       "en",
       "hi"
     ],
-    "herokuAppName": "gradzcircle"
+    "herokuAppName": "gradzcircle",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true
   }
 }

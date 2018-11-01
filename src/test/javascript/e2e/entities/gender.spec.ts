@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Gender e2e test', () => {
 
     let navBarPage: NavBarPage;
     let genderDialogPage: GenderDialogPage;
     let genderComponentsPage: GenderComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Gender e2e test', () => {
     it('should load Genders', () => {
         navBarPage.goToEntity('gender');
         genderComponentsPage = new GenderComponentsPage();
-        expect(genderComponentsPage.getTitle()).toMatch(/gradzcircleApp.gender.home.title/);
+        expect(genderComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.gender.home.title/);
 
     });
 
     it('should load create Gender dialog', () => {
         genderComponentsPage.clickOnCreateButton();
         genderDialogPage = new GenderDialogPage();
-        expect(genderDialogPage.getModalTitle()).toMatch(/gradzcircleApp.gender.home.createOrEditLabel/);
+        expect(genderDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.gender.home.createOrEditLabel/);
         genderDialogPage.close();
     });
 
@@ -39,7 +37,7 @@ describe('Gender e2e test', () => {
         expect(genderDialogPage.getGenderInput()).toMatch('gender');
         genderDialogPage.save();
         expect(genderDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -69,13 +67,13 @@ export class GenderDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setGenderInput = function (gender) {
+    setGenderInput = function(gender) {
         this.genderInput.sendKeys(gender);
-    }
+    };
 
-    getGenderInput = function () {
+    getGenderInput = function() {
         return this.genderInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

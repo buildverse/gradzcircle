@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
+import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
@@ -29,7 +29,8 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+          this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
     }
 
 
@@ -37,11 +38,8 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     loadEmploymentsForCandidate() {
 
         this.candidateEmploymentService.findEmploymentsByCandidateId(this.candidateId).subscribe(
-            (res: ResponseWrapper) => {
-                    this.candidateEmployments = res.json;
-                },
-                (res: ResponseWrapper) => this.onError(res.json)
-                );
+           (res: HttpResponse<CandidateEmployment[]>) => this.candidateEmployments = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message));
         return;
 
     }
@@ -51,18 +49,18 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
             this.candidateEmploymentService.search({
                 query: this.currentSearch,
                 }).subscribe(
-                    (res: ResponseWrapper) => this.candidateEmployments = res.json,
-                    (res: ResponseWrapper) => this.onError(res.json)
+                    (res: HttpResponse<CandidateEmployment[]>) => this.candidateEmployments = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
         }
         else {
             this.candidateEmploymentService.query().subscribe(
-                (res: ResponseWrapper) => {
-                    this.candidateEmployments = res.json;
-                    this.currentSearch = '';
+                (res: HttpResponse<CandidateEmployment[]>) => {
+                this.candidateEmployments = res.body;
+                this.currentSearch = '';
                 },
-                (res: ResponseWrapper) => this.onError(res.json)
+                 (res: HttpErrorResponse) => this.onError(res.message)
             );
         }
     }

@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { FilterCategory } from './filter-category.model';
 import { FilterCategoryService } from './filter-category.service';
 
@@ -25,10 +26,12 @@ export class FilterCategoryPopupService {
             }
 
             if (id) {
-                this.filterCategoryService.find(id).subscribe((filterCategory) => {
-                    this.ngbModalRef = this.filterCategoryModalRef(component, filterCategory);
-                    resolve(this.ngbModalRef);
-                });
+                this.filterCategoryService.find(id)
+                    .subscribe((filterCategoryResponse: HttpResponse<FilterCategory>) => {
+                        const filterCategory: FilterCategory = filterCategoryResponse.body;
+                        this.ngbModalRef = this.filterCategoryModalRef(component, filterCategory);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class FilterCategoryPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.filterCategory = filterCategory;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

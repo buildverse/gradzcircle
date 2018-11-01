@@ -2,11 +2,12 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
+import{ HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-linked-candidate-list',
@@ -91,11 +92,8 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.corporateId
     }).subscribe(
-      (res: ResponseWrapper) => {
-        this.onSuccess(res.json, res.headers)
-        //this.currentSearch = '';
-      },
-      (res: ResponseWrapper) => this.onError(res.json)
+       (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
+       (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 
@@ -132,12 +130,9 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   private onSuccess(data, headers) {
-    // console.log('HEADER IS ----> ' + JSON.stringify(headers));
-    // console.log('DATA IS ----> ' + JSON.stringify(data));
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = headers.get('X-Total-Count');
     this.queryCount = this.totalItems;
-    // this.page = pagingParams.page;
     this.candidateList = data;
   }
 }

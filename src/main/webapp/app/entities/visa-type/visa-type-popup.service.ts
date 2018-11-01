@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HttpResponse } from '@angular/common/http';
 import { VisaType } from './visa-type.model';
 import { VisaTypeService } from './visa-type.service';
 
@@ -25,10 +26,12 @@ export class VisaTypePopupService {
             }
 
             if (id) {
-                this.visaTypeService.find(id).subscribe((visaType) => {
-                    this.ngbModalRef = this.visaTypeModalRef(component, visaType);
-                    resolve(this.ngbModalRef);
-                });
+                this.visaTypeService.find(id)
+                    .subscribe((visaTypeResponse: HttpResponse<VisaType>) => {
+                        const visaType: VisaType = visaTypeResponse.body;
+                        this.ngbModalRef = this.visaTypeModalRef(component, visaType);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,10 +46,10 @@ export class VisaTypePopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.visaType = visaType;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
             this.ngbModalRef = null;
         });
         return modalRef;

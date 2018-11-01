@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
+import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
@@ -30,7 +30,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
     }
 
     loadAll() {
@@ -38,17 +39,18 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
             this.candidateEducationService.search({
                 query: this.currentSearch,
                 }).subscribe(
-                    (res: ResponseWrapper) => this.candidateEducations = res.json,
-                    (res: ResponseWrapper) => this.onError(res.json)
+                        (res: HttpResponse<CandidateEducation[]>) => this.candidateEducations = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
         } else {
             this.candidateEducationService.query().subscribe(
-                (res: ResponseWrapper) => {
-                    this.candidateEducations = res.json;
+                 (res: HttpResponse<CandidateEducation[]>) => {
+                this.candidateEducations = res.body;
+
                     this.currentSearch = '';
                 },
-                (res: ResponseWrapper) => this.onError(res.json)
+                 (res: HttpErrorResponse) => this.onError(res.message)
             );
         }
     }
@@ -56,10 +58,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     loadEducationForCandidate() {
 
         this.candidateEducationService.findEducationByCandidateId(this.candidateId).subscribe(
-           (res: ResponseWrapper) => {
-                    this.candidateEducations = res.json;
-                },
-                (res: ResponseWrapper) => this.onError(res.json)
+          (res: HttpResponse<CandidateEducation[]>) => this.candidateEducations = res.body,
+          (res: HttpErrorResponse) => this.onError(res.message)
         );
         return;
     }

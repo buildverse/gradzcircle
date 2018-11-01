@@ -1,5 +1,5 @@
-<nav
-	class="navbar navbar-toggleable-sm fixed-top navbar-inverse bg-primary app-navbar">
+
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary app-navbar">
 	<!-- <div class="jh-logo-container float-left">
         <button class="navbar-toggler d-lg-none float-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
             aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,15 +15,15 @@
 		<span class="logo-img"></span>
 	</a>
 
-	<button class="navbar-toggler navbar-toggler-right d-md-none"
+	<a class="navbar-toggler navbar-toggler-right d-md-none"
 		type="button" data-toggle="collapse" data-target="#navbarResponsive"
 		aria-controls="navbarResponsive"
-		[attr.aria-expanded]="!isNavbarCollapsed"
-		aria-label="Toggle navigation">
+		aria-expanded="false"
+		aria-label="Toggle navigation"
+		(click)="toggleNavbar()">
 		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="navbar-collapse collapse" id="navbarResponsive"
-		[ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
+	</a>
+	<div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
 		<ul class="navbar-nav ml-auto">
 			<!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
 			<li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown
@@ -377,9 +377,9 @@
 					<!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
 				</ul></li>
 			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']" ngbDropdown
-				class="nav-item dropdown pointer" (click)="collapseNavbar()"
+				class="nav-item dropdown pointer" 
 				[routerLink]="['/job']" routerLinkActive="active"><a
-				class="nav-link"> <span
+				class="nav-link" (click)="collapseNavbar()"> <span
 					jhiTranslate="global.menu.candidate.dashboard">Dashboard</span>
 			</a></li>
 			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']"
@@ -440,7 +440,6 @@
                         <li>
                             <a class="dropdown-item" [routerLink]="['/job']" routerLinkActive="active" (click)="collapseNavbar()">
                                     <span jhiTranslate="global.menu.corporate.job.allJobs">Jobs</span>
-
                             </a>
                         </li>
                     </ul>
@@ -519,34 +518,50 @@
 					<span jhiTranslate="global.menu.account.login">Sign In</span>
 			</a>
 			</li>
-			<li *ngSwitchCase="true" class="nav-item"><a class="nav-link"
-				(click)="logout()"> <span
-					jhiTranslate="global.menu.account.logout">Sign out</span>
-			</a></li>
-
+			
 			<li *ngSwitchCase="true" class="nav-item ml-2">
-				<button class="btn btn-default navbar-btn navbar-btn-avatar"
-					data-toggle="popover">
+				<button class="btn btn-default navbar-btn navbar-btn-avatar" >
 					<img class="rounded-circle"
 						[src]="noImage ? defaultImage : userImage ">
 				</button>
 			</li>
+			<li *ngSwitchCase="true" ngbDropdown 
+				class="nav-item dropdown pointer">
+				<a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);"></a>
+				<ul class="dropdown-menu" ngbDropdownMenu>
+					<li>
+						<a class="dropdown-item" routerLink="password"
+							> <span style="color:#3097d1;"
+								jhiTranslate="global.menu.account.password">Password</span>
+						</a>
+					</li>
+					<li>
+						<a class="dropdown-item"
+							(click)="logout()"
+							> 
+							<span style="color:#3097d1;" jhiTranslate="global.menu.account.logout">Sign out</span>
+						</a>
+					</li>
+				</ul>
+			</li>	
 		</ul>
 		<!--LETS VISIT AGAIN... *NGSWITCH CAUSING ISSUES TO EMBED SIGNOUT IN THE IMAGE-->
-		<!-- <ul  id="#js-popoverContent" class="nav navbar-nav float-right mr-5 hidden-sm-down">
-                <li class="nav-item ml-2">
-                    <button class="btn btn-default navbar-btn navbar-btn-avatar" data-toggle="popover">
-                        <img class="rounded-circle" src="../../../content/images/no-image.png">
-                    </button>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav hidden-xs-up" id="js-popoverContent">
-                <li class="nav-item">
-                    <a class="nav-link" (click)="logout()">
-                        <span jhiTranslate="global.menu.account.logout">Sign out</span>
-                    </a>
-                </li>
-            </ul> -->
+		<!--  <ul class="nav navbar-nav float-right d-none d-md-flex" id="#js-popoverContent">
+              <li *ngSwitchCase="true" class="nav-item ml-2">
+                  <button class="btn btn-default navbar-btn navbar-btn-avatar" [ngbPopover]="popoverContent" placement="bottom">
+                      <img class="rounded-circle" src="../../../content/images/no-image.png">
+                  </button>
+              </li>
+         </ul>
+         <ng-template #popoverContent>
+	          <ul class="nav navbar-nav d-none" id="js-popoverContent">
+	               <li *ngSwitchCase="true" class="nav-item">
+	                   <a class="nav-link" (click)="logout()">
+	                       <span jhiTranslate="global.menu.account.logout">Sign out</span>
+	                   </a>
+	               </li>
+	          </ul>
+         </ng-template>-->
 
 
 	</div>

@@ -3,12 +3,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
-import {ITEMS_PER_PAGE, Principal, ResponseWrapper, UserService} from '../../shared';
-import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import {ITEMS_PER_PAGE, Principal, UserService} from '../../shared';
+import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {Observable} from 'rxjs/Observable';
 import {SERVER_API_URL} from '../../app.constants';
-
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   moduleId: module.id,
@@ -24,7 +24,7 @@ export class CandidateProfileComponent implements OnInit {
   imageUrl: any;
   loginId: string;
   noImage: boolean;
-  eventSubscriber: Subscription;
+  private eventSubscriber: Subscription;
   currentSearch: string;
   defaultImage = require('../../../content/images/no-image.png');
 
@@ -32,34 +32,40 @@ export class CandidateProfileComponent implements OnInit {
     private eventManager: JhiEventManager,
     private alertService: JhiAlertService,
     private candidateService: CandidateService,
-    private localStorage: LocalStorageService,
-    private sessionStorage: SessionStorageService,
+
     private principal: Principal,
     private userService: UserService,
     private router: Router) {}
 
 
   ngOnInit() {
-    this.route.data.subscribe((data: {candidate: Candidate}) => this.candidate = data.candidate);
+    this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
     this.currentSearch = this.candidate.id.toString();
-    console.log('candidate got is '+JSON.stringify(this.candidate));
+
     this.loginId = this.candidate.login.id;
-    //this.loadCandidateDetail();
-    // this.route.data.subscribe((data: {imageData: any })=> this.imageData = data.imageData);
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
-    this.reloadUserImage()
+    this.reloadUserImage();
     // this.checkImageUrl();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
   }
 
+  getCandidateByCandidateId(id) {
+    this.candidateService.getCandidateByCandidateId(id).subscribe(
+      (res: HttpResponse<Candidate>) => {
+        this.candidate = res.body;
+        this.loginId = this.candidate.login.id;
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
+    return;
+  }
+
 
   reloadCandidate() {
     this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
-      (res: Candidate) => {
-        this.candidate = res;
-      },
-      (res: Error) => this.onError(res)
+      (res: HttpResponse<Candidate>) => this.candidate = res.body,
+      (res: HttpErrorResponse) => this.onError(res.message)
     );
     return;
 
@@ -105,7 +111,7 @@ export class CandidateProfileComponent implements OnInit {
       if (user) {
         if (user.imageUrl) {
           this.userService.getImageData(user.id).subscribe((response) => {
-            const responseJson = response.json()
+            const responseJson = response.body;
             this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
           }, (error: any) => {
             console.log(`${error}`);

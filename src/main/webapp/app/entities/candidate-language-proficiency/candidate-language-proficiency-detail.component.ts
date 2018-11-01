@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
+import { JhiEventManager } from 'ng-jhipster';
 
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
@@ -31,9 +32,10 @@ export class CandidateLanguageProficiencyDetailComponent implements OnInit, OnDe
     }
 
     load(id) {
-        this.candidateLanguageProficiencyService.find(id).subscribe((candidateLanguageProficiency) => {
-            this.candidateLanguageProficiency = candidateLanguageProficiency;
-        });
+        this.candidateLanguageProficiencyService.find(id)
+            .subscribe((candidateLanguageProficiencyResponse: HttpResponse<CandidateLanguageProficiency>) => {
+                this.candidateLanguageProficiency = candidateLanguageProficiencyResponse.body;
+            });
     }
     previousState() {
         window.history.back();

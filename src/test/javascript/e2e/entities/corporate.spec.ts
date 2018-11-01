@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Corporate e2e test', () => {
 
     let navBarPage: NavBarPage;
     let corporateDialogPage: CorporateDialogPage;
     let corporateComponentsPage: CorporateComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Corporate e2e test', () => {
     it('should load Corporates', () => {
         navBarPage.goToEntity('corporate');
         corporateComponentsPage = new CorporateComponentsPage();
-        expect(corporateComponentsPage.getTitle()).toMatch(/gradzcircleApp.corporate.home.title/);
+        expect(corporateComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.corporate.home.title/);
 
     });
 
     it('should load create Corporate dialog', () => {
         corporateComponentsPage.clickOnCreateButton();
         corporateDialogPage = new CorporateDialogPage();
-        expect(corporateDialogPage.getModalTitle()).toMatch(/gradzcircleApp.corporate.home.createOrEditLabel/);
+        expect(corporateDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.corporate.home.createOrEditLabel/);
         corporateDialogPage.close();
     });
 
@@ -78,7 +76,7 @@ describe('Corporate e2e test', () => {
         corporateDialogPage.loginSelectLastOption();
         corporateDialogPage.save();
         expect(corporateDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -129,205 +127,205 @@ export class CorporateDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setNameInput = function (name) {
+    setNameInput = function(name) {
         this.nameInput.sendKeys(name);
-    }
+    };
 
-    getNameInput = function () {
+    getNameInput = function() {
         return this.nameInput.getAttribute('value');
-    }
+    };
 
-    setAddressInput = function (address) {
+    setAddressInput = function(address) {
         this.addressInput.sendKeys(address);
-    }
+    };
 
-    getAddressInput = function () {
+    getAddressInput = function() {
         return this.addressInput.getAttribute('value');
-    }
+    };
 
-    setCityInput = function (city) {
+    setCityInput = function(city) {
         this.cityInput.sendKeys(city);
-    }
+    };
 
-    getCityInput = function () {
+    getCityInput = function() {
         return this.cityInput.getAttribute('value');
-    }
+    };
 
-    setEstablishedSinceInput = function (establishedSince) {
+    setEstablishedSinceInput = function(establishedSince) {
         this.establishedSinceInput.sendKeys(establishedSince);
-    }
+    };
 
-    getEstablishedSinceInput = function () {
+    getEstablishedSinceInput = function() {
         return this.establishedSinceInput.getAttribute('value');
-    }
+    };
 
-    setEmailInput = function (email) {
+    setEmailInput = function(email) {
         this.emailInput.sendKeys(email);
-    }
+    };
 
-    getEmailInput = function () {
+    getEmailInput = function() {
         return this.emailInput.getAttribute('value');
-    }
+    };
 
-    setOverviewInput = function (overview) {
+    setOverviewInput = function(overview) {
         this.overviewInput.sendKeys(overview);
-    }
+    };
 
-    getOverviewInput = function () {
+    getOverviewInput = function() {
         return this.overviewInput.getAttribute('value');
-    }
+    };
 
-    setBenefitsInput = function (benefits) {
+    setBenefitsInput = function(benefits) {
         this.benefitsInput.sendKeys(benefits);
-    }
+    };
 
-    getBenefitsInput = function () {
+    getBenefitsInput = function() {
         return this.benefitsInput.getAttribute('value');
-    }
+    };
 
-    setWebsiteInput = function (website) {
+    setWebsiteInput = function(website) {
         this.websiteInput.sendKeys(website);
-    }
+    };
 
-    getWebsiteInput = function () {
+    getWebsiteInput = function() {
         return this.websiteInput.getAttribute('value');
-    }
+    };
 
-    setFacebookInput = function (facebook) {
+    setFacebookInput = function(facebook) {
         this.facebookInput.sendKeys(facebook);
-    }
+    };
 
-    getFacebookInput = function () {
+    getFacebookInput = function() {
         return this.facebookInput.getAttribute('value');
-    }
+    };
 
-    setTwitterInput = function (twitter) {
+    setTwitterInput = function(twitter) {
         this.twitterInput.sendKeys(twitter);
-    }
+    };
 
-    getTwitterInput = function () {
+    getTwitterInput = function() {
         return this.twitterInput.getAttribute('value');
-    }
+    };
 
-    setInstagramInput = function (instagram) {
+    setInstagramInput = function(instagram) {
         this.instagramInput.sendKeys(instagram);
-    }
+    };
 
-    getInstagramInput = function () {
+    getInstagramInput = function() {
         return this.instagramInput.getAttribute('value');
-    }
+    };
 
-    setLinkedInInput = function (linkedIn) {
+    setLinkedInInput = function(linkedIn) {
         this.linkedInInput.sendKeys(linkedIn);
-    }
+    };
 
-    getLinkedInInput = function () {
+    getLinkedInInput = function() {
         return this.linkedInInput.getAttribute('value');
-    }
+    };
 
-    setCultureInput = function (culture) {
+    setCultureInput = function(culture) {
         this.cultureInput.sendKeys(culture);
-    }
+    };
 
-    getCultureInput = function () {
+    getCultureInput = function() {
         return this.cultureInput.getAttribute('value');
-    }
+    };
 
-    setContactPersonInput = function (contactPerson) {
+    setContactPersonInput = function(contactPerson) {
         this.contactPersonInput.sendKeys(contactPerson);
-    }
+    };
 
-    getContactPersonInput = function () {
+    getContactPersonInput = function() {
         return this.contactPersonInput.getAttribute('value');
-    }
+    };
 
-    setPhoneInput = function (phone) {
+    setPhoneInput = function(phone) {
         this.phoneInput.sendKeys(phone);
-    }
+    };
 
-    getPhoneInput = function () {
+    getPhoneInput = function() {
         return this.phoneInput.getAttribute('value');
-    }
+    };
 
-    setPhoneCodeInput = function (phoneCode) {
+    setPhoneCodeInput = function(phoneCode) {
         this.phoneCodeInput.sendKeys(phoneCode);
-    }
+    };
 
-    getPhoneCodeInput = function () {
+    getPhoneCodeInput = function() {
         return this.phoneCodeInput.getAttribute('value');
-    }
+    };
 
-    setPersonDesignationInput = function (personDesignation) {
+    setPersonDesignationInput = function(personDesignation) {
         this.personDesignationInput.sendKeys(personDesignation);
-    }
+    };
 
-    getPersonDesignationInput = function () {
+    getPersonDesignationInput = function() {
         return this.personDesignationInput.getAttribute('value');
-    }
+    };
 
-    setTagLineInput = function (tagLine) {
+    setTagLineInput = function(tagLine) {
         this.tagLineInput.sendKeys(tagLine);
-    }
+    };
 
-    getTagLineInput = function () {
+    getTagLineInput = function() {
         return this.tagLineInput.getAttribute('value');
-    }
+    };
 
-    setEscrowAmountInput = function (escrowAmount) {
+    setEscrowAmountInput = function(escrowAmount) {
         this.escrowAmountInput.sendKeys(escrowAmount);
-    }
+    };
 
-    getEscrowAmountInput = function () {
+    getEscrowAmountInput = function() {
         return this.escrowAmountInput.getAttribute('value');
-    }
+    };
 
-    countrySelectLastOption = function () {
+    countrySelectLastOption = function() {
         this.countrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    countrySelectOption = function (option) {
+    countrySelectOption = function(option) {
         this.countrySelect.sendKeys(option);
-    }
+    };
 
-    getCountrySelect = function () {
+    getCountrySelect = function() {
         return this.countrySelect;
-    }
+    };
 
-    getCountrySelectedOption = function () {
+    getCountrySelectedOption = function() {
         return this.countrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    industrySelectLastOption = function () {
+    industrySelectLastOption = function() {
         this.industrySelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    industrySelectOption = function (option) {
+    industrySelectOption = function(option) {
         this.industrySelect.sendKeys(option);
-    }
+    };
 
-    getIndustrySelect = function () {
+    getIndustrySelect = function() {
         return this.industrySelect;
-    }
+    };
 
-    getIndustrySelectedOption = function () {
+    getIndustrySelectedOption = function() {
         return this.industrySelect.element(by.css('option:checked')).getText();
-    }
+    };
 
-    loginSelectLastOption = function () {
+    loginSelectLastOption = function() {
         this.loginSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    loginSelectOption = function (option) {
+    loginSelectOption = function(option) {
         this.loginSelect.sendKeys(option);
-    }
+    };
 
-    getLoginSelect = function () {
+    getLoginSelect = function() {
         return this.loginSelect;
-    }
+    };
 
-    getLoginSelectedOption = function () {
+    getLoginSelectedOption = function() {
         return this.loginSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

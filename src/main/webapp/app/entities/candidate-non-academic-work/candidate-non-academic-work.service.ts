@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { SERVER_API_URL } from '../../app.constants';
 
 import { JhiDateUtils } from 'ng-jhipster';
 
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
-import { ResponseWrapper, createRequestOption } from '../../shared';
+import { createRequestOption } from '../../shared';
+
+export type EntityResponseType = HttpResponse<CandidateNonAcademicWork>;
 
 @Injectable()
 export class CandidateNonAcademicWorkService {
@@ -15,71 +17,72 @@ export class CandidateNonAcademicWorkService {
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/candidate-non-academic-works';
     private resourceUrlNonAcademicWorkByCandidate = SERVER_API_URL + 'api/candidate-non-academic-work-by-id';
 
-    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
+   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
 
-    create(candidateNonAcademicWork: CandidateNonAcademicWork): Observable<CandidateNonAcademicWork> {
+   create(candidateNonAcademicWork: CandidateNonAcademicWork): Observable<EntityResponseType> {
         const copy = this.convert(candidateNonAcademicWork);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.post<CandidateNonAcademicWork>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    update(candidateNonAcademicWork: CandidateNonAcademicWork): Observable<CandidateNonAcademicWork> {
+    update(candidateNonAcademicWork: CandidateNonAcademicWork): Observable<EntityResponseType> {
         const copy = this.convert(candidateNonAcademicWork);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+       return this.http.put<CandidateNonAcademicWork>(this.resourceUrl, copy, { observe: 'response' })
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    findNonAcademicWorkByCandidateId(id: number): Observable<ResponseWrapper> {
-        return this.http.get(`${this.resourceUrlNonAcademicWorkByCandidate}/${id}`)
-          .map((res: Response) => this.convertResponse(res));
+    findNonAcademicWorkByCandidateId(id: number): Observable<HttpResponse<CandidateNonAcademicWork[]>> {
+        return this.http.get<CandidateNonAcademicWork[]>(`${this.resourceUrlNonAcademicWorkByCandidate}/${id}`, { observe: 'response'})
+              .map((res: HttpResponse<CandidateNonAcademicWork[]>) => this.convertArrayResponse(res));
+         
   }
 
-    find(id: number): Observable<CandidateNonAcademicWork> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+    find(id: number): Observable<EntityResponseType> {
+        return this.http.get<CandidateNonAcademicWork>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+            .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
-    query(req?: any): Observable<ResponseWrapper> {
+     query(req?: any): Observable<HttpResponse<CandidateNonAcademicWork[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<CandidateNonAcademicWork[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateNonAcademicWork[]>) => this.convertArrayResponse(res));
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+   delete(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<ResponseWrapper> {
+   search(req?: any): Observable<HttpResponse<CandidateNonAcademicWork[]>> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceSearchUrl, options)
-            .map((res: any) => this.convertResponse(res));
+         return this.http.get<CandidateNonAcademicWork[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .map((res: HttpResponse<CandidateNonAcademicWork[]>) => this.convertArrayResponse(res));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
+    private convertResponse(res: EntityResponseType): EntityResponseType {
+        const body: CandidateNonAcademicWork = this.convertItemFromServer(res.body);
+        return res.clone({body});
+    }
+  
+    private convertArrayResponse(res: HttpResponse<CandidateNonAcademicWork[]>): HttpResponse<CandidateNonAcademicWork[]> {
+        const jsonResponse: CandidateNonAcademicWork[] = res.body;
+        const body: CandidateNonAcademicWork[] = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return res.clone({body});
     }
+
 
     /**
      * Convert a returned JSON object to CandidateNonAcademicWork.
      */
-    private convertItemFromServer(json: any): CandidateNonAcademicWork {
-        const entity: CandidateNonAcademicWork = Object.assign(new CandidateNonAcademicWork(), json);
-        entity.nonAcademicWorkStartDate = this.dateUtils
-            .convertLocalDateFromServer(json.nonAcademicWorkStartDate);
-        entity.nonAcademicWorkEndDate = this.dateUtils
-            .convertLocalDateFromServer(json.nonAcademicWorkEndDate);
-        return entity;
+    private convertItemFromServer(candidateNonAcademicWork: CandidateNonAcademicWork): CandidateNonAcademicWork {
+        const copy: CandidateNonAcademicWork = Object.assign({}, candidateNonAcademicWork);
+        copy.nonAcademicWorkStartDate = this.dateUtils
+            .convertLocalDateFromServer(candidateNonAcademicWork.nonAcademicWorkStartDate);
+        copy.nonAcademicWorkEndDate = this.dateUtils
+            .convertLocalDateFromServer(candidateNonAcademicWork.nonAcademicWorkEndDate);
+        return copy;
     }
 
     /**

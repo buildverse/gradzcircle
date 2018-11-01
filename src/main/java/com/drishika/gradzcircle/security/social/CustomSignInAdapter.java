@@ -21,44 +21,47 @@ import javax.servlet.http.Cookie;
 
 public class CustomSignInAdapter implements SignInAdapter {
 
-	@SuppressWarnings("unused")
-	private final Logger log = LoggerFactory.getLogger(CustomSignInAdapter.class);
+    @SuppressWarnings("unused")
+    private final Logger log = LoggerFactory.getLogger(CustomSignInAdapter.class);
 
-	private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-	private final JHipsterProperties jHipsterProperties;
+    private final JHipsterProperties jHipsterProperties;
 
-	private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-	public CustomSignInAdapter(UserDetailsService userDetailsService, JHipsterProperties jHipsterProperties,
-			TokenProvider tokenProvider) {
-		this.userDetailsService = userDetailsService;
-		this.jHipsterProperties = jHipsterProperties;
-		this.tokenProvider = tokenProvider;
-	}
 
-	@Override
-	public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
-		try {
-			UserDetails user = userDetailsService.loadUserByUsername(userId);
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user,
-					null, user.getAuthorities());
+    public CustomSignInAdapter(UserDetailsService userDetailsService, JHipsterProperties jHipsterProperties,
+            TokenProvider tokenProvider) {
+        this.userDetailsService = userDetailsService;
+        this.jHipsterProperties = jHipsterProperties;
+        this.tokenProvider = tokenProvider;
+    }
 
-			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-			String jwt = tokenProvider.createToken(authenticationToken, false);
-			ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-			servletWebRequest.getResponse().addCookie(getSocialAuthenticationCookie(jwt));
-		} catch (AuthenticationException ae) {
-			log.error("Social authentication error");
-			log.trace("Authentication exception trace: {}", ae);
-		}
-		return jHipsterProperties.getSocial().getRedirectAfterSignIn();
-	}
+    @Override
+    public String signIn(String userId, Connection<?> connection, NativeWebRequest request){
+        try {
+            UserDetails user = userDetailsService.loadUserByUsername(userId);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                user,
+                null,
+                user.getAuthorities());
 
-	private Cookie getSocialAuthenticationCookie(String token) {
-		Cookie socialAuthCookie = new Cookie("social-authentication", token);
-		socialAuthCookie.setPath("/");
-		socialAuthCookie.setMaxAge(10);
-		return socialAuthCookie;
-	}
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            String jwt = tokenProvider.createToken(authenticationToken, false);
+            ServletWebRequest servletWebRequest = (ServletWebRequest) request;
+            servletWebRequest.getResponse().addCookie(getSocialAuthenticationCookie(jwt));
+        } catch (AuthenticationException ae) {
+            log.error("Social authentication error");
+            log.trace("Authentication exception trace: {}", ae);
+        }
+        return jHipsterProperties.getSocial().getRedirectAfterSignIn();
+    }
+
+    private Cookie getSocialAuthenticationCookie(String token) {
+        Cookie socialAuthCookie = new Cookie("social-authentication", token);
+        socialAuthCookie.setPath("/");
+        socialAuthCookie.setMaxAge(10);
+        return socialAuthCookie;
+    }
 }

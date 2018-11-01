@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('JobFilter e2e test', () => {
 
     let navBarPage: NavBarPage;
     let jobFilterDialogPage: JobFilterDialogPage;
     let jobFilterComponentsPage: JobFilterComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('JobFilter e2e test', () => {
     it('should load JobFilters', () => {
         navBarPage.goToEntity('job-filter');
         jobFilterComponentsPage = new JobFilterComponentsPage();
-        expect(jobFilterComponentsPage.getTitle()).toMatch(/gradzcircleApp.jobFilter.home.title/);
+        expect(jobFilterComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.jobFilter.home.title/);
 
     });
 
     it('should load create JobFilter dialog', () => {
         jobFilterComponentsPage.clickOnCreateButton();
         jobFilterDialogPage = new JobFilterDialogPage();
-        expect(jobFilterDialogPage.getModalTitle()).toMatch(/gradzcircleApp.jobFilter.home.createOrEditLabel/);
+        expect(jobFilterDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.jobFilter.home.createOrEditLabel/);
         jobFilterDialogPage.close();
     });
 
@@ -40,7 +38,7 @@ describe('JobFilter e2e test', () => {
         jobFilterDialogPage.jobSelectLastOption();
         jobFilterDialogPage.save();
         expect(jobFilterDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -71,29 +69,29 @@ export class JobFilterDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setFilterDescriptionInput = function (filterDescription) {
+    setFilterDescriptionInput = function(filterDescription) {
         this.filterDescriptionInput.sendKeys(filterDescription);
-    }
+    };
 
-    getFilterDescriptionInput = function () {
+    getFilterDescriptionInput = function() {
         return this.filterDescriptionInput.getAttribute('value');
-    }
+    };
 
-    jobSelectLastOption = function () {
+    jobSelectLastOption = function() {
         this.jobSelect.all(by.tagName('option')).last().click();
-    }
+    };
 
-    jobSelectOption = function (option) {
+    jobSelectOption = function(option) {
         this.jobSelect.sendKeys(option);
-    }
+    };
 
-    getJobSelect = function () {
+    getJobSelect = function() {
         return this.jobSelect;
-    }
+    };
 
-    getJobSelectedOption = function () {
+    getJobSelectedOption = function() {
         return this.jobSelect.element(by.css('option:checked')).getText();
-    }
+    };
 
     save() {
         this.saveButton.click();

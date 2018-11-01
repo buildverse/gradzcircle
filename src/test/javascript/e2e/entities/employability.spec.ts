@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Employability e2e test', () => {
 
     let navBarPage: NavBarPage;
     let employabilityDialogPage: EmployabilityDialogPage;
     let employabilityComponentsPage: EmployabilityComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Employability e2e test', () => {
     it('should load Employabilities', () => {
         navBarPage.goToEntity('employability');
         employabilityComponentsPage = new EmployabilityComponentsPage();
-        expect(employabilityComponentsPage.getTitle()).toMatch(/gradzcircleApp.employability.home.title/);
+        expect(employabilityComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.employability.home.title/);
 
     });
 
     it('should load create Employability dialog', () => {
         employabilityComponentsPage.clickOnCreateButton();
         employabilityDialogPage = new EmployabilityDialogPage();
-        expect(employabilityDialogPage.getModalTitle()).toMatch(/gradzcircleApp.employability.home.createOrEditLabel/);
+        expect(employabilityDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.employability.home.createOrEditLabel/);
         employabilityDialogPage.close();
     });
 
@@ -43,7 +41,7 @@ describe('Employability e2e test', () => {
         expect(employabilityDialogPage.getEmployabilityPercentileInput()).toMatch('5');
         employabilityDialogPage.save();
         expect(employabilityDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -75,29 +73,29 @@ export class EmployabilityDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setEmployableSkillNameInput = function (employableSkillName) {
+    setEmployableSkillNameInput = function(employableSkillName) {
         this.employableSkillNameInput.sendKeys(employableSkillName);
-    }
+    };
 
-    getEmployableSkillNameInput = function () {
+    getEmployableSkillNameInput = function() {
         return this.employableSkillNameInput.getAttribute('value');
-    }
+    };
 
-    setEmployabilityScoreInput = function (employabilityScore) {
+    setEmployabilityScoreInput = function(employabilityScore) {
         this.employabilityScoreInput.sendKeys(employabilityScore);
-    }
+    };
 
-    getEmployabilityScoreInput = function () {
+    getEmployabilityScoreInput = function() {
         return this.employabilityScoreInput.getAttribute('value');
-    }
+    };
 
-    setEmployabilityPercentileInput = function (employabilityPercentile) {
+    setEmployabilityPercentileInput = function(employabilityPercentile) {
         this.employabilityPercentileInput.sendKeys(employabilityPercentile);
-    }
+    };
 
-    getEmployabilityPercentileInput = function () {
+    getEmployabilityPercentileInput = function() {
         return this.employabilityPercentileInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

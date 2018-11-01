@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
 
@@ -31,9 +31,10 @@ export class CandidateNonAcademicWorkDetailComponent implements OnInit, OnDestro
     }
 
     load(id) {
-        this.candidateNonAcademicWorkService.find(id).subscribe((candidateNonAcademicWork) => {
-            this.candidateNonAcademicWork = candidateNonAcademicWork;
-        });
+       this.candidateNonAcademicWorkService.find(id)
+            .subscribe((candidateNonAcademicWorkResponse: HttpResponse<CandidateNonAcademicWork>) => {
+                this.candidateNonAcademicWork = candidateNonAcademicWorkResponse.body;
+            });
     }
     previousState() {
         window.history.back();

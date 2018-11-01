@@ -1,53 +1,40 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save()"
-	#editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
-	<div class="modal-header">
-		<h4 class="modal-title" id="myErrorMessagesLabel"
-			jhiTranslate="gradzcircleApp.errorMessages.home.createOrEditLabel">Create
-			or edit a Error Messages</h4>
-		<button type="button" class="close" data-dismiss="modal"
-			aria-hidden="true" (click)="clear()">&times;</button>
-	</div>
-	<div class="modal-body">
-		<jhi-alert-error></jhi-alert-error>
-		<div class="form-group" [hidden]="!errorMessages.id">
-			<label for="id" jhiTranslate="global.field.id">ID</label> <input
-				type="text" class="form-control" id="id" name="id"
-				[(ngModel)]="errorMessages.id" readonly />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.errorMessages.componentName"
-				for="field_componentName">Component Name</label> <input type="text"
-				class="form-control" name="componentName" id="field_componentName"
-				[(ngModel)]="errorMessages.componentName" />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.errorMessages.errorKey"
-				for="field_errorKey">Error Key</label> <input type="text"
-				class="form-control" name="errorKey" id="field_errorKey"
-				[(ngModel)]="errorMessages.errorKey" />
-		</div>
-		<div class="form-group">
-			<label class="form-control-label"
-				jhiTranslate="gradzcircleApp.errorMessages.errorMessage"
-				for="field_errorMessage">Error Message</label> <input type="text"
-				class="form-control" name="errorMessage" id="field_errorMessage"
-				[(ngModel)]="errorMessages.errorMessage" />
-		</div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myErrorMessagesLabel" jhiTranslate="gradzcircleApp.errorMessages.home.createOrEditLabel">Create or edit a Error Messages</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!errorMessages.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="errorMessages.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.errorMessages.componentName" for="field_componentName">Component Name</label>
+            <input type="text" class="form-control" name="componentName" id="field_componentName"
+                [(ngModel)]="errorMessages.componentName" />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.errorMessages.errorKey" for="field_errorKey">Error Key</label>
+            <input type="text" class="form-control" name="errorKey" id="field_errorKey"
+                [(ngModel)]="errorMessages.errorKey" />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.errorMessages.errorMessage" for="field_errorMessage">Error Message</label>
+            <input type="text" class="form-control" name="errorMessage" id="field_errorMessage"
+                [(ngModel)]="errorMessages.errorMessage" />
+        </div>
 
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal"
-			(click)="clear()">
-			<span class="fa fa-ban"></span>&nbsp;<span
-				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
-		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
-			class="btn btn-primary">
-			<span class="fa fa-save"></span>&nbsp;<span
-				jhiTranslate="entity.action.save">Save</span>
-		</button>
-	</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
 </form>

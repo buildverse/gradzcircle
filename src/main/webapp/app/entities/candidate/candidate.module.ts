@@ -25,7 +25,7 @@ const ENTITY_STATES = [
     imports: [
         GradzcircleSharedModule,
         GradzcircleAdminModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
+        RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [
         CandidateComponent,

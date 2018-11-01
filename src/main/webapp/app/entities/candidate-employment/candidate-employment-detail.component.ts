@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
-
+import { HttpResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
 
@@ -31,8 +31,8 @@ export class CandidateEmploymentDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.candidateEmploymentService.find(id).subscribe((candidateEmployment) => {
-            this.candidateEmployment = candidateEmployment;
+        this.candidateEmploymentService.find(id) .subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) => {
+                this.candidateEmployment = candidateEmploymentResponse.body;
         });
     }
     previousState() {

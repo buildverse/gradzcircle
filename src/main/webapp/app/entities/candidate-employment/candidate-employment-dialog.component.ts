@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -16,7 +15,7 @@ import { EmploymentType, EmploymentTypeService } from '../employment-type';
 import { Country, CountryService } from '../country';
 import { JobType, JobTypeService } from '../job-type';
 import { JhiDateUtils } from 'ng-jhipster';
-import { ResponseWrapper, EditorProperties } from '../../shared';
+import { EditorProperties } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate-employment-dialog',
@@ -85,13 +84,13 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;
         this.candidateService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+             .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.employmentTypeService.query()
-            .subscribe((res: ResponseWrapper) => { this.employmenttypes = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmenttypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.countryService.query()
-            .subscribe((res: ResponseWrapper) => { this.countries = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+             .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.jobTypeService.query()
-            .subscribe((res: ResponseWrapper) => { this.jobtypes = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+             .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -109,9 +108,9 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<CandidateEmployment>) {
-        result.subscribe((res: CandidateEmployment) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+ private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateEmployment>>) {
+        result.subscribe((res: HttpResponse<CandidateEmployment>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CandidateEmployment) {

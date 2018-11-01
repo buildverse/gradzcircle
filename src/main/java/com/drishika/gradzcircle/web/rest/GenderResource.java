@@ -1,25 +1,7 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.Gender;
-import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
-import com.drishika.gradzcircle.entitybuilders.GenderEntityBuilder;
-import com.drishika.gradzcircle.repository.GenderRepository;
-import com.drishika.gradzcircle.repository.search.GenderSearchRepository;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +11,37 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.apache.commons.beanutils.BeanUtils;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.Gender;
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.GenderEntityBuilder;
+import com.drishika.gradzcircle.repository.GenderRepository;
+import com.drishika.gradzcircle.repository.search.GenderSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Gender.
@@ -70,11 +82,9 @@ public class GenderResource {
 	@Timed
 	public ResponseEntity<Gender> createGender(@RequestBody Gender gender) throws URISyntaxException {
 		log.debug("REST request to save Gender : {}", gender);
-		if (gender.getId() != null) {
-			return ResponseEntity.badRequest().headers(
-					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new gender cannot already have an ID"))
-					.body(null);
-		}
+		 if (gender.getId() != null) {
+	            throw new BadRequestAlertException("A new gender cannot already have an ID", ENTITY_NAME, "idexists");
+	        }
 		Gender result = genderRepository.save(gender);
 		elasticSearchTemplate.index(new GenderEntityBuilder(result.getId()).name(result.getGender())
 				.suggest(new String[] { result.getGender() }).buildIndex());

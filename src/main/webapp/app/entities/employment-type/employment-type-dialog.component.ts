@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { JhiEventManager } from 'ng-jhipster';
 
 import { EmploymentType } from './employment-type.model';
 import { EmploymentTypePopupService } from './employment-type-popup.service';
@@ -21,7 +21,6 @@ export class EmploymentTypeDialogComponent implements OnInit {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private jhiAlertService: JhiAlertService,
         private employmentTypeService: EmploymentTypeService,
         private eventManager: JhiEventManager
     ) {
@@ -46,9 +45,9 @@ export class EmploymentTypeDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<EmploymentType>) {
-        result.subscribe((res: EmploymentType) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<EmploymentType>>) {
+        result.subscribe((res: HttpResponse<EmploymentType>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: EmploymentType) {
@@ -59,10 +58,6 @@ export class EmploymentTypeDialogComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
-    }
-
-    private onError(error: any) {
-        this.jhiAlertService.error(error.message, null, null);
     }
 }
 

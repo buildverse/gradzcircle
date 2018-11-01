@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { Skills } from './skills.model';
@@ -31,9 +32,10 @@ export class SkillsDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.skillsService.find(id).subscribe((skills) => {
-            this.skills = skills;
-        });
+        this.skillsService.find(id)
+            .subscribe((skillsResponse: HttpResponse<Skills>) => {
+                this.skills = skillsResponse.body;
+            });
     }
     previousState() {
         window.history.back();

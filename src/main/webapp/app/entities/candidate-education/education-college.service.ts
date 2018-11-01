@@ -1,5 +1,5 @@
-import {Component, Injectable} from '@angular/core';
-import {Jsonp, URLSearchParams,ConnectionBackend} from '@angular/http';	
+/*import {Component, Injectable} from '@angular/core';
+import {Jsonp, URLSearchParams,ConnectionBackend} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
@@ -31,3 +31,4 @@ export class EducationCollegeService {
       .map(response => <string[]> response.json()[1]);
   }
 }
+*/

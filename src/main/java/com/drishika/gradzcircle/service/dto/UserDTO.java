@@ -40,7 +40,7 @@ public class UserDTO {
 
 	private boolean activated = false;
 
-	@Size(min = 2, max = 5)
+	@Size(min = 2, max = 6)
 	private String langKey;
 
 	private String createdBy;
@@ -56,13 +56,25 @@ public class UserDTO {
 	public UserDTO() {
 		// Empty constructor needed for Jackson.
 	}
+	
+	 public UserDTO(User user) {
+	        this.id = user.getId();
+	        this.login = user.getLogin();
+	        this.firstName = user.getFirstName();
+	        this.lastName = user.getLastName();
+	        this.email = user.getEmail();
+	        this.activated = user.getActivated();
+	        this.imageUrl = user.getImageUrl();
+	        this.langKey = user.getLangKey();
+	        this.createdBy = user.getCreatedBy();
+	        this.createdDate = user.getCreatedDate();
+	        this.lastModifiedBy = user.getLastModifiedBy();
+	        this.lastModifiedDate = user.getLastModifiedDate();
+	        this.authorities = user.getAuthorities().stream()
+	            .map(Authority::getName)
+	            .collect(Collectors.toSet());
+	    }
 
-	public UserDTO(User user) {
-		this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail(),
-				user.getActivated(), user.getImageUrl(), user.getLangKey(), user.getCreatedBy(), user.getCreatedDate(),
-				user.getLastModifiedBy(), user.getLastModifiedDate(),
-				user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
-	}
 
 	public UserDTO(Long id, String login, String firstName, String lastName, String email, boolean activated,
 			String imageUrl, String langKey, String createdBy, Instant createdDate, String lastModifiedBy,
@@ -146,6 +158,8 @@ public class UserDTO {
 	public Set<String> getAuthorities() {
 		return authorities;
 	}
+	
+	
 
 	@Override
 	public String toString() {

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { HttpResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { CaptureQualification } from './capture-qualification.model';
@@ -31,9 +32,10 @@ export class CaptureQualificationDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.captureQualificationService.find(id).subscribe((captureQualification) => {
-            this.captureQualification = captureQualification;
-        });
+        this.captureQualificationService.find(id)
+            .subscribe((captureQualificationResponse: HttpResponse<CaptureQualification>) => {
+                this.captureQualification = captureQualificationResponse.body;
+            });
     }
     previousState() {
         window.history.back();

@@ -1,15 +1,11 @@
-import { browser, element, by, $ } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
-const path = require('path');
 
 describe('Audit e2e test', () => {
 
     let navBarPage: NavBarPage;
     let auditDialogPage: AuditDialogPage;
     let auditComponentsPage: AuditComponentsPage;
-    const fileToUpload = '../../../../main/webapp/content/images/logo-jhipster.png';
-    const absolutePath = path.resolve(__dirname, fileToUpload);
-    
 
     beforeAll(() => {
         browser.get('/');
@@ -22,14 +18,16 @@ describe('Audit e2e test', () => {
     it('should load Audits', () => {
         navBarPage.goToEntity('audit');
         auditComponentsPage = new AuditComponentsPage();
-        expect(auditComponentsPage.getTitle()).toMatch(/gradzcircleApp.audit.home.title/);
+        expect(auditComponentsPage.getTitle())
+            .toMatch(/gradzcircleApp.audit.home.title/);
 
     });
 
     it('should load create Audit dialog', () => {
         auditComponentsPage.clickOnCreateButton();
         auditDialogPage = new AuditDialogPage();
-        expect(auditDialogPage.getModalTitle()).toMatch(/gradzcircleApp.audit.home.createOrEditLabel/);
+        expect(auditDialogPage.getModalTitle())
+            .toMatch(/gradzcircleApp.audit.home.createOrEditLabel/);
         auditDialogPage.close();
     });
 
@@ -45,7 +43,7 @@ describe('Audit e2e test', () => {
         expect(auditDialogPage.getUpdatedTimeInput()).toMatch('2001-12-31T02:30');
         auditDialogPage.save();
         expect(auditDialogPage.getSaveButton().isPresent()).toBeFalsy();
-    }); 
+    });
 
     afterAll(() => {
         navBarPage.autoSignOut();
@@ -78,37 +76,37 @@ export class AuditDialogPage {
         return this.modalTitle.getAttribute('jhiTranslate');
     }
 
-    setCreatedByInput = function (createdBy) {
+    setCreatedByInput = function(createdBy) {
         this.createdByInput.sendKeys(createdBy);
-    }
+    };
 
-    getCreatedByInput = function () {
+    getCreatedByInput = function() {
         return this.createdByInput.getAttribute('value');
-    }
+    };
 
-    setUpdatedByInput = function (updatedBy) {
+    setUpdatedByInput = function(updatedBy) {
         this.updatedByInput.sendKeys(updatedBy);
-    }
+    };
 
-    getUpdatedByInput = function () {
+    getUpdatedByInput = function() {
         return this.updatedByInput.getAttribute('value');
-    }
+    };
 
-    setCreatedTimeInput = function (createdTime) {
+    setCreatedTimeInput = function(createdTime) {
         this.createdTimeInput.sendKeys(createdTime);
-    }
+    };
 
-    getCreatedTimeInput = function () {
+    getCreatedTimeInput = function() {
         return this.createdTimeInput.getAttribute('value');
-    }
+    };
 
-    setUpdatedTimeInput = function (updatedTime) {
+    setUpdatedTimeInput = function(updatedTime) {
         this.updatedTimeInput.sendKeys(updatedTime);
-    }
+    };
 
-    getUpdatedTimeInput = function () {
+    getUpdatedTimeInput = function() {
         return this.updatedTimeInput.getAttribute('value');
-    }
+    };
 
     save() {
         this.saveButton.click();

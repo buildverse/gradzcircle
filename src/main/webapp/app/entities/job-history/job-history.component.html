@@ -1,168 +1,127 @@
 <div>
-	<h2>
-		<span jhiTranslate="gradzcircleApp.jobHistory.home.title">Job
-			Histories</span>
-		<button
-			class="btn btn-primary float-right jh-create-entity create-job-history"
-			[routerLink]="['/', { outlets: { popup: ['job-history-new'] } }]">
-			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
-				jhiTranslate="gradzcircleApp.jobHistory.home.createLabel">
-				Create new Job History </span>
-		</button>
-	</h2>
-	<jhi-alert></jhi-alert>
-	<div class="row">
-		<div class="col-sm-12">
-			<form name="searchForm" class="form-inline">
-				<div class="input-group w-100 mt-3">
-					<input type="text" class="form-control" [(ngModel)]="currentSearch"
-						id="currentSearch" name="currentSearch"
-						placeholder="{{ 'gradzcircleApp.jobHistory.home.search' | translate }}">
-					<button class="input-group-addon btn btn-info"
-						(click)="search(currentSearch)">
-						<span class="fa fa-search"></span>
-					</button>
-					<button class="input-group-addon btn btn-danger" (click)="clear()"
-						*ngIf="currentSearch">
-						<span class="fa fa-trash-o"></span>
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<br />
-	<div class="table-responsive" *ngIf="jobHistories">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th><span jhiTranslate="global.field.id">ID</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.jobTitle">Job
-							Title</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.jobDescription">Job
-							Description</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.noOfApplicants">No
-							Of Applicants</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.salary">Salary</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.jobStatus">Job
-							Status</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.createDate">Create
-							Date</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.originalJobCost">Original
-							Job Cost</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.jobCost">Job
-							Cost</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.amountPaid">Amount
-							Paid</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.totalAmountPaid">Total
-							Amount Paid</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantsBought">No
-							Of Applicants Bought</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.removedFilterAmount">Removed
-							Filter Amount</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.additionalFilterAmount">Additional
-							Filter Amount</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.adminCharge">Admin
-							Charge</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.adminChargeRate">Admin
-							Charge Rate</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.upfrontDiscountRate">Upfront
-							Discount Rate</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.upfrontDiscountAmount">Upfront
-							Discount Amount</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.escrowAmountUsed">Escrow
-							Amount Used</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.escrowAmountAdded">Escrow
-							Amount Added</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.paymentType">Payment
-							Type</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.jobHistory.hasBeenEdited">Has
-							Been Edited</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.everActive">Ever
-							Active</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.canEdit">Can
-							Edit</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.updateDate">Update
-							Date</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.createdBy">Created
-							By</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.updatedBy">Updated
-							By</span></th>
-					<th><span jhiTranslate="gradzcircleApp.jobHistory.job">Job</span></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let jobHistory of jobHistories ;trackBy: trackId">
-					<td><a [routerLink]="['../job-history', jobHistory.id ]">{{jobHistory.id}}</a></td>
-					<td>{{jobHistory.jobTitle}}</td>
-					<td>{{jobHistory.jobDescription}}</td>
-					<td>{{jobHistory.noOfApplicants}}</td>
-					<td>{{jobHistory.salary}}</td>
-					<td>{{jobHistory.jobStatus}}</td>
-					<td>{{jobHistory.createDate | date:'medium'}}</td>
-					<td>{{jobHistory.originalJobCost}}</td>
-					<td>{{jobHistory.jobCost}}</td>
-					<td>{{jobHistory.amountPaid}}</td>
-					<td>{{jobHistory.totalAmountPaid}}</td>
-					<td>{{jobHistory.noOfApplicantsBought}}</td>
-					<td>{{jobHistory.removedFilterAmount}}</td>
-					<td>{{jobHistory.additionalFilterAmount}}</td>
-					<td>{{jobHistory.adminCharge}}</td>
-					<td>{{jobHistory.adminChargeRate}}</td>
-					<td>{{jobHistory.upfrontDiscountRate}}</td>
-					<td>{{jobHistory.upfrontDiscountAmount}}</td>
-					<td>{{jobHistory.escrowAmountUsed}}</td>
-					<td>{{jobHistory.escrowAmountAdded}}</td>
-					<td
-						jhiTranslate="{{'gradzcircleApp.PaymentType.' + jobHistory.paymentType}}">{{jobHistory.paymentType}}</td>
-					<td>{{jobHistory.hasBeenEdited}}</td>
-					<td>{{jobHistory.everActive}}</td>
-					<td>{{jobHistory.canEdit}}</td>
-					<td>{{jobHistory.updateDate | date:'medium'}}</td>
-					<td>{{jobHistory.createdBy}}</td>
-					<td>{{jobHistory.updatedBy}}</td>
-					<td>
-						<div *ngIf="jobHistory.job">
-							<a [routerLink]="['../job', jobHistory.job?.id ]">{{jobHistory.job?.id}}</a>
-						</div>
-					</td>
-					<td class="text-right">
-						<div class="btn-group flex-btn-group-container">
-							<button type="submit"
-								[routerLink]="['../job-history', jobHistory.id ]"
-								class="btn btn-info btn-sm">
-								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
-									jhiTranslate="entity.action.view">View</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'job-history/'+ jobHistory.id + '/edit'} }]"
-								replaceUrl="true" class="btn btn-primary btn-sm">
-								<span class="fa fa-pencil"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'job-history/'+ jobHistory.id + '/delete'} }]"
-								replaceUrl="true" class="btn btn-danger btn-sm">
-								<span class="fa fa-remove"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-							</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <h2>
+        <span jhiTranslate="gradzcircleApp.jobHistory.home.title">Job Histories</span>
+        <button class="btn btn-primary float-right jh-create-entity create-job-history" [routerLink]="['/', { outlets: { popup: ['job-history-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.jobHistory.home.createLabel">
+            Create new Job History
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.jobHistory.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="jobHistories">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.jobTitle">Job Title</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.jobDescription">Job Description</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.noOfApplicants">No Of Applicants</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.salary">Salary</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.jobStatus">Job Status</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.createDate">Create Date</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.originalJobCost">Original Job Cost</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.jobCost">Job Cost</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.amountPaid">Amount Paid</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.totalAmountPaid">Total Amount Paid</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantsBought">No Of Applicants Bought</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.removedFilterAmount">Removed Filter Amount</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.additionalFilterAmount">Additional Filter Amount</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.adminCharge">Admin Charge</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.adminChargeRate">Admin Charge Rate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.upfrontDiscountRate">Upfront Discount Rate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.upfrontDiscountAmount">Upfront Discount Amount</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.escrowAmountUsed">Escrow Amount Used</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.escrowAmountAdded">Escrow Amount Added</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.paymentType">Payment Type</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.hasBeenEdited">Has Been Edited</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.everActive">Ever Active</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.canEdit">Can Edit</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.updateDate">Update Date</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.createdBy">Created By</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.updatedBy">Updated By</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.job">Job</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let jobHistory of jobHistories ;trackBy: trackId">
+                <td><a [routerLink]="['../job-history', jobHistory.id ]">{{jobHistory.id}}</a></td>
+                <td>{{jobHistory.jobTitle}}</td>
+                <td>{{jobHistory.jobDescription}}</td>
+                <td>{{jobHistory.noOfApplicants}}</td>
+                <td>{{jobHistory.salary}}</td>
+                <td>{{jobHistory.jobStatus}}</td>
+                <td>{{jobHistory.createDate | date:'medium'}}</td>
+                <td>{{jobHistory.originalJobCost}}</td>
+                <td>{{jobHistory.jobCost}}</td>
+                <td>{{jobHistory.amountPaid}}</td>
+                <td>{{jobHistory.totalAmountPaid}}</td>
+                <td>{{jobHistory.noOfApplicantsBought}}</td>
+                <td>{{jobHistory.removedFilterAmount}}</td>
+                <td>{{jobHistory.additionalFilterAmount}}</td>
+                <td>{{jobHistory.adminCharge}}</td>
+                <td>{{jobHistory.adminChargeRate}}</td>
+                <td>{{jobHistory.upfrontDiscountRate}}</td>
+                <td>{{jobHistory.upfrontDiscountAmount}}</td>
+                <td>{{jobHistory.escrowAmountUsed}}</td>
+                <td>{{jobHistory.escrowAmountAdded}}</td>
+                <td jhiTranslate="{{'gradzcircleApp.PaymentType.' + jobHistory.paymentType}}">{{jobHistory.paymentType}}</td>
+                <td>{{jobHistory.hasBeenEdited}}</td>
+                <td>{{jobHistory.everActive}}</td>
+                <td>{{jobHistory.canEdit}}</td>
+                <td>{{jobHistory.updateDate | date:'medium'}}</td>
+                <td>{{jobHistory.createdBy}}</td>
+                <td>{{jobHistory.updatedBy}}</td>
+                <td>
+                    <div *ngIf="jobHistory.job">
+                        <a [routerLink]="['../job', jobHistory.job?.id ]" >{{jobHistory.job?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../job-history', jobHistory.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'job-history/'+ jobHistory.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'job-history/'+ jobHistory.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -4,20 +4,20 @@ import { CandidateLanguageProficiency } from '../../entities/candidate-language-
 import { Principal } from '../../shared/auth/principal.service';
 import { CandidateLanguageProficiencyService } from '../../entities/candidate-language-proficiency/candidate-language-proficiency.service';
 import { Candidate } from '../../entities/candidate/candidate.model';
-import { Response } from '@angular/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { ResponseWrapper } from '../../shared';
+
 
 @Injectable()
-export class CandidateLanguageProficiencyResolverService implements Resolve<CandidateLanguageProficiency> {
+export class CandidateLanguageProficiencyResolverService implements Resolve<HttpResponse<CandidateLanguageProficiency[]>> {
     candidateLanguageProficiencies: CandidateLanguageProficiency[];
     constructor (private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,private router: Router){}
-    resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CandidateLanguageProficiency>{
+    resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<HttpResponse<CandidateLanguageProficiency[]>>{
         let candidateId = route.parent.data['candidate'].id;
        // console.log("Candidate id is "+JSON.stringify(candidateId));
         return this.candidateLanguageProficiencyService.search({
                 query: candidateId
-                }).map((res: ResponseWrapper)=> this.candidateLanguageProficiencies).catch((error: any) => {
+                }).map((res: HttpResponse<CandidateLanguageProficiency[]>)=> this.candidateLanguageProficiencies).catch((error: any) => {
                         console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);

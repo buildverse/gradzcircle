@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { JobHistoryComponent } from './job-history.component';
 import { JobHistoryDetailComponent } from './job-history-detail.component';
 import { JobHistoryPopupComponent } from './job-history-dialog.component';

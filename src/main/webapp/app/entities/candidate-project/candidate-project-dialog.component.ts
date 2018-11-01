@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
-
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CandidateProject } from './candidate-project.model';
@@ -14,7 +13,7 @@ import { CandidateEmployment, CandidateEmploymentService } from '../candidate-em
 import { CandidateEducationProjectPopupService } from './candidate-education-project-popup.service';
 import { CandidateEmploymentProjectPopupService } from './candidate-employment-project-popup.service';
 import { JhiDateUtils } from 'ng-jhipster';
-import { ResponseWrapper,EditorProperties } from '../../shared';
+import { EditorProperties } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate-project-dialog',
@@ -79,9 +78,9 @@ export class CandidateProjectDialogComponent implements OnInit {
         this.candidateProject.isCurrentProject?this.endDateControl=true:this.endDateControl=false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.candidateEducationService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidateEducations = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<CandidateEducation[]>) => { this.candidateEducations = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.candidateEmploymentService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidateEmployments = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<CandidateEmployment[]>) => { this.candidateEmployments = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -99,9 +98,9 @@ export class CandidateProjectDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<CandidateProject>) {
-        result.subscribe((res: CandidateProject) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
+     private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateProject>>) {
+        result.subscribe((res: HttpResponse<CandidateProject>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: CandidateProject) {

@@ -5,9 +5,10 @@ import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, 
 import { Candidate } from '../candidate/candidate.model';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
-import { ITEMS_PER_PAGE, Principal, ResponseWrapper } from '../../shared';
+import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-candidate-language-proficiency',
@@ -28,7 +29,8 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+            this.activatedRoute.snapshot.params['search'] : '';
     }
 
     loadAll() {
@@ -38,17 +40,17 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
             this.candidateLanguageProficiencyService.search({
                 query: this.currentSearch,
                 }).subscribe(
-                    (res: ResponseWrapper) => this.candidateLanguageProficiencies = res.json,
-                    (res: ResponseWrapper) => this.onError(res.json)
+                     (res: HttpResponse<CandidateLanguageProficiency[]>) => this.candidateLanguageProficiencies = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
        }
         this.candidateLanguageProficiencyService.query().subscribe(
-            (res: ResponseWrapper) => {
-                this.candidateLanguageProficiencies = res.json;
+             (res: HttpResponse<CandidateLanguageProficiency[]>) => {
+                this.candidateLanguageProficiencies = res.body;
                 this.currentSearch = '';
             },
-            (res: ResponseWrapper) => this.onError(res.json)
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
 
@@ -68,13 +70,8 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     loadCandidateLanguages(){
         this.candidateLanguageProficiencyService.findByCandidateId(this.candidateId)
             .subscribe(
-                (response: ResponseWrapper)=> {
-                    this.candidateLanguageProficiencies = response.json;
-                },
-                (response: ResponseWrapper) => {
-                    this.onError(response.json);
-                    
-                }
+                (res: HttpResponse<CandidateLanguageProficiency[]>) => this.candidateLanguageProficiencies = res.body,
+                    (res: HttpErrorResponse) => this.onError(res.message)
             );
     }
 

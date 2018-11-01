@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy ,Input} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
 import { NgForm } from '@angular/Forms'
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +12,7 @@ import { CandidateLanguageProficiencyService } from './candidate-language-profic
 import { Candidate, CandidateService } from '../candidate';
 import { Language, LanguageService } from '../language';
 import { Principal } from '../../shared';
-import { ResponseWrapper } from '../../shared';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-candidate-language-proficiency-dialog',
@@ -99,12 +98,12 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         this.selectLanguageProficiency = false;
         if (this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN'])) {
              this.candidateService.query()
-            .subscribe((res: ResponseWrapper) => { this.candidates = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
 
         }
 
         this.languageService.query()
-            .subscribe((res: ResponseWrapper) => { this.languages = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+             .subscribe((res: HttpResponse<Language[]>) => { this.languages = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
 
 
     }
@@ -140,10 +139,10 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
 
     }
 
-    private subscribeToSaveResponse(result: Observable<CandidateLanguageProficiency>) {
-        result.subscribe((res: CandidateLanguageProficiency) =>
-            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
-    }
+   private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateLanguageProficiency>>) {
+        result.subscribe((res: HttpResponse<CandidateLanguageProficiency>) =>
+            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+  }
 
     private onSaveSuccess(result: CandidateLanguageProficiency) {
         this.eventManager.broadcast({ name: 'candidateLanguageProficiencyListModification', content: 'OK'});

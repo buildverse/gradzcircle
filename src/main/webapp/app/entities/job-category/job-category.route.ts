@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { JobCategoryComponent } from './job-category.component';
 import { JobCategoryDetailComponent } from './job-category-detail.component';
 import { JobCategoryPopupComponent } from './job-category-dialog.component';
