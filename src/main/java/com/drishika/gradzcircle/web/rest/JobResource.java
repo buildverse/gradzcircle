@@ -237,6 +237,47 @@ public class JobResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedJobsByCandidate");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
+	
+	
+	/**
+	 * GET /shortListedCandidatesForJob : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/shortListedCandidatesForJob/{jobId}")
+	@Timed
+	public ResponseEntity<List<CandidateProfileListDTO>> getShortListedCandidatesByJob(@ApiParam Pageable pageable,
+			@PathVariable Long jobId) {
+		final Page<CandidateProfileListDTO> page = jobService.getShortListedCandidatesForJob(pageable, jobId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/shortListedCandidatesForJob");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /candidatesAppliedForAllJbsByCorporate : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/appliedCandidatesForJobsByCorporate/{corporateId}")
+	@Timed
+	public ResponseEntity<Long> getAppliedCandidatesForJobsByCorporate(@PathVariable Long corporateId) {
+		Long numberOfCandidates = jobService.getAppliedCandidatesForAllJobsByCorporate(corporateId);
+		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, numberOfCandidates.toString()))
+				.body(numberOfCandidates);
+	}
+	
+	/**
+	 * GET /totalJobsByCorporate : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/totalJobsByCorporate/{corporateId}")
+	@Timed
+	public ResponseEntity<Long> getTotalJobsByCorporate(@PathVariable Long corporateId) {
+		Long numberOfCandidates = jobService.getTotalJobsByCorporate(corporateId);
+		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, numberOfCandidates.toString()))
+				.body(numberOfCandidates);
+	}
 
 	/**
 	 * Apply for Job
@@ -252,6 +293,17 @@ public class JobResource {
 				.body(result);
 	}
 
+	
+	
+	@GetMapping("/totalJobsPostedLastMonthByCorporate/{corporateId}")
+	@Timed
+	public ResponseEntity <Long> jobsPostedLastMonth(@PathVariable Long corporateId)
+			throws URISyntaxException {
+		Long totalNumberOfJobsLAstMonth = jobService.getTotalJobsPostedSinceLastMonth(corporateId);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, totalNumberOfJobsLAstMonth.toString()))
+				.body(totalNumberOfJobsLAstMonth);
+	}
+	
 	/**
 	 * GET /jobs/:id : get the "id" job.
 	 *

@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.repository;
 
 import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -14,7 +15,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
-import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Job;
@@ -47,5 +47,11 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
 	@Query("select j from Job j, CandidateAppliedJobs cJA where cJA.id.jobId = j.id and cJA.id.candidateId=?1")
 	Page<Job> findAppliedJobByCandidate(Long candidateId, Pageable pageable);
+	
+	@Query("select count(j) from Job j where j.corporate.id=?1")
+	Long countByCorporate(Long corporateId);
+	
+	@Query("select count(j) from Job j where j.corporate.id=?1 and j.createDate between ?2 and ?3")
+	Long numberOfJobsPostedAcrossDates(Long corporateId, ZonedDateTime fromDate, ZonedDateTime toDate);
 
 }

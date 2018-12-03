@@ -145,24 +145,24 @@
 			<jhi-alert-error></jhi-alert-error>
 			<div class="form-group row mx-4 ">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.jobTitle" for="field_jobTitle">Job
 						Title</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-10">
 					<small
-						class=" justify-content-start form-text text-muted profile-text-info"
+						class=" justify-content-start form-text  profile-text-info"
 						*ngIf="prevJob && !job.hasBeenEdited && prevJob.everActive && prevJob.paymentType==='UPFRONT'">
 						<span class="icon icon-info" style="color: #448AFF"></span> <small
 						style="color: #448AFF"> First edit is free.</small>
 					</small> <small
 						*ngIf="prevJob && !job.hasBeenEdited && prevJob.everActive && prevJob.paymentType==='AS_YOU_GO'"
-						class="form-text text-muted profile-text-info"> <span
+						class="form-text  profile-text-info"> <span
 						class="icon icon-info" style="color: #448AFF"></span> <small
 						style="color: #448AFF"> Admin charge of
 							{{filterMap.get(AMEND)}} %is applicable for editing job</small>
 					</small> <input type="text" required #jobTitle="ngModel"
-						class="form-control text-muted" name="jobTitle"
+						class="form-control " name="jobTitle"
 						id="field_jobTitle" [(ngModel)]="job.jobTitle" />
 					<div *ngIf="jobTitle.invalid && jobTitle.touched"
 						class="text-danger">
@@ -172,18 +172,23 @@
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.jobDescription"
 						for="field_jobDescription">Job Description</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-10">
-					<textarea [froalaEditor]='options' class="form-control text-muted"
+					<ck-editor class="form-control " 
+						 name="jobDescription" required #jobDesc="ngModel"
+						id="field_jobDescription" [config]="editorConfig"
+						[(ngModel)]="job.jobDescription">
+					</ck-editor>
+					<!--  <textarea [froalaEditor]='options' class="form-control "
 						required #jobDesc="ngModel" name="jobDescription"
 						id="field_jobDescription" rows="20"
 						[(ngModel)]="job.jobDescription">
-                </textarea>
+                </textarea>-->
 					<!--  <input type="text" required #jobDesc="ngModel"
-						class="form-control text-muted" name="jobDescription"
+						class="form-control " name="jobDescription"
 						id="field_jobDescription" [(ngModel)]="job.jobDescription" />-->
 					<div *ngIf="jobDesc.invalid && jobDesc.touched" class="text-danger">
 						<small>Please enter Job Description</small>
@@ -193,19 +198,19 @@
 
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.salary" for="field_salary">Salary</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-10"
 					[class.has-danger]="jobSalary.invalid && jobSalary.touched">
-					<input type="number" class="form-control text-muted" name="salary"
+					<input type="number" class="form-control " name="salary"
 						type="number" pattern="^[0-9]+$" id="field_salary"
 						#jobSalary="ngModel" [(ngModel)]="job.salary" />
 					<div *ngIf="jobSalary.invalid && jobSalary.touched"
 						class="text-danger">
 						<small>Please enter valid salary</small>
 					</div>
-					<small class="form-text text-muted profile-text-info"> <span
+					<small class="form-text  profile-text-info"> <span
 						class="icon icon-info" style="color: #448AFF"></span> <small
 						style="color: #448AFF"> Salary p.a. </small>
 					</small>
@@ -227,17 +232,17 @@
 			(stepEnter)="enterFilters()" (stepExit)="exitFilters()">
 		<hr>
 		<div class="modal-body my-0">
-			<div class="form-inline d-flex justify-content-around">
+			<div class="form-inline d-flex justify-content-around font-weight-light">
 				<label for="filter_category_basic"> <input type="checkbox"
-					class="form-check-input text-muted" name="basic"
+					class="form-check-input " name="basic"
 					id="filter_category_basic" [(ngModel)]="basic" disabled>
 					Basic
 				</label> <label for="filter_category_premium"> <input
-					type="checkbox" class="form-check-input text-muted" name="premium"
+					type="checkbox" class="form-check-input " name="premium"
 					id="filter_category_premium" [(ngModel)]="premium"
 					(ngModelChange)="togglePremiumFilter()"> Premium
 				</label> <label for="filter_category_addOn"> <input type="checkbox"
-					class="form-check-input text-muted" name="addOn"
+					class="form-check-input " name="addOn"
 					id="filter_category_addOn" [(ngModel)]="addOn"
 					(ngModelChange)="toggleAddOnFilter()"> Add On
 				</label>
@@ -246,13 +251,13 @@
 		<div *ngIf="basic">
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.jobType" for="field_jobType">Job
 						Type</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-4"
 					*ngIf="businessPlanEnabled; else businessPlanJobNotEnabled">
-					<select class="form-control text-muted" required id="field_jobType"
+					<select class="form-control " required id="field_jobType"
 						#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
 						(ngModelChange)="captureJobTypeCost($event)">
 						<option [ngValue]="null"></option>
@@ -266,7 +271,7 @@
 				</div>
 				<ng-template #businessPlanJobNotEnabled>
 				<div class="ml-0 pl-0 col-md-4">
-					<select class="form-control text-muted" required id="field_jobType"
+					<select class="form-control " required id="field_jobType"
 						#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
 						(ngModelChange)="captureJobTypeCost($event)">
 						<option [ngValue]="null"></option>
@@ -281,13 +286,13 @@
 				</ng-template>
 
 				<div class="col-md-3 mr-0">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.employmentType"
 						for="field_employmentType">Employment Type</label>
 				</div>
 				<div class="pl-0 ml-0 col-md-3"
 					*ngIf="businessPlanEnabled; else businessPlanNotEnabled">
-					<select class="form-control text-muted" required
+					<select class="form-control " required
 						id="field_employmentType" #empType="ngModel" name="employmentType"
 						[(ngModel)]="job.employmentType"
 						(ngModelChange)="captureEmploymentTypeCost($event)">
@@ -302,7 +307,7 @@
 				</div>
 				<ng-template #businessPlanNotEnabled>
 				<div class="pl-0 ml-0 col-md-3">
-					<select class="form-control text-muted" required
+					<select class="form-control " required
 						id="field_employmentType" #empType="ngModel" name="employmentType"
 						[(ngModel)]="job.employmentType"
 						(ngModelChange)="captureEmploymentTypeCost($event)">
@@ -320,16 +325,16 @@
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.job.noOfApplicants"
 						for="field_minApplicants">Min Applicants</label>
 				</div>
 				<div class="ml-0 pl-0 col-md-10">
-					<input type="number" class="form-control text-muted"
+					<input type="number" class="form-control "
 						name="minApplicants" id="field_minApplicants"
 						#noOfApplicates="ngModel" [(ngModel)]="job.noOfApplicants"
 						(ngModelChange)="numOfCandidateValueChange($event)" /> <small
-						class="form-text text-muted profile-text-info"> <span
+						class="form-text  profile-text-info"> <span
 						class="icon icon-info" style="color: #448AFF"></span> <small
 						style="color: #448AFF"> Minimum 20 candidate required </small>
 					</small>
@@ -342,7 +347,7 @@
 
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.college"
 						for="field_college">College</label>
 				</div>
@@ -354,14 +359,14 @@
 						[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
 					</tag-input>
 				</div>
-				<small class="offset-md-2 form-text text-muted profile-text-info">
+				<small class="offset-md-2 form-text  profile-text-info">
 					<span class="icon icon-info" style="color: #448AFF"></span> <small
 					style="color: #448AFF"> </small>
 				</small>
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.university"
 						for="field_university">University</label>
 				</div>
@@ -373,7 +378,7 @@
 						[autocompleteObservable]='requestUniversityData'></tag-input-dropdown>
 					</tag-input>
 				</div>
-				<small class="offset-md-2 form-text text-muted profile-text-info">
+				<small class="offset-md-2 form-text  profile-text-info">
 					<span class="icon icon-info" style="color: #448AFF"></span> <small
 					style="color: #448AFF"> Do we need to filter by uni ? </small>
 				</small>
@@ -384,7 +389,7 @@
 			<hr>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.course"
 						for="field_course">Course</label>
 				</div>
@@ -401,7 +406,7 @@
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.qualification"
 						for="field_qualification">Qualification</label>
 				</div>
@@ -415,7 +420,7 @@
 						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
 					</tag-input>
 				</div>
-				<small class="offset-md-2 form-text text-muted profile-text-info">
+				<small class="offset-md-2 form-text  profile-text-info">
 					<span class="icon icon-info" style="color: #448AFF"></span> <small
 					style="color: #448AFF"> We will consider candidates highest
 						qualification for matching </small>
@@ -423,11 +428,11 @@
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.scoreFilter"
 						for="field_grade">Score more than..</label>
 				</div>
-				<div class="col-md-4 form-check justify-content-around">
+				<div class="col-md-4 form-check form-check-inline justify-content-around">
 					<label class="form-check-label"> <input type="radio"
 						name="scoreType" value="percent" [(ngModel)]="scoreType"
 						class="form-check-input" (change)="setScoreControl()">
@@ -438,11 +443,11 @@
 					</label>
 				</div>
 				<div *ngIf="enablePercent" class="col-md-2 ">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.percentage"
 						for="field_grade"> Percentage</label>
 				</div>
-				<div *ngIf="enablePercent" class="col-md-4"
+				<div *ngIf="enablePercent" class="col-md-2"
 					[class.has-danger]="percent.invalid && percent.touched">
 					<input required pattern="^[0-9]+(\.[0-9]{1,2})?$"
 						#percent="ngModel" type="number" class="form-control"
@@ -457,14 +462,14 @@
 						<small>Percentage cannot be greater than 100</small>
 					</div>
 				</div>
-				<div *ngIf="enableGpa" class="col-md-2 ">
-					<label class="form-control-label font-weight-bold text-muted"
+				<div *ngIf="enableGpa" class="col-md-1 ">
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.gpa"
 						for="field_grade">GPA</label>
 				</div>
 				<div *ngIf="enableGpa" class="col-md-2"
 					[class.has-danger]="roundOfGrades.invalid && roundOfGrades.touched">
-					<select class="form-control text-muted" name="roundOfGrade"
+					<select class="form-control " name="roundOfGrade"
 						#roundOfGrades="ngModel" required [(ngModel)]="roundOfGrade"
 						(change)="shouldDisableDecimal()" (blur)="updateScoreCost()">
 						<!--  <option [ngValue]="null"></option>-->
@@ -477,14 +482,14 @@
 					</div>
 				</div>
 				<div *ngIf="enableGpa" required class="col-md-2">
-					<select class="form-control text-muted" name="gradeDecimal"
+					<select class="form-control " name="gradeDecimal"
 						[(ngModel)]="gradeDecimal" [disabled]="!enableDecimal">
 						<!--  <option [ngValue]="null"></option>-->
 						<option [ngValue]="score == gradeDecimal? gradeDecimal : score"
 							*ngFor="let score of gpaDecimalValues;">.{{score}}</option>
 					</select>
 				</div>
-				<small class="offset-md-2 form-text text-muted profile-text-info">
+				<small class="offset-md-2 form-text  profile-text-info">
 					<span class="icon icon-info" style="color: #448AFF"></span> <small
 					style="color: #448AFF"> GPA or percentage will be average
 						across all year from school to college </small>
@@ -503,39 +508,40 @@
 			<hr>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-6">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateEducation.graduationDate"
 						for="field_graduationDate">Graduation Date</label>
 				</div>
 			</div>
 			<div class="form-inline d-flex justify-content-around">
 				<label for="graduation_date_less"> <input type="radio"
-					class="form-check-input text-muted" name="date" value="less"
+					class="form-check-input " name="date" value="less"
 					[(ngModel)]="graduationDateType"
 					(ngModelChange)="showDateControl()"> Less Than
 				</label> <label for="graduation_date_greater"> <input type="radio"
-					class="form-check-input text-muted" name="date" value="greater"
+					class="form-check-input " name="date" value="greater"
 					[(ngModel)]="graduationDateType"
 					(ngModelChange)="showDateControl()"> Greater Than
 				</label> <label for="graduation_date_between"> <input type="radio"
-					class="form-check-input text-muted" name="date" value="between"
+					class="form-check-input " name="date" value="between"
 					[(ngModel)]="graduationDateType"
 					(ngModelChange)="showDateControl()"> Between
 				</label>
 			</div>
 			<div *ngIf="singleDateControl">
 				<div class="form-group row mx-4 my-4 d-flex justify-content-center">
-					<div class="col-md-6">
+					<div class="col-md-6" (mouseleave)="graduationDateDp.close()">
 						<div class=" input-group">
 							<input id="field_graduationDate" #gradDat="ngModel" type="text"
-								class="form-control text-muted" name="gradDate" ngbDatepicker
+								class="form-control " name="gradDate" ngbDatepicker
 								required #graduationDateDp="ngbDatepicker"
 								[(ngModel)]="graduationDate"
 								(ngModelChange)="updateGraduationDateCost()" /> <span
-								class="input-group-addon " (click)="graduationDateDp.toggle()">
-
-								<img src="../../../content/images/calendar.png"
-								style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+								class="input-group-append ">
+								
+								<button class="btn btn-outline-secondary" (click)="graduationDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
 
 							</span>
 						</div>
@@ -545,22 +551,22 @@
 			<div *ngIf="multipleDateControl">
 				<div class="form-group row mx-4 my-4 d-flex justify-content-around">
 					<div class="col-md-2">
-						<label class="form-control-label font-weight-bold text-muted"
+						<label class="form-control-label font-weight-bold "
 							jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate"
 							for="field_graduationDate">From Date</label>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4" (mouseleave)="graduationFromDateDp.close()">
 						<div class="input-group">
 							<input id="field_graduationFromDate" #fromDate="ngModel" required
-								type="text" class="form-control text-muted"
+								type="text" class="form-control "
 								name="graduationFromDate" ngbDatepicker required
 								#graduationFromDateDp="ngbDatepicker"
 								[(ngModel)]="graduationFromDate"
 								(ngModelChange)="validateDatesAndUpdateCost()" /> <span
-								class="input-group-addon "
-								(click)="graduationFromDateDp.toggle()"> <img
-								src="../../../content/images/calendar.png"
-								style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+								class="input-group-append "> 
+								<button class="btn btn-outline-secondary" (click)="graduationFromDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
 							</span>
 						</div>
 						<div *ngIf="fromDate.invalid && fromDate.touched"
@@ -569,23 +575,24 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<label class="form-control-label font-weight-bold text-muted"
+						<label class="form-control-label font-weight-bold "
 							jhiTranslate="gradzcircleApp.candidateEducation.educationToDate"
 							for="field_graduationDate">Till Date</label>
 					</div>
 					<div class="col-md-4">
 						<div class="input-group">
 							<input id="field_graduationToDate" #toDate="ngModel" required
-								type="text" class="form-control text-muted"
+								type="text" class="form-control "
 								name="graduationToDate" ngbDatepicker
 								#graduationToDateDp="ngbDatepicker"
 								[(ngModel)]="graduationToDate"
 								(ngModelChange)="validateDatesAndUpdateCost()" />
-							<button class="input-group-addon "
-								(click)="graduationToDateDp.toggle()" type="button">
-								<img src="../../../content/images/calendar.png"
-									style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-							</button>
+							<span
+								class="input-group-append "> 
+								<button class="btn btn-outline-secondary" (click)="graduationToDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
+							</span>
 						</div>
 						<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
 							<small>Please enter Graduation End Date</small>
@@ -605,12 +612,12 @@
 			</div>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidate.gender" for="field_gender">Gender</label>
 				</div>
 				<div class="col-md-4"
 					[class.has-danger]="genderType.invalid && genderType.touched">
-					<select class="form-control text-muted" name="gender"
+					<select class="form-control " name="gender"
 						#genderType="ngModel" [(ngModel)]="gender" id="field_gender"
 						(change)="updateGenderCost()">
 						<option [ngValue]="null"></option>
@@ -629,7 +636,7 @@
 					<label
 						jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language"
 						for="field_language"
-						class="form-control-label font-weight-bold text-muted">Language</label>
+						class="form-control-label font-weight-bold ">Language</label>
 				</div>
 				<div class="col-md-10">
 					<tag-input name="languages" [(ngModel)]="languages"
@@ -668,19 +675,19 @@
 			navigationSymbolFontFamily="FontAwesome" (stepEnter)="enterPreview()"
 			(stepExit)="exitPreview()">
 		<div class="row mx-2 my-4">
-			<div class="col-md-12 font-weight-bold text-muted">
+			<div class="col-md-12 font-weight-bold ">
 				<h4 jhiTranslate="gradzcircleApp.job.jobPostPreviewMessage"></h4>
 			</div>
 		</div>
 		<div *ngIf="!(prevEmploymentType && prevJobType); else changedTypes">
 			<div class="row mx-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.jobType"></div>
 				<div class="col-md-6 d-flex justify-content-center">{{job.jobType?.jobType}}</div>
 
 			</div>
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.employmentType"></div>
 				<div class="col-md-6 d-flex justify-content-center">{{job.employmentType?.employmentType}}</div>
 			</div>
@@ -689,20 +696,20 @@
 		<div
 			*ngIf="prevEmploymentType?.id != currentEmploymentType?.id && employmentTypeChanged; else sameEmploymentType">
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.prevEmploymentType"></div>
 				<div class="col-md-6 d-flex justify-content-center text-danger">{{prevEmploymentType?.employmentType}}</div>
 
 			</div>
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.newEmploymentType"></div>
 				<div class="col-md-6 d-flex justify-content-center text-success">{{currentEmploymentType?.employmentType}}</div>
 			</div>
 		</div>
 		<ng-template #sameEmploymentType>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.employmentType"></div>
 			<div class="col-md-6 d-flex justify-content-center">{{job.employmentType?.employmentType}}</div>
 		</div>
@@ -710,68 +717,71 @@
 		<div
 			*ngIf="prevJobType?.id != currentJobType?.id && jobTypeChanged; else sameJobType">
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.prevJobType"></div>
 				<div class="col-md-6 d-flex justify-content-center text-danger">{{prevJobType?.jobType}}</div>
 
 			</div>
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.newJobType"></div>
 				<div class="col-md-6 d-flex justify-content-center text-success">{{currentJobType?.jobType}}</div>
 			</div>
 		</div>
 		<ng-template #sameJobType>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.jobType"></div>
 			<div class="col-md-6 d-flex justify-content-center">{{job.jobType?.jobType}}</div>
 		</div>
 		</ng-template> </ng-template>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.jobTitle"></div>
 			<div class="col-md-6 d-flex justify-content-center">{{job.jobTitle}}</div>
 		</div>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-3 font-weight-bold text-muted"
+			<div class="col-md-3 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.jobDescription"></div>
-			<div class="col-md-9 ">{{job.jobDescription}}</div>
+			
+		</div>
+		<div class="row mx-4 mt-4">
+			<div class="col-md-12 ">{{job.jobDescription}}</div>
 		</div>
 		<div class="row mx-4 mt-4"
 			*ngIf="job.noOfApplicants===prevNoOfApplicants || !job.everActive; else deltaNoOfApplicants">
-			<div class="col-md-6 d-flex font-weight-bold text-muted "
+			<div class="col-md-6 d-flex font-weight-bold  "
 				jhiTranslate="gradzcircleApp.job.noOfApplicants">No. Of
 				candidate</div>
 			<div
-				class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{job.noOfApplicants}}</div>
+				class="col-md-6 d-flex font-weight-bold  justify-content-center">{{job.noOfApplicants}}</div>
 		</div>
 		<ng-template #deltaNoOfApplicants>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 d-flex font-weight-bold text-muted "
+			<div class="col-md-6 d-flex font-weight-bold  "
 				jhiTranslate="gradzcircleApp.job.prevNoOfApplicants">No. Of
 				candidate</div>
 			<div
-				class="col-md-6 d-flex font-weight-bold text-muted text-danger justify-content-center">{{prevNoOfApplicants}}
+				class="col-md-6 d-flex font-weight-bold  text-danger justify-content-center">{{prevNoOfApplicants}}
 			</div>
 		</div>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 d-flex font-weight-bold text-muted "
+			<div class="col-md-6 d-flex font-weight-bold  "
 				jhiTranslate="gradzcircleApp.job.currNoOfApplicants">No. Of
 				candidate</div>
 			<div
-				class="col-md-6 d-flex font-weight-bold text-muted text-success justify-content-center">{{job.noOfApplicants}}
+				class="col-md-6 d-flex font-weight-bold  text-success justify-content-center">{{job.noOfApplicants}}
 			</div>
 		</div>
 		</ng-template>
 		<div class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.salary"></div>
 			<div class="col-md-6 d-flex justify-content-center">{{job?.salary?job.salary:'Not
 				declared'}}</div>
 		</div>
 		<div class="row mx-4 mt-4" *ngIf="colleges?.length>0">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.collegesSelected"></div>
 
 			<div class="table-responsive col-md-6 ">
@@ -786,7 +796,7 @@
 			</div>
 		</div>
 		<div class="row mx-4 mt-4" *ngIf="universities?.length>0">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.universitiesSelected"></div>
 			<div class="col-md-6 table-responsive">
 				<table class="table table-striped">
@@ -801,7 +811,7 @@
 		</div>
 		<div class="row mx-4 mt-4"
 			*ngIf="qualifications && qualifications?.length>0">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.qualification"></div>
 			<div class="col-md-6 table-responsive">
 				<table class="table table-striped">
@@ -815,7 +825,7 @@
 			</div>
 		</div>
 		<div class="row mx-4 mt-4" *ngIf="courses && courses?.length>0">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.coursesSelected"></div>
 			<div class="col-md-6 table-responsive">
 				<table class="table table-striped">
@@ -830,7 +840,7 @@
 		</div>
 		<div *ngIf="scoreType==='percent'">
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.percent"></div>
 				<div class="col-md-6 d-flex justify-content-center">
 					{{percentage}}%</div>
@@ -838,14 +848,14 @@
 		</div>
 
 		<div *ngIf="scoreType==='gpa'" class="row mx-4 mt-4">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.gpa"></div>
 			<div class="col-md-6 d-flex justify-content-center">
 				{{roundOfGrade}}.{{gradeDecimal?gradeDecimal:0}}</div>
 		</div>
 
 		<div class="row mx-4 mt-4" *ngIf="gender">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.genderSelected"></div>
 			<div class="col-md-6 d-flex justify-content-center">
 				{{gender.gender}}</div>
@@ -853,10 +863,10 @@
 		<div *ngIf="singleDateControl">
 			<div class="row mx-4 mt-4">
 				<div *ngIf="graduationDateType==='less';else later"
-					class="col-md-6 font-weight-bold text-muted"
+					class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.graduatedDateLessThan"></div>
 				<ng-template #later>
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.graduatedDateGreaterThan"></div>
 				</ng-template>
 				<div class="col-md-6 d-flex justify-content-center">{{gradDate|date:'mediumDate'}}</div>
@@ -864,7 +874,7 @@
 		</div>
 		<div *ngIf="multipleDateControl">
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 font-weight-bold text-muted"
+				<div class="col-md-6 font-weight-bold "
 					jhiTranslate="gradzcircleApp.job.graduatedDateBetween"></div>
 				<div class="col-md-6 d-flex justify-content-center">
 					{{gradFromDate | date:'mediumDate'}}
@@ -874,7 +884,7 @@
 			</div>
 		</div>
 		<div class="row mx-4 mt-4" *ngIf="languages && languages?.length>0">
-			<div class="col-md-6 font-weight-bold text-muted"
+			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.languagesSelected"></div>
 			<div class="col-md-6 table-responsive">
 				<table class="table table-striped">
@@ -890,40 +900,40 @@
 		<div *ngIf="businessPlanEnabled && job.originalJobCost >0">
 
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Basic
+				<div class="col-md-6 d-flex font-weight-bold  ">Basic
 					Cost ( Inclusive of Job type, Employment type, College and
 					University Filters)</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 					{{employmentTypeCost[0]+jobTypeCost[0]}}</div>
 			</div>
 			<div class="row mx-4 mt-4 "
 				*ngIf="qualificationCost >0 || coursesCost>0 ||scoreCost >0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Premium
+				<div class="col-md-6 d-flex font-weight-bold  ">Premium
 					Filter Cost</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 					{{qualificationCost+coursesCost+scoreCost}}</div>
 			</div>
 			<div class="row mx-4 mt-4"
 				*ngIf="genderCost>0||languageCost>0||gradDateCost>0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Add-On
+				<div class="col-md-6 d-flex font-weight-bold  ">Add-On
 					filters Cost</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 					{{genderCost+languageCost+gradDateCost}}</div>
 			</div>
 
 			<div class="row mx-4 mt-4" *ngIf="escrowAmount>0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Escrow
+				<div class="col-md-6 d-flex font-weight-bold  ">Escrow
 					Amount</div>
 				<div
-					class="form-inline col-md-6 d-flex font-weight-bold text-muted justify-content-center">
+					class="form-inline col-md-6 d-flex font-weight-bold  justify-content-center">
 					&#8377; {{escrowAmount?escrowAmount:0}}
 					<div class="form-check ml-3 font-weight-normal"
 						*ngIf="escrowAmount && job.jobCost>0 && this.jobCostDifference >=0 && this.job.paymentType==='UPFRONT' ">
 						<label for="use_escrow"> <input type="checkbox"
-							class="form-check-input text-muted" name="useEscrow"
+							class="form-check-input " name="useEscrow"
 							id="use_escrow" [(ngModel)]="useEscrow"
 							(ngModelChange)="offsetEscrow()"> Use Escrow
 						</label>
@@ -931,44 +941,44 @@
 				</div>
 			</div>
 			<div class="row mx-4 mt-4" *ngIf="useEscrow">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">New
+				<div class="col-md-6 d-flex font-weight-bold  ">New
 					Escrow Amount</div>
 				<div
-					class="form-inline col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+					class="form-inline col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 					{{job.corporate.escrowAmount}}</div>
 			</div>
 			<div class="row mx-4 mt-4" *ngIf="amendmentCharge>0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted ">Amendment
+				<div class="col-md-6 d-flex font-weight-bold  ">Amendment
 					Charges</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">{{0}}</div>
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">{{0}}</div>
 			</div>
 			jobCostDifference ##{{jobCostDifference}}
 			<div class="row mx-4 mt-4"
 				*ngIf="businessPlanEnabled && !prevJob.everActive; else editJob">
-				<div class="col-md-6 d-flex font-weight-bold text-muted">Job
+				<div class="col-md-6 d-flex font-weight-bold ">Job
 					Cost</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
+					class="col-md-6 d-flex font-weight-bold  justify-content-center"
 					*ngIf="escrowAmount>=0 && useEscrow; else noEscrow">
 					<div *ngIf="job.jobCost<0; else showJobCost">N/A</div>
 					<ng-template #showJobCost>&#8377; {{job.jobCost}}</ng-template>
 				</div>
 				<ng-template #noEscrow>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">
 					&#8377; {{job.jobCost}}</div>
 				</ng-template>
 			</div>
 			<ng-template #editJob>
 			<div class="row mx-4 mt-4" *ngIf="jobCostDifference>0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted">Additional
+				<div class="col-md-6 d-flex font-weight-bold ">Additional
 					Amount Payable</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
+					class="col-md-6 d-flex font-weight-bold  justify-content-center"
 					*ngIf="escrowAmount ; else noEscrow">
 					<div
-						class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
+						class="col-md-6 d-flex font-weight-bold  justify-content-center"
 						*ngIf='useEscrow; else noUseEscrow'>
 						<div
 							*ngIf="escrowAmount > jobCostDifference ; else jobCostGreater">
@@ -979,47 +989,47 @@
 					</div>
 					<ng-template #noUseEscrow>
 					<div
-						class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">
+						class="col-md-6 d-flex font-weight-bold  justify-content-center">
 						&#8377; {{jobCostDifference}}</div>
 					</ng-template>
 
 				</div>
 				<ng-template #noEscrow>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">
 					&#8377; {{jobCostDifference}}</div>
 				</ng-template>
 
 			</div>
 			<div class="row mx-4 mt-4" *ngIf="jobCostDifference<0">
-				<div class="col-md-6 d-flex font-weight-bold text-muted">Reduced
+				<div class="col-md-6 d-flex font-weight-bold ">Reduced
 					Filter Amount</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">
 					&#8377; {{job.removedFilterAmount}}</div>
 			</div>
 			<div class="row mx-4 mt-4" *ngIf="jobCostDifference">
-				<div class="col-md-6 d-flex font-weight-bold text-muted">New
+				<div class="col-md-6 d-flex font-weight-bold ">New
 					Job Cost</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+					class="col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 					{{job.jobCost}}</div>
 			</div>
 			<div *ngIf="job.adminCharge">
 				<div class="row mx-4 mt-4">
-					<div class="col-md-6 d-flex font-weight-bold text-muted">Admin
+					<div class="col-md-6 d-flex font-weight-bold ">Admin
 						Charge</div>
 					<div
-						class="col-md-6 d-flex font-weight-bold text-muted justify-content-center">&#8377;
+						class="col-md-6 d-flex font-weight-bold  justify-content-center">&#8377;
 						{{job.adminCharge}}</div>
 				</div>
 			</div>
 			</ng-template>
 			<div class="row mx-4 mt-4">
-				<div class="col-md-6 d-flex font-weight-bold text-muted">Amount
+				<div class="col-md-6 d-flex font-weight-bold ">Amount
 					Payable</div>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
+					class="col-md-6 d-flex font-weight-bold  justify-content-center"
 					*ngIf="amountPayable>0;else noAmountPayable">
 					<div *ngIf="job.adminCharge;else noAdminCharge">&#8377;
 						{{amountPayable}}+{{job.adminCharge}}={{amountPayable+job.adminCharge}}
@@ -1029,11 +1039,11 @@
 				</div>
 				<ng-template #noAmountPayable>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center"
+					class="col-md-6 d-flex font-weight-bold  justify-content-center"
 					*ngIf="job.adminCharge; else noAdminCharg">&#8377;{{job.adminCharge}}</div>
 				<ng-template #noAdminCharg>
 				<div
-					class="col-md-6 d-flex font-weight-bold text-muted justify-content-center text-success">N/A</div>
+					class="col-md-6 d-flex font-weight-bold  justify-content-center text-success">N/A</div>
 				</ng-template> </ng-template>
 			</div>
 			amount payable {{amountPayable}} admin charge {{job.adminCharge}}
@@ -1048,7 +1058,7 @@
 			</div>
 			<div class="row mx-4 mt-4"
 				*ngIf="businessPlanEnabled && !job.everActive">
-				<div class="mx-auto form-check justify-content-center">
+				<div class="mx-auto form-check form-check-inline justify-content-center">
 					<label class="form-check-label"> <input type="radio"
 						name="paymentType" value="now" [(ngModel)]="paymentType"
 						class="form-check-input" (change)="calculateDiscountedCost()">

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
+import com.drishika.gradzcircle.service.dto.CandidateLanguageProficiencyDTO;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
@@ -136,9 +137,9 @@ public class CandidateLanguageProficiencyResource {
 	 */
 	@GetMapping("/candidate-language-proficiencies/{id}")
 	@Timed
-	public ResponseEntity<CandidateLanguageProficiency> getCandidateLanguageProficiency(@PathVariable Long id) {
+	public ResponseEntity<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiency(@PathVariable Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageService
+		CandidateLanguageProficiencyDTO candidateLanguageProficiency = candidateLanguageService
 				.getCandidateLanguageProficiency(id);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateLanguageProficiency));
 	}

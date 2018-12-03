@@ -4,13 +4,19 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
 import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -45,10 +55,13 @@ public class CountryResource {
 	private final CountryRepository countryRepository;
 
 	private final CountrySearchRepository countrySearchRepository;
+	
+	private final ElasticsearchTemplate elasticSearchTemplate;
 
-	public CountryResource(CountryRepository countryRepository, CountrySearchRepository countrySearchRepository) {
+	public CountryResource(CountryRepository countryRepository, CountrySearchRepository countrySearchRepository,ElasticsearchTemplate elasticSearchTemplate) {
 		this.countryRepository = countryRepository;
 		this.countrySearchRepository = countrySearchRepository;
+		this.elasticSearchTemplate = elasticSearchTemplate;
 	}
 
 	/**
@@ -70,7 +83,9 @@ public class CountryResource {
 	            throw new BadRequestAlertException("A new country cannot already have an ID", ENTITY_NAME, "idexists");
 	        }
 		Country result = countryRepository.save(country);
-		countrySearchRepository.save(result);
+		elasticSearchTemplate.index(new CountryEntityBuilder(result.getId()).name(result.getCountryNiceName())
+				.suggest(new String[] { result.getCountryNiceName() }).buildIndex());
+		elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
 		return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -95,7 +110,9 @@ public class CountryResource {
 			return createCountry(country);
 		}
 		Country result = countryRepository.save(country);
-		countrySearchRepository.save(result);
+		elasticSearchTemplate.index(new CountryEntityBuilder(result.getId()).name(result.getCountryNiceName())
+				.suggest(new String[] { result.getCountryNiceName() }).buildIndex());
+		elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, country.getId().toString()))
 				.body(result);
 	}
@@ -188,6 +205,39 @@ public class CountryResource {
 		log.debug("REST request to search Countries for query {}", query);
 		return StreamSupport.stream(countrySearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
+	}
+	
+	 /**
+	 * SEARCH /_search/jobCategories?query=:query : search for the college corresponding
+	 * to the query.
+	 *
+	 * @param query
+	 *            the query of the college search
+	 * @return the result of the search
+	 */
+	@GetMapping("/_search/countryBySuggest")
+	@Timed
+	public String searchNationalityBySuggest(@RequestParam String query) {
+		log.debug("REST request to search Country for query {}", query);
+		String suggest = null;
+		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+				.completionSuggestion("country-suggest").text(query).field("suggest");
+		SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
+				com.drishika.gradzcircle.domain.elastic.Country.class);
+		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("country-suggest");
+		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+		List<GenericElasticSuggest> countries = new ArrayList<GenericElasticSuggest>();
+		ObjectMapper objectMapper = new ObjectMapper();
+		options.forEach(option -> {
+			countries.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
+			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+		});
+		try {
+			suggest = objectMapper.writeValueAsString(countries);
+		} catch (JsonProcessingException e) {
+			log.error("Error parsing object to JSON {},{}", e.getMessage(), e);
+		}
+		return suggest;
 	}
 
 }

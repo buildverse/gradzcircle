@@ -19,7 +19,7 @@ public class CollegeEntityBuilder {
 		return this;
 	}
 
-	public CollegeEntityBuilder domainName(String domainName) {
+	/*public CollegeEntityBuilder domainName(String domainName) {
 		college.setDomainName(domainName);
 		return this;
 	}
@@ -27,7 +27,7 @@ public class CollegeEntityBuilder {
 	public CollegeEntityBuilder status(Integer status) {
 		college.setStatus(status);
 		return this;
-	}
+	}*/
 
 	public CollegeEntityBuilder suggest(String[] input) {
 		return suggest(input, null);

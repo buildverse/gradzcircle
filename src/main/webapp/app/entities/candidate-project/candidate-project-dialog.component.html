@@ -14,13 +14,13 @@
 		<div *ngIf="!isEmploymentProject; else employmentProject">
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateProject.projectType"
 						for="field_projectType">Project Type</label>
 				</div>
 				<div class="col-md-3"
 					[class.has-danger]="projectType.invalid && projectType.touched">
-					<select class="form-control text-muted" name="projectType"
+					<select class="form-control " name="projectType"
 						#projectType="ngModel" required
 						[(ngModel)]="candidateProject.projectType" id="field_projectType">
 						<option value="ACADEMIC"
@@ -35,13 +35,13 @@
 					</div>
 				</div>
 				<div class="col-md-2 offset-md-1">
-					<label class="form-control-label font-weight-bold text-muted"
+					<label class="form-control-label font-weight-bold "
 						jhiTranslate="gradzcircleApp.candidateProject.projectTitle"
 						for="field_projectTitle">Project Title</label>
 				</div>
 				<div class="col-md-4"
 					[class.has-danger]="projectTitle.invalid && projectTitle.touched">
-					<input type="text" class="form-control text-muted" required
+					<input type="text" class="form-control " required
 						#projectTitle="ngModel" name="projectTitle"
 						id="field_projectTitle"
 						[(ngModel)]="candidateProject.projectTitle" />
@@ -56,13 +56,13 @@
 		<ng-template #employmentProject>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateProject.projectTitle"
 					for="field_projectTitle">Project Title</label>
 			</div>
 			<div class="col-md-10"
 				[class.has-danger]="projectTitle.invalid && projectTitle.touched">
-				<input type="text" class="form-control text-muted" required
+				<input type="text" class="form-control " required
 					#projectTitle="ngModel" name="projectTitle" id="field_projectTitle"
 					[(ngModel)]="candidateProject.projectTitle" />
 				<div *ngIf="projectTitle.invalid && projectTitle.touched"
@@ -77,69 +77,69 @@
 
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
-					jhiTranslate="gradzcircleApp.candidateProject.projectDescription"
+				<label class="form-control-label font-weight-bold "
+					jhiTranslate="gradzcircleApp.candidateProject.projectDescriptionForForm"
 					for="field_projectDescription">Description</label>
 			</div>
 			<div class="col-md-10"
 				[class.has-danger]="projectDescription.invalid && projectDescription.touched">
-				<textarea [froalaEditor]='options' class="form-control text-muted"
+                <ck-editor class="form-control " 
 					required #projectDescription="ngModel" name="projectDescription"
-					id="field_projectDescription" rows="10"
-					[(ngModel)]="candidateProject.projectDescription">
-                </textarea>
+					id="field_projectDescription" [config]="editorConfig"
+					[(ngModel)]="candidateProject.projectDescription"></ck-editor>
 				<div
 					*ngIf="projectDescription.invalid && projectDescription.touched"
 					class="text-danger">
 					<small> Please add the Project Description.</small>
 				</div>
-				<small class="form-text text-muted text-info"> Employers
+				<small class="form-text form-text-primary"> Employers
 					look for details. Please focus on project details, benefits,
 					impact. </small>
 			</div>
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
-					jhiTranslate="gradzcircleApp.candidateProject.contributionInProject"
+				<label class="form-control-label font-weight-bold "
+					jhiTranslate="gradzcircleApp.candidateProject.contributionInProjectForForm"
 					for="field_contributionInProject">Contribution</label>
 			</div>
 			<div class="col-md-10"
 				[class.has-danger]="projectContribution.invalid && projectContribution.touched">
-				<textarea [froalaEditor]='options' class="form-control text-muted"
-					required #projectContribution="ngModel"
-					name="contributionInProject" id="field_contributionInProject"
-					rows="10" [(ngModel)]="candidateProject.contributionInProject">
-                </textarea>
+				   <ck-editor class="form-control " 
+					required #projectContribution="ngModel" name="contributionInProject"
+					id="field_contributionInProject" [config]="editorConfig"
+					[(ngModel)]="candidateProject.contributionInProject"></ck-editor>
 				<div
 					*ngIf="projectContribution.invalid && projectContribution.touched"
 					class="text-danger">
 					<small> Please add details of your contribution.</small>
 				</div>
-				<small class="form-text text-muted text-info"> Add
+				<small class="form-text form-text-primary"> Add
 					categories like Leadership, Technical and Functional skills,
 					Communication with supporting examples. </small>
 			</div>
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateProject.projectStartDate"
 					for="field_projectStartDate">Project Start Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="fromDate.invalid && fromDate.touched">
+				[class.has-danger]="fromDate.invalid && fromDate.touched" (mouseleave)="projectStartDateDp.close()">
 				<div class="input-group">
 					<input id="field_projectStartDate" #fromDate="ngModel" required
-						type="text" class="form-control text-muted"
+						type="text" class="form-control "
 						name="projectStartDate" ngbDatepicker
 						#projectStartDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectStartDate"
-						(ngModelChange)="validateDates()" /> <span
-						class="input-group-addon " (click)="projectStartDateDp.toggle()">
-						<img src="../../../content/images/calendar.png"
-						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</span>
+						(ngModelChange)="validateDates()" /> 
+						<span class="input-group-append" > 
+								<button class="btn btn-outline-secondary" (click)="projectStartDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
+						</span>
+						
 				</div>
 				<div *ngIf="fromDate.invalid && fromDate.touched"
 					class="text-danger">
@@ -147,26 +147,24 @@
 				</div>
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateProject.projectEndDate"
 					for="field_projectStartDate">Project Start Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="toDate.invalid && toDate.touched">
+				[class.has-danger]="toDate.invalid && toDate.touched" (mouseleave)="projectEndDateDp.close()">
 				<div class="input-group">
 					<input id="field_projectEndDate" #toDate="ngModel" required
-						type="text" class="form-control text-muted"
+						type="text" class="form-control "
 						[disabled]="endDateControl" name="field_projectEndDate"
 						ngbDatepicker #projectEndDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectEndDate"
 						(ngModelChange)="validateDates()" />
-
-					<button class="input-group-addon "
-						(click)="projectEndDateDp.toggle()" type="button"
-						[disabled]="endDateControl">
-						<img src="../../../content/images/calendar.png"
-							style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</button>
+					<span class="input-group-append" > 
+								<button class="btn btn-outline-secondary" (click)="projectEndDateDp.toggle()" type="button" [disabled]="endDateControl">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
+						</span>
 				</div>
 				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
 					<small>Please enter End Date</small>
@@ -178,9 +176,9 @@
 
 		</div>
 		<div class="form-group row mx-4 my-4">
-			<div class="col-md-6 form-check font-weight-bold text-muted">
+			<div class="col-md-6 form-check font-weight-bold ">
 				<label class="form-check-label" for="field_isCurrentProject">
-					<input class="form-check-input font-weight-bold text-muted"
+					<input class="form-check-input font-weight-bold "
 					type="checkbox" name="isCurrentProject" id="field_isCurrentProject"
 					(change)="manageEndDateControl()"
 					[(ngModel)]="candidateProject.isCurrentProject" /> Am still working

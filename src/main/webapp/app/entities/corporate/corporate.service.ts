@@ -7,7 +7,7 @@ import {JhiDateUtils} from 'ng-jhipster';
 import {CandidateList} from '../job/candidate-list.model';
 import {Corporate} from './corporate.model';
 import {createRequestOption} from '../../shared';
-
+import {Country} from '../../entities/country/country.model';
 export type EntityResponseType = HttpResponse<Corporate>;
 export type EntityResponseTypeCandidateList = HttpResponse<CandidateList>;
 
@@ -29,6 +29,7 @@ export class CorporateService {
 
   update(corporate: Corporate): Observable<EntityResponseType> {
     const copy = this.convert(corporate);
+    console.log('Sedning hwat '+JSON.stringify(copy));
     return this.http.put<Corporate>(this.resourceUrl, copy, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
@@ -69,7 +70,22 @@ export class CorporateService {
 
   private convertResponse(res: EntityResponseType): EntityResponseType {
     const body: Corporate = this.convertItemFromServer(res.body);
+    this.convertMetaDataForDisplay(body);
     return res.clone({body});
+  }
+  
+  private convertMetaDataForDisplay(corporate: Corporate) {
+    if (corporate.country && corporate.country) {
+      const countryArray = new Array();
+      countryArray.push(corporate.country);
+      corporate.country = countryArray;
+    }
+  }
+  
+  convertMetaDataForServer(corporate: Corporate) {
+    const country = new Country();
+    country.countryNiceName = corporate.country[0].value;
+    corporate.country = country;
   }
 
   /**
@@ -89,6 +105,7 @@ export class CorporateService {
     const copy: Corporate = Object.assign({}, corporate);
     copy.establishedSince = this.dateUtils
       .convertLocalDateToServer(corporate.establishedSince);
+    this.convertMetaDataForServer(copy);
     return copy;
   }
 

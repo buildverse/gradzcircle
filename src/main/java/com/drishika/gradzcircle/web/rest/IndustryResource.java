@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.Industry;
+import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
 import com.drishika.gradzcircle.repository.IndustryRepository;
 import com.drishika.gradzcircle.repository.search.IndustrySearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
@@ -45,10 +47,13 @@ public class IndustryResource {
 	private final IndustryRepository industryRepository;
 
 	private final IndustrySearchRepository industrySearchRepository;
+	
+	private final ElasticsearchTemplate elasticsearchTemplate;
 
-	public IndustryResource(IndustryRepository industryRepository, IndustrySearchRepository industrySearchRepository) {
+	public IndustryResource(IndustryRepository industryRepository, IndustrySearchRepository industrySearchRepository,ElasticsearchTemplate elasticsearchTemplate) {
 		this.industryRepository = industryRepository;
 		this.industrySearchRepository = industrySearchRepository;
+		this.elasticsearchTemplate = elasticsearchTemplate;
 	}
 
 	/**
@@ -70,7 +75,9 @@ public class IndustryResource {
 	            throw new BadRequestAlertException("A new industry cannot already have an ID", ENTITY_NAME, "idexists");
 	    }
 		Industry result = industryRepository.save(industry);
-		industrySearchRepository.save(result);
+		elasticsearchTemplate.index(new IndustryEntityBuilder(result.getId()).name(result.getIndustryName())
+				.suggest(new String[] { result.getIndustryName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
 		return ResponseEntity.created(new URI("/api/industries/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -95,7 +102,9 @@ public class IndustryResource {
 			return createIndustry(industry);
 		}
 		Industry result = industryRepository.save(industry);
-		industrySearchRepository.save(result);
+		elasticsearchTemplate.index(new IndustryEntityBuilder(result.getId()).name(result.getIndustryName())
+				.suggest(new String[] { result.getIndustryName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, industry.getId().toString()))
 				.body(result);
 	}

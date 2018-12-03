@@ -80,6 +80,7 @@ export class CandidateCertificationService {
         const copy: CandidateCertification = Object.assign({}, candidateCertification);
         copy.certificationDate = this.dateUtils
             .convertLocalDateFromServer(candidateCertification.certificationDate);
+        copy.collapsed = true;
         return copy;
     }
   

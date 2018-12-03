@@ -11,7 +11,7 @@
 		<!-- <jhi-alert-error></jhi-alert-error>       <p jhiTranslate="gradzcircleApp.candidateEducation.delete.question"
        >Are you sure you want to delete this Candidate Education?</p> -->
 		<p jhiTranslate="gradzcircleApp.candidateEducation.delete.question"
-			translateValues="{education: '<b>{{candidateEducation.capturedQualification?candidateEducation.capturedQualification:candidateEducation.qualification?.qualification}} in {{candidateEducation.capturedCourse?candidateEducation.capturedCourse:candidateEducation.course?.course}}</b>'}">Are
+			translateValues="{education: '<b>{{candidateEducation.qualification[0]?.qualification}} in {{candidateEducation.course[0]?.course}}</b>'}">Are
 			you sure you want to delete this Candidate Education?</p>
 		<p class="font-italic"
 			jhiTranslate="gradzcircleApp.candidateEducation.delete.questionExtension"></p>

@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
-import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
+import com.drishika.gradzcircle.repository.CandidateAppliedJobsRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
@@ -68,7 +68,9 @@ public class JobService {
 
 	private final CandidateRepository candidateRepository;
 
-	private final CorporateSearchRepository corporateSearchRepository;
+	private final CorporateService corporateService;
+	
+	private final CandidateAppliedJobsRepository candidateAppliedJobsRepository;
 
 	private final DTOConverters converter;
 
@@ -78,18 +80,20 @@ public class JobService {
 			CorporateSearchRepository corporateSearchRepository, JobHistoryRepository jobHistoryRepository,
 			JobHistorySearchRepository jobHistorySearchRepository,
 			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher,
-			CandidateRepository candidateRepository, DTOConverters converter) {
+			CandidateRepository candidateRepository, DTOConverters converter, CandidateAppliedJobsRepository candidateAppliedJobsRepository,
+			CorporateService corporateService) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
 		this.corporateRepository = corporateRepository;
 		// this.cacheManager = cacheManager;
-		this.corporateSearchRepository = corporateSearchRepository;
+		this.corporateService = corporateService;
 		this.jobHistoryRepository = jobHistoryRepository;
 		this.jobHistorySearchRepository = jobHistorySearchRepository;
 		this.jobFilterRepository = jobFilterRepository;
 		this.matcher = matcher;
 		this.candidateRepository = candidateRepository;
 		this.converter = converter;
+		this.candidateAppliedJobsRepository = candidateAppliedJobsRepository;
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
@@ -233,7 +237,12 @@ public class JobService {
 
 	public Page<CorporateJobDTO> getActiveJobsListForCorporates(Pageable pageable, Long corporateId) {
 		Page<Job> jobPage = jobRepository.findByActiveJobAndCorporateId(corporateId, pageable);
-		final Page<CorporateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCorporate(job));
+		Long totalNumberOfJobs = getTotalJobsByCorporate(corporateId);
+		Long jobsPostedLastMonth = getTotalJobsPostedSinceLastMonth(corporateId);
+		Long applicantsToJobs = getAppliedCandidatesForAllJobsByCorporate(corporateId);
+		Long totalLinkedCandidates = corporateService.getAllLinkedCandidates(corporateId); 
+		final Page<CorporateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCorporate(job,
+				totalLinkedCandidates,totalNumberOfJobs,applicantsToJobs,jobsPostedLastMonth,getTotalCandidatedShorListedByCorporateForJob(job.getId())));
 		return page;
 	}
 
@@ -271,5 +280,31 @@ public class JobService {
 		Candidate candidate = candidateRepository.findByLoginId(loginId);
 		job.addAppliedCandidate(candidate);
 		return jobRepository.save(job);
+	}
+	
+	public Long getAppliedCandidatesForAllJobsByCorporate(Long corporateId) {
+		return candidateAppliedJobsRepository.findAppliedCandidatesForAllJobsByCorporate(corporateId);
+	}
+	
+	public Long getTotalJobsByCorporate(Long corporateId) {
+		return jobRepository.countByCorporate(corporateId);
+	}
+	
+	public Long getTotalCandidatedShorListedByCorporateForJob(Long jobId) {
+		return corporateRepository.findCountOfCandidatesShortlistedByJob(jobId);
+	}
+	
+	public Long getTotalJobsPostedSinceLastMonth(Long corporateId) {
+		ZoneId zoneId = ZoneId.of("Asia/Kolkata");
+		ZonedDateTime toDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+		ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue()-1,toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
+		return jobRepository.numberOfJobsPostedAcrossDates(corporateId,fromDateTime,toDateTime);
+	}
+	
+	public Page<CandidateProfileListDTO> getShortListedCandidatesForJob(Pageable pageable,Long jobId) {
+		Page<CorporateCandidate> candidateCorporatePage = corporateRepository.findLinkedCandidatesByJob(jobId, pageable);
+		final Page<CandidateProfileListDTO> page = candidateCorporatePage.map(corporateCandidate -> converter
+				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate));
+		return page;
 	}
 }

@@ -1,10 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Principal } from '../../shared/auth/principal.service';
+import { Component, OnInit } from '@angular/core';
 import { Candidate } from '../../entities/candidate/candidate.model';
-import { CandidateService } from '../../entities/candidate/candidate.service';
-import { Account } from '../../shared'
 import 'rxjs/add/operator/debounceTime';
-import { ActivatedRoute ,Router,ActivatedRouteSnapshot} from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -16,24 +13,13 @@ import { ActivatedRoute ,Router,ActivatedRouteSnapshot} from '@angular/router';
 export class CandidateProfileAboutMeDetailsComponent implements OnInit {
 
     candidate: Candidate;
-    //account: Account;
-    errorMessage: String;
-  
-    constructor(
-        private principal: Principal,
-        private candidateService: CandidateService,
-        private route: ActivatedRoute,
-        private router: Router
 
+    errorMessage: String;
+    constructor(
+        private route: ActivatedRoute,
     ) {}
 
     ngOnInit() { 
-      //console.log('Candidate details from parent is '+JSON.stringify(this.candidate));
-        this.candidate = this.route.snapshot.data['candidate'];
-       this.route.parent.snapshot.data['candidate'] = this.candidate;
-    }
-
-    save ():void {
-        this.router.navigate['candidate-profile/aboutMe'];
+        this.candidate = this.route.snapshot.data['candidate'].body;
     }
 }

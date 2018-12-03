@@ -19,9 +19,9 @@
             "name": "Name",
             "address": "Address",
             "city": "City",
-            "establishedSince": "Established Since",
+            "establishedSince": "Year Founded",
             "email": "Email",
-            "overview": "Overview",
+            "overview": "Who are we",
             "benefits": "Benefits",
             "website": "Website",
             "facebook": "Facebook",
@@ -39,7 +39,10 @@
             "industry": "Industry",
             "login": "Login",
             "job": "Job",
-            "uploadLogo":"Logo"
+            "uploadLogo":"Logo",
+            "corporateDetails" :"Company Details",
+            "companyType":"Compamy Type",
+            "companySize": "Company Size"
         }
     }
 }

@@ -25,7 +25,7 @@ export class Corporate implements BaseEntity {
         public personDesignation?: string,
         public tagLine?: string,
         public escrowAmount?: number,
-        public country?: Country,
+        public country?: any,
         public industry?: Industry,
         public login?: User,
         public jobs?: Job[],

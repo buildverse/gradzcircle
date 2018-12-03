@@ -45,6 +45,7 @@
                 "jobHistory": "Job History",
                 "jobFilterHistory": "Job Filter History",
                 "appConfig": "App Config",
+                "states": "States",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

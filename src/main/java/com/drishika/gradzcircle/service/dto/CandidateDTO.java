@@ -18,6 +18,7 @@ public class CandidateDTO implements Serializable {
 	private Long id;
 	private String firstName;
 	private String lastName;
+	private String aboutMe;
 	private User login;
 
 	/**
@@ -79,5 +80,21 @@ public class CandidateDTO implements Serializable {
 	public void setLogin(User login) {
 		this.login = login;
 	}
+
+	/**
+	 * @return the aboutMe
+	 */
+	public String getAboutMe() {
+		return aboutMe;
+	}
+
+	/**
+	 * @param aboutMe the aboutMe to set
+	 */
+	public void setAboutMe(String aboutMe) {
+		this.aboutMe = aboutMe;
+	}
+	
+	
 
 }

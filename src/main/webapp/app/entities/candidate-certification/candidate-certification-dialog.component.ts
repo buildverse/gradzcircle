@@ -22,7 +22,8 @@ export class CandidateCertificationDialogComponent implements OnInit {
     authorities: any[];
     candidates: Candidate[];
     certificationDateDp: any;
-    options: Object;
+    editorConfig: any;
+  
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
@@ -33,9 +34,16 @@ export class CandidateCertificationDialogComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.editorConfig = {
+          'toolbarGroups': [
+            {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+            {name: 'paragraph', groups: ['list', 'indent', 'align']},
+          ],
+          'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+        };
         this.isSaving = false;
                 this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        this.options = new EditorProperties().options;
         this.candidateService.query()
             .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }

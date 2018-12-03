@@ -2599,6 +2599,89 @@ public class CandidateEducationResourceIntTest {
 
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void createMatchSetWithGenderAndEducationOnlyThenUpdateEducationWithCurrentlyStudying() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+
+		genderRepository.saveAndFlush(femaleGender);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		Thread.sleep(10000);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(4.0);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(null).isPursuingEducation(true)
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(5);
+		/*assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_B, 62.0, 28.0, null, null, 45.0, CANDIDATE_A))
+				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A));*/
+	}
+
+	
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void createMatchSetWithLanguageAndEducationOnlyThenUpdateEducation() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);

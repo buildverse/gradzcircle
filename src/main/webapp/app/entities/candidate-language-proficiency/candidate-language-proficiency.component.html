@@ -1,4 +1,49 @@
-<div class="container my-3 ">
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="card-body">
+	<div *ngIf="candidateLanguageProficiencies?.length > 0;">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.language">Language</span></th>
+					<th colspan="3"><span jhiTranslate="gradzcircleApp.candidateLanguageProficiency.proficiency">Proficiency</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let candidateLanguageProficiency of candidateLanguageProficiencies ;trackBy: trackId">
+					<td>
+						<div *ngIf="candidateLanguageProficiency.language">
+							{{candidateLanguageProficiency.language[0].language}}
+						</div>
+					</td>
+					<td>{{candidateLanguageProficiency.proficiency}}</td>
+					<td>
+					<span class="project_buttons">
+						<a class="btn btn-sm btn-pill btn-primary" [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/edit'} }]"
+								replaceUrl="true"> <span class="icon icon-edit"></span> <span
+								class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
+						</a>
+						<a class="btn btn-sm btn-pill btn-danger" [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/'+ candidateLanguageProficiency.id + '/delete'} }]"
+							replaceUrl="true"> <span class="icon icon-trash"
+							></span> <span class="hidden-md-down"
+							jhiTranslate="entity.action.delete">Delete</span>
+						</a>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="col-lg-12 text-right d-block">
+		<a class="btn btn-sm btn-pill btn-primary mb-2" 
+			[routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency-new/'+ candidateId } }]">
+			<span class="icon icon-circle-with-plus"
+			jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.add">
+				Add </span>
+		</a>
+	</div>
+</div>
+
+<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="container my-3 ">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card card-profile mb-3">

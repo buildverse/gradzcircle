@@ -1,0 +1,34 @@
+
+<div class="mt-6" *ngIf="candidateList">
+	<div class="mt-1 justify-content-center">
+		<h1 class="text-center" style="color:#455A64;">Shortlisted Candidates</h1>
+	</div>
+
+		<div class="row justify-content-center" >
+			   <div *ngFor="let candidate of candidateList" class="m-2 col-lg-3">
+			   	<div class="card card-profile h-100">			     
+			       <div class="card-header" style="background-color: #2196F3;"></div>
+			       <div class="card-body text-xs-center">
+			         <img class="card-profile-img" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
+			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
+			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
+			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
+			         <button class="btn btn-outline-primary btn-sm" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id+'/'+jobId+'/'+corporateId} }]">
+			           <span class="icon icon-add-user"></span> View
+			         </button>
+			       </div>
+			   </div>
+			   </div>  
+		</div>
+		<div class="mt-2" *ngIf="candidateList">
+					<div class="row justify-content-center font-weight-light">
+						<jhi-item-count [page]="page" [total]="queryCount"
+							[itemsPerPage]="itemsPerPage"></jhi-item-count>
+					</div>
+					<div class="row justify-content-center font-weight-light">
+						<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+							(pageChange)="loadPage(page)"></ngb-pagination>
+					</div>
+		</div>
+
+</div>

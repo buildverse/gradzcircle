@@ -43,7 +43,7 @@ function deepcopy<T>(o: T): T {
   templateUrl: './job-dialog.component.html'
 })
 export class JobDialogComponent implements OnInit {
-
+  editorConfig: any;
   job: Job;
   prevJob: Job;
   isSaving: boolean;
@@ -157,7 +157,14 @@ export class JobDialogComponent implements OnInit {
     this.employmentTypeCost = [];
     this.jobFilter = new JobFilter();
     this.basic = true;
-    this.options = new EditorProperties().options;
+    this.editorConfig = {
+          'toolbarGroups': [
+            {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+            {name: 'paragraph', groups: ['list', 'indent', 'align']},
+          ],
+          'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+        };
     this.jobTypeService.query()
         .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.employmentTypeService.query()
@@ -172,7 +179,7 @@ export class JobDialogComponent implements OnInit {
         });
       }
       , (res: HttpErrorResponse) => this.onError(res.message));
-
+    
     this.genderService.query()
       .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

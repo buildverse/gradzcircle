@@ -1,6 +1,6 @@
 package com.drishika.gradzcircle.repository.search;
 
-import com.drishika.gradzcircle.domain.MaritalStatus;
+import com.drishika.gradzcircle.domain.elastic.MaritalStatus;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**

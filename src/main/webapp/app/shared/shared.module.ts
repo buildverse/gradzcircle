@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { ArchwizardModule } from 'ng2-archwizard';
 import { TagInputModule } from 'ngx-chips';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+
+import { CKEditorModule } from 'ngx-ckeditor';
 import {
     GradzcircleSharedLibsModule,
     GradzcircleSharedCommonModule,
@@ -18,8 +20,8 @@ import {
     HasAnyAuthorityDirective,
     JhiSocialComponent,
     SocialService,
-    JhiLoginModalComponent,
-    // UserImagePipe
+    JhiLoginModalComponent
+   
 } from './';
 
 @NgModule({
@@ -28,16 +30,14 @@ import {
         GradzcircleSharedCommonModule,
         ArchwizardModule,
         MultiselectDropdownModule,
-        TagInputModule
-       // MatButtonModule, MatCheckboxModule, MatRadioModule, MatInputModule, MatDatepickerModule, MatSelectModule
-
+        TagInputModule,
+        CKEditorModule
+  
     ],
     declarations: [
         JhiSocialComponent,
         JhiLoginModalComponent,
-        HasAnyAuthorityDirective,
-        // UserImagePipe
-
+        HasAnyAuthorityDirective
     ],
     providers: [
         LoginService,
@@ -50,8 +50,7 @@ import {
         AuthServerProvider,
         SocialService,
         UserService,
-        DatePipe,
-        // UserImagePipe
+        DatePipe
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [
@@ -62,9 +61,9 @@ import {
         DatePipe,
         ArchwizardModule,
         MultiselectDropdownModule,
-        TagInputModule
-      //  MatButtonModule, MatCheckboxModule, MatRadioModule, MatInputModule, MatDatepickerModule, MatSelectModule
-        // UserImagePipe
+        TagInputModule,
+        CKEditorModule
+     
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

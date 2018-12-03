@@ -1,223 +1,83 @@
-<div class="container my-3">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card card-profile">
-				<!--{{candidate | json}}-->
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span jhiTranslate="gradzcircleApp.candidate.firstName"
-							class="font-weight-bold text-muted">FirstName</span>
-					</div>
-					<div class="col-md-3">{{candidate.firstName}}</div>
 
-
-					<div class="col-md-2 offset-md-1">
-						<span jhiTranslate="gradzcircleApp.candidate.middleName"
-							class="font-weight-bold text-muted">Middle Name</span>
-					</div>
-
-					<div class="col-md-3">{{candidate.middleName}}</div>
-				</div>
-
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.lastName">Last Name</span>
-					</div>
-					<div class="col-md-3">{{candidate.lastName}}</div>
-					<div class="col-md-1"></div>
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="userManagement.email">Email</span>
-					</div>
-					<div class="col-md-3">{{candidate.login.email}}</div>
-
-				</div>
-				<!-- <div class="row mx-4 my-3">
-                    <div class="col-md-2 ">
-                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.aboutMe">About Me</span>
-                    </div>
-                    <div class="col-md-9">
-                        {{candidate.aboutMe}}
-                    </div>
-                </div> -->
-
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.careerInterests">Career
-							Interests</span>
-					</div>
-					<div class="col-md-3">
-						<p *ngFor="let jobCategory of candidate.jobCategories">{{jobCategory.jobCategory}}</p>
-					</div>
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.nationality?candidate.nationality.nationality:''}}</div>
-				</div>
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.dateOfBirth">Date
-							of Birth</span>
-					</div>
-					<div class="col-md-3">{{candidate.dateOfBirth | date}}</div>
-
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.gender">Gender</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.gender?(candidate.gender.gender):''}}</div>
-				</div>
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital
-							Status</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.maritalStatus?(candidate.maritalStatus.status):''}}</div>
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span>
-					</div>
-					<div class="col-md-3">{{candidate.facebook}}</div>
-				</div>
-
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.differentlyAbled">Different
-							Abled</span>
-					</div>
-					<div class="col-md-3 checkbox">
-						{{candidate.differentlyAbled?(candidate.differentlyAbled?'Yes':'No'):''}}
-					</div>
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.visaType.visa">Visa</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.visaType?candidate.visaType.visa:''}}</div>
-				</div>
-
-				<div class="row mx-4 my-3">
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</span>
-					</div>
-					<div class="col-md-3">{{candidate.twitter}}</div>
-					<div class="col-md-1 invisible"></div>
-
-				</div>
-
-				<!-- this needs to be fixed when enhancing address as array-->
-
-				<div class="row mx-4 my-3">
-					<!-- Hard coding address array here since we are supporting only one address per candidate. Later can open to 1 - many from candidate to addres -->
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.detail.title">Address
-							Line 1</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.addressLineOne):''}}
-					</div>
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.detail.title">Address
-							Line 2</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.addressLineTwo):''}}
-					</div>
-
-				</div>
-				<div class="row mx-4 my-3">
-
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.city">City</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.city):''}}</div>
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.state">State</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.state):''}}</div>
-
-				</div>
-				<div class="row mx-4 my-3">
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.zip">Zip</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.zip):''}}</div>
-
-					<div class="col-md-1 invisible"></div>
-					<div class="col-md-2 ">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.address.country">Country</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country.countryNiceName:''):''}}
-					</div>
-				</div>
-
-
-				<div class="row mx-4 my-3">
-					<div class="col-md-2">
-						<span class="font-weight-bold text-muted"
-							jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone
-							Number</span>
-					</div>
-					<div class="col-md-3">
-						{{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
-					</div>
-				</div>
-				<!-- <div class="row mx-4 my-3">
-                     <div class="col-md-2">
-                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone Number</span>
-                    </div>
-                    <div class="col-md-3">
-                        {{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
-                    </div>
-                    
-                   
-                </div> -->
-				<div class="row mx-4 my-3 justify-content-end">
-
-					<a class="btn btn-sm btn-pill btn-primary"
-						[routerLink]="['edit',candidate.id]"> <span
-						class="icon icon-edit">Edit</span>
-					</a>
-
-
-
-				</div>
-
-			</div>
-
+<div class="card-body">
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.candidate.firstName" class="font-weight-bold "></span>
 		</div>
-
-
-
-
+		<div class="col-md-3">{{candidate.login.firstName}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.candidate.lastName"></span>
+		</div>
+		<div class="col-md-3">{{candidate.login.lastName}}</div>
 	</div>
-</div>
-<div>
-	<router-outlet></router-outlet>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="userManagement.email" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.login.email}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.candidate.careerInterests"></span>
+		</div>
+		<div class="col-md-3"><span *ngFor="let jobCategory of candidate.jobCategories">{{jobCategory.jobCategory}}</span></div>
+	</div>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.candidate.nationality" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.nationality?candidate.nationality[0].nationality:''}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.candidate.gender"></span>
+		</div>
+		<div class="col-md-3">{{candidate.gender?(candidate.gender.gender):''}}</div>
+	</div>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.candidate.maritalStatus" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.maritalStatus?(candidate.maritalStatus.status):''}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.candidate.differentlyAbled"> </span>
+		</div>
+		<div class="col-md-3">{{candidate.differentlyAbled?(candidate.differentlyAbled?'Yes':'No'):''}}</div>
+	</div>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.address.detail.title" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.addresses?(candidate.addresses[0]?.addressLineOne):''}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.address.zip"> </span>
+		</div>
+		<div class="col-md-3">{{candidate.addresses?(candidate.addresses[0]?.zip):''}}</div>
+	</div>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.address.city" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.addresses?(candidate.addresses[0]?.city):''}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.address.state"> </span>
+		</div>
+		<div class="col-md-3">{{candidate.addresses?(candidate.addresses[0]?.state):''}}</div>
+	</div>
+	<div class="row py-4">
+		<div class="col-md-2 ">
+			<span jhiTranslate="gradzcircleApp.candidate.phoneNumber" class="font-weight-bold "></span>
+		</div>
+		<div class="col-md-3">{{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}</div>
+		<div class="col-md-2 offset-md-1">
+			<span class="font-weight-bold " jhiTranslate="gradzcircleApp.address.country"> </span>
+		</div>
+		<div class="col-md-3">{{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0].countryNiceName:''):''}}</div>
+	</div>
+	
+	<div class="row py-4">
+
+		<div class="col-md-12  my-4 text-right d-block">
+			<a class="btn btn-sm  btn-primary"
+				[routerLink]="['../edit',candidate.id]"> <span
+				class="icon icon-edit">Edit</span>
+			</a>
+		</div>
+	</div>
 </div>

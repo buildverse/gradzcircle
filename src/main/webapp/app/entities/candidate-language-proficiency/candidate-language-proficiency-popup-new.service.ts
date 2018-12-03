@@ -44,7 +44,7 @@ export class CandidateLanguageProficiencyPopupServiceNew {
                 setTimeout(() => {
                     this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, this.candidateLanguageProficiency, currentCandidateLanguageProficiencies);
                     resolve(this.ngbModalRef);
-                }, 0)
+                }, 0);
 
 
             } else {

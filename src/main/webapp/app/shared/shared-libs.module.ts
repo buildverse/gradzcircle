@@ -6,7 +6,9 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgJhipsterModule } from 'ng-jhipster';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { CookieModule } from 'ngx-cookie';
+import { CookieModule } from 'ngx-cookie';  
+
+
 
 @NgModule({
     imports: [
@@ -28,6 +30,8 @@ import { CookieModule } from 'ngx-cookie';
         NgbModule,
         NgJhipsterModule,
         InfiniteScrollModule
+        
+
     ]
 })
 export class GradzcircleSharedLibsModule {}

@@ -30,19 +30,19 @@ export class ProfileHelperService {
   constructor(private http: HttpClient) { }
 
     getCareerInterests(): Observable<JobCategory[]> {
-        return this.http.get('api/job-categories').map(this.extractData)
+        return this.http.get('api/job-categories', {observe:'response'}).map((res: HttpResponse<any>) => this.extractData(res))
            // .do(data => console.log('getCareerInterests: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
-    getGender (): Observable <Gender []>{
-        return this.http.get('api/genders').map(this.extractData)
+    getGender(): Observable <Gender []>{
+        return this.http.get('api/genders', {observe:'response'}).map((res: HttpResponse<any>) => this.extractData(res))
            // .do(data => console.log('getGender: '+JSON.stringify(data)))
             .catch(this.handleError);
     }
 
     getMaritalStatus (): Observable <MaritalStatus[]> {
-        return this.http.get('api/marital-statuses').map(this.extractData)
+        return this.http.get('api/marital-statuses',{observe:'response'}).map((res: HttpResponse<any>) => this.extractData(res))
            // .do(data=> console.log('getMaritalStatuses: '+JSON.stringify(data)))
             .catch(this.handleError);
     }
@@ -98,13 +98,13 @@ export class ProfileHelperService {
             .catch(this.handleError);
     }
     
-    handleError(error: Response): Observable<any>{
+    handleError(error: HttpResponse<any>): Observable<any>{
         return Observable.throw(error.body || 'Server error');
     }
 
-    private extractData(response: Response) {
+    private extractData(response: HttpResponse<any>) {
         let body = response.body;
-       // console.log("Body is :"+JSON.stringify(body));
+        console.log("Body is :"+JSON.stringify(body));
         return body || {};
     }
 }

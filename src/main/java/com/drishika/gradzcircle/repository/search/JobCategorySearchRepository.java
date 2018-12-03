@@ -1,6 +1,6 @@
 package com.drishika.gradzcircle.repository.search;
 
-import com.drishika.gradzcircle.domain.JobCategory;
+import com.drishika.gradzcircle.domain.elastic.JobCategory;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**

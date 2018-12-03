@@ -11,7 +11,9 @@ export class CandidateNonAcademicWork implements BaseEntity {
         public nonAcademicWorkStartDate?: any,
         public nonAcademicWorkEndDate?: any,
         public candidate?: BaseEntity,
+        public collapsed?: boolean
     ) {
         this.isCurrentActivity = false;
+      this.collapsed = true;
     }
 }

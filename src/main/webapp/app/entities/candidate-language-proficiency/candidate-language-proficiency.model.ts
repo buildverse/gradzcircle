@@ -6,7 +6,7 @@ export class CandidateLanguageProficiency implements BaseEntity {
         public id?: number,
         public proficiency?: string,
         public candidate?: BaseEntity,
-        public language?: Language,
+        public language?: any,
     ) {
     }
 }

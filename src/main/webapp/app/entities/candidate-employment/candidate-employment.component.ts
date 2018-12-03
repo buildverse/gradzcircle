@@ -12,7 +12,8 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
 @Component({
     selector: 'jhi-candidate-employment',
-    templateUrl: './candidate-employment.component.html'
+    templateUrl: './candidate-employment.component.html',
+    styleUrls :['candidate-employment.css']
 })
 export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     candidateEmployments: CandidateEmployment[];
@@ -81,7 +82,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         this.principal.identity().then((account) => {
             this.currentAccount = account;
             if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
-                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
+                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.currentSearch = this.candidateId;
                 this.loadEmploymentsForCandidate();
             } else {

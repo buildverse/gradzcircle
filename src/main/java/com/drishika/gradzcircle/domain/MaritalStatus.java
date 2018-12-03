@@ -15,7 +15,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "marital_status")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "maritalstatus")
+
 public class MaritalStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;

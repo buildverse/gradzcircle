@@ -1,11 +1,18 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.Country;
-import com.drishika.gradzcircle.repository.CountryRepository;
-import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,13 +29,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.Industry;
+import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
+import com.drishika.gradzcircle.repository.CountryRepository;
+import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CountryResource REST controller.
@@ -80,11 +89,14 @@ public class CountryResourceIntTest {
 	private MockMvc restCountryMockMvc;
 
 	private Country country;
+	
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final CountryResource countryResource = new CountryResource(countryRepository, countrySearchRepository);
+		final CountryResource countryResource = new CountryResource(countryRepository, countrySearchRepository,elasticsearchTemplate);
 		this.restCountryMockMvc = MockMvcBuilders.standaloneSetup(countryResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();
@@ -102,6 +114,31 @@ public class CountryResourceIntTest {
 				.numCode(DEFAULT_NUM_CODE).phoneCode(DEFAULT_PHONE_CODE).enabled(DEFAULT_ENABLED);
 		return country;
 	}
+	
+	 /**
+		 * Create an entity for this test.
+		 *
+		 * This is a static method, as tests for other entities might also need it, if
+		 * they test an entity which requires the current entity.
+		 */
+		public static CountryEntityBuilder createEntityBuilder(Country country) {
+			CountryEntityBuilder entityBuilder = new CountryEntityBuilder(country.getId());
+			entityBuilder.name(country.getCountryNiceName());
+			return entityBuilder;
+		}
+
+		/**
+		 * Create an entity for this test.
+		 *
+		 * This is a static method, as tests for other entities might also need it, if
+		 * they test an entity which requires the current entity.
+		 */
+		public static com.drishika.gradzcircle.domain.elastic.Country createElasticInstance(
+				Country country) {
+			com.drishika.gradzcircle.domain.elastic.Country elasticCountry = new com.drishika.gradzcircle.domain.elastic.Country();
+			elasticCountry.countryNiceName(country.getCountryNiceName());
+			return elasticCountry;
+		}
 
 	@Before
 	public void initTest() {
@@ -132,7 +169,8 @@ public class CountryResourceIntTest {
 
 		// Validate the Country in Elasticsearch
 		Country countryEs = countrySearchRepository.findOne(testCountry.getId());
-		assertThat(countryEs).isEqualToComparingFieldByField(testCountry);
+		assertThat(countryEs.getId()).isEqualTo(testCountry.getId());
+		assertThat(countryEs.getCountryNiceName()).isEqualTo(testCountry.getCountryNiceName());
 	}
 
 	@Test
@@ -203,7 +241,9 @@ public class CountryResourceIntTest {
 	public void updateCountry() throws Exception {
 		// Initialize the database
 		countryRepository.saveAndFlush(country);
-		countrySearchRepository.save(country);
+		elasticsearchTemplate.index(createEntityBuilder(country)
+				.suggest(new String[] { createElasticInstance(country).getCountryNiceName() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
 		int databaseSizeBeforeUpdate = countryRepository.findAll().size();
 
 		// Update the country
@@ -229,7 +269,8 @@ public class CountryResourceIntTest {
 
 		// Validate the Country in Elasticsearch
 		Country countryEs = countrySearchRepository.findOne(testCountry.getId());
-		assertThat(countryEs).isEqualToComparingFieldByField(testCountry);
+		assertThat(countryEs.getId()).isEqualTo(testCountry.getId());
+		assertThat(countryEs.getCountryNiceName()).isEqualTo(testCountry.getCountryNiceName());
 	}
 
 	@Test
@@ -254,7 +295,9 @@ public class CountryResourceIntTest {
 	public void deleteCountry() throws Exception {
 		// Initialize the database
 		countryRepository.saveAndFlush(country);
-		countrySearchRepository.save(country);
+		 elasticsearchTemplate.index(createEntityBuilder(country)
+					.suggest(new String[] { createElasticInstance(country).getCountryNiceName() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
 		int databaseSizeBeforeDelete = countryRepository.findAll().size();
 
 		// Get the country
@@ -276,20 +319,22 @@ public class CountryResourceIntTest {
 	public void searchCountry() throws Exception {
 		// Initialize the database
 		countryRepository.saveAndFlush(country);
-		countrySearchRepository.save(country);
+		 elasticsearchTemplate.index(createEntityBuilder(country)
+					.suggest(new String[] { createElasticInstance(country).getCountryNiceName() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
 
 		// Search the country
 		restCountryMockMvc.perform(get("/api/_search/countries?query=id:" + country.getId())).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.[*].id").value(hasItem(country.getId().intValue())))
-				.andExpect(jsonPath("$.[*].countryName").value(hasItem(DEFAULT_COUNTRY_NAME.toString())))
-				.andExpect(jsonPath("$.[*].shortCode").value(hasItem(DEFAULT_SHORT_CODE.toString())))
-				.andExpect(
-						jsonPath("$.[*].shortCodeThreeChar").value(hasItem(DEFAULT_SHORT_CODE_THREE_CHAR.toString())))
-				.andExpect(jsonPath("$.[*].countryNiceName").value(hasItem(DEFAULT_COUNTRY_NICE_NAME.toString())))
-				.andExpect(jsonPath("$.[*].numCode").value(hasItem(DEFAULT_NUM_CODE)))
-				.andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
-				.andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
+			//	.andExpect(jsonPath("$.[*].countryName").value(hasItem(DEFAULT_COUNTRY_NAME.toString())))
+			//	.andExpect(jsonPath("$.[*].shortCode").value(hasItem(DEFAULT_SHORT_CODE.toString())))
+			//	.andExpect(
+				//		jsonPath("$.[*].shortCodeThreeChar").value(hasItem(DEFAULT_SHORT_CODE_THREE_CHAR.toString())))
+				.andExpect(jsonPath("$.[*].countryNiceName").value(hasItem(DEFAULT_COUNTRY_NICE_NAME.toString())));
+				//.andExpect(jsonPath("$.[*].numCode").value(hasItem(DEFAULT_NUM_CODE)))
+				//.andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
+				//.andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
 	}
 
 	@Test

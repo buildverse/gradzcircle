@@ -238,11 +238,6 @@
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.53.tgz#4e0cefad09df5ec48c8dd40433512f84b1568d61"
   integrity sha512-2YNL0jXYuN7w07mb1sMZQ6T6zOvGi83v8UbjhBZ8mhvI1VkQ2STU9XOrTFyvWswMyh5rW1evS+e7qltYJvTqPA==
 
-"@types/jquery@^2.0.40":
-  version "2.0.48"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.48.tgz#3e90d8cde2d29015e5583017f7830cb3975b2eef"
-  integrity sha512-nNLzUrVjaRV/Ds1eHZLYTd7IZxs38cwwLSaqMJj8OTXY8xNUbxSK69bi9cMLvQ7dm/IBeQ1wHwQ0S1uYa0rd2w==
-
 "@types/node@8.0.18":
   version "8.0.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.18.tgz#9e96603a02a38889d08f451906f9cb56a2725ff5"
@@ -418,14 +413,6 @@ angular-2-dropdown-multiselect@1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/angular-2-dropdown-multiselect/-/angular-2-dropdown-multiselect-1.7.1.tgz#e524b515e98febb65ae200c943515bc2a154f365"
   integrity sha512-wUnOX1atvB8q4Y2c4OqAPucV48QGZntBHU0rg3+ZZzmW0NUWJMEfFjv7Vh9hRLf8ZMxiYR6MfoYkBOHpwB9GRQ==
-
-angular-froala-wysiwyg@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/angular-froala-wysiwyg/-/angular-froala-wysiwyg-2.7.0.tgz#db76834fe05297b47ae79cebf6778f247456146c"
-  integrity sha1-23aDT+BSl7R655zr9nePJHRWFGw=
-  dependencies:
-    "@types/jquery" "^2.0.40"
-    froala-editor "^2.7.0"
 
 angular2-template-loader@0.6.2:
   version "0.6.2"
@@ -3812,7 +3799,7 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.1"
     readable-stream "^2.0.4"
 
-font-awesome@4.7.0, font-awesome@>=4.4.0:
+font-awesome@4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
   integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
@@ -3909,14 +3896,6 @@ fresh@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.3.0.tgz#651f838e22424e7566de161d8358caa199f83d4f"
   integrity sha1-ZR+DjiJCTnVm3hYdg1jKoZn4PU8=
-
-froala-editor@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-2.7.0.tgz#d85acc6535541ca3811c6ca2287ab7e26d812428"
-  integrity sha1-2FrMZTVUHKOBHGyiKHq34m2BJCg=
-  dependencies:
-    font-awesome ">=4.4.0"
-    jquery ">=1.11.0"
 
 from2@^2.1.0:
   version "2.3.0"
@@ -5576,7 +5555,7 @@ joi@^11.1.1:
     isemail "3.x.x"
     topo "2.x.x"
 
-jquery@3.2.1, jquery@>=1.11.0:
+jquery@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
   integrity sha1-XE2d5lKvbNCncBVKYxu6ErAVx4c=
@@ -6995,6 +6974,11 @@ ngx-chips@1.8.2:
   integrity sha512-6xrj1YpUzyD3+nY06DekGrueeR8kJu8tXh+uPdaS31f5/B9y1dLnfHNQVYuDdpojmajsWtf6HplbAAl49Z3AVg==
   dependencies:
     ng2-material-dropdown "0.9.5"
+
+ngx-ckeditor@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/ngx-ckeditor/-/ngx-ckeditor-0.3.2.tgz#fc2a0b9f72414a5ce192ab86a0def1d5c3ff3807"
+  integrity sha1-/CoLn3JBSlzhkquGoN7x1cP/OAc=
 
 ngx-cookie@2.0.1:
   version "2.0.1"

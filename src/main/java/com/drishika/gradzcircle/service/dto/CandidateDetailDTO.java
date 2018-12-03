@@ -5,9 +5,10 @@ package com.drishika.gradzcircle.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
-
+import com.drishika.gradzcircle.domain.Nationality;
 import com.drishika.gradzcircle.domain.User;
 
 /**
@@ -45,8 +46,18 @@ public class CandidateDetailDTO implements Serializable {
 	private Boolean availableForHiring;
 
 	private Boolean openToRelocate;
+	
+	private Nationality nationality;
 
 	private User login;
+	
+	private List<JobCategoryDTO> jobCategories = new ArrayList<>();
+	
+	private List<AddressDTO> addresses = new ArrayList<>();
+	
+	private GenderDTO gender;
+	
+	private MaritalStatusDTO maritalStatus;
 
 	/**
 	 * @return the id
@@ -272,5 +283,77 @@ public class CandidateDetailDTO implements Serializable {
 	public void setLogin(User login) {
 		this.login = login;
 	}
+
+	/**
+	 * @return the addresses
+	 */
+	public List<AddressDTO> getAddresses() {
+		return addresses;
+	}
+
+	/**
+	 * @param addresses the addresses to set
+	 */
+	public void setAddresses(List<AddressDTO> addresses) {
+		this.addresses = addresses;
+	}
+
+	/**
+	 * @return the jobCategories
+	 */
+	public List<JobCategoryDTO> getJobCategories() {
+		return jobCategories;
+	}
+
+	/**
+	 * @param jobCategories the jobCategories to set
+	 */
+	public void setJobCategories(List<JobCategoryDTO> jobCategories) {
+		this.jobCategories = jobCategories;
+	}
+
+	/**
+	 * @return the nationality
+	 */
+	public Nationality getNationality() {
+		return nationality;
+	}
+
+	/**
+	 * @param nationality the nationality to set
+	 */
+	public void setNationality(Nationality nationality) {
+		this.nationality = nationality;
+	}
+
+	/**
+	 * @return the genderDTO
+	 */
+	public GenderDTO getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param genderDTO the genderDTO to set
+	 */
+	public void setGender(GenderDTO gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the maritalStatus
+	 */
+	public MaritalStatusDTO getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	/**
+	 * @param maritalStatus the maritalStatus to set
+	 */
+	public void setMaritalStatus(MaritalStatusDTO maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
+	
+	
 
 }

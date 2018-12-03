@@ -12,8 +12,10 @@ import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
+import com.drishika.gradzcircle.domain.Country;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.CorporateRepository;
+import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.util.DTOConverters;
@@ -31,14 +33,17 @@ public class CorporateService {
 	private final CorporateRepository corporateRepository;
 
 	private final CorporateSearchRepository corporateSearchRepository;
+	
+	private final CountryRepository countryRepository;
 
 	private final DTOConverters converter;
 
 	public CorporateService(CorporateRepository corporateRepository,
-			CorporateSearchRepository corporateSearchRepository, DTOConverters converter) {
+			CorporateSearchRepository corporateSearchRepository, DTOConverters converter,CountryRepository countryRepository) {
 		this.corporateRepository = corporateRepository;
 		this.corporateSearchRepository = corporateSearchRepository;
 		this.converter = converter;
+		this.countryRepository = countryRepository;
 	}
 
 	public void createCorporate(String corporateName, String phoneNumber, String country, User user) {
@@ -51,7 +56,21 @@ public class CorporateService {
 		corporateSearchRepository.save(corporate);
 		logger.debug("Information for created Corporate {} ", corporate);
 	}
+	
+	public Corporate updateCorporate(Corporate corporate) {
+		Corporate corporateFromRepo = corporateRepository.findOne(corporate.getId());
+		corporate.setShortlistedCandidates(corporateFromRepo.getShortlistedCandidates());
+		injestCountryDetails(corporate);
+		Corporate result = corporateRepository.save(corporate);
+		return result;
+	}
 
+	private void injestCountryDetails(Corporate corporate) {
+		Country country  = countryRepository.findByCountryNiceName(corporate.getCountry().getCountryNiceName());
+		corporate.setCountry(country);
+	}
+
+	
 	/**
 	 * @param id
 	 * @return
@@ -75,6 +94,10 @@ public class CorporateService {
 		final Page<CandidateProfileListDTO> page = candidatePage.map(
 				corporateCandidate -> converter.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate()));
 		return page;
+	}
+	
+	public Long getAllLinkedCandidates(Long corporateId) {
+		return corporateRepository.findAllLinkedCandidates(corporateId);
 	}
 
 }

@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.mutable.MutableDouble;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.domain.Candidate;
@@ -41,7 +43,7 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
  * @author abhinav
  *
  */
-@Service
+@Component
 public class MatchUtils {
 
 	private final Logger log = LoggerFactory.getLogger(MatchUtils.class);
@@ -66,7 +68,9 @@ public class MatchUtils {
 
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
 
-	private final Map<String, Long> jobFilterWeightMap = new HashMap<>();
+	private  final Map<String, Long> jobFilterWeightMap = new HashMap<>();
+	
+	
 
 	public MatchUtils(JobFilterParser jobFilterParser, FilterRepository filterRepository,
 			CourseRepository courseRepository, QualificationRepository qualificationRepository,
@@ -97,15 +101,16 @@ public class MatchUtils {
 		return jobFilter;
 	}
 
-	public Map<String, Long> getJobFilterWeightMap() {
-		if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
-			populateJobFilterWeightMap();
+	@PostConstruct
+	public Map<String, Long> init() {
+		//if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
+		populateJobFilterWeightMap();
 		return jobFilterWeightMap;
 
 	}
 
 	public void populateJobFilterWeightMap() {
-		if (jobFilterWeightMap.size() <= 0) {
+		
 			List<Filter> filters = filterRepository.findAll();
 			filters.forEach(filter -> {
 				if (filter.getFilterName().equalsIgnoreCase(Constants.COURSE))
@@ -125,7 +130,7 @@ public class MatchUtils {
 				if (filter.getFilterName().equalsIgnoreCase(Constants.LANGUAGE))
 					jobFilterWeightMap.put(filter.getFilterName(), filter.getMatchWeight());
 			});
-		}
+		
 		log.info("Job filter Weight has been populated {}", jobFilterWeightMap);
 	}
 
@@ -226,6 +231,7 @@ public class MatchUtils {
 
 	private Double matchCandidateEducationToJob(JobFilterObject jobfilterObject, CandidateEducation education) {
 		Double educationScore = 0.0;
+		log.debug("Filter weight Mpa before matching starts is {}",jobFilterWeightMap);
 		educationScore = matchCourse(jobfilterObject.getCourses(), education);
 		educationScore += matchQualification(jobfilterObject.getQualifications(), education);
 		educationScore += matchColleges(jobfilterObject.getColleges(), education);
@@ -501,7 +507,7 @@ public class MatchUtils {
 	}
 
 	private Double getMatchScoreEligible(JobFilterObject jobfilterObject) {
-		getJobFilterWeightMap();
+		//getJobFilterWeightMap();
 		MutableDouble matchScoreEligible = new MutableDouble(0);
 		if (jobfilterObject.getColleges() != null && jobfilterObject.getColleges().size() > 0) {
 			matchScoreEligible.add(jobFilterWeightMap.get(Constants.COLLEGE));

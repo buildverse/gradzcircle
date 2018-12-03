@@ -24,4 +24,6 @@ public interface CandidateAppliedJobsRepository
 	@Query("select cJ from CandidateAppliedJobs cJ where cJ.id.jobId.id=?1")
 	Page<CandidateAppliedJobs> findByJobId(Long jobId, Pageable pageable);
 
+	@Query("select count(cJ) from CandidateAppliedJobs cJ, Job j where cJ.id.jobId=j.id and j.corporate.id=?1")
+	Long findAppliedCandidatesForAllJobsByCorporate(Long corporateId);
 }

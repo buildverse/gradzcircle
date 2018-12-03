@@ -1,222 +1,229 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {Observable} from 'rxjs/Rx';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
+import {CandidateProject} from './candidate-project.model';
+import {CandidateProjectPopupService} from './candidate-project-popup.service';
+import {CandidateProjectService} from './candidate-project.service';
+import {CandidateEducation, CandidateEducationService} from '../candidate-education';
+import {CandidateEmployment, CandidateEmploymentService} from '../candidate-employment';
+import {CandidateEducationProjectPopupService} from './candidate-education-project-popup.service';
+import {CandidateEmploymentProjectPopupService} from './candidate-employment-project-popup.service';
+import {JhiDateUtils} from 'ng-jhipster';
 
-import { CandidateProject } from './candidate-project.model';
-import { CandidateProjectPopupService } from './candidate-project-popup.service';
-import { CandidateProjectService } from './candidate-project.service';
-import { CandidateEducation, CandidateEducationService } from '../candidate-education';
-import { CandidateEmployment, CandidateEmploymentService } from '../candidate-employment';
-import { CandidateEducationProjectPopupService } from './candidate-education-project-popup.service';
-import { CandidateEmploymentProjectPopupService } from './candidate-employment-project-popup.service';
-import { JhiDateUtils } from 'ng-jhipster';
-import { EditorProperties } from '../../shared';
 
 @Component({
-    selector: 'jhi-candidate-project-dialog',
-    templateUrl: './candidate-project-dialog.component.html'
+  selector: 'jhi-candidate-project-dialog',
+  templateUrl: './candidate-project-dialog.component.html'
+
 })
 export class CandidateProjectDialogComponent implements OnInit {
+  candidateProject: CandidateProject;
+  authorities: any[];
+  isSaving: boolean;
+  options: Object;
+  candidateEducations: CandidateEducation[];
+  endDateLesser: boolean;
+  endDateControl: boolean;
+  isEmploymentProject: boolean;
+  candidateEmployments: CandidateEmployment[];
+  projectStartDateDp: any;
+  projectEndDateDp: any;
+  editorConfig: any;
 
-    candidateProject: CandidateProject;
-    authorities: any[];
-    isSaving: boolean;
-    options: Object;
-    candidateEducations: CandidateEducation[];
-    endDateLesser: boolean;
-    endDateControl:boolean;
-    isEmploymentProject: boolean;
-    candidateEmployments: CandidateEmployment[];
-    projectStartDateDp: any;
-    projectEndDateDp: any;
+  constructor(
+    public activeModal: NgbActiveModal,
+    private jhiAlertService: JhiAlertService,
+    private candidateProjectService: CandidateProjectService,
+    private candidateEducationService: CandidateEducationService,
+    private candidateEmploymentService: CandidateEmploymentService,
+    private eventManager: JhiEventManager,
+    private dateUtils: JhiDateUtils
+  ) {
+  }
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private jhiAlertService: JhiAlertService,
-        private candidateProjectService: CandidateProjectService,
-        private candidateEducationService: CandidateEducationService,
-        private candidateEmploymentService: CandidateEmploymentService,
-        private eventManager: JhiEventManager,
-        private dateUtils: JhiDateUtils
-    ) {
-    }
-
- manageEndDateControl() {
-        if (this.candidateProject.isCurrentProject) {
-            this.endDateControl = true;
-            this.candidateProject.projectEndDate='';
-            this.endDateLesser =false;
-        } else {
-            this.endDateControl = false;
-
-        }
-    }
-    validateDates() {
-         this.endDateLesser = false;
-        if(this.candidateProject.projectStartDate && this.candidateProject.projectEndDate){
-        let fromDate = new Date (this.dateUtils
-             .convertLocalDateToServer(this.candidateProject.projectStartDate));
-        let toDate = new Date(this.dateUtils
-             .convertLocalDateToServer(this.candidateProject.projectEndDate));
-
-        if(fromDate > toDate )
-            this.endDateLesser = true;
-        else
-            this.endDateLesser = false;
-        }
-
+  manageEndDateControl() {
+    if (this.candidateProject.isCurrentProject) {
+      this.endDateControl = true;
+      this.candidateProject.projectEndDate = '';
+      this.endDateLesser = false;
+    } else {
+      this.endDateControl = false;
 
     }
+  }
+  validateDates() {
+    this.endDateLesser = false;
+    if (this.candidateProject.projectStartDate && this.candidateProject.projectEndDate) {
+      const fromDate = new Date(this.dateUtils
+        .convertLocalDateToServer(this.candidateProject.projectStartDate));
+      const toDate = new Date(this.dateUtils
+        .convertLocalDateToServer(this.candidateProject.projectEndDate));
 
-    ngOnInit() {
-        this.isSaving = false;
-        this.options = new EditorProperties().options;
+      if (fromDate > toDate) {
+        this.endDateLesser = true;
+      } else {
         this.endDateLesser = false;
-        this.candidateProject.isCurrentProject?this.endDateControl=true:this.endDateControl=false;
-        this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        this.candidateEducationService.query()
-            .subscribe((res: HttpResponse<CandidateEducation[]>) => { this.candidateEducations = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-        this.candidateEmploymentService.query()
-            .subscribe((res: HttpResponse<CandidateEmployment[]>) => { this.candidateEmployments = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+      }
     }
+  }
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  ngOnInit() {
+    this.editorConfig = {
+      'toolbarGroups': [
+        {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+        {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+        {name: 'paragraph', groups: ['list', 'indent', 'align']},
+      ],
+      'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+    };
+    this.isSaving = false;
+    // this.options = new EditorProperties().options;
+    this.endDateLesser = false;
+    this.candidateProject.isCurrentProject ? this.endDateControl = true : this.endDateControl = false;
+    this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
+    this.candidateEducationService.query()
+      .subscribe((res: HttpResponse<CandidateEducation[]>) => {this.candidateEducations = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+    this.candidateEmploymentService.query()
+      .subscribe((res: HttpResponse<CandidateEmployment[]>) => {this.candidateEmployments = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+  }
 
-    save() {
-        this.isSaving = true;
-        if (this.candidateProject.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.candidateProjectService.update(this.candidateProject));
-        } else {
-            this.subscribeToSaveResponse(
-                this.candidateProjectService.create(this.candidateProject));
-        }
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-     private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateProject>>) {
-        result.subscribe((res: HttpResponse<CandidateProject>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+  save() {
+    this.isSaving = true;
+    if (this.candidateProject.id !== undefined) {
+      this.subscribeToSaveResponse(
+        this.candidateProjectService.update(this.candidateProject));
+    } else {
+      this.subscribeToSaveResponse(
+        this.candidateProjectService.create(this.candidateProject));
     }
+  }
 
-    private onSaveSuccess(result: CandidateProject) {
-         this.eventManager.broadcast({ name: 'candidateProjectListModification', content: 'OK' });
-        this.eventManager.broadcast({ name: 'candidateEducationListModification', content: 'OK' });
-        this.eventManager.broadcast({ name: 'candidateEmploymentListModification', content: 'OK' });
-        this.isSaving = false;
-        this.activeModal.dismiss(result);
-    }
+  private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateProject>>) {
+    result.subscribe((res: HttpResponse<CandidateProject>) =>
+      this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+  }
 
-    private onSaveError() {
-        this.isSaving = false;
-    }
+  private onSaveSuccess(result: CandidateProject) {
+    this.eventManager.broadcast({name: 'candidateProjectListModification', content: 'OK'});
+    this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
+    this.eventManager.broadcast({name: 'candidateEmploymentListModification', content: 'OK'});
+    this.isSaving = false;
+    this.activeModal.dismiss(result);
+  }
 
-    private onError(error: any) {
-        this.jhiAlertService.error(error.message, null, null);
-    }
+  private onSaveError() {
+    this.isSaving = false;
+  }
 
-    trackCandidateEducationById(index: number, item: CandidateEducation) {
-        return item.id;
-    }
+  private onError(error: any) {
+    this.jhiAlertService.error(error.message, null, null);
+  }
 
-    trackCandidateEmploymentById(index: number, item: CandidateEmployment) {
-        return item.id;
-    }
+  trackCandidateEducationById(index: number, item: CandidateEducation) {
+    return item.id;
+  }
+
+  trackCandidateEmploymentById(index: number, item: CandidateEmployment) {
+    return item.id;
+  }
 }
 
 @Component({
-    selector: 'jhi-candidate-project-popup',
-    template: ''
+  selector: 'jhi-candidate-project-popup',
+  template: ''
 })
 export class CandidateProjectPopupComponent implements OnInit, OnDestroy {
 
-    isEmploymentProject: boolean;
-    routeSub: any;
+  isEmploymentProject: boolean;
+  routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private candidateProjectPopupService: CandidateProjectPopupService
-    ) {}
+  constructor(
+    private route: ActivatedRoute,
+    private candidateProjectPopupService: CandidateProjectPopupService
+  ) {}
 
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if(params['isEmploymentProject']==='true'){
-                this.isEmploymentProject = true;
-            }
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe((params) => {
+      if (params['isEmploymentProject'] === 'true') {
+        this.isEmploymentProject = true;
+      }
 
-            if (params['id']) {
-                this.candidateProjectPopupService
-                    .open(CandidateProjectDialogComponent as Component, params['id'],this.isEmploymentProject);
-            } else {
-                this.candidateProjectPopupService
-                    .open(CandidateProjectDialogComponent as Component,this.isEmploymentProject);
-            }
-        });
-    }
+      if (params['id']) {
+        this.candidateProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, params['id'], this.isEmploymentProject);
+      } else {
+        this.candidateProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, this.isEmploymentProject);
+      }
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }
 @Component({
-    selector: 'jhi-candidate-project-popup',
-    template: ''
+  selector: 'jhi-candidate-project-popup',
+  template: ''
 })
 export class CandidateEducationProjectPopupComponent implements OnInit, OnDestroy {
 
 
-    routeSub: any;
+  routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private candidateEducationProjectPopupService: CandidateEducationProjectPopupService
-    ) { }
+  constructor(
+    private route: ActivatedRoute,
+    private candidateEducationProjectPopupService: CandidateEducationProjectPopupService
+  ) {}
 
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if (params['id']) {
-                 this.candidateEducationProjectPopupService
-                    .open(CandidateProjectDialogComponent as Component, params['id']);
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.candidateEducationProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, params['id']);
 
-            }
-        });
-    }
+      }
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }
 
 @Component({
-    selector: 'jhi-candidate-project-popup',
-    template: ''
+  selector: 'jhi-candidate-project-popup',
+  template: ''
 })
 export class CandidateEmploymentProjectPopupComponent implements OnInit, OnDestroy {
 
 
-    routeSub: any;
-    isEmployment: boolean;
-    constructor(
-        private route: ActivatedRoute,
-        private candidateEmploymentProjectPopupService: CandidateEmploymentProjectPopupService
+  routeSub: any;
+  isEmployment: boolean;
+  constructor(
+    private route: ActivatedRoute,
+    private candidateEmploymentProjectPopupService: CandidateEmploymentProjectPopupService
 
-    ) { }
+  ) {}
 
-    ngOnInit() {
-        this.isEmployment = true;
-        this.routeSub = this.route.params.subscribe((params) => {
-            if (params['id']) {
-                 this.candidateEmploymentProjectPopupService
-                    .open(CandidateProjectDialogComponent as Component, params['id'],this.isEmployment);
-            }
-        });
-    }
+  ngOnInit() {
+    this.isEmployment = true;
+    this.routeSub = this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.candidateEmploymentProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, params['id'], this.isEmployment);
+      }
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }

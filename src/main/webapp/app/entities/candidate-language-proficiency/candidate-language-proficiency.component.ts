@@ -1,18 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
-import { Candidate } from '../candidate/candidate.model';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { Principal } from '../../shared';
+
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-candidate-language-proficiency',
-    templateUrl: './candidate-language-proficiency.component.html'
+    templateUrl: './candidate-language-proficiency.component.html',
+    styleUrls: ['candidate-language.css']
 })
 export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy {
     candidateLanguageProficiencies: CandidateLanguageProficiency[];
@@ -35,8 +36,6 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
 
     loadAll() {
         if (this.currentSearch.length>0) {
-          
-        console.log('In search');
             this.candidateLanguageProficiencyService.search({
                 query: this.currentSearch,
                 }).subscribe(
@@ -78,9 +77,8 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     ngOnInit() {
         this.principal.identity().then((account) => {
             this.currentAccount = account;
-            if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
-                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
-                this.currentSearch = this.candidateId;
+            if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) >-1 ) {
+                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.loadCandidateLanguages();
             } else {
               this.loadAll();

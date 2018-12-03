@@ -58,7 +58,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      login: ['', [Validators.required, Validators.minLength(6)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
       passwordGroup: this.formBuilder.group({
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -88,10 +89,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.errorEmailExists = null;
     this.languageService.getCurrent().then((key) => {
       this.registerAccount.langKey = key;
-      this.registerAccount.login = this.registerForm.get('login').value;
+      //USE email as login id
+      this.registerAccount.login = this.registerForm.get('email').value;
       this.registerAccount.password = this.registerForm.get('passwordGroup.password').value;
       this.registerAccount.email = this.registerForm.get('email').value;
-
+      this.registerAccount.firstName = this.registerForm.get('firstName').value;
+      this.registerAccount.lastName = this.registerForm.get('lastName').value;
       this.registerService.save(this.registerAccount).subscribe(() => {
         this.success = true;
         this.registerForm.reset();

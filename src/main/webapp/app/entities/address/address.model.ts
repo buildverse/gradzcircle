@@ -10,7 +10,7 @@ export class Address implements BaseEntity {
         public state?: string,
         public zip?: string,
         public candidate?: Candidate,
-        public country?: Country,
+        public country?: any,
     ) {
     }
 }

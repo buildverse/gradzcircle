@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.service.CorporateService;
@@ -84,7 +87,7 @@ public class CorporateResource {
             throw new BadRequestAlertException("A new corporate cannot already have an ID", ENTITY_NAME, "idexists");
         }
 		Corporate result = corporateRepository.save(corporate);
-		corporateSearchRepository.save(result);
+		//corporateSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/corporates/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -109,8 +112,8 @@ public class CorporateResource {
 		if (corporate.getId() == null) {
 			return createCorporate(corporate);
 		}
-		Corporate result = corporateRepository.save(corporate);
-		corporateSearchRepository.save(result);
+		Corporate result = corporateService.updateCorporate(corporate);
+		//corporateSearchRepository.save(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, corporate.getId().toString())).body(result);
 	}
@@ -125,7 +128,9 @@ public class CorporateResource {
 	@Timed
 	public List<Corporate> getAllCorporates() {
 		log.debug("REST request to get all Corporates");
-		return corporateRepository.findAll();
+		List<Corporate> corporates = corporateRepository.findAll();
+		corporates.forEach(corporate -> updateCountryDataForDisplay(corporate));
+		return corporates;
 	}
 
 	/**
@@ -141,6 +146,7 @@ public class CorporateResource {
 	public ResponseEntity<Corporate> getCorporate(@PathVariable Long id) {
 		log.debug("REST request to get Corporate : {}", id);
 		Corporate corporate = corporateRepository.findOne(id);
+		updateCountryDataForDisplay(corporate);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(corporate));
 	}
 
@@ -157,8 +163,25 @@ public class CorporateResource {
 	public ResponseEntity<List<CandidateProfileListDTO>> getLinkedCandidates(@PathVariable Long id, Pageable pageable) {
 		log.debug("REST request to get Linked Canddiates For Corporate : {}", id);
 		final Page<CandidateProfileListDTO> page = corporateService.getLinkedCandidates(pageable, id);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedCandiatesForJob");
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/linkedCandidates");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /corporates/:id : get Linked Candidates for corporate.
+	 *
+	 * @param id
+	 *            the id of the corporate to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the corporate,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/totalLinkedCandidates/{corporateId}")
+	@Timed
+	public ResponseEntity<Long> getTotalLinkedCandidates(@PathVariable Long corporateId) {
+		log.debug("REST request to get Linked Canddiates For Corporate : {}", corporateId);
+		Long totalLinkedCandidated = corporateService.getAllLinkedCandidates( corporateId);
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, corporateId.toString())).body(totalLinkedCandidated);
 	}
 
 	/**
@@ -174,6 +197,7 @@ public class CorporateResource {
 	public ResponseEntity<Corporate> getCorporateByLoginID(@PathVariable Long id) {
 		log.debug("REST request to get Corporate : {}", id);
 		Corporate corporate = corporateRepository.findByLoginId(id);
+		updateCountryDataForDisplay(corporate);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(corporate));
 	}
 
@@ -207,6 +231,17 @@ public class CorporateResource {
 		log.debug("REST request to search Corporates for query {}", query);
 		return StreamSupport.stream(corporateSearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
+	}
+	
+	private void updateCountryDataForDisplay(Corporate corporate) {
+		if (corporate == null)
+			return;
+		if (corporate.getCountry() != null) {
+			corporate.getCountry().setValue(corporate.getCountry().getCountryNiceName());
+			corporate.getCountry().setDisplay(corporate.getCountry().getCountryNiceName());
+
+		}
+
 	}
 
 }

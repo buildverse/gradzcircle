@@ -72,7 +72,7 @@ public class CandidateProjectResource {
 	            throw new BadRequestAlertException("A new candidateProject cannot already have an ID", ENTITY_NAME, "idexists");
 	        }
 		CandidateProject result = candidateProjectRepository.save(candidateProject);
-		candidateProjectSearchRepository.save(result);
+		//candidateProjectSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/candidate-projects/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -107,7 +107,7 @@ public class CandidateProjectResource {
 			return createCandidateProject(candidateProject);
 		}
 		CandidateProject result = candidateProjectRepository.save(candidateProject);
-		candidateProjectSearchRepository.save(result);
+	//	candidateProjectSearchRepository.save(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateProject.getId().toString()))
 				.body(result);

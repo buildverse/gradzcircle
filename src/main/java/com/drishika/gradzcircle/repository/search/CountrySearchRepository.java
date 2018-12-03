@@ -1,6 +1,6 @@
 package com.drishika.gradzcircle.repository.search;
 
-import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.elastic.Country;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**

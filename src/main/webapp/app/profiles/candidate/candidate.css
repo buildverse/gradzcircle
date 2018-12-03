@@ -1,5 +1,5 @@
 .profile-mybackground {
-	background: url("../../../content/images/iceland.jpg") no-repeat;
+	background: url("../../../content/images/banner-1.jpg") no-repeat;
 	background-size: cover;
 }
 
@@ -94,4 +94,198 @@
 
 .blockquote {
 	border-left: solid #CCCACA;
+}
+
+p {
+	margin-bottom: 0rem;
+}
+
+/*======================================================
+Designer css
+=======================================================*/
+figure {
+	margin: 0;
+	margin-top: 52px;
+}
+
+.after-header {
+	margin-top: 70px;
+}
+
+.profile_page_head {
+	height: 27vh;
+	background-image: url(../../../content/images/banner-1.jpg);
+	background-position: 100% 42%;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.profile_page_head_content {
+	margin-top: -11vh;
+}
+
+.profile_page {
+	padding-left: 0 !important;
+	background: #f2f2f2;
+	box-sizing: border-box;
+	box-shadow: 0px 1px 4px 0px rgba(183, 181, 181, 0.5);
+}
+
+#accordion .card-header {
+	background: #1276ae;
+}
+
+#accordion .card-header a {
+	color: #fff;
+	font-weight: 500;
+	letter-spacing: 1px;
+}
+
+#accordion .card-header .fa {
+	cursor: pointer;
+}
+
+#accordion .card-header h6 {
+	cursor: pointer;
+	color: #ffffff !important;
+}
+
+#accordion .card-header h6:before {
+	content: "\f078";
+	font-family: 'FontAwesome';
+	margin-right: 10px;
+}
+
+#accordion .card-header h6.collapsed:before {
+	content: "\f077";
+	font-family: 'FontAwesome';
+}
+
+#accordion .form-btn {
+	background: #e8e8e8;
+}
+
+a.card-link.d-block[aria-expanded|="true"]:after {
+	font-family: FontAwesome;
+	content: "\f068";
+	position: absolute;
+	right: 43px;
+}
+
+a.card-link.d-block[aria-expanded|="false"]:after {
+	font-family: FontAwesome;
+	content: "\f067";
+	position: absolute;
+	right: 43px;
+}
+
+db-left {
+    height: auto;
+}
+.db-left {
+    background: #293540;
+    width: 280px;
+    margin-bottom: 60px;
+    overflow: auto;
+}
+@media (min-width: 768px)
+.col-md-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+}
+
+@media (min-width: 992px) {
+  .db-right {
+    padding: 30px 30px 0 30px;
+  }
+}
+
+@media (min-width: 992px) {
+  .db-right .db-content {
+    height: auto;
+  }
+}
+
+@media (max-width: 991px) {
+  .db-right .db-content {
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+  }
+}
+
+.db-right .db-content .head-sec {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.db-right .db-content h5 {
+  font-family: 'proxima_novabold';
+  color: #3d4069;
+}
+
+.edit_profile {
+    background: #1276ae;
+    border: 0;
+    color: #fff !important;
+    padding: 10px 40px 10px 20px;
+    cursor: pointer;
+    margin: 8px;
+    position: relative;
+}
+
+.save_profile{
+  display: none;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #0D47A1;
+    border-color: #dee2e6 #dee2e6 #fff;
+    
+}
+
+ul.nav.nav-tabs {
+	   	border-bottom: 1px solid #dee2e6;
+}
+ul.nav.nav-tabs a {
+    color: #000;
+    font-size: 19px;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+
+}
+
+.tab-content {
+  background: #fff;
+  padding: 25px 8px 12px;
+  box-sizing: border-box;
+  box-shadow: -1px 0px 5px 1px #d6d6d6;
+  margin: 8px 0;
+}
+
+.modal-header {
+  background: #3eaae6;
+  color: #fff;
+  text-align: center;
+  border: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.applicant-profile-name {
+  font-size: 12px;
+  font-weight: normal;
+  color: #fff;
+  display: block;
+  margin-top: 0px;
+}
+
+.applicant-image {
+  width: 100%;
+}
+.applicant-image img {
+  width: 75%;
+}
+.mar-0 {
+  margin: 0;
 }

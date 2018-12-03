@@ -11,5 +11,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface NationalityRepository extends JpaRepository<Nationality, Long> {
+	
+	public Nationality findByNationality(String nationlaity);
 
 }

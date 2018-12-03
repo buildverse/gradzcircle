@@ -12,7 +12,7 @@
 		<jhi-alert-error></jhi-alert-error>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted mt-2"
+				<label class="form-control-label font-weight-bold  mt-2"
 					jhiTranslate="gradzcircleApp.corporate.name"
 					for="field_corporateName">Corporate Name</label>
 			</div>
@@ -25,7 +25,7 @@
 				</span>
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted mt-2"
+				<label class="form-control-label font-weight-bold  mt-2"
 					jhiTranslate="gradzcircleApp.corporate.industry"
 					for="field_industry">Industry</label>
 			</div>
@@ -46,7 +46,7 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted mt-2"
+				<label class="form-control-label font-weight-bold  mt-2"
 					jhiTranslate="gradzcircleApp.corporate.email"
 					for="field_corporateEmail">Corporate Email</label>
 			</div>
@@ -60,20 +60,21 @@
 				</span>
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted mt-2"
+				<label class="form-control-label font-weight-bold  mt-2"
 					jhiTranslate="gradzcircleApp.corporate.establishedSince"
 					for="field_establishedSince">Established Since</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="establishedDate.invalid && establishedDate.touched">
+				[class.has-danger]="establishedDate.invalid && establishedDate.touched" (mouseleave)="establishedSinceDp.close()">
 				<div class="input-group">
 					<input id="field_establishedSince" type="text" class="form-control"
-						required #establishedDate="ngModel" name="establishedSince"
+						required establishedSinceDp name="establishedSince" #establishedDate="ngModel"
 						ngbDatepicker #establishedSinceDp="ngbDatepicker"
 						[(ngModel)]="corporate.establishedSince" /> <span
-						class="input-group-addon " (click)="establishedSinceDp.toggle()">
-						<img src="../../../content/images/calendar.png"
-						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+						class="input-group-append ">
+						<button class="btn btn-outline-secondary" (click)="establishedSinceDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+						</button>
 					</span>
 				</div>
 				<span *ngIf="establishedDate.invalid && establishedDate.touched"
@@ -84,7 +85,7 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2 ">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.tagLine"
 					for="field_corporateTagLine">Tag Line</label>
 			</div>
@@ -95,47 +96,54 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2 ">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.overview"
 					for="field_corporateOverview">About Us</label>
 			</div>
 			<div class="col-md-10">
-				<textarea [froalaEditor]='options' class="form-control"
+				<ck-editor class="form-control " 
+						 name="overview"
+						id="field_corporateOverview" [config]="editorConfig"
+						[(ngModel)]="corporate.overview">
+				</ck-editor>
+				<!--  <textarea [froalaEditor]='options' class="form-control"
 					name="overview" id="field_corporateOverview" rows="10"
 					[(ngModel)]="corporate.overview">
-                        </textarea>
+                        </textarea>-->
 			</div>
 		</div>
 
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2 ">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.culture"
 					for="field_corporateCulture">Our Culture</label>
 			</div>
 			<div class="col-md-10">
-				<textarea [froalaEditor]='options' class="form-control"
-					name="culture" id="field_corporateCulture" rows="10"
-					[(ngModel)]="corporate.culture">
-                        </textarea>
+				<ck-editor class="form-control " 
+							 name="culture"
+							id="field_corporateCulture" [config]="editorConfig"
+							[(ngModel)]="corporate.culture">
+				</ck-editor>
 			</div>
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2 ">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.benefits"
 					for="field_corporateBenefits">Employee Benefits</label>
 			</div>
 			<div class="col-md-10">
-				<textarea [froalaEditor]='options' rows="10" class="form-control"
-					name="benefits" id="field_corporateBenefits"
-					[(ngModel)]="corporate.benefits">
-                    </textarea>
+				<ck-editor class="form-control " 
+							 name="benefits"
+							id="field_corporateBenefits" [config]="editorConfig"
+							[(ngModel)]="corporate.benefits">
+				</ck-editor>
 			</div>
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2 ">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.website"
 					for="field_corporateWebsite">Corporate Website</label>
 			</div>
@@ -143,19 +151,19 @@
 				<input type="text" class="form-control" name="website"
 					id="field_corporateWebsite" [(ngModel)]="corporate.website" />
 			</div>
-			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+			<!-- <div class="col-md-2">
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.linkedIn"
 					for="field_corporateLinkedIn">Corporate Linked In</label>
 			</div>
-			<div class="col-md-4">
+			 <div class="col-md-4">
 				<input type="text" class="form-control" name="linkedIn"
 					id="field_corporateLinkedIn" [(ngModel)]="corporate.linkedIn" />
-			</div>
+			</div>-->
 		</div>
-		<div class="form-group row mx-4 my-4">
+		<!--  <div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.facebook"
 					for="field_corporateFacebook">Corporate Facebook</label>
 			</div>
@@ -164,7 +172,7 @@
 					id="field_corporateFacebook" [(ngModel)]="corporate.facebook" />
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.twitter"
 					for="field_corporateTwitter">Corporate Twitter</label>
 			</div>
@@ -172,10 +180,10 @@
 				<input type="text" class="form-control" name="twitter"
 					id="field_corporateTwitter" [(ngModel)]="corporate.twitter" />
 			</div>
-		</div>
-		<div class="form-group row mx-4 my-4">
+		</div>-->
+		<!--  <div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.instagram"
 					for="field_corporateInstagram">Corporate Instagram</label>
 			</div>
@@ -183,10 +191,10 @@
 				<input type="text" class="form-control" name="instagram"
 					id="field_corporateInstagram" [(ngModel)]="corporate.instagram" />
 			</div>
-		</div>
+		</div>-->
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.contactPerson"
 					for="field_contactPerson">Contact Person</label>
 			</div>
@@ -195,7 +203,7 @@
 					id="field_contactPerson" [(ngModel)]="corporate.contactPerson" />
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.personDesignation"
 					for="field_contactPersonDesignation">Contact Person
 					Designation</label>
@@ -208,7 +216,7 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.address"
 					for="field_corporateAddress">Corporate Address</label>
 			</div>
@@ -217,7 +225,7 @@
 					id="field_corporateAddress" [(ngModel)]="corporate.address" />
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.city"
 					for="field_corporateCity">Corporate City</label>
 			</div>
@@ -228,23 +236,23 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.country" for="field_country">Country</label>
 			</div>
 			<div class="col-md-4"
 				[class.has-danger]="country.invalid && country.touched">
-				<select class="form-control" id="field_country" name="country"
-					[(ngModel)]="corporate.country" required #country="ngModel">
-					<option [ngValue]="null"></option>
-					<option
-						[ngValue]="countryOption.id === corporate.country?.id ? corporate.country : countryOption"
-						*ngFor="let countryOption of countries; trackBy: trackCountryById">{{countryOption.countryNiceName}}</option>
-				</select> <span *ngIf="country.invalid && country.touched"
+				<tag-input name="country" [(ngModel)]="corporate.country" required #country="ngModel"
+									theme='bootstrap' [onlyFromAutocomplete]="true"
+									 [onTextChangeDebounce]="500"
+									[secondaryPlaceholder]="'Required'" [maxItems]='1'> 
+									<tag-input-dropdown [autocompleteObservable]='requestCountryData'></tag-input-dropdown>
+								</tag-input>
+				<span *ngIf="country.invalid && country.touched"
 					class="text-danger"> <small> Please select Country</small>
 				</span>
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.corporate.phone"
 					for="field_corporatePhone">Corporate Phone</label>
 			</div>

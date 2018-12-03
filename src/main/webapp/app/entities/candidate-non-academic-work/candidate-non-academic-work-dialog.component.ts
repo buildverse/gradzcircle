@@ -25,7 +25,7 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     options: Object;
     endDateLesser: boolean;
     endDateControl:boolean;
-
+    editorConfig: any;
     candidates: Candidate[];
     nonAcademicWorkStartDateDp: any;
     nonAcademicWorkEndDateDp: any;
@@ -42,6 +42,14 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.editorConfig = {
+          'toolbarGroups': [
+            {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+            {name: 'paragraph', groups: ['list', 'indent', 'align']},
+          ],
+          'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+        };
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;

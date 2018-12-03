@@ -15,9 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
+import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
+import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
+import com.drishika.gradzcircle.service.dto.CandidateLanguageProficiencyDTO;
+import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
 
 @Service
@@ -31,23 +35,27 @@ public class CandidateLanguageService {
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
 
 	private final CandidateRepository candidateRepository;
+	
+	private final LanguageRepository languageRepository;
 
 	private final CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
 
 	public CandidateLanguageService(CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
-			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository,
+			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository, LanguageRepository languageRepository,
 			@Qualifier("CandidateLanguageMatcher") Matcher<Candidate> matcher,
 			CandidateRepository candidateRepository) {
 		this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
 		this.candidateLanguageProficiencySearchRepository = candidateLanguageProficiencySearchRepository;
 		this.matcher = matcher;
 		this.candidateRepository = candidateRepository;
+		this.languageRepository = languageRepository;
 	}
 
 	public CandidateLanguageProficiency createCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
+		injestLanguageInformation(candidateLanguageProficiency);
 		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository
-				.saveAndFlush(candidateLanguageProficiency);
+				.save(candidateLanguageProficiency);
 		Candidate candidate = candidateRepository.findOne(result.getCandidate().getId());
 		log.debug("I have these pre in candidate {}", candidate.getCandidateLanguageProficiencies());
 		candidate.addCandidateLanguageProficiency(result);
@@ -57,7 +65,9 @@ public class CandidateLanguageService {
 
 	public CandidateLanguageProficiency updateCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
-		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency);
+		injestLanguageInformation(candidateLanguageProficiency);
+		CandidateLanguageProficiency fromRepo = candidateLanguageProficiencyRepository.findOne(candidateLanguageProficiency.getId());
+		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency.candidate(fromRepo.getCandidate()));
 		// Candidate candidate =
 		// candidateRepository.findOne(result.getCandidate().getId());
 		// //candidate.addCandidateLanguageProficiency(result);
@@ -73,10 +83,24 @@ public class CandidateLanguageService {
 		return candidateLanguageProficiencies;
 	}
 
-	public CandidateLanguageProficiency getCandidateLanguageProficiency(Long id) {
+	public CandidateLanguageProficiencyDTO getCandidateLanguageProficiency(Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
 		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(id);
-		return candidateLanguageProficiency;
+		return convertCandidateLanguageProficienciesToDTO(candidateLanguageProficiency);
+	}
+	
+	private CandidateLanguageProficiencyDTO convertCandidateLanguageProficienciesToDTO(CandidateLanguageProficiency candidateLanguageProficiency) {
+		
+		CandidateLanguageProficiencyDTO candidateLanguageProficiencyDTO = new CandidateLanguageProficiencyDTO();
+		LanguageDTO languageDTO = new LanguageDTO();
+		candidateLanguageProficiencyDTO.setId(candidateLanguageProficiency.getId());
+		languageDTO.setLanguage(candidateLanguageProficiency.getLanguage().getLanguage());
+		languageDTO.setId(candidateLanguageProficiency.getLanguage().getId());
+		languageDTO.setValue(candidateLanguageProficiency.getLanguage().getLanguage());
+		languageDTO.setDisplay(candidateLanguageProficiency.getLanguage().getLanguage());
+		candidateLanguageProficiencyDTO.setLanguage(languageDTO);
+		candidateLanguageProficiencyDTO.setProficiency(candidateLanguageProficiency.getProficiency());
+		return candidateLanguageProficiencyDTO;
 	}
 
 	public List<CandidateLanguageProficiency> getCandidateLanguageProficiencyByCandidate(Long id) {
@@ -105,6 +129,13 @@ public class CandidateLanguageService {
 						false)
 				.collect(Collectors.toList());
 		return candidateLanguageProficiencies;
+	}
+	
+	private void injestLanguageInformation(CandidateLanguageProficiency candidateLanguageProficiency) {
+		if(candidateLanguageProficiency.getLanguage() != null) {
+			Language languageFromRepo = languageRepository.findByLanguage(candidateLanguageProficiency.getLanguage().getLanguage());
+			candidateLanguageProficiency.setLanguage(languageFromRepo);
+		}
 	}
 
 }

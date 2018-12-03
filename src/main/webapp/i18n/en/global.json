@@ -46,6 +46,7 @@
                 "jobHistory": "Job History",
                 "jobFilterHistory": "Job Filter History",
                 "appConfig": "App Config",
+                "states": "States",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -81,7 +82,8 @@
                 "jobs" :  "Jobs",
                 "job": {
                      "applied" : "Applied Jobs",
-                     "active" : "All Jobs"
+                     "active" : "All Jobs",
+                     "shortlisted" : "Shortlisted For"
              }
             },
              "corporate": {
@@ -105,7 +107,10 @@
             "confirmpassword": "Confirm New password",
             "confirmpassword.placeholder": "Confirm your password",
             "email": "Email",
-            "email.placeholder": "Enter your email address"
+            "email.placeholder": "Enter your email address",
+            "firstName.placeholder": "Enter your first name",
+            "lastName.placeholder": "Enter your last name",
+            "required":"Required"
         },
         "messages": {
             "info": {

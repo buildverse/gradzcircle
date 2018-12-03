@@ -1,17 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
+import { JhiEventManager,  JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { Principal } from '../../shared';
+
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-candidate-certification',
-    templateUrl: './candidate-certification.component.html'
+    templateUrl: './candidate-certification.component.html',
+    styleUrls: ['certification.css']
 })
 export class CandidateCertificationComponent implements OnInit, OnDestroy {
     candidateCertifications: CandidateCertification[];
@@ -73,12 +74,11 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         this.loadAll();
     }
     ngOnInit() {
-        console.log("In inti");
+
         this.principal.identity().then((account) => {
             this.currentAccount = account;
-            console.log("Account is "+ this.currentAccount);
-            if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
-                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
+            if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1 ) {
+                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.currentSearch = this.candidateId;
                 this.loadCertificationsForCandidate();
             } else {
@@ -86,7 +86,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
             }
             this.registerChangeInCandidateCertifications();
         });
-        console.log("exit inti");
+
     }
 
     ngOnDestroy() {
@@ -99,9 +99,9 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     registerChangeInCandidateCertifications() {
         if (this.candidateId) {
             this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', (response) => this.loadCertificationsForCandidate());
-        }
-        else
+        } else {
             this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', (response) => this.loadAll());
+      }
     }
 
     private onError(error) {

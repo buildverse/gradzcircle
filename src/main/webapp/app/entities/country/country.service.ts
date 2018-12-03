@@ -13,6 +13,7 @@ export class CountryService {
 
     private resourceUrl =  SERVER_API_URL + 'api/countries';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/countries';
+   private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/countryBySuggest';
 
     constructor(private http: HttpClient) { }
 
@@ -69,6 +70,11 @@ export class CountryService {
           .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
     }
 
+  
+   searchRemote(req?: any): Observable<HttpResponse<any>> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
+  }
     /**
      * Convert a returned JSON object to Country.
      */

@@ -6,7 +6,6 @@ import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -33,15 +32,9 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   constructor(
     private jobService: JobService,
     private jhiAlertService: JhiAlertService,
-    private eventManager: JhiEventManager,
     private activatedRoute: ActivatedRoute,
-    private principal: Principal,
     private parseLinks: JhiParseLinks,
-    private router: Router,
-    private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig,
-    
-
+    private router: Router
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {

@@ -6,9 +6,9 @@ import {JhiLanguageService, JhiEventManager} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {ProfileService} from '../profiles/profile.service';
 import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService} from '../../shared';
-import {VERSION, DEBUG_INFO_ENABLED} from '../../app.constants';
-import {SERVER_API_URL} from '../../app.constants';
-import {Corporate, CorporateService} from '../../entities/corporate';
+import {VERSION} from '../../app.constants';
+
+import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
 
 @Component({
@@ -33,7 +33,6 @@ export class NavbarComponent implements OnInit {
   corporateId: number;
   candidateId: number;
   candidate: Candidate;
-  // imageUrl='http://localhost:8080/api/files/';
   noImage: boolean;
   authorities: string[];
   constructor(
@@ -56,15 +55,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
      this.isNavbarCollapsed = true;
-    //this.authorities = ['ROLE_CORPORATE'];
-    //if (this.principal.hasAnyAuthorityDirect(this.authorities)) {
-      
-    this.loadId();
-
-    //}
     this.languageHelper.getAll().then((languages) => {
       this.languages = languages;
     });
+    this.loadId();
     this.reloadUserImage();
      this.profileService.getProfileInfo().then((profileInfo) => {
             this.inProduction = profileInfo.inProduction;
@@ -75,11 +69,10 @@ export class NavbarComponent implements OnInit {
   }
 
   registerSuccessfulLogin() {
-      this.eventSubscriber = this.eventManager.subscribe('authenticationSuccess', (response) => this.loadId());
+      this.eventSubscriber = this.eventManager.subscribe('authenticationSuccess', (response) => this.reloadUserImage());
   }
   
   loadId() {
-    console.log('Am I being called');
       this.principal.identity(true).then((user) => {
         if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
           this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
@@ -88,11 +81,8 @@ export class NavbarComponent implements OnInit {
         } else {
            if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
           this.candidateService.getCandidateByLoginId(user.id).subscribe((response) => {
-           // this.candidateId = response.id;
             this.candidate = response.body;
             this.candidateId = this.candidate.id;
-
-            //console.log('Candidate in nav bar is '+JSON.stringify(this.candidate));
           });
         }
         }
@@ -105,7 +95,6 @@ export class NavbarComponent implements OnInit {
 
   collapseNavbar() {
     this.isNavbarCollapsed = true;
-    //console.log('nav bar is '+ this.isNavbarCollapsed);
   }
 
   isAuthenticated() {
@@ -149,11 +138,10 @@ export class NavbarComponent implements OnInit {
       if (user) {
         if (user.imageUrl !== undefined) {
           this.userService.getImageData(user.id).subscribe((response) => {
-            if(response !== undefined) {
-            //  console.log(JSON.stringify('------------'+response));
+            if (response !== undefined) {
               const responseJson = response.body;
               if(responseJson) {
-                  this.userImage = responseJson[0].href + '?t=' + Math.random().toString();  
+                  this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
               } else {
                 this.noImage = true;
               }

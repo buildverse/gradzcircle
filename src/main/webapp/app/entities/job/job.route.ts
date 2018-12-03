@@ -14,6 +14,7 @@ import { JobEditMessageDialogComponent,JobEditMessagePopupComponent } from './jo
 import { CandidateListDialogComponent,CandidateListPopupComponent } from '../candidate-list/candidate-list-dialog.component';
 import { MatchedCandidateListComponent } from './matched-candidate-list.component';
 import { AppliedCandidateListComponent } from './applied-candidate-list.component';
+import { ShortListedCandidateListComponent } from './short-listed-candidate-list.component';
 
 const TRACKER_ROUTE = [
    //matchTrackerRoute
@@ -79,6 +80,18 @@ export const jobRoute: Routes = [
               pageTitle: 'gradzcircleApp.job.home.title'
           },
           canActivate: [UserRouteAccessService]
+      },
+     {
+          path: 'shortListedCandidateList/:id/:corporateId',
+          component: ShortListedCandidateListComponent,
+          resolve: {
+              'pagingParams': JobResolvePagingParams
+          },
+          data: {
+              authorities: ['ROLE_USER','ROLE_CORPORATE'],
+              pageTitle: 'gradzcircleApp.job.home.title'
+          },
+          canActivate: [UserRouteAccessService]
       }
  // matchTrackerRoute
 ];
@@ -115,7 +128,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/:id/view/:hasApplied',
+        path: 'job/:id/view/:matchScore',
         component: JobViewPopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE','ROLE_CANDIDATE'],

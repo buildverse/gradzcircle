@@ -153,8 +153,9 @@ export class CandidateEducationDialogComponent implements OnInit {
     this.validPercentScore = true;
     // console.log("Percent =" + JSON.stringify(this.candidateEducation.percentage));
     if (this.candidateEducation.percentage) {
-      if (this.candidateEducation.percentage > 100)
+      if (this.candidateEducation.percentage > 100) {
         this.validPercentScore = false;
+      }
     }
 
 
@@ -163,8 +164,10 @@ export class CandidateEducationDialogComponent implements OnInit {
   shouldDisableDecimal() {
     this.enableDecimal = true;
     if (this.candidateEducation.roundOfGrade) {
-      if (this.candidateEducation.roundOfGrade === 10)
+      if (this.candidateEducation.roundOfGrade === 10) {
+        this.candidateEducation.gradeDecimal = 0;
         this.enableDecimal = false;
+      }
     }
   }
   ngOnInit() {
@@ -277,8 +280,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   validateAndResetScoreBeforeSave() {
     if (this.candidateEducation.scoreType === 'gpa') {
       this.candidateEducation.percentage = null;
-    }
-    else {
+    }  else {
       this.candidateEducation.gradeDecimal = null;
       this.candidateEducation.roundOfGrade = null;
       this.candidateEducation.grade = null;
@@ -319,17 +321,18 @@ export class CandidateEducationDialogComponent implements OnInit {
   }
 
    private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateEducation>>) {
-        result.subscribe((res: HttpResponse<CandidateEducation>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<CandidateEducation>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError(res));
     }
 
   private onSaveSuccess(result: CandidateEducation) {
+    console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
     this.isSaving = false;
     this.activeModal.dismiss(result);
   }
 
-  private onSaveError() {
+  private onSaveError(result:any) {
+    console.log(JSON.stringify(result));
     this.isSaving = false;
   }
 

@@ -74,6 +74,7 @@
 			"cannotEditCandidateMessage": "You do not have to pay again for the candidates you have already bought.",
 			"editHeader": "Cannot Edit Job",
 			"noCandidateShortlisted": "No Candidtaes Shortlisted",
+			"shortlistedCandidate": "ShortListed Candidates",
 			"noAmountPaid": "No Payment Yet",
 			"payUpfront": "Plan - Pay Upfront",
 			"payAsYouGo": "Plan - Pay When you Like The Candidate",
@@ -81,7 +82,15 @@
 			"noOfMatchedApplicants": "Matched Candidates",
 			"apply": "Apply",
 			"matchScore": " Match Score",
-			"noOfCandidatesApplied": "Candidates Applied"
+			"noOfCandidatesApplied": "Candidates Applied",
+			"totalJobs": "&nbsp; Total Jobs",
+			"postedSince": "&nbsp; Posted since",
+			"newJobs": "&nbsp; New Jobs",
+			"postedInLastTwoMonths": "&nbsp; Posted in last two months",
+			"candidatesApplied" : "&nbsp; Candidate Applied to Recent Jobs",
+			"candidateLinked":"&nbsp; Profiles saved for future pitching",
+			"savedProfiles":"&nbsp; Saved Profiles",
+			"newRequests":"&nbsp; New Requests"
 		}
 	}
 }

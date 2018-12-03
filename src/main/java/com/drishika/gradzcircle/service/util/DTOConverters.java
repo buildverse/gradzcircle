@@ -3,8 +3,6 @@
  */
 package com.drishika.gradzcircle.service.util;
 
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,6 +11,7 @@ import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
@@ -53,8 +52,8 @@ public class DTOConverters {
 				+ highestCandidateEducation.getCourse().getCourse());
 		return dto;
 	}
-
-	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate) {
+	
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CorporateCandidate corporateCandidate) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
 		dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
@@ -67,8 +66,30 @@ public class DTOConverters {
 		return dto;
 	}
 
-	public CorporateJobDTO convertToJobListingForCorporate(Job job) {
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate) {
+		CandidateProfileListDTO dto = new CandidateProfileListDTO();
+		dto.setFirstName(candidate.getFirstName());
+		dto.setLastName(candidate.getLastName());
+		dto.setLogin(candidate.getLogin());
+		dto.setId(candidate.getId());
+		CandidateEducation highestCandidateEducation = null;
+		if(candidate.getEducations().stream()
+				.filter(education -> education.isHighestQualification()).findFirst().isPresent())
+			highestCandidateEducation = candidate.getEducations().stream()
+				.filter(education -> education.isHighestQualification()).findFirst().get();
+		if(highestCandidateEducation != null)
+			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
+				+ highestCandidateEducation.getCourse().getCourse());
+		return dto;
+	}
+
+	public CorporateJobDTO convertToJobListingForCorporate(Job job,Long totalLinkedCandidates, Long totalNumberOfJobs, 
+			Long newApplicants, Long jobsLastMonth,Long numberOfCandidatesShortListedByJob) {
 		CorporateJobDTO jobListingData = new CorporateJobDTO();
+		jobListingData.setTotalLinkedCandidates(totalLinkedCandidates);
+		jobListingData.setTotalNumberOfJobs(totalNumberOfJobs);
+		jobListingData.setNewApplicants(newApplicants);
+		jobListingData.setJobsLastMonth(jobsLastMonth);
 		jobListingData.setJobStatus(job.getJobStatus());
 		jobListingData.setJobTitle(job.getJobTitle());
 		jobListingData.setEmploymentType(job.getEmploymentType());
@@ -79,7 +100,11 @@ public class DTOConverters {
 		// !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
 		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size());
 		jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
+		jobListingData.setNoOfShortListedCandidate(numberOfCandidatesShortListedByJob);
 		jobListingData.setId(job.getId());
+		jobListingData.setCanEdit(job.getCanEdit());
+		jobListingData.setHasBeenEdited(job.getHasBeenEdited());
+		jobListingData.setEverActive(job.getEverActive());
 		return jobListingData;
 	}
 

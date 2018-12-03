@@ -13,7 +13,7 @@
 
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateCertification.home.title"
 					for="field_certificationTitle">Certification Title</label>
 			</div>
@@ -23,7 +23,7 @@
 					#certificationTitle="ngModel" required name="certificationTitle"
 					id="field_certificationTitle"
 					[(ngModel)]="candidateCertification.certificationTitle" /> <small
-					class="form-text text-muted text-info"> Provide
+					class="form-text  form-text-primary"> Provide
 					certification name </small>
 				<div
 					*ngIf="certificationTitle.invalid && certificationTitle.touched"
@@ -34,18 +34,22 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails"
 					for="field_certificationDetails">Certification Details</label>
 			</div>
 			<div class="col-md-9"
 				[class.has-danger]="certificationDetails.invalid && certificationDetails.touched">
-				<textarea [froalaEditor]='options' class="form-control"
+				<!--  <textarea [froalaEditor]='options' class="form-control"
 					#certificationDetails="ngModel" required
 					name="certificationDetails" id="field_certificationDetails"
 					[(ngModel)]="candidateCertification.certificationDetails" rows="20">
-                </textarea>
-				<small class="form-text text-muted text-info"> Provide
+                </textarea>-->
+                <ck-editor class="form-control " 
+					#certificationDetails="ngModel" required name="certificationDetails" 
+					id="field_certificationDetails" [config]="editorConfig"
+					[(ngModel)]="candidateCertification.certificationDetails"></ck-editor>
+				<small class="form-text  form-text-primary"> Provide
 					overview of what you learnt and how this will help in improving
 					your skills. </small>
 				<div
@@ -57,22 +61,23 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateCertification.certificationDate"
 					for="field_certificationDate">Certification Date</label>
 			</div>
-			<div class="col-md-3"
+			<div class="col-md-3" (mouseleave)="certificationDateDp.close()"
 				[class.has-danger]="certificationDate.invalid && certificationDate.touched">
 				<div class="input-group">
 					<input id="field_certificationDate" #certificationDate="ngModel"
-						required type="text" class="form-control text-muted"
+						required type="text" class="form-control "
 						name="certificationDate" ngbDatepicker
 						#certificationDateDp="ngbDatepicker"
-						[(ngModel)]="candidateCertification.certificationDate" /> <span
-						class="input-group-addon " (click)="certificationDateDp.toggle()">
-						<img src="../../../content/images/calendar.png"
-						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</span>
+						[(ngModel)]="candidateCertification.certificationDate" /> 
+						<span class=" input-group-append" >
+							<button class="btn btn-outline-secondary" (click)="certificationDateDp.toggle()" type="button">
+										<i class="fa fa-calendar" style="color:#1276ae"></i>
+							</button>
+						</span>
 				</div>
 				<div *ngIf="certificationDate.invalid && certificationDate.touched"
 					class="text-danger">

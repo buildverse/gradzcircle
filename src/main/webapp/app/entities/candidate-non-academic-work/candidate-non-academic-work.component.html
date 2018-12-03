@@ -1,209 +1,64 @@
-<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card mb-3">
-
-				<div class="row mx-4 my-4 justify-content-between">
-					<div>
-						<p class="h4 underline-headers"
-							jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.title">
-							<span>Extra Curriculars</span>
-						</p>
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+	<div id="accordion">
+		<div *ngIf="candidateNonAcademicWorks?.length>0;">
+			<div *ngFor="let candidateNonAcademicWork of candidateNonAcademicWorks ;">
+				 <div class="card mb-2">
+					<div class="card-header justify-content-between education_title">
+						<a class="card-link " 
+	       				   [attr.aria-controls]="candidateNonAcademicWork.id" (click)="candidateNonAcademicWork.collapsed = !candidateNonAcademicWork.collapsed"
+	       				   [attr.aria-expanded]="!candidateNonAcademicWork.collapsed"
+						> {{candidateNonAcademicWork.nonAcademicInitiativeTitle}}</a>
+						<span class="project_buttons">
+							<a class="btn btn-sm btn-pill btn-primary mb-2"
+								[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/edit'} }]"
+								replaceUrl="true"> 
+								<span class="icon icon-edit "  jhiTranslate="entity.action.edit">
+									Edit
+								</span>
+							</a>
+							<a class="btn btn-sm btn-pill btn-danger mb-2"
+								[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/delete'} }]"
+								replaceUrl="true"> 
+								<span class="icon icon-trash " jhiTranslate="entity.action.delete">
+									Delete
+								</span>
+							</a>
+						</span>
 					</div>
-					<div>
-						<a class="btn btn-sm btn-pill btn-primary float-right"
-							[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work-new/'+ candidateId } }]">
-							<span class="icon icon-circle-with-plus"
-							jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.add">
-								Add </span>
-						</a>
-					</div>
+					<div id="{{candidateNonAcademicWork.id}}" data-parent="#accordion" [ngbCollapse]="candidateNonAcademicWork.collapsed">	      
+				        <div class="card-body"> 
+				        		<div class="col-lg-12 row">
+						          <span class="education_title_2 w-100 editable mt-2 pb-0" [innerHtml]="candidateNonAcademicWork.nonAcademicInitiativeDescription"></span>
+						     </div>
+						     <div class="col-lg-12 row">
+						          <span class="education_title_2 w-100 editable mt-2 pb-0" [innerHtml]="candidateNonAcademicWork.roleInInitiative"></span>
+						     </div>
+						     <div class="col-lg-12 row">
+							        <span class="education_body w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateNonAcademicWork.nonAcademicWorkStartDate
+												|date:'mediumDate'}} -
+												{{candidateNonAcademicWork.nonAcademicWorkEndDate
+												?(candidateNonAcademicWork.nonAcademicWorkEndDate|
+												date:'mediumDate'): ' Till Date' }}
+									</span>
+							 </div>
+					  	</div>				
+					</div>      
 				</div>
-				<div *ngIf="candidateNonAcademicWorks?.length > 0; else promptToAdd">
-					<div class="timeline">
-						<div class="line text-muted"></div>
-						<div
-							*ngFor="let candidateNonAcademicWork of candidateNonAcademicWorks ;trackBy: trackId">
-							<div class="separator text-muted">
-								<time>{{candidateNonAcademicWork.nonAcademicWorkStartDate
-									|date:'mediumDate'}} -
-									{{candidateNonAcademicWork.nonAcademicWorkEndDate
-									?(candidateNonAcademicWork.nonAcademicWorkEndDate|
-									date:'mediumDate'): ' Till Date' }}</time>
-							</div>
-							<div class="card card-outline-primary">
-								<div class="card-header icon">
-									<span class="icon icon-trophy" style="color: white">
-								</div>
-								<div class="card-header" style="background-color: #3097D1">
-									<div class="row mx-2 p-lower-lower justify-content-end ">
-										<div class="mr-auto ">
-											<p style="color: white" class="p-lower-lower ">
-												<span class="mt-0">{{candidateNonAcademicWork.nonAcademicInitiativeTitle}}</span>
-											</p>
-										</div>
-										<div class="pr-2 ">
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/edit'} }]"
-												replaceUrl="true"> <span class="icon icon-edit"
-												style="color: white" jhiTranslate="entity.action.edit">Edit</span>
-											</a>
-										</div>
-
-										<div>
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/delete'} }]"
-												replaceUrl="true"> <span class="icon icon-trash"
-												style="color: maroon" jhiTranslate="entity.action.delete">Delete</span>
-											</a>
-										</div>
-
-									</div>
-								</div>
-								<div class="card-block">
-									<div class="row mx-4 my-3">
-										<div class="col-md-2">
-											<span class="font-weight-bold text-muted"
-												jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription">Description</span>
-										</div>
-										<div class="col-md-10"
-											[innerHtml]="candidateNonAcademicWork.nonAcademicInitiativeDescription">
-
-										</div>
-									</div>
-									<div class="row mx-4 my-3">
-										<div class="col-md-2">
-											<span class="font-weight-bold text-muted"
-												jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative">Role</span>
-										</div>
-										<div class="col-md-10"
-											[innerHtml]="candidateNonAcademicWork.roleInInitiative">
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- <div *ngFor="let candidateNonAcademicWork of candidateNonAcademicWorks ;trackBy: trackId">
-                            <div class="row mx-4 my-3 justify-content-end">
-                                <div class="mr-auto p-2">
-                                    <p class="h4 underline-headers "><span>{{candidateNonAcademicWork.nonAcademicInitiativeTitle}}</span></p>
-                                </div>
-                                <div class="p-2">
-                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/edit'} }]" replaceUrl="true">
-                                        <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
-                                    </a>
-                                </div>
-
-                                <div class="p-2">
-                                    <a [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/delete'} }]" replaceUrl="true">
-                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row mx-4 my-3">
-                                <div class="col-md-2">
-                                    <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription">Description</span>
-                                </div>
-                                <div class="col-md-10" [innerHtml]="candidateNonAcademicWork.nonAcademicInitiativeDescription">
-
-                                </div>
-                            </div>
-                            <div class="row mx-4 my-3">
-                                <div class="col-md-2">
-                                    <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative">Role</span>
-                                </div>
-                                <div class="col-md-10" [innerHtml]="candidateNonAcademicWork.roleInInitiative">
-
-                                </div>
-                            </div>
-                            <div class="row mx-4 my-3">
-                                <div class="col-md-2 ">
-                                    <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate">Start Date</span>
-                                </div>
-                                <div class="col-md-3">
-                                    {{candidateNonAcademicWork.nonAcademicWorkStartDate |date:'mediumDate'}}
-                                </div>
-                                <div *ngIf="candidateNonAcademicWork.nonAcademicWorkEndDate" class="col-md-2">
-                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate">End Date</span>
-                                </div>
-                                <div class="col-md-3">
-                                    {{candidateNonAcademicWork.nonAcademicWorkEndDate| date:'mediumDate'}}
-                                </div>
-                            </div>
-
-                        </div> -->
-
-				</div>
-				<ng-template #promptToAdd>
-				<div class="col-md-12">
-					<p class="profile-text-info">Please add your emplyment details,
-						providing overview of your contribution.</p>
-					<p class="profile-text-info">Example : Ruchi to come up with
-						one...</p>
-				</div>
-				</ng-template>
 			</div>
+		</div>
+		<div class="col-lg-12  my-4 text-right d-block">
+			<a class="btn btn-sm btn-pill btn-primary" 
+				[routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work-new/'+ candidateId } }]">
+				<span class="icon icon-circle-with-plus"
+				jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.title">
+					Add </span>
+			</a>
 		</div>
 	</div>
 </div>
-<!-- <br/>
-    <div class="table-responsive" *ngIf="candidateNonAcademicWorks">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th><span jhiTranslate="global.field.id">ID</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle">Non Academic Initiative Title</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription">Non Academic Initiative Description</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.duration">Duration</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative">Role In Initiative</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate">Non Academic Work Start Date</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate">Non Academic Work End Date</span></th>
-                    <th><span jhiTranslate="gradzcircleApp.candidateNonAcademicWork.candidate">Candidate</span></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let candidateNonAcademicWork of candidateNonAcademicWorks ;trackBy: trackId">
-                    <td><a [routerLink]="['../candidate-non-academic-work', candidateNonAcademicWork.id ]">{{candidateNonAcademicWork.id}}</a></td>
-                    <td>{{candidateNonAcademicWork.nonAcademicInitiativeTitle}}</td>
-                    <td>{{candidateNonAcademicWork.nonAcademicInitiativeDescription}}</td>
-                    <td>{{candidateNonAcademicWork.duration}}</td>
-                    <td>{{candidateNonAcademicWork.roleInInitiative}}</td>
-                    <td>{{candidateNonAcademicWork.nonAcademicWorkStartDate | date:'mediumDate'}}</td>
-                    <td>{{candidateNonAcademicWork.nonAcademicWorkEndDate | date:'mediumDate'}}</td>
-                    <td>
-                        <div *ngIf="candidateNonAcademicWork.candidate">
-                            <a [routerLink]="['../candidate', candidateNonAcademicWork.candidate?.id ]">{{candidateNonAcademicWork.candidate?.id}}</a>
-                        </div>
-                    </td>
-                    <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
-                            <button type="submit" [routerLink]="['../candidate-non-academic-work', candidateNonAcademicWork.id ]" class="btn btn-info btn-sm">
-                                <span class="fa fa-eye"></span>
-                                <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
-                            </button>
-                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/edit'} }]" replaceUrl="true" class="btn btn-primary btn-sm">
-                                <span class="fa fa-pencil"></span>
-                                <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
-                            </button>
-                            <button type="submit" [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/'+ candidateNonAcademicWork.id + '/delete'} }]" replaceUrl="true" class="btn btn-danger btn-sm">
-                                <span class="fa fa-remove"></span>
-                                <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    </div> -->
+
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
-
-
-
 	<h2>
 		<span
 			jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.title">Candidate

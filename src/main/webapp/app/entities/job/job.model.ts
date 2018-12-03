@@ -52,6 +52,12 @@ export class Job implements BaseEntity {
     public corporate?: Corporate,
     public candidateJobs?: CandidateJob[],
     public appliedCandidates?: BaseEntity[],
+    public totalNumberOfJobs?: number,
+    public jobsLastMonth?: number,
+    public newApplicants?: number,
+    public totalLinkedCandidates?: number,
+    public noOfShortListedCandidate?: number
+
   ) {
     this.hasBeenEdited = false;
     this.everActive = false;

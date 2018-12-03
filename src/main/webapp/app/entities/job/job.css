@@ -1,0 +1,238 @@
+/*Corporate Dashboard CSS*/
+.tab-content {
+	background: #fff;
+	padding: 25px 8px 12px;
+	box-sizing: border-box;
+	box-shadow: -1px 0px 5px 1px #d6d6d6;
+	margin: 8px 0;
+}
+
+.tab-content2 {
+	padding: 6px 0px 0 30px;
+	width: 100%;
+}
+
+.tab-content {
+	background: #fff;
+	padding: 25px 8px 12px;
+	box-sizing: border-box;
+	box-shadow: -1px 0px 5px 1px #d6d6d6;
+	margin: 8px 0;
+}
+
+.tab-content2 {
+	padding: 6px 0px 0 30px;
+	width: 100%;
+}
+
+.tab-1, .tab-2, .tab-3, .tab-4 {
+	height: 70px;
+	width: 70px;
+	display: block;
+	line-height: 66px;
+	border-radius: 50%;
+	padding: 0;
+	margin: 0 18px;
+}
+
+.tab-1 {
+	background: #1565C0;
+}
+
+.tab-2 {
+	background: #D50000;
+}
+
+.tab-3 {
+	background: #9E9D24;
+}
+
+.tab-4 {
+	background: #EF6C00;
+}
+
+.total-job-heading {
+	line-height: 66px;
+}
+
+.total-job-heading>p {
+	font-size: 40px;
+	color: #282828;
+}
+
+.total-job-heading>p>span {
+	font-size: 14px;
+	color: #adadad;
+}
+
+.total-job-content span {
+	border-left: 1px solid #d6d6d6;
+	font-size: 14px;
+	color: #282828;
+	padding: 6px 0;
+}
+
+.total-job-content {
+	margin-left: 2.3vw;
+}
+
+.pad-0 {
+	padding: 0;
+}
+
+.tabs {
+	padding-left: 0;
+}
+
+.tab-content-right-box {
+	background: #fff;
+	padding: 5px 8px 1vh;
+	box-sizing: border-box;
+	box-shadow: -1px 0px 5px 1px #d6d6d6;
+	margin: 8px 0;
+	text-align: center;
+}
+
+.spinner {
+	text-align: center;
+	height: 150px;
+	width: 150px;
+	border: 5px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 5px solid #1565C0;
+	border-right: 5px solid #1565C0;
+	border-bottom: 5px solid #1565C0;
+	transform: rotate(42deg);
+	margin: 4vh auto;
+	padding: 30px;
+}
+
+.spin3 {
+	text-align: center;
+	height: 80px;
+	width: 80px;
+	border: 5px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 5px solid #EF6C00;
+	border-right: 5px solid #EF6C00;
+	transform: rotate(0deg);
+	margin: 0px auto;
+	padding: 5px;
+}
+
+.spin4 {
+	text-align: center;
+	height: 30px;
+	width: 30px;
+	border: 5px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 5px solid #9E9D24;
+	transform: rotate(0deg);
+	margin: 14px auto;
+}
+
+tbody>tr>td {
+	border-bottom: 1px solid #eaeaea;
+}
+
+.loader-bottom ul li a p {
+	font-size: 14px;
+}
+
+.loader-bottom ul li a span {
+	font-size: 12px;
+}
+
+.loader-bottom ul {
+	width: 100%;
+	margin: 0 auto;
+	text-decoration: none;
+	text-align: center;
+	padding: 0;
+}
+
+.loader-bottom ul li {
+	display: inline-block;
+	width: 30%;
+	list-style-type: none;
+}
+
+.loader-bottom ul li a {
+	font-size: 20px;
+	text-decoration: none;
+	color: #282828;
+	line-height: 8px;
+	text-align: left;
+}
+
+.loader-bottom ul li a span {
+	font-size: 14px;
+	text-decoration: none;
+	color: #999999;
+	display: block;
+	padding: 10px 0;
+}
+
+.loader-bottom ul li a span.circle {
+	border-radius: 50%;
+	display: inline-block;
+	padding: 5px;
+	vertical-align: top;
+	margin-top: 8px;
+}
+
+.loader-bottom ul li a p {
+	display: inline-block;
+	margin-left: 10px;
+	margin-top: 8px;
+	font-size: 20px;
+}
+
+.circle-1 {
+	background: #1565C0;
+}
+
+.circle-2 {
+	background: #EF6C00;
+}
+
+.circle-3 {
+	background: #9E9D24;
+}
+
+.db-right .db-content .administer-prescription td {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	vertical-align: middle;
+}
+
+@media ( min-width : 992px) {
+.db-right .db-content .administer-prescription td input.form-control {
+	border-radius: 0;
+	font-size: 14px;
+	margin: 0 auto;
+	max-width: 80%;
+}
+.db-right .db-content .administer-prescription td .action-icon {
+	padding: 0 3px;
+}
+}
+
+.db-right .db-content td.icons-edit a {
+  color: #a6a6a6;
+}
+
+tbody>tr>td {
+  border-bottom: 1px solid #eaeaea;
+}
+.db-right .db-content tbody td {
+  padding: 12px 21px !important;
+  font-size: 14px;
+  font-family: 'proxima_nova_rgregular';
+}
+.db-right .db-content thead th {
+  padding: 12px 21px !important;
+  font-size: 16px;
+  font-family: 'proxima_nova_rgregular';
+}
+/* Candidate dashboard css*/

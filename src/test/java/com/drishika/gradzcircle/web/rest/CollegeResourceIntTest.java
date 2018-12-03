@@ -115,8 +115,8 @@ public class CollegeResourceIntTest {
 	public static CollegeEntityBuilder createEntityBuilder(College college) {
 		CollegeEntityBuilder entityBuilder = new CollegeEntityBuilder(college.getId());
 		entityBuilder.name(college.getCollegeName());
-		entityBuilder.domainName(college.getDomainName());
-		entityBuilder.status(college.getStatus());
+		//entityBuilder.domainName(college.getDomainName());
+		//entityBuilder.status(college.getStatus());
 		return entityBuilder;
 	}
 

@@ -60,6 +60,11 @@ Navbar
 	padding: .2em 1em;
 }
 
+.nav-bg {
+	background-color : #0D47A1;
+	
+}
+
 .jh-navbar .profile-image {
 	margin: -10px 0px;
 	height: 40px;
@@ -148,3 +153,4 @@ Logo styles
 	overflow: visible !important;
 	border: 1px solid #e6e6e6;
 }
+

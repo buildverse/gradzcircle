@@ -11,7 +11,7 @@
 	<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="modal-body">
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.jobTitle"
 					for="field_jobTitle">Job Title</label>
 			</div>
@@ -20,7 +20,7 @@
 				<input type="text" class="form-control" #jobTitle="ngModel" required
 					name="jobTitle" id="field_jobTitle"
 					[(ngModel)]="candidateEmployment.jobTitle" /> <small
-					class="form-text text-muted text-info"> Examples :
+					class="form-text  form-text-primary"> Examples :
 					"Intern", Analyst etc. </small>
 				<div *ngIf="jobTitle.invalid && jobTitle.touched"
 					class="text-danger">
@@ -30,7 +30,7 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.employerName"
 					for="field_employerName">Employer Name</label>
 			</div>
@@ -48,22 +48,26 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription"
 					for="field_jobDescription">Job Description</label>
 			</div>
 			<div class="col-md-9"
 				[class.has-danger]="jobDescription.invalid && jobDescription.touched">
-				<textarea [froalaEditor]='options' class="form-control"
+				<!--  <textarea [froalaEditor]='options' class="form-control"
 					name="jobDescription" id="field_jobDescription" rows="10" required
 					#jobDescription="ngModel"
 					[(ngModel)]="candidateEmployment.jobDescription">
-                </textarea>
+                </textarea>-->
+                <ck-editor class="form-control " 
+					required #jobDescription="ngModel" name="jobDescription"
+					id="field_jobDescription" [config]="editorConfig"
+					[(ngModel)]="candidateEmployment.jobDescription"></ck-editor>
 				<div *ngIf="jobDescription.invalid && jobDescription.touched"
 					class="text-danger">
 					<small> Please enter Job Description. </small>
 				</div>
-				<small class="form-text text-muted text-info"> Please ensure
+				<small class="form-text  form-text-primary"> Please ensure
 					the job description is crisp and concise. </small>
 			</div>
 
@@ -71,7 +75,7 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.employmentType"
 					for="field_employmentType">Employment Type</label>
 			</div>
@@ -91,7 +95,7 @@
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.jobType"
 					for="field_jobType">Job Type</label>
 			</div>
@@ -112,24 +116,24 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-3">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate"
 					for="field_employmentStartDate">Employment Start Date</label>
 			</div>
-			<div class="col-md-3"
+			<div class="col-md-3" (mouseleave)="employmentStartDateDp.close()"
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_employmentStartDate" #fromDate="ngModel" required
-						type="text" class="form-control text-muted"
+						type="text" class="form-control "
 						name="employmentStartDate" ngbDatepicker
-						#employmentStartDateDp="ngbDatepicker"
+						#employmentStartDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentStartDate"
-						(ngModelChange)="validateDates()" /> <span
-						class="input-group-addon "
-						(click)="employmentStartDateDp.toggle()"> <img
-						src="../../../content/images/calendar.png"
-						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</span>
+						(ngModelChange)="validateDates()" /> 
+						<span class="input-group-append" > 
+								<button class="btn btn-outline-secondary" (click)="employmentStartDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
+						</span>
 				</div>
 				<div *ngIf="fromDate.invalid && fromDate.touched"
 					class="text-danger">
@@ -137,25 +141,24 @@
 				</div>
 			</div>
 			<div class="col-md-3  text-center">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate"
 					for="field_employmentEndDate">Employment End Date</label>
 			</div>
-			<div class="col-md-3"
+			<div class="col-md-3" (mouseleave)="employmentEndDateDp.close()"
 				[class.has-danger]="toDate.invalid && toDate.touched">
 				<div class="input-group">
 					<input id="field_employmentEndDate" #toDate="ngModel" required
-						type="text" class="form-control text-muted"
+						type="text" class="form-control "
 						[disabled]="endDateControl" name="employmentEndDate" ngbDatepicker
-						#employmentEndDateDp="ngbDatepicker"
+						#employmentEndDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentEndDate"
 						(ngModelChange)="validateDates()" />
-					<button class="input-group-addon "
-						(click)="employmentEndDateDp.toggle()" type="button"
-						[disabled]="endDateControl">
-						<img src="../../../content/images/calendar.png"
-							style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</button>
+					<span class="input-group-append" > 
+								<button class="btn btn-outline-secondary" (click)="employmentEndDateDp.toggle()" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								</button>
+						</span>
 				</div>
 				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
 					<small>Please enter End Date</small>
@@ -170,7 +173,7 @@
 			<div class="col-md-6 form-check align-items-end">
 				<label class="form-check-label" for="field_isCurrentEmployment">
 
-					<input class="form-check-input font-weight-bold text-muted"
+					<input class="form-check-input font-weight-bold "
 					type="checkbox" name="isCurrentEmployment"
 					id="field_isCurrentEmployment" (change)="manageEndDateControl()"
 					[(ngModel)]="candidateEmployment.isCurrentEmployment" /> I am still

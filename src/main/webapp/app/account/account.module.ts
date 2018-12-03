@@ -25,6 +25,7 @@ import {
     LoginService,
     CorporateRegisterResolver,
     LoginComponent,
+    SideMenuComponent,
     CorporateRegisterErrorMessagesResolver
 } from './';
 
@@ -45,7 +46,8 @@ import {
         PasswordResetFinishComponent,
         LoginComponent,
         SettingsComponent,
-        EmployerAccountComponent
+        EmployerAccountComponent,
+        SideMenuComponent
     ],
     providers: [
         Register,

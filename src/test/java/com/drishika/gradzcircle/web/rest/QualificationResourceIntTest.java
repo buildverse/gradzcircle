@@ -73,7 +73,7 @@ public class QualificationResourceIntTest {
 
 	private Qualification qualification;
 
-	private com.drishika.gradzcircle.domain.elastic.Qualification elasticQualification;
+
 
 	@Before
 	public void setup() {

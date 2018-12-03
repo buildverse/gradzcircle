@@ -747,7 +747,6 @@ public class JobResourceIntTest {
 
 	@Test
 	@Transactional
-	@Ignore
 	public void getActiveJobsListForCorporatesFilteredByReviewStatusTrue() throws Exception {
 		Candidate candidate1 = new Candidate();
 		Candidate candidate2 = new Candidate();
@@ -757,15 +756,14 @@ public class JobResourceIntTest {
 		job.setCorporate(corporate);
 		jobRepository.saveAndFlush(job);
 		CandidateJob cJ1 = new CandidateJob(candidate1, job);
-		cJ1.setReviewed(true);
 		cJ1.setMatchScore(100d);
 		CandidateJob cJ2 = new CandidateJob(candidate2, job);
 		cJ2.setMatchScore(10d);
 		job.addCandidateJob(cJ2).addCandidateJob(cJ1);
 		jobRepository.saveAndFlush(job);
 		restJobMockMvc.perform(get("/api/activeJobsForCorporate/{id}", corporate.getId()))
-				.andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[0].matchScore", is(10.0)));
+				.andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$", hasSize(1)));
+				
 	}
 
 	@Test
@@ -2698,6 +2696,119 @@ public class JobResourceIntTest {
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].firstName", hasItem("Abhinav")))
 				.andExpect(jsonPath("$[*].firstName", hasItem("Aveer")))
 				.andExpect(jsonPath("$[*].qualificationWithHighestCourse", hasItem("Bach in Arts")));
+	}
+
+	
+	@Test
+	@Transactional
+	public void testGetAppliedCandidatesForAllJobsByCorporate() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+		Job job2 = new Job();
+		job1.jobTitle("Test Job 2");
+		
+		//job.jobStatus(1);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		Candidate c2 = new Candidate().firstName("Aveer");
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		corporateRepository.saveAndFlush(corp);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		job1.corporate(corp);job2.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		c2.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		CandidateJob cJ1 = new CandidateJob(c1, job1);
+		CandidateJob cJ2 = new CandidateJob(c2, job1);
+		CandidateJob cJ3 = new CandidateJob(c2, job2);
+		c1.addCandidateJob(cJ1);
+		c2.addCandidateJob(cJ2);
+		c2.addCandidateJob(cJ3);
+		c1.addAppliedJob(job1);
+		c2.addAppliedJob(job2);
+		c2.addAppliedJob(job1);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/appliedCandidatesForJobsByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(3));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetTotalJobsByCorporate() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+		Job job2 = new Job();
+		job1.jobTitle("Test Job 2");
+		corporateRepository.saveAndFlush(corp);
+		
+		job1.corporate(corp);job2.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/totalJobsByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(2));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetJobsPostedLastMonthByCorporate() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+		ZonedDateTime createDate = ZonedDateTime.parse("2018-10-30T12:30:40Z[GMT]");
+		job1.createDate(createDate);
+		Job job2 = new Job();
+		job1.jobTitle("Test Job 2");
+		ZonedDateTime createDate2 = ZonedDateTime.parse("2018-09-30T12:30:40Z[GMT]");
+		job2.setCreateDate(createDate2);
+		corporateRepository.saveAndFlush(corp);
+		job1.corporate(corp);job2.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/totalJobsPostedLastMonthByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(1));
 	}
 
 	

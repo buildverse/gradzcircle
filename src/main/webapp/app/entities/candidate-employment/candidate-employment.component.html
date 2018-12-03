@@ -1,325 +1,128 @@
-<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card mb-3">
-
-				<div class="row mx-4 my-4 justify-content-between">
-					<div>
-						<p class="h4 underline-headers"
-							jhiTranslate="gradzcircleApp.candidateEmployment.home.title">
-							<span>Employment</span>
-						</p>
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+	<div id="accordion">
+		<div *ngIf="candidateEmployments?.length>0;">
+			<div *ngFor="let candidateEmployment of candidateEmployments ;">
+				 <div class="card mb-2">
+					<div class="card-header justify-content-between education_title">
+						<a class="card-link " 
+	       				   [attr.aria-controls]="candidateEmployment.id" (click)="candidateEmployment.collapsed = !candidateEmployment.collapsed"
+	       				   [attr.aria-expanded]="!candidateEmployment.collapsed"
+						> {{candidateEmployment.employerName}} </a>
+						<span class="project_buttons">
+							<a class="btn btn-sm btn-pill btn-primary mb-2"
+													[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]"
+													replaceUrl="true"> 
+													<span class="icon icon-edit "  jhiTranslate="entity.action.edit">
+														Edit
+													</span>
+												</a>
+												<a class="btn btn-sm btn-pill btn-danger mb-2"
+													[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]"
+													replaceUrl="true"> 
+													<span class="icon icon-trash " jhiTranslate="entity.action.delete">
+														Delete
+													</span>
+												</a>
+						</span>
 					</div>
-					<div>
-						<a class="btn btn-sm btn-pill btn-primary float-right"
-							[routerLink]="['/', { outlets: { popup: 'candidate-employment-new/'+ candidateId } }]">
-							<span class="icon icon-circle-with-plus"
-							jhiTranslate="gradzcircleApp.candidateEmployment.home.add">
-								Add </span>
-						</a>
-					</div>
-
-				</div>
-				<div
-					*ngIf="candidateEmployments?.length>0; else showNoEmploymentsMessage">
-					<div class="timeline">
-						<div class="line text-muted"></div>
-						<div
-							*ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
-							<div class="separator text-muted">
-								<time>{{candidateEmployment.employmentStartDate |
+					<div id="{{candidateEmployment.id}}" data-parent="#accordion" [ngbCollapse]="candidateEmployment.collapsed">	      
+						        <div class="card-body"> 
+						        		<div class="col-lg-12 row">
+								          <span class="education_title_2 w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateEmployment.jobType.jobType}} -&nbsp; {{candidateEmployment.employmentType.employmentType}}
+										 </span>
+								     </div>
+								     <div class="col-lg-12 row">
+									        <span class="education_body w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateEmployment.jobTitle}}
+											</span>
+									 </div>
+									  <div class="col-lg-12 row">
+									        <span class="education_body w-100 editable mt-2" [innerHtml]="candidateEmployment.jobDescription">
+											</span>
+									 </div>
+									 <div class="col-lg-12 row">
+									        <span class="education_body w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateEmployment.employmentStartDate |
 									date:'mediumDate'}} - {{candidateEmployment.employmentEndDate
 									?(candidateEmployment.employmentEndDate | date:'mediumDate'):
-									'Till Date' }}</time>
-							</div>
-							<div class="card card-outline-primary">
-								<div class="card-header icon">
-									<span class="icon icon-briefcase" style="color: white">
-								</div>
-								<div class="card-header" style="background-color: #3097D1">
-									<div class="row mx-2 p-lower justify-content-end ">
-										<div class="mr-auto ">
-											<p style="color: white" class="p-lower-lower ">
-												<span class="mt-0">{{candidateEmployment.jobTitle}} </span>
-												at <span>{{candidateEmployment.employerName}}</span>
-											</p>
-											<p style="color: white">
-												Employment : <span class="font-italic">{{candidateEmployment.employmentType?.employmentType}}</span>
-											</p>
-										</div>
-										<div class="pr-2 pt-2">
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]"
-												replaceUrl="true"> <span class="icon icon-edit"
-												style="color: white" jhiTranslate="entity.action.edit">Edit</span>
-											</a>
-										</div>
-
-										<div class="pt-2">
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]"
-												replaceUrl="true"> <span class="icon icon-trash"
-												style="color: maroon" jhiTranslate="entity.action.delete">Delete</span>
-											</a>
-										</div>
-
-									</div>
-								</div>
-								<div class="card-block">
-									<div class="row my-1">
-										<div class="col-md-2">
-											<span
-												jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription"
-												class="font-weight-bold text-muted">Description</span>
-										</div>
-									</div>
-									<div class="row mx-1">
-										<div class="col-md-10 "
-											[innerHtml]=" candidateEmployment.jobDescription"></div>
-									</div>
-									<div
-										*ngIf="candidateEmployment.projects?.length>0 ; else showProjectMessage">
-										<div class="row my-2 mx-1">
-											<div class="col-md-12 mr-auto font-weight-bold text-muted">
-												<b>Projects included</b>
-											</div>
-										</div>
-										<hr class="seperator">
-										<div
-											*ngFor="let candidateProject of candidateEmployment.projects">
-											<div class="row mx-1 justify-content-end">
-												<div class="mr-auto p-1">
-													<ul class="square font-weight-bold p-lower-lower">
-														<li><span>{{candidateProject.projectTitle}} </span></li>
-													</ul>
-													<span class="time-period px-5 "><time>{{candidateProject.projectStartDate
-															| date:'mediumDate'}} -
-															{{candidateProject.projectEndDate?(candidateProject.projectEndDate
-															| date:'mediumDate'):' Am still working on this'}}</time></span>
-												</div>
-												<div class="p-2">
-													<a
-														[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/true/edit'} }]"
-														replaceUrl="true"> <span class="icon icon-edit"
-														style="color: #3097D1" jhiTranslate="entity.action.edit">Edit</span>
+									'Till Date' }}
+											</span>
+									 </div>
+									 
+							  		 <div class=" row col-lg-12 mt-2">
+							  		 	<span class="education_title_2 w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;Projects
+			                                  <span class="project_buttons">
+			                                      <a class="btn btn-sm btn-pill btn-primary" 
+														[routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]">
+														<span class="icon icon-circle-with-plus"
+														jhiTranslate="gradzcircleApp.candidateProject.home.title">
+															Add </span>
 													</a>
-												</div>
-
-												<div class="p-2">
-													<a
-														[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]"
-														replaceUrl="true"> <span class="icon icon-trash"
-														style="color: maroon" jhiTranslate="entity.action.delete">Delete</span>
-													</a>
-												</div>
-
-											</div>
-
-											<div class="row mx-4 my-3">
-												<div class="col-md-2 ">
-													<span class="font-weight-bold text-muted"
-														jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project
-														Description</span>
-												</div>
-											</div>
-											<div class="row mx-4 my-3">
-												<div class="col-md-10 "
-													[innerHtml]="candidateProject.projectDescription"></div>
-											</div>
-											<div class="row mx-4 my-3">
-												<div class="col-md-2 ">
-													<span class="font-weight-bold text-muted"
-														jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
-												</div>
-											</div>
-											<div class="row mx-4 my-3">
-												<div class="col-md-10 "
-													[innerHtml]="candidateProject.contributionInProject">
-
-												</div>
-											</div>
-										</div>
-									</div>
-									<ng-template #showProjectMessage>
-									<hr class="seperator">
-									<div class="col-md-12">
-										<p class="profile-text-info">Please add your associated
-											projects, providing overview of your contribution.</p>
-										<p class="profile-text-info">Example : Ruchi to come up
-											with one...</p>
-									</div>
-									</ng-template>
-								</div>
-								<div class="card-footer">
-									<div class="row mx-4 justify-content-end">
-										<a
-											[routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]"
-											replaceUrl="true"> <span
-											class="icon icon-circle-with-plus"
-											jhiTranslate="gradzcircleApp.candidateEmployment.home.addProject"
-											style="color: #3097D1">Add Project</span>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+			                                  </span>
+                                				</span>   
+							  		 </div>
+									  <div *ngFor="let candidateProject of candidateEmployment.projects ;let j= index">		
+			                                    <div class="col-lg-12"  [attr.aria-controls]="candidateProject.id" (click)="candidateProject.collapsed = !candidateProject.collapsed"
+	       				   												[attr.aria-expanded]="!candidateProject.collapsed">
+			                                      <span class="education_title_2 w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectTitle}}
+			                                      	 <span class="project_buttons">
+																 		<a class="btn btn-sm btn-pill btn-primary" 
+																			[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/true/edit'} }]">
+																			<span class="icon icon-circle-with-plus"
+																			jhiTranslate="entity.action.edit">
+																				Add </span>
+																		</a>
+																		<a class="btn btn-sm btn-pill btn-danger" 
+																			[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]">
+																			<span class="icon icon-circle-with-plus"
+																			jhiTranslate="entity.action.delete">
+																				Add </span>
+																		</a>
+													 </span>
+			                                      </span>
+			                                    </div>
+			                                    <div id="{{candidateProject.id}}" [ngbCollapse]="candidateProject.collapsed">
+				                                    <div class="col-lg-12">
+					                                      <span class="education_body w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectType==='ACADEMIC'?'
+																	Academic project ' : ' Did it out of self
+																	interest' }}
+																
+														</span>
+				                                    </div>
+				                                    <div class="col-lg-12">
+				                                 		<span class="education_title_2 w-100 editable mb-2" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">-&nbsp;&nbsp;&nbsp;</span>
+				                              		</div> 
+				                              		<div class="col-lg-12">
+				                                 		<span class="education_body w-100 editable mb-2" [innerHtml]="candidateProject.projectDescription"></span>
+				                              		</div> 
+				                              		<div class="col-lg-12">
+				                                 		<span class="education_title_2 w-100 editable mb-2" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">-&nbsp;&nbsp;&nbsp;</span>
+				                              		</div> 
+				                             		 <div class="col-lg-12">
+														<span class="education_body w-100 editable mb-2" [innerHtml]="candidateProject.contributionInProject">-</span>
+				                              		</div>  
+				                              		 <div class="col-lg-12">
+				                                 		<span class="education_body w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectStartDate |
+																		date:'mediumDate'}} -
+																		{{candidateProject.projectEndDate?(candidateProject.projectEndDate|
+																		date:'mediumDate'): 'Till Date' }}</span>
+				                              		</div>  
+				                              	</div>
+			                                 
+									  </div>
+						       </div>
+					</div>      
 				</div>
-				<!-- <div *ngIf="candidateEmployments?.length>0; else showNoEmploymentsMessage">
-                    <div *ngFor="let candidateEmployment of candidateEmployments ;trackBy: trackId">
-                        <div class="row mx-4 my-3 justify-content-end">
-                            <div class="mr-auto p-2">
-                                <p class="h4 underline-headers"><span>{{candidateEmployment.jobTitle}} at {{candidateEmployment.employerName}}</span></p>
-                            </div>
-                            <div class="p-2">
-                                <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]" replaceUrl="true">
-                                                        <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
-                                </a>
-                            </div>
-
-                            <div class="p-2">
-                                <a [routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]" replaceUrl="true">
-                                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                </a>
-                            </div>
-
-                        </div>
-                        <div class="row mx-4 my-1">
-                            <div class="col-md-2">
-                                <span jhiTranslate="gradzcircleApp.candidateEmployment.jobDescription" class="font-weight-bold text-muted">Description</span>
-                            </div>
-                        </div>
-                        <div class="row mx-4">
-                            <div class="col-md-10 offset-md-1">
-                                {{candidateEmployment.jobDescription}}
-                            </div>
-                        </div>
-                        <div class="row mx-4 my-3">
-                            <div class="col-md-2 ">
-                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate">From</span>
-                            </div>
-                            <div class="col-md-3">
-                                {{candidateEmployment.employmentStartDate | date:'mediumDate'}}
-                            </div>
-
-                            <div class="col-md-2 offset-md-1">
-                                <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate">To</span>
-                            </div>
-                            <div *ngIf="candidateEmployment.employmentEndDate; else isCurrent" class="col-md-3">
-                                {{candidateEmployment.employmentEndDate | date:'mediumDate'}}
-                            </div>
-                            <ng-template #isCurrent>
-                                <div class="col-md-3">
-                                    Till Date
-                                </div>
-                            </ng-template>
-
-                        </div>
-                        <div>
-                            <hr/>
-                        </div>
-                        <div *ngIf="candidateEmployment.projects?.length>0; else showProjectMessage">
-                            <div *ngFor="let candidateProject of candidateEmployment.projects">
-                                <div class="row mx-4 my-3 justify-content-end">
-                                    <div class="mr-auto p-2">
-                                        <p class="h4 underline-headers"><span>{{candidateProject.projectTitle}} </span></p>
-                                    </div>
-                                    <div class="p-2">
-                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/edit'} }]" replaceUrl="true">
-                                                        <span class="icon icon-edit" style="color:#3097D1" jhiTranslate="entity.action.edit">Edit</span>
-                                        </a>
-                                    </div>
-
-                                    <div class="p-2">
-                                        <a [routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]" replaceUrl="true">
-                                                        <span class="icon icon-trash" style="color:maroon" jhiTranslate="entity.action.delete">Delete</span>
-                                        </a>
-                                    </div>
-
-                                </div>
-                                <div class="row mx-4 my-3">
-                                    <div class="col-md-2 ">
-                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectDescription">Project Description</span>
-                                    </div>
-                                </div>
-                                <div class="row mx-4 my-3">
-                                    <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.projectDescription">
-
-                                    </div>
-                                </div>
-                                <div class="row mx-4 my-3">
-                                    <div class="col-md-2 ">
-                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.contributionInProject">Contribution</span>
-                                    </div>
-                                </div>
-                                <div class="row mx-4 my-3">
-                                    <div class="col-md-10 offset-md-1" [innerHtml]="candidateProject.contributionInProject">
-
-                                    </div>
-                                </div>
-                                <div class="row mx-4 my-3">
-                                    <div class="col-md-3 ">
-                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectStartDate">Start Date</span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        {{candidateProject.projectStartDate}}
-                                    </div>
-                                    <div *ngIf="candidateProject.projectEndDate; else isCurrent" class="col-md-3">
-                                            <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.projectEndDate">End Date</span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        {{candidateProject.projectEndDate}}
-                                    </div>
-                                </div>
-                                <ng-template #isCurrent>
-                                    <div class="col-md-3 ">
-                                        <span class="font-weight-bold text-muted" jhiTranslate="gradzcircleApp.candidateProject.isCurrentProject"></span>
-                                    </div>
-                                    <div clas="col-md-3">
-                                        {{candidateProject.projectTitle}}
-                                    </div>
-                                </ng-template>
-
-                                <div>
-                                    <hr/>
-                                </div>
-                            </div>
-                            <ng-template #showProjectMessage>
-                                <div class="col-md-12">
-                                    <p class="profile-text-info">Please add your associated projects, providing overview of your contribution.</p>
-                                    <p class="profile-text-info">Example : Ruchi to come up with one...</p>
-                                </div>
-                            </ng-template>
-
-                        </div>
-                        <div class="row mx-4 my-3 justify-content-end">
-
-                                <a [routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]" replaceUrl="true">
-                                    <span class="icon icon-circle-with-plus" jhiTranslate ="gradzcircleApp.candidateEmployment.home.addProject" style="color:#3097D1" >Add Project</span>
-                                </a>
-
-
-                            </div>
-                            <div>
-                                <hr class="split" />
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-				<ng-template #showNoEmploymentsMessage>
-				<div class="col-md-12">
-					<p class="profile-text-info">Please add your emplyment details,
-						providing overview of your contribution.</p>
-					<p class="profile-text-info">Example : Ruchi to come up with
-						one...</p>
-				</div>
-				</ng-template>
 			</div>
 		</div>
 	</div>
 </div>
-
-
+<div class="col-lg-12  my-4 text-right d-block">
+	<a class="btn btn-sm btn-pill btn-primary" 
+		[routerLink]="['/', { outlets: { popup: 'candidate-employment-new/'+ candidateId } }]">
+		<span class="icon icon-circle-with-plus"
+		jhiTranslate="gradzcircleApp.candidateEmployment.home.title">
+			Add </span>
+	</a>
+</div>
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
 	<h2>
 		<span jhiTranslate="gradzcircleApp.candidateEmployment.home.title">Candidate

@@ -1,15 +1,11 @@
 package com.drishika.gradzcircle.service;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.*;
-import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.GenderEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.LanguageEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
-import com.drishika.gradzcircle.repository.*;
-import com.drishika.gradzcircle.repository.search.*;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +16,95 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.List;
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.College;
+import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.Course;
+import com.drishika.gradzcircle.domain.EmploymentType;
+import com.drishika.gradzcircle.domain.Gender;
+import com.drishika.gradzcircle.domain.Industry;
+import com.drishika.gradzcircle.domain.JobCategory;
+import com.drishika.gradzcircle.domain.JobType;
+import com.drishika.gradzcircle.domain.Language;
+import com.drishika.gradzcircle.domain.MaritalStatus;
+import com.drishika.gradzcircle.domain.Nationality;
+import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.GenderEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.JobCategoryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.LanguageEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.NationalityEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
+import com.drishika.gradzcircle.repository.AddressRepository;
+import com.drishika.gradzcircle.repository.AuditRepository;
+import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
+import com.drishika.gradzcircle.repository.CandidateEducationRepository;
+import com.drishika.gradzcircle.repository.CandidateEmploymentRepository;
+import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
+import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
+import com.drishika.gradzcircle.repository.CandidateProjectRepository;
+import com.drishika.gradzcircle.repository.CandidateRepository;
+import com.drishika.gradzcircle.repository.CaptureCollegeRepository;
+import com.drishika.gradzcircle.repository.CaptureCourseRepository;
+import com.drishika.gradzcircle.repository.CaptureQualificationRepository;
+import com.drishika.gradzcircle.repository.CaptureUniversityRepository;
+import com.drishika.gradzcircle.repository.CollegeRepository;
+import com.drishika.gradzcircle.repository.CorporateRepository;
+import com.drishika.gradzcircle.repository.CountryRepository;
+import com.drishika.gradzcircle.repository.CourseRepository;
+import com.drishika.gradzcircle.repository.EmployabilityRepository;
+import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
+import com.drishika.gradzcircle.repository.ErrorMessagesRepository;
+import com.drishika.gradzcircle.repository.GenderRepository;
+import com.drishika.gradzcircle.repository.IndustryRepository;
+import com.drishika.gradzcircle.repository.JobCategoryRepository;
+import com.drishika.gradzcircle.repository.JobTypeRepository;
+import com.drishika.gradzcircle.repository.LanguageRepository;
+import com.drishika.gradzcircle.repository.MaritalStatusRepository;
+import com.drishika.gradzcircle.repository.NationalityRepository;
+import com.drishika.gradzcircle.repository.QualificationRepository;
+import com.drishika.gradzcircle.repository.SkillsRepository;
+import com.drishika.gradzcircle.repository.UniversityRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.repository.VisaTypeRepository;
+import com.drishika.gradzcircle.repository.search.AddressSearchRepository;
+import com.drishika.gradzcircle.repository.search.AuditSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateLanguageProficiencySearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
+import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
+import com.drishika.gradzcircle.repository.search.CaptureCollegeSearchRepository;
+import com.drishika.gradzcircle.repository.search.CaptureCourseSearchRepository;
+import com.drishika.gradzcircle.repository.search.CaptureQualificationSearchRepository;
+import com.drishika.gradzcircle.repository.search.CaptureUniversitySearchRepository;
+import com.drishika.gradzcircle.repository.search.CollegeSearchRepository;
+import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
+import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
+import com.drishika.gradzcircle.repository.search.CourseSearchRepository;
+import com.drishika.gradzcircle.repository.search.EmployabilitySearchRepository;
+import com.drishika.gradzcircle.repository.search.EmploymentTypeSearchRepository;
+import com.drishika.gradzcircle.repository.search.ErrorMessagesSearchRepository;
+import com.drishika.gradzcircle.repository.search.GenderSearchRepository;
+import com.drishika.gradzcircle.repository.search.IndustrySearchRepository;
+import com.drishika.gradzcircle.repository.search.JobCategorySearchRepository;
+import com.drishika.gradzcircle.repository.search.JobTypeSearchRepository;
+import com.drishika.gradzcircle.repository.search.LanguageSearchRepository;
+import com.drishika.gradzcircle.repository.search.MaritalStatusSearchRepository;
+import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
+import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
+import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
+import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
+import com.drishika.gradzcircle.repository.search.UserSearchRepository;
+import com.drishika.gradzcircle.repository.search.VisaTypeSearchRepository;
 
 @Service
 public class ElasticsearchIndexService {
@@ -301,7 +383,7 @@ public class ElasticsearchIndexService {
 		// captureUniversitySearchRepository);
 		// reindexForClass(Corporate.class, corporateRepository,
 		// corporateSearchRepository);
-		reindexForClass(Country.class, countryRepository, countrySearchRepository);
+		//reindexForClass(Country.class, countryRepository, countrySearchRepository);
 		// reindexForClass(Course.class, courseRepository, courseSearchRepository);
 		// reindexForClass(Employability.class, employabilityRepository,
 		// employabilitySearchRepository);
@@ -309,17 +391,17 @@ public class ElasticsearchIndexService {
 		// reindexForClass(ErrorMessages.class, errorMessagesRepository,
 		// errorMessagesSearchRepository);
 		// reindexForClass(Gender.class, genderRepository, genderSearchRepository);
-		reindexForClass(Industry.class, industryRepository, industrySearchRepository);
-		reindexForClass(JobCategory.class, jobCategoryRepository, jobCategorySearchRepository);
+		//reindexForClass(Industry.class, industryRepository, industrySearchRepository);
+		//reindexForClass(JobCategory.class, jobCategoryRepository, jobCategorySearchRepository);
 		reindexForClass(JobType.class, jobTypeRepository, jobTypeSearchRepository);
 		// reindexForClass(Language.class, languageRepository,
 		// languageSearchRepository);
 		// reindexForClass(MaritalStatus.class, maritalStatusRepository,
 		// maritalStatusSearchRepository);
-		reindexForClass(Nationality.class, nationalityRepository, nationalitySearchRepository);
+		//reindexForClass(Nationality.class, nationalityRepository, nationalitySearchRepository);
 		// reindexForClass(Qualification.class, qualificationRepository,
 		// qualificationSearchRepository);
-		reindexForClass(Skills.class, skillsRepository, skillsSearchRepository);
+		//reindexForClass(Skills.class, skillsRepository, skillsSearchRepository);
 		// reindexForClass(University.class, universityRepository,
 		// universitySearchRepository);
 		// reindexForClass(VisaType.class, visaTypeRepository,
@@ -331,7 +413,44 @@ public class ElasticsearchIndexService {
 		reindexForLanguage(languageRepository);
 		reindexForGender(genderRepository);
 		reindexForCollege(collegeRepository);
+		reindexForCountry(countryRepository);
+		reindexForNationality(nationalityRepository);
+		reindexForIndustry(industryRepository);
+		reindexForJobCategory(jobCategoryRepository);
+		reindexForMaritalStatus(maritalStatusRepository);
 		log.info("Elasticsearch: Successfully performed reindexing");
+	}
+	
+	//TODO - enable catching exception from asynch method. 
+	@Async
+	@Timed
+	public void reindexByEntityName(String entityName) throws EntityNotFoundException{
+		if(Constants.ENTITY_COLLEGE.equalsIgnoreCase(entityName))
+			reindexForCollege(collegeRepository);
+		else if (Constants.ENTITY_COUNTRY.equalsIgnoreCase(entityName))
+			reindexForCountry(countryRepository);
+		else if (Constants.ENTITY_COURSE.equalsIgnoreCase(entityName))
+			reindexForCourse(courseRepository);
+		else if (Constants.ENTITY_GENDER.equalsIgnoreCase(entityName))
+			reindexForGender(genderRepository);
+		else if (Constants.ENTITY_INDUSTRY.equalsIgnoreCase(entityName))
+			reindexForIndustry(industryRepository);
+		else if (Constants.ENTITY_JOB_CATEGORY.equalsIgnoreCase(entityName))
+			reindexForJobCategory(jobCategoryRepository);
+		else if (Constants.ENTITY_LANGUAGE.equalsIgnoreCase(entityName))
+			reindexForLanguage(languageRepository);
+		else if (Constants.ENTITY_MARITAL_STATUS.equalsIgnoreCase(entityName))
+			reindexForMaritalStatus(maritalStatusRepository);
+		else if (Constants.ENTITY_NATIONALITY.equalsIgnoreCase(entityName))
+			reindexForNationality(nationalityRepository);
+		else if (Constants.ENTITY_QUALIFICATION.equalsIgnoreCase(entityName))
+			reindexForQualification(qualificationRepository);
+		else if (Constants.ENTITY_UNIVERSITY.equalsIgnoreCase(entityName))
+			reindexForUniversity(universityRepository);
+		else
+			throw new EntityNotFoundException(entityName+" not found");
+		
+	
 	}
 
 	@Transactional(readOnly = true)
@@ -422,6 +541,61 @@ public class ElasticsearchIndexService {
 			elasticsearchTemplate.index(new GenderEntityBuilder(gender.getId()).name(gender.getGender())
 					.suggest(new String[] { gender.getGender() }).buildIndex());
 			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	private void reindexForCountry(CountryRepository countryRepository) {
+		List<Country> countries = countryRepository.findAll();
+		countries.forEach(country -> {
+			elasticsearchTemplate.index(new CountryEntityBuilder(country.getId()).name(country.getCountryNiceName())
+					.suggest(new String[] { country.getCountryNiceName() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	private void reindexForIndustry(IndustryRepository industryRepository) {
+		List<Industry> industries = industryRepository.findAll();
+		industries.forEach(industry -> {
+			elasticsearchTemplate.index(new IndustryEntityBuilder(industry.getId()).name(industry.getIndustryName())
+					.suggest(new String[] { industry.getIndustryName() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	private void reindexForJobCategory(JobCategoryRepository jobCategoryRepository) {
+		List<JobCategory> jobCategories = jobCategoryRepository.findAll();
+		jobCategories.forEach(jobCategory -> {
+			elasticsearchTemplate.index(new JobCategoryEntityBuilder(jobCategory.getId()).name(jobCategory.getJobCategory())
+					.suggest(new String[] { jobCategory.getJobCategory() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.JobCategory.class);
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	private void reindexForMaritalStatus(MaritalStatusRepository maritalStatusRepository) {
+		List<MaritalStatus> statuses = maritalStatusRepository.findAll();
+		statuses.forEach(status -> {
+			elasticsearchTemplate.index(new CountryEntityBuilder(status.getId()).name(status.getStatus())
+					.suggest(new String[] { status.getStatus() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.MaritalStatus.class);
+		});
+	}
+	
+	@Transactional(readOnly = true)
+	@SuppressWarnings("unchecked")
+	private void reindexForNationality(NationalityRepository nationalityRepository) {
+		List<Nationality> nationalities = nationalityRepository.findAll();
+		nationalities.forEach(nationality -> {
+			elasticsearchTemplate.index(new NationalityEntityBuilder(nationality.getId()).name(nationality.getNationality())
+					.suggest(new String[] { nationality.getNationality() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
 		});
 	}
 }

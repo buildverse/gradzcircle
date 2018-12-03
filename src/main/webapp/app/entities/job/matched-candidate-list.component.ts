@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import {ITEMS_PER_PAGE, UserService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CandidateList} from './candidate-list.model';
@@ -11,7 +11,8 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-matched-candidate-list',
-  templateUrl: './matched-candidate-list.html'
+  templateUrl: './matched-candidate-list.html',
+  styleUrls:['job.css']
 })
 export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   candidateList: CandidateList[];
@@ -29,13 +30,14 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   corporateId:number;
   eventSubscriber: Subscription;
   subscription: Subscription;
+  defaultImage = require('../../../content/images/no-image.png');
 
   constructor(
     private jobService: JobService,
     private jhiAlertService: JhiAlertService,
     private eventManager: JhiEventManager,
     private activatedRoute: ActivatedRoute,
-    private principal: Principal,
+    private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
     private paginationUtil: JhiPaginationUtil,
@@ -141,5 +143,23 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.candidateList = data;
+    this.setImageUrl();
+  }
+  
+  private setImageUrl() {
+    this.candidateList.forEach((candidate) => {
+      if (candidate.login.imageUrl !== undefined) {
+          this.userService.getImageData(candidate.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true;
+              }
+            }
+          });
+        }
+    });
   }
 }

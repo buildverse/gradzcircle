@@ -1,7 +1,6 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {GradzcircleSharedModule} from '../../shared';
-import {FroalaEditorModule} from 'angular-froala-wysiwyg';
 //import { GradzcircleTrackerModule, MatchTrackerComponent } from '../match-tracker/';
 //import { MatchTrackerService } from '../match-tracker/match-tracker.service';
 import {
@@ -27,7 +26,8 @@ import {
   CandidateListPopupComponent,
   JobResolvePagingParams,
   MatchedCandidateListComponent,
-  AppliedCandidateListComponent
+  AppliedCandidateListComponent,
+  ShortListedCandidateListComponent
 
 } from './';
 
@@ -40,8 +40,7 @@ const ENTITY_STATES = [
 @NgModule({
   imports: [
     GradzcircleSharedModule,
-    RouterModule.forChild(ENTITY_STATES),
-    FroalaEditorModule.forRoot()
+    RouterModule.forChild(ENTITY_STATES)
   ],
   declarations: [
     JobComponent,
@@ -60,7 +59,8 @@ const ENTITY_STATES = [
     CandidateListDialogComponent,
     CandidateListPopupComponent,
     MatchedCandidateListComponent,
-    AppliedCandidateListComponent
+    AppliedCandidateListComponent,
+    ShortListedCandidateListComponent
     //MatchTrackerComponent
   ],
   entryComponents: [
@@ -79,7 +79,8 @@ const ENTITY_STATES = [
     CandidateListDialogComponent,
     CandidateListPopupComponent,
     MatchedCandidateListComponent,
-    AppliedCandidateListComponent
+    AppliedCandidateListComponent,
+    ShortListedCandidateListComponent
     //  MatchTrackerComponent
   ],
   providers: [

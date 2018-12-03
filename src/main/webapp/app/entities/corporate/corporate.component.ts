@@ -104,12 +104,30 @@ export class CorporateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.noImage = true;
     // this.imageDataNotAvailable=true;
+    this.activatedRoute.data.subscribe((data: {corporate: any}) => this.corporate = data.corporate.body);
+    console.log('What am i getting'+JSON.stringify(this.corporate));
+    this.currentSearch = this.corporate.id.toString();
+    //this.loginId = this.corporate.login.id;
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
-    this.principal.identity().then((account) => {
+    const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
+    this.uploader = new FileUploader({
+      url: SERVER_API_URL + 'api/upload/' + this.corporate.login.id,
+      allowedMimeType: this.allowedMimeType,
+      maxFileSize: this.maxFileSize,
+      queueLimit: this.queueLimit,
+      removeAfterUpload: true
+    });
+    this.uploader.authTokenHeader = 'Authorization';
+    this.uploader.authToken = 'Bearer ' + token;
+    this.uploader.onWhenAddingFileFailed = (item, filter, options) => this.onWhenAddingFileFailed(item, filter, options);
+    this.uploader.onAfterAddingFile = (item) => this.onAfterAddingFile(item);
+    this.reloadCorporateImage();
+   /* this.principal.identity().then((account) => {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
         this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
           this.corporate = response.body;
+          console.log('Corprtate is '+ JSON.stringify(this.corporate));
           this.currentCorporate = this.corporate.id.toString();
           const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
           this.uploader = new FileUploader({
@@ -129,7 +147,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
         this.loadAll();
       }
 
-    });
+    });*/
     this.registerChangeInCorporates();
     this.registerChangeInCorporateImage();
   }

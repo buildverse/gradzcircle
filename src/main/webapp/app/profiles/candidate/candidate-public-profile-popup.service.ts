@@ -18,29 +18,29 @@ export class CandidatePublicProfilePopupService {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any,jobId?:number, corporateId?:number): Promise<NgbModalRef> {
-        return new Promise<NgbModalRef>((resolve, reject) => {
-            const isOpen = this.ngbModalRef !== null;
-            if (isOpen) {
-                resolve(this.ngbModalRef);
-            }
+    open(component: Component, id?: number | any, jobId?: number, corporateId?: number): Promise<NgbModalRef> {
+      return new Promise<NgbModalRef>((resolve, reject) => {
+        const isOpen = this.ngbModalRef !== null;
+        if (isOpen) {
+          resolve(this.ngbModalRef);
+        }
 
-            if (id) {
-                this.candidateService.getCandidatePublicProfile(id,jobId,corporateId).subscribe(
-                    (candidateResponse: HttpResponse<CandidatePublicProfile>) => {
-                        const candidate: CandidatePublicProfile = candidateResponse.body;
-                        this.ngbModalRef = this.candidateModalRef(component, candidate,jobId,corporateId);
-                        resolve(this.ngbModalRef);
-                    });
+        if (id) {
+          this.candidateService.getCandidatePublicProfile(id, jobId, corporateId).subscribe(
+            (candidateResponse: HttpResponse<CandidatePublicProfile>) => {
+              const candidate: CandidatePublicProfile = candidateResponse.body;
+              this.ngbModalRef = this.candidateModalRef(component, candidate, jobId, corporateId);
+              resolve(this.ngbModalRef);
+            });
 
-            } else {
-                // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
-                setTimeout(() => {
-                    this.ngbModalRef = this.candidateModalRef(component, new CandidatePublicProfile());
-                    resolve(this.ngbModalRef);
-                }, 0);
-            }
-        });
+        } else {
+          // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
+          setTimeout(() => {
+            this.ngbModalRef = this.candidateModalRef(component, new CandidatePublicProfile());
+            resolve(this.ngbModalRef);
+          }, 0);
+        }
+      });
     }
 
     candidateModalRef(component: Component, candidate: CandidatePublicProfile,jobId?:number,corporateId?:number): NgbModalRef {

@@ -1,11 +1,19 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.JobCategory;
-import com.drishika.gradzcircle.repository.JobCategoryRepository;
-import com.drishika.gradzcircle.repository.search.JobCategorySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,14 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.JobCategory;
+import com.drishika.gradzcircle.domain.MaritalStatus;
+import com.drishika.gradzcircle.entitybuilders.JobCategoryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.MaritalStatusEntityBuilder;
+import com.drishika.gradzcircle.repository.JobCategoryRepository;
+import com.drishika.gradzcircle.repository.search.JobCategorySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the JobCategoryResource REST controller.
@@ -63,11 +72,14 @@ public class JobCategoryResourceIntTest {
     private MockMvc restJobCategoryMockMvc;
 
     private JobCategory jobCategory;
+    
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final JobCategoryResource jobCategoryResource = new JobCategoryResource(jobCategoryRepository, jobCategorySearchRepository);
+        final JobCategoryResource jobCategoryResource = new JobCategoryResource(jobCategoryRepository, jobCategorySearchRepository,elasticsearchTemplate);
         this.restJobCategoryMockMvc = MockMvcBuilders.standaloneSetup(jobCategoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -86,6 +98,31 @@ public class JobCategoryResourceIntTest {
             .jobCategory(DEFAULT_JOB_CATEGORY);
         return jobCategory;
     }
+    
+    /**
+   	 * Create an entity for this test.
+   	 *
+   	 * This is a static method, as tests for other entities might also need it, if
+   	 * they test an entity which requires the current entity.
+   	 */
+   	public static JobCategoryEntityBuilder createEntityBuilder(JobCategory jobCategory) {
+   		JobCategoryEntityBuilder entityBuilder = new JobCategoryEntityBuilder(jobCategory.getId());
+   		entityBuilder.name(jobCategory.getJobCategory());
+   		return entityBuilder;
+   	}
+
+   	/**
+   	 * Create an entity for this test.
+   	 *
+   	 * This is a static method, as tests for other entities might also need it, if
+   	 * they test an entity which requires the current entity.
+   	 */
+   	public static com.drishika.gradzcircle.domain.elastic.JobCategory createElasticInstance(
+   			JobCategory jobCategory) {
+   		com.drishika.gradzcircle.domain.elastic.JobCategory elasticJobCategory = new com.drishika.gradzcircle.domain.elastic.JobCategory();
+   		elasticJobCategory.jobCategory(jobCategory.getJobCategory());
+   		return elasticJobCategory;
+   	}
 
     @Before
     public void initTest() {
@@ -112,7 +149,8 @@ public class JobCategoryResourceIntTest {
 
         // Validate the JobCategory in Elasticsearch
         JobCategory jobCategoryEs = jobCategorySearchRepository.findOne(testJobCategory.getId());
-        assertThat(jobCategoryEs).isEqualToIgnoringGivenFields(testJobCategory);
+        assertThat(jobCategoryEs.getId()).isEqualTo(testJobCategory.getId());
+		assertThat(jobCategoryEs.getJobCategory()).isEqualTo(testJobCategory.getJobCategory());
     }
 
     @Test
@@ -175,7 +213,9 @@ public class JobCategoryResourceIntTest {
     public void updateJobCategory() throws Exception {
         // Initialize the database
         jobCategoryRepository.saveAndFlush(jobCategory);
-        jobCategorySearchRepository.save(jobCategory);
+        elasticsearchTemplate.index(createEntityBuilder(jobCategory)
+				.suggest(new String[] { createElasticInstance(jobCategory).getJobCategory() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.JobCategory.class);
         int databaseSizeBeforeUpdate = jobCategoryRepository.findAll().size();
 
         // Update the jobCategory
@@ -198,7 +238,8 @@ public class JobCategoryResourceIntTest {
 
         // Validate the JobCategory in Elasticsearch
         JobCategory jobCategoryEs = jobCategorySearchRepository.findOne(testJobCategory.getId());
-        assertThat(jobCategoryEs).isEqualToIgnoringGivenFields(testJobCategory);
+        assertThat(jobCategoryEs.getId()).isEqualTo(testJobCategory.getId());
+		assertThat(jobCategoryEs.getJobCategory()).isEqualTo(testJobCategory.getJobCategory());
     }
 
     @Test
@@ -224,7 +265,9 @@ public class JobCategoryResourceIntTest {
     public void deleteJobCategory() throws Exception {
         // Initialize the database
         jobCategoryRepository.saveAndFlush(jobCategory);
-        jobCategorySearchRepository.save(jobCategory);
+        elasticsearchTemplate.index(createEntityBuilder(jobCategory)
+				.suggest(new String[] { createElasticInstance(jobCategory).getJobCategory() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.JobCategory.class);
         int databaseSizeBeforeDelete = jobCategoryRepository.findAll().size();
 
         // Get the jobCategory
@@ -246,7 +289,9 @@ public class JobCategoryResourceIntTest {
     public void searchJobCategory() throws Exception {
         // Initialize the database
         jobCategoryRepository.saveAndFlush(jobCategory);
-        jobCategorySearchRepository.save(jobCategory);
+        elasticsearchTemplate.index(createEntityBuilder(jobCategory)
+				.suggest(new String[] { createElasticInstance(jobCategory).getJobCategory()}).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.JobCategory.class);
 
         // Search the jobCategory
         restJobCategoryMockMvc.perform(get("/api/_search/job-categories?query=id:" + jobCategory.getId()))

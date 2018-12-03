@@ -1,0 +1,71 @@
+.user-photo {
+  background: #1276ae;
+}
+
+.user-photo img {
+  border-radius: 100%;
+  /*  border: 5px solid #3eaae6;*/
+  padding: 2px;
+  width: 40%;
+}
+
+.user-menu ul {
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-menu ul li {
+  float: left;
+  width: 100%;
+  transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+}
+
+.user-menu ul li.a.active {
+  background: #3eaae6;
+}
+
+.user-menu ul li.active {
+  color: #fff;
+}
+
+.user-menu ul li:hover {
+  background: #3eaae6;
+}
+
+.user-menu ul li.active a,
+.user-menu ul li:hover a {
+  color: #fff;
+}
+
+.user-menu ul li a {
+  color: #93a1b1;
+  float: left;
+  padding: 16px 20px;
+  width: 100%;
+  text-decoration: none !important;
+}
+
+.user-menu ul li i {
+  margin: 0 10px 0 0;
+  font-size: 16px;
+}
+
+.white {
+  color: #ffffff;
+
+}
+
+ul.sub-nav li {
+    background: transparent;
+    color: #fff;
+}
+
+ul.sub-nav li a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}

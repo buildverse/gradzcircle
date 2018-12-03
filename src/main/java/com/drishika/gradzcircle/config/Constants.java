@@ -13,7 +13,7 @@ public final class Constants {
 	public static final String DEFAULT_LANGUAGE = "en";
 	public static final String SUCCESS = "SUCCESS";
 	public static final String ERROR = "ERROR";
-	public static final String AWS_REGION = "us-west-1";
+	public static final String AWS_REGION = "ap-south-1";
 	public static final String OTHER = "Other";
 	public static final String COURSE = "course";
 	public static final String GRADUATION_DATE = "gradDate";
@@ -34,5 +34,17 @@ public final class Constants {
 	 */
 
 	public static final Integer SCORE_THRESHOLD = 2;
+	
+	public static final String ENTITY_COLLEGE = "college";
+	public static final String ENTITY_UNIVERSITY = "university";
+	public static final String ENTITY_LANGUAGE = "language";
+	public static final String ENTITY_GENDER = "gender";
+	public static final String ENTITY_QUALIFICATION = "qualification";
+	public static final String ENTITY_JOB_CATEGORY = "jobcategory";
+	public static final String ENTITY_INDUSTRY = "industry";
+	public static final String ENTITY_MARITAL_STATUS = "maritalstatus";
+	public static final String ENTITY_COUNTRY = "country";
+	public static final String ENTITY_NATIONALITY = "nationality";
+	public static final String ENTITY_COURSE = "course";
 
 }

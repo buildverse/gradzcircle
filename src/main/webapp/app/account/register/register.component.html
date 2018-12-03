@@ -55,16 +55,52 @@
 						</span>
 					</div>
 				</div-->
-
 				<div class="form-group"  >
 					<div class="input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-mail" id="basic-addon2"></span>
+							<span class="input-group-text icon icon-user" id="basic-addon1"></span>
+						</div>
+						<input class="form-control"
+							[ngClass]="{'is-invalid': (registerForm.get('firstName').touched || registerForm.get('firstName').dirty) && !registerForm.get('firstName').valid }"
+							placeholder="{{'global.form.firstName.placeholder' | translate}}"
+							formControlName="firstName" aria-describedby="basic-addon1">
+					</div>
+					<div>
+						<span class="form-text text-left" *ngIf="(registerForm.get('firstName').touched || registerForm.get('firstName').dirty) &&
+                                                        registerForm.get('firstName').errors">
+							<div class="text-danger" *ngIf="registerForm.get('firstName').errors.required">Please enter your first name.</div>
+						
+						</span>
+					</div>
+				</div>
+				<div class="form-group"  >
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text icon icon-user" id="basic-addon2"></span>
+						</div>
+						<input class="form-control"
+							[ngClass]="{'is-invalid': (registerForm.get('lastName').touched || registerForm.get('lastName').dirty) && !registerForm.get('lastName').valid }"
+							placeholder="{{'global.form.lastName.placeholder' | translate}}"
+							formControlName="lastName" aria-describedby="basic-addon2">
+					</div>
+					<div>
+						<span class="form-text text-left" *ngIf="(registerForm.get('lastName').touched || registerForm.get('lastName').dirty) &&
+                                                        registerForm.get('lastName').errors">
+							<div class="text-danger" *ngIf="registerForm.get('lastName').errors.required">Please enter your last name.</div>
+							
+						</span>
+					</div>
+				</div>
+				
+				<div class="form-group"  >
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text icon icon-mail" id="basic-addon3"></span>
 						</div>
 						<input class="form-control"
 							[ngClass]="{'is-invalid': (registerForm.get('email').touched || registerForm.get('email').dirty) && !registerForm.get('email').valid }"
 							placeholder="{{'global.form.email.placeholder' | translate}}"
-							formControlName="email" aria-describedby="basic-addon2">
+							formControlName="email" aria-describedby="basic-addon3">
 					</div>
 					<div>
 						<span class="form-text text-left" *ngIf="(registerForm.get('email').touched || registerForm.get('email').dirty) &&
@@ -84,11 +120,11 @@
                                                                             !registerForm.get('passwordGroup.password').valid}">
 						<div class="input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-key" id="basic-addon3"></span>
+							<span class="input-group-text icon icon-key" id="basic-addon4"></span>
 						</div>
 							<input type="password" class="form-control"
 								placeholder="{{'global.form.newpassword.placeholder' | translate}}"
-								formControlName="password" aria-describedby="basic-addon3">
+								formControlName="password" aria-describedby="basic-addon4">
 						</div>
 
 
@@ -116,12 +152,12 @@
 
 						<div class="input-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text icon icon-key" id="basic-addon4"></span>
+								<span class="input-group-text icon icon-key" id="basic-addon5"></span>
 							</div>
 							<input type="password" class="form-control"
 								placeholder="{{'global.form.confirmpassword.placeholder' | translate}}"
 								formControlName="confirmPassword"
-								aria-describedby="basic-addon4">
+								aria-describedby="basic-addon5">
 						</div>
 
 						<div>
@@ -159,3 +195,8 @@
 		</form>
 	</div>
 </div>
+
+<br>Dirty: {{ registerForm.dirty }}
+<br>Touched: {{ registerForm.touched }}
+<br>Valid: {{ registerForm.valid }}
+<br>Value: {{ registerForm.value | json }}

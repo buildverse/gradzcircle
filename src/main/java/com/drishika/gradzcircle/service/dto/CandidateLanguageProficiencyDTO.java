@@ -5,6 +5,7 @@ package com.drishika.gradzcircle.service.dto;
 
 import java.io.Serializable;
 
+
 /**
  * @author abhinav
  *
@@ -13,9 +14,25 @@ public class CandidateLanguageProficiencyDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Long id ;
+	
 	private String proficiency;
 
-	private String language;
+	private LanguageDTO language;
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the proficiency
@@ -35,16 +52,18 @@ public class CandidateLanguageProficiencyDTO implements Serializable {
 	/**
 	 * @return the language
 	 */
-	public String getLanguage() {
+	public LanguageDTO getLanguage() {
 		return language;
 	}
 
 	/**
-	 * @param language
-	 *            the language to set
+	 * @param language the language to set
 	 */
-	public void setLanguage(String language) {
+	public void setLanguage(LanguageDTO language) {
 		this.language = language;
 	}
+
+	
+	
 
 }

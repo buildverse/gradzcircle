@@ -82,6 +82,7 @@ export class CandidateNonAcademicWorkService {
             .convertLocalDateFromServer(candidateNonAcademicWork.nonAcademicWorkStartDate);
         copy.nonAcademicWorkEndDate = this.dateUtils
             .convertLocalDateFromServer(candidateNonAcademicWork.nonAcademicWorkEndDate);
+      copy.collapsed = true;
         return copy;
     }
 

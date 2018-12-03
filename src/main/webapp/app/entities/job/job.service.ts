@@ -19,6 +19,7 @@ export class JobService {
   private resourceActiveJobsForCandidateUrl = SERVER_API_URL + 'api/newActiveJobsForCandidate';
   private resourceApplyForJobByCandidateUrl = SERVER_API_URL + 'api/applyForJob';
   private resourceMatchedCandidatedForJobUrl = SERVER_API_URL + 'api/matchedCandiatesForJob';
+  private resourceShortListedCandidatedForJobUrl = SERVER_API_URL + 'api/shortListedCandidatesForJob';
   private resourceAppliedCandidatesForJobUrl = SERVER_API_URL + 'api/appliedCandiatesForJob';
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/jobs';
   private resourceAppliedJobsByCandidateUrl = SERVER_API_URL + 'api/appliedJobsByCandidate';
@@ -64,6 +65,13 @@ export class JobService {
     return this.http.get<CandidateList[]>(`${this.resourceMatchedCandidatedForJobUrl}/${req.id}`, {params: options, observe: 'response'})
       .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
   }
+
+   queryShortListedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<CandidateList[]>(`${this.resourceShortListedCandidatedForJobUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
+  }
+  
 
   queryAppliedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);

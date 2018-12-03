@@ -1,11 +1,19 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.Nationality;
-import com.drishika.gradzcircle.repository.NationalityRepository;
-import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,14 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Industry;
+import com.drishika.gradzcircle.domain.Nationality;
+import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.NationalityEntityBuilder;
+import com.drishika.gradzcircle.repository.NationalityRepository;
+import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the NationalityResource REST controller.
@@ -63,11 +72,14 @@ public class NationalityResourceIntTest {
     private MockMvc restNationalityMockMvc;
 
     private Nationality nationality;
+    
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NationalityResource nationalityResource = new NationalityResource(nationalityRepository, nationalitySearchRepository);
+        final NationalityResource nationalityResource = new NationalityResource(nationalityRepository, nationalitySearchRepository, elasticsearchTemplate);
         this.restNationalityMockMvc = MockMvcBuilders.standaloneSetup(nationalityResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -86,6 +98,31 @@ public class NationalityResourceIntTest {
             .nationality(DEFAULT_NATIONALITY);
         return nationality;
     }
+    
+    /**
+  	 * Create an entity for this test.
+  	 *
+  	 * This is a static method, as tests for other entities might also need it, if
+  	 * they test an entity which requires the current entity.
+  	 */
+  	public static NationalityEntityBuilder createEntityBuilder(Nationality nationality) {
+  		NationalityEntityBuilder entityBuilder = new NationalityEntityBuilder(nationality.getId());
+  		entityBuilder.name(nationality.getNationality());
+  		return entityBuilder;
+  	}
+
+  	/**
+  	 * Create an entity for this test.
+  	 *
+  	 * This is a static method, as tests for other entities might also need it, if
+  	 * they test an entity which requires the current entity.
+  	 */
+  	public static com.drishika.gradzcircle.domain.elastic.Nationality createElasticInstance(
+  			Nationality nationality) {
+  		com.drishika.gradzcircle.domain.elastic.Nationality elasticNationality = new com.drishika.gradzcircle.domain.elastic.Nationality();
+  		elasticNationality.nationality(nationality.getNationality());
+  		return elasticNationality;
+  	}
 
     @Before
     public void initTest() {
@@ -112,7 +149,8 @@ public class NationalityResourceIntTest {
 
         // Validate the Nationality in Elasticsearch
         Nationality nationalityEs = nationalitySearchRepository.findOne(testNationality.getId());
-        assertThat(nationalityEs).isEqualToIgnoringGivenFields(testNationality);
+        assertThat(nationalityEs.getId()).isEqualTo(testNationality.getId());
+		assertThat(nationalityEs.getNationality()).isEqualTo(testNationality.getNationality());
     }
 
     @Test
@@ -175,7 +213,9 @@ public class NationalityResourceIntTest {
     public void updateNationality() throws Exception {
         // Initialize the database
         nationalityRepository.saveAndFlush(nationality);
-        nationalitySearchRepository.save(nationality);
+        elasticsearchTemplate.index(createEntityBuilder(nationality)
+				.suggest(new String[] { createElasticInstance(nationality).getNationality() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
         int databaseSizeBeforeUpdate = nationalityRepository.findAll().size();
 
         // Update the nationality
@@ -198,7 +238,8 @@ public class NationalityResourceIntTest {
 
         // Validate the Nationality in Elasticsearch
         Nationality nationalityEs = nationalitySearchRepository.findOne(testNationality.getId());
-        assertThat(nationalityEs).isEqualToIgnoringGivenFields(testNationality);
+        assertThat(nationalityEs.getId()).isEqualTo(testNationality.getId());
+		assertThat(nationalityEs.getNationality()).isEqualTo(testNationality.getNationality());
     }
 
     @Test
@@ -224,7 +265,9 @@ public class NationalityResourceIntTest {
     public void deleteNationality() throws Exception {
         // Initialize the database
         nationalityRepository.saveAndFlush(nationality);
-        nationalitySearchRepository.save(nationality);
+        elasticsearchTemplate.index(createEntityBuilder(nationality)
+				.suggest(new String[] { createElasticInstance(nationality).getNationality()}).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
         int databaseSizeBeforeDelete = nationalityRepository.findAll().size();
 
         // Get the nationality
@@ -246,7 +289,10 @@ public class NationalityResourceIntTest {
     public void searchNationality() throws Exception {
         // Initialize the database
         nationalityRepository.saveAndFlush(nationality);
-        nationalitySearchRepository.save(nationality);
+        elasticsearchTemplate.index(createEntityBuilder(nationality)
+				.suggest(new String[] { createElasticInstance(nationality).getNationality()}).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
+
 
         // Search the nationality
         restNationalityMockMvc.perform(get("/api/_search/nationalities?query=id:" + nationality.getId()))

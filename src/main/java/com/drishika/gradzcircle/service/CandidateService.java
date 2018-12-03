@@ -26,7 +26,9 @@ import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
+import com.drishika.gradzcircle.domain.Country;
 import com.drishika.gradzcircle.domain.Job;
+import com.drishika.gradzcircle.domain.Nationality;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
@@ -37,7 +39,9 @@ import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
+import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.repository.NationalityRepository;
 import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
@@ -54,6 +58,11 @@ import com.drishika.gradzcircle.service.dto.CandidateLanguageProficiencyDTO;
 import com.drishika.gradzcircle.service.dto.CandidateNonAcademicWorkDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProjectDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
+import com.drishika.gradzcircle.service.dto.CountryDTO;
+import com.drishika.gradzcircle.service.dto.GenderDTO;
+import com.drishika.gradzcircle.service.dto.JobCategoryDTO;
+import com.drishika.gradzcircle.service.dto.LanguageDTO;
+import com.drishika.gradzcircle.service.dto.MaritalStatusDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
 
 /**
@@ -93,6 +102,10 @@ public class CandidateService {
 	private final CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository;
 
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
+	
+	private final NationalityRepository nationalityRepository;
+	
+	private final CountryRepository countryRepository;
 
 	private final Matcher<Candidate> matcher;
 
@@ -119,7 +132,7 @@ public class CandidateService {
 			CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
 			CandidateCertificationRepository candidateCertificationRepository,
 			CandidateEmploymentRepository candidateEmploymentRepository, JobRepository jobRepository,
-			CorporateRepository corporateRepository) {
+			CorporateRepository corporateRepository, NationalityRepository nationalityRepository,CountryRepository countryRepository) {
 		this.candidateRepository = candidateRepository;
 		this.candidateSearchRepository = candidateSearchRepository;
 		this.addressRepository = addressRepository;
@@ -139,6 +152,8 @@ public class CandidateService {
 		this.matcher = matcher;
 		this.jobRepository = jobRepository;
 		this.corporateRepository = corporateRepository;
+		this.countryRepository = countryRepository;
+		this.nationalityRepository = nationalityRepository;
 	}
 
 	public void createCandidate(User user) {
@@ -164,8 +179,8 @@ public class CandidateService {
 		logger.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
 		Boolean enableMatch = false;
 		Candidate prevCandidate = candidateRepository.findOne(candidate.getId());
-		logger.debug("Egender from repo{}", prevCandidate.getGender());
-		logger.debug("Egender from request{}", candidate.getGender());
+		injestNationalityDetails(candidate);
+		injestCountryDetails(candidate);
 		if (candidate.getGender() != null) {
 			if (!candidate.getGender().equals(prevCandidate.getGender())) {
 				enableMatch = true;
@@ -175,13 +190,27 @@ public class CandidateService {
 		}
 		candidate.setEducations(prevCandidate.getEducations());
 		candidate.setCandidateJobs(prevCandidate.getCandidateJobs());
+		candidate.setMatchEligible(prevCandidate.getMatchEligible());
 		Candidate result = candidateRepository.save(candidate);
 		result.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(result));
 		// Replace with Future
 		if (enableMatch)
 			matcher.match(result);
 		// candidateSearchRepository.save(result);
+		
 		return result;
+	}
+	
+	
+	
+	private void injestNationalityDetails(Candidate candidate) {
+		Nationality nationality  = nationalityRepository.findByNationality(candidate.getNationality().getNationality());
+		candidate.setNationality(nationality);
+	}
+	
+	private void injestCountryDetails(Candidate candidate) {
+		Country country  = countryRepository.findByCountryNiceName(candidate.getAddresses().iterator().next().getCountry().getCountryNiceName());
+		candidate.getAddresses().forEach(address -> address.setCountry(country));
 	}
 
 	public List<Candidate> getAllCandidates() {
@@ -199,7 +228,7 @@ public class CandidateService {
 			 * });
 			 */
 			candidate.setAddresses(addresses);
-			logger.debug("Retruning candidate {}", candidate.getAddresses());
+			logger.debug("Retruning candidate {}", candidate);
 		}
 		 return candidate;
 	}
@@ -228,6 +257,7 @@ public class CandidateService {
 
 	public CandidatePublicProfileDTO getCandidatePublicProfile(Long candidateId, Long jobId, Long corporateId) {
 		logger.debug("REST request to get Candidate public profile for candidate {}", candidateId);
+		Boolean shortListed = false;
 		Candidate candidate = candidateRepository.findOne(candidateId);
 		if (candidate == null)
 			return new CandidatePublicProfileDTO();
@@ -266,8 +296,10 @@ public class CandidateService {
 		 * candidate.getCandidateLanguageProficiencies().addAll(
 		 * candidateLanguageProficiencies);
 		 */
-		setCandidateReviewedForJob(candidate, jobId);
-		Boolean shortListed = isShortListed(candidate, jobId, corporateId);
+		if(jobId >0 && corporateId >0) {
+			setCandidateReviewedForJob(candidate, jobId);
+			shortListed = isShortListed(candidate, jobId, corporateId);
+		}
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
 				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed);
 	}
@@ -339,7 +371,10 @@ public class CandidateService {
 			CandidatePublicProfileDTO dto) {
 		candidateLanguageProficiencies.forEach(languageProficiency -> {
 			CandidateLanguageProficiencyDTO languageProficiencyDTO = new CandidateLanguageProficiencyDTO();
-			languageProficiencyDTO.setLanguage(languageProficiency.getLanguage().getLanguage());
+			LanguageDTO languageDTO = new LanguageDTO();
+			languageDTO.setId(languageProficiency.getLanguage().getId());
+			languageDTO.setLanguage(languageProficiency.getLanguage().getLanguage());
+			languageProficiencyDTO.setLanguage(languageDTO);
 			languageProficiencyDTO.setProficiency(languageProficiency.getProficiency());
 			dto.getCandidateLanguageProficiencies().add(languageProficiencyDTO);
 		});
@@ -367,6 +402,7 @@ public class CandidateService {
 	private void setCandidateEmployments(Set<CandidateEmployment> candidateEmployments, CandidatePublicProfileDTO dto) {
 		candidateEmployments.forEach(employment -> {
 			CandidateEmploymentDTO employmentDTO = new CandidateEmploymentDTO();
+			employmentDTO.setJobTitle(employment.getJobTitle());
 			employmentDTO.setEmployerName(employment.getEmployerName());
 			employmentDTO.setEmploymentStartDate(employment.getEmploymentStartDate());
 			employmentDTO.setEmploymentEndDate(employment.getEmploymentEndDate());
@@ -410,9 +446,9 @@ public class CandidateService {
 			educationDTO.setUniversityName(education.getCollege().getUniversity().getUniversityName());
 			String scoreType = education.getScoreType();
 			if (scoreType != null && scoreType.equals(Constants.GPA))
-				educationDTO.setScore(education.getGrade());
+				educationDTO.setGrade(education.getGrade());
 			else
-				educationDTO.setScore(education.getPercentage());
+				educationDTO.setPercentage(education.getPercentage());
 			educationDTO.setScoreType(education.getScoreType());
 			educationDTO.setQualification(education.getQualification().getQualification());
 			educationDTO.setCourse(education.getCourse().getCourse());
@@ -434,7 +470,9 @@ public class CandidateService {
 			addressDTO.setAddressLineOne(address.getAddressLineOne());
 			addressDTO.setAddressLineTwo(address.getAddressLineTwo());
 			addressDTO.setCity(address.getCity());
-			addressDTO.setCountry(address.getCountry().getCountryNiceName());
+			CountryDTO countryDTO = new CountryDTO();
+			countryDTO.setCountryNiceName(address.getCountry().getCountryNiceName());
+			addressDTO.setCountry(countryDTO);
 			addressDTO.setState(address.getState());
 			addressDTO.setZip(address.getZip());
 			dto.getAddresses().add(addressDTO);
@@ -486,6 +524,45 @@ public class CandidateService {
 		candidateDetailDTO.setPhoneCode(candidate.getPhoneCode());
 		candidateDetailDTO.setPhoneNumber(candidate.getPhoneNumber());
 		candidateDetailDTO.setTwitter(candidate.getTwitter());
+		candidateDetailDTO.setNationality(candidate.getNationality());
+		if(candidate.getMaritalStatus()!=null) {
+			MaritalStatusDTO maritalStatusDTO = new MaritalStatusDTO();
+			maritalStatusDTO.setId(candidate.getMaritalStatus().getId());
+			maritalStatusDTO.setStatus(candidate.getMaritalStatus().getStatus());
+			candidateDetailDTO.setMaritalStatus(maritalStatusDTO);
+		}
+		if(candidate.getGender() != null) {
+			GenderDTO genderDTO = new GenderDTO();
+			genderDTO.setGender(candidate.getGender().getGender());
+			genderDTO.setId(candidate.getGender().getId());
+			candidateDetailDTO.setGender(genderDTO);
+		}
+		if(candidate.getJobCategories()!=null) {
+			candidate.getJobCategories().forEach(jobCategory->{
+				JobCategoryDTO jobCategoryDTO = new JobCategoryDTO();
+				jobCategoryDTO.setId(jobCategory.getId());
+				jobCategoryDTO.setJobCategory(jobCategory.getJobCategory());
+				candidateDetailDTO.getJobCategories().add(jobCategoryDTO);
+			});
+		}
+		if(candidate.getAddresses()!=null) {
+			candidate.getAddresses().forEach(address->{
+				AddressDTO addressDTO = new AddressDTO();
+				addressDTO.setId(address.getId());
+				addressDTO.setAddressLineOne(address.getAddressLineOne());
+				addressDTO.setAddressLineTwo(address.getAddressLineTwo());
+				addressDTO.setCity(address.getCity());
+				addressDTO.setState(address.getState());
+				addressDTO.setZip(address.getZip());
+				CountryDTO countryDTO = new CountryDTO();
+				countryDTO.setId(address.getCountry().getId());
+				countryDTO.setCountryNiceName(address.getCountry().getCountryNiceName());
+				countryDTO.setValue(address.getCountry().getCountryNiceName());
+				countryDTO.setDisplay(address.getCountry().getCountryNiceName());
+				addressDTO.setCountry(countryDTO);
+				candidateDetailDTO.getAddresses().add(addressDTO);
+			});
+		}
 		return candidateDetailDTO;
 	}
 

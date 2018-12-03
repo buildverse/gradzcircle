@@ -40,35 +40,39 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
     this.reloadUserImage();
   }
 
-  reloadUserImage() {
+ reloadUserImage() {
     this.noImage = false;
-    this.principal.identity().then((user) => {
-      if (user) {
-        if (user.imageUrl) {
-          this.userService.getImageData(user.id).subscribe(response => {
-            let responseJson = response.body;
-            this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
-          }, (error: any) => {
-            console.log(`${error}`);
-            this.router.navigate(['/error']);
-            return Observable.of(null);
+   
+
+      if (this.candidate.candidateDetails.login) {
+        if (this.candidate.candidateDetails.login.imageUrl !== undefined) {
+          this.userService.getImageData(this.candidate.candidateDetails.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if(responseJson) {
+                  this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                this.noImage = true;
+              }
+            }
           });
-        }
-        else {
+        } else {
           this.noImage = true;
         }
       }
-    });
-  }
 
-  private getWidth(candidateLanguageProficiency) {
-    if (candidateLanguageProficiency === 'Beginner')
-      return '33%';
-    else if (candidateLanguageProficiency === 'Intermediate')
-      return '66%';
-    else if (candidateLanguageProficiency === 'Expert')
-      return '100%';
+
   }
+  
+ private getWidth (candidateLanguageProficiency) {
+   if (candidateLanguageProficiency === 'Beginner') {
+     return '33%';
+   } else if (candidateLanguageProficiency === 'Intermediate') {
+     return '66%';
+   } else if (candidateLanguageProficiency === 'Expert') {
+     return '100%';
+   }
+ }
 
   save() {
     this.isSaving = true;
@@ -84,8 +88,8 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
 
    private onSaveSuccess(result: Candidate) {
         this.eventManager.broadcast({ name: 'matchedListModification', content: 'OK'});
+      this.eventManager.broadcast({ name: 'shortListedCandidateListModification', content: 'OK'});
         this.isSaving = false;
-     console.log('Save is a success ??');
         this.activeModal.dismiss(result);
     }
 

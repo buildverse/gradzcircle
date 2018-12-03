@@ -1,0 +1,23 @@
+
+{
+    "gradzcircleApp": {
+        "states" : {
+            "home": {
+                "title": "States",
+                "createLabel": "नया States बनाएँ",
+                "createOrEditLabel": "States बनाएँ या संपादित करें",
+                "search": "States खोजें"
+            },
+            "created": "एक नया States [identifier: {{ param }}] तैयार है",
+            "updated": "एक States [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "States [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "States [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "States"
+            },
+            "name": "Name"
+        }
+    }
+}

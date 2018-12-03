@@ -1,43 +1,33 @@
-<div class="table-responsive" *ngIf="candidateList">
-	<div class="ml-5 mr-5 mt-5">
-		<table class="table table-hover ">
-			<thead class="bg-primary text-white ">
-				<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
-					[callback]="transition.bind(this)">
-
-					<th class="justfiy-content-center"><span
-						jhiTranslate="gradzcircleApp.candidate.firstName">First
-							Name</span></th>
-					<th class="justfiy-content-center"><span
-						jhiTranslate="gradzcircleApp.candidate.lastName">Job Type</span></th>
-					<th class="justfiy-content-center"><span
-						jhiTranslate="gradzcircleApp.candidate.educationDescriptionShortForm">Education
-							Summary </span></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let candidate of candidateList">
-					<td>{{candidate.firstName}}</td>
-					<td>{{candidate.lastName}}</td>
-					<td>{{candidate.qualificationWithHighestCourse}}</td>
-					<td><div *ngIf="candidate.reviewed">You have Reviewed
-							this profile for this job</div></td>
-					<td><a
-						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id+'/'+jobId+'/'+corporateId} }]"><span
-							class="icon icon-eye"></span></a></td>
-				</tr>
-			</tbody>
-		</table>
-		<div *ngIf="candidateList">
-			<div class="row justify-content-center">
-				<jhi-item-count [page]="page" [total]="queryCount"
-					[itemsPerPage]="itemsPerPage"></jhi-item-count>
-			</div>
-			<div class="row justify-content-center">
-				<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
-					(pageChange)="loadPage(page)"></ngb-pagination>
-			</div>
-		</div>
+<div class="mt-6" *ngIf="candidateList">
+	<div class="mt-1 justify-content-center">
+		<h1 class="text-center" style="color:#455A64;">Matched Candidates</h1>
 	</div>
+
+		<div class="row justify-content-center" >
+			   <div *ngFor="let candidate of candidateList" class="m-2 col-lg-3">
+			   	<div class="card card-profile h-100">			     
+			       <div class="card-header" style="background-color: #2196F3;"></div>
+			       <div class="card-body text-xs-center">
+			         <img class="card-profile-img" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
+			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
+			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
+			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
+			         <button class="btn btn-outline-primary btn-sm" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id+'/'+jobId+'/'+corporateId} }]">
+			           <span class="icon icon-add-user"></span> View
+			         </button>
+			       </div>
+			   </div>
+			   </div>  
+		</div>
+		<div class="mt-2" *ngIf="candidateList">
+					<div class="row justify-content-center font-weight-light">
+						<jhi-item-count [page]="page" [total]="queryCount"
+							[itemsPerPage]="itemsPerPage"></jhi-item-count>
+					</div>
+					<div class="row justify-content-center font-weight-light">
+						<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+							(pageChange)="loadPage(page)"></ngb-pagination>
+					</div>
+		</div>
+
 </div>

@@ -19,7 +19,7 @@ export class JobPopupService {
     this.ngbModalRef = null;
   }
 
-  open(component: Component, id?: number | any,hasCandidateApplied?: any): Promise<NgbModalRef> {
+  open(component: Component, id?: number | any,matchScore?:number | any,hasCandidateApplied?: any): Promise<NgbModalRef> {
     return new Promise<NgbModalRef>((resolve, reject) => {
       const isOpen = this.ngbModalRef !== null;
       if (isOpen) {
@@ -30,6 +30,7 @@ export class JobPopupService {
         this.jobService.find(id)
           .subscribe((jobResponse: HttpResponse<Job>) => {
           const job: Job = jobResponse.body;
+            job.matchScore = matchScore;
           if (job.createDate) {
             job.createDate = {
               year: job.createDate.getFullYear(),

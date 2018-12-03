@@ -11,10 +11,12 @@ import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CandidateService} from '../candidate/candidate.service';
 import {CorporateService} from '../corporate/corporate.service';
+import {Corporate} from '../corporate/corporate.model';
 
 @Component({
   selector: 'jhi-job',
-  templateUrl: './job.component.html'
+  templateUrl: './job.component.html',
+  styleUrls :['job.css']
 })
 export class JobComponent implements OnInit, OnDestroy {
   jobs: Job[];
@@ -35,6 +37,8 @@ export class JobComponent implements OnInit, OnDestroy {
   previousPage: any;
   reverse: any;
   candidateId: number;
+  job: Job;
+  corporate: Corporate;
 
 
   constructor(
@@ -143,12 +147,15 @@ export class JobComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.corporateId = null;
+    this.job = new Job();
+    this.corporate = new Corporate();
     this.DRAFT = JobConstants.DRAFT;
     this.principal.identity().then((account) => {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
         this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
           this.corporateId = response.body.id;
+          this.corporate = response.body;
           this.loadActiveJobs();
         });
       } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
@@ -230,5 +237,18 @@ export class JobComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.jobs = data;
+    if (this.jobs.length === 0)    {
+      //this.job = new Job();
+      this.job.totalNumberOfJobs = 0;
+      this.job.jobsLastMonth = 0;
+      this.job.newApplicants = 0;
+      this.job.totalLinkedCandidates = 0;
+    } else {
+     // this.job = new Job();
+      this.job.totalNumberOfJobs = this.jobs[0].totalNumberOfJobs;
+      this.job.jobsLastMonth = this.jobs[0].jobsLastMonth;
+      this.job.newApplicants = this.jobs[0].newApplicants;
+      this.job.totalLinkedCandidates = this.jobs[0].totalLinkedCandidates;
+    }
   }
 }

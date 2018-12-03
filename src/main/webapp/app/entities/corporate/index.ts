@@ -6,4 +6,5 @@ export * from './corporate-delete-dialog.component';
 export * from './corporate-detail.component';
 export * from './corporate.component';
 export * from './corporate.route';
-export * from './corporate-linked-candidates.component'
+export * from './corporate-linked-candidates.component';
+export * from './corporate-resolver.service';

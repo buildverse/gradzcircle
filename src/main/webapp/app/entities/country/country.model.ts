@@ -10,6 +10,8 @@ export class Country implements BaseEntity {
         public numCode?: number,
         public phoneCode?: number,
         public enabled?: boolean,
+        public value?: string,
+        public display?:string,
         public nationality?: BaseEntity,
         public addresses?: BaseEntity[],
         public universities?: BaseEntity[],

@@ -18,7 +18,7 @@
                  </div> -->
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeTitle"
 					for="field_nonAcademicInitiativeTitle">Title</label>
 			</div>
@@ -28,7 +28,7 @@
 					required name="nonAcademicTitle"
 					id="field_nonAcademicInitiativeTitle"
 					[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeTitle" />
-				<small class="form-text text-muted text-info"> Provide extra
+				<small class="form-text  form-text-primary"> Provide extra
 					curricular activtiy name could be sports, dramatics, community
 					service etc. </small>
 				<div *ngIf="nonAcademicTitle.invalid && nonAcademicTitle.touched"
@@ -40,20 +40,24 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicInitiativeDescription"
 					for="field_nonAcademicInitiativeDescription">Activity
 					Details</label>
 			</div>
 			<div class="col-md-10"
 				[class.has-danger]="activityDetails.invalid && activityDetails.touched">
-				<textarea [froalaEditor]='options' class="form-control"
+				<!--  <textarea [froalaEditor]='options' class="form-control"
 					#activityDetails="ngModel" required name="activityDetails"
 					id="field_certificationDetails"
 					[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription"
 					rows="20">
-                         </textarea>
-				<small class="form-text text-muted text-info"> Provide
+                         </textarea>-->
+                 <ck-editor class="form-control " 
+					required #activityDetails="ngModel" name="activityDetails"
+					id="field_nonAcademicInitiativeDescription" [config]="editorConfig"
+					[(ngModel)]="candidateNonAcademicWork.nonAcademicInitiativeDescription"></ck-editor>
+				<small class="form-text  form-text-primary"> Provide
 					overview of the activity, what you learnt and how this will help in
 					improving your skills. </small>
 				<div *ngIf="activityDetails.invalid && activityDetails.touched"
@@ -66,18 +70,22 @@
 
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.roleInInitiative"
 					for="field_roleInInitiative">Activity Details</label>
 			</div>
 			<div class="col-md-10"
 				[class.has-danger]="roleDetails.invalid && roleDetails.touched">
-				<textarea [froalaEditor]='options' class="form-control"
+				<!--  <textarea [froalaEditor]='options' class="form-control"
 					#roleDetails="ngModel" name="roleDetails"
 					id="field_roleInInitiative"
 					[(ngModel)]="candidateNonAcademicWork.roleInInitiative" rows="5">
-                         </textarea>
-				<small class="form-text text-muted text-info"> What was you
+                         </textarea>-->
+                <ck-editor class="form-control " 
+					required #roleDetails="ngModel" name="roleDetails"
+					id="field_roleInInitiative" [config]="editorConfig"
+					[(ngModel)]="candidateNonAcademicWork.roleInInitiative"></ck-editor>
+				<small class="form-text  form-text-primary"> What was you
 					role in the activity </small>
 				<!-- <div *ngIf="roleDetails.invalid && roleDetails.touched" class="text-danger">
                              <small> Please enter your Activity details</small>
@@ -89,24 +97,24 @@
 		</div>
 		<div class="form-group row mx-4 my-4">
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate"
 					for="field_nonAcademicWorkFromDate">From Date</label>
 			</div>
-			<div class="col-md-4"
+			<div class="col-md-4" (mouseleave)="nonAcademicFromDateDp.close()"
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
-						required type="text" class="form-control text-muted"
+						required type="text" class="form-control "
 						name="nonAcademicFromDate" ngbDatepicker
 						#nonAcademicFromDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
-						(ngModelChange)="validateDates()" /> <span
-						class="input-group-addon "
-						(click)="nonAcademicFromDateDp.toggle()"> <img
-						src="../../../content/images/calendar.png"
-						style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</span>
+						(ngModelChange)="validateDates()" /> 
+						<span class="input-group-append" > 
+							<button class="btn btn-outline-secondary" (click)="nonAcademicFromDateDp.toggle()" type="button">
+								<i class="fa fa-calendar" style="color:#1276ae"></i>
+							</button>
+						</span>
 				</div>
 				<div *ngIf="fromDate.invalid && fromDate.touched"
 					class="text-danger">
@@ -114,25 +122,24 @@
 				</div>
 			</div>
 			<div class="col-md-2">
-				<label class="form-control-label font-weight-bold text-muted"
+				<label class="form-control-label font-weight-bold "
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkEndDate"
 					for="field_nonAcademicWorkEndDate">Education To Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="toDate.invalid && toDate.touched">
+				[class.has-danger]="toDate.invalid && toDate.touched" (mouseleave)="nonAcademicToDateDp.close()">
 				<div class="input-group">
 					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required
-						type="text" class="form-control text-muted"
+						type="text" class="form-control "
 						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker
 						#nonAcademicToDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
 						(ngModelChange)="validateDates()" />
-					<button class="input-group-addon "
-						(click)="nonAcademicToDateDp.toggle()" type="button"
-						[disabled]="endDateControl">
-						<img src="../../../content/images/calendar.png"
-							style="width: 1.2rem; height: 1rem; cursor: pointer;" />
-					</button>
+					<span class=" input-group-append" >
+						<button class="btn btn-outline-secondary" (click)="nonAcademicToDateDp.toggle()" [disabled]="endDateControl" type="button">
+									<i class="fa fa-calendar" style="color:#1276ae"></i>
+						</button>
+					</span>
 				</div>
 				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
 					<small>Please enter End Date</small>
@@ -143,10 +150,10 @@
 			</div>
 		</div>
 		<div class="form-group row mx-4 my-4">
-			<div class="col-md-6 form-check">
+			<div class="col-md-6 form-check ml-3">
 				<label class="form-check-label" for="field_isCurrentActivity">
 
-					<input class="form-check-input font-weight-bold text-muted"
+					<input class="form-check-input font-weight-bold "
 					type="checkbox" name="isCurrentActivity"
 					id="field_isCurrentActivity" (change)="manageEndDateControl()"
 					[(ngModel)]="candidateNonAcademicWork.isCurrentActivity" /> I am

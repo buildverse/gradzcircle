@@ -23,7 +23,7 @@ export class CorporateDialogComponent implements OnInit {
 
     corporate: Corporate;
     isSaving: boolean;
-    options: Object;
+    editorConfig: any;
     countries: Country[];
     industries: Industry[];
     users: User[];
@@ -43,8 +43,15 @@ export class CorporateDialogComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.editorConfig = {
+          'toolbarGroups': [
+            {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+            {name: 'paragraph', groups: ['list', 'indent', 'align']},
+          ],
+          'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+        };
         this.isSaving = false;
-        this.options = new EditorProperties().options;
         this.countryService.query()
             .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.industryService.query()
@@ -68,6 +75,12 @@ export class CorporateDialogComponent implements OnInit {
         }
     }
 
+   requestCountryData = (text: string): Observable<Response> => {
+    return this.countryService.searchRemote({
+      query: text
+    }).map((data) => data.body);
+  }
+  
     private subscribeToSaveResponse(result: Observable<HttpResponse<Corporate>>) {
         result.subscribe((res: HttpResponse<Corporate>) =>
             this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());

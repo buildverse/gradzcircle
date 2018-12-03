@@ -31,12 +31,14 @@
 			</div>
 
 			<fieldset>
-				<!--  >div class="form-group"
+				<div class="form-group"
 					[ngClass]="{'has-danger':  (corporateRegisterForm.get('firstName').touched || 
                                                                   corporateRegisterForm.get('firstName').dirty) &&
                                                                   !corporateRegisterForm.get('firstName').valid }">
 					<div class="input-group">
-						<span class="input-group-addon icon icon-user" id="basic-addon1"></span>
+						<div class="input-group-prepend">
+							<span class="input-group-text icon icon-user" id="basic-addon1"></span>
+						</div>
 						<input class="form-control" placeholder="First Name..."
 							formControlName="firstName" id="firstname"
 							aria-describedby="basic-addon1">
@@ -62,7 +64,9 @@
                                                                   corporateRegisterForm.get('lastName').dirty) &&
                                                                   !corporateRegisterForm.get('lastName').valid }">
 					<div class="input-group">
-						<span class="input-group-addon icon icon-user" id="basic-addon2"></span>
+						<div class="input-group-prepend">
+							<span class="input-group-text icon icon-user" id="basic-addon2"></span>
+						</div>
 						<input class="form-control" placeholder="Last Name..."
 							formControlName="lastName" aria-describedby="basic-addon2">
 					</div>
@@ -80,7 +84,7 @@
 								The first name must be longer than 6 characters.</div>
 						</span>
 					</div>
-				</div-->
+				</div>
 
 				<div class="form-group"
 					[ngClass]="{'is-invalid':  (corporateRegisterForm.get('companyName').touched || 

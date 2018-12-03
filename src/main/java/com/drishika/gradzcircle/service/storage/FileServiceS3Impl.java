@@ -45,7 +45,7 @@ public class FileServiceS3Impl implements FileServiceS3 {
 	private void init() {
 		ClientConfiguration configuration = new ClientConfiguration();
 		configuration.setConnectionTimeout(5000);
-		configuration.setMaxConnections(100);
+		configuration.setMaxConnections(1000);
 		amazonS3Client = AmazonS3ClientBuilder.standard().withClientConfiguration(configuration)
 				.withRegion(Constants.AWS_REGION).build();
 	}
@@ -105,21 +105,18 @@ public class FileServiceS3Impl implements FileServiceS3 {
 	@Override
 	public Resource getObject(String bucketName, String key) throws FileRetrieveException {
 		Resource file = null;
-		try {
-			logger.debug("Key coming iin is {}", key);
-			S3Object s3Object = amazonS3Client.getObject(bucketName, key);
+			try (S3Object s3Object = amazonS3Client.getObject(bucketName, key)) {
 			file = new Resource(s3Object,
 					new Link(String.format("https://s3-%s.amazonaws.com/%s/%s",
 							amazonS3Client.getBucketLocation(bucketName), s3Object.getBucketName(), s3Object.getKey()))
 									.withRel("url"));
 			logger.debug("Resource details are {}", file.getLinks());
+			return file;
+		
 		} catch (Exception stex) {
 			logger.error("Error while retreiving file { }", stex);
 			throw new FileRetrieveException(stex.getMessage());
 		}
-		if (file != null) {
-			return file;
-		} else
-			return null;
+		
 	}
 }

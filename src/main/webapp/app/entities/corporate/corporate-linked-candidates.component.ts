@@ -1,13 +1,11 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import {AuthoritiesConstants} from '../../shared/authorities.constant';
+import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
+import {ITEMS_PER_PAGE, UserService} from '../../shared';
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
-import{ HttpResponse } from '@angular/common/http';
+import {HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-linked-candidate-list',
@@ -33,13 +31,11 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   constructor(
     private corporateService: CorporateService,
     private jhiAlertService: JhiAlertService,
-    private eventManager: JhiEventManager,
     private activatedRoute: ActivatedRoute,
-    private principal: Principal,
+    private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig,
+
 
 
   ) {
@@ -134,5 +130,23 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     this.totalItems = headers.get('X-Total-Count');
     this.queryCount = this.totalItems;
     this.candidateList = data;
+    this.setImageUrl();
+  }
+  
+   private setImageUrl() {
+    this.candidateList.forEach((candidate) => {
+      if (candidate.login.imageUrl !== undefined) {
+          this.userService.getImageData(candidate.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true;
+              }
+            }
+          });
+        }
+    });
   }
 }

@@ -26,5 +26,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 	 */
 	@Query("Select c.id as id, c.countryNiceName as countryNiceName, c.phoneCode as phoneCode from Country c")
 	public List<Country> findCountries();
+	
+	public Country findByCountryNiceName(String niceName);
 
 }

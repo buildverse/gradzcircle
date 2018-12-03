@@ -29,3 +29,4 @@ export * from './social/social-register.component';
 export * from './social/social.route';
 export * from './account.route';
 export * from '../entities/country/country.service';
+export * from './side-menu/side-menu.component';

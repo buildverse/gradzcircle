@@ -12,7 +12,8 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
 @Component({
     selector: 'jhi-candidate-education',
-    templateUrl: './candidate-education.component.html'
+    templateUrl: './candidate-education.component.html',
+    styleUrls: ['candidate-education.css']
 })
 export class CandidateEducationComponent implements OnInit, OnDestroy {
     candidateEducations: CandidateEducation[];
@@ -79,8 +80,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.principal.identity().then((account) => {
             this.currentAccount = account;
-            if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
-                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
+            if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
+                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.currentSearch = this.candidateId;
                 this.loadEducationForCandidate();
             } else {
@@ -105,9 +106,9 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
 
             this.eventSubscriber = this.eventManager.subscribe('candidateEducationListModification', (response) => this.loadEducationForCandidate());
             this.eventSubscriber = this.eventManager.subscribe('candidateProjectListModification', (response) => this.loadEducationForCandidate());
-        }
-        else
+        } else {
             this.eventSubscriber = this.eventManager.subscribe('candidateEducationListModification', (response) => this.loadAll());
+      }
 
     }
 

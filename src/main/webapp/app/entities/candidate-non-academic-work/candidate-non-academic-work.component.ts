@@ -11,7 +11,8 @@ import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-candidate-non-academic-work',
-    templateUrl: './candidate-non-academic-work.component.html'
+    templateUrl: './candidate-non-academic-work.component.html',
+    styleUrls: ['non-academic.css']
 })
 export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
 candidateNonAcademicWorks: CandidateNonAcademicWork[];
@@ -75,7 +76,7 @@ candidateNonAcademicWorks: CandidateNonAcademicWork[];
         this.principal.identity().then((account) => {
             this.currentAccount = account;
             if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
-                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].id;
+                this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.currentSearch = this.candidateId;
                 this.loadExtraCurricularForCandidate();
             } else {

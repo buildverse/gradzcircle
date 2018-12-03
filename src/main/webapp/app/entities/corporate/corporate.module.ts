@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { GradzcircleSharedModule } from '../../shared';
 import { GradzcircleAdminModule } from '../../admin/admin.module';
-import { FroalaEditorModule } from 'angular-froala-wysiwyg';
 import { FileUploadModule } from 'ng2-file-upload'
 import {
     CorporateService,
@@ -17,7 +16,8 @@ import {
     corporateRoute,
     corporatePopupRoute,
     LinkedCandidatesComponent,
-    LinkedCandidatesResolvePagingParams
+    LinkedCandidatesResolvePagingParams,
+    CorporateResolverService
 } from './';
 
 const ENTITY_STATES = [
@@ -31,7 +31,6 @@ const ENTITY_STATES = [
         GradzcircleAdminModule,
         MultiselectDropdownModule,
         FileUploadModule,
-        FroalaEditorModule,
         RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [
@@ -54,6 +53,7 @@ const ENTITY_STATES = [
     providers: [
         CorporateService,
         CorporatePopupService,
+        CorporateResolverService,
         LinkedCandidatesResolvePagingParams
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

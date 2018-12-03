@@ -1,97 +1,55 @@
-<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container my-3 ">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card mb-3">
-
-				<div class="row mx-4 my-4 justify-content-between">
-					<div>
-						<p class="h4 underline-headers"
-							jhiTranslate="gradzcircleApp.candidateCertification.home.title">
-							<span>Certifications</span>
-						</p>
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+	<div id="accordion">
+		<div *ngIf="candidateCertifications?.length>0;">
+			<div *ngFor="let candidateCertification of candidateCertifications ;">
+				 <div class="card mb-2">
+					<div class="card-header justify-content-between education_title">
+						<a class="card-link " 
+	       				   [attr.aria-controls]="candidateCertification.id" (click)="candidateCertification.collapsed = !candidateCertification.collapsed"
+	       				   [attr.aria-expanded]="!candidateCertification.collapsed"
+						> {{candidateCertification.certificationTitle}}</a>
+						<span class="project_buttons">
+							<a class="btn btn-sm btn-pill btn-primary mb-2"
+													[routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]"
+													replaceUrl="true"> 
+													<span class="icon icon-edit "  jhiTranslate="entity.action.edit">
+														Edit
+													</span>
+												</a>
+												<a class="btn btn-sm btn-pill btn-danger mb-2"
+													[routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]"
+													replaceUrl="true"> 
+													<span class="icon icon-trash " jhiTranslate="entity.action.delete">
+														Delete
+													</span>
+												</a>
+						</span>
 					</div>
-					<div>
-						<a
-							class="btn btn-sm btn-pill btn-primary float-right create-candidate-certification"
-							[routerLink]="['/', { outlets: { popup: 'candidate-certification-new/'+ candidateId } }]">
-							<span class="icon icon-circle-with-plus"
-							jhiTranslate="gradzcircleApp.candidateCertification.home.add">
-								Add </span>
-						</a>
-					</div>
+					<div id="{{candidateCertification.id}}" data-parent="#accordion" [ngbCollapse]="candidateCertification.collapsed">	      
+				        <div class="card-body"> 
+				        		<div class="col-lg-12 row">
+						          <span class="education_title_2 w-100 editable mt-2 pb-0" [innerHtml]="candidateCertification.certificationDetails"></span>
+						     </div>
+						     <div class="col-lg-12 row">
+							        <span class="education_body w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateCertification.certificationDate|
+									date:'mediumDate'}}
+									</span>
+							 </div>
+					  	</div>				
+					</div>      
 				</div>
-				<div
-					*ngIf="candidateCertifications?.length>0; else showNoCertificationMessage">
-					<div class="timeline">
-						<div class="line text-muted"></div>
-
-						<div
-							*ngFor="let candidateCertification of candidateCertifications ;trackBy: trackId">
-							<div class="separator text-muted">
-								<time>{{candidateCertification.certificationDate|
-									date:'mediumDate'}}</time>
-							</div>
-							<div class="card card-outline-primary">
-								<div class="card-header icon">
-									<span class="icon icon-price-ribbon" style="color: white">
-								</div>
-								<div class="card-header" style="background-color: #3097D1">
-									<div class="row mx-2 p-lower justify-content-end ">
-										<div class="mr-auto ">
-											<p style="color: white">
-												<span class="mt-0">{{candidateCertification.certificationTitle}}
-												</span>
-											</p>
-
-										</div>
-										<div class="pr-2 ">
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/edit'} }]"
-												replaceUrl="true"> <span class="icon icon-edit"
-												style="color: white" jhiTranslate="entity.action.edit">Edit</span>
-											</a>
-										</div>
-
-										<div>
-											<a
-												[routerLink]="['/', { outlets: { popup: 'candidate-certification/'+ candidateCertification.id + '/delete'} }]"
-												replaceUrl="true"> <span class="icon icon-trash"
-												style="color: maroon" jhiTranslate="entity.action.delete">Delete</span>
-											</a>
-										</div>
-									</div>
-								</div>
-								<div class="card-block">
-									<div class="row mx-4">
-										<div class="col-md-3">
-											<span
-												jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails"
-												class="font-weight-bold text-muted">Certification
-												Details</span>
-										</div>
-										<div class="col-md-9"
-											[innerHtml]="candidateCertification.certificationDetails">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<ng-template #showNoCertificationMessage>
-				<div class="col-md-12">
-					<p class="profile-text-info">Please add your Certification
-						Details.</p>
-					<p class="profile-text-info">Example : Ruchi to come up with
-						one...</p>
-				</div>
-				</ng-template>
-
 			</div>
+		</div>
+		<div class="col-lg-12  my-4 text-right d-block">
+			<a class="btn btn-sm btn-pill btn-primary" 
+				[routerLink]="['/', { outlets: { popup: 'candidate-certification-new/'+ candidateId } }]">
+				<span class="icon icon-circle-with-plus"
+				jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle">
+					Add </span>
+			</a>
 		</div>
 	</div>
 </div>
-
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
 	<h2>

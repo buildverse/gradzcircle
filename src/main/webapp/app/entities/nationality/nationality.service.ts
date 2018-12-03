@@ -13,6 +13,7 @@ export class NationalityService {
 
     private resourceUrl =  SERVER_API_URL + 'api/nationalities';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/nationalities';
+   private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/nationalityBySuggest';
 
     constructor(private http: HttpClient) { }
 
@@ -49,6 +50,11 @@ export class NationalityService {
             .map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res));
     }
 
+   searchRemote(req?: any): Observable<HttpResponse<any>> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
+  }
+  
     private convertResponse(res: EntityResponseType): EntityResponseType {
         const body: Nationality = this.convertItemFromServer(res.body);
         return res.clone({body});

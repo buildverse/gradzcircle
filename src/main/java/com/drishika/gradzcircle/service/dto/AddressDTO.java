@@ -5,6 +5,8 @@ package com.drishika.gradzcircle.service.dto;
 
 import java.io.Serializable;
 
+import com.drishika.gradzcircle.domain.Country;
+
 /**
  * @author abhinav
  *
@@ -12,6 +14,8 @@ import java.io.Serializable;
 public class AddressDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Long id;
 
 	private String addressLineOne;
 
@@ -23,7 +27,24 @@ public class AddressDTO implements Serializable {
 
 	private String zip;
 
-	private String country;
+	private CountryDTO country;
+	
+	
+	
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the addressLineOne
@@ -103,16 +124,17 @@ public class AddressDTO implements Serializable {
 	/**
 	 * @return the country
 	 */
-	public String getCountry() {
+	public CountryDTO getCountry() {
 		return country;
 	}
 
 	/**
-	 * @param country
-	 *            the country to set
+	 * @param country the country to set
 	 */
-	public void setCountry(String country) {
+	public void setCountry(CountryDTO country) {
 		this.country = country;
 	}
+
+	
 
 }

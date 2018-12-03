@@ -13,7 +13,7 @@ export class JobCategoryService {
 
     private resourceUrl =  SERVER_API_URL + 'api/job-categories';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/job-categories';
-
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/jobCategoriesBySuggest';
     constructor(private http: HttpClient) { }
 
     create(jobCategory: JobCategory): Observable<EntityResponseType> {
@@ -48,6 +48,11 @@ export class JobCategoryService {
         return this.http.get<JobCategory[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<JobCategory[]>) => this.convertArrayResponse(res));
     }
+  
+   searchRemote(req?: any): Observable<HttpResponse<any>> {
+        const options = createRequestOption(req);
+        return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
+  }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {
         const body: JobCategory = this.convertItemFromServer(res.body);

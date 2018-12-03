@@ -103,7 +103,7 @@ export class JobViewPopupComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
       this.jobPopupService
-        .open(JobViewComponent as Component, params['id']);
+        .open(JobViewComponent as Component, params['id'],params['matchScore']);
     });
   }
 

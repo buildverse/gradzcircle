@@ -1,5 +1,4 @@
-
-<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary app-navbar">
+<nav class="navbar navbar-expand-md fixed-top navbar-dark nav-bg app-navbar">
 	<!-- <div class="jh-logo-container float-left">
         <button class="navbar-toggler d-lg-none float-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
             aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +10,6 @@
         </a>
     </div> -->
 	<a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-		<span jhiTranslate="global.title" class="navbar-title">Gradzcircle</span>
 		<span class="logo-img"></span>
 	</a>
 
@@ -320,6 +318,12 @@
 							aria-hidden="true"></i> <span
 							jhiTranslate="global.menu.entities.qualification">Qualification</span>
 					</a></li>
+<li>
+                        <a class="dropdown-item" routerLink="states" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.states">States</span>
+                        </a>
+                    </li>
 					<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 				</ul></li>
 			<li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown
@@ -376,7 +380,7 @@
 					</a></li>
 					<!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
 				</ul></li>
-			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']" ngbDropdown
+		    <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']" ngbDropdown
 				class="nav-item dropdown pointer" 
 				[routerLink]="['/job']" routerLinkActive="active"><a
 				class="nav-link" (click)="collapseNavbar()"> <span
@@ -384,7 +388,7 @@
 			</a></li>
 			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']"
 				class="nav-item " routerLinkActive="active"
-				[routerLink]="['/candidate-profile']" (click)="collapseNavbar()">
+				[routerLink]="['/candidate-profile',{outlets:{detail:'details'}}]" (click)="collapseNavbar()">
 
 				<a class="nav-link" aria-haspopup="true" aria-expanded="false">
 					<span jhiTranslate="global.menu.candidate.profile">Profile</span>
@@ -397,15 +401,18 @@
 					jhiTranslate="global.menu.candidate.jobs">Jobs</span>
 			</a>
 				<ul class="dropdown-menu" ngbDropdownMenu>
-					<li><a class="dropdown-item" routerLink="#"
-						routerLinkActive="active" (click)="collapseNavbar()"> <span
-							jhiTranslate="global.menu.candidate.job.active">All Jobs</span>
-					</a></li>
 					<li><a class="dropdown-item"
 						[routerLink]="['/appliedJobs/'+candidateId]"
 						routerLinkActive="active" (click)="collapseNavbar()"> <span
 							jhiTranslate="global.menu.candidate.job.applied">Applied
 								Jobs</span>
+
+					</a></li>
+					<li><a class="dropdown-item"
+						[routerLink]="['/appliedJobs/'+candidateId]"
+						routerLinkActive="active" (click)="collapseNavbar()"> <span
+							jhiTranslate="global.menu.candidate.job.shortlisted">Shortlisted
+								</span>
 
 					</a></li>
 				</ul></li>

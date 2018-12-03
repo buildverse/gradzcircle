@@ -90,7 +90,7 @@ public class CandidateEducationResource {
 			return createCandidateEducation(candidateEducation);
 		}
 		CandidateEducation result = candidateEducationService.updateCandidateEductaion(candidateEducation);
-		updateEducationDependentMetaForDisplay(candidateEducation);
+		updateEducationDependentMetaForDisplay(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateEducation.getId().toString()))
 				.body(result);

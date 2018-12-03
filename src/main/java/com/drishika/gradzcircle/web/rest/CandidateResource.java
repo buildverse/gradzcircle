@@ -94,7 +94,7 @@ public class CandidateResource {
 		log.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
 
 		Candidate result = candidateService.updateCandidate(candidate);
-
+		updateCountryAndNationalityDataForDisplay(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidate.getId().toString())).body(result);
 	}
@@ -208,6 +208,7 @@ public class CandidateResource {
 	public ResponseEntity<CandidateDetailDTO> getCandidateDetailsById(@PathVariable Long id) {
 		log.debug("REST request to get Candidate by Id for  : {}", id);
 		Candidate candidate = candidateService.getCandidate(id);
+		updateCountryAndNationalityDataForDisplay(candidate);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.convertToCandidateDetailDTO(candidate)));
 	}
 
@@ -215,6 +216,7 @@ public class CandidateResource {
 
 		CandidateDTO candidateDTO = new CandidateDTO();
 		candidateDTO.setId(candidate.getId());
+		candidateDTO.setAboutMe(candidate.getAboutMe());
 		candidateDTO.setFirstName(candidate.getFirstName());
 		candidateDTO.setLastName(candidate.getLastName());
 		candidateDTO.setLogin(candidate.getLogin());
@@ -325,6 +327,22 @@ public class CandidateResource {
 					address.getCountry().setAddresses(null);
 					address.setCandidate(null);
 				}
+			});
+		}
+
+	}
+	
+	private void updateCountryAndNationalityDataForDisplay(Candidate candidate) {
+		if (candidate == null)
+			return;
+		if (candidate.getNationality() != null) {
+			candidate.getNationality().setDisplay(candidate.getNationality().getNationality());
+			candidate.getNationality().setValue(candidate.getNationality().getNationality());
+		}
+		if (candidate.getAddresses() != null) {
+			candidate.getAddresses().forEach(address -> {
+				address.getCountry().setValue(address.getCountry().getCountryNiceName());
+				address.getCountry().setDisplay(address.getCountry().getCountryNiceName());
 			});
 		}
 

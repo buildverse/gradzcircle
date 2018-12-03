@@ -4,6 +4,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "nationality")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "nationality")
+
 public class Nationality implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +28,14 @@ public class Nationality implements Serializable {
 
 	@Column(name = "nationality")
 	private String nationality;
+	
+	@Transient
+	@JsonProperty
+	private String value;
+
+	@Transient
+	@JsonProperty
+	private String display;
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
 	// remove
@@ -49,8 +59,39 @@ public class Nationality implements Serializable {
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
 	}
+	
+	
+	
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
 	// setters here, do not remove
+
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the display
+	 */
+	public String getDisplay() {
+		return display;
+	}
+
+	/**
+	 * @param display the display to set
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
 
 	@Override
 	public boolean equals(Object o) {

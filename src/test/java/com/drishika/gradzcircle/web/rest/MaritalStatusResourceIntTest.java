@@ -1,11 +1,19 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.MaritalStatus;
-import com.drishika.gradzcircle.repository.MaritalStatusRepository;
-import com.drishika.gradzcircle.repository.search.MaritalStatusSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,14 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.MaritalStatus;
+import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.MaritalStatusEntityBuilder;
+import com.drishika.gradzcircle.repository.MaritalStatusRepository;
+import com.drishika.gradzcircle.repository.search.MaritalStatusSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the MaritalStatusResource REST controller.
@@ -63,11 +72,14 @@ public class MaritalStatusResourceIntTest {
     private MockMvc restMaritalStatusMockMvc;
 
     private MaritalStatus maritalStatus;
+    
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final MaritalStatusResource maritalStatusResource = new MaritalStatusResource(maritalStatusRepository, maritalStatusSearchRepository);
+        final MaritalStatusResource maritalStatusResource = new MaritalStatusResource(maritalStatusRepository, maritalStatusSearchRepository,elasticsearchTemplate);
         this.restMaritalStatusMockMvc = MockMvcBuilders.standaloneSetup(maritalStatusResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -86,6 +98,31 @@ public class MaritalStatusResourceIntTest {
             .status(DEFAULT_STATUS);
         return maritalStatus;
     }
+    
+    /**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static MaritalStatusEntityBuilder createEntityBuilder(MaritalStatus maritalStatus) {
+		MaritalStatusEntityBuilder entityBuilder = new MaritalStatusEntityBuilder(maritalStatus.getId());
+		entityBuilder.name(maritalStatus.getStatus());
+		return entityBuilder;
+	}
+
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static com.drishika.gradzcircle.domain.elastic.MaritalStatus createElasticInstance(
+			MaritalStatus maritalStatus) {
+		com.drishika.gradzcircle.domain.elastic.MaritalStatus elasticMaritalStatus = new com.drishika.gradzcircle.domain.elastic.MaritalStatus();
+		elasticMaritalStatus.status(maritalStatus.getStatus());
+		return elasticMaritalStatus;
+	}
 
     @Before
     public void initTest() {
@@ -112,7 +149,8 @@ public class MaritalStatusResourceIntTest {
 
         // Validate the MaritalStatus in Elasticsearch
         MaritalStatus maritalStatusEs = maritalStatusSearchRepository.findOne(testMaritalStatus.getId());
-        assertThat(maritalStatusEs).isEqualToIgnoringGivenFields(testMaritalStatus);
+        assertThat(maritalStatusEs.getId()).isEqualTo(testMaritalStatus.getId());
+		assertThat(maritalStatusEs.getStatus()).isEqualTo(testMaritalStatus.getStatus());
     }
 
     @Test
@@ -175,7 +213,9 @@ public class MaritalStatusResourceIntTest {
     public void updateMaritalStatus() throws Exception {
         // Initialize the database
         maritalStatusRepository.saveAndFlush(maritalStatus);
-        maritalStatusSearchRepository.save(maritalStatus);
+        elasticsearchTemplate.index(createEntityBuilder(maritalStatus)
+				.suggest(new String[] { createElasticInstance(maritalStatus).getStatus() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.MaritalStatus.class);
         int databaseSizeBeforeUpdate = maritalStatusRepository.findAll().size();
 
         // Update the maritalStatus
@@ -198,7 +238,8 @@ public class MaritalStatusResourceIntTest {
 
         // Validate the MaritalStatus in Elasticsearch
         MaritalStatus maritalStatusEs = maritalStatusSearchRepository.findOne(testMaritalStatus.getId());
-        assertThat(maritalStatusEs).isEqualToIgnoringGivenFields(testMaritalStatus);
+        assertThat(maritalStatusEs.getId()).isEqualTo(testMaritalStatus.getId());
+		assertThat(maritalStatusEs.getStatus()).isEqualTo(testMaritalStatus.getStatus());
     }
 
     @Test
@@ -224,7 +265,9 @@ public class MaritalStatusResourceIntTest {
     public void deleteMaritalStatus() throws Exception {
         // Initialize the database
         maritalStatusRepository.saveAndFlush(maritalStatus);
-        maritalStatusSearchRepository.save(maritalStatus);
+        elasticsearchTemplate.index(createEntityBuilder(maritalStatus)
+				.suggest(new String[] { createElasticInstance(maritalStatus).getStatus() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.MaritalStatus.class);
         int databaseSizeBeforeDelete = maritalStatusRepository.findAll().size();
 
         // Get the maritalStatus
@@ -246,7 +289,9 @@ public class MaritalStatusResourceIntTest {
     public void searchMaritalStatus() throws Exception {
         // Initialize the database
         maritalStatusRepository.saveAndFlush(maritalStatus);
-        maritalStatusSearchRepository.save(maritalStatus);
+        elasticsearchTemplate.index(createEntityBuilder(maritalStatus)
+				.suggest(new String[] { createElasticInstance(maritalStatus).getStatus()}).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.MaritalStatus.class);
 
         // Search the maritalStatus
         restMaritalStatusMockMvc.perform(get("/api/_search/marital-statuses?query=id:" + maritalStatus.getId()))

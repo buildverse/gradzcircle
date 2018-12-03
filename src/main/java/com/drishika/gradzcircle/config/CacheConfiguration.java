@@ -116,6 +116,7 @@ public class CacheConfiguration {
 			cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".appliedCandidates",jcacheConfiguration);
 			cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".candidateJobs", jcacheConfiguration);
             
+            cm.createCache(com.drishika.gradzcircle.domain.States.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -23,6 +23,7 @@
             "linkedIn": "Linked In",
             "twitter": "Twitter",
             "aboutMe": "About Me",
+            "aboutMe.hint": "Short description of yourself",
             "dateOfBirth": "Date Of Birth",
             "phoneCode": "Phone Code",
             "phoneNumber": "Phone Number",
@@ -45,8 +46,15 @@
             "profilePic" : "Profile Pic",
             "careerInterests": "Carrer Interests",
             "job": "Job",
-            "educationDescriptionShortForm": "Education Summary"
-
+            "educationDescriptionShortForm": "Education Summary",
+			"profile": {
+                "details": "Details",
+                "education": "My Education",
+                "employment": "My Experience",
+                "nonAcademic": "Extra Curriculars",
+                "certifications": "My Certifications",
+                "candidateLanguageProficiency": "Languages"
+            }
         }
     }
 }

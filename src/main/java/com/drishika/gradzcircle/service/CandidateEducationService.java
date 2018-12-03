@@ -152,7 +152,11 @@ public class CandidateEducationService {
 			if (candidateEducations.size() > 0)
 				candidateEducations.forEach(education -> {
 					if (candidateEducation.getEducationToDate() != null) {
-						if ((education.getEducationToDate().isAfter(candidateEducation.getEducationToDate()))
+						if(education.getEducationToDate() == null) {
+							education.setHighestQualification(true);
+							candidateEducation.setHighestQualification(false);
+						} else 
+						if (education.getEducationToDate() != null && (education.getEducationToDate().isAfter(candidateEducation.getEducationToDate()))
 								&& !(candidateEducation.isHighestQualification())) {
 							education.setHighestQualification(true);
 							candidateEducation.setHighestQualification(false);

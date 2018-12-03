@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,7 +32,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.CorporateCandidate;
+import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.service.CorporateService;
@@ -105,6 +109,9 @@ public class CorporateResourceIntTest {
 
 	@Autowired
 	private CorporateRepository corporateRepository;
+	
+	@Autowired
+	private CandidateRepository candidateRepository;
 
 	@Autowired
 	private CorporateSearchRepository corporateSearchRepository;
@@ -419,5 +426,54 @@ public class CorporateResourceIntTest {
 		assertThat(corporate1).isNotEqualTo(corporate2);
 		corporate1.setId(null);
 		assertThat(corporate1).isNotEqualTo(corporate2);
+	}
+	
+	@Test
+	@Transactional
+	public void findAllLinkedCandidatesForCorporte() throws Exception{
+		
+		Candidate c1 = new Candidate().firstName("abhinav");
+		Candidate c2 = new Candidate().firstName("Bunny");
+		Candidate c3 = new Candidate().firstName("Tom");
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		corporateRepository.saveAndFlush(corporate);
+		CorporateCandidate cc1 = new CorporateCandidate(corporate,c1,-1L);
+		CorporateCandidate cc2 = new CorporateCandidate(corporate,c2,-1L);
+		corporate.addCorporateCandidate(cc1);
+		corporate.addCorporateCandidate(cc2);
+		corporateRepository.saveAndFlush(corporate);
+		restCorporateMockMvc.perform(get("/api/totalLinkedCandidates/{id}", corporate.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$").value(2));
+		
+		
+	}
+	
+	@Test
+	@Transactional
+	public void findLinkedCandidatesForCorporte() throws Exception{
+		Corporate corp = new Corporate();
+		Candidate c1 = new Candidate().firstName("abhinav");
+		Candidate c2 = new Candidate().firstName("Bunny");
+		Candidate c3 = new Candidate().firstName("Tom");
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		corporateRepository.saveAndFlush(corporate);
+		corporateRepository.saveAndFlush(corp);
+		CorporateCandidate cc1 = new CorporateCandidate(corporate,c1,-1L);
+		CorporateCandidate cc2 = new CorporateCandidate(corporate,c2,-1L);
+		CorporateCandidate cc3 = new CorporateCandidate(corp,c2,-1L);
+		corporate.addCorporateCandidate(cc1);
+		corporate.addCorporateCandidate(cc2);
+		corporate.addCorporateCandidate(cc3);
+		corporateRepository.saveAndFlush(corporate);
+		restCorporateMockMvc.perform(get("/api/linkedCandidates/{id}", corporate.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$", hasSize(2)));
+		
+		
 	}
 }

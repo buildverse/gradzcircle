@@ -7,6 +7,8 @@ export class CandidateCertification implements BaseEntity {
         public certificationDate?: any,
         public certificationDetails?: string,
         public candidate?: BaseEntity,
+        public collapsed?: boolean
     ) {
+      this.collapsed = true;
     }
 }

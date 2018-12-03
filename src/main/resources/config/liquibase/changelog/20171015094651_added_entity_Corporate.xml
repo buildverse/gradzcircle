@@ -127,4 +127,11 @@
 
          <addPrimaryKey columnNames="corporate_id, candidate_id, job_id" tableName="corporate_candidate"/>
     </changeSet>
+    <changeSet author="abhinav" id="20171015094651-3">
+	    <modifyDataType catalogName="gradzcircle"
+	            columnName="culture"
+	            newDataType="varchar(10000)"
+	            schemaName="public"
+	            tableName="corporate"/>
+	</changeSet>
 </databaseChangeLog>

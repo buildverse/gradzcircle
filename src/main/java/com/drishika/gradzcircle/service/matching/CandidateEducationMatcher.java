@@ -134,7 +134,12 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				jobFilterObject);
 		if (jobFilterObject.getGraduationDateType() == null)
 			return true;
-		if (jobFilterObject.getGraduationDateType().equalsIgnoreCase(Constants.GRADUATION_DATE_GREATER)) {
+		//IF CANIDATE IS CURRENLTY STUDYING SHOULD I CONSIDER OR SKIP THE CANDIDATE FOR MATCH
+		
+		if(education.getEducationToDate() == null && education.isIsPursuingEducation())
+			return true;
+		
+		if (jobFilterObject.getGraduationDateType().equalsIgnoreCase(Constants.GRADUATION_DATE_GREATER)) {		
 			if (education.getEducationToDate().isAfter(jobFilterObject.getGraduationDate().getGraduationDate())
 					|| education.getEducationToDate().equals(jobFilterObject.getGraduationDate().getGraduationDate()))
 				return true;
