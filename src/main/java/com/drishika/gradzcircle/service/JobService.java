@@ -240,9 +240,15 @@ public class JobService {
 		Long totalNumberOfJobs = getTotalJobsByCorporate(corporateId);
 		Long jobsPostedLastMonth = getTotalJobsPostedSinceLastMonth(corporateId);
 		Long applicantsToJobs = getAppliedCandidatesForAllJobsByCorporate(corporateId);
-		Long totalLinkedCandidates = corporateService.getAllLinkedCandidates(corporateId); 
+		Long totalLinkedCandidates = corporateService.getLinkedCandidatesCount(corporateId); 
 		final Page<CorporateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCorporate(job,
 				totalLinkedCandidates,totalNumberOfJobs,applicantsToJobs,jobsPostedLastMonth,getTotalCandidatedShorListedByCorporateForJob(job.getId())));
+		return page;
+	}
+	
+	public Page<CandidateJobDTO> getShortListedJobsListForCandidate(Pageable pageable, Long candidateId) {
+		Page<Job> jobPage = jobRepository.getJobListShortListedForCandidate(candidateId, pageable);
+		final Page<CandidateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCandidate(job,candidateId,false));
 		return page;
 	}
 

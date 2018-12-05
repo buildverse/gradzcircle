@@ -19,9 +19,10 @@ import {CandidateNonAcademicWorkComponent} from '../../entities/candidate-non-ac
 import {CandidatePublicProfilePopupComponent} from './candidate-public-profile-popup.component';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {SideMenuComponent} from '../../account/side-menu/side-menu.component';
+import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
 
 @Injectable()
-export class AppliedJobResolvePagingParams implements Resolve<any> {
+export class JobResolvePagingParams implements Resolve<any> {
 
   constructor(private paginationUtil: JhiPaginationUtil) {}
 
@@ -158,9 +159,22 @@ export const candidateProfileRoutes: Routes = [
     },
     canActivate: [UserRouteAccessService],
     resolve: {
-      'pagingParams': AppliedJobResolvePagingParams
+      'pagingParams': JobResolvePagingParams
+    },
+  },
+  {
+    path: 'shortListedForJob',
+    component: ShortListedJobsForCandidateComponent,
+    data: {
+      authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+      pageTitle: 'gradzcircleApp.candidate.home.title'
+    },
+    canActivate: [UserRouteAccessService],
+    resolve: {
+      'pagingParams': JobResolvePagingParams
     },
   }
+  
 ];
 
 export const candidateProfilePopupRoute: Routes = [

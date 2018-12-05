@@ -3,7 +3,6 @@ import { DatePipe } from '@angular/common';
 import { ArchwizardModule } from 'ng2-archwizard';
 import { TagInputModule } from 'ngx-chips';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-
 import { CKEditorModule } from 'ngx-ckeditor';
 import {
     GradzcircleSharedLibsModule,
@@ -20,7 +19,8 @@ import {
     HasAnyAuthorityDirective,
     JhiSocialComponent,
     SocialService,
-    JhiLoginModalComponent
+    JhiLoginModalComponent,
+    DataService
    
 } from './';
 
@@ -50,7 +50,8 @@ import {
         AuthServerProvider,
         SocialService,
         UserService,
-        DatePipe
+        DatePipe,
+        DataService
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [
@@ -63,6 +64,7 @@ import {
         MultiselectDropdownModule,
         TagInputModule,
         CKEditorModule
+        
      
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

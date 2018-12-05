@@ -23,6 +23,7 @@ export class JobService {
   private resourceAppliedCandidatesForJobUrl = SERVER_API_URL + 'api/appliedCandiatesForJob';
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/jobs';
   private resourceAppliedJobsByCandidateUrl = SERVER_API_URL + 'api/appliedJobsByCandidate';
+  private resourceShortListedJobsForCandidateUrl = SERVER_API_URL + 'api/shortListedJobsForCandidate';
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
@@ -88,6 +89,12 @@ export class JobService {
   queryAppliedJobsByCandidate(req: any): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
     return this.http.get(`${this.resourceAppliedJobsByCandidateUrl}/${req.id}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+  }
+  
+  queryShortListedJobsForCandidate(req: any): Observable<HttpResponse<Job[]>> {
+    const options = createRequestOption(req);
+    return this.http.get(`${this.resourceShortListedJobsForCandidateUrl}/${req.id}`, {params: options, observe: 'response'})
       .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 

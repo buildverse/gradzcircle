@@ -158,9 +158,9 @@ public class CorporateResource {
 	 * @return the ResponseEntity with status 200 (OK) and with body the corporate,
 	 *         or with status 404 (Not Found)
 	 */
-	@GetMapping("/linkedCandidates/{id}")
+	@GetMapping("/linkedCandidatesForCorporate/{id}")
 	@Timed
-	public ResponseEntity<List<CandidateProfileListDTO>> getLinkedCandidates(@PathVariable Long id, Pageable pageable) {
+	public ResponseEntity<List<CandidateProfileListDTO>> getLinkedCandidatesByCorporate(@PathVariable Long id, Pageable pageable) {
 		log.debug("REST request to get Linked Canddiates For Corporate : {}", id);
 		final Page<CandidateProfileListDTO> page = corporateService.getLinkedCandidates(pageable, id);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/linkedCandidates");
@@ -178,11 +178,13 @@ public class CorporateResource {
 	@GetMapping("/totalLinkedCandidates/{corporateId}")
 	@Timed
 	public ResponseEntity<Long> getTotalLinkedCandidates(@PathVariable Long corporateId) {
-		log.debug("REST request to get Linked Canddiates For Corporate : {}", corporateId);
-		Long totalLinkedCandidated = corporateService.getAllLinkedCandidates( corporateId);
+		log.debug("REST request to get Total Linked Canddiates For Corporate : {}", corporateId);
+		Long totalLinkedCandidated = corporateService.getLinkedCandidatesCount( corporateId);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, corporateId.toString())).body(totalLinkedCandidated);
 	}
+	
+	
 
 	/**
 	 * GET /corporates/:id : get the "id" Login.

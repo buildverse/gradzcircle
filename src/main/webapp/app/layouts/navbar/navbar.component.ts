@@ -5,9 +5,8 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiLanguageService, JhiEventManager} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {ProfileService} from '../profiles/profile.service';
-import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService} from '../../shared';
+import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService, DataService} from '../../shared';
 import {VERSION} from '../../app.constants';
-
 import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
 
@@ -34,6 +33,7 @@ export class NavbarComponent implements OnInit {
   candidateId: number;
   candidate: Candidate;
   noImage: boolean;
+  routeInfo: any = {};
   authorities: string[];
   constructor(
     private loginService: LoginService,
@@ -46,7 +46,8 @@ export class NavbarComponent implements OnInit {
     private eventManager: JhiEventManager,
     private userService: UserService,
     private candidateService: CandidateService,
-    private corporateService: CorporateService
+    private corporateService: CorporateService,
+    private dataService: DataService
 
   ) {
     this.version = VERSION ? 'v' + VERSION : '';
@@ -58,7 +59,6 @@ export class NavbarComponent implements OnInit {
     this.languageHelper.getAll().then((languages) => {
       this.languages = languages;
     });
-    this.loadId();
     this.reloadUserImage();
      this.profileService.getProfileInfo().then((profileInfo) => {
             this.inProduction = profileInfo.inProduction;
@@ -69,24 +69,31 @@ export class NavbarComponent implements OnInit {
   }
 
   registerSuccessfulLogin() {
-      this.eventSubscriber = this.eventManager.subscribe('authenticationSuccess', (response) => this.reloadUserImage());
+      this.eventSubscriber = this.eventManager.subscribe('authenticationSuccess', (response) => {
+       this.reloadUserImage();
+        this.loadId();
+      });
   }
   
   loadId() {
-      this.principal.identity(true).then((user) => {
-        if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
-          this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
-            this.corporateId = response.body.id;
-          });
-        } else {
-           if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
+    this.principal.identity(true).then((user) => {
+      if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
+        this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
+          this.corporateId = response.body.id;
+          this.routeInfo.corporateId = this.corporateId;
+          this.dataService.columnVars = this.routeInfo;
+        });
+      } else {
+        if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
           this.candidateService.getCandidateByLoginId(user.id).subscribe((response) => {
             this.candidate = response.body;
             this.candidateId = this.candidate.id;
+            this.routeInfo.candidateId = this.candidateId;
+            this.dataService.columnVars = this.routeInfo;
           });
         }
-        }
-      });
+      }
+    });
   }
   
   changeLanguage(languageKey: string) {

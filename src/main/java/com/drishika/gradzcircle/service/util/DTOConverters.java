@@ -123,12 +123,7 @@ public class DTOConverters {
 		else
 			job.getAppliedCandidates().stream()
 					.filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId));
-		/*
-		 * if(job.getAppliedCandidates().stream().filter(appliedCandidate ->
-		 * appliedCandidate.getId().equals(candidateId)).findAny().isPresent())
-		 * jobListingData.setHasCandidateApplied(true); else
-		 * jobListingData.setHasCandidateApplied(false);
-		 */
+	
 		jobListingData.setId(job.getId());
 		return jobListingData;
 	}

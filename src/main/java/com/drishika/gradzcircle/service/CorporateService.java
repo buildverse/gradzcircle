@@ -96,7 +96,7 @@ public class CorporateService {
 		return page;
 	}
 	
-	public Long getAllLinkedCandidates(Long corporateId) {
+	public Long getLinkedCandidatesCount(Long corporateId) {
 		return corporateRepository.findAllLinkedCandidates(corporateId);
 	}
 

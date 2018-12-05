@@ -200,6 +200,7 @@
 								</tr>
 							</tbody>
 						</table>
+						</div>
 						<div *ngIf="jobs && jobs.length">
 							<div class="row justify-content-center font-weight-light">
 								<jhi-item-count [page]="page" [total]="queryCount"
@@ -210,7 +211,7 @@
 									(pageChange)="loadPage(page)"></ngb-pagination>
 							</div>
 						</div>
-					</div>
+					
 				</div>
 			</div>
 			

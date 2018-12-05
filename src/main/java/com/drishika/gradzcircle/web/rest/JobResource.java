@@ -181,6 +181,20 @@ public class JobResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsForCorporate");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
+	
+	/**
+	 * GET /shortListedJob for Candidate: get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/shortListedJobsForCandidate/{candidateId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getShortListedJobsListForCcandidate(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId) {
+		final Page<CandidateJobDTO> page = jobService.getShortListedJobsListForCandidate(pageable, candidateId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/shortListedJobsForCandidate");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
 
 	/**
 	 * GET /activeJobs for Candidates : get all the jobs.

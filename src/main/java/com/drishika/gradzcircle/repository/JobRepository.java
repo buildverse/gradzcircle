@@ -53,5 +53,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	
 	@Query("select count(j) from Job j where j.corporate.id=?1 and j.createDate between ?2 and ?3")
 	Long numberOfJobsPostedAcrossDates(Long corporateId, ZonedDateTime fromDate, ZonedDateTime toDate);
+	
+	@Query("select j from Job j, CorporateCandidate cc where j.id=cc.id.jobId and cc.id.candidateId=?1")
+	Page<Job> getJobListShortListedForCandidate(Long candidateId, Pageable pageable);
 
 }
