@@ -1,6 +1,16 @@
 {
     "home": {
         "title": "Gradzcircle",
+        "mainHeader": "NEVER MISS AN OPPORTUNITY",
+        "subHeader":"Explore jobs, internships and much more!",
+        "sectionContent_1":"Looking For a Job",
+        "sectionContent_2": "This is how it works, register now to explore more!",
+        "createProfile": "Create Profile",
+        "createProfileDescription": "This is how it works, register now to explore more!",
+        "applyJob": "Apply to Macthing Job",
+        "applyJobDescription": "This is how it works, register now to explore more!",
+        "getNoticed": "Get Noticed",
+        "getNoticedDescription": "This is how it works, register now to explore more!",
         "subtitle": "This is your homepage",
         "logged": {
             "message": "You are logged in as user \"{{username}}\"."
