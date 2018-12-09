@@ -124,6 +124,8 @@
     "webpack:prod:main": "yarn run webpack -- --config webpack/webpack.prod.js --profile",
     "webpack:prod": "yarn run cleanup && yarn run webpack:prod:main && yarn run clean-www",
     "webpack:test": "yarn run test",
+    "webpack:uat:main": "yarn run webpack -- --config webpack/webpack.uat.js --progress --profile",
+	"webpack:uat": "yarn run cleanup && yarn run webpack:uat:main && yarn run clean-www",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
     "e2e": "protractor src/test/javascript/protractor.conf.js",
