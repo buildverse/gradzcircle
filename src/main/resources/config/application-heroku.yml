@@ -25,8 +25,8 @@ spring:
         #url: ${JDBC_DATABASE_URL}
         #username: ${JDBC_DATABASE_USERNAME}
         #password: ${JDBC_DATABASE_PASSWORD}
-        url: jdbc:postgresql://ec2-174-129-22-84.compute-1.amazonaws.com:5432/ddsk6kjocpbd3r
-        username: xllxrjezvwzgnf
-        password: c080edbf5c5e3de2ec9879297c1602dfde9f1572f94db12a74e9dac5e516733d
+        url: jdbc:postgresql://ec2-23-21-201-12.compute-1.amazonaws.com:5432/dbdpcpev4mhtb5
+        username: nytfinyqqlfgdz
+        password: eb770ad706380c1d0a15c54f55fa82ae622d79f036e777178664d72e0fec2db0
         hikari:
             maximumPoolSize: 8

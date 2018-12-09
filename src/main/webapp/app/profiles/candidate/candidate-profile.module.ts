@@ -24,7 +24,6 @@ import {CandidateNationalityResolverService} from './candidate-profile-nationali
 import {CandidateDetailResolverService} from './candidate-detail-resolver.service';
 import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
 import {CandidateLanguageProficiencyResolverService} from './candidate-language-proficiency-resolver.service';
-import {CandidateProfileLanguaugeEditComponent} from './candidate-about-me-language-edit-component';
 import {ImageCropperModule} from 'ng2-img-cropper'
 import {SafeHtml} from './image.pipe';
 import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
@@ -54,7 +53,6 @@ const ENTITY_STATES = [
     CandidateProfileAboutMeEditComponent,
     CandidateProfileAboutMeDetailsComponent,
     CandidateLanguageProficiencyDetailsComponent,
-    CandidateProfileLanguaugeEditComponent,
     SafeHtml,
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,

@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang.mutable.MutableDouble;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.drishika.gradzcircle.config.Constants;
@@ -44,6 +45,7 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
  *
  */
 @Component
+@DependsOn("liquibase")
 public class MatchUtils {
 
 	private final Logger log = LoggerFactory.getLogger(MatchUtils.class);

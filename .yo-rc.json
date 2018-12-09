@@ -39,8 +39,8 @@
       "en",
       "hi"
     ],
-    "herokuAppName": "gradzcircle",
     "cacheProvider": "ehcache",
-    "enableHibernateCache": true
+    "enableHibernateCache": true,
+    "herokuDeployType": "jar"
   }
 }

@@ -30,7 +30,7 @@
 					#language="ngModel" required [onlyFromAutocomplete]="true"
 					[placeholder]="'Language+'" [onTextChangeDebounce]="500"
 					id="field_language"
-					[secondaryPlaceholder]="'Languages'" (onAdd)="validateLanguage($event)" (onRemove)="validateLanguage($event)" [disable]="languageLocked" 
+					[secondaryPlaceholder]="'Languages'" (onAdd)="validateLanguage()" (onRemove)="validateLanguage()" [disable]="languageLocked" 
 					 [maxItems]='1'> <tag-input-dropdown
 					[autocompleteObservable]='requestLanguageData'   ></tag-input-dropdown>
 				</tag-input>
@@ -117,16 +117,11 @@
 
 
 
-	</div>
+	
 	<!--</div>
         </div>
     </div>-->
 </form>
-<br>Dirty: {{ editForm.dirty }}
-<br>Touched: {{ editForm.touched }}
-<br>Valid: {{ editForm.valid }}
-<br>Value: {{ editForm.value | json }}
-
 <!--<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header">

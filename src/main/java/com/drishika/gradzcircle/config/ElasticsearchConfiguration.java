@@ -25,7 +25,7 @@ public class ElasticsearchConfiguration {
 	private final Logger log = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
 
 	// USE in DEV
-	/*@Bean
+/*	@Bean
 	public ElasticsearchTemplate elasticsearchTemplate(Client client,
 			Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
 		return new ElasticsearchTemplate(client,
@@ -33,7 +33,7 @@ public class ElasticsearchConfiguration {
 	}
 */
 	/* USED for PROD */
-	
+
 	@Bean
 	public ElasticsearchTemplate elasticsearchTemplate(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
 		return new ElasticsearchTemplate(client(),
@@ -45,14 +45,14 @@ public class ElasticsearchConfiguration {
 		TransportClient client = null;
 		boolean enableSsl = true;
 		try {
-			Settings settings = Settings.builder().put("cluster.name", "3c324b76257b9c008f22f0a038088ec1")
+			Settings settings = Settings.builder().put("cluster.name", "46986c59fa7447aeb0c4642ca01365a7")
 					.put("transport.ping_schedule", "5s") // .put("transport.sniff", false)
 					.put("action.bulk.compress", false).put("shield.transport.ssl", enableSsl)
-					.put("request.headers.X-Found-Cluster", "3c324b76257b9c008f22f0a038088ec1")
-					.put("shield.user", "gradzcircle:oc4ehtn0n34").build();
+					.put("request.headers.X-Found-Cluster", "46986c59fa7447aeb0c4642ca01365a7")
+					.put("shield.user", "gradzcircle:rpqi9a786r5").build();
 			client = TransportClient.builder().addPlugin(ShieldPlugin.class).settings(settings).build()
 					.addTransportAddress(new InetSocketTransportAddress(
-							InetAddress.getByName("3c324b76257b9c008f22f0a038088ec1.us-east-1.aws.found.io"), 9343));
+							InetAddress.getByName("46986c59fa7447aeb0c4642ca01365a7.us-east-1.aws.found.io"), 9343));
 		} catch (UnknownHostException e) {
 			log.error("Error creating Elastic Client {}", e.getMessage());
 		}
