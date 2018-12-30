@@ -47,7 +47,7 @@
 										</div>
 										<div class="col-lg-7 py-5 text-left">
 											<p class="my_profile_title">{{corporate.name}}</p>
-											<span class="my_profile_detail">{{corporate.industry.industryName}}</span>
+											<span class="my_profile_detail">{{corporate.industry?.industryName}}</span>
 											<span class="my_profile_detail">{{corporate.tagline}}</span>
 										</div>
 									</div>
@@ -82,27 +82,27 @@
 										</h5>
 										<p [innerHtml]="corporate.culture"></p>
 									</div>
-									<div class="col-lg-12 text-left mt-5 py-2">
+									<!--  <div class="col-lg-12 text-left mt-5 py-2">
 										<h4 class="shortlist-title">
 											<span
 												jhiTranslate="gradzcircleApp.corporate.corporateDetails"></span>
 										</h4>
-									</div>
+									</div>-->
 									<div class="col-lg-12 text-left">
 										<h5 class="shortlist-title">
 											<b><span
 												jhiTranslate="gradzcircleApp.corporate.establishedSince"></span></b>
 										</h5>
 										<p>{{corporate.establishedSince | date:'mediumDate'}}</p>
-										<br>
+										
 									</div>
 									<div class="col-lg-12 text-left">
 										<h5 class="shortlist-title">
 											<b><span
 												jhiTranslate="gradzcircleApp.corporate.companyType"></span></b>
 										</h5>
-										<p>{{corporate.industry.industryName}}</p>
-										<br>
+										<p>{{corporate.industry?.industryName}}</p>
+										
 									</div>
 									<!--  <div class="col-lg-12 text-left">
 	                                              <h5 class="shortlist-title"><b>Company size</b></h5>
