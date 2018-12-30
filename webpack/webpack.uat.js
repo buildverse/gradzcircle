@@ -11,9 +11,8 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'uat';
-const extractCSS = new ExtractTextPlugin(`[name].[hash].css`);
 const extractSASS = new ExtractTextPlugin(`[name]-sass.[hash].css`);
-
+const extractCSS = new ExtractTextPlugin(`[name].[hash].css`);
 
 module.exports = webpackMerge(commonConfig({ env: ENV }), {
     // Enable source maps. Please note that this will slow down the build.
@@ -22,7 +21,7 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     entry: {
         polyfills: './src/main/webapp/app/polyfills',
         global: './src/main/webapp/content/css/global.css',
-        main: './src/main/webapp/app/app.main-aot'
+        main: './src/main/webapp/app/app.main'
     },
     output: {
         path: utils.root('build/www'),
@@ -35,11 +34,6 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
                 use: [ '@ngtools/webpack' ]
             },
         {
-            test: /\.css$/,
-            loaders: ['to-string-loader', 'css-loader'],
-            exclude: /(vendor\.css|global\.css)/
-        },
-        {
             test: /\.scss$/,
             loaders: ['to-string-loader', 'css-loader', 'sass-loader'],
             exclude: /(vendor\.scss|global\.scss)/
@@ -50,6 +44,11 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
                 fallback: 'style-loader',
                 use: ['css-loader', 'postcss-loader', 'sass-loader']
             })
+        },
+        {
+            test: /\.css$/,
+            loaders: ['to-string-loader', 'css-loader'],
+            exclude: /(vendor\.css|global\.css)/
         },
         {
             test: /(vendor\.css|global\.css)/,

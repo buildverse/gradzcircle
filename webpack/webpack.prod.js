@@ -30,8 +30,8 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     },
     module: {
     		rules: [{
-            test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-            use: [ '@ngtools/webpack' ]
+	            test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+	            use: [ '@ngtools/webpack' ]
         },
         {
             test: /\.scss$/,
