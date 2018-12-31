@@ -24,7 +24,6 @@ export class CorporatePopupService {
       if (isOpen) {
         resolve(this.ngbModalRef);
       }
-
       if (id) {
         this.corporateService.find(id)
           .subscribe((corporateResponse: HttpResponse<Corporate>) => {

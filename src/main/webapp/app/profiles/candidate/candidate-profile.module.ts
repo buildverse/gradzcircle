@@ -27,6 +27,7 @@ import {CandidateLanguageProficiencyResolverService} from './candidate-language-
 import {ImageCropperModule} from 'ng2-img-cropper'
 import {SafeHtml} from './image.pipe';
 import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
+import { DataService } from '../../shared/helper/data.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
@@ -75,7 +76,8 @@ const ENTITY_STATES = [
     CandidateLanguageProficiencyResolverService,
     // ImageResolver,
     CandidatePublicProfilePopupService,
-    JobResolvePagingParams
+    JobResolvePagingParams,
+    DataService
 
   ],
   entryComponents: [

@@ -74,8 +74,8 @@
 	<div class="row py-4">
 
 		<div class="col-md-12  my-4 text-right d-block">
-			<a class="btn btn-sm  btn-primary"
-				[routerLink]="['../edit',candidate.id]"> <span
+			<a class="btn btn-sm  btn-primary" (click)="setRouteParams()"
+				[routerLink]="['../edit']"> <span
 				class="icon icon-edit">Edit</span>
 			</a>
 		</div>

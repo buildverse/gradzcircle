@@ -64,8 +64,8 @@ import {
         MultiselectDropdownModule,
         TagInputModule,
         CKEditorModule
-        
      
+
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

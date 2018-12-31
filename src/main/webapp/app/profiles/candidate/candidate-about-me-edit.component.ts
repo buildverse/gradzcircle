@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserService} from '../../shared/';
+import {UserService,DataService} from '../../shared/';
 import {Principal} from '../../shared/auth/principal.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
@@ -128,7 +128,8 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     private userService: UserService,
     private jobCategoryService: JobCategoryService,
     private nationalityService: NationalityService,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private dataService: DataService
     //  private cropperSettings: CropperSettings
 
   ) {}
@@ -435,7 +436,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
   onSaveComplete(): void {
     this.candidateAboutMeForm.reset();
     this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
-    this.router.navigate(['../../details'], {relativeTo: this.route});
+    this.router.navigate(['../details'], {relativeTo: this.route});
   }
 
  /* validNationality(c: AbstractControl): {[key: string]: boolean} | null {

@@ -52,8 +52,8 @@
 										</div>
 									</div>
 									<div class=" col-lg-12 text-right">
-										<button type="submit"
-											[routerLink]="['/', { outlets: { popup: 'corporate/'+ corporate?.id + '/edit'} }]"
+										<button type="submit" (click)="setRouterData()"
+											[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
 											replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
 											<span class="icon icon-edit"
 												jhiTranslate="entity.action.edit">Edit</span>
@@ -267,7 +267,7 @@
 					<td class="text-right">
 						<div class="btn-group flex-btn-group-container">
 							<button type="submit"
-								[routerLink]="['../corporate', corporate.id ]"
+								[routerLink]="['../corporateDetails' ]"
 								class="btn btn-info btn-sm">
 								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
 									jhiTranslate="entity.action.view">View</span>

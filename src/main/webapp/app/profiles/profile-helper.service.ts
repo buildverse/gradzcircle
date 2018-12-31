@@ -104,7 +104,6 @@ export class ProfileHelperService {
 
     private extractData(response: HttpResponse<any>) {
         let body = response.body;
-        console.log("Body is :"+JSON.stringify(body));
         return body || {};
     }
 }

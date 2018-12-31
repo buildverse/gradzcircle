@@ -6,7 +6,7 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Corporate} from './corporate.model';
 import {CorporateService} from './corporate.service';
-import {ITEMS_PER_PAGE, Principal, UserService} from '../../shared';
+import {ITEMS_PER_PAGE, Principal, UserService, DataService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileSelectDirective, FileUploader, FileLikeObject} from 'ng2-file-upload';
@@ -27,7 +27,6 @@ export class CorporateComponent implements OnInit, OnDestroy {
   eventSubscriber: Subscription;
   currentSearch: string;
   currentCorporate: string;
-  corporateId: number;
   imageUrl: any;
   noImage: boolean;
   defaultImage = require('../../../content/images/no-image.png');
@@ -48,6 +47,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private localStorage: LocalStorageService,
     private sessionStorage: SessionStorageService,
     private router: Router,
+    private dataService: DataService
   ) {
    this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -105,7 +105,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
     this.noImage = true;
     // this.imageDataNotAvailable=true;
     this.activatedRoute.data.subscribe((data: {corporate: any}) => this.corporate = data.corporate.body);
-    console.log('What am i getting'+JSON.stringify(this.corporate));
+   // console.log('What am i getting'+JSON.stringify(this.corporate));
     this.currentSearch = this.corporate.id.toString();
     //this.loginId = this.corporate.login.id;
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
@@ -150,6 +150,10 @@ export class CorporateComponent implements OnInit, OnDestroy {
     });*/
     this.registerChangeInCorporates();
     this.registerChangeInCorporateImage();
+  }
+  
+  setRouterData() {
+    this.dataService.setRouteData(this.corporate.id);
   }
 
   ngOnDestroy() {

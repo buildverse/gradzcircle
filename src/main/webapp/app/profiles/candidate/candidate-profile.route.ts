@@ -78,7 +78,8 @@ export const candidateProfileRoutes: Routes = [
 
       },
       {
-        path: 'edit/:id',
+        //path: 'edit/:id',
+        path:'edit',
         component: CandidateProfileAboutMeEditComponent,
         data: {
           authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],

@@ -52,7 +52,7 @@ export const corporateRoute: Routes = [
       ]
     }, 
     {
-        path: 'corporate/:id',
+        path: 'corporateDetails',
         component: CorporateDetailComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
@@ -86,7 +86,7 @@ export const corporatePopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'corporate/:id/edit',
+        path: 'corporate/edit',
         component: CorporatePopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],

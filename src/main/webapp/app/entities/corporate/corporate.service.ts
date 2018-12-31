@@ -29,7 +29,6 @@ export class CorporateService {
 
   update(corporate: Corporate): Observable<EntityResponseType> {
     const copy = this.convert(corporate);
-    console.log('Sedning hwat '+JSON.stringify(copy));
     return this.http.put<Corporate>(this.resourceUrl, copy, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
