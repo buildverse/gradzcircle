@@ -5,7 +5,7 @@ import { JhiEventManager,  JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
-import { Principal } from '../../shared';
+import { Principal, DataService } from '../../shared';
 
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
@@ -27,7 +27,8 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private dataservice: DataService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -42,6 +43,16 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         return;
 
     }
+  
+    setAddRouteParam() {
+      this.dataservice.setRouteData(this.candidateId);  
+    }
+  
+    setEditDeleteRouteParam(candidateCertificationId) {
+      this.dataservice.setRouteData(candidateCertificationId);
+    }
+  
+  
     loadAll() {
         if (this.currentSearch) {
             this.candidateCertificationService.searchForAdmin({

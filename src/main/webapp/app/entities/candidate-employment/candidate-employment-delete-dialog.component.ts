@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-
+import {DataService} from '../../shared';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentPopupService } from './candidate-employment-popup.service';
 import { CandidateEmploymentService } from './candidate-employment.service';
@@ -51,13 +51,20 @@ export class CandidateEmploymentDeletePopupComponent implements OnInit, OnDestro
 
     constructor(
         private route: ActivatedRoute,
-        private candidateEmploymentPopupService: CandidateEmploymentPopupService
+        private candidateEmploymentPopupService: CandidateEmploymentPopupService,
+        private dataService : DataService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
             this.candidateEmploymentPopupService
                 .open(CandidateEmploymentDeleteDialogComponent as Component, params['id']);
+          } else {
+            const id = this.dataService.getRouteData();
+            this.candidateEmploymentPopupService
+                .open(CandidateEmploymentDeleteDialogComponent as Component, id);
+          }
         });
     }
 

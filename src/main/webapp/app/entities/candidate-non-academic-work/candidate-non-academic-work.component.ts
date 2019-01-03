@@ -6,7 +6,7 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
+import { DataService, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
@@ -26,7 +26,8 @@ candidateNonAcademicWorks: CandidateNonAcademicWork[];
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private dataService: DataService
     ) {
          this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -40,6 +41,14 @@ candidateNonAcademicWorks: CandidateNonAcademicWork[];
             return;
         }
 
+    setAddRouterParam(){
+      this.dataService.setRouteData(this.candidateId);
+    }
+    
+    setEditDeleteRouteParam(candidateNonAcademicWorkId ) {
+      this.dataService.setRouteData(candidateNonAcademicWorkId);
+    }
+  
     loadAll() {
         if (this.currentSearch) {
             this.candidateNonAcademicWorkService.search({

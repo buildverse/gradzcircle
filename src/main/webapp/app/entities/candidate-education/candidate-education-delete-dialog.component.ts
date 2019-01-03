@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import {DataService} from '../../shared';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
@@ -48,13 +48,21 @@ export class CandidateEducationDeletePopupComponent implements OnInit, OnDestroy
 
     constructor(
         private route: ActivatedRoute,
-        private candidateEducationPopupService: CandidateEducationPopupService
+        private candidateEducationPopupService: CandidateEducationPopupService,
+        private dataService: DataService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
             this.candidateEducationPopupService
                 .open(CandidateEducationDeleteDialogComponent as Component, params['id']);
+          } else { 
+            const id = this.dataService.getRouteData();
+            this.candidateEducationPopupService
+                .open(CandidateEducationDeleteDialogComponent as Component, id);
+            
+          }
         });
     }
 

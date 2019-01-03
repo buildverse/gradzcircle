@@ -49,7 +49,7 @@ export const candidateEducationPopupRoute: Routes = [
     outlet: 'popup'
   },
   {
-    path: 'candidate-education-new/:id',
+    path: 'new-candidate-education',
     component: CandidateEducationPopupComponentNew,
     data: {
       authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
@@ -63,7 +63,7 @@ export const candidateEducationPopupRoute: Routes = [
     canActivate: [UserRouteAccessService],
     outlet: 'popup'
   },
-  {
+   {
     path: 'candidate-education/:id/edit',
     component: CandidateEducationPopupComponent,
     data: {
@@ -79,7 +79,32 @@ export const candidateEducationPopupRoute: Routes = [
     outlet: 'popup'
   },
   {
+    path: 'candidate-education/edit',
+    component: CandidateEducationPopupComponent,
+    data: {
+      authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+      pageTitle: 'gradzcircleApp.candidateEducation.home.title'
+    },
+    /*  resolve: {
+          courses: CourseResolverService,
+          qualifications: QualificationResolverService,
+          colleges: CollegeResolverService
+      },*/
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  },
+  {
     path: 'candidate-education/:id/delete',
+    component: CandidateEducationDeletePopupComponent,
+    data: {
+      authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+      pageTitle: 'gradzcircleApp.candidateEducation.home.title'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  },
+  {
+    path: 'candidate-education/delete',
     component: CandidateEducationDeletePopupComponent,
     data: {
       authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],

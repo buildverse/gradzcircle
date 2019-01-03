@@ -42,7 +42,7 @@ export const candidateEmploymentPopupRoute: Routes = [
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },
-    {        path: 'candidate-employment-new/:id',
+    {        path: 'new-candidate-employment',
         component: CandidateEmploymentPopupComponentNew,
         data: {
             authorities: ['ROLE_USER','ROLE_CANDIDATE'],
@@ -51,8 +51,6 @@ export const candidateEmploymentPopupRoute: Routes = [
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },
-
-
     {
         path: 'candidate-employment/:id/edit',
         component: CandidateEmploymentPopupComponent,
@@ -64,7 +62,27 @@ export const candidateEmploymentPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
+        path: 'candidate-employment/edit',
+        component: CandidateEmploymentPopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateEmployment.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
         path: 'candidate-employment/:id/delete',
+        component: CandidateEmploymentDeletePopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateEmployment.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+     {
+        path: 'candidate-employment/delete',
         component: CandidateEmploymentDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CANDIDATE'],

@@ -16,7 +16,7 @@ import {College, CollegeService} from '../college';
 import {University, UniversityService} from '../university';
 import {CandidateEducationPopupServiceNew} from './candidate-education-popup-new.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {Principal} from '../../shared';
+import {Principal,DataService} from '../../shared';
 import {JhiDateUtils} from 'ng-jhipster';
 //import {EducationCollegeService} from './education-college.service';
 
@@ -70,7 +70,8 @@ export class CandidateEducationDialogComponent implements OnInit {
    // private educationCollegeService: EducationCollegeService,
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
-    private dateUtils: JhiDateUtils
+    private dateUtils: JhiDateUtils,
+    dataService: DataService
 
   ) {
   }
@@ -325,14 +326,14 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
   private onSaveSuccess(result: CandidateEducation) {
-    console.log('on suucess');
+   // console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
     this.isSaving = false;
     this.activeModal.dismiss(result);
   }
 
   private onSaveError(result:any) {
-    console.log(JSON.stringify(result));
+   // console.log(JSON.stringify(result));
     this.isSaving = false;
   }
 
@@ -370,22 +371,25 @@ export class CandidateEducationPopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private candidateEducationPopupService: CandidateEducationPopupService
+    private candidateEducationPopupService: CandidateEducationPopupService,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
-    //this.route.data.subscribe((data: {courses: Course[]}) => this.courses = data.courses);
-    // this.route.data.subscribe((data: {qualifications: Qualification[]}) => this.qualifications = data.qualifications);
-    // this.route.data.subscribe((data: {colleges: College[]}) => this.colleges = data.colleges);
+
     this.routeSub = this.route.params.subscribe((params) => {
       if (params['id']) {
         this.candidateEducationPopupService
-          //  .open(CandidateEducationDialogComponent as Component, params['id'], this.courses, this.colleges, this.qualifications);
           .open(CandidateEducationDialogComponent as Component, params['id']);
       } else {
+       const id = this.dataService.getRouteData();
+        if (id) {
+          this.candidateEducationPopupService
+          .open(CandidateEducationDialogComponent as Component, id);
+        } else {
         this.candidateEducationPopupService
           .open(CandidateEducationDialogComponent as Component);
-        // .open(CandidateEducationDialogComponent as Component, this.courses, this.colleges, this.qualifications);
+      }
       }
     });
   }
@@ -402,24 +406,26 @@ export class CandidateEducationPopupComponentNew implements OnInit, OnDestroy {
 
 
   routeSub: any;
-  // courses: Course[];
-  // qualifications: Qualification[];
-  // colleges: College[];
 
   constructor(
     private route: ActivatedRoute,
-    private candidateEducationPopupService: CandidateEducationPopupServiceNew
+    private candidateEducationPopupService: CandidateEducationPopupServiceNew,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
-    //  this.route.data.subscribe((data: {courses: Course[]}) => this.courses = data.courses);
-    //  this.route.data.subscribe((data: {qualifications: Qualification[]}) => this.qualifications = data.qualifications);
-    //  this.route.data.subscribe((data: {colleges: College[]}) => this.colleges = data.colleges);
 
     this.routeSub = this.route.params.subscribe((params) => {
+      if (params['id']) {
       this.candidateEducationPopupService
-        // .open(CandidateEducationDialogComponent as Component, params['id'], this.colleges, this.courses, this.qualifications);
         .open(CandidateEducationDialogComponent as Component, params['id']);
+      } else { 
+        const id = this.dataService.getRouteData();
+        if (id) {
+           this.candidateEducationPopupService
+        .open(CandidateEducationDialogComponent as Component, id);
+        }
+      }
 
     });
   }

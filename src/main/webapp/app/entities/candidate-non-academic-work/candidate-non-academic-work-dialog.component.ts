@@ -10,7 +10,7 @@ import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkPopupService } from './candidate-non-academic-work-popup.service';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
 import { Candidate, CandidateService } from '../candidate';
-import { EditorProperties } from '../../shared';
+import { EditorProperties, DataService } from '../../shared';
 
 
 @Component({
@@ -53,12 +53,13 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;
-
+        this.candidateNonAcademicWork.isCurrentActivity ? this.endDateControl = true : this.endDateControl = false;
         this.candidateService.query()
             .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
     validateDates() {
         this.endDateLesser = false;
+       
        if(this.candidateNonAcademicWork.nonAcademicWorkStartDate && this.candidateNonAcademicWork.nonAcademicWorkEndDate){
        let fromDate = new Date (this.dateUtils
             .convertLocalDateToServer(this.candidateNonAcademicWork.nonAcademicWorkStartDate));
@@ -134,7 +135,8 @@ export class CandidateNonAcademicWorkPopupComponent implements OnInit, OnDestroy
 
     constructor(
         private route: ActivatedRoute,
-        private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService
+        private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService,
+        private dataService: DataService
     ) {}
 
     ngOnInit() {
@@ -143,8 +145,14 @@ export class CandidateNonAcademicWorkPopupComponent implements OnInit, OnDestroy
                 this.candidateNonAcademicWorkPopupService
                     .open(CandidateNonAcademicWorkDialogComponent as Component, params['id']);
             } else {
+              const id = this.dataService.getRouteData();
+              if(id) {
+                 this.candidateNonAcademicWorkPopupService
+                    .open(CandidateNonAcademicWorkDialogComponent as Component, id);
+              } else {
                 this.candidateNonAcademicWorkPopupService
                     .open(CandidateNonAcademicWorkDialogComponent as Component);
+              }
             }
         });
     }
@@ -164,13 +172,20 @@ export class CandidateNonAcademicWorkPopupComponentNew implements OnInit, OnDest
 
     constructor(
         private route: ActivatedRoute,
-        private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupServiceNew
+        private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupServiceNew,
+        private dataService : DataService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
                 this.candidateNonAcademicWorkPopupService
                     .open(CandidateNonAcademicWorkDialogComponent as Component, params['id']);
+          } else {
+            const id = this.dataService.getRouteData();
+              this.candidateNonAcademicWorkPopupService
+                    .open(CandidateNonAcademicWorkDialogComponent as Component,id);
+          }
         });
     }
 

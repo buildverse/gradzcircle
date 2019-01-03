@@ -13,7 +13,7 @@
             "updated": "A Candidate Certification is updated with identifier {{ param }}",
             "deleted": "A Candidate Certification is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete details for {{ certification }}?"
+                "question": "Are you sure you want to remove {{ certification }}?"
             },
             "detail": {
                 "title": "Candidate Certification"

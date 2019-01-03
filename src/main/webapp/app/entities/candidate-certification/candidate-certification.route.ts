@@ -44,7 +44,7 @@ export const candidateCertificationPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'candidate-certification-new/:id',
+        path: 'new-candidate-certification',
         component: CandidateCertificationPopupComponentNew,
         data: {
             authorities: ['ROLE_USER','ROLE_CANDIDATE'],
@@ -65,6 +65,26 @@ export const candidateCertificationPopupRoute: Routes = [
     },
     {
         path: 'candidate-certification/:id/delete',
+        component: CandidateCertificationDeletePopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateCertification.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+     {
+        path: 'candidate-certification/edit',
+        component: CandidateCertificationPopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateCertification.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-certification/delete',
         component: CandidateCertificationDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CANDIDATE'],

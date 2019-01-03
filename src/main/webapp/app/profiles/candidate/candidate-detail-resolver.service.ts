@@ -4,7 +4,6 @@ import { Candidate } from '../../entities/candidate/candidate.model';
 import { CandidateService } from '../../entities/candidate/candidate.service';
 import { Observable } from 'rxjs/Observable';
 
-
 @Injectable()
 export class CandidateDetailResolverService implements Resolve<Candidate> {
     constructor(private candidateService: CandidateService, private router: Router){}

@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { GradzcircleSharedModule } from '../../shared';
+import { GradzcircleSharedModule, DataService } from '../../shared';
 import {
     CandidateLanguageProficiencyService,
     CandidateLanguageProficiencyPopupService,
@@ -49,7 +49,8 @@ const ENTITY_STATES = [
         CandidateLanguageProficiencyService,
         CandidateLanguageProficiencyPopupService,
         CandidateLanguageProficiencyPopupServiceNew,
-        CandidateLanguageResolverService
+        CandidateLanguageResolverService,
+        DataService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

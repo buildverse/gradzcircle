@@ -44,7 +44,7 @@ export class CandidateLanguageProficiencyService {
   }
 
   findByCandidateId(id: number): Observable<HttpResponse<CandidateLanguageProficiency[]>> {
-    console.log('CAALNG FOR CANDIDATE ONLY');
+    //console.log('CAALNG FOR CANDIDATE ONLY');
     return this.http.get<CandidateLanguageProficiency[]>(`${this.resourceUrlByCandidate}/${id}`, {observe: 'response'})
       .map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res));
   }
@@ -67,7 +67,7 @@ export class CandidateLanguageProficiencyService {
 
   private convertResponse(res: EntityResponseType): EntityResponseType {
     const body: CandidateLanguageProficiency = this.convertItemFromServer(res.body);
-    console.log('what did i get '+JSON.stringify(body));
+  //  console.log('what did i get '+JSON.stringify(body));
     return res.clone({body});
   }
 
@@ -107,7 +107,7 @@ export class CandidateLanguageProficiencyService {
   private convert(candidateLanguageProficiency: CandidateLanguageProficiency): CandidateLanguageProficiency {
     const copy: CandidateLanguageProficiency = Object.assign({}, candidateLanguageProficiency);
     this.convertLanguageMetaForServer(copy); 
-    console.log('converted what ?'+JSON.stringify(copy));
+  //  console.log('converted what ?'+JSON.stringify(copy));
     return copy;
   }
 }

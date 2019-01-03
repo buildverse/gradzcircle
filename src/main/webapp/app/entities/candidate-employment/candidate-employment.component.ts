@@ -5,7 +5,7 @@ import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, 
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
+import { DataService, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
@@ -28,12 +28,20 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private dataService: DataService
     ) {
           this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
     }
 
+  setAddRouteParams() {
+    this.dataService.setRouteData(this.candidateId);
+  }
+  
+  setEditDeleteRouteParams(candidateEmploymentId) {
+    this.dataService.setRouteData(candidateEmploymentId);
+  }
 
     /*To be removed once undertsand Elastic */
     loadEmploymentsForCandidate() {

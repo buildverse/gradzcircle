@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { GradzcircleSharedModule } from '../../shared';
+import { GradzcircleSharedModule, DataService } from '../../shared';
 import {
     CandidateCertificationService,
     CandidateCertificationPopupService,
@@ -47,7 +47,8 @@ const ENTITY_STATES = [
     providers: [
         CandidateCertificationService,
         CandidateCertificationPopupService,
-        CandidateCertificationPopupServiceNew
+        CandidateCertificationPopupServiceNew,
+        DataService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

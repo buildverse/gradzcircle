@@ -9,7 +9,7 @@ import { CandidateCertificationPopupService } from './candidate-certification-po
 import { CandidateCertificationService } from './candidate-certification.service';
 import { Candidate, CandidateService } from '../candidate';
 import { CandidateCertificationPopupServiceNew } from './candidate-certification-popup-new.service';
-import { EditorProperties } from '../../shared';
+import { DataService } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate-certification-dialog',
@@ -97,7 +97,8 @@ export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private candidateCertificationPopupService: CandidateCertificationPopupService
+        private candidateCertificationPopupService: CandidateCertificationPopupService,
+        private dataService: DataService
     ) {}
 
     ngOnInit() {
@@ -106,8 +107,14 @@ export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
                 this.candidateCertificationPopupService
                     .open(CandidateCertificationDialogComponent as Component, params['id']);
             } else {
+              const id = this.dataService.getRouteData();
+              if(id) {
+                 this.candidateCertificationPopupService
+                    .open(CandidateCertificationDialogComponent as Component,id);
+              } else {
                 this.candidateCertificationPopupService
                     .open(CandidateCertificationDialogComponent as Component);
+              }
             }
         });
     }
@@ -127,13 +134,20 @@ export class CandidateCertificationPopupComponentNew implements OnInit, OnDestro
 
     constructor(
         private route: ActivatedRoute,
-        private candidateCertificationPopupService: CandidateCertificationPopupServiceNew
+        private candidateCertificationPopupService: CandidateCertificationPopupServiceNew,
+        private dataService: DataService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
                 this.candidateCertificationPopupService
                     .open(CandidateCertificationDialogComponent as Component, params['id']);
+          } else {
+            const id = this.dataService.getRouteData();
+             this.candidateCertificationPopupService
+                    .open(CandidateCertificationDialogComponent as Component, id);
+          }
         });
     }
 

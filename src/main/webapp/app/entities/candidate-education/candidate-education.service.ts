@@ -66,7 +66,7 @@ export class CandidateEducationService {
 
   private convertResponse(res: EntityResponseType): EntityResponseType {
     const body: CandidateEducation = this.convertItemFromServer(res.body);
-    console.log('body is '+JSON.stringify(body));
+  //  console.log('body is '+JSON.stringify(body));
     return res.clone({body});
   }
 

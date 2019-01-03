@@ -11,7 +11,7 @@ import {CandidateLanguageProficiencyPopupServiceNew} from './candidate-language-
 import {CandidateLanguageProficiencyService} from './candidate-language-proficiency.service';
 import {Candidate, CandidateService} from '../candidate';
 import {Language, LanguageService} from '../language';
-import {Principal} from '../../shared';
+import {Principal, DataService} from '../../shared';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
@@ -63,7 +63,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
   
   validateLanguage() {
     // console.log("Value passed is "+ JSON.stringify(value));
-    console.log('selected data is '+JSON.stringify(this.candidateLanguageProficiency.language));
+  //  console.log('selected data is '+JSON.stringify(this.candidateLanguageProficiency.language));
     this.serverSideError = '';
     if (this.candidateLanguageProficiency.language.length <= 0) {
       this.hasNoLanguageSelectedError = true;
@@ -194,7 +194,8 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
   // candidateAllLanguageSelections : CandidateLanguageProficiency[];
   constructor(
     private route: ActivatedRoute,
-    private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupService
+    private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupService,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
@@ -204,8 +205,15 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
         this.candidateLanguageProficiencyPopupService
           .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.languageLocked);
       } else {
+        const id = this.dataService.getRouteData();
+        if(id) {
+          this.languageLocked = true;
+          this.candidateLanguageProficiencyPopupService
+          .open(CandidateLanguageProficiencyDialogComponent as Component, id, this.languageLocked);
+        } else {
         this.candidateLanguageProficiencyPopupService
           .open(CandidateLanguageProficiencyDialogComponent as Component);
+        }
       }
     });
   }
@@ -228,14 +236,22 @@ export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, On
 
   constructor(
     private route: ActivatedRoute,
-    private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupServiceNew
+    private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupServiceNew,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data: {currentLanguageSelections: CandidateLanguageProficiency[]}) => this.currentCandidateLanguageProficiencies = data.currentLanguageSelections);
     this.routeSub = this.route.params.subscribe((params) => {
+      
+      if(params['id']) {
       this.candidateLanguageProficiencyPopupService
         .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.currentCandidateLanguageProficiencies);
+      } else {
+        const id = this.dataService.getRouteData();
+        this.candidateLanguageProficiencyPopupService
+        .open(CandidateLanguageProficiencyDialogComponent as Component, id, this.currentCandidateLanguageProficiencies);
+      }
     });
   }
 

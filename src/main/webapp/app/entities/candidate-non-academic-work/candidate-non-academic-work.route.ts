@@ -43,7 +43,7 @@ export const candidateNonAcademicWorkPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-    path: 'candidate-non-academic-work-new/:id',
+    path: 'new-candidate-non-academic-work',
     component: CandidateNonAcademicWorkPopupComponentNew,
     data: {
         authorities: ['ROLE_USER','ROLE_CANDIDATE'],
@@ -65,6 +65,26 @@ export const candidateNonAcademicWorkPopupRoute: Routes = [
     },
     {
         path: 'candidate-non-academic-work/:id/delete',
+        component: CandidateNonAcademicWorkDeletePopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateNonAcademicWork.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-non-academic-work/edit',
+        component: CandidateNonAcademicWorkPopupComponent,
+        data: {
+            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateNonAcademicWork.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-non-academic-work/delete',
         component: CandidateNonAcademicWorkDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CANDIDATE'],

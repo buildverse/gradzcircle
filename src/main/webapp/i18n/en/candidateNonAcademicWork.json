@@ -13,7 +13,7 @@
             "updated": "A Candidate Non Academic Work is updated with identifier {{ param }}",
             "deleted": "A Candidate Non Academic Work is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete your extra-curricular activity {{ activity }}?"
+                "question": "Are you sure you want to remove {{ activity }}?"
 
             },
             "detail": {

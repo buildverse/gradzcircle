@@ -9,15 +9,15 @@
 	       				   [attr.aria-expanded]="!candidateEmployment.collapsed"
 						> {{candidateEmployment.employerName}} </a>
 						<span class="project_buttons">
-							<a class="btn btn-sm btn-pill btn-primary mb-2"
-													[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/edit'} }]"
+							<a class="btn btn-sm btn-pill btn-primary mb-2" (click)="setEditDeleteRouteParams(candidateEmployment.id)"
+													[routerLink]="['/', { outlets: { popup: 'candidate-employment/edit'} }]"
 													replaceUrl="true"> 
 													<span class="icon icon-edit "  jhiTranslate="entity.action.edit">
 														Edit
 													</span>
 												</a>
-												<a class="btn btn-sm btn-pill btn-danger mb-2"
-													[routerLink]="['/', { outlets: { popup: 'candidate-employment/'+ candidateEmployment.id + '/delete'} }]"
+												<a class="btn btn-sm btn-pill btn-danger mb-2" (click)="setEditDeleteRouteParams(candidateEmployment.id)"
+													[routerLink]="['/', { outlets: { popup: 'candidate-employment/delete'} }]"
 													replaceUrl="true"> 
 													<span class="icon icon-trash " jhiTranslate="entity.action.delete">
 														Delete
@@ -116,8 +116,8 @@
 	</div>
 </div>
 <div class="col-lg-12  my-4 text-right d-block">
-	<a class="btn btn-sm btn-pill btn-primary" 
-		[routerLink]="['/', { outlets: { popup: 'candidate-employment-new/'+ candidateId } }]">
+	<a class="btn btn-sm btn-pill btn-primary" (click)="setAddRouteParams()"
+		[routerLink]="['/', { outlets: { popup: 'new-candidate-employment' } }]">
 		<span class="icon icon-circle-with-plus"
 		jhiTranslate="gradzcircleApp.candidateEmployment.home.title">
 			Add </span>

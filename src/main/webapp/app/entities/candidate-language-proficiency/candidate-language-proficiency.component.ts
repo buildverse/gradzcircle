@@ -5,7 +5,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
-import { Principal } from '../../shared';
+import { Principal,DataService } from '../../shared';
 
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -28,12 +28,21 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private dataService: DataService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
     }
 
+  setAddRouterParam(){
+    this.dataService.setRouteData(this.candidateId);
+  }
+  
+  setEditDeleteRouterParam(candidateLanguageProficiencyId) {
+    this.dataService.setRouteData(candidateLanguageProficiencyId);
+  }
+  
     loadAll() {
         if (this.currentSearch.length>0) {
             this.candidateLanguageProficiencyService.search({
@@ -96,7 +105,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         return item.id;
     }
     registerChangeInCandidateLanguageProficiencies() {
-      console.log('CANDIDATE ID IS '+JSON.stringify(this.candidateId));
+    //  console.log('CANDIDATE ID IS '+JSON.stringify(this.candidateId));
        if (this.candidateId) {
 
             this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());

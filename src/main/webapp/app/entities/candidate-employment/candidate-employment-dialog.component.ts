@@ -15,7 +15,7 @@ import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Country, CountryService} from '../country';
 import {JobType, JobTypeService} from '../job-type';
 import {JhiDateUtils} from 'ng-jhipster';
-import {EditorProperties} from '../../shared';
+import {EditorProperties,DataService} from '../../shared';
 
 @Component({
   selector: 'jhi-candidate-employment-dialog',
@@ -163,18 +163,29 @@ export class CandidateEmploymentPopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private candidateEmploymentPopupService: CandidateEmploymentPopupService
+    private candidateEmploymentPopupService: CandidateEmploymentPopupService,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
       if (params['id']) {
+        console.log('Am here');
         this.candidateEmploymentPopupService
           .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
-        this.candidateEmploymentPopupService
-          .open(CandidateEmploymentDialogComponent as Component);
-      }
+        const id = this.dataService.getRouteData();
+        if(id) {
+          console.log('Or Am here');
+          this.candidateEmploymentPopupService
+          .open(CandidateEmploymentDialogComponent as Component,id);
+        } else {
+          console.log('Or Am here------');
+          this.candidateEmploymentPopupService
+            .open(CandidateEmploymentDialogComponent as Component);
+        }  
+      } 
+      
     });
   }
 
@@ -197,13 +208,19 @@ export class CandidateEmploymentPopupComponentNew implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateEmploymentPopupService: CandidateEmploymentPopupServiceNew,
-
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
+      if(params['id']) {
       this.candidateEmploymentPopupService
         .open(CandidateEmploymentDialogComponent as Component, params['id']);
+      } else {
+        const id = this.dataService.getRouteData();
+        this.candidateEmploymentPopupService
+        .open(CandidateEmploymentDialogComponent as Component, id);
+      }
 
     });
   }
