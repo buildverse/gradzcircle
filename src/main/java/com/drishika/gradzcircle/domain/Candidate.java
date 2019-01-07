@@ -165,7 +165,7 @@ public class Candidate implements Serializable {
 	@JsonManagedReference
 	private Set<CandidateJob> candidateJobs = new HashSet<CandidateJob>();
 
-	@OneToMany(mappedBy = "corporate", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonBackReference
 	private Set<CorporateCandidate> shortlistedByCorporates = new HashSet<>();
 

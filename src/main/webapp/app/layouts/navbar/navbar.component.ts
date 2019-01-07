@@ -5,10 +5,11 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiLanguageService, JhiEventManager} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {ProfileService} from '../profiles/profile.service';
-import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService, DataService} from '../../shared';
+import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService, DataService, DataStorageService} from '../../shared';
 import {VERSION} from '../../app.constants';
 import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
+import { USER_ID, USER_TYPE} from '../../shared/constants/storage.constants';
 
 @Component({
   selector: 'jhi-navbar',
@@ -33,7 +34,6 @@ export class NavbarComponent implements OnInit {
   candidateId: number;
   candidate: Candidate;
   noImage: boolean;
-  routeInfo: any = {};
   authorities: string[];
   constructor(
     private loginService: LoginService,
@@ -47,7 +47,8 @@ export class NavbarComponent implements OnInit {
     private userService: UserService,
     private candidateService: CandidateService,
     private corporateService: CorporateService,
-    private dataService: DataService
+    private dataService: DataService,
+    private localStorageService: DataStorageService
 
   ) {
     this.version = VERSION ? 'v' + VERSION : '';
@@ -66,6 +67,9 @@ export class NavbarComponent implements OnInit {
         });
     this.registerChangeInImage();
     this.registerSuccessfulLogin();
+    if(!this.localStorageService.getData(USER_ID)) {
+      this.loadId();
+    }
   }
 
   registerSuccessfulLogin() {
@@ -80,16 +84,16 @@ export class NavbarComponent implements OnInit {
       if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
         this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
           this.corporateId = response.body.id;
-          this.routeInfo.corporateId = this.corporateId;
-          this.dataService.columnVars = this.routeInfo;
+          this.localStorageService.setdata(USER_TYPE,'ROLE_CORPORATE');
+          this.localStorageService.setdata(USER_ID,this.corporateId);
         });
       } else {
         if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
           this.candidateService.getCandidateByLoginId(user.id).subscribe((response) => {
             this.candidate = response.body;
             this.candidateId = this.candidate.id;
-            this.routeInfo.candidateId = this.candidateId;
-            this.dataService.columnVars = this.routeInfo;
+            this.localStorageService.setdata(USER_TYPE,'ROLE_CANDIDATE');
+            this.localStorageService.setdata(USER_ID,this.candidateId);
           });
         }
       }
@@ -104,6 +108,18 @@ export class NavbarComponent implements OnInit {
     this.isNavbarCollapsed = true;
   }
 
+  setCandidateRouterParamAndCollapse() {
+    this.collapseNavbar();
+    this.dataService.setRouteData(this.candidateId);
+  }
+  
+  setCorporateRouterParamAndCollapse() {
+    this.collapseNavbar();
+    this.dataService.setRouteData(this.corporateId);
+  }
+  
+ 
+  
   isAuthenticated() {
     return this.principal.isAuthenticated();
   }

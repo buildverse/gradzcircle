@@ -152,7 +152,7 @@ export const candidateProfileRoutes: Routes = [
     ]
   },
   {
-    path: 'appliedJobs/:id',
+    path: 'appliedJobs',
     component: AppliedJobsComponent,
     data: {
       authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
@@ -180,7 +180,7 @@ export const candidateProfileRoutes: Routes = [
 
 export const candidateProfilePopupRoute: Routes = [
   {
-    path: 'candidate-public-profile/:id/:jobId/:corporateId',
+    path: 'candidate-public-profile',
     component: CandidatePublicProfilePopupComponent,
     data: {
       authorities: ['ROLE_USER', 'ROLE_CANDIDATE', 'ROLE_CORPORATE'],

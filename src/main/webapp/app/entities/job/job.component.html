@@ -3,7 +3,13 @@
 	    <div class="db-content">
 	       <div class="row m-0 px-4">
 	          <div class="col-md-12 col-lg-12 tabs-panel">
-	             <div class="row">
+	          	<div class="row d-flex justify-content-end mr-2">
+	         	 	 <button type="button" class="btn btn-sm btn-pill btn-success" (click)="setJobRouterParam()"
+						[routerLink]="['/', { outlets: { popup: 'new-job' } }]">Post New
+						Job
+					 </button>
+		  		 </div>
+	             <div class="row ">
 	                <div class="col-md-12 col-lg-6 col-xl-6  tabs">
 	                   <div class="row tab-content">
 	                      <div class="col-lg-12 col-xl-4  total-job-img text-center pad-0">
@@ -120,19 +126,19 @@
 								<td class="font-weight-light">Draft</td>
 								</ng-template>
 								<td class="font-weight-light"><a
-									[routerLink]="['../matchedCandidateList',job.id,corporateId]">
+									[routerLink]="['../matchedCandidateList']" (click)="setJobAndCorporateRouteParam(job.id,corporateId)">
 										{{job.noOfMatchedCandidates}}</a></td>
 								<td class="font-weight-light"><a [routerLink]="['../appliedCandidateList',job.id ]">{{job.noOfCandidatesApplied}}</a></td>
 								<td class="font-weight-light"><a
 									[routerLink]="['../shortListedCandidateList',job.id,corporateId]">
 										{{job.noOfShortListedCandidate}}</a></td>
 								<td class="icons-edit">
-			                         <a [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/view/'} }]"><span class="icon icon-eye"></span></a>
-			                         <a *ngIf="!job.canEdit" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true"> <span class="icon icon-edit"></span> 
+			                         <a [routerLink]="['/', { outlets: { popup: 'job/view/'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>
+			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true"> <span class="icon icon-edit"></span> 
 									</a> 
-									<a *ngIf="job.canEdit" [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]" replaceUrl="true"> <span class="icon icon-edit"></span> 
+									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true"> <span class="icon icon-edit"></span> 
 									</a>
-			                         <a  [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/remove'} }]" replaceUrl="true"> <span class="icon icon-trash"></span> 
+			                         <a  [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)" replaceUrl="true"> <span class="icon icon-trash"></span> 
 									</a>
 			                      </td>
 						</tbody>

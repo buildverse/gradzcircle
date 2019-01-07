@@ -1,5 +1,5 @@
 
-import {Candidate} from '../candidate';
+
 import {BaseEntity, User} from './../../shared';
 
 export class CandidateList implements BaseEntity {
@@ -9,7 +9,8 @@ export class CandidateList implements BaseEntity {
     public lastName?: string,
     public qualificationWithHighestCourse?: string,
     public login?: User,
-    public reviewed?: boolean
+    public reviewed?: boolean,
+    public jobId?: number
   ) {
     this.reviewed = false;
   }

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-
+import {DataService} from '../../shared';
 import { Job } from './job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
@@ -48,13 +48,20 @@ export class JobRemovePopupComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private jobPopupService: JobPopupService
+        private jobPopupService: JobPopupService,
+        private dataService: DataService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
             this.jobPopupService
                 .open(JobRemoveDialogComponent as Component, params['id']);
+          } else {
+            this.jobPopupService
+                .open(JobRemoveDialogComponent as Component, this.dataService.getRouteData());
+          }
+            
         });
     }
 

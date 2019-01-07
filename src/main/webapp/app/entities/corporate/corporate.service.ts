@@ -17,7 +17,7 @@ export class CorporateService {
   private resourceUrl = SERVER_API_URL + 'api/corporates';
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/corporates';
   private findByLoginIdresourceUrl = SERVER_API_URL + 'api/corporateByLoginId';
-  private resourceLinkedCandidatesForCorporateUrl = SERVER_API_URL + 'api/linkedCandidates';
+  private resourceLinkedCandidatesForCorporateUrl = SERVER_API_URL + 'api/linkedCandidatesForCorporate';
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 

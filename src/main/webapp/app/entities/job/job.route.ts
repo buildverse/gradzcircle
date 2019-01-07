@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes  } from '@angular/router';
 
 import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-//import { matchTrackerRoute } from '../match-tracker/';
 import { JobComponent } from './job.component';
 import { JobDetailComponent } from './job-detail.component';
-import { JobPopupComponent,JobPopupComponentNew } from './job-dialog.component';
-import { JobViewComponent,JobViewPopupComponent} from './job-view.component';
-import { JobRemoveDialogComponent,JobRemovePopupComponent} from './job-remove-dialog.component'
+import { JobPopupComponent, JobPopupComponentNew } from './job-dialog.component';
+import { JobViewPopupComponent} from './job-view.component';
+import { JobRemovePopupComponent} from './job-remove-dialog.component'
 import { JobDeletePopupComponent } from './job-delete-dialog.component';
-import { JobEditMessageDialogComponent,JobEditMessagePopupComponent } from './job-edit-message-dialog.component';
-import { CandidateListDialogComponent,CandidateListPopupComponent } from '../candidate-list/candidate-list-dialog.component';
+import { JobEditMessagePopupComponent } from './job-edit-message-dialog.component';
+import { CandidateListPopupComponent } from '../candidate-list/candidate-list-dialog.component';
 import { MatchedCandidateListComponent } from './matched-candidate-list.component';
 import { AppliedCandidateListComponent } from './applied-candidate-list.component';
 import { ShortListedCandidateListComponent } from './short-listed-candidate-list.component';
-
-const TRACKER_ROUTE = [
-   //matchTrackerRoute
-];
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
@@ -58,7 +53,7 @@ export const jobRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-          path: 'matchedCandidateList/:id/:corporateId',
+          path: 'matchedCandidateList',
           component: MatchedCandidateListComponent,
           resolve: {
               'pagingParams': JobResolvePagingParams
@@ -108,7 +103,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job-new/:id',
+        path: 'new-job',
         component: JobPopupComponentNew,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
@@ -118,7 +113,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/:id/edit',
+        path: 'job/edit',
         component: JobPopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
@@ -128,7 +123,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/:id/view/:matchScore',
+        path: 'job/view/:matchScore',
         component: JobViewPopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE','ROLE_CANDIDATE'],
@@ -148,7 +143,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
      {
-        path: 'job/:id/remove',
+        path: 'job/remove',
         component: JobRemovePopupComponent,
         data: {
             authorities: ['ROLE_CORPORATE'],

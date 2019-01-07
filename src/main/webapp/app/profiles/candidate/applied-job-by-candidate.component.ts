@@ -4,9 +4,11 @@ import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import {ITEMS_PER_PAGE, DataService, DataStorageService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+import { USER_ID } from '../../shared/constants/storage.constants';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'jhi-applied-job-list',
@@ -34,7 +36,9 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     private jhiAlertService: JhiAlertService,
     private activatedRoute: ActivatedRoute,
     private parseLinks: JhiParseLinks,
-    private router: Router
+    private router: Router,
+    private dataService: DataService,
+    private localDataStorageService: DataStorageService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -64,7 +68,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/appliedJobs/:id'], {
+    this.router.navigate(['/appliedJobs'], {
       queryParams:
       {
         page: this.page,
@@ -91,12 +95,18 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.candidateId = params['id'];
-      this.loadAppliedJobs(); 
-    });
-   
 
+    this.subscription = this.activatedRoute.params.subscribe((params) => {
+      if (params['id']) {
+        this.candidateId = params['id'];
+      } else {
+        this.candidateId = this.dataService.getRouteData();
+      }
+      if (!this.candidateId) {
+        this.candidateId = this.localDataStorageService.getData(USER_ID);
+      }
+      this.loadAppliedJobs();
+    });
   }
 
   ngOnDestroy() {

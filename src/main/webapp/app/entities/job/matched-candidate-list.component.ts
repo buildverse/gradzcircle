@@ -3,9 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, UserService} from '../../shared';
+import {ITEMS_PER_PAGE, UserService, DataService,DataStorageService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
+import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
 import {CandidateList} from './candidate-list.model';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
@@ -42,6 +43,8 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     private router: Router,
     private paginationUtil: JhiPaginationUtil,
     private paginationConfig: PaginationConfig,
+    private dataService: DataService,
+    private dataStorageService: DataStorageService
     
 
   ) {
@@ -73,7 +76,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/matchedCandidateList/:id'], {
+    this.router.navigate(['/matchedCandidateList'], {
       queryParams:
       {
         page: this.page,
@@ -100,14 +103,30 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.jobId = params['id'];
-        this.corporateId = params['corporateId'];
-      this.loadMatchedCandidates(); 
-        this.registerChangeInMatches();
-    });
-   
+    this.subscription = this.activatedRoute.params.subscribe((params) => {
 
+      if (params['id'] && params['corporateId']) {
+        this.jobId = params['id'];
+        this.corporateId = params['corporateId'];
+      } else {
+        this.jobId = parseFloat(this.dataService.get(JOB_ID));
+        this.corporateId = parseFloat(this.dataService.get(CORPORATE_ID));
+      }
+      if (!(this.jobId || this.corporateId)) {
+        this.jobId = this.dataStorageService.getData(JOB_ID);
+        this.corporateId = this.dataStorageService.getData(CORPORATE_ID);
+      }
+      this.loadMatchedCandidates();
+      this.registerChangeInMatches();
+    });
+
+
+  }
+  
+  setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    this.dataService.put(CANDIDATE_ID,candidateId);
+    this.dataService.put(JOB_ID,jobId);
+    this.dataService.put(CORPORATE_ID,corporateId);
   }
 
   ngOnDestroy() {

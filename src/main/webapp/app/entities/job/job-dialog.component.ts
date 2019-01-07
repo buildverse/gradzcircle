@@ -1,8 +1,8 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {of} from 'rxjs/observable/of';
+import {DataService, DataStorageService} from '../../shared';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Job, PaymentType} from './job.model';
 import {JobPopupService} from './job-popup.service';
@@ -13,18 +13,16 @@ import {JobType, JobTypeService} from '../job-type';
 import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
-import {EditorProperties} from '../../shared';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {Qualification, QualificationService} from '../qualification';
+import { USER_ID } from '../../shared/constants/storage.constants';
+import { QualificationService} from '../qualification';
 import {Course, CourseService} from '../course';
 import {College, CollegeService} from '../college';
 import {Gender, GenderService} from '../gender';
-import {FilterCategory, FilterCategoryService} from '../filter-category';
 import {University, UniversityService} from '../university/index';
 import {Language, LanguageService} from '../language';
 import {Filter, FilterService} from '../filter';
-import {JobCategoryDeleteDialogComponent} from '../job-category';
 import {JhiDateUtils} from 'ng-jhipster';
 import {JobFilterService} from '../job-filter/job-filter.service';
 import {JobFilter} from '../job-filter/index';
@@ -849,12 +847,12 @@ export class JobDialogComponent implements OnInit {
         this.jobFilter.filterDescription.percentage = this.percentage;
       }
       if (this.roundOfGrade) {
-        console.log('AM I HERE');
+       // console.log('AM I HERE');
         if(!this.gradeDecimal){
           this.gradeDecimal =0;
         }
         this.jobFilter.filterDescription.gpa = this.roundOfGrade + '.' + this.gradeDecimal;
-        console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
+      //  console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
       }
     }
     if (this.addOn) {
@@ -941,13 +939,13 @@ export class JobDialogComponent implements OnInit {
   prepareJobEconomics() {
     // console.log('job cost incoming prep eco is ' + this.job.jobCost);
     this.amountPayable = this.job.jobCost;
-    console.log('Amount payable is '+this.amountPayable);
+   // console.log('Amount payable is '+this.amountPayable);
      
     if (!this.job.everActive && !this.job.originalJobCost) {
       this.job.originalJobCost = this.job.jobCost;
     }
     if (!this.job.hasBeenEdited && !this.jobCostDifference && this.job.everActive) {
-      console.log('First if Amount payable is '+this.amountPayable);
+      //console.log('First if Amount payable is '+this.amountPayable);
       this.amountPayable = null;
     } else {
       if (this.jobCostDifference) {
@@ -963,7 +961,7 @@ export class JobDialogComponent implements OnInit {
           this.useEscrow = null;
 
           this.amountPayable = null;
-          console.log('Job cost diff less than 0 '+this.amountPayable);
+        //  console.log('Job cost diff less than 0 '+this.amountPayable);
         } else if (this.jobCostDifference > 0) {
           this.job.additionalFilterAmount = this.jobCostDifference;
           this.job.jobCost += this.job.additionalFilterAmount;
@@ -1194,7 +1192,9 @@ export class JobPopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private jobPopupService: JobPopupService
+    private jobPopupService: JobPopupService,
+    private dataService: DataService,
+    private dataStorageService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -1203,8 +1203,14 @@ export class JobPopupComponent implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobDialogComponent as Component, params['id']);
       } else {
+        let id = this.dataService.getRouteData();
+        if(id) {
+          this.jobPopupService
+          .open(JobDialogComponent as Component, id);
+        } else {
         this.jobPopupService
           .open(JobDialogComponent as Component);
+        }
       }
     });
   }
@@ -1225,13 +1231,24 @@ export class JobPopupComponentNew implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private jobPopupService: JobPopupServiceNew
+    private jobPopupService: JobPopupServiceNew,
+    private dataService: DataService,
+    private dataStorageService: DataStorageService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
-      this.jobPopupService
-        .open(JobDialogComponent as Component, params['id']);
+      if(params['id']) {
+        this.jobPopupService
+          .open(JobDialogComponent as Component, params['id']);
+      } else {
+        let id = this.dataService.getRouteData();
+        if(!id) {
+          id = this.dataStorageService.getData(USER_ID);
+        }
+        this.jobPopupService
+          .open(JobDialogComponent as Component, id);
+      }
     });
   }
 

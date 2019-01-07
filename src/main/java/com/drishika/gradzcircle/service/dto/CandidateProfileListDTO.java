@@ -22,6 +22,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private User login;
 	private Long id;
 	private Boolean reviewed;
+	private Long jobId;
 
 	/**
 	 * @return the reviewed
@@ -128,4 +129,19 @@ public class CandidateProfileListDTO implements Serializable {
 		this.login = login;
 	}
 
+	/**
+	 * @return the jobId
+	 */
+	public Long getJobId() {
+		return jobId;
+	}
+
+	/**
+	 * @param jobId the jobId to set
+	 */
+	public void setJobId(Long jobId) {
+		this.jobId = jobId;
+	}
+
+	
 }

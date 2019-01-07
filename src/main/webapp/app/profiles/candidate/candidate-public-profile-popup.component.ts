@@ -3,11 +3,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager} from 'ng-jhipster';
-import {Principal, UserService} from '../../shared';
+import {Principal, UserService, DataService} from '../../shared';
 import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-profile.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
+import { CANDIDATE_ID, JOB_ID, CORPORATE_ID } from '../../shared/constants/storage.constants';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
@@ -112,13 +113,20 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private candidatePublicProfilePopupService: CandidatePublicProfilePopupService
+    private candidatePublicProfilePopupService: CandidatePublicProfilePopupService,
+    private dataService : DataService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
+      if(params['id'] && params['jobId'] && params['corporateId']) {
       this.candidatePublicProfilePopupService
         .open(CandidatePublicProfilePopupDialogComponent as Component, params['id'], params['jobId'], params['corporateId']);
+      } else {
+        this.candidatePublicProfilePopupService
+        .open(CandidatePublicProfilePopupDialogComponent as Component, this.dataService.get(CANDIDATE_ID),
+            parseFloat(this.dataService.get(JOB_ID)), parseFloat(this.dataService.get(CORPORATE_ID)));
+      }
     });
   }
 

@@ -19,5 +19,5 @@ export class CandidatePublicProfile implements BaseEntity {
     public certifications?: CandidateCertification[],
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
-  ) {}
+  ) { this.shortListed = false; }
 }

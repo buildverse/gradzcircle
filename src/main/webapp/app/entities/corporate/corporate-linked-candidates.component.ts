@@ -2,7 +2,8 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
-import {ITEMS_PER_PAGE, UserService} from '../../shared';
+import {ITEMS_PER_PAGE, UserService, DataService, DataStorageService} from '../../shared';
+import {USER_ID, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
 import {HttpResponse } from '@angular/common/http';
@@ -35,7 +36,8 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-
+    private dataService: DataService,
+    private dataStorageService: DataStorageService
 
 
   ) {
@@ -67,7 +69,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/linkedCandidatesForCorporate/:id'], {
+    this.router.navigate(['/linkedCandidatesForCorporate'], {
       queryParams:
       {
         page: this.page,
@@ -80,6 +82,12 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     this.loadLinkedCandidates();
   }
 
+   setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    this.dataService.put(CANDIDATE_ID,candidateId);
+    this.dataService.put(JOB_ID,jobId);
+    this.dataService.put(CORPORATE_ID,corporateId);
+  }
+  
   loadLinkedCandidates() {
     this.corporateService.queryLinkedCandidates({
       page: this.page - 1,
@@ -95,8 +103,14 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.activatedRoute.params.subscribe((params) => {
+      if(params['id']) {
       this.corporateId = params['id'];
-
+      } else {
+        this.corporateId = this.dataService.getRouteData();
+      }
+      if(!this.corporateId) {
+        this.corporateId = this.dataStorageService.getData(USER_ID);
+      }
       this.loadLinkedCandidates();
     });
 

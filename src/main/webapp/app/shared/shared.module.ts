@@ -20,7 +20,8 @@ import {
     JhiSocialComponent,
     SocialService,
     JhiLoginModalComponent,
-    DataService
+    DataService,
+    DataStorageService
    
 } from './';
 
@@ -51,7 +52,8 @@ import {
         SocialService,
         UserService,
         DatePipe,
-        DataService
+        DataService,
+        DataStorageService
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [

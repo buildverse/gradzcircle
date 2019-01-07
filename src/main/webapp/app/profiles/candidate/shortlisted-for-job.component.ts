@@ -2,11 +2,12 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
-import { DataService} from '../../shared';
+import { DataService, DataStorageService} from '../../shared';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+import { USER_ID } from '../../shared/constants/storage.constants';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -36,7 +37,9 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private localDataStorageService: DataStorageService
+
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -66,7 +69,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/shortListedForJob/:id'], {
+    this.router.navigate(['/shortListedForJob'], {
       queryParams:
       {
         page: this.page,
@@ -93,14 +96,20 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      /*this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.candidateId = params['id'];
-      this.loadShortListedJobs(); 
+    this.subscription = this.activatedRoute.params.subscribe((params) => {
+
+      if (params['id']) {
+        this.candidateId = params['id'];
+      } else {
+        this.candidateId = this.dataService.getRouteData();
+      } 
+      
+      if(!this.candidateId) {
+        this.candidateId = this.localDataStorageService.getData(USER_ID);
+      }
+      this.loadShortListedJobs();
     });
-   */
-    this.candidateId = this.dataService.columnVars.candidateId;
-    this.loadShortListedJobs(); 
-  //  }
+
 
   }
 

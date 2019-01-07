@@ -105,7 +105,7 @@ public class Corporate implements Serializable {
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Job> jobs = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "corporate", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference(value = "candidateToCorporate")
 	private Set<CorporateCandidate> shortlistedCandidates = new HashSet<CorporateCandidate>();
 

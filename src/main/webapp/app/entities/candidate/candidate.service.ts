@@ -179,8 +179,12 @@ export class CandidateService {
   convertMetaDataForServer(candidate: Candidate) {
     const nationality = new Nationality();
     const country = new Country();
-    nationality.nationality = candidate.nationality[0].value;
-    country.countryNiceName = candidate.addresses[0].country[0].value;
+    if (candidate.nationality) {
+      nationality.nationality = candidate.nationality[0].value;
+    }
+    if (candidate.addresses[0] && candidate.addresses[0].country[0]) {
+      country.countryNiceName = candidate.addresses[0].country[0].value;
+    }
     candidate.nationality = nationality;
     candidate.addresses[0].country = country;
 

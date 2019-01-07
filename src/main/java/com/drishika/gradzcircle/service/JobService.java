@@ -303,7 +303,7 @@ public class JobService {
 	public Long getTotalJobsPostedSinceLastMonth(Long corporateId) {
 		ZoneId zoneId = ZoneId.of("Asia/Kolkata");
 		ZonedDateTime toDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-		ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue()-1,toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
+		ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue(),toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
 		return jobRepository.numberOfJobsPostedAcrossDates(corporateId,fromDateTime,toDateTime);
 	}
 	

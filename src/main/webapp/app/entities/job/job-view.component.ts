@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import {DataService, Principal} from '../../shared';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {JhiDateUtils} from 'ng-jhipster';
@@ -42,7 +42,7 @@ export class JobViewComponent implements OnInit {
       this.currentAccount = account;
     });
     //  console.log('Converting ?');
-    if (this.job.jobFilters !== null && this.job.jobFilters.length > 0) {
+    if (this.job.jobFilters && this.job.jobFilters.length > 0) {
       if (this.job.jobFilters[0].filterDescription.graduationDate !== null) {
         //   console.log('converting '+JSON.stringify(this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate)));
         this.job.jobFilters[0].filterDescription.graduationDate = (this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationDate));
@@ -97,13 +97,20 @@ export class JobViewPopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private jobPopupService: JobPopupService
+    private jobPopupService: JobPopupService,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
-      this.jobPopupService
-        .open(JobViewComponent as Component, params['id'],params['matchScore']);
+      if (params['id']) {
+        this.jobPopupService
+          .open(JobViewComponent as Component, params['id'], params['matchScore']);
+      } else {
+        const id = this.dataService.getRouteData(); 
+        this.jobPopupService
+          .open(JobViewComponent as Component, id, params['matchScore']);
+      }
     });
   }
 

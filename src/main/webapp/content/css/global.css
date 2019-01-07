@@ -84,6 +84,11 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 	color: white;
 }
 
+.btn-success {
+	background-color: #43A047;
+	color: white;
+}
+
 .modal-header-decorate {
 	background-color: #0D47A1;
 	color: white;

@@ -5,10 +5,11 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobConstants} from './job.constants';
 import {Job} from './job.model';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import {ITEMS_PER_PAGE, Principal, DataService, DataStorageService} from '../../shared';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
+import { JOB_ID, CORPORATE_ID } from '../../shared/constants/storage.constants';
 import {CandidateService} from '../candidate/candidate.service';
 import {CorporateService} from '../corporate/corporate.service';
 import {Corporate} from '../corporate/corporate.model';
@@ -52,7 +53,9 @@ export class JobComponent implements OnInit, OnDestroy {
     private corporateService: CorporateService,
     private router: Router,
     private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig
+    private paginationConfig: PaginationConfig,
+    private dataService: DataService,
+    private dataStorageService : DataStorageService
 
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -145,6 +148,22 @@ export class JobComponent implements OnInit, OnDestroy {
       );
   }
 
+  setJobRouterParam() {
+    this.dataService.setRouteData(this.corporateId);
+  }
+  
+  setJobEditOrViewRouteParam(jobId) {
+    this.dataService.setRouteData(jobId);
+  }
+  
+  setJobAndCorporateRouteParam(jobId,corporateId) {
+    this.dataService.put(JOB_ID,jobId);
+    this.dataService.put(CORPORATE_ID,corporateId);
+    this.dataStorageService.setdata(JOB_ID, jobId);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId); 
+  }
+  
+  
   ngOnInit() {
     this.corporateId = null;
     this.job = new Job();
@@ -191,8 +210,6 @@ export class JobComponent implements OnInit, OnDestroy {
     return item.id;
   }
   registerChangeInJobs() {
-    console.log(' have corporate'+this.corporateId);
-    console.log(' have candidate'+this.candidateId);
     if (this.corporateId) {
       this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadActiveJobs());
     } else if (this.candidateId) {
@@ -225,7 +242,6 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    console.log(error);
     this.jhiAlertService.error(error.message, null, null);
   }
 

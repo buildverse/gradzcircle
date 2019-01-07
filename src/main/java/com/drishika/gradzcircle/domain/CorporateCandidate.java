@@ -155,6 +155,22 @@ public class CorporateCandidate implements Serializable {
 		public CorporateCandidateJobId() {
 
 		}
+		
+		
+
+		/**
+		 * @return the jobId
+		 */
+		public Long getJobId() {
+			return jobId;
+		}
+
+		/**
+		 * @param jobId the jobId to set
+		 */
+		public void setJobId(Long jobId) {
+			this.jobId = jobId;
+		}
 
 		/*
 		 * (non-Javadoc)

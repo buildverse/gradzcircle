@@ -745,8 +745,8 @@
 				jhiTranslate="gradzcircleApp.job.jobDescription"></div>
 			
 		</div>
-		<div class="row mx-4 mt-4">
-			<div class="col-md-12 ">{{job.jobDescription}}</div>
+		<div class="row mx-4 mt-4 justify-content-center">
+			<p [innerHtml]="job.jobDescription"></p>
 		</div>
 		<div class="row mx-4 mt-4"
 			*ngIf="job.noOfApplicants===prevNoOfApplicants || !job.everActive; else deltaNoOfApplicants">
@@ -953,7 +953,6 @@
 				<div
 					class="col-md-6 d-flex font-weight-bold  justify-content-center">{{0}}</div>
 			</div>
-			jobCostDifference ##{{jobCostDifference}}
 			<div class="row mx-4 mt-4"
 				*ngIf="businessPlanEnabled && !prevJob.everActive; else editJob">
 				<div class="col-md-6 d-flex font-weight-bold ">Job
@@ -1046,7 +1045,7 @@
 					class="col-md-6 d-flex font-weight-bold  justify-content-center text-success">N/A</div>
 				</ng-template> </ng-template>
 			</div>
-			amount payable {{amountPayable}} admin charge {{job.adminCharge}}
+			
 			<div
 				*ngIf="businessPlanEnabled && (jobCostDifference<0 || jobCostNegative)"
 				class="d-flex justify-content-end">
@@ -1058,24 +1057,26 @@
 			</div>
 			<div class="row mx-4 mt-4"
 				*ngIf="businessPlanEnabled && !job.everActive">
-				<div class="mx-auto form-check form-check-inline justify-content-center">
-					<label class="form-check-label"> <input type="radio"
-						name="paymentType" value="now" [(ngModel)]="paymentType"
-						class="form-check-input" (change)="calculateDiscountedCost()">
-						Pay upfront
-					</label> <label class="form-check-label "> <input type="radio"
-						name="paymentType" [(ngModel)]="paymentType" value="later"
-						(change)="calculateBaseCost()" class="form-check-input">
-						Pay as you go
-					</label>
+				<div class="mx-auto justify-content-between">
+					<div class="form-check form-check-inline">
+						<input type="radio" name="paymentType" value="now" [(ngModel)]="paymentType" class="form-check-input" (change)="calculateDiscountedCost()">
+						<label class="form-check-label"> 
+							Pay upfront
+						</label>
+					</div>
+					<div class="form-check form-check-inline"> 
+						 <input type="radio" name="paymentType" [(ngModel)]="paymentType" value="later" (change)="calculateBaseCost()" class="form-check-input">
+						<label class="form-check-label ">
+							Pay as you go
+						</label>
+					</div>
 				</div>
-
 				<div class="d-flex justify-content-end" *ngIf="!paymentType">
 					<div class="growl growl-static">
 						<div class="alert alert-info d-flex justify-content-center"
 							role="alert">
-							Please Select a Payment Type to proceed...<br />Discount of
-							{{filterMap.get(DISCOUNT)}} %</strong> if you pay upfront.
+							<p>Please Select a Payment Type to proceed... <br>
+							Discount of <strong>{{filterMap.get(DISCOUNT)}}% </strong> if you pay upfront.</p>
 						</div>
 					</div>
 				</div>
@@ -1092,7 +1093,7 @@
 								<div *ngIf="amountPayable<=0; else nonNegative">Amount
 									deducted from Escrow</div>
 								<ng-template #nonNegative>
-								<strong> Discount of {{filterMap.get(DISCOUNT)}} %</strong> if
+								<strong> Discount of {{filterMap.get(DISCOUNT)}}% </strong> if
 								you pay now. Pay only &#8377; {{amountPayable}}</ng-template>
 							</div>
 						</div>
@@ -1294,14 +1295,5 @@
 		</div>
 	</form>
 </div>
-<!-- 
-<br>
-Dirty: {{ editForm.dirty }}
-<br>
-Touched: {{ editForm.touched }}
-<br>
-Valid: {{ editForm.form.get('jobTitle')?.valid }} Valid agai : {{
-editForm.form.get('jobDescription')?.valid }}
-<br>
-Value: {{ editForm.value | json }} -->
-Value: {{ editForm.value | json }}
+<!--  <br>
+Value: {{ editForm.value | json }}-->

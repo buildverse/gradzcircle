@@ -341,8 +341,10 @@ public class CandidateResource {
 		}
 		if (candidate.getAddresses() != null) {
 			candidate.getAddresses().forEach(address -> {
+				if(address.getCountry()!=null) {
 				address.getCountry().setValue(address.getCountry().getCountryNiceName());
 				address.getCountry().setDisplay(address.getCountry().getCountryNiceName());
+				}
 			});
 		}
 

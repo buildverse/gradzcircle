@@ -286,16 +286,6 @@ public class CandidateService {
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>(
 				candidateLanguageProficiencyRepository
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId()));
-
-		/*
-		 * candidate.getAddresses().addAll(addresses);
-		 * candidate.getEducations().addAll(candidateEducations);
-		 * candidate.getEmployments().addAll(candidateEmployments);
-		 * candidate.getCertifications().addAll(candidateCertifications);
-		 * candidate.getNonAcademics().addAll(candidateNonAcademicWorks);
-		 * candidate.getCandidateLanguageProficiencies().addAll(
-		 * candidateLanguageProficiencies);
-		 */
 		if(jobId >0 && corporateId >0) {
 			setCandidateReviewedForJob(candidate, jobId);
 			shortListed = isShortListed(candidate, jobId, corporateId);
@@ -307,7 +297,8 @@ public class CandidateService {
 	private Boolean isShortListed(Candidate candidate, Long jobId, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
 		CorporateCandidate cC = new CorporateCandidate(corporate, candidate, jobId);
-		if (corporate.getShortlistedCandidates().stream().filter(link -> link.equals(cC)).findFirst().isPresent())
+		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates());
+		if (corporate.getShortlistedCandidates().stream().filter(link -> link.equals(cC)).findAny().isPresent())
 			return true;
 		else
 			return false;

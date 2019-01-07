@@ -61,7 +61,7 @@ export const corporateRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
   {
-        path: 'linkedCandidatesForCorporate/:id',
+        path: 'linkedCandidatesForCorporate',
         component: LinkedCandidatesComponent,
         resolve: {
             'pagingParams': LinkedCandidatesResolvePagingParams

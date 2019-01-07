@@ -82,6 +82,25 @@ public class DTOConverters {
 				+ highestCandidateEducation.getCourse().getCourse());
 		return dto;
 	}
+	
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CorporateCandidate corporateCandidate) {
+		CandidateProfileListDTO dto = new CandidateProfileListDTO();
+		Candidate candidate = corporateCandidate.getCandidate();
+		dto.setFirstName(candidate.getFirstName());
+		dto.setLastName(candidate.getLastName());
+		dto.setLogin(candidate.getLogin());
+		dto.setId(candidate.getId());
+		dto.setJobId(corporateCandidate.getId().getJobId());
+		CandidateEducation highestCandidateEducation = null;
+		if(candidate.getEducations().stream()
+				.filter(education -> education.isHighestQualification()).findFirst().isPresent())
+			highestCandidateEducation = candidate.getEducations().stream()
+				.filter(education -> education.isHighestQualification()).findFirst().get();
+		if(highestCandidateEducation != null)
+			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
+				+ highestCandidateEducation.getCourse().getCourse());
+		return dto;
+	}
 
 	public CorporateJobDTO convertToJobListingForCorporate(Job job,Long totalLinkedCandidates, Long totalNumberOfJobs, 
 			Long newApplicants, Long jobsLastMonth,Long numberOfCandidatesShortListedByJob) {
