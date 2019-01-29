@@ -142,11 +142,16 @@
         {
             "fieldName": "matchEligible",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "profileScore",
+            "fieldType": "Double"
         }
     ],
     "changelogDate": "20171015094626",
     "entityTableName": "candidate",
     "dto": "no",
     "pagination": "no",
-    "service": "no"
+    "service": "no",
+    "jpaMetamodelFiltering": false
 }
