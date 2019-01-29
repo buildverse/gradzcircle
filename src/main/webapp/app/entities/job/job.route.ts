@@ -123,7 +123,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/view/:matchScore',
+        path: 'job/view',
         component: JobViewPopupComponent,
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE','ROLE_CANDIDATE'],

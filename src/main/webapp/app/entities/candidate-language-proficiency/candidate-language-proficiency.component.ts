@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -6,7 +7,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
 import { Principal,DataService } from '../../shared';
-
+import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
@@ -29,7 +30,8 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataService: DataService
+        private dataService: DataService,
+        private candidateProfileScoreService : CandidateProfileScoreService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';

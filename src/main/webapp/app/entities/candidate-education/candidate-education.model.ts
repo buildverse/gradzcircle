@@ -1,5 +1,6 @@
 import { BaseEntity } from './../../shared';
 import {CandidateProject } from '../candidate-project/candidate-project.model';
+import {Candidate } from '../candidate/candidate.model';
  
 export class CandidateEducation implements BaseEntity {
     constructor(
@@ -19,7 +20,7 @@ export class CandidateEducation implements BaseEntity {
         public percentage?: number,
         public scoreType?: string,
         public educationDuration?: number,
-        public candidate?: BaseEntity,
+        public candidate?: Candidate,
         public projects?: CandidateProject[],
         public qualification?: any,
         public course?: any,

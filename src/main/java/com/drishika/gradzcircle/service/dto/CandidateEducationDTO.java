@@ -32,8 +32,6 @@ public class CandidateEducationDTO implements Serializable {
 
 	private Integer gradeDecimal;
 
-	private String course;
-
 	private Double percentage;
 
 	private String scoreType;
@@ -44,11 +42,36 @@ public class CandidateEducationDTO implements Serializable {
 
 	private String universityName;
 
-	private String qualification;
-
 	private Double score;
+	
+	private Long id;
+	
+	private CollegeDTO college;
+	
+	private UniversityDTO university;
+	
+	private CourseDTO course;
+	
+	private QualificationDTO qualification;
 
 	private Set<CandidateProjectDTO> projects = new HashSet<>();
+	
+	private CandidateDTO candidate;
+	
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the grade
@@ -170,21 +193,7 @@ public class CandidateEducationDTO implements Serializable {
 		this.gradeDecimal = gradeDecimal;
 	}
 
-	/**
-	 * @return the course
-	 */
-	public String getCourse() {
-		return course;
-	}
-
-	/**
-	 * @param course
-	 *            the course to set
-	 */
-	public void setCourse(String course) {
-		this.course = course;
-	}
-
+	
 	/**
 	 * @return the percentage
 	 */
@@ -275,20 +284,6 @@ public class CandidateEducationDTO implements Serializable {
 		this.universityName = universityName;
 	}
 
-	/**
-	 * @return the qualification
-	 */
-	public String getQualification() {
-		return qualification;
-	}
-
-	/**
-	 * @param qualification
-	 *            the qualification to set
-	 */
-	public void setQualification(String qualification) {
-		this.qualification = qualification;
-	}
 
 	/**
 	 * @return the score
@@ -304,5 +299,92 @@ public class CandidateEducationDTO implements Serializable {
 	public void setScore(Double score) {
 		this.score = score;
 	}
+
+	/**
+	 * @return the candidate
+	 */
+	public CandidateDTO getCandidate() {
+		return candidate;
+	}
+
+	/**
+	 * @param candidate the candidate to set
+	 */
+	public void setCandidate(CandidateDTO candidate) {
+		this.candidate = candidate;
+	}
+
+	/**
+	 * @return the college
+	 */
+	public CollegeDTO getCollege() {
+		return college;
+	}
+
+	/**
+	 * @param college the college to set
+	 */
+	public void setCollege(CollegeDTO college) {
+		this.college = college;
+	}
+
+	/**
+	 * @return the university
+	 */
+	public UniversityDTO getUniversity() {
+		return university;
+	}
+
+	/**
+	 * @param university the university to set
+	 */
+	public void setUniversity(UniversityDTO university) {
+		this.university = university;
+	}
+
+	/**
+	 * @return the course
+	 */
+	public CourseDTO getCourse() {
+		return course;
+	}
+
+	/**
+	 * @param course the course to set
+	 */
+	public void setCourse(CourseDTO course) {
+		this.course = course;
+	}
+
+	/**
+	 * @return the qualification
+	 */
+	public QualificationDTO getQualification() {
+		return qualification;
+	}
+
+	/**
+	 * @param qualification the qualification to set
+	 */
+	public void setQualification(QualificationDTO qualification) {
+		this.qualification = qualification;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CandidateEducationDTO [grade=" + grade + ", educationFromDate=" + educationFromDate
+				+ ", educationToDate=" + educationToDate + ", isPursuingEducation=" + isPursuingEducation
+				+ ", gradeScale=" + gradeScale + ", highestQualification=" + highestQualification + ", roundOfGrade="
+				+ roundOfGrade + ", gradeDecimal=" + gradeDecimal + ", percentage=" + percentage + ", scoreType="
+				+ scoreType + ", educationDuration=" + educationDuration + ", collegeName=" + collegeName
+				+ ", universityName=" + universityName + ", score=" + score + ", id=" + id + ", college=" + college
+				+ ", university=" + university + ", course=" + course + ", qualification=" + qualification
+				+ ", projects=" + projects + ", candidate=" + candidate + "]";
+	}
+
+	
 
 }

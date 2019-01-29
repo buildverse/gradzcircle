@@ -200,7 +200,7 @@
 										<div>{{job.matchScore}}%</div>
 									</td>
 									<td class="icons-apply">
-			                               <a [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/view/'+job.matchScore} }]" class="icon icon-eye" style="color:#1976D2;" placement="right" ngbTooltip="View Job"></a>
+			                               <a (click)="setJobViewParamForCandidate(job.id, job.matchScore)" [routerLink]="['/', { outlets: { popup: 'job/view'} }]" class="icon icon-eye" style="color:#1976D2;" placement="right" ngbTooltip="View Job"></a>
 			                                <a href="#" class="icon icon-paper-plane" style="color:#1976D2;" placement="right" ngbTooltip="Apply for Job"></a>
 			                         </td>
 								</tr>

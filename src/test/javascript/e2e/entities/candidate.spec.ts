@@ -89,12 +89,15 @@ describe('Candidate e2e test', () => {
                 expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeTruthy();
             }
         });
+        candidateDialogPage.setProfileScoreInput('5');
+        expect(candidateDialogPage.getProfileScoreInput()).toMatch('5');
         candidateDialogPage.loginSelectLastOption();
         candidateDialogPage.nationalitySelectLastOption();
         candidateDialogPage.genderSelectLastOption();
         candidateDialogPage.maritalStatusSelectLastOption();
         // candidateDialogPage.jobCategorySelectLastOption();
         // candidateDialogPage.jobSelectLastOption();
+        // candidateDialogPage.profileCategorySelectLastOption();
         candidateDialogPage.visaTypeSelectLastOption();
         candidateDialogPage.save();
         expect(candidateDialogPage.getSaveButton().isPresent()).toBeFalsy();
@@ -136,12 +139,14 @@ export class CandidateDialogPage {
     availableForHiringInput = element(by.css('input#field_availableForHiring'));
     openToRelocateInput = element(by.css('input#field_openToRelocate'));
     matchEligibleInput = element(by.css('input#field_matchEligible'));
+    profileScoreInput = element(by.css('input#field_profileScore'));
     loginSelect = element(by.css('select#field_login'));
     nationalitySelect = element(by.css('select#field_nationality'));
     genderSelect = element(by.css('select#field_gender'));
     maritalStatusSelect = element(by.css('select#field_maritalStatus'));
     jobCategorySelect = element(by.css('select#field_jobCategory'));
     jobSelect = element(by.css('select#field_job'));
+    profileCategorySelect = element(by.css('select#field_profileCategory'));
     visaTypeSelect = element(by.css('select#field_visaType'));
 
     getModalTitle() {
@@ -240,6 +245,14 @@ export class CandidateDialogPage {
     getMatchEligibleInput = function() {
         return this.matchEligibleInput;
     };
+    setProfileScoreInput = function(profileScore) {
+        this.profileScoreInput.sendKeys(profileScore);
+    };
+
+    getProfileScoreInput = function() {
+        return this.profileScoreInput.getAttribute('value');
+    };
+
     loginSelectLastOption = function() {
         this.loginSelect.all(by.tagName('option')).last().click();
     };
@@ -334,6 +347,22 @@ export class CandidateDialogPage {
 
     getJobSelectedOption = function() {
         return this.jobSelect.element(by.css('option:checked')).getText();
+    };
+
+    profileCategorySelectLastOption = function() {
+        this.profileCategorySelect.all(by.tagName('option')).last().click();
+    };
+
+    profileCategorySelectOption = function(option) {
+        this.profileCategorySelect.sendKeys(option);
+    };
+
+    getProfileCategorySelect = function() {
+        return this.profileCategorySelect;
+    };
+
+    getProfileCategorySelectedOption = function() {
+        return this.profileCategorySelect.element(by.css('option:checked')).getText();
     };
 
     visaTypeSelectLastOption = function() {

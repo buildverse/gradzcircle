@@ -60,7 +60,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		matchUtils.populateJobFilterWeightMap();
-		if (candidate.getEducations() != null && candidate.getEducations().size() > 0)
+		if (candidate.getEducations() != null)
 			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
 					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 		log.debug("Got CandidateJobs post Match as {} and is empty {}", candidateJobs, candidateJobs.isEmpty());
@@ -71,10 +71,10 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				if (candidate.getCandidateJobs().contains(candidateJob)) {
 					candidate.getCandidateJobs().remove(candidateJob);
 					candidate.getCandidateJobs().add(candidateJob);
-					log.debug("In If");
+					log.debug("Replacing Candidate Job {}",candidate.getCandidateJobs());
 				} else {
 					candidate.getCandidateJobs().add(candidateJob);
-					log.debug("In else");
+					log.debug("After Adding CandidateJobs {}",candidate.getCandidateJobs());
 				}
 			});
 		}

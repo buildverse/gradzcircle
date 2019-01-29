@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { JhiEventManager } from 'ng-jhipster';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs/Subscription';
+import { JhiEventManager } from 'ng-jhipster';
+
 import { Candidate } from './candidate.model';
 import { CandidateService } from './candidate.service';
 
@@ -31,7 +32,7 @@ export class CandidateDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-         this.candidateService.find(id)
+        this.candidateService.find(id)
             .subscribe((candidateResponse: HttpResponse<Candidate>) => {
                 this.candidate = candidateResponse.body;
             });

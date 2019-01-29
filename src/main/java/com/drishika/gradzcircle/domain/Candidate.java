@@ -25,8 +25,11 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.drishika.gradzcircle.web.rest.CandidateCertificationResource;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -42,6 +45,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Document(indexName = "candidate")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Candidate.class)
 public class Candidate implements Serializable {
+	
 
 	private static final long serialVersionUID = 1L;
 
@@ -91,6 +95,10 @@ public class Candidate implements Serializable {
 
 	@Column(name = "match_eligible")
 	private Boolean matchEligible;
+	
+	@Column(name="profile_score")
+	private Double profileScore;
+	
 
 	/*
 	 * @Transient
@@ -115,15 +123,15 @@ public class Candidate implements Serializable {
 	// @JsonManagedReference
 	private Set<CandidateEducation> educations = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate")
+	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateNonAcademicWork> nonAcademics = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate")
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateCertification> certifications = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate")
+	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEmployment> employments = new HashSet<>();
 
@@ -168,6 +176,10 @@ public class Candidate implements Serializable {
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonBackReference
 	private Set<CorporateCandidate> shortlistedByCorporates = new HashSet<>();
+	
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@JsonManagedReference
+    private Set<CandidateProfileScore> profileScores = new HashSet<>();
 
 	@ManyToOne
 	private VisaType visaType;
@@ -366,6 +378,25 @@ public class Candidate implements Serializable {
 
 	public void setMatchEligible(Boolean matchEligible) {
 		this.matchEligible = matchEligible;
+	}
+
+	public Candidate profileScore(Double profileScore) {
+		this.profileScore = profileScore;
+		return this;
+	}
+	
+	/**
+	 * @return the profileScore
+	 */
+	public Double getProfileScore() {
+		return profileScore;
+	}
+
+	/**
+	 * @param profileScore the profileScore to set
+	 */
+	public void setProfileScore(Double profileScore) {
+		this.profileScore = profileScore;
 	}
 
 	public User getLogin() {
@@ -665,6 +696,7 @@ public class Candidate implements Serializable {
 	public void setCandidateJobs(Set<CandidateJob> candidatejobs) {
 		this.candidateJobs = candidatejobs;
 	}
+	
 
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
 	// setters here, do not remove
@@ -689,6 +721,26 @@ public class Candidate implements Serializable {
 		corporateCandidate.setCandidate(this);
 		return this;
 	}
+	
+	public Candidate addCandidateProfileScore(CandidateProfileScore profileScore) {
+		this.profileScores.add(profileScore);
+		profileScore.setCandidate(this);
+		return this;
+	}
+
+	/**
+	 * @return the profileScores
+	 */
+	public Set<CandidateProfileScore> getProfileScores() {
+		return profileScores;
+	}
+
+	/**
+	 * @param profileScores the profileScores to set
+	 */
+	public void setProfileScores(Set<CandidateProfileScore> profileScores) {
+		this.profileScores = profileScores;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -710,14 +762,19 @@ public class Candidate implements Serializable {
 		return Objects.hashCode(getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Candidate{" + "id=" + getId() + ", firstName='" + getFirstName() + "'" + ", lastName='" + getLastName()
-				+ "'" + ", middleName='" + getMiddleName() + "'" + ", facebook='" + getFacebook() + "'" + ", linkedIn='"
-				+ getLinkedIn() + "'" + ", twitter='" + getTwitter() + "'" + ", aboutMe='" + getAboutMe() + "'"
-				+ ", dateOfBirth='" + getDateOfBirth() + "'" + ", phoneCode='" + getPhoneCode() + "'"
-				+ ", phoneNumber='" + getPhoneNumber() + "'" + ", differentlyAbled='" + isDifferentlyAbled() + "'"
-				+ ", availableForHiring='" + isAvailableForHiring() + "'" + ", openToRelocate='" + isOpenToRelocate()
-				+ "'" + ", matchEligible='" + isMatchEligible() + "'" + "}";
+		return "Candidate [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
+				+ middleName + ", facebook=" + facebook + ", linkedIn=" + linkedIn + ", twitter=" + twitter
+				+ ", aboutMe=" + aboutMe + ", dateOfBirth=" + dateOfBirth + ", phoneCode=" + phoneCode
+				+ ", phoneNumber=" + phoneNumber + ", differentlyAbled=" + differentlyAbled + ", availableForHiring="
+				+ availableForHiring + ", openToRelocate=" + openToRelocate + ", matchEligible=" + matchEligible
+				+ ", profileScore=" + profileScore + "]";
 	}
+
+	
+
 }

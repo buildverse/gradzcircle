@@ -9,6 +9,7 @@ import {College} from '../college/college.model';
 import {University} from '../university/university.model';
 import {Qualification} from '../qualification/qualification.model';
 import {Course} from '../course/course.model';
+import { stringify } from 'querystring';
 
 export type EntityResponseType = HttpResponse<CandidateEducation>;
 
@@ -85,6 +86,7 @@ export class CandidateEducationService {
   }
 
   private convertArrayResponse(res: HttpResponse<CandidateEducation[]>): HttpResponse<CandidateEducation[]> {
+    console.log('============'+JSON.stringify(res.body));
     const jsonResponse: CandidateEducation[] = res.body;
     const body: CandidateEducation[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {

@@ -2,7 +2,7 @@
 	<div id="accordion">
 		<div *ngIf="candidateCertifications?.length>0;">
 			<div *ngFor="let candidateCertification of candidateCertifications ;">
-				 <div class="card mb-2">
+				 <div *ngIf="candidateCertification.id" class="card mb-2">
 					<div class="card-header justify-content-between education_title">
 						<a class="card-link " 
 	       				   [attr.aria-controls]="candidateCertification.id" (click)="candidateCertification.collapsed = !candidateCertification.collapsed"

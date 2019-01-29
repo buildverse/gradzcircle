@@ -92,6 +92,7 @@ entity Candidate {
 	availableForHiring Boolean,
 	openToRelocate Boolean,
 	matchEligible Boolean
+
 }
 
 entity Address {
@@ -306,6 +307,11 @@ entity CaptureQualification {
 	qualificationName String
 }
 
+entity ProfileCategory {
+	categoryName String,
+	weightage Integer
+}
+
 relationship OneToOne {
 	Candidate {login} to User,
     Corporate {login} to User,
@@ -360,7 +366,8 @@ relationship ManyToOne {
 relationship ManyToMany {
 	Candidate {jobCategory} to JobCategory {candidate},
 	 Candidate {job} to Job {candidate},
-	 Corporate {candidate} to Candidate {corporate} /*This about this relationship. Do we need to maintain for what job this was linked  */
+	 Corporate {candidate} to Candidate {corporate}
+
    
 }
 

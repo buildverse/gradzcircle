@@ -1,0 +1,25 @@
+
+{
+    "gradzcircleApp": {
+        "profileCategory" : {
+            "home": {
+                "title": "ProfileCategories",
+                "createLabel": "नया Profile Category बनाएँ",
+                "createOrEditLabel": "Profile Category बनाएँ या संपादित करें",
+                "search": "Profile Category खोजें"
+            },
+            "created": "एक नया Profile Category [identifier: {{ param }}] तैयार है",
+            "updated": "एक Profile Category [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Profile Category [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Profile Category [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Profile Category"
+            },
+            "categoryName": "Category Name",
+            "weightage": "Weightage",
+            "candidate": "Candidate"
+        }
+    }
+}

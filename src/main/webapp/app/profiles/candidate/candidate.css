@@ -1,6 +1,9 @@
 .profile-mybackground {
-	background: url("../../../content/images/banner-1.jpg") no-repeat;
-	background-size: cover;
+	background: url('../../../content/images/candidate-profile.jpg');
+	height: 500px; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
 }
 
 .public-profile-split {
@@ -20,17 +23,21 @@
 	position: relative;
 	margin-left: 30px;;
 	margin-top: 30px;
-	border-top-style: 60px;
+
 	width: 200px;
 	height: 200px;
-	border: 1px dotted rgb(210, 206, 206);
+	
+}
+
+.progress-bar {
+    background-color: #1A237E;
 }
 
 .public-profile-pic-square .media-object {
 	display: inline-block;
-	width: 90px;
-	margin-left: 50px;
-	margin-top: -65px;
+	width: 200px;
+	margin-left: 8px;
+	margin-top: 23px;
 }
 
 .public-profile-resume {
@@ -59,18 +66,25 @@
 
 .public-profile-header .container-inner {
 	max-width: 450px;
-	margin-left: 20px;
+	margin-left: 10px;
+	margin-top: 70px;
+	display: inline-block;
 }
 
 .public-profile-header {
 	position: relative;
 	display: table;
 	width: 100%;
-	height: 300px;
+	height: 150px;
 	padding-bottom: 3.2rem;
 	margin-bottom: 0;
 	background-size: cover;
 	border: 0;
+	  background: #3F51B5;
+}
+
+.progress-bar {
+	background-color: #3F51B5;
 }
 
 .public-profile-headers {
@@ -103,7 +117,101 @@ p {
 /*======================================================
 Designer css
 =======================================================*/
-figure {
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #0D47A1;
+    border-color: #dee2e6 #dee2e6 #fff;
+    
+}
+
+ul.nav.nav-tabs {
+	   	border-bottom: 1px solid #dee2e6;
+}
+ul.nav.nav-tabs a {
+    color: #000;
+    font-size: 19px;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+
+}
+
+.tab-content {
+  background: #fff;
+    padding: 25px 8px 12px;
+    box-sizing: border-box;
+    box-shadow: -1px 0 5px 1px #d6d6d6;
+    margin: 8px 0;
+}
+
+@media (min-width: 992px) {
+  .db-right {
+    padding: 30px 30px 0 30px;
+  }
+}
+
+@media (min-width: 992px) {
+  .db-right .db-content {
+    height: auto;
+  }
+}
+
+@media (max-width: 991px) {
+  .db-right .db-content {
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+  }
+}
+
+.db-right .db-content .head-sec {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.db-right .db-content h5 {
+  font-family: 'proxima_novabold';
+  color: #3d4069;
+}
+
+.edit_profile {
+    background: #1276ae;
+    border: 0;
+    color: #fff !important;
+    padding: 10px 40px 10px 20px;
+    cursor: pointer;
+    margin: 8px;
+    position: relative;
+}
+
+.save_profile{
+  display: none;
+}
+
+.applicant-profile-name {
+  font-size: 12px;
+  font-weight: normal;
+  color: #fff;
+  display: block;
+  margin-top: 0px;
+}
+
+.applicant-image {
+  width: 100%;
+}
+.applicant-image img {
+  width: 75%;
+}
+
+.modal-header {
+  background: #3F51B5;
+  color: #fff;
+  text-align: center;
+  border: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+/*figure {
 	margin: 0;
 	margin-top: 52px;
 }
@@ -256,11 +364,12 @@ ul.nav.nav-tabs a {
 }
 
 .tab-content {
-  background: #fff;
-  padding: 25px 8px 12px;
-  box-sizing: border-box;
-  box-shadow: -1px 0px 5px 1px #d6d6d6;
-  margin: 8px 0;
+  position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .modal-header {
@@ -288,4 +397,4 @@ ul.nav.nav-tabs a {
 }
 .mar-0 {
   margin: 0;
-}
+}*/

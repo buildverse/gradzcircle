@@ -1,11 +1,13 @@
 package com.drishika.gradzcircle.repository;
 
-import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.repository.query.Param;
+import java.util.Set;
 
-import org.springframework.data.jpa.repository.*;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 
 /**
  * Spring Data JPA repository for the CandidateNonAcademicWork entity.
@@ -14,6 +16,6 @@ import java.util.List;
 @Repository
 public interface CandidateNonAcademicWorkRepository extends JpaRepository<CandidateNonAcademicWork, Long> {
 	@Query("select candidateNonAcademicWork from CandidateNonAcademicWork candidateNonAcademicWork where candidateNonAcademicWork.candidate.id=:id order by candidateNonAcademicWork.nonAcademicWorkEndDate desc")
-	List<CandidateNonAcademicWork> findNonAcademicWorkByCandidateId(@Param("id") Long id);
+	Set<CandidateNonAcademicWork> findNonAcademicWorkByCandidateId(@Param("id") Long id);
 
 }

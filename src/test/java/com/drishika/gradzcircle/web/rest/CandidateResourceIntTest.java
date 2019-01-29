@@ -35,23 +35,29 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Filter;
 import com.drishika.gradzcircle.domain.Gender;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
+import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.GenderRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.CandidateService;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 /**
  * Test class for the CandidateResource REST controller.
@@ -135,6 +141,9 @@ public class CandidateResourceIntTest {
 
 	@Autowired
 	private GenderRepository genderRepository;
+	
+	@Autowired
+	private ProfileCategoryRepository profileCategoryRepository;
 
 	@Autowired
 	private EntityManager em;
@@ -142,6 +151,8 @@ public class CandidateResourceIntTest {
 	private MockMvc restCandidateMockMvc;
 
 	private Candidate candidate;
+	
+	private ProfileCategory basic, personal, edu, exp, lang, cert, nonAcad;
 
 	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH;
 
@@ -265,6 +276,36 @@ public class CandidateResourceIntTest {
 	public static Filter createGenderFilter(EntityManager em) {
 		return new Filter().filterName("gender").matchWeight(4L);
 	}
+	
+	public static ProfileCategory createBasicProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_BASIC_PROFILE).weightage(5);
+	}
+	
+	public static ProfileCategory createCertProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_CERTIFICATION_PROFILE).weightage(5);
+	}
+	
+	public static ProfileCategory createEduProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_EDUCATION_PROFILE).weightage(50);
+	}
+	
+	public static ProfileCategory createExpProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_EXPERIENCE_PROFILE).weightage(15);
+	}
+	
+	public static ProfileCategory createLangProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_LANGUAGE_PROFILE).weightage(5);
+	}
+	
+	public static ProfileCategory createNonAcadProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_NON_ACADEMIC_PROFILE).weightage(5);
+	}
+	
+	public static ProfileCategory createPersonalProfile(EntityManager em) {
+		return new ProfileCategory().categoryName(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE).weightage(15);
+	}
+	
+
 
 	/**
 	 * Create an entity for this test.
@@ -285,13 +326,20 @@ public class CandidateResourceIntTest {
 	@Before
 	public void initTest() {
 		candidateSearchRepository.deleteAll();
+		profileCategoryRepository.deleteAll();
 		candidate = createEntity(em);
 		maleGender = createMaleGender(em);
 		femaleGender = createFemaleGender(em);
 		jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
-
+		basic = createBasicProfile(em);
+		personal = createPersonalProfile(em);
+		cert=createCertProfile(em);
+		exp = createExpProfile(em);
+		nonAcad = createNonAcadProfile(em);
+		edu = createEduProfile(em);
+		lang = createLangProfile(em);
 		jobF = createJobF(em);
 		jobG = createJobG(em);
 		qualificationFilter = createQualificationFilter(em);
@@ -302,6 +350,13 @@ public class CandidateResourceIntTest {
 		scoreFilter = createScoreFilter(em);
 		languageFilter = createLanguagefilter(em);
 		genderFilter = createGenderFilter(em);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 	}
 
 	@Test
@@ -820,6 +875,34 @@ public class CandidateResourceIntTest {
 		}
 
 	}
+	
+	@Test
+	@Transactional
+	public void createCandidate() throws Exception {
+		
+		int databaseSizeBeforeCreate = candidateRepository.findAll().size();
+		int profileSizeBeforeCreate = profileCategoryRepository.findAll().size();
+		
+		
+	
+
+		// Create the Candidate
+		restCandidateMockMvc.perform(post("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidate))).andExpect(status().isCreated());
+
+		// Validate the Candidate in the database
+		List<Candidate> candidateList = candidateRepository.findAll();
+		List<ProfileCategory> categoriesList = profileCategoryRepository.findAll();
+		assertThat(categoriesList).hasSize(profileSizeBeforeCreate);
+		assertThat(candidateList).hasSize(databaseSizeBeforeCreate + 1);
+		Candidate testCandidate = candidateList.get(candidateList.size() - 1);
+		assertThat(testCandidate.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
+		assertThat(testCandidate.getLastName()).isEqualTo(DEFAULT_LAST_NAME);
+		assertThat(testCandidate.getProfileScores()).hasSize(1);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		// Validate the Filter in Elasticsearch
+	}
 
 	@Test
 	@Transactional
@@ -901,9 +984,12 @@ public class CandidateResourceIntTest {
 	public void updateCandidate() throws Exception {
 		// Initialize the database
 		candidateRepository.saveAndFlush(candidate);
-		candidateSearchRepository.save(candidate);
 		int databaseSizeBeforeUpdate = candidateRepository.findAll().size();
-
+		CandidateProfileScore candidateProfileScore = new CandidateProfileScore(candidate,basic);
+		candidateProfileScore.setScore(5d);
+		candidate.addCandidateProfileScore(candidateProfileScore);
+		candidate.setProfileScore(5D);
+		candidateRepository.saveAndFlush(candidate);
 		// Update the candidate
 		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
 		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
@@ -932,6 +1018,67 @@ public class CandidateResourceIntTest {
 		assertThat(testCandidate.isDifferentlyAbled()).isEqualTo(UPDATED_DIFFERENTLY_ABLED);
 		assertThat(testCandidate.isAvailableForHiring()).isEqualTo(UPDATED_AVAILABLE_FOR_HIRING);
 		assertThat(testCandidate.isOpenToRelocate()).isEqualTo(UPDATED_OPEN_TO_RELOCATE);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(20D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+
+		// Validate the Candidate in Elasticsearch
+		// Candidate candidateEs =
+		// candidateSearchRepository.findOne(testCandidate.getId());
+		// assertThat(candidateEs).isEqualToComparingFieldByField(testCandidate);
+	}
+
+	@Test
+	@Transactional
+	public void updateCandidateWithEducationAndCertProfileScores() throws Exception {
+		// Initialize the database
+		candidateRepository.saveAndFlush(candidate);
+		int databaseSizeBeforeUpdate = candidateRepository.findAll().size();
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,edu);
+		CandidateProfileScore candidateProfileScore3 = new CandidateProfileScore(candidate,cert);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(50d);
+		candidateProfileScore3.setScore(5d);
+		candidate.addCandidateProfileScore(candidateProfileScore1);
+		candidate.addCandidateProfileScore(candidateProfileScore2);
+		candidate.addCandidateProfileScore(candidateProfileScore3);
+		candidate.setProfileScore(60D);
+		candidateRepository.saveAndFlush(candidate);
+		System.out.println("========================="+profileCategoryRepository.findAll());
+		// Update the candidate
+		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
+		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
+				.facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
+				.aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)
+				.phoneNumber(UPDATED_PHONE_NUMBER).differentlyAbled(UPDATED_DIFFERENTLY_ABLED)
+				.availableForHiring(UPDATED_AVAILABLE_FOR_HIRING).openToRelocate(UPDATED_OPEN_TO_RELOCATE);
+
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+
+		// Validate the Candidate in the database
+		List<Candidate> candidateList = candidateRepository.findAll();
+		assertThat(candidateList).hasSize(databaseSizeBeforeUpdate);
+		Candidate testCandidate = candidateList.get(candidateList.size() - 1);
+		assertThat(testCandidate.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
+		assertThat(testCandidate.getLastName()).isEqualTo(UPDATED_LAST_NAME);
+		assertThat(testCandidate.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
+		assertThat(testCandidate.getFacebook()).isEqualTo(UPDATED_FACEBOOK);
+		assertThat(testCandidate.getLinkedIn()).isEqualTo(UPDATED_LINKED_IN);
+		assertThat(testCandidate.getTwitter()).isEqualTo(UPDATED_TWITTER);
+		assertThat(testCandidate.getAboutMe()).isEqualTo(UPDATED_ABOUT_ME);
+		assertThat(testCandidate.getDateOfBirth()).isEqualTo(UPDATED_DATE_OF_BIRTH);
+		assertThat(testCandidate.getPhoneCode()).isEqualTo(UPDATED_PHONE_CODE);
+		assertThat(testCandidate.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
+		assertThat(testCandidate.isDifferentlyAbled()).isEqualTo(UPDATED_DIFFERENTLY_ABLED);
+		assertThat(testCandidate.isAvailableForHiring()).isEqualTo(UPDATED_AVAILABLE_FOR_HIRING);
+		assertThat(testCandidate.isOpenToRelocate()).isEqualTo(UPDATED_OPEN_TO_RELOCATE);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(75D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
 
 		// Validate the Candidate in Elasticsearch
 		// Candidate candidateEs =

@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/Observable';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Candidate } from './candidate.model';
@@ -15,6 +15,8 @@ import { Gender, GenderService } from '../gender';
 import { MaritalStatus, MaritalStatusService } from '../marital-status';
 import { JobCategory, JobCategoryService } from '../job-category';
 import { Job, JobService } from '../job';
+import { ProfileCategory, ProfileCategoryService } from '../profile-category';
+import { Corporate, CorporateService } from '../corporate';
 import { VisaType, VisaTypeService } from '../visa-type';
 
 @Component({
@@ -38,6 +40,10 @@ export class CandidateDialogComponent implements OnInit {
 
     jobs: Job[];
 
+    profilecategories: ProfileCategory[];
+
+    corporates: Corporate[];
+
     visatypes: VisaType[];
     dateOfBirthDp: any;
 
@@ -51,6 +57,8 @@ export class CandidateDialogComponent implements OnInit {
         private maritalStatusService: MaritalStatusService,
         private jobCategoryService: JobCategoryService,
         private jobService: JobService,
+        private profileCategoryService: ProfileCategoryService,
+        private corporateService: CorporateService,
         private visaTypeService: VisaTypeService,
         private eventManager: JhiEventManager
     ) {
@@ -70,6 +78,10 @@ export class CandidateDialogComponent implements OnInit {
             .subscribe((res: HttpResponse<JobCategory[]>) => { this.jobcategories = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.jobService.query()
             .subscribe((res: HttpResponse<Job[]>) => { this.jobs = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.profileCategoryService.query()
+            .subscribe((res: HttpResponse<ProfileCategory[]>) => { this.profilecategories = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.corporateService.query()
+            .subscribe((res: HttpResponse<Corporate[]>) => { this.corporates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.visaTypeService.query()
             .subscribe((res: HttpResponse<VisaType[]>) => { this.visatypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
@@ -89,10 +101,10 @@ export class CandidateDialogComponent implements OnInit {
         }
     }
 
-  private subscribeToSaveResponse(result: Observable<HttpResponse<Candidate>>) {
+    private subscribeToSaveResponse(result: Observable<HttpResponse<Candidate>>) {
         result.subscribe((res: HttpResponse<Candidate>) =>
             this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
-  }
+    }
 
     private onSaveSuccess(result: Candidate) {
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK'});
@@ -129,6 +141,14 @@ export class CandidateDialogComponent implements OnInit {
     }
 
     trackJobById(index: number, item: Job) {
+        return item.id;
+    }
+
+    trackProfileCategoryById(index: number, item: ProfileCategory) {
+        return item.id;
+    }
+
+    trackCorporateById(index: number, item: Corporate) {
         return item.id;
     }
 

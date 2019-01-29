@@ -39,6 +39,7 @@ import { GradzcircleJobHistoryModule } from './job-history/job-history.module';
 import { GradzcircleJobFilterHistoryModule } from './job-filter-history/job-filter-history.module';
 import { GradzcircleAppConfigModule } from './app-config/app-config.module';
 import { GradzcircleStatesModule } from './states/states.module';
+import { GradzcircleProfileCategoryModule } from './profile-category/profile-category.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -82,6 +83,7 @@ import { GradzcircleStatesModule } from './states/states.module';
         GradzcircleJobFilterHistoryModule,
         GradzcircleAppConfigModule,
         GradzcircleStatesModule,
+        GradzcircleProfileCategoryModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

@@ -53,7 +53,7 @@ public class CorporateService {
 		// corporate.setCorporateCountry (country);
 		corporate.setLogin(user);
 		corporateRepository.save(corporate);
-		corporateSearchRepository.save(corporate);
+		//corporateSearchRepository.save(corporate);
 		logger.debug("Information for created Corporate {} ", corporate);
 	}
 	
@@ -85,7 +85,7 @@ public class CorporateService {
 	 */
 	public void deleteCorporate(Long id) {
 		corporateRepository.delete(id);
-		corporateSearchRepository.delete(id);
+	//	corporateSearchRepository.delete(id);
 
 	}
 

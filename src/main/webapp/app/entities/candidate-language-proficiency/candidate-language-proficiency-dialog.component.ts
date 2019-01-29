@@ -88,10 +88,11 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
 
 
   isLanguageAlreadyPresent() {
+    console.log('---------------'+JSON.stringify(this.currentCandidateLanguageProficiencies));
     this.languageAlreadyPresentError = false;
     if (this.currentCandidateLanguageProficiencies) {
       for (let i = 0; i < this.currentCandidateLanguageProficiencies.length; i++) {
-        if (this.candidateLanguageProficiency.language[0]) {
+        if (this.candidateLanguageProficiency.language[0] && this.candidateLanguageProficiency.id) {
           if (this.candidateLanguageProficiency.language[0].value === this.currentCandidateLanguageProficiencies[i].language[0].language) {
             this.languageAlreadyPresentError = true;
             const language = this.candidateLanguageProficiency.language[0].value as any;

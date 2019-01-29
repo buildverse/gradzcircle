@@ -20,6 +20,7 @@ public class CandidateDTO implements Serializable {
 	private String lastName;
 	private String aboutMe;
 	private User login;
+	private Double profileScore;
 
 	/**
 	 * @return the id
@@ -93,6 +94,20 @@ public class CandidateDTO implements Serializable {
 	 */
 	public void setAboutMe(String aboutMe) {
 		this.aboutMe = aboutMe;
+	}
+
+	/**
+	 * @return the profileScore
+	 */
+	public Double getProfileScore() {
+		return profileScore;
+	}
+
+	/**
+	 * @param profileScore the profileScore to set
+	 */
+	public void setProfileScore(Double profileScore) {
+		this.profileScore = profileScore;
 	}
 	
 	

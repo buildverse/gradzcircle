@@ -4,6 +4,8 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,9 +25,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateCertification;
 import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
+import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
+import com.drishika.gradzcircle.service.dto.CandidateCertificationDTO;
+import com.drishika.gradzcircle.service.util.DTOConverters;
+import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -45,11 +53,21 @@ public class CandidateCertificationResource {
 	private final CandidateCertificationRepository candidateCertificationRepository;
 
 	private final CandidateCertificationSearchRepository candidateCertificationSearchRepository;
+	
+	private final ProfileScoreCalculator profileScoreCalculator;
+	
+	private final CandidateRepository candidateRepository;
+	
+	private final DTOConverters converter;
 
 	public CandidateCertificationResource(CandidateCertificationRepository candidateCertificationRepository,
-			CandidateCertificationSearchRepository candidateCertificationSearchRepository) {
+			CandidateCertificationSearchRepository candidateCertificationSearchRepository, ProfileScoreCalculator profileScoreCalculator,
+			CandidateRepository candidateRepository,DTOConverters converter) {
 		this.candidateCertificationRepository = candidateCertificationRepository;
 		this.candidateCertificationSearchRepository = candidateCertificationSearchRepository;
+		this.profileScoreCalculator = profileScoreCalculator;
+		this.candidateRepository = candidateRepository;
+		this.converter = converter;
 	}
 
 	/**
@@ -67,12 +85,22 @@ public class CandidateCertificationResource {
 	@Timed
 	public ResponseEntity<CandidateCertification> createCandidateCertification(
 			@RequestBody CandidateCertification candidateCertification) throws URISyntaxException {
-		log.debug("REST request to save CandidateCertification : {}", candidateCertification);
+		log.debug("REST request to save CandidateCertification : {}, {}", candidateCertification,candidateCertification.getCandidate());
 		if (candidateCertification.getId() != null) {
             throw new BadRequestAlertException("A new candidateCertification cannot already have an ID", ENTITY_NAME, "idexists");
         }
-		CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
-		candidateCertificationSearchRepository.save(result);
+		Candidate candidate = candidateRepository.findOne(candidateCertification.getCandidate().getId());
+		if(candidate.getCertifications().size() < 1) {
+			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, false);
+		}
+		candidate = candidate.addCertification(candidateCertification);
+		candidate = candidateRepository.save(candidate);
+		log.debug("Candidate Certification post save are {}",candidate.getCertifications());
+		//CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
+		CandidateCertification result = candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().isPresent()?
+				candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().get():candidateCertification;
+		
+		//candidateCertificationSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/candidate-certifications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -98,7 +126,7 @@ public class CandidateCertificationResource {
 			return createCandidateCertification(candidateCertification);
 		}
 		CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
-		candidateCertificationSearchRepository.save(result);
+		//candidateCertificationSearchRepository.save(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateCertification.getId().toString()))
 				.body(result);
@@ -145,12 +173,14 @@ public class CandidateCertificationResource {
 	 */
 	@GetMapping("/candidate-cert-by-id/{id}")
 	@Timed
-	public List<CandidateCertification> getCertificationByCandidate(@PathVariable Long id) {
+	public List<CandidateCertificationDTO> getCertificationByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertifications by Candidate Id : {}", id);
+		List<CandidateCertificationDTO> certificationDTOs = new ArrayList<>();
 		List<CandidateCertification> candidateCertifications = candidateCertificationRepository
 				.findCertificationsByCandidateId(id);
-		candidateCertifications.forEach(candidateCertification -> candidateCertification.setCandidate(null));
-		return candidateCertifications;
+		Candidate candidate = candidateRepository.findOne(id);
+		certificationDTOs.addAll(converter.convertCandidateCertifications(new HashSet<CandidateCertification>(candidateCertifications), true,candidate));
+		return certificationDTOs;
 	}
 
 	/**
@@ -164,9 +194,18 @@ public class CandidateCertificationResource {
 	@DeleteMapping("/candidate-certifications/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteCandidateCertification(@PathVariable Long id) {
-		log.debug("REST request to delete CandidateCertification : {}", id);
-		candidateCertificationRepository.delete(id);
-		candidateCertificationSearchRepository.delete(id);
+		log.debug("REST request to delete CandidateCertification  : {}", id);
+		CandidateCertification candidateCertification = candidateCertificationRepository.findOne(id);
+		Candidate candidate = candidateCertification.getCandidate();
+		log.debug("REST request to delete CandidateCertification for candidate   : {} , {}", id,candidate.getId());
+		log.debug("CANDIDATE CERTIFICATIONS ARE BEFORE REMOVE FROM LIST {}",candidate.getCertifications());
+		candidate = candidate.removeCertification(candidateCertification);
+		log.debug("Candidate post emoval of certs is {} {}",candidate,candidate.getCertifications());
+		if(candidate.getCertifications().isEmpty())
+			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, true);
+		candidate = candidateRepository.save(candidate);
+		//candidateCertificationSearchRepository.delete(id);
+		log.debug("After saving Candidate {}",candidate.getCertifications());
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

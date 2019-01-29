@@ -1,158 +1,145 @@
 <div>
-	<h2>
-		<span jhiTranslate="gradzcircleApp.candidate.home.title">Candidates</span>
-		<button
-			class="btn btn-primary float-right jh-create-entity create-candidate"
-			[routerLink]="['/', { outlets: { popup: ['candidate-new'] } }]">
-			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
-				jhiTranslate="gradzcircleApp.candidate.home.createLabel">
-				Create new Candidate </span>
-		</button>
-	</h2>
-	<jhi-alert></jhi-alert>
-	<div class="row">
-		<div class="col-sm-12">
-			<form name="searchForm" class="form-inline">
-				<div class="input-group w-100 mt-3">
-					<input type="text" class="form-control" [(ngModel)]="currentSearch"
-						id="currentSearch" name="currentSearch"
-						placeholder="{{ 'gradzcircleApp.candidate.home.search' | translate }}">
-					<button class="input-group-addon btn btn-info"
-						(click)="search(currentSearch)">
-						<span class="fa fa-search"></span>
-					</button>
-					<button class="input-group-addon btn btn-danger" (click)="clear()"
-						*ngIf="currentSearch">
-						<span class="fa fa-trash-o"></span>
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	<br />
-	<div class="table-responsive" *ngIf="candidates">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th><span jhiTranslate="global.field.id">ID</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.firstName">First
-							Name</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.lastName">Last
-							Name</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.middleName">Middle
-							Name</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.linkedIn">Linked
-							In</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.aboutMe">About
-							Me</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.dateOfBirth">Date
-							Of Birth</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.phoneCode">Phone
-							Code</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone
-							Number</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.candidate.differentlyAbled">Differently
-							Abled</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.candidate.availableForHiring">Available
-							For Hiring</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.candidate.openToRelocate">Open
-							To Relocate</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.candidate.matchEligible">Match
-							Eligible</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.login">Login</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></th>
-					<th><span
-						jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital
-							Status</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job
-							Category</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.job">Job</span></th>
-					<th><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa
-							Type</span></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let candidate of candidates ;trackBy: trackId">
-					<td><a [routerLink]="['../candidate', candidate.id ]">{{candidate.id}}</a></td>
-					<td>{{candidate.firstName}}</td>
-					<td>{{candidate.lastName}}</td>
-					<td>{{candidate.middleName}}</td>
-					<td>{{candidate.facebook}}</td>
-					<td>{{candidate.linkedIn}}</td>
-					<td>{{candidate.twitter}}</td>
-					<td>{{candidate.aboutMe}}</td>
-					<td>{{candidate.dateOfBirth | date:'mediumDate'}}</td>
-					<td>{{candidate.phoneCode}}</td>
-					<td>{{candidate.phoneNumber}}</td>
-					<td>{{candidate.differentlyAbled}}</td>
-					<td>{{candidate.availableForHiring}}</td>
-					<td>{{candidate.openToRelocate}}</td>
-					<td>{{candidate.matchEligible}}</td>
-					<td>{{candidate.login?.id}}</td>
-					<td>
-						<div *ngIf="candidate.nationality">
-							<a [routerLink]="['../nationality', candidate.nationality?.id ]">{{candidate.nationality?.id}}</a>
-						</div>
-					</td>
-					<td>
-						<div *ngIf="candidate.gender">
-							<a [routerLink]="['../gender', candidate.gender?.id ]">{{candidate.gender?.id}}</a>
-						</div>
-					</td>
-					<td>
-						<div *ngIf="candidate.maritalStatus">
-							<a
-								[routerLink]="['../marital-status', candidate.maritalStatus?.id ]">{{candidate.maritalStatus?.id}}</a>
-						</div>
-					</td>
-					<td><span
-						*ngFor="let jobCategory of candidate.jobCategories; let last = last">
-							<a class="form-control-static"
-							[routerLink]="['../job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last
-							? '' : ', '}}
-					</span></td>
-					<td><span *ngFor="let job of candidate.jobs; let last = last">
-							<a class="form-control-static"
-							[routerLink]="['../job', job?.id ]">{{job.id}}</a>{{last ? '' :
-							', '}}
-					</span></td>
-					<td>
-						<div *ngIf="candidate.visaType">
-							<a [routerLink]="['../visa-type', candidate.visaType?.id ]">{{candidate.visaType?.id}}</a>
-						</div>
-					</td>
-					<td class="text-right">
-						<div class="btn-group flex-btn-group-container">
-							<button type="submit"
-								[routerLink]="['../candidate', candidate.id ]"
-								class="btn btn-info btn-sm">
-								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
-									jhiTranslate="entity.action.view">View</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/edit'} }]"
-								replaceUrl="true" class="btn btn-primary btn-sm">
-								<span class="fa fa-pencil"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-							</button>
-							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/delete'} }]"
-								replaceUrl="true" class="btn btn-danger btn-sm">
-								<span class="fa fa-remove"></span> <span
-									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-							</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <h2>
+        <span jhiTranslate="gradzcircleApp.candidate.home.title">Candidates</span>
+        <button class="btn btn-primary float-right jh-create-entity create-candidate" [routerLink]="['/', { outlets: { popup: ['candidate-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.candidate.home.createLabel">
+            Create new Candidate
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'gradzcircleApp.candidate.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="candidates">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.firstName">First Name</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.lastName">Last Name</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.middleName">Middle Name</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.facebook">Facebook</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.linkedIn">Linked In</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.twitter">Twitter</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.aboutMe">About Me</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.dateOfBirth">Date Of Birth</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.phoneCode">Phone Code</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.phoneNumber">Phone Number</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.differentlyAbled">Differently Abled</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.availableForHiring">Available For Hiring</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.openToRelocate">Open To Relocate</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.matchEligible">Match Eligible</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.profileScore">Profile Score</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.login">Login</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.nationality">Nationality</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.gender">Gender</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.maritalStatus">Marital Status</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.jobCategory">Job Category</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.job">Job</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.profileCategory">Profile Category</span></th>
+            <th><span jhiTranslate="gradzcircleApp.candidate.visaType">Visa Type</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let candidate of candidates ;trackBy: trackId">
+                <td><a [routerLink]="['../candidate', candidate.id ]">{{candidate.id}}</a></td>
+                <td>{{candidate.firstName}}</td>
+                <td>{{candidate.lastName}}</td>
+                <td>{{candidate.middleName}}</td>
+                <td>{{candidate.facebook}}</td>
+                <td>{{candidate.linkedIn}}</td>
+                <td>{{candidate.twitter}}</td>
+                <td>{{candidate.aboutMe}}</td>
+                <td>{{candidate.dateOfBirth | date:'mediumDate'}}</td>
+                <td>{{candidate.phoneCode}}</td>
+                <td>{{candidate.phoneNumber}}</td>
+                <td>{{candidate.differentlyAbled}}</td>
+                <td>{{candidate.availableForHiring}}</td>
+                <td>{{candidate.openToRelocate}}</td>
+                <td>{{candidate.matchEligible}}</td>
+                <td>{{candidate.profileScore}}</td>
+                <td>
+                    {{candidate.login?.id}}
+                </td>
+                <td>
+                    <div *ngIf="candidate.nationality">
+                        <a [routerLink]="['../nationality', candidate.nationality?.id ]" >{{candidate.nationality?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="candidate.gender">
+                        <a [routerLink]="['../gender', candidate.gender?.id ]" >{{candidate.gender?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="candidate.maritalStatus">
+                        <a [routerLink]="['../marital-status', candidate.maritalStatus?.id ]" >{{candidate.maritalStatus?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <span *ngFor="let jobCategory of candidate.jobCategories; let last = last">
+                            <a class="form-control-static" [routerLink]="['../job-category', jobCategory?.id ]">{{jobCategory.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let job of candidate.jobs; let last = last">
+                            <a class="form-control-static" [routerLink]="['../job', job?.id ]">{{job.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let profileCategory of candidate.profileCategories; let last = last">
+                            <a class="form-control-static" [routerLink]="['../profile-category', profileCategory?.id ]">{{profileCategory.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <div *ngIf="candidate.visaType">
+                        <a [routerLink]="['../visa-type', candidate.visaType?.id ]" >{{candidate.visaType?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../candidate', candidate.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'candidate/'+ candidate.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

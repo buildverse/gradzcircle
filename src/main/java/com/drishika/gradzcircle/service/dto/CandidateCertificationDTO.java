@@ -15,10 +15,14 @@ public class CandidateCertificationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String certificationTitle;
+	
+	private Long id;
 
 	private LocalDate certificationDate;
 
 	private String certificationDetails;
+	
+	private CandidateDTO candidate;
 
 	/**
 	 * @return the certificationTitle
@@ -64,5 +68,35 @@ public class CandidateCertificationDTO implements Serializable {
 	public void setCertificationDetails(String certificationDetails) {
 		this.certificationDetails = certificationDetails;
 	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the candidate
+	 */
+	public CandidateDTO getCandidate() {
+		return candidate;
+	}
+
+	/**
+	 * @param candidate the candidate to set
+	 */
+	public void setCandidate(CandidateDTO candidate) {
+		this.candidate = candidate;
+	}
+	
+	
 
 }

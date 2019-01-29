@@ -4,6 +4,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,10 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEducationSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
+import com.drishika.gradzcircle.service.dto.CandidateEducationDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
+import com.drishika.gradzcircle.service.util.DTOConverters;
+import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 
 @Service
 @Transactional
@@ -59,6 +63,8 @@ public class CandidateEducationService {
 	private final UniversityRepository universityRepository;
 	private final CandidateEducationSearchRepository candidateEducationSearchRepository;
 	private final ElasticsearchTemplate elasticsearchTemplate;
+	private final ProfileScoreCalculator profileScoreCalculator;
+	private final DTOConverters converter;
 
 	// @Qualifier("CandidateEducationMatcher")
 	private final Matcher<Candidate> matcher;
@@ -70,9 +76,9 @@ public class CandidateEducationService {
 			QualificationRepository qualififcationRepository, CourseRepository courseRepository,
 			UniversityRepository universityRepository,
 			@Qualifier("CandidateEducationMatcher") Matcher<Candidate> matcher,
-
+			ProfileScoreCalculator profileScoreCalculator,
 			UniversitySearchRepository universitySearchRepository, ElasticsearchTemplate elasticsearchTemplate,
-			CandidateRepository candidateRepository) {
+			CandidateRepository candidateRepository,DTOConverters converter) {
 		this.candidateEducationRepository = candidateEducationRepository;
 		this.candidateEducationSearchRepository = candidateEducationSearchRepository;
 		this.candidateProjectRepository = candidateProjectRepository;
@@ -83,6 +89,8 @@ public class CandidateEducationService {
 		this.matcher = matcher;
 		this.elasticsearchTemplate = elasticsearchTemplate;
 		this.candidateRepository = candidateRepository;
+		this.profileScoreCalculator = profileScoreCalculator;
+		this.converter = converter;
 	}
 
 	private void setGrade(CandidateEducation candidateEducation) {
@@ -106,14 +114,17 @@ public class CandidateEducationService {
 		log.info("Creating education for candidate, course,qualification {},{},{}", candidateEducation.getCandidate(),
 				candidateEducation.getCourse(), candidateEducation.getQualification());
 		setHighestEducation(candidateEducation, false);
-		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
-		log.debug("CandidateJobs post save candidateEducation is {}", result.getCandidate().getCandidateJobs());
-		log.debug("Highest Qulaification {}", result.getHighestQualification());
 		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
-		if (result.getHighestQualification())
-			matcher.match(candidate.addEducation(result));
+		candidateEducation = candidateEducationRepository.save(candidateEducation);
+		candidate = candidate.addEducation(candidateEducation);
+		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, false);
+		candidate = candidateRepository.save(candidate);
+		log.debug("CandidateEducation post save  is {}", candidate.getEducations());
+		//Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
+		if (candidateEducation.getHighestQualification())
+			matcher.match(candidate);
 		// updateEducationDependentMetaForDisplay(result);
-		return result;
+		return candidateEducation;
 	}
 
 	/*
@@ -299,17 +310,10 @@ public class CandidateEducationService {
 		return candidateEducation;
 	}
 
-	public List<CandidateEducation> getEducationByCandidateId(Long id) {
-
+	public List<CandidateEducationDTO> getEducationByCandidateId(Long id) {
 		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(id);
-		if (candidateEducations != null) {
-			candidateEducations.forEach(candidateEducation -> {
-				Set<CandidateProject> candidateProjects = candidateProjectRepository
-						.findByEducation(candidateEducation);
-				candidateEducation.setProjects(candidateProjects);
-			});
-		}
-		return candidateEducations;
+		Candidate candidate = candidateRepository.findOne(id);
+		return new ArrayList<CandidateEducationDTO>(converter.convertCandidateEducations(new HashSet<CandidateEducation>(candidateEducations), true,candidate));
 	}
 
 	public void deleteCandidateEducation(Long id) {
@@ -319,6 +323,8 @@ public class CandidateEducationService {
 		candidate.getEducations().remove(education);
 		log.debug("Educaiton set post removing education is {}", candidate.getEducations());
 		candidate.getEducations().addAll((setHighestEducation(education, true)));
+		if(candidate.getEducations().isEmpty())
+			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, true);
 		matcher.match(candidate);
 		// candidateEducationSearchRepository.delete(id);
 	}

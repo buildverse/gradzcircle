@@ -20,7 +20,7 @@ import com.drishika.gradzcircle.domain.Job;
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 	// @Query("select distinct candidate from Candidate candidate left join fetch
 	// candidate.jobCategories left join fetch candidate.jobs")
-	@Query("select distinct candidate from Candidate candidate left join fetch candidate.jobCategories ")
+	@Query("select distinct candidate from Candidate candidate left join fetch candidate.jobCategories")
 	List<Candidate> findAllWithEagerRelationships();
 
 	// @Query("select candidate from Candidate candidate left join fetch

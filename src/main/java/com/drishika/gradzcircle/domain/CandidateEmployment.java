@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -57,8 +59,9 @@ public class CandidateEmployment implements Serializable {
 	@ManyToOne
 	private Candidate candidate;
 
-	@OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE,fetch=FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@JsonManagedReference
 	private Set<CandidateProject> projects = new HashSet<>();
 
 	@ManyToOne

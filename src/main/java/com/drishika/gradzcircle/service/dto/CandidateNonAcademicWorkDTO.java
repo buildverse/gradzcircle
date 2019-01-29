@@ -15,6 +15,8 @@ public class CandidateNonAcademicWorkDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String nonAcademicInitiativeTitle;
+	
+	private Long id;
 
 	private String nonAcademicInitiativeDescription;
 
@@ -27,6 +29,40 @@ public class CandidateNonAcademicWorkDTO implements Serializable {
 	private LocalDate nonAcademicWorkStartDate;
 
 	private LocalDate nonAcademicWorkEndDate;
+	
+	private CandidateDTO candidate;
+	
+	
+	
+	
+
+	/**
+	 * @return the candidate
+	 */
+	public CandidateDTO getCandidate() {
+		return candidate;
+	}
+
+	/**
+	 * @param candidate the candidate to set
+	 */
+	public void setCandidate(CandidateDTO candidate) {
+		this.candidate = candidate;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the nonAcademicInitiativeTitle

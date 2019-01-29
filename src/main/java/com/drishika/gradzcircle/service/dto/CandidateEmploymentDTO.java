@@ -17,6 +17,8 @@ public class CandidateEmploymentDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer location;
+	
+	private Long id;
 
 	private String jobTitle;
 
@@ -35,6 +37,8 @@ public class CandidateEmploymentDTO implements Serializable {
 	private String employmentType;
 
 	private String jobType;
+	
+	private CandidateDTO candidate;
 
 	private Set<CandidateProjectDTO> projects = new HashSet<>();
 
@@ -202,5 +206,35 @@ public class CandidateEmploymentDTO implements Serializable {
 	public void setProjects(Set<CandidateProjectDTO> projects) {
 		this.projects = projects;
 	}
+
+	/**
+	 * @return the candidate
+	 */
+	public CandidateDTO getCandidate() {
+		return candidate;
+	}
+
+	/**
+	 * @param candidate the candidate to set
+	 */
+	public void setCandidate(CandidateDTO candidate) {
+		this.candidate = candidate;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	
 
 }

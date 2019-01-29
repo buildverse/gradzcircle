@@ -106,7 +106,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     checked: 'item selected',
     checkedPlural: 'items selected',
     searchPlaceholder: 'Search..',
-    defaultTitle: 'Select at least one career Interest',
+    defaultTitle: 'Select career Interests',
     allSelected: 'All selected'
   };
 

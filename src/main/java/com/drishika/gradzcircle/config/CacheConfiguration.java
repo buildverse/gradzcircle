@@ -115,8 +115,13 @@ public class CacheConfiguration {
 			cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".appliedJobs",jcacheConfiguration);
 			cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".appliedCandidates",jcacheConfiguration);
 			cm.createCache(com.drishika.gradzcircle.domain.Job.class.getName() + ".candidateJobs", jcacheConfiguration);
-            
             cm.createCache(com.drishika.gradzcircle.domain.States.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.ProfileCategory.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".profileCategories", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.ProfileCategory.class.getName() + ".profileScores", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.CandidateProfileScore.class.getName(), jcacheConfiguration);
+           /* cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".corporates", jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.Corporate.class.getName() + ".candidates", jcacheConfiguration);*/
             // jhipster-needle-ehcache-add-entry
         };
     }

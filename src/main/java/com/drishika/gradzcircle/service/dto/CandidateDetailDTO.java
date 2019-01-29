@@ -58,6 +58,8 @@ public class CandidateDetailDTO implements Serializable {
 	private GenderDTO gender;
 	
 	private MaritalStatusDTO maritalStatus;
+	
+	private Double profileScore;
 
 	/**
 	 * @return the id
@@ -352,6 +354,20 @@ public class CandidateDetailDTO implements Serializable {
 	 */
 	public void setMaritalStatus(MaritalStatusDTO maritalStatus) {
 		this.maritalStatus = maritalStatus;
+	}
+
+	/**
+	 * @return the profileScore
+	 */
+	public Double getProfileScore() {
+		return profileScore;
+	}
+
+	/**
+	 * @param profileScore the profileScore to set
+	 */
+	public void setProfileScore(Double profileScore) {
+		this.profileScore = profileScore;
 	}
 	
 	

@@ -32,6 +32,7 @@ export class Candidate implements BaseEntity {
         public openToRelocate?: boolean,
         public matchEligible?: boolean,
         public qualificationWithHighestCourse?: string,
+        public profileScore?: number,
         //public job?: Job,
         //public corporate?: Corporate,
         public login?: User,
@@ -47,6 +48,7 @@ export class Candidate implements BaseEntity {
         public jobCategories?: JobCategory[],
         public visaType?: VisaType,
         public jobs?: Job[],
+        public profileCategories?: BaseEntity[],
     ) {
         this.differentlyAbled = false;
         this.availableForHiring = false;

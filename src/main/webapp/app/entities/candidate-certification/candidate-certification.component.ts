@@ -6,7 +6,7 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
 import { Principal, DataService } from '../../shared';
-
+import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -28,7 +28,8 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataservice: DataService
+        private dataservice: DataService,
+        private candidateProfileScoreService : CandidateProfileScoreService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -36,11 +37,16 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
 
     /*To be removed once undertsand Elastic */
     loadCertificationsForCandidate() {
-        this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(
-                (res: HttpResponse<CandidateCertification[]>) => this.candidateCertifications = res.body,
-                    (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        return;
+      this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(
+        (res: HttpResponse<CandidateCertification[]>) => {
+          this.candidateCertifications = res.body;
+          if (this.candidateCertifications && this.candidateCertifications.length > 0) {
+            this.candidateProfileScoreService.changeScore(this.candidateCertifications[0].candidate.profileScore);
+          }
+        },
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
+      return;
 
     }
   
@@ -52,17 +58,19 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
       this.dataservice.setRouteData(candidateCertificationId);
     }
   
-  
+
     loadAll() {
-        if (this.currentSearch) {
-            this.candidateCertificationService.searchForAdmin({
-                query: this.currentSearch,
-                }).subscribe(
-                        (res: HttpResponse<CandidateCertification[]>) => this.candidateCertifications = res.body,
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
-            return;
-       }
+      if (this.currentSearch) {
+        this.candidateCertificationService.searchForAdmin({
+          query: this.currentSearch,
+        }).subscribe(
+          (res: HttpResponse<CandidateCertification[]>) =>
+            this.candidateCertifications = res.body,
+
+          (res: HttpErrorResponse) => this.onError(res.message));
+
+        return;
+      }
         this.candidateCertificationService.query().subscribe(
             (res: HttpResponse<CandidateCertification[]>) => {
                 this.candidateCertifications = res.body;

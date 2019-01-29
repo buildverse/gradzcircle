@@ -9,7 +9,7 @@ import {ITEMS_PER_PAGE, Principal, DataService, DataStorageService} from '../../
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import { JOB_ID, CORPORATE_ID } from '../../shared/constants/storage.constants';
+import {JOB_ID, CORPORATE_ID, MATCH_SCORE} from '../../shared/constants/storage.constants';
 import {CandidateService} from '../candidate/candidate.service';
 import {CorporateService} from '../corporate/corporate.service';
 import {Corporate} from '../corporate/corporate.model';
@@ -154,6 +154,11 @@ export class JobComponent implements OnInit, OnDestroy {
   
   setJobEditOrViewRouteParam(jobId) {
     this.dataService.setRouteData(jobId);
+  }
+  
+  setJobViewParamForCandidate(jobId,matchScore) {
+    this.dataService.put(JOB_ID,jobId);
+    this.dataService.put(MATCH_SCORE,matchScore);
   }
   
   setJobAndCorporateRouteParam(jobId,corporateId) {

@@ -47,6 +47,8 @@
             "careerInterests": "Carrer Interests",
             "job": "Job",
             "educationDescriptionShortForm": "Education Summary",
+            "profileScore": "Profile Score",
+            "profileCategory": "Profile Category",
 			"profile": {
                 "details": "Details",
                 "education": "My Education",

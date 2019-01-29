@@ -6,7 +6,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
 import { DataService, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
 
@@ -30,7 +30,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataService: DataService
+        private dataService: DataService,
+        private candidateProfileScoreService : CandidateProfileScoreService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -68,7 +69,12 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     loadEducationForCandidate() {
 
         this.candidateEducationService.findEducationByCandidateId(this.candidateId).subscribe(
-          (res: HttpResponse<CandidateEducation[]>) => this.candidateEducations = res.body,
+          (res: HttpResponse<CandidateEducation[]>) => {
+           this.candidateEducations = res.body;
+            if(this.candidateEducations && this.candidateEducations.length>0) {
+              this.candidateProfileScoreService.changeScore(this.candidateEducations[0].candidate.profileScore);
+            } 
+          },
           (res: HttpErrorResponse) => this.onError(res.message)
         );
         return;

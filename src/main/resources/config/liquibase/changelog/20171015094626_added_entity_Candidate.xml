@@ -171,4 +171,27 @@
             </column>
         </createTable>
      </changeSet>
+     <changeSet id="20190109094626-1" author="abhinav">
+     	 <createTable tableName="candidate_profile_score">
+            <column name="profile_categories_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidates_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="candidates_id, profile_categories_id" tableName="candidate_profile_score"/>
+     </changeSet>
+     <changeSet id="20191015094626-2" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_profile_score">
+        		<column name="score" type="double"/>
+    		</addColumn>
+    		<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate">
+        		<column name="profile_score" type="double"/>
+    		</addColumn>
+     </changeSet>
 </databaseChangeLog>

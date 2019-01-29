@@ -1,9 +1,105 @@
-<figure class="figure w-100">
+<div class="profile-header profile-mybackground">
+	<div class="container">
+		<div class="container-inner">
+			<img class="rounded-circle media-object"
+				[src]="noImage ? defaultImage : userImage ">
+			<h3 class="profile-header-user">{{candidate.login.firstName}}
+				{{candidate.login.lastName}}</h3>
+			<p class="profile-header-bio">{{candidate.aboutMe}}</p>
+			<p>
+				<a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
+					[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"
+					ngbTooltip="Public Profile"> <span class="icon icon-eye"
+					style="color: #007bff;"></span>
+				</a>
+			</p>
+		</div>
+	</div>
+</div>
+<div class="mt-2 col db-right">
+	<ul class="nav nav-tabs  justify-content-center" role="tablist" id="profileTab">
+			    <li class="nav-item">
+			      <a class="nav-link" id="details-tab" data-toggle="tab" aria-controls="details" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{detail:'details'}}]" [ngClass]="{ 'active':activeTab==='details'}" jhiTranslate="gradzcircleApp.candidate.profile.details" 
+			      		 (click)="setActiveTab('details')">
+			      		Details
+			      </a>
+			    </li>
+			    <li class="nav-item">
+			      <a class="nav-link" id="edu-tab" data-toggle="tab" aria-controls="edu" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{educations:'education'}}]" [ngClass]="{ 'active':activeTab==='edu'}" 
+			      		(click)="setActiveTab('edu')">Education
+			      </a>
+			    </li>
+			    <li class="nav-item">
+			      <a class="nav-link" id="emp-tab" data-toggle="tab" aria-controls="emp" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{employments:'employment'}}]" jhiTranslate="gradzcircleApp.candidate.profile.employment"
+			      		[ngClass]="{ 'active':activeTab==='emp'}" (click)="setActiveTab('emp')" >
+			      		My Experience
+			      </a>
+			    </li>
+			    <li class="nav-item">
+			      <a class="nav-link" id="lang-tab" data-toggle="tab" aria-controls="lang" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{languages:'language'}}]" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"
+			      		[ngClass]="{ 'active':activeTab==='lang'}" (click)="setActiveTab('lang')">
+			      		My Certification
+			      </a>
+			    </li>
+			    <li class="nav-item">
+			      <a class="nav-link" id="cert-tab" data-toggle="tab" aria-controls="certs" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{certifications:'certification'}}]" jhiTranslate="gradzcircleApp.candidate.profile.certifications" 
+			      		[ngClass]="{ 'active':activeTab==='certs'}" (click)="setActiveTab('certs')">
+			      		certs
+			      </a>
+			    </li>
+			     <li class="nav-item">
+			      <a class="nav-link" id="extras-tab" data-toggle="tab" aria-controls="extras" routerLinkActive="active" 
+			      		[routerLink]="[{outlets:{nonAcademics:'beyondAcademics'}}]"jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"
+			      		[ngClass]="{ 'active':activeTab==='extras'}" (click)="setActiveTab('extras')">
+			      		Extra Curriculars
+			      </a>
+			    </li>
+	 </ul>
+	 <div class="mt-2 mb-2">
+	 		<p><ngb-progressbar [value]="profileScore">{{message}}</ngb-progressbar></p>
+	 </div>
+	<div class="tab-content" id="profileTabContent">
+		
+		<div id="details" class="container tab-pane " [ngClass]="{ 'active':activeTab==='details'}"  aria-labelledby="details-tab" role="tabpanel">
+			<div><router-outlet name="detail"></router-outlet></div>
+		</div>
+		<div id="edu" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='edu'}" aria-labelledby="edu-tab" role="tabpanel">
+			<div class="tab_sub_section">
+				<router-outlet name="educations"></router-outlet>
+			</div>
+		</div>
+		<div id="emp" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='emp'}" aria-labelledby="emp-tab" role="tabpanel">
+			<div class="tab_sub_section">
+				<router-outlet name="employments"></router-outlet>
+			</div>
+		</div>
+		<div id="lang" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='lang'}" aria-labelledby="lang-tab" role="tabpanel">
+			<div class="tab_sub_section">
+				<router-outlet name="languages"></router-outlet>
+			</div>
+		</div>
+		<div id="certs" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='certs'}" aria-labelledby="cert-tab" role="tabpanel">
+			<div class="tab_sub_section">
+				<router-outlet name="certifications"></router-outlet>
+			</div>
+		</div>
+		<div id="extras" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='extras'}" aria-labelledby="extras-tab" role="tabpanel">
+			<div class="tab_sub_section">
+				<router-outlet name="nonAcademics"></router-outlet>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!--  <figure class="figure w-100">
 	<div class="container-fluid">
 		<div class="row d-block d-xs-block d-sm-block d-lg-flex ">
-			 <!--  div class="col col-md-auto db-left">
-			 	<router-outlet name="sidemenu"></router-outlet>
-			 </div-->
 			 <div class="col db-right">
 				<div class="db-content">
 					<div class="row m-0 px-0 profile_page">
@@ -100,81 +196,10 @@
        						</div>
        					</div>
 					 </div>
-					<!--  <div id="accordion" class="my-5 h-100">
-						  <div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleDetails()"
-          								[attr.aria-expanded]="!detailsCollapsed" aria-controls="detailsCollapse" [routerLink]="[{outlets:{detail:'details'}}]"
-									  jhiTranslate="gradzcircleApp.candidate.profile.details"> Details </a>
-							</div>
-						
-							<div id="detailsCollapse" [ngbCollapse]="detailsCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="detail"></router-outlet></div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleEducation()" [routerLink]="[{outlets:{educations:'education'}}]"
-          								[attr.aria-expanded]="!educationCollapsed" aria-controls="educationCollapse" 
-									 jhiTranslate="gradzcircleApp.candidate.profile.education"> Edu </a>
-							</div>
-						
-							<div id="educationCollapse" [ngbCollapse]="educationCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="educations"></router-outlet></div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleEmployment()" [routerLink]="[{outlets:{employments:'employment'}}]"
-          								[attr.aria-expanded]="!employmentCollapsed" aria-controls="employmentCollapse"  jhiTranslate="gradzcircleApp.candidate.profile.employment"> Emp </a>
-							</div>
-						
-							<div id="employmentCollapse" [ngbCollapse]="employmentCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="employments"></router-outlet></div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleLanguage()" [routerLink]="[{outlets:{languages:'language'}}]"
-          								[attr.aria-expanded]="!languageCollapsed" aria-controls="languageCollapse" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"> lang </a>
-							</div>
-						
-							<div id="languages" [ngbCollapse]="languageCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="languages"></router-outlet></div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleCertification()" [routerLink]="[{outlets:{certifications:'certification'}}]"
-          								[attr.aria-expanded]="!certificationsCollapsed" aria-controls="certificationCollapse" jhiTranslate="gradzcircleApp.candidate.profile.certifications"> Cert </a>
-							</div>
-						
-							<div id="certificationCollapse" [ngbCollapse]="certificationsCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="certifications"></router-outlet></div>
-							</div>	
-						</div>				
-						<div class="card">
-							<div class="card-header">
-								<a class="card-link d-block" (click)="toggleNonAcads()" [routerLink]="[{outlets:{nonAcademics:'beyondAcademics'}}]"
-          								[attr.aria-expanded]="!nonAcademicCollapsed" aria-controls="nonAcademicCollapse" jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"> non acad </a>
-							</div>
-						
-							<div id="nonAcademicCollapse" [ngbCollapse]="nonAcademicCollapsed"
-								data-parent="#accordion">
-								<div><router-outlet name="nonAcademics"></router-outlet></div>
-							</div>
-						</div>
-						
-					 </div>-->
 				</div>
 			</div>
 		</div>
 	</div>
-</figure>
+</figure>-->
 
 

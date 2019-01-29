@@ -180,6 +180,12 @@ public class JobMatcherIntTest {
 				genderRepository, languageRepository, jobRepository, jobSearchRepository, matchUtils,
 				candidateJobRepository, candidateRepository, applicationEventPublisher);
 
+		
+	}
+	
+	@Before
+	public void initTest() {
+		
 		filterRepository.deleteAll();
 		courseRepository.deleteAll();
 		qualificationRepository.deleteAll();
@@ -255,6 +261,15 @@ public class JobMatcherIntTest {
 		candidateH = createCandidateHProfile(em);
 		// jobH = createJobH(em);
 		corporate = new Corporate();
+		candidateRepository.saveAndFlush(candidateA.gender(male));
+		candidateRepository.saveAndFlush(candidateB.gender(female));
+		candidateRepository.saveAndFlush(candidateC.gender(male));
+		candidateRepository.saveAndFlush(candidateD.gender(male));
+		candidateRepository.saveAndFlush(candidateE.gender(female));
+		candidateRepository.saveAndFlush(candidateF.gender(male));
+		candidateRepository.saveAndFlush(candidateG.gender(male));
+		candidateRepository.saveAndFlush(candidateH.gender(male));
+		
 	}
 
 	public static Filter createGradDateFilter(EntityManager em) {
@@ -660,17 +675,9 @@ public class JobMatcherIntTest {
 	public void testMatchingOnCreatingJobAWithCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndThreeLanguages()
 			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
-		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobA.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobA);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+
 		CandidateJob candidateJob1 = new CandidateJob(candidateA, jobA);
 		candidateJob1.setMatchScore(47.0);
 		candidateJob1.setEducationMatchScore(40.0);
@@ -705,8 +712,7 @@ public class JobMatcherIntTest {
 						tuple(CANDIDATE_D, 33.0, 15.0, 0.0, null, 45.0, false),
 						tuple(CANDIDATE_F, 11.0, 5.0, 0.0, null, 45.0, false),
 						tuple(CANDIDATE_G, 20.0, 9.0, 0.0, null, 45.0, false));
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
-		assertThat(candidateList).hasSize(8);
+		assertThat(candidateList).hasSize( 8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
 
@@ -720,14 +726,7 @@ public class JobMatcherIntTest {
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobZ.setCorporate(corporateRepository.save(corporate));
 		// jobRepository.saveAndFlush(jobZ);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+
 		/*
 		 * CandidateJob candidateJob1 = new CandidateJob(candidateA, jobZ);
 		 * candidateJob1.setMatchScore(47.0);
@@ -771,7 +770,7 @@ public class JobMatcherIntTest {
 		 * tuple(CANDIDATE_F,11.0,5.0,0.0,0.0,45.0),tuple(CANDIDATE_G,20.0,9.0,0.0,0.0,
 		 * 45.0),tuple(CANDIDATE_E,20.0,9.0,0.0,0.0,45.0));
 		 */
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
+		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate );
 		assertThat(candidateList).hasSize(8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
@@ -786,14 +785,7 @@ public class JobMatcherIntTest {
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobB);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+	
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
@@ -814,7 +806,7 @@ public class JobMatcherIntTest {
 		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName", "matchScore").contains(
 				tuple(CANDIDATE_H, 38.0), tuple(CANDIDATE_A, 40.0), tuple(CANDIDATE_B, 80.0), tuple(CANDIDATE_C, 29.0),
 				tuple(CANDIDATE_D, 31.0), tuple(CANDIDATE_F, 18.0), tuple(CANDIDATE_G, 13.0));
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
+		assertThat(candidateList).hasSize(8);
 
 	}
 
@@ -826,14 +818,7 @@ public class JobMatcherIntTest {
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobC);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
@@ -854,7 +839,7 @@ public class JobMatcherIntTest {
 		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName", "matchScore").contains(
 				tuple(CANDIDATE_H, 39.0), tuple(CANDIDATE_A, 36.0), tuple(CANDIDATE_B, 70.0), tuple(CANDIDATE_C, 36.0),
 				tuple(CANDIDATE_D, 39.0), tuple(CANDIDATE_F, 16.0), tuple(CANDIDATE_G, 57.0));
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
+		assertThat(candidateList).hasSize( 8);
 
 	}
 
@@ -865,14 +850,7 @@ public class JobMatcherIntTest {
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobF);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+	
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
@@ -891,7 +869,7 @@ public class JobMatcherIntTest {
 		Job matchedJob = jobList.get(0);
 		assertThat(matchedJob.getCandidateJobs()).hasSize(1);
 		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName").contains(CANDIDATE_E);
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
+		assertThat(candidateList).hasSize( 8);
 
 	}
 
@@ -902,21 +880,15 @@ public class JobMatcherIntTest {
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobG);
-		candidateRepository.saveAndFlush(candidateA.gender(male));
-		candidateRepository.saveAndFlush(candidateB.gender(female));
-		candidateRepository.saveAndFlush(candidateC.gender(male));
-		candidateRepository.saveAndFlush(candidateD.gender(male));
-		candidateRepository.saveAndFlush(candidateE.gender(female));
-		candidateRepository.saveAndFlush(candidateF.gender(male));
-		candidateRepository.saveAndFlush(candidateG.gender(male));
-		candidateRepository.saveAndFlush(candidateH.gender(male));
+		List<Candidate> candidateList = candidateRepository.findAll();
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
+		assertThat(candidateList).hasSize(8 );
 		jobMatcher.match(jobG);
 
 		List<Job> jobList = jobRepository.findAll();
-		List<Candidate> candidateList = candidateRepository.findAll();
+		
 		List<CandidateEducation> candidateEducationList = candidateEducationService.getAllCandidateEducations();
 		List<CandidateLanguageProficiency> candidateLanguageList = candidateLanguageService
 				.getAllCandidateLanguageProficiencies();
@@ -929,7 +901,7 @@ public class JobMatcherIntTest {
 		assertThat(matchedJob.getCandidateJobs()).hasSize(6);
 		assertThat(matchedJob.getCandidateJobs()).extracting("candidate.firstName").contains(CANDIDATE_H, CANDIDATE_A,
 				CANDIDATE_B, CANDIDATE_D, CANDIDATE_F, CANDIDATE_G);
-		assertThat(candidateList).hasSize(candidateDatabaseSizeBeforeCreate + 8);
+		assertThat(candidateList).hasSize(8 );
 
 	}
 

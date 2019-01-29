@@ -1,13 +1,13 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
-
+import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {GradzcircleSharedModule} from '../../shared';
 import {GradzcircleAdminModule} from '../../admin/admin.module';
-import {GradzcircleCandidateModule} from '../../entities/candidate/candidate.module';
 import {GradzcircleCandidateLanguageProficiencyModule} from '../../entities/candidate-language-proficiency/candidate-language-proficiency.module';
 import {candidateProfileRoutes, candidateProfilePopupRoute, JobResolvePagingParams} from './candidate-profile.route';
 import {CandidateProfileAboutMeEditComponent} from './candidate-about-me-edit.component';
 import {CandidateProfileComponent} from './candidate-profile.component';
+import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {CandidateResolverService} from './candidate-profile-account-resolver.service';
 import {CandidateCareerInterestResolverService} from './candidate-profile-career-interest-resolver.service';
 import {ProfileHelperService} from '../profile-helper.service';
@@ -32,6 +32,7 @@ import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogC
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
+
 
 const ENTITY_STATES = [
   ...candidateProfileRoutes,
@@ -77,7 +78,9 @@ const ENTITY_STATES = [
     // ImageResolver,
     CandidatePublicProfilePopupService,
     JobResolvePagingParams,
-    DataService
+    DataService,
+    NgbProgressbarConfig,
+    CandidateProfileScoreService
 
   ],
   entryComponents: [

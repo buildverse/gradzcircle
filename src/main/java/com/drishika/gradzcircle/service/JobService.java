@@ -1,5 +1,7 @@
 package com.drishika.gradzcircle.service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -302,8 +304,11 @@ public class JobService {
 	
 	public Long getTotalJobsPostedSinceLastMonth(Long corporateId) {
 		ZoneId zoneId = ZoneId.of("Asia/Kolkata");
-		ZonedDateTime toDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-		ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue(),toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
+		//ZonedDateTime toDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+		//ZonedDateTime toDateTime = LocalDate.now().atStartOfDay(zoneId);
+		//ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue()-1,toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
+		ZonedDateTime toDateTime = LocalDate.now().atStartOfDay(zoneId);
+		ZonedDateTime fromDateTime = toDateTime.minusMonths(1).withDayOfMonth(1);
 		return jobRepository.numberOfJobsPostedAcrossDates(corporateId,fromDateTime,toDateTime);
 	}
 	

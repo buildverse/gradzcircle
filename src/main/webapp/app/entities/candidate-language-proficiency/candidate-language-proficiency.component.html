@@ -1,5 +1,5 @@
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="card-body">
-	<div *ngIf="candidateLanguageProficiencies?.length > 0;">
+	<div *ngIf="candidateLanguageProficiencies?.length > 0 && candidateLanguageProficiencies[0].id">
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -9,6 +9,7 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let candidateLanguageProficiency of candidateLanguageProficiencies ;trackBy: trackId">
+				
 					<td>
 						<div *ngIf="candidateLanguageProficiency.language">
 							{{candidateLanguageProficiency.language[0].language}}

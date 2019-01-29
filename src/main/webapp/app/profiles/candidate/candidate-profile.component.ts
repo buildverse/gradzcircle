@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
-import {Principal, UserService} from '../../shared';
-
+import {Principal, UserService, DataService} from '../../shared';
+import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import {Observable} from 'rxjs/Observable';
-
+import { CandidateProfileScoreService } from './candidate-profile-score.service';
+import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
@@ -18,7 +18,7 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 })
 
-export class CandidateProfileComponent implements OnInit {
+export class CandidateProfileComponent implements OnInit ,AfterViewInit {
 
   candidate: Candidate;
   imageUrl: any;
@@ -33,17 +33,21 @@ export class CandidateProfileComponent implements OnInit {
   employmentCollapsed: boolean;
   nonAcademicCollapsed: boolean;
   certificationsCollapsed: boolean;
-  languageCollapsed : boolean;
+  languageCollapsed: boolean;
   activeTab: string;
+  message: string;
+  profileScore: number;
   
   constructor(private route: ActivatedRoute,
     private eventManager: JhiEventManager,
     private alertService: JhiAlertService,
     private candidateService: CandidateService,
-
+    private progressBarConfig: NgbProgressbarConfig,
     private principal: Principal,
     private userService: UserService,
-    private router: Router) {
+    private candidateProfileScoreService: CandidateProfileScoreService,
+    private cd: ChangeDetectorRef ,
+    private dataService: DataService) {
     this.activeTab ='details';
     this.detailsCollapsed = true;
     this.educationCollapsed = true;
@@ -52,6 +56,11 @@ export class CandidateProfileComponent implements OnInit {
     this.certificationsCollapsed = true;
     this.languageCollapsed = true;
     this.noImage = false;
+    this.progressBarConfig.max = 100;
+    this.progressBarConfig.striped = true;
+    this.progressBarConfig.animated = true;
+    this.progressBarConfig.height = '20px';
+    this.message = 'Profile Completeness';
   }
 
   toggleDetails() {
@@ -120,8 +129,18 @@ export class CandidateProfileComponent implements OnInit {
     // this.checkImageUrl();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
+    this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
+      if (profileScore) {
+        this.profileScore = profileScore;
+      }
+    });
+
   }
 
+  ngAfterViewInit() {
+    this.cd.detectChanges();
+  }
+ 
   getCandidateByCandidateId(id) {
     this.candidateService.getCandidateByCandidateId(id).subscribe(
       (res: HttpResponse<Candidate>) => {
@@ -142,6 +161,12 @@ export class CandidateProfileComponent implements OnInit {
     return;
 
 
+  }
+  
+  setPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    this.dataService.put(CANDIDATE_ID,candidateId);
+    this.dataService.put(JOB_ID,-1);
+    this.dataService.put(CORPORATE_ID,-1);
   }
 
   private onError(error) {

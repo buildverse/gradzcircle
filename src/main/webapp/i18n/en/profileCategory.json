@@ -1,0 +1,25 @@
+
+{
+    "gradzcircleApp": {
+        "profileCategory" : {
+            "home": {
+                "title": "Profile Categories",
+                "createLabel": "Create a new Profile Category",
+                "createOrEditLabel": "Create or edit a Profile Category",
+                "search": "Search for Profile Category"
+            },
+            "created": "A new Profile Category is created with identifier {{ param }}",
+            "updated": "A Profile Category is updated with identifier {{ param }}",
+            "deleted": "A Profile Category is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Profile Category {{ id }}?"
+            },
+            "detail": {
+                "title": "Profile Category"
+            },
+            "categoryName": "Category Name",
+            "weightage": "Weightage",
+            "candidate": "Candidate"
+        }
+    }
+}

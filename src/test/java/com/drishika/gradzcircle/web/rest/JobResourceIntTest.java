@@ -5,7 +5,6 @@ import static com.drishika.gradzcircle.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -42,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.Candidate;
-import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
@@ -2791,12 +2791,14 @@ public class JobResourceIntTest {
 		corp.name("Drishika");
 		Job job1 = new Job();
 		job1.jobTitle("Test Job 1");
-		ZonedDateTime createDate = ZonedDateTime.parse("2018-10-30T12:30:40Z[GMT]");
-		job1.createDate(createDate);
+	//	ZonedDateTime createDate = ZonedDateTime.parse("2018-10-30T12:30:40Z[GMT]");
+		LocalDate createDate = LocalDate.now(ZoneId.of("Asia/Kolkata"));
+		job1.createDate(createDate.atStartOfDay(ZoneId.of("Asia/Kolkata")));
 		Job job2 = new Job();
 		job1.jobTitle("Test Job 2");
-		ZonedDateTime createDate2 = ZonedDateTime.parse("2018-09-30T12:30:40Z[GMT]");
-		job2.setCreateDate(createDate2);
+		LocalDate createDate2 = LocalDate.of(2017,Month.JANUARY,1);
+	//	ZonedDateTime createDate2 = ZonedDateTime.parse("2018-09-30T12:30:40Z[GMT]");
+		job2.setCreateDate(createDate2.atStartOfDay(ZoneId.of("Asia/Kolkata")));
 		corporateRepository.saveAndFlush(corp);
 		job1.corporate(corp);job2.corporate(corp);
 		jobRepository.saveAndFlush(job1);
@@ -2810,6 +2812,65 @@ public class JobResourceIntTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$").value(1));
 	}
+	
+	@Test
+	@Transactional
+	public void testGetJobsPostedLastMonthByCorporateFromDecToJan() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+	//	ZonedDateTime createDate = ZonedDateTime.parse("2018-10-30T12:30:40Z[GMT]");
+		LocalDate createDate = LocalDate.of(2018,Month.DECEMBER,22);
+		job1.createDate(createDate.atStartOfDay(ZoneId.of("Asia/Kolkata")));
+		Job job2 = new Job();
+		job1.jobTitle("Test Job 2");
+		LocalDate createDate2 = LocalDate.of(2017,Month.JANUARY,1);
+	//	ZonedDateTime createDate2 = ZonedDateTime.parse("2018-09-30T12:30:40Z[GMT]");
+		job2.setCreateDate(createDate2.atStartOfDay(ZoneId.of("Asia/Kolkata")));
+		corporateRepository.saveAndFlush(corp);
+		job1.corporate(corp);job2.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/totalJobsPostedLastMonthByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(1));
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobsPostedLastMonthByCorporateFromDec1stToJanCurrent() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+	//	ZonedDateTime createDate = ZonedDateTime.parse("2018-10-30T12:30:40Z[GMT]");
+		LocalDate createDate = LocalDate.of(2018,Month.DECEMBER,1);
+		job1.createDate(createDate.atStartOfDay(ZoneId.of("Asia/Kolkata")));
+		Job job2 = new Job();
+		job1.jobTitle("Test Job 2");
+		LocalDate createDate2 = LocalDate.of(2017,Month.JANUARY,1);
+	//	ZonedDateTime createDate2 = ZonedDateTime.parse("2018-09-30T12:30:40Z[GMT]");
+		job2.setCreateDate(createDate2.atStartOfDay(ZoneId.of("Asia/Kolkata")));
+		corporateRepository.saveAndFlush(corp);
+		job1.corporate(corp);job2.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/totalJobsPostedLastMonthByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(1));
+	}
+
 
 	
 

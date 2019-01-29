@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "profileCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "categoryName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "weightage",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20190108140353",
+    "entityTableName": "profile_category",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false
+}

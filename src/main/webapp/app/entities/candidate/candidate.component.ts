@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+
 import { Candidate } from './candidate.model';
 import { CandidateService } from './candidate.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-candidate',
@@ -25,7 +25,7 @@ candidates: Candidate[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
     }
 
@@ -34,19 +34,17 @@ candidates: Candidate[];
             this.candidateService.search({
                 query: this.currentSearch,
                 }).subscribe(
-                       (res: HttpResponse<Candidate[]>) => this.candidates = res.body,
+                    (res: HttpResponse<Candidate[]>) => this.candidates = res.body,
                     (res: HttpErrorResponse) => this.onError(res.message)
-
                 );
             return;
        }
         this.candidateService.query().subscribe(
-           (res: HttpResponse<Candidate[]>) => {
+            (res: HttpResponse<Candidate[]>) => {
                 this.candidates = res.body;
                 this.currentSearch = '';
             },
-             (res: HttpErrorResponse) => this.onError(res.message)
-
+            (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
 

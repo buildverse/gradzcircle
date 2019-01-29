@@ -14,11 +14,13 @@ public class CandidateLanguageProficiencyDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long id ;
-	
+	private Long id;
+
 	private String proficiency;
 
 	private LanguageDTO language;
+
+	private CandidateDTO candidate;
 
 	/**
 	 * @return the id
@@ -28,7 +30,8 @@ public class CandidateLanguageProficiencyDTO implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -57,12 +60,26 @@ public class CandidateLanguageProficiencyDTO implements Serializable {
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
 	public void setLanguage(LanguageDTO language) {
 		this.language = language;
 	}
 
+	/**
+	 * @return the candidate
+	 */
+	public CandidateDTO getCandidate() {
+		return candidate;
+	}
+
+	/**
+	 * @param candidate the candidate to set
+	 */
+	public void setCandidate(CandidateDTO candidate) {
+		this.candidate = candidate;
+	}
 	
 	
 

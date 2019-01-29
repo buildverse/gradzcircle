@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.service.CandidateEducationService;
+import com.drishika.gradzcircle.service.dto.CandidateEducationDTO;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -58,8 +59,8 @@ public class CandidateEducationResource {
 	@Timed
 	public ResponseEntity<CandidateEducation> createCandidateEducation(
 			@RequestBody CandidateEducation candidateEducation) throws URISyntaxException {
-		log.debug("REST request to save CandidateEducation : {},{},{},{}", candidateEducation,
-				candidateEducation.getCollege(), candidateEducation.getCourse(), candidateEducation.getQualification());
+		log.debug("REST request to save CandidateEducation : {},{},{},{},{}", candidateEducation,
+				candidateEducation.getCollege(), candidateEducation.getCourse(), candidateEducation.getQualification(),candidateEducation.getCandidate());
 		 if (candidateEducation.getId() != null) {
 	            throw new BadRequestAlertException("A new candidateEducation cannot already have an ID", ENTITY_NAME, "idexists");
 	        }
@@ -140,20 +141,20 @@ public class CandidateEducationResource {
 	@GetMapping("/education-by-candidate/{id}")
 	@Timed
 
-	public List<CandidateEducation> getEducationByCandidateId(@PathVariable Long id) {
+	public List<CandidateEducationDTO> getEducationByCandidateId(@PathVariable Long id) {
 		log.debug("REST request to get CandidateEducation : {}", id);
-		List<CandidateEducation> candidateEducations = candidateEducationService.getEducationByCandidateId(id);
+		List<CandidateEducationDTO> candidateEducations = candidateEducationService.getEducationByCandidateId(id);
 		candidateEducations.forEach(candidateEducation -> {
-			candidateEducation.getProjects().forEach(project -> {
+			/*candidateEducation.getProjects().forEach(project -> {
 				project.setEducation(null);
 			});
 			;
 			candidateEducation.setCandidate(null);
 			if (candidateEducation.getCollege().getUniversity() != null) {
 				candidateEducation.getCollege().getUniversity().setCountry(null);
-			}
-			updateEducationDependentMetaForDisplay(candidateEducation);
-			log.debug("College data is {}", candidateEducation.getCollege());
+			}*/
+			updateEducationDTODependentMetaForDisplay(candidateEducation);
+			//log.debug("College data is {}", candidateEducation.getCollege());
 		});
 
 		log.debug("Candidate Education returned is: {}", candidateEducations);
@@ -207,6 +208,31 @@ public class CandidateEducationResource {
 
 	}
 
+	private void updateEducationDTODependentMetaForDisplay(CandidateEducationDTO candidateEducation) {
+		if (candidateEducation == null)
+			return;
+		if (candidateEducation.getCollege() != null) {
+			candidateEducation.getCollege().setDisplay(candidateEducation.getCollege().getCollegeName());
+			candidateEducation.getCollege().setValue(candidateEducation.getCollege().getCollegeName());
+			if (candidateEducation.getCollege().getUniversity() != null) {
+				candidateEducation.getCollege().getUniversity()
+						.setDisplay(candidateEducation.getCollege().getUniversity().getUniversityName());
+				candidateEducation.getCollege().getUniversity()
+						.setValue(candidateEducation.getCollege().getUniversity().getUniversityName());
+			}
+		}
+		if (candidateEducation.getQualification() != null) {
+			candidateEducation.getQualification().setDisplay(candidateEducation.getQualification().getQualification());
+			candidateEducation.getQualification().setValue(candidateEducation.getQualification().getQualification());
+		}
+
+		if (candidateEducation.getCourse() != null) {
+			candidateEducation.getCourse().setDisplay(candidateEducation.getCourse().getCourse());
+			candidateEducation.getCourse().setValue(candidateEducation.getCourse().getCourse());
+		}
+
+	}
+	
 	private void updateEducationDependentMetaForDisplay(CandidateEducation candidateEducation) {
 		if (candidateEducation == null)
 			return;

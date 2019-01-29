@@ -29,6 +29,7 @@ import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Country;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.Nationality;
+import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
@@ -64,6 +65,8 @@ import com.drishika.gradzcircle.service.dto.JobCategoryDTO;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.MaritalStatusDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
+import com.drishika.gradzcircle.service.util.DTOConverters;
+import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 
 /**
  * Service to manage Candidate
@@ -105,6 +108,8 @@ public class CandidateService {
 	
 	private final NationalityRepository nationalityRepository;
 	
+	private final ProfileScoreCalculator profileScoreCalculator;
+	
 	private final CountryRepository countryRepository;
 
 	private final Matcher<Candidate> matcher;
@@ -114,6 +119,8 @@ public class CandidateService {
 	private final AddressRepository addressRepository;
 
 	private JobRepository jobRepository;
+	
+	private DTOConverters dtoConverter;
 
 	private CorporateRepository corporateRepository;
 
@@ -132,7 +139,8 @@ public class CandidateService {
 			CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
 			CandidateCertificationRepository candidateCertificationRepository,
 			CandidateEmploymentRepository candidateEmploymentRepository, JobRepository jobRepository,
-			CorporateRepository corporateRepository, NationalityRepository nationalityRepository,CountryRepository countryRepository) {
+			CorporateRepository corporateRepository, NationalityRepository nationalityRepository,CountryRepository countryRepository,
+			ProfileScoreCalculator profileScoreCalculator, DTOConverters dtoConverter) {
 		this.candidateRepository = candidateRepository;
 		this.candidateSearchRepository = candidateSearchRepository;
 		this.addressRepository = addressRepository;
@@ -154,12 +162,16 @@ public class CandidateService {
 		this.corporateRepository = corporateRepository;
 		this.countryRepository = countryRepository;
 		this.nationalityRepository = nationalityRepository;
+		this.profileScoreCalculator = profileScoreCalculator;
+		this.dtoConverter = dtoConverter;
 	}
 
 	public void createCandidate(User user) {
 		Candidate candidate = new Candidate();
 		candidate.setLogin(user);
 		candidate.setMatchEligible(true);
+		candidateRepository.save(candidate);
+		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_BASIC_PROFILE,false);
 		candidateRepository.save(candidate);
 		candidateSearchRepository.save(candidate);
 		logger.debug("Created Information for candidate: {}", candidate);
@@ -169,6 +181,8 @@ public class CandidateService {
 		logger.debug("REST request to save Candidate : {}", candidate);
 		candidate.setMatchEligible(true);
 		Candidate result = candidateRepository.save(candidate);
+		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_BASIC_PROFILE,false);
+		candidateRepository.save(candidate);
 		// Replace with Future
 		matcher.match(result);
 		// candidateSearchRepository.save(result);
@@ -188,9 +202,11 @@ public class CandidateService {
 				logger.debug("Enabe Match is {}", enableMatch);
 			}
 		}
+		candidate.setProfileScores(prevCandidate.getProfileScores());
 		candidate.setEducations(prevCandidate.getEducations());
 		candidate.setCandidateJobs(prevCandidate.getCandidateJobs());
 		candidate.setMatchEligible(prevCandidate.getMatchEligible());
+		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE,false);
 		Candidate result = candidateRepository.save(candidate);
 		result.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(result));
 		// Replace with Future
@@ -204,13 +220,17 @@ public class CandidateService {
 	
 	
 	private void injestNationalityDetails(Candidate candidate) {
-		Nationality nationality  = nationalityRepository.findByNationality(candidate.getNationality().getNationality());
-		candidate.setNationality(nationality);
+		if(candidate.getNationality() != null) {
+			Nationality nationality  = nationalityRepository.findByNationality(candidate.getNationality().getNationality());
+			candidate.setNationality(nationality);
+		}
 	}
 	
 	private void injestCountryDetails(Candidate candidate) {
-		Country country  = countryRepository.findByCountryNiceName(candidate.getAddresses().iterator().next().getCountry().getCountryNiceName());
-		candidate.getAddresses().forEach(address -> address.setCountry(country));
+		if(candidate.getAddresses() != null && !candidate.getAddresses().isEmpty()) {
+			Country country  = countryRepository.findByCountryNiceName(candidate.getAddresses().iterator().next().getCountry().getCountryNiceName());
+			candidate.getAddresses().forEach(address -> address.setCountry(country));
+		}
 	}
 
 	public List<Candidate> getAllCandidates() {
@@ -283,9 +303,8 @@ public class CandidateService {
 				candidateCertifcationRepository.findCertificationsByCandidateId(candidate.getId()));
 		Set<CandidateNonAcademicWork> candidateNonAcademicWorks = new HashSet<>(
 				candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId()));
-		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>(
-				candidateLanguageProficiencyRepository
-						.findCandidateLanguageProficienciesByCandidateId(candidate.getId()));
+		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
+						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 		if(jobId >0 && corporateId >0) {
 			setCandidateReviewedForJob(candidate, jobId);
 			shortListed = isShortListed(candidate, jobId, corporateId);
@@ -327,172 +346,16 @@ public class CandidateService {
 			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		dto.setShortListed(isShortListed);
-		setCandidateDetails(candidate, dto);
-		setCandidateAddresses(addresses, dto);
-		setCandidateEducations(candidateEducations, dto);
-		setCandidateEmployments(candidateEmployments, dto);
-		setCandidateCertifications(candidateCertifications, dto);
-		setCandidateLanguageProficiencies(candidateLanguageProficiencies, dto);
-		setCandidateNonAcademicWork(candidateNonAcademicWorks, dto);
+		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
+		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));
+		dto.setEducations(dtoConverter.convertCandidateEducations(candidateEducations, false,candidate));
+		dto.setEmployments(dtoConverter.convertCandidateEmployments(candidateEmployments, false,candidate));
+		dto.setCertifications(dtoConverter.convertCandidateCertifications(candidateCertifications, false,candidate));
+		dto.setCandidateLanguageProficiencies(dtoConverter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, false,candidate));
+		dto.setNonAcademics(dtoConverter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, false,candidate));
 		return dto;
 	}
 
-	/**
-	 * @param candidateNonAcademicWorks
-	 * @param dto
-	 */
-	private void setCandidateNonAcademicWork(Set<CandidateNonAcademicWork> candidateNonAcademicWorks,
-			CandidatePublicProfileDTO dto) {
-		candidateNonAcademicWorks.forEach(nonAcademic -> {
-			CandidateNonAcademicWorkDTO nonAcademicWorkDTO = new CandidateNonAcademicWorkDTO();
-			nonAcademicWorkDTO.setNonAcademicInitiativeTitle(nonAcademic.getNonAcademicInitiativeTitle());
-			nonAcademicWorkDTO.setNonAcademicInitiativeDescription(nonAcademic.getNonAcademicInitiativeDescription());
-			nonAcademicWorkDTO.setNonAcademicWorkEndDate(nonAcademic.getNonAcademicWorkEndDate());
-			nonAcademicWorkDTO.setNonAcademicWorkStartDate(nonAcademic.getNonAcademicWorkStartDate());
-			nonAcademicWorkDTO.setRoleInInitiative(nonAcademic.getRoleInInitiative());
-			dto.getNonAcademics().add(nonAcademicWorkDTO);
-		});
-	}
-
-	/**
-	 * @param candidateLanguageProficiencies
-	 * @param dto
-	 */
-	private void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiency> candidateLanguageProficiencies,
-			CandidatePublicProfileDTO dto) {
-		candidateLanguageProficiencies.forEach(languageProficiency -> {
-			CandidateLanguageProficiencyDTO languageProficiencyDTO = new CandidateLanguageProficiencyDTO();
-			LanguageDTO languageDTO = new LanguageDTO();
-			languageDTO.setId(languageProficiency.getLanguage().getId());
-			languageDTO.setLanguage(languageProficiency.getLanguage().getLanguage());
-			languageProficiencyDTO.setLanguage(languageDTO);
-			languageProficiencyDTO.setProficiency(languageProficiency.getProficiency());
-			dto.getCandidateLanguageProficiencies().add(languageProficiencyDTO);
-		});
-	}
-
-	/**
-	 * @param candidateCertifications
-	 * @param dto
-	 */
-	private void setCandidateCertifications(Set<CandidateCertification> candidateCertifications,
-			CandidatePublicProfileDTO dto) {
-		candidateCertifications.forEach(certification -> {
-			CandidateCertificationDTO certificationDTO = new CandidateCertificationDTO();
-			certificationDTO.setCertificationTitle(certification.getCertificationTitle());
-			certificationDTO.setCertificationDetails(certification.getCertificationDetails());
-			certificationDTO.setCertificationDate(certification.getCertificationDate());
-			dto.getCertifications().add(certificationDTO);
-		});
-	}
-
-	/**
-	 * @param candidateEmployments
-	 * @param dto
-	 */
-	private void setCandidateEmployments(Set<CandidateEmployment> candidateEmployments, CandidatePublicProfileDTO dto) {
-		candidateEmployments.forEach(employment -> {
-			CandidateEmploymentDTO employmentDTO = new CandidateEmploymentDTO();
-			employmentDTO.setJobTitle(employment.getJobTitle());
-			employmentDTO.setEmployerName(employment.getEmployerName());
-			employmentDTO.setEmploymentStartDate(employment.getEmploymentStartDate());
-			employmentDTO.setEmploymentEndDate(employment.getEmploymentEndDate());
-			employmentDTO.setEmploymentType(employment.getEmploymentType().getEmploymentType());
-			employmentDTO.setJobType(employment.getJobType().getJobType());
-			employmentDTO.setJobDescription(employment.getJobDescription());
-			employment.getProjects().forEach(project -> {
-				CandidateProjectDTO projectDTO = setCandidateProjects(project);
-				employmentDTO.getProjects().add(projectDTO);
-			});
-			dto.getEmployments().add(employmentDTO);
-		});
-	}
-
-	/**
-	 * @param project
-	 * @return
-	 */
-	private CandidateProjectDTO setCandidateProjects(CandidateProject project) {
-		CandidateProjectDTO projectDTO = new CandidateProjectDTO();
-		projectDTO.setProjectTitle(project.getProjectTitle());
-		projectDTO.setProjectDescription(project.getProjectDescription());
-		projectDTO.setProjectStartDate(project.getProjectStartDate());
-		projectDTO.setProjectEndDate(project.getProjectEndDate());
-		projectDTO.setContributionInProject(project.getContributionInProject());
-		projectDTO.setIsCurrentProject(project.isIsCurrentProject());
-		projectDTO.setProjectType(project.getProjectType());
-		return projectDTO;
-	}
-
-	/**
-	 * @param candidateEducations
-	 * @param dto
-	 */
-	private void setCandidateEducations(Set<CandidateEducation> candidateEducations, CandidatePublicProfileDTO dto) {
-		candidateEducations.forEach(education -> {
-			CandidateEducationDTO educationDTO = new CandidateEducationDTO();
-			educationDTO.setEducationFromDate(education.getEducationFromDate());
-			educationDTO.setEducationToDate(education.getEducationToDate());
-			educationDTO.setCollegeName(education.getCollege().getCollegeName());
-			educationDTO.setUniversityName(education.getCollege().getUniversity().getUniversityName());
-			String scoreType = education.getScoreType();
-			if (scoreType != null && scoreType.equals(Constants.GPA))
-				educationDTO.setGrade(education.getGrade());
-			else
-				educationDTO.setPercentage(education.getPercentage());
-			educationDTO.setScoreType(education.getScoreType());
-			educationDTO.setQualification(education.getQualification().getQualification());
-			educationDTO.setCourse(education.getCourse().getCourse());
-			education.getProjects().forEach(project -> {
-				CandidateProjectDTO projectDTO = setCandidateProjects(project);
-				educationDTO.getProjects().add(projectDTO);
-			});
-			dto.getEducations().add(educationDTO);
-		});
-	}
-
-	/**
-	 * @param addresses
-	 * @param dto
-	 */
-	private void setCandidateAddresses(Set<Address> addresses, CandidatePublicProfileDTO dto) {
-		addresses.forEach(address -> {
-			AddressDTO addressDTO = new AddressDTO();
-			addressDTO.setAddressLineOne(address.getAddressLineOne());
-			addressDTO.setAddressLineTwo(address.getAddressLineTwo());
-			addressDTO.setCity(address.getCity());
-			CountryDTO countryDTO = new CountryDTO();
-			countryDTO.setCountryNiceName(address.getCountry().getCountryNiceName());
-			addressDTO.setCountry(countryDTO);
-			addressDTO.setState(address.getState());
-			addressDTO.setZip(address.getZip());
-			dto.getAddresses().add(addressDTO);
-		});
-	}
-
-	/**
-	 * @param candidate
-	 * @return
-	 */
-	private void setCandidateDetails(Candidate candidate, CandidatePublicProfileDTO dto) {
-		CandidateDetailDTO candidateDetailDTO = new CandidateDetailDTO();
-		candidateDetailDTO.setId(candidate.getId());
-		candidateDetailDTO.setFirstName(candidate.getFirstName());
-		candidateDetailDTO.setLastName(candidate.getLastName());
-		candidateDetailDTO.setAboutMe(candidate.getAboutMe());
-		candidateDetailDTO.setAvailableForHiring(candidate.isAvailableForHiring());
-		candidateDetailDTO.setDateOfBirth(candidate.getDateOfBirth());
-		candidateDetailDTO.setDifferentlyAbled(candidate.isDifferentlyAbled());
-		candidateDetailDTO.setFacebook(candidate.getFacebook());
-		candidateDetailDTO.setLinkedIn(candidate.getLinkedIn());
-		candidateDetailDTO.setLogin(candidate.getLogin());
-		candidateDetailDTO.setMiddleName(candidate.getMiddleName());
-		candidateDetailDTO.setOpenToRelocate(candidate.isOpenToRelocate());
-		candidateDetailDTO.setPhoneCode(candidate.getPhoneCode());
-		candidateDetailDTO.setPhoneNumber(candidate.getPhoneNumber());
-		candidateDetailDTO.setTwitter(candidate.getTwitter());
-		dto.setCandidateDetails(candidateDetailDTO);
-	}
 	
 	/**
 	 * @param candidate
@@ -516,6 +379,7 @@ public class CandidateService {
 		candidateDetailDTO.setPhoneNumber(candidate.getPhoneNumber());
 		candidateDetailDTO.setTwitter(candidate.getTwitter());
 		candidateDetailDTO.setNationality(candidate.getNationality());
+		candidateDetailDTO.setProfileScore(candidate.getProfileScore());
 		if(candidate.getMaritalStatus()!=null) {
 			MaritalStatusDTO maritalStatusDTO = new MaritalStatusDTO();
 			maritalStatusDTO.setId(candidate.getMaritalStatus().getId());

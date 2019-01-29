@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,12 +155,10 @@ public class CandidateLanguageProficiencyResource {
 	 */
 	@GetMapping("/language-proficiencies-by-candidate/{id}")
 	@Timed
-	public List<CandidateLanguageProficiency> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
+	public List<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-		List<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageService
-				.getCandidateLanguageProficiencyByCandidate(id);
-		candidateLanguageProficiencies
-				.forEach(candidateLanguageProficiency -> candidateLanguageProficiency.setCandidate(null));
+		List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<CandidateLanguageProficiencyDTO>(candidateLanguageService
+				.getCandidateLanguageProficiencyByCandidate(id));
 		return candidateLanguageProficiencies;
 	}
 

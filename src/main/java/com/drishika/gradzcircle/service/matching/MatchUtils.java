@@ -342,6 +342,7 @@ public class MatchUtils {
 				for (Qualification filterQualification : jobFilterQualification) {
 					Qualification qualification = qualificationRepository
 							.findByQualification(filterQualification.getValue());
+					log.debug("Job Qulaiifcation is {} ",jobFilterQualification);
 					log.debug("Qulaification from filter is {}", qualification);
 					if (qualification != null) {
 						if (qualification.equals(education.getQualification())) {

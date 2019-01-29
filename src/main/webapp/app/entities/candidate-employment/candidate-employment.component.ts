@@ -6,7 +6,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
 import { DataService, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
 
@@ -22,6 +22,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     currentSearch: string;
     candidateId: any;
     subscription: Subscription;
+    profileScore: number; 
 
     constructor(
         private candidateEmploymentService: CandidateEmploymentService,
@@ -29,7 +30,8 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataService: DataService
+        private dataService: DataService,
+        private candidateProfileScoreService: CandidateProfileScoreService
     ) {
           this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -47,7 +49,16 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     loadEmploymentsForCandidate() {
 
         this.candidateEmploymentService.findEmploymentsByCandidateId(this.candidateId).subscribe(
-           (res: HttpResponse<CandidateEmployment[]>) => this.candidateEmployments = res.body,
+           (res: HttpResponse<CandidateEmployment[]>) =>{
+             this.candidateEmployments = res.body;
+             if(this.candidateEmployments && this.candidateEmployments.length>0)
+               {
+               this.candidateProfileScoreService.changeScore(this.candidateEmployments[0].candidate.profileScore);
+             } else {
+               this.candidateProfileScoreService.changeScore(this.profileScore);
+             }
+           } 
+             ,
                     (res: HttpErrorResponse) => this.onError(res.message));
         return;
 
@@ -91,6 +102,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
             if(account.authorities.indexOf(AuthoritiesConstants.CANDIDATE)>-1){
                 this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
+                this.profileScore = this.activatedRoute.snapshot.parent.data['candidate'].body.profileScore;
                 this.currentSearch = this.candidateId;
                 this.loadEmploymentsForCandidate();
             } else {

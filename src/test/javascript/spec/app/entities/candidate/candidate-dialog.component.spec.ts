@@ -15,6 +15,8 @@ import { GenderService } from '../../../../../../main/webapp/app/entities/gender
 import { MaritalStatusService } from '../../../../../../main/webapp/app/entities/marital-status';
 import { JobCategoryService } from '../../../../../../main/webapp/app/entities/job-category';
 import { JobService } from '../../../../../../main/webapp/app/entities/job';
+import { ProfileCategoryService } from '../../../../../../main/webapp/app/entities/profile-category';
+import { CorporateService } from '../../../../../../main/webapp/app/entities/corporate';
 import { VisaTypeService } from '../../../../../../main/webapp/app/entities/visa-type';
 
 describe('Component Tests', () => {
@@ -37,6 +39,8 @@ describe('Component Tests', () => {
                     MaritalStatusService,
                     JobCategoryService,
                     JobService,
+                    ProfileCategoryService,
+                    CorporateService,
                     VisaTypeService,
                     CandidateService
                 ]

@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DataService, Principal} from '../../shared';
+import { JOB_ID, MATCH_SCORE } from '../../shared/constants/storage.constants';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {JhiDateUtils} from 'ng-jhipster';
@@ -30,6 +31,7 @@ export class JobViewComponent implements OnInit {
     private principal: Principal,
     private router: Router,
     private jhiAlertService: JhiAlertService,
+    private dataService: DataService
   ) {
   }
 
@@ -107,9 +109,14 @@ export class JobViewPopupComponent implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobViewComponent as Component, params['id'], params['matchScore']);
       } else {
-        const id = this.dataService.getRouteData(); 
+        let id = this.dataService.getRouteData();
+        const matchScore = this.dataService.get(MATCH_SCORE);
+        if (!id) {
+          id = this.dataService.get(JOB_ID);
+
+        }
         this.jobPopupService
-          .open(JobViewComponent as Component, id, params['matchScore']);
+          .open(JobViewComponent as Component, id, matchScore);
       }
     });
   }

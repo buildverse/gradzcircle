@@ -1,3 +1,4 @@
+import { Candidate } from '../candidate/candidate.model';
 import { BaseEntity } from './../../shared';
 
 export class CandidateCertification implements BaseEntity {
@@ -6,7 +7,7 @@ export class CandidateCertification implements BaseEntity {
         public certificationTitle?: string,
         public certificationDate?: any,
         public certificationDetails?: string,
-        public candidate?: BaseEntity,
+        public candidate?: Candidate,
         public collapsed?: boolean
     ) {
       this.collapsed = true;

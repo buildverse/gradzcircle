@@ -1,3 +1,4 @@
+import { Candidate } from '../candidate/candidate.model';
 import { BaseEntity } from './../../shared';
 
 export class CandidateNonAcademicWork implements BaseEntity {
@@ -10,7 +11,7 @@ export class CandidateNonAcademicWork implements BaseEntity {
         public roleInInitiative?: string,
         public nonAcademicWorkStartDate?: any,
         public nonAcademicWorkEndDate?: any,
-        public candidate?: BaseEntity,
+        public candidate?: Candidate,
         public collapsed?: boolean
     ) {
         this.isCurrentActivity = false;

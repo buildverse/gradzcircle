@@ -25,7 +25,7 @@ public class ElasticsearchConfiguration {
 	private final Logger log = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
 
 	// USE in DEV
-/*	@Bean
+	/*@Bean
 	public ElasticsearchTemplate elasticsearchTemplate(Client client,
 			Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
 		return new ElasticsearchTemplate(client,
@@ -58,7 +58,7 @@ public class ElasticsearchConfiguration {
 		}
 		return client;
 	}
-	
+
 	public class CustomEntityMapper implements EntityMapper {
 
 		private ObjectMapper objectMapper;
