@@ -20,8 +20,7 @@
 	                      </div>
 	                      <div class="row tab-content2">
 	                         <div class="col-lg-12 total-job-content pad-0">
-	                            <span jhiTranslate="gradzcircleApp.job.postedSince">&nbsp;&nbsp;&nbsp; Posted since {{this.corporate.establishedSince|
-												date:'mediumDate'}}</span>
+	                            <span jhiTranslate="gradzcircleApp.job.postedSince">&nbsp;&nbsp;&nbsp; Posted since {{this.corporate.establishedSince | date:'mediumDate'}}</span>
 	                         </div>
 	                      </div>
 	                   </div>
@@ -133,7 +132,7 @@
 									[routerLink]="['../shortListedCandidateList',job.id,corporateId]">
 										{{job.noOfShortListedCandidate}}</a></td>
 								<td class="icons-edit">
-			                         <a [routerLink]="['/', { outlets: { popup: 'job/view/'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>
+			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>
 			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true"> <span class="icon icon-edit"></span> 
 									</a> 
 									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true"> <span class="icon icon-edit"></span> 
@@ -343,6 +342,9 @@
 					<th jhiSortBy="updatedBy"><span
 						jhiTranslate="gradzcircleApp.job.updatedBy">Updated By</span><span
 						class="icon icon-select-arrows"></span></th>
+					<th jhiSortBy="noOfApplicantLeft"><span
+						jhiTranslate="gradzcircleApp.job.noOfApplicantLeft">noOfApplicantLeft</span><span
+						class="icon icon-select-arrows"></span></th>
 					<th jhiSortBy="jobType"><span
 						jhiTranslate="gradzcircleApp.job.jobType">Job Type</span><span
 						class="icon icon-select-arrows"></span></th>
@@ -386,6 +388,7 @@
 					<td>{{job.updateDate | date:'medium'}}</td>
 					<td>{{job.createdBy}}</td>
 					<td>{{job.updatedBy}}</td>
+					<td>{{job.noOfApplicantLeft}}</td>
 
 					<td>
 						<div *ngIf="job.jobType">

@@ -80,7 +80,12 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     loadCandidateLanguages(){
         this.candidateLanguageProficiencyService.findByCandidateId(this.candidateId)
             .subscribe(
-                (res: HttpResponse<CandidateLanguageProficiency[]>) => this.candidateLanguageProficiencies = res.body,
+                (res: HttpResponse<CandidateLanguageProficiency[]>) => {
+                 this.candidateLanguageProficiencies = res.body;
+                  if(this.candidateLanguageProficiencies && this.candidateLanguageProficiencies.length >0){
+                    this.candidateProfileScoreService.changeScore(this.candidateLanguageProficiencies[0].candidate.profileScore);
+                  } 
+                },
                     (res: HttpErrorResponse) => this.onError(res.message)
             );
     }

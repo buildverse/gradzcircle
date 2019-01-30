@@ -34,6 +34,9 @@ export class JobHistory implements BaseEntity {
         public updateDate?: any,
         public createdBy?: number,
         public updatedBy?: number,
+        public noOfApplicantLeft?: number,
+        public jobType?: BaseEntity,
+        public employmentType?: BaseEntity,
         public job?: BaseEntity,
     ) {
         this.hasBeenEdited = false;

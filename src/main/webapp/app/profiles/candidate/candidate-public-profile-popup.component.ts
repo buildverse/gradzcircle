@@ -90,6 +90,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
    private onSaveSuccess(result: Candidate) {
         this.eventManager.broadcast({ name: 'matchedListModification', content: 'OK'});
       this.eventManager.broadcast({ name: 'shortListedCandidateListModification', content: 'OK'});
+     this.eventManager.broadcast({ name: 'jobListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }

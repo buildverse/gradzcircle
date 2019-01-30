@@ -86,7 +86,7 @@ export class CandidateEducationService {
   }
 
   private convertArrayResponse(res: HttpResponse<CandidateEducation[]>): HttpResponse<CandidateEducation[]> {
-    console.log('============'+JSON.stringify(res.body));
+   // console.log('============'+JSON.stringify(res.body));
     const jsonResponse: CandidateEducation[] = res.body;
     const body: CandidateEducation[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {

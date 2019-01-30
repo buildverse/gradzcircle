@@ -1,3 +1,4 @@
+
 {
     "gradzcircleApp": {
         "job" : {
@@ -42,6 +43,7 @@
             "updateDate": "Update Date",
             "createdBy": "Created By",
             "updatedBy": "Updated By",
+            "noOfApplicantLeft": "No Of Applicant Left",
             "jobFilter": "Job Filter",
             "history": "History",
             "jobType": "Job Type",

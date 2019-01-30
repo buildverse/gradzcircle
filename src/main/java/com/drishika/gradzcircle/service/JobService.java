@@ -256,6 +256,9 @@ public class JobService {
 
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidates(Pageable pageable, Long candidateId) {
 		Page<Job> jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedForCandidate(candidateId, pageable);
+		if(jobPage.getSize()==0) {
+			jobPage = jobRepository.findAllActiveJobsForCandidates(pageable,candidateId);
+		}
 		final Page<CandidateJobDTO> page = jobPage
 				.map(job -> converter.convertToJobListingForCandidate(job, candidateId, false));
 		return page;

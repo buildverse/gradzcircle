@@ -31,6 +31,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
 	@Query(" select j from Job j where j.jobStatus=1")
 	List<Job> findAllActiveJobs();
+	
+	@Query(" select j from Job j where j.jobStatus=1 and j.id not in (select cJA.id.jobId from CandidateAppliedJobs cJA where cJA.id.candidateId =?1)")
+	Page<Job> findAllActiveJobsForCandidates(Pageable pageable, Long candidateId);
 
 	@Query(" select j from Job j where j.jobStatus=1")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))

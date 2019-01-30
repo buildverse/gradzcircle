@@ -108,6 +108,22 @@
         <dd>
             <span>{{jobHistory.updatedBy}}</span>
         </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantLeft">No Of Applicant Left</span></dt>
+        <dd>
+            <span>{{jobHistory.noOfApplicantLeft}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.jobType">Job Type</span></dt>
+        <dd>
+            <div *ngIf="jobHistory.jobType">
+                <a [routerLink]="['/job-type', jobHistory.jobType?.id]">{{jobHistory.jobType?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.jobHistory.employmentType">Employment Type</span></dt>
+        <dd>
+            <div *ngIf="jobHistory.employmentType">
+                <a [routerLink]="['/employment-type', jobHistory.employmentType?.id]">{{jobHistory.employmentType?.id}}</a>
+            </div>
+        </dd>
         <dt><span jhiTranslate="gradzcircleApp.jobHistory.job">Job</span></dt>
         <dd>
             <div *ngIf="jobHistory.job">

@@ -641,8 +641,8 @@ INSERT INTO language (id,language) VALUES
 
 
 
-insert into filter (id,filter_name,filter_cost,comments) 
-values 
+insert into filter (id,filter_name,filter_cost,comments)
+values
 (1,'gradDate',5,''),
 (2,'score',20,''),
 (3,'quali',20,''),
@@ -653,8 +653,8 @@ values
 (8,'universities',0,''),
 (9,'disc',10,'This is a percentage value');
 
-insert into app_config (id,config_name,config_value) 
-values 
+insert into app_config (id,config_name,config_value)
+values
 (1,'Busin',true);
 
  INSERT INTO qualification (id, qualification,weightage) VALUES
@@ -705,3 +705,5 @@ values
 (46, 'M.Arch',4),
 (47, 'M.Phil/PhD',5),
 (48, 'LLM',null);
+
+/i profile_categoires.sql

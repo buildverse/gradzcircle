@@ -148,11 +148,16 @@
         {
             "fieldName": "updatedBy",
             "fieldType": "Long"
+        },
+        {
+            "fieldName": "noOfApplicantLeft",
+            "fieldType": "Long"
         }
     ],
     "changelogDate": "20171128154426",
     "entityTableName": "job",
     "dto": "no",
     "pagination": "no",
-    "service": "no"
+    "service": "no",
+    "jpaMetamodelFiltering": false
 }

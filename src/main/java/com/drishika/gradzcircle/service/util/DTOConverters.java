@@ -5,6 +5,7 @@ package com.drishika.gradzcircle.service.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -141,10 +142,8 @@ public class DTOConverters {
 		jobListingData.setEmploymentType(job.getEmploymentType());
 		jobListingData.setJobType(job.getJobType());
 		// FILTER OUT REVIEWED CANDIDATES
-		// jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream()
-		// .filter(candidateJob ->
-		// !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
-		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size());
+		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream().filter(candidateJob -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
+		//jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size());
 		jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
 		jobListingData.setNoOfShortListedCandidate(numberOfCandidatesShortListedByJob);
 		jobListingData.setId(job.getId());

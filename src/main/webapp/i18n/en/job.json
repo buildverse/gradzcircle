@@ -90,7 +90,8 @@
 			"candidatesApplied" : "&nbsp; Candidate Applied to Recent Jobs",
 			"candidateLinked":"&nbsp; Profiles saved for future pitching",
 			"savedProfiles":"&nbsp; Saved Profiles",
-			"newRequests":"&nbsp; New Requests"
+			"newRequests":"&nbsp; New Requests",
+			"noOfApplicantLeft": "No Of Applicant Left"
 		}
 	}
 }

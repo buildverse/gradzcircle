@@ -24,7 +24,8 @@ entity Job{
     canEdit Boolean,
     updateDate ZonedDateTime,
     createdBy Long,
-    updatedBy Long
+    updatedBy Long,
+    noOfApplicantLeft Long
 
 }
 
@@ -54,7 +55,8 @@ entity JobHistory{
     canEdit Boolean,
     updateDate ZonedDateTime,
     createdBy Long,
-    updatedBy Long
+    updatedBy Long,
+    noOfApplicantLeft Long
 }
 
 entity AppConfig {

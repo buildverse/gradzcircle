@@ -56,7 +56,8 @@ export class Job implements BaseEntity {
     public jobsLastMonth?: number,
     public newApplicants?: number,
     public totalLinkedCandidates?: number,
-    public noOfShortListedCandidate?: number
+    public noOfShortListedCandidate?: number,
+    public noOfApplicantLeft?: number
 
   ) {
     this.hasBeenEdited = false;

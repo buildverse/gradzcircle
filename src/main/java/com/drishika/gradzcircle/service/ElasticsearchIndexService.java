@@ -29,6 +29,7 @@ import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.MaritalStatus;
 import com.drishika.gradzcircle.domain.Nationality;
+import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
@@ -68,6 +69,7 @@ import com.drishika.gradzcircle.repository.JobTypeRepository;
 import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.MaritalStatusRepository;
 import com.drishika.gradzcircle.repository.NationalityRepository;
+import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.SkillsRepository;
 import com.drishika.gradzcircle.repository.UniversityRepository;
@@ -100,6 +102,7 @@ import com.drishika.gradzcircle.repository.search.JobTypeSearchRepository;
 import com.drishika.gradzcircle.repository.search.LanguageSearchRepository;
 import com.drishika.gradzcircle.repository.search.MaritalStatusSearchRepository;
 import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
+import com.drishika.gradzcircle.repository.search.ProfileCategorySearchRepository;
 import com.drishika.gradzcircle.repository.search.QualificationSearchRepository;
 import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
 import com.drishika.gradzcircle.repository.search.UniversitySearchRepository;
@@ -238,6 +241,10 @@ public class ElasticsearchIndexService {
 	private final UserRepository userRepository;
 
 	private final UserSearchRepository userSearchRepository;
+	
+	private ProfileCategoryRepository profileCategoryRepository;
+	
+	private ProfileCategorySearchRepository profileCategorySearchRepository;
 
 	private final ElasticsearchTemplate elasticsearchTemplate;
 
@@ -284,7 +291,8 @@ public class ElasticsearchIndexService {
 			QualificationSearchRepository qualificationSearchRepository, SkillsRepository skillsRepository,
 			SkillsSearchRepository skillsSearchRepository, UniversityRepository universityRepository,
 			UniversitySearchRepository universitySearchRepository, VisaTypeRepository visaTypeRepository,
-			VisaTypeSearchRepository visaTypeSearchRepository, ElasticsearchTemplate elasticsearchTemplate) {
+			VisaTypeSearchRepository visaTypeSearchRepository, ElasticsearchTemplate elasticsearchTemplate,
+			ProfileCategoryRepository profileCategoryRepository, ProfileCategorySearchRepository profileCategorySearchRepository) {
 		this.userRepository = userRepository;
 		this.userSearchRepository = userSearchRepository;
 		this.addressRepository = addressRepository;
@@ -350,6 +358,8 @@ public class ElasticsearchIndexService {
 		this.visaTypeRepository = visaTypeRepository;
 		this.visaTypeSearchRepository = visaTypeSearchRepository;
 		this.elasticsearchTemplate = elasticsearchTemplate;
+		this.profileCategoryRepository = profileCategoryRepository;
+		this.profileCategorySearchRepository  = profileCategorySearchRepository;
 	}
 
 	@Async
@@ -394,6 +404,7 @@ public class ElasticsearchIndexService {
 		//reindexForClass(Industry.class, industryRepository, industrySearchRepository);
 		//reindexForClass(JobCategory.class, jobCategoryRepository, jobCategorySearchRepository);
 		reindexForClass(JobType.class, jobTypeRepository, jobTypeSearchRepository);
+		reindexForClass(ProfileCategory.class, profileCategoryRepository, profileCategorySearchRepository);
 		// reindexForClass(Language.class, languageRepository,
 		// languageSearchRepository);
 		// reindexForClass(MaritalStatus.class, maritalStatusRepository,

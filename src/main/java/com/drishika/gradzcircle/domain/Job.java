@@ -128,6 +128,9 @@ public class Job implements Serializable {
 
 	@Column(name = "updated_by")
 	private Long updatedBy;
+	
+    @Column(name = "no_of_applicant_left")
+    private Long noOfApplicantLeft;
 
 	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -517,6 +520,22 @@ public class Job implements Serializable {
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+	
+	
+
+	/**
+	 * @return the noOfApplicantLeft
+	 */
+	public Long getNoOfApplicantLeft() {
+		return noOfApplicantLeft;
+	}
+
+	/**
+	 * @param noOfApplicantLeft the noOfApplicantLeft to set
+	 */
+	public void setNoOfApplicantLeft(Long noOfApplicantLeft) {
+		this.noOfApplicantLeft = noOfApplicantLeft;
+	}
 
 	public Set<JobFilter> getJobFilters() {
 		return jobFilters;
@@ -689,21 +708,24 @@ public class Job implements Serializable {
 		return Objects.hashCode(getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Job{" + "id=" + getId() + ", jobTitle='" + getJobTitle() + "'" + ", jobDescription='"
-				+ getJobDescription() + "'" + ", noOfApplicants='" + getNoOfApplicants() + "'" + ", salary='"
-				+ getSalary() + "'" + ", jobStatus='" + getJobStatus() + "'" + ", createDate='" + getCreateDate() + "'"
-				+ ", originalJobCost='" + getOriginalJobCost() + "'" + ", jobCost='" + getJobCost() + "'"
-				+ ", amountPaid='" + getAmountPaid() + "'" + ", totalAmountPaid='" + getTotalAmountPaid() + "'"
-				+ ", noOfApplicantsBought='" + getNoOfApplicantsBought() + "'" + ", removedFilterAmount='"
-				+ getRemovedFilterAmount() + "'" + ", additionalFilterAmount='" + getAdditionalFilterAmount() + "'"
-				+ ", adminCharge='" + getAdminCharge() + "'" + ", adminChargeRate='" + getAdminChargeRate() + "'"
-				+ ", upfrontDiscountRate='" + getUpfrontDiscountRate() + "'" + ", upfrontDiscountAmount='"
-				+ getUpfrontDiscountAmount() + "'" + ", escrowAmountUsed='" + getEscrowAmountUsed() + "'"
-				+ ", escrowAmountAdded='" + getEscrowAmountAdded() + "'" + ", paymentType='" + getPaymentType() + "'"
-				+ ", hasBeenEdited='" + isHasBeenEdited() + "'" + ", everActive='" + isEverActive() + "'"
-				+ ", canEdit='" + isCanEdit() + "'" + ", updateDate='" + getUpdateDate() + "'" + ", createdBy='"
-				+ getCreatedBy() + "'" + ", updatedBy='" + getUpdatedBy() + "'" + "}";
+		return "Job [id=" + id + ", jobTitle=" + jobTitle + ", jobDescription=" + jobDescription + ", noOfApplicants="
+				+ noOfApplicants + ", salary=" + salary + ", jobStatus=" + jobStatus + ", createDate=" + createDate
+				+ ", originalJobCost=" + originalJobCost + ", jobCost=" + jobCost + ", amountPaid=" + amountPaid
+				+ ", totalAmountPaid=" + totalAmountPaid + ", noOfApplicantsBought=" + noOfApplicantsBought
+				+ ", removedFilterAmount=" + removedFilterAmount + ", additionalFilterAmount=" + additionalFilterAmount
+				+ ", adminCharge=" + adminCharge + ", adminChargeRate=" + adminChargeRate + ", upfrontDiscountRate="
+				+ upfrontDiscountRate + ", upfrontDiscountAmount=" + upfrontDiscountAmount + ", escrowAmountUsed="
+				+ escrowAmountUsed + ", escrowAmountAdded=" + escrowAmountAdded + ", paymentType=" + paymentType
+				+ ", hasBeenEdited=" + hasBeenEdited + ", everActive=" + everActive + ", canEdit=" + canEdit
+				+ ", updateDate=" + updateDate + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", noOfApplicantLeft=" + noOfApplicantLeft + "]";
 	}
+
+	
+	
 }

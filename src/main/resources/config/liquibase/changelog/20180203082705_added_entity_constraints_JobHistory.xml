@@ -15,4 +15,19 @@
                                  referencedTableName="job"/>
 
     </changeSet>
+    <changeSet id="20180203082705-3" author="abhinav">
+        
+        <addForeignKeyConstraint baseColumnNames="job_type_id"
+                                 baseTableName="job_history"
+                                 constraintName="fk_job_history_job_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="job_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="employment_type_id"
+                                 baseTableName="job_history"
+                                 constraintName="fk_job_history_employment_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employment_type"/>
+
+    </changeSet>
 </databaseChangeLog>

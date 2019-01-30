@@ -105,6 +105,10 @@ describe('JobHistory e2e test', () => {
         expect(jobHistoryDialogPage.getCreatedByInput()).toMatch('5');
         jobHistoryDialogPage.setUpdatedByInput('5');
         expect(jobHistoryDialogPage.getUpdatedByInput()).toMatch('5');
+        jobHistoryDialogPage.setNoOfApplicantLeftInput('5');
+        expect(jobHistoryDialogPage.getNoOfApplicantLeftInput()).toMatch('5');
+        jobHistoryDialogPage.jobTypeSelectLastOption();
+        jobHistoryDialogPage.employmentTypeSelectLastOption();
         jobHistoryDialogPage.jobSelectLastOption();
         jobHistoryDialogPage.save();
         expect(jobHistoryDialogPage.getSaveButton().isPresent()).toBeFalsy();
@@ -158,6 +162,9 @@ export class JobHistoryDialogPage {
     updateDateInput = element(by.css('input#field_updateDate'));
     createdByInput = element(by.css('input#field_createdBy'));
     updatedByInput = element(by.css('input#field_updatedBy'));
+    noOfApplicantLeftInput = element(by.css('input#field_noOfApplicantLeft'));
+    jobTypeSelect = element(by.css('select#field_jobType'));
+    employmentTypeSelect = element(by.css('select#field_employmentType'));
     jobSelect = element(by.css('select#field_job'));
 
     getModalTitle() {
@@ -358,6 +365,46 @@ export class JobHistoryDialogPage {
 
     getUpdatedByInput = function() {
         return this.updatedByInput.getAttribute('value');
+    };
+
+    setNoOfApplicantLeftInput = function(noOfApplicantLeft) {
+        this.noOfApplicantLeftInput.sendKeys(noOfApplicantLeft);
+    };
+
+    getNoOfApplicantLeftInput = function() {
+        return this.noOfApplicantLeftInput.getAttribute('value');
+    };
+
+    jobTypeSelectLastOption = function() {
+        this.jobTypeSelect.all(by.tagName('option')).last().click();
+    };
+
+    jobTypeSelectOption = function(option) {
+        this.jobTypeSelect.sendKeys(option);
+    };
+
+    getJobTypeSelect = function() {
+        return this.jobTypeSelect;
+    };
+
+    getJobTypeSelectedOption = function() {
+        return this.jobTypeSelect.element(by.css('option:checked')).getText();
+    };
+
+    employmentTypeSelectLastOption = function() {
+        this.employmentTypeSelect.all(by.tagName('option')).last().click();
+    };
+
+    employmentTypeSelectOption = function(option) {
+        this.employmentTypeSelect.sendKeys(option);
+    };
+
+    getEmploymentTypeSelect = function() {
+        return this.employmentTypeSelect;
+    };
+
+    getEmploymentTypeSelectedOption = function() {
+        return this.employmentTypeSelect.element(by.css('option:checked')).getText();
     };
 
     jobSelectLastOption = function() {

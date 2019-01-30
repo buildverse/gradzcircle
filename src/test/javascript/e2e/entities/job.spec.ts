@@ -105,6 +105,8 @@ describe('Job e2e test', () => {
         expect(jobDialogPage.getCreatedByInput()).toMatch('5');
         jobDialogPage.setUpdatedByInput('5');
         expect(jobDialogPage.getUpdatedByInput()).toMatch('5');
+        jobDialogPage.setNoOfApplicantLeftInput('5');
+        expect(jobDialogPage.getNoOfApplicantLeftInput()).toMatch('5');
         jobDialogPage.jobTypeSelectLastOption();
         jobDialogPage.employmentTypeSelectLastOption();
         jobDialogPage.corporateSelectLastOption();
@@ -160,6 +162,7 @@ export class JobDialogPage {
     updateDateInput = element(by.css('input#field_updateDate'));
     createdByInput = element(by.css('input#field_createdBy'));
     updatedByInput = element(by.css('input#field_updatedBy'));
+    noOfApplicantLeftInput = element(by.css('input#field_noOfApplicantLeft'));
     jobTypeSelect = element(by.css('select#field_jobType'));
     employmentTypeSelect = element(by.css('select#field_employmentType'));
     corporateSelect = element(by.css('select#field_corporate'));
@@ -362,6 +365,14 @@ export class JobDialogPage {
 
     getUpdatedByInput = function() {
         return this.updatedByInput.getAttribute('value');
+    };
+
+    setNoOfApplicantLeftInput = function(noOfApplicantLeft) {
+        this.noOfApplicantLeftInput.sendKeys(noOfApplicantLeft);
+    };
+
+    getNoOfApplicantLeftInput = function() {
+        return this.noOfApplicantLeftInput.getAttribute('value');
     };
 
     jobTypeSelectLastOption = function() {

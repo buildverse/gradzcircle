@@ -47,19 +47,23 @@ import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.Course;
+import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
+import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.enumeration.PaymentType;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.CourseRepository;
+import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.JobFilterRepository;
 import com.drishika.gradzcircle.repository.JobHistoryRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.repository.JobTypeRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.JobService;
@@ -189,6 +193,12 @@ public class JobResourceIntTest {
 	private CourseRepository courseRepository;
 
 	@Autowired
+	private JobTypeRepository jobTypeRepository;
+	
+	@Autowired
+	private EmploymentTypeRepository employmentTypeRepository;
+	
+	@Autowired
 	private QualificationRepository qualificationRepository;
 
 	@Autowired
@@ -215,6 +225,10 @@ public class JobResourceIntTest {
 	private Corporate corporate;
 
 	private Candidate candidateA, candidateB, candidateC;
+	
+	private JobType jobType;
+	
+	private EmploymentType employmentType;
 
 	@Before
 	public void setup() {
@@ -478,12 +492,26 @@ public class JobResourceIntTest {
 		Corporate corporate = new Corporate();
 		return corporate;
 	}
+	
+	public static EmploymentType createEmploymentType(EntityManager em) {
+		EmploymentType employmentType = new EmploymentType();
+		return employmentType;
+	}
+	
+	public static JobType createJobType(EntityManager em) {
+		JobType jobType = new JobType();
+		return jobType;
+	}
 
 	@Before
 	public void initTest() {
 		// jobSearchRepository.deleteAll();
 		job = createDraftJob(em);
 		corporate = createCorporate(em);
+		employmentType = createEmploymentType(em);
+		jobType = createJobType(em);
+		employmentTypeRepository.saveAndFlush(employmentType);
+		jobTypeRepository.saveAndFlush(jobType);
 	}
 
 	@Test
@@ -875,6 +903,8 @@ public class JobResourceIntTest {
 	public void updateDraftJobToActiveWithDefaultFilter() throws Exception {
 		// Create Draft Job
 		Job job = createDraftJob(em);
+		job.employmentType(employmentType);
+		job.jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -1232,8 +1262,7 @@ public class JobResourceIntTest {
 		// everctive is true
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
-				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
-		;
+				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).employmentType(employmentType).jobType(jobType);
 		JobFilter jobFilter = new JobFilter();
 		jobFilter.setFilterDescription(BASIC_FILTER);
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
@@ -1279,6 +1308,9 @@ public class JobResourceIntTest {
 		assertThat(jobList).hasSize(jobDatabaseSizeBeforeUpdate);
 		assertThat(jobHistoryList).hasSize(jobHistoryDatabaseSizeBeforeUpdate + 1);
 		assertThat(jobHistoryList).hasSize(3);
+		assertThat(jobHistoryList.get(2).getEmploymentType()).isEqualTo(employmentType);
+		assertThat(jobHistoryList.get(2).getJobType()).isEqualTo(jobType);
+	
 		assertThat(jobFilterList).hasSize(jobFiltersSizeBeforeUpdate);
 		assertThat(jobFilterList).hasSize(1);
 		// should not have any filter history
@@ -1700,6 +1732,7 @@ public class JobResourceIntTest {
 
 		// Initialize the database
 		Job job = createJobDraftNotEditedCanEdit(em);
+		
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();

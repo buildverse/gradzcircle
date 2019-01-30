@@ -194,7 +194,7 @@
 			</div>
 			<ng-template #showProfile>
 			<div class="my-3  ml-4 mr-3">
-				<div *ngIf="candidate.employments?.length>0">
+				<div *ngIf="candidate.employments?.length>0 && candidate.employments[0].id">
 					<div class="row">
 						<div class="col-md-12">
 							<span style="color: grey; float: left; margin-left: -5px"
@@ -260,7 +260,7 @@
 							class="icon icon-graduation-cap"></span> <span
 							style="margin-left: 15px;"
 							class="underline-public-profile-headers public-profile-headers">EDUCATION</span>
-						<div *ngIf="candidate.educations?.length>0">
+						<div *ngIf="candidate.educations?.length>0 && candidate.educations[0].id ">
 							<div *ngFor="let candidateEducation of candidate.educations ; trackBy: trackId">
 								<div class="mt-3" style="margin-left: 15px;">
 									<p
@@ -330,7 +330,7 @@
 				</div>
 				<div class="row my-5">
 					<div class="col-md-6">
-						<div *ngIf="candidate.candidateLanguageProficiencies?.length>0">
+						<div *ngIf="candidate.candidateLanguageProficiencies?.length>0 && candidate.candidateLanguageProficiencies[0].id">
 							<span style="color: grey; float: left; margin-left: -5px"
 								class="icon icon-chat"></span> <span style="margin-left: 15px;"
 								class="underline-public-profile-headers public-profile-headers">LANGUAGES</span>
@@ -354,29 +354,29 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div *ngIf="candidate.nonAcademics?.length>0">
+						<div *ngIf="candidate.nonAcademics?.length>0 && candidate.nonAcademics[0].id">
 							<span style="color: grey; float: left; margin-left: 5px"
 								class="icon icon-trophy"></span> <span
 								style="margin-left: 15px;"
 								class="underline-public-profile-headers public-profile-headers text-uppercase">Extra
 								- Curricular and Awards</span>
-						</div>
-						<div *ngFor="let candidateNonAcademic of candidate.nonAcademics ; trackBy: trackId" >
-							<div class="mt-2" style="margin-left: 15px;">
-							
-								<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">
-								<span class="ico icon-chevron-right" style="color: #397598;"></span>
-									{{candidateNonAcademic.nonAcademicInitiativeTitle}}</p>
-								<p class="public-profile-body"  style="margin-left: 15px;"
-									[innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
+					
+							<div *ngFor="let candidateNonAcademic of candidate.nonAcademics ; trackBy: trackId" >
+								<div class="mt-2" style="margin-left: 15px;">
+								
+									<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">
+									<span class="ico icon-chevron-right" style="color: #397598;"></span>
+										{{candidateNonAcademic.nonAcademicInitiativeTitle}}</p>
+									<p class="public-profile-body"  style="margin-left: 15px;"
+										[innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
+								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 				<div class="row mt-4">
 					<div class="col-md-12">
-						<div *ngIf="candidate.certifications?.length>0">
+						<div *ngIf="candidate.certifications?.length>0 && candidate.certifications[0].id">
 							<span style="color: grey; float: left; margin-left: -5px"
 								class="icon icon-price-ribbon"></span> <span
 								style="margin-left: 15px;"

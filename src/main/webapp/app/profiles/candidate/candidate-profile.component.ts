@@ -155,7 +155,10 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
 
   reloadCandidate() {
     this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
-      (res: HttpResponse<Candidate>) => this.candidate = res.body,
+      (res: HttpResponse<Candidate>) => {
+       this.candidate = res.body;
+        this.candidateProfileScoreService.changeScore(this.candidate.profileScore); 
+      },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
     return;

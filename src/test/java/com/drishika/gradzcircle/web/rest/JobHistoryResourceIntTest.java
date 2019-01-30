@@ -123,6 +123,9 @@ public class JobHistoryResourceIntTest {
     private static final Long DEFAULT_UPDATED_BY = 1L;
     private static final Long UPDATED_UPDATED_BY = 2L;
 
+    private static final Long DEFAULT_NO_OF_APPLICANT_LEFT = 1L;
+    private static final Long UPDATED_NO_OF_APPLICANT_LEFT = 2L;
+
     @Autowired
     private JobHistoryRepository jobHistoryRepository;
 
@@ -189,7 +192,8 @@ public class JobHistoryResourceIntTest {
             .canEdit(DEFAULT_CAN_EDIT)
             .updateDate(DEFAULT_UPDATE_DATE)
             .createdBy(DEFAULT_CREATED_BY)
-            .updatedBy(DEFAULT_UPDATED_BY);
+            .updatedBy(DEFAULT_UPDATED_BY)
+            .noOfApplicantLeft(DEFAULT_NO_OF_APPLICANT_LEFT);
         return jobHistory;
     }
 
@@ -240,6 +244,7 @@ public class JobHistoryResourceIntTest {
         assertThat(testJobHistory.getUpdateDate()).isEqualTo(DEFAULT_UPDATE_DATE);
         assertThat(testJobHistory.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testJobHistory.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testJobHistory.getNoOfApplicantLeft()).isEqualTo(DEFAULT_NO_OF_APPLICANT_LEFT);
 
         // Validate the JobHistory in Elasticsearch
         JobHistory jobHistoryEs = jobHistorySearchRepository.findOne(testJobHistory.getId());
@@ -303,7 +308,8 @@ public class JobHistoryResourceIntTest {
             .andExpect(jsonPath("$.[*].canEdit").value(hasItem(DEFAULT_CAN_EDIT.booleanValue())))
             .andExpect(jsonPath("$.[*].updateDate").value(hasItem(sameInstant(DEFAULT_UPDATE_DATE))))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.intValue())))
-            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.intValue())));
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.intValue())))
+            .andExpect(jsonPath("$.[*].noOfApplicantLeft").value(hasItem(DEFAULT_NO_OF_APPLICANT_LEFT.intValue())));
     }
 
     @Test
@@ -342,7 +348,8 @@ public class JobHistoryResourceIntTest {
             .andExpect(jsonPath("$.canEdit").value(DEFAULT_CAN_EDIT.booleanValue()))
             .andExpect(jsonPath("$.updateDate").value(sameInstant(DEFAULT_UPDATE_DATE)))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.intValue()))
-            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY.intValue()));
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY.intValue()))
+            .andExpect(jsonPath("$.noOfApplicantLeft").value(DEFAULT_NO_OF_APPLICANT_LEFT.intValue()));
     }
 
     @Test
@@ -391,7 +398,8 @@ public class JobHistoryResourceIntTest {
             .canEdit(UPDATED_CAN_EDIT)
             .updateDate(UPDATED_UPDATE_DATE)
             .createdBy(UPDATED_CREATED_BY)
-            .updatedBy(UPDATED_UPDATED_BY);
+            .updatedBy(UPDATED_UPDATED_BY)
+            .noOfApplicantLeft(UPDATED_NO_OF_APPLICANT_LEFT);
 
         restJobHistoryMockMvc.perform(put("/api/job-histories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -428,6 +436,7 @@ public class JobHistoryResourceIntTest {
         assertThat(testJobHistory.getUpdateDate()).isEqualTo(UPDATED_UPDATE_DATE);
         assertThat(testJobHistory.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testJobHistory.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testJobHistory.getNoOfApplicantLeft()).isEqualTo(UPDATED_NO_OF_APPLICANT_LEFT);
 
         // Validate the JobHistory in Elasticsearch
         JobHistory jobHistoryEs = jobHistorySearchRepository.findOne(testJobHistory.getId());
@@ -513,7 +522,8 @@ public class JobHistoryResourceIntTest {
             .andExpect(jsonPath("$.[*].canEdit").value(hasItem(DEFAULT_CAN_EDIT.booleanValue())))
             .andExpect(jsonPath("$.[*].updateDate").value(hasItem(sameInstant(DEFAULT_UPDATE_DATE))))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.intValue())))
-            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.intValue())));
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.intValue())))
+            .andExpect(jsonPath("$.[*].noOfApplicantLeft").value(hasItem(DEFAULT_NO_OF_APPLICANT_LEFT.intValue())));
     }
 
     @Test

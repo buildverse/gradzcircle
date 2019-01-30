@@ -68,7 +68,7 @@ class JobGatlingTest extends Simulation {
             .exec(http("Create new job")
             .post("/api/jobs")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "jobTitle":"SAMPLE_TEXT", "jobDescription":"SAMPLE_TEXT", "noOfApplicants":"0", "salary":null, "jobStatus":"0", "createDate":"2020-01-01T00:00:00.000Z", "originalJobCost":null, "jobCost":null, "amountPaid":null, "totalAmountPaid":null, "noOfApplicantsBought":"0", "removedFilterAmount":null, "additionalFilterAmount":null, "adminCharge":null, "adminChargeRate":null, "upfrontDiscountRate":null, "upfrontDiscountAmount":null, "escrowAmountUsed":null, "escrowAmountAdded":null, "paymentType":null, "hasBeenEdited":null, "everActive":null, "canEdit":null, "updateDate":"2020-01-01T00:00:00.000Z", "createdBy":null, "updatedBy":null}""")).asJSON
+            .body(StringBody("""{"id":null, "jobTitle":"SAMPLE_TEXT", "jobDescription":"SAMPLE_TEXT", "noOfApplicants":"0", "salary":null, "jobStatus":"0", "createDate":"2020-01-01T00:00:00.000Z", "originalJobCost":null, "jobCost":null, "amountPaid":null, "totalAmountPaid":null, "noOfApplicantsBought":"0", "removedFilterAmount":null, "additionalFilterAmount":null, "adminCharge":null, "adminChargeRate":null, "upfrontDiscountRate":null, "upfrontDiscountAmount":null, "escrowAmountUsed":null, "escrowAmountAdded":null, "paymentType":null, "hasBeenEdited":null, "everActive":null, "canEdit":null, "updateDate":"2020-01-01T00:00:00.000Z", "createdBy":null, "updatedBy":null, "noOfApplicantLeft":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_job_url"))).exitHereIfFailed
             .pause(10)

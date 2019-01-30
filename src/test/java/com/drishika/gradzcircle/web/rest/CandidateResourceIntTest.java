@@ -706,7 +706,7 @@ public class CandidateResourceIntTest {
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
 		Corporate corporate = new Corporate();
 		corporate.setName("Drishika");
-
+		jobA.setNoOfApplicants(30);
 		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
 		jobRepository.saveAndFlush(jobC);
@@ -739,6 +739,65 @@ public class CandidateResourceIntTest {
 		// restCandidateMockMvc.perform(get("/api/candidates/{id}",
 		// candidate.getId())).andExpect(status().isOk())
 		List<Candidate> testCandidates = candidateRepository.findAll();
+		Job testJob = jobRepository.findOne(jobA.getId());
+		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(29);
+		assertThat(testJob.getNoOfApplicants()).isEqualTo(30);
+		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(1);
+		assertThat(testCandidates).hasSize(1);
+		Candidate testCandidate = testCandidates.get(0);
+		assertThat(testCandidate.getShortlistedByCorporates()).hasSize(1);
+		assertThat(testCandidate.getShortlistedByCorporates())
+				.extracting("id.jobId", "corporate.name", "candidate.firstName")
+				.contains(tuple(jobA.getId(), "Drishika", "Abhinav"));
+
+	}
+	
+	@Test
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public void shortListCandidateForJobByCorporateWithAlreadyShortlistCandidateShouldIncrementAccordingly() throws Exception {
+		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
+		Corporate corporate = new Corporate();
+		corporate.setName("Drishika");
+		jobA.setNoOfApplicants(30);
+		jobA.setNoOfApplicantsBought(4);
+		jobA.setNoOfApplicantLeft(26l);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		genderRepository.saveAndFlush(maleGender);
+		genderRepository.saveAndFlush(femaleGender);
+		// candidateRepository.saveAndFlush(candidate);
+		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+		corporate.addJob(jobA);
+		corporate.addJob(jobB);
+		corporateRepository.saveAndFlush(corporate);
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		// updatedCandidate.setJob(jobA);
+		// updatedCandidate.setCorporate(corporate);
+		// update the Candidate
+		restCandidateMockMvc.perform(get("/api/candidate-corporate-link/{id1}/{id2}/{id3}", updatedCandidate.getId(),
+				jobA.getId(), corporate.getId())).andExpect(status().isOk());
+
+		// restCandidateMockMvc.perform(get("/api/candidates/{id}",
+		// candidate.getId())).andExpect(status().isOk())
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		Job testJob = jobRepository.findOne(jobA.getId());
+		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(25);
+		assertThat(testJob.getNoOfApplicants()).isEqualTo(30);
+		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(5);
 		assertThat(testCandidates).hasSize(1);
 		Candidate testCandidate = testCandidates.get(0);
 		assertThat(testCandidate.getShortlistedByCorporates()).hasSize(1);

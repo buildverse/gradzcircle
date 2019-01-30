@@ -56,6 +56,9 @@
             <th><span jhiTranslate="gradzcircleApp.jobHistory.updateDate">Update Date</span></th>
             <th><span jhiTranslate="gradzcircleApp.jobHistory.createdBy">Created By</span></th>
             <th><span jhiTranslate="gradzcircleApp.jobHistory.updatedBy">Updated By</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantLeft">No Of Applicant Left</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.jobType">Job Type</span></th>
+            <th><span jhiTranslate="gradzcircleApp.jobHistory.employmentType">Employment Type</span></th>
             <th><span jhiTranslate="gradzcircleApp.jobHistory.job">Job</span></th>
             <th></th>
             </tr>
@@ -89,6 +92,17 @@
                 <td>{{jobHistory.updateDate | date:'medium'}}</td>
                 <td>{{jobHistory.createdBy}}</td>
                 <td>{{jobHistory.updatedBy}}</td>
+                <td>{{jobHistory.noOfApplicantLeft}}</td>
+                <td>
+                    <div *ngIf="jobHistory.jobType">
+                        <a [routerLink]="['../job-type', jobHistory.jobType?.id ]" >{{jobHistory.jobType?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="jobHistory.employmentType">
+                        <a [routerLink]="['../employment-type', jobHistory.employmentType?.id ]" >{{jobHistory.employmentType?.id}}</a>
+                    </div>
+                </td>
                 <td>
                     <div *ngIf="jobHistory.job">
                         <a [routerLink]="['../job', jobHistory.job?.id ]" >{{jobHistory.job?.id}}</a>

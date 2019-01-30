@@ -78,7 +78,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				}
 			});
 		}
-		log.debug("Status of education in candidate before save {}", candidate.getEducations());
+		log.debug("Status of education and Matched Set in candidate before save {},{}", candidate.getEducations(),candidate.getCandidateJobs());
 		candidateRepository.save(candidate);
 
 	}

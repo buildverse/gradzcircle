@@ -9,6 +9,8 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { JobHistory } from './job-history.model';
 import { JobHistoryPopupService } from './job-history-popup.service';
 import { JobHistoryService } from './job-history.service';
+import { JobType, JobTypeService } from '../job-type';
+import { EmploymentType, EmploymentTypeService } from '../employment-type';
 import { Job, JobService } from '../job';
 
 @Component({
@@ -20,12 +22,18 @@ export class JobHistoryDialogComponent implements OnInit {
     jobHistory: JobHistory;
     isSaving: boolean;
 
+    jobtypes: JobType[];
+
+    employmenttypes: EmploymentType[];
+
     jobs: Job[];
 
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private jobHistoryService: JobHistoryService,
+        private jobTypeService: JobTypeService,
+        private employmentTypeService: EmploymentTypeService,
         private jobService: JobService,
         private eventManager: JhiEventManager
     ) {
@@ -33,6 +41,10 @@ export class JobHistoryDialogComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
+        this.jobTypeService.query()
+            .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.employmentTypeService.query()
+            .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmenttypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.jobService.query()
             .subscribe((res: HttpResponse<Job[]>) => { this.jobs = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
@@ -69,6 +81,14 @@ export class JobHistoryDialogComponent implements OnInit {
 
     private onError(error: any) {
         this.jhiAlertService.error(error.message, null, null);
+    }
+
+    trackJobTypeById(index: number, item: JobType) {
+        return item.id;
+    }
+
+    trackEmploymentTypeById(index: number, item: EmploymentType) {
+        return item.id;
     }
 
     trackJobById(index: number, item: Job) {

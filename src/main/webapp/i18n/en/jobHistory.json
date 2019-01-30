@@ -43,6 +43,9 @@
             "updateDate": "Update Date",
             "createdBy": "Created By",
             "updatedBy": "Updated By",
+            "noOfApplicantLeft": "No Of Applicant Left",
+            "jobType": "Job Type",
+            "employmentType": "Employment Type",
             "job": "Job"
         }
     }

@@ -143,5 +143,12 @@
         <dropDefaultValue tableName="job" columnName="update_date" columnDataType="datetime"/>
         
     </changeSet>
+    <changeSet id="20171128154426-2" author="abhinav">
+    		<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="job">
+        		<column name="no_of_applicant_left" type="bigint"/>
+    		</addColumn>
+    </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

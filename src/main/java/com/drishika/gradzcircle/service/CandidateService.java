@@ -180,13 +180,13 @@ public class CandidateService {
 	public Candidate createCandidate(Candidate candidate) {
 		logger.debug("REST request to save Candidate : {}", candidate);
 		candidate.setMatchEligible(true);
-		Candidate result = candidateRepository.save(candidate);
+		candidate = candidateRepository.save(candidate);
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_BASIC_PROFILE,false);
 		candidateRepository.save(candidate);
 		// Replace with Future
-		matcher.match(result);
+		matcher.match(candidate);
 		// candidateSearchRepository.save(result);
-		return result;
+		return candidate;
 	}
 
 	public Candidate updateCandidate(Candidate candidate) {
@@ -429,8 +429,11 @@ public class CandidateService {
 	public Candidate shortListCandidateForJob(Long candidateId, Long jobId, Long corporateId) {
 		Candidate candidateFromRepo = candidateRepository.findOne(candidateId);
 		Corporate corporateFromRepo = corporateRepository.findOne(corporateId);
+		Job job = jobRepository.findOne(jobId);
 		CorporateCandidate corporateCandidateLink = new CorporateCandidate(corporateFromRepo, candidateFromRepo, jobId);
 		candidateFromRepo.addCorporateCandidate(corporateCandidateLink);
+		job.setNoOfApplicantsBought(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought()+1:0+1);
+		job.setNoOfApplicantLeft(new Long(job.getNoOfApplicants()-job.getNoOfApplicantsBought()));
 		return candidateRepository.save(candidateFromRepo);
 	}
 

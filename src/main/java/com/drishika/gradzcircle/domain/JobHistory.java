@@ -117,9 +117,18 @@ public class JobHistory implements Serializable {
 
 	@Column(name = "updated_by")
 	private Long updatedBy;
+	
+	@Column(name = "no_of_applicant_left")
+    private Long noOfApplicantLeft;
 
 	@ManyToOne
 	private Job job;
+	
+	@ManyToOne
+    private EmploymentType employmentType;
+	
+    @ManyToOne
+	private JobType jobType;
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not
 	// remove
@@ -489,6 +498,27 @@ public class JobHistory implements Serializable {
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+	
+	
+
+	/**
+	 * @return the noOfApplicantLeft
+	 */
+	public Long getNoOfApplicantLeft() {
+		return noOfApplicantLeft;
+	}
+
+	/**
+	 * @param noOfApplicantLeft the noOfApplicantLeft to set
+	 */
+	public void setNoOfApplicantLeft(Long noOfApplicantLeft) {
+		this.noOfApplicantLeft = noOfApplicantLeft;
+	}
+	
+	public JobHistory noOfApplicantLeft(Long noOfApplicantLeft) {
+		this.noOfApplicantLeft = noOfApplicantLeft;
+		return this;
+	}
 
 	public Job getJob() {
 		return job;
@@ -502,6 +532,32 @@ public class JobHistory implements Serializable {
 	public void setJob(Job job) {
 		this.job = job;
 	}
+	
+    public JobHistory jobType(JobType jobType) {
+        this.jobType = jobType;
+        return this;
+    }
+    
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
+    
+    public JobType getJobType() {
+        return jobType;
+    }
+    
+    public EmploymentType getEmploymentType() {
+        return employmentType;
+    }
+    
+    public JobHistory employmentType(EmploymentType employmentType) {
+        this.employmentType = employmentType;
+        return this;
+    }
+
+    public void setEmploymentType(EmploymentType employmentType) {
+        this.employmentType = employmentType;
+    }
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and
 	// setters here, do not remove
 

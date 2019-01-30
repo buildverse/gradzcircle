@@ -154,7 +154,26 @@
             <input type="number" class="form-control" name="updatedBy" id="field_updatedBy"
                 [(ngModel)]="jobHistory.updatedBy" />
         </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.noOfApplicantLeft" for="field_noOfApplicantLeft">No Of Applicant Left</label>
+            <input type="number" class="form-control" name="noOfApplicantLeft" id="field_noOfApplicantLeft"
+                [(ngModel)]="jobHistory.noOfApplicantLeft" />
+        </div>
 
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.jobType" for="field_jobType">Job Type</label>
+            <select class="form-control" id="field_jobType" name="jobType" [(ngModel)]="jobHistory.jobType" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="jobTypeOption.id === jobHistory.jobType?.id ? jobHistory.jobType : jobTypeOption" *ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.employmentType" for="field_employmentType">Employment Type</label>
+            <select class="form-control" id="field_employmentType" name="employmentType" [(ngModel)]="jobHistory.employmentType" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="employmentTypeOption.id === jobHistory.employmentType?.id ? jobHistory.employmentType : employmentTypeOption" *ngFor="let employmentTypeOption of employmenttypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.id}}</option>
+            </select>
+        </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="gradzcircleApp.jobHistory.job" for="field_job">Job</label>
             <select class="form-control" id="field_job" name="job" [(ngModel)]="jobHistory.job" >

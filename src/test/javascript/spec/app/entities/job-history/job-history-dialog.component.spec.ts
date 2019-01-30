@@ -9,6 +9,8 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { JobHistoryDialogComponent } from '../../../../../../main/webapp/app/entities/job-history/job-history-dialog.component';
 import { JobHistoryService } from '../../../../../../main/webapp/app/entities/job-history/job-history.service';
 import { JobHistory } from '../../../../../../main/webapp/app/entities/job-history/job-history.model';
+import { JobTypeService } from '../../../../../../main/webapp/app/entities/job-type';
+import { EmploymentTypeService } from '../../../../../../main/webapp/app/entities/employment-type';
 import { JobService } from '../../../../../../main/webapp/app/entities/job';
 
 describe('Component Tests', () => {
@@ -25,6 +27,8 @@ describe('Component Tests', () => {
                 imports: [GradzcircleTestModule],
                 declarations: [JobHistoryDialogComponent],
                 providers: [
+                    JobTypeService,
+                    EmploymentTypeService,
                     JobService,
                     JobHistoryService
                 ]

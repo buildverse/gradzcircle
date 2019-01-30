@@ -30,7 +30,7 @@ import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
  */
 @Service
 //@Depends need to be commented while running tests
-//@DependsOn("liquibase")
+@DependsOn("liquibase")
 @Transactional
 public class ProfileScoreCalculator {
 	
@@ -47,7 +47,7 @@ public class ProfileScoreCalculator {
 	}
 	
 	//@PsotConstruct needs to be commented while running tests
-	//@PostConstruct
+	@PostConstruct
 	public Map<String, Long> init() {
 		populateProfileCategoryWeightMap();
 		return profileCategoryWeightMap;
@@ -111,7 +111,7 @@ public class ProfileScoreCalculator {
 	}
 	
 	public void updateProfileScore(Candidate candidate,String categoryName, Boolean remove) {
-		//if(profileCategoryWeightMap.isEmpty())
+		if(profileCategoryWeightMap.isEmpty())
 			init();
 		Double totalScore = candidate.getProfileScore()!=null?candidate.getProfileScore():0D;
 		CandidateProfileScore profileScore =null;

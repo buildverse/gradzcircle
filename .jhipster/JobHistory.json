@@ -3,6 +3,18 @@
     "relationships": [
         {
             "relationshipType": "many-to-one",
+            "relationshipName": "jobType",
+            "otherEntityName": "jobType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "employmentType",
+            "otherEntityName": "employmentType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
             "relationshipName": "job",
             "otherEntityName": "job",
             "otherEntityField": "id"
@@ -116,6 +128,10 @@
         },
         {
             "fieldName": "updatedBy",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "noOfApplicantLeft",
             "fieldType": "Long"
         }
     ],
