@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  */
 @Entity
 @Table(name = "candidate_education")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidateeducation")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = CandidateEducation.class)
 public class CandidateEducation implements Serializable {
@@ -91,7 +91,7 @@ public class CandidateEducation implements Serializable {
 	private Candidate candidate;
 
 	@OneToMany(mappedBy = "education", cascade = CascadeType.REMOVE)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateProject> projects = new HashSet<>();
 
 	@ManyToOne

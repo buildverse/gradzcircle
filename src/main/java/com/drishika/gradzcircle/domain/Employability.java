@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "employability")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "employability")
 public class Employability implements Serializable {
 

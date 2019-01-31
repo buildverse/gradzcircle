@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Entity
 @Table(name = "language")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 
 public class Language implements Serializable {
 
@@ -50,7 +50,7 @@ public class Language implements Serializable {
 
 	@OneToMany(mappedBy = "language")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not

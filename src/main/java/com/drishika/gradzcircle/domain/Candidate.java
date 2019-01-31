@@ -41,7 +41,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  */
 @Entity
 @Table(name = "candidate")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidate")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Candidate.class)
 public class Candidate implements Serializable {
@@ -114,29 +114,29 @@ public class Candidate implements Serializable {
 	private User login;
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	// @JsonManagedReference
 	private Set<Address> addresses = new HashSet<>();
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	// @JsonManagedReference
 	private Set<CandidateEducation> educations = new HashSet<>();
 
 	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateNonAcademicWork> nonAcademics = new HashSet<>();
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateCertification> certifications = new HashSet<>();
 
 	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEmployment> employments = new HashSet<>();
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
 
 	@ManyToOne
@@ -149,12 +149,12 @@ public class Candidate implements Serializable {
 	private MaritalStatus maritalStatus;
 
 	@ManyToMany
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JoinTable(name = "candidate_job_category", joinColumns = @JoinColumn(name = "candidates_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "job_categories_id", referencedColumnName = "id"))
 	private Set<JobCategory> jobCategories = new HashSet<>();
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JoinTable(name = "candidate_applied_jobs", joinColumns = @JoinColumn(name = "candidate_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "job_id", referencedColumnName = "id"))
 	private Set<Job> appliedJobs = new HashSet<>();
 

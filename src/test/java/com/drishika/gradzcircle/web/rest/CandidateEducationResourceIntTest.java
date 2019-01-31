@@ -1096,7 +1096,10 @@ public class CandidateEducationResourceIntTest {
 		candidateJobs.add(candidateJob2);
 		candidateJobs.add(candidateJob1);
 		candidateA.getCandidateJobs().addAll(candidateJobs);
-
+	//	jobB.addCandidateJob(candidateJob1);
+	//	jobG.addCandidateJob(candidateJob2);
+	//jobRepository.saveAndFlush(jobB);
+	//	jobRepository.saveAndFlush(jobG);
 		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(79d)
 				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).candidate(candidateA);
@@ -1109,6 +1112,10 @@ public class CandidateEducationResourceIntTest {
 
 		List<Candidate> testCandidates = candidateRepository.findAll();
 		assertThat(testCandidates).hasSize(1);
+		Job testJobB = jobRepository.findOne(jobB.getId());
+		Job testJobG = jobRepository.findOne(jobG.getId());
+		assertThat(testJobB.getCandidateJobs()).hasSize(0);
+		assertThat(testJobG.getCandidateJobs()).hasSize(0);
 		List<CandidateEducation> testCandidateEducationsAgain = candidateEducationRepository.findAll();
 		assertThat(testCandidateEducationsAgain).hasSize(0);
 		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(0);

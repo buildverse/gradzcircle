@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "marital_status")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 
 public class MaritalStatus implements Serializable {
 

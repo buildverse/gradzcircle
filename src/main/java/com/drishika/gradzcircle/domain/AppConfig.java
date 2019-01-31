@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "app_config")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "appconfig")
 public class AppConfig implements Serializable {
 

@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "job_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "jobtype")
 public class JobType implements Serializable {
 
@@ -36,7 +36,7 @@ public class JobType implements Serializable {
 
     @OneToMany(mappedBy = "jobType")
     @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+   // @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateEmployment> candidateEmployments = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

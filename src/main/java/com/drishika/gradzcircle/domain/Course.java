@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "course")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 
 public class Course implements Serializable {
 
@@ -43,7 +43,7 @@ public class Course implements Serializable {
 
 	@OneToMany(mappedBy = "course")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEducation> candidateEducations = new HashSet<>();
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not

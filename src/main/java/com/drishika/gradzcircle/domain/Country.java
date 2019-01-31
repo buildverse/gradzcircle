@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "country")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Country implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -63,27 +63,27 @@ public class Country implements Serializable {
 
 	@OneToMany(mappedBy = "country")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Address> addresses = new HashSet<>();
 
 	@OneToMany(mappedBy = "country")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<University> universities = new HashSet<>();
 
 	@OneToMany(mappedBy = "country")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEmployment> candidateEmployments = new HashSet<>();
 
 	@OneToMany(mappedBy = "country")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<VisaType> visas = new HashSet<>();
 
 	@OneToMany(mappedBy = "country")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Corporate> corporates = new HashSet<>();
 
 	// jhipster-needle-entity-add-field - JHipster will add fields here, do not

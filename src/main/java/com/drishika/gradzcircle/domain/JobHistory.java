@@ -27,7 +27,7 @@ import com.drishika.gradzcircle.domain.enumeration.PaymentType;
  */
 @Entity
 @Table(name = "job_history")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "jobhistory")
 public class JobHistory implements Serializable {
 

@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "gender")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Gender implements Serializable {
 
 	private static final long serialVersionUID = 1L;

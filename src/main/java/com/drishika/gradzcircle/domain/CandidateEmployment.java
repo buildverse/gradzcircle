@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "candidate_employment")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidateemployment")
 public class CandidateEmployment implements Serializable {
 
@@ -60,7 +60,7 @@ public class CandidateEmployment implements Serializable {
 	private Candidate candidate;
 
 	@OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE,fetch=FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference
 	private Set<CandidateProject> projects = new HashSet<>();
 

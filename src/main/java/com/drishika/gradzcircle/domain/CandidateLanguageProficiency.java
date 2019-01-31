@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "candidate_language_proficiency")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "candidatelanguageproficiency")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CandidateLanguageProficiency implements Serializable {

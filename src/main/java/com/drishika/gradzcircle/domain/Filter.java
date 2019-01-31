@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "filter")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "filter")
 public class Filter implements Serializable {
 

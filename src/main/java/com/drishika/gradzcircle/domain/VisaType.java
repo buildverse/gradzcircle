@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "visa_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "visatype")
 public class VisaType implements Serializable {
 
@@ -32,7 +32,7 @@ public class VisaType implements Serializable {
 
 	@OneToMany(mappedBy = "visaType")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Candidate> candidates = new HashSet<>();
 
 	@ManyToOne

@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "jhi_social_user_connection")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 
 public class SocialUserConnection implements Serializable {
 

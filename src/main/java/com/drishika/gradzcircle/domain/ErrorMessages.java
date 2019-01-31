@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "error_messages")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "errormessages")
 public class ErrorMessages implements Serializable {
 

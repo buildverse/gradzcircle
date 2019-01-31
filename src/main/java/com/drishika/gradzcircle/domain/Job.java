@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  */
 @Entity
 @Table(name = "job")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "job")
 // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
 // property = "id")
@@ -133,13 +133,13 @@ public class Job implements Serializable {
     private Long noOfApplicantLeft;
 
 	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference
 	private Set<JobFilter> jobFilters = new HashSet<>();
 
 	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<JobHistory> histories = new HashSet<>();
 
 	@ManyToOne
@@ -153,11 +153,11 @@ public class Job implements Serializable {
 
 	@ManyToMany(mappedBy = "appliedJobs")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Candidate> appliedCandidates = new HashSet<>();
 
 	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference(value = "jobToCandidate")
 	private Set<CandidateJob> candidateJobs = new HashSet<>();
 

@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "profile_category")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "profilecategory")
 public class ProfileCategory implements Serializable {
 
@@ -39,7 +39,7 @@ public class ProfileCategory implements Serializable {
 
     @OneToMany(mappedBy = "profileCategory",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "candidateProfile")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateProfileScore> profileScores = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

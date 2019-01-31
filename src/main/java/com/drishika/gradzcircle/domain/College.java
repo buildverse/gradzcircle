@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Entity
 @Table(name = "college")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class College implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -65,7 +65,7 @@ public class College implements Serializable {
 
 	@OneToMany(mappedBy = "college")
 	@JsonIgnore
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEducation> candidateEducations = new HashSet<>();
 
 	@ManyToOne

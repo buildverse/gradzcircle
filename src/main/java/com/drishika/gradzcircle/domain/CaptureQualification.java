@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "capture_qualification")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "capturequalification")
 public class CaptureQualification implements Serializable {
 
