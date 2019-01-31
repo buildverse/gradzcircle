@@ -33,13 +33,13 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	List<Job> findAllActiveJobs();
 	
 	@Query(" select j from Job j where j.jobStatus=1 and j.id not in (select cJA.id.jobId from CandidateAppliedJobs cJA where cJA.id.candidateId =?1)")
-	Page<Job> findAllActiveJobsForCandidates(Pageable pageable, Long candidateId);
+	Page<Job> findAllActiveJobsForCandidatesThatCandidateHasNotAppliedFor(Pageable pageable, Long candidateId);
 
 	@Query(" select j from Job j where j.jobStatus=1")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
 	Stream<Job> findAllActiveJobsForMatchingAsStream();
 
-	@Query("select j from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus>-1 and cJ.candidate.id=?1 and j.id not in (select cJA.id.jobId from CandidateAppliedJobs cJA where cJA.id.candidateId =?1) order by cJ.matchScore desc")
+	@Query("select j from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus>0 and cJ.candidate.id=?1 and j.id not in (select cJA.id.jobId from CandidateAppliedJobs cJA where cJA.id.candidateId =?1) order by cJ.matchScore desc")
 	Page<Job> findByJobStatusAndMatchAndNotAppliedForCandidate(Long candidateId, Pageable pageable);
 
 	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")

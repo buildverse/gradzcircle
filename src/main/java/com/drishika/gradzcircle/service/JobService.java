@@ -1,7 +1,6 @@
 package com.drishika.gradzcircle.service;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
+import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
@@ -255,12 +255,25 @@ public class JobService {
 	}
 
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidates(Pageable pageable, Long candidateId) {
-		Page<Job> jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedForCandidate(candidateId, pageable);
-		if(jobPage.getSize()==0) {
-			jobPage = jobRepository.findAllActiveJobsForCandidates(pageable,candidateId);
+		Candidate candidate = candidateRepository.findOne(candidateId);
+		Set<CandidateEducation> candidateEducations = candidate.getEducations();
+		Page<Job> jobPage = null;
+		final Page<CandidateJobDTO> page;
+		if(candidateEducations.isEmpty()) {
+			//get all jobs set score to 0
+			jobPage = jobRepository.findAllActiveJobsForCandidatesThatCandidateHasNotAppliedFor(pageable,candidateId);
+			log.debug("Did i get any result {}", jobPage.getContent());
+			page = jobPage
+					.map(job -> converter.convertToJobListingForCandidateWithNoEducation(job, candidateId));;
+		} else {
+			jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedForCandidate(candidateId, pageable);
+			page = jobPage
+					.map(job -> converter.convertToJobListingForCandidate(job, candidateId, false));
 		}
-		final Page<CandidateJobDTO> page = jobPage
-				.map(job -> converter.convertToJobListingForCandidate(job, candidateId, false));
+		//Page<Job> jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedForCandidate(candidateId, pageable);
+		/*if(jobPage.getSize()==0) {
+			jobPage = jobRepository.findAllActiveJobsForCandidates(pageable,candidateId);
+		}*/
 		return page;
 	}
 

@@ -174,6 +174,17 @@ public class DTOConverters {
 		return jobListingData;
 	}
 	
+	public CandidateJobDTO convertToJobListingForCandidateWithNoEducation(Job job, Long candidateId) {
+		CandidateJobDTO jobListingData = new CandidateJobDTO();
+		jobListingData.setJobStatus(job.getJobStatus());
+		jobListingData.setJobTitle(job.getJobTitle());
+		jobListingData.setEmploymentType(job.getEmploymentType());
+		jobListingData.setJobType(job.getJobType());
+		jobListingData.setMatchScore(0d);
+		jobListingData.setId(job.getId());
+		return jobListingData;
+	}
+	
 	/**
 	 * @param candidateNonAcademicWorks
 	 * @param dto

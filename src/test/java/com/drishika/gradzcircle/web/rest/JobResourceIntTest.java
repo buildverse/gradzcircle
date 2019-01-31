@@ -40,9 +40,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
@@ -2681,6 +2683,101 @@ public class JobResourceIntTest {
 		// resultActions.andDo(MockMvcResultHandlers.print());
 
 	}
+	
+	@Test
+	@Transactional
+	public void testGetAllJobsForCandidateWithNoEducation() throws Exception {
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		c1.addAppliedJob(job1);
+		candidateRepository.saveAndFlush(c1);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
+				.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job3")))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(0d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+	
+	@Test
+	@Transactional
+	public void testGetAllJobsForCandidateWithEducation() throws Exception {
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		c1.addAppliedJob(job1);
+		CandidateJob cj1 = new CandidateJob(c1,job1);
+		CandidateJob cj2 = new CandidateJob(c1,job2);
+		CandidateJob cj3 = new CandidateJob(c1,job3);
+		cj1.setMatchScore(30d);
+		cj2.setMatchScore(40d);
+		cj3.setMatchScore(50d);
+	//c1.addCandidateJob(cj1);c1.addCandidateJob(cj2);c1.addCandidateJob(cj3);
+		job1.addCandidateJob(cj1);job2.addCandidateJob(cj2);job3.addCandidateJob(cj3);
+		
+		candidateRepository.saveAndFlush(c1);
+		
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
+				.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job3")))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(40d)))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(50d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+	
+	
 
 	@Test
 	@Transactional
