@@ -433,7 +433,7 @@ public class CandidateService {
 		CorporateCandidate corporateCandidateLink = new CorporateCandidate(corporateFromRepo, candidateFromRepo, jobId);
 		candidateFromRepo.addCorporateCandidate(corporateCandidateLink);
 		job.setNoOfApplicantsBought(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought()+1:0+1);
-		job.setNoOfApplicantLeft(new Long(job.getNoOfApplicants()-job.getNoOfApplicantsBought()));
+		job.setNoOfApplicantLeft(new Long(job.getNoOfApplicants()-(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought():0)));
 		return candidateRepository.save(candidateFromRepo);
 	}
 
