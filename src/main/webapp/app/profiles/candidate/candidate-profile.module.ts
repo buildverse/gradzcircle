@@ -24,14 +24,16 @@ import {CandidateNationalityResolverService} from './candidate-profile-nationali
 import {CandidateDetailResolverService} from './candidate-detail-resolver.service';
 import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
 import {CandidateLanguageProficiencyResolverService} from './candidate-language-proficiency-resolver.service';
-import {ImageCropperModule} from 'ng2-img-cropper'
 import {SafeHtml} from './image.pipe';
 import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
 import { DataService } from '../../shared/helper/data.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
+import { CandidateProfileMgmtPopupService } from './candidate-profile-pic-mgmt-popup.service';
+import {CandidateProfilePicMgmtPopupDialogComponent,CandidateProfilePicMgmtPopupComponent} from './candidate-profile-pic-mgmt-popup.component';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 
 const ENTITY_STATES = [
@@ -45,9 +47,9 @@ const ENTITY_STATES = [
     GradzcircleAdminModule,
     MultiselectDropdownModule,
     FileUploadModule,
-    ImageCropperModule,
     GradzcircleCandidateLanguageProficiencyModule,
     GradzcircleCandidateEducationModule,
+    ImageCropperModule,
     RouterModule.forChild(ENTITY_STATES)
   ],
   declarations: [
@@ -59,7 +61,9 @@ const ENTITY_STATES = [
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
     AppliedJobsComponent,
-    ShortListedJobsForCandidateComponent
+    ShortListedJobsForCandidateComponent,
+    CandidateProfilePicMgmtPopupComponent,
+    CandidateProfilePicMgmtPopupDialogComponent
 
   ],
   providers: [
@@ -75,17 +79,19 @@ const ENTITY_STATES = [
     CandidateNationalityResolverService,
     CandidateDetailResolverService,
     CandidateLanguageProficiencyResolverService,
-    // ImageResolver,
     CandidatePublicProfilePopupService,
     JobResolvePagingParams,
     DataService,
     NgbProgressbarConfig,
-    CandidateProfileScoreService
+    CandidateProfileScoreService,
+    CandidateProfileMgmtPopupService
 
   ],
   entryComponents: [
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
+    CandidateProfilePicMgmtPopupComponent,
+    CandidateProfilePicMgmtPopupDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

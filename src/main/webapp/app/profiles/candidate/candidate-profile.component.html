@@ -1,18 +1,23 @@
 <div class="profile-header profile-mybackground">
 	<div class="container">
 		<div class="container-inner">
-			<img class="rounded-circle media-object"
-				[src]="noImage ? defaultImage : userImage ">
-			<h3 class="profile-header-user">{{candidate.login.firstName}}
-				{{candidate.login.lastName}}</h3>
-			<p class="profile-header-bio">{{candidate.aboutMe}}</p>
-			<p>
-				<a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
-					[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"
-					ngbTooltip="Public Profile"> <span class="icon icon-eye"
-					style="color: #007bff;"></span>
-				</a>
-			</p>
+			<div class="hovereffect">
+				<img class="rounded-circle media-object"
+					[src]="noImage ? defaultImage : userImage ">
+				<div class="overlay">
+           			<a class="info" (click)="setPublicProfilePicmgmtRouteParams(candidate.login.id)" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
+				</div>
+				<h3 class="profile-header-user">{{candidate.login.firstName}}
+					{{candidate.login.lastName}}</h3>
+				<p class="profile-header-bio">{{candidate.aboutMe}}</p>
+				<p>
+					<a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
+						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"
+						ngbTooltip="Public Profile"> <span class="icon icon-eye"
+						style="color: #007bff;"></span>
+					</a>
+				</p>
+			</div>
 		</div>
 	</div>
 </div>

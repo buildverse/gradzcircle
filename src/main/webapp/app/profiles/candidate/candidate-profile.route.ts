@@ -20,6 +20,7 @@ import {CandidatePublicProfilePopupComponent} from './candidate-public-profile-p
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {SideMenuComponent} from '../../account/side-menu/side-menu.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
+import {CandidateProfilePicMgmtPopupComponent} from './candidate-profile-pic-mgmt-popup.component';
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
@@ -189,5 +190,15 @@ export const candidateProfilePopupRoute: Routes = [
     canActivate: [UserRouteAccessService],
     outlet: 'popup'
   },
+  {
+    path: 'update-picture',
+    component: CandidateProfilePicMgmtPopupComponent,
+    data: {
+      authorities: ['ROLE_USER', 'ROLE_CANDIDATE', 'ROLE_CORPORATE'],
+      pageTitle: 'gradzcircleApp.candidate.home.title'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 
 ]

@@ -171,6 +171,10 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.dataService.put(JOB_ID,-1);
     this.dataService.put(CORPORATE_ID,-1);
   }
+  
+  setPublicProfilePicmgmtRouteParams(candidateId) {
+    this.dataService.put(CANDIDATE_ID,candidateId);
+  }
 
   private onError(error) {
     this.alertService.error(error.message, null, null);

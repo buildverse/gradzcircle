@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserService,DataService} from '../../shared/';
+import {Component, OnInit} from '@angular/core';
+
 import {Principal} from '../../shared/auth/principal.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
@@ -21,16 +21,10 @@ import {VisaType} from '../../entities/visa-type/visa-type.model';
 import {JobType} from '../../entities/job-type/job-type.model';
 import {EmploymentType} from '../../entities/employment-type/employment-type.model';
 import {IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts} from 'angular-2-dropdown-multiselect';
-
-import {FileUploader, FileLikeObject} from 'ng2-file-upload';
 import {Address} from '../../entities/address/address.model';
-
 import {Nationality} from '../../entities/nationality/nationality.model';
-import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 
-//import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
-import {SERVER_API_URL} from '../../app.constants';
 import {JobCategoryService} from '../../entities//job-category/job-category.service';
 import {NationalityService} from '../../entities/nationality/nationality.service';
 import {CountryService} from '../../entities/country/country.service';
@@ -58,10 +52,6 @@ import {CountryService} from '../../entities/country/country.service';
 })
 
 export class CandidateProfileAboutMeEditComponent implements OnInit {
-
-  @ViewChild('selectedPicture')
-  selectedPicture: any;
-
   candidateAboutMeForm: FormGroup;
   candidate: Candidate;
   address: Address;
@@ -80,16 +70,9 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
   employmentType: EmploymentType[];
   nationalities: Nationality[];
   careerInterestOptions: IMultiSelectOption[];
-  uploader: FileUploader;
-  fileUploadErrorMessage: string;
-  allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
-  maxFileSize = 100 * 1024;
-  imageDataNotAvailable: boolean;
   enableLanguageProfiency: boolean;
-  croppedImage: any;
   charsLeft: number;
   maxAboutMeLength: number;
-  queueLimit = 1;
 
   mySettings: IMultiSelectSettings = {
     enableSearch: true,
@@ -122,46 +105,30 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     private router: Router,
     private config: NgbDatepickerConfig,
     private dateUtils: JhiDateUtils,
-    private localStorage: LocalStorageService,
-    private sessionStorage: SessionStorageService,
     private eventManager: JhiEventManager,
-    private userService: UserService,
+  
     private jobCategoryService: JobCategoryService,
     private nationalityService: NationalityService,
-    private countryService: CountryService,
-    private dataService: DataService
-    //  private cropperSettings: CropperSettings
-
+    private countryService: CountryService
   ) {}
 
 
   ngOnInit() {
 
-    this.imageDataNotAvailable = false;
+   
     this.route.data.subscribe((data: {jobCategory: any}) => this.jobCategories = data.jobCategory);
     this.route.data.subscribe((data: {maritalStatus: any}) => this.maritalStatuses = data.maritalStatus);
     this.route.data.subscribe((data: {gender: any}) => this.genders = data.gender);
     this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
 
-    if (!this.principal.getImageUrl()) {
-      this.imageDataNotAvailable = true;
-    }
+    
     //   this.initializeCropper(); 
     this.careerInterestOptions = new Array();
     this.jobCategories.forEach((item) => {
       this.careerInterestOptions.push({id: item.id, name: item.jobCategory});
     });
     this.configureDatePicker();
-    const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
-    this.uploader = new FileUploader({
-      url: SERVER_API_URL + 'api/upload/' + this.candidate.login.id,
-      allowedMimeType: this.allowedMimeType,
-      maxFileSize: this.maxFileSize,
-      queueLimit: this.queueLimit,
-      removeAfterUpload: true
-    });
-    this.uploader.authTokenHeader = 'Authorization';
-    this.uploader.authToken = 'Bearer ' + token;
+
     this.maxAboutMeLength = 150;
 
     this.candidateAboutMeForm = this.formBuilder.group({
@@ -183,9 +150,8 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
 
     });
     this.onCandidateRetrieved();
-
-    this.uploader.onWhenAddingFileFailed = (item, filter, options) => this.onWhenAddingFileFailed(item, filter, options);
-    this.uploader.onAfterAddingFile = (item) => this.onAfterAddingFile(item);
+  
+  //  this.uploader.onBeforeUploadItem = (item) => this.compressImage(item);
     // COMMENTING THIS FOR NOW.. EARLIER PLAN WAS TO HAVE ISD POPULATED ON COUNTRY SELECTION
     /* let control = <FormArray>this.candidateAboutMeForm.controls['address'];
      control.get('country').valueChanges.subscribe(value => this.onCountrySelect(value));*/
@@ -194,23 +160,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     this.characterCount();
   }
 
-  // initializeCropper(){
-  //     this.cropperSettings = new CropperSettings();
-  //     this.cropperSettings.width = 100;
-  //     this.cropperSettings.height = 100;
-  //     this.cropperSettings.croppedWidth =256;
-  //     this.cropperSettings.croppedHeight = 256;
-  //     this.cropperSettings.canvasWidth = 300;
-  //     this.cropperSettings.canvasHeight = 300;
-  //     this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
-  //     this.cropperSettings.cropperDrawSettings.strokeWidth = 2;
-  //     this.croppedImage={};
-  // }
 
-  clearSelectedPicture() {
-    this.uploader.clearQueue();
-    this.selectedPicture.nativeElement.value = '';
-  }
 
   requestJobCategoryData = (text: string): Observable<Response> => {
     return this.jobCategoryService.searchRemote({
@@ -230,35 +180,6 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     }).map((data) => data.body);
   }
 
-  uploadImage(item) {
-    item.upload();
-    this.uploader.onCompleteItem = (item, response, status, header) => {
-      if (status === 200) {
-        this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
-        this.router.navigate(['../../details'], {relativeTo: this.route});
-      }
-    };
-  }
-  onAfterAddingFile(item) {
-    this.fileUploadErrorMessage = '';
-  }
-  
-  onWhenAddingFileFailed(item: FileLikeObject, filter: any, options: any) {
-    switch (filter.name) {
-      case 'fileSize':
-        this.fileUploadErrorMessage = `File size must not be more than 100 Kb`;
-        break;
-      case 'mimeType':
-        const allowedTypes = this.allowedMimeType.join();
-        this.fileUploadErrorMessage = `File types allowed : png,jpg,jpeg,gif`;
-        break;
-      case 'queueLimit':
-        break;
-      default:
-        this.fileUploadErrorMessage = `Unknown error (filter is ${filter.name})`;
-    }
-
-  }
 
   reCreateJobCategoryModelFromSelection(value) {
 
@@ -274,17 +195,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     return jobCategoryReformatted;
   }
 
-  removeImage() {
-    let status;
-    this.userService.deleteImage(this.candidate.login.id).subscribe((response) => {
-      status = response.status;
-      if (status === 200) {
-        this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
-        this.router.navigate(['../../details'], {relativeTo: this.route});
-      }
-    });
-  }
-
+  
   buildAddressGroup(): FormGroup {
     return this.formBuilder.group({
       id: [null],

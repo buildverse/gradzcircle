@@ -1,0 +1,68 @@
+<div class="modal-header modal-header-decorate">
+		<h6 class="modal-title" jhiTranslate="gradzcircleApp.candidate.updateProfilePic">Update Profile Pic</h6>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;
+		</button>
+
+</div>
+<div class="modal-body mx-4 my-4">
+	<div class="container my-4">
+		
+			<div class="d-flex justify-content-center">
+					<image-cropper
+						    [imageChangedEvent]="imageChangedEvent"
+						    [maintainAspectRatio]="false"
+						    [roundCropper]="true"
+						    [aspectRatio]="1/1"
+						    [resizeToWidth]="128"
+						    format="png"
+						    (imageCropped)="imageCropped($event)"
+						    (imageLoaded)="imageLoaded()"
+						    (cropperReady)="cropperReady()"
+						    (loadImageFailed)="loadImageFailed()"
+						></image-cropper></div>
+			</div>
+		
+		
+				<div *ngIf="uploader?.queue?.length==0; else imageSelected">
+					<div *ngIf="!imageDataAvailable " class="upload-btn-wrapper d-flex justify-content-center">
+						<button type="button" class="btn btn-pill btn-primary" style="background-color:#0D47A1;">Select</button>
+						<input #selectedPicture type="file" ng2FileSelect
+								[uploader]="uploader" (change)="fileChangeEvent($event)"/>	
+					</div>
+					<div *ngIf="imageDataAvailable" class=" d-flex justify-content-around">
+						<div class="upload-btn-wrapper">
+							<button type="button" class="btn btn-pill btn-primary" style="background-color:#0D47A1;">Select New</button>
+							<input #selectedPicture type="file" ng2FileSelect
+									[uploader]="uploader" (change)="fileChangeEvent($event)"/>
+						</div>	
+						<button type="submit"
+								class="btn btn-pill btn-danger float-right"
+								(click)="removeImage()">
+								<span class="icon icon-trash"></span>&nbsp;<span>Remove Pic</span>
+						</button>
+					</div>
+				</div>
+				<ng-template #imageSelected>
+					<!--  ><div *ngIf='imageDataAvailable && uploader?.queue?.length==0'
+						class="clearfix">
+						
+					</div>-->
+					<div 
+						*ngFor="let item  of uploader?.queue" class="d-flex justify-content-center">
+						<button class="btn btn-pill" style="background-color:#0D47A1;"
+							(click)="uploadImage(item)"
+							[disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
+							<span class="icon icon-arrow-with-circle-up" style="color: white">Upload</span>
+						</button>
+						<!-- <button class="btn btn-sm btn-pill btn-warning" (click)="item.cancel()" [disabled]="!item.isUploading">
+                                    <span class="icon icon-block" style="color:white">Cancel</span>
+                                </button> -->
+						<!--  <button class="btn btn-sm btn-pill btn-danger"
+							(click)="clearSelectedPicture()">
+							<span class="icon icon-trash" style="color: white" ml-auto>Remove</span>
+						</button>-->
+					</div>
+				</ng-template>
+		
+	</div>

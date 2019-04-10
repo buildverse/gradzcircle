@@ -43,8 +43,6 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
 
  reloadUserImage() {
     this.noImage = false;
-   
-
       if (this.candidate.candidateDetails.login) {
         if (this.candidate.candidateDetails.login.imageUrl !== undefined) {
           this.userService.getImageData(this.candidate.candidateDetails.login.id).subscribe((response) => {
@@ -61,8 +59,6 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
           this.noImage = true;
         }
       }
-
-
   }
   
  private getWidth (candidateLanguageProficiency) {

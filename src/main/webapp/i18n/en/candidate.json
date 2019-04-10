@@ -44,6 +44,7 @@
             "jobCategory": "Job Category",
             "visaType": "Visa Type",
             "profilePic" : "Profile Pic",
+            "updateProfilePic" : "Update Profile Pic",
             "careerInterests": "Carrer Interests",
             "job": "Job",
             "educationDescriptionShortForm": "Education Summary",
