@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DataService} from '../../shared';
-import {CandidateProfileMgmtPopupService} from './candidate-profile-pic-mgmt-popup.service';
+import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
 import {CANDIDATE_ID} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
@@ -14,10 +14,10 @@ import {UserService} from '../../shared/';
 
 @Component({
   selector: 'jhi-candidate-profile-pic-dialog',
-  templateUrl: './candidate-profile-pic.html',
-  styleUrls: ['candidate.css']
+  templateUrl: './profile-pic.html'
+ 
 })
-export class CandidateProfilePicMgmtPopupDialogComponent implements OnInit {
+export class ProfilePicMgmtPopupDialogComponent implements OnInit {
 
   @ViewChild('selectedPicture')
   selectedPicture: any;
@@ -140,13 +140,13 @@ export class CandidateProfilePicMgmtPopupDialogComponent implements OnInit {
   selector: 'jhi-candidate-profile-pic-popup',
   template: ''
 })
-export class CandidateProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
+export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
 
   routeSub: any;
 
   constructor(
     private route: ActivatedRoute,
-    private candidateProfilePicMgmtPopupService: CandidateProfileMgmtPopupService,
+    private candidateProfilePicMgmtPopupService: ProfileMgmtPopupService,
     private dataService: DataService
   ) {}
 
@@ -154,10 +154,10 @@ export class CandidateProfilePicMgmtPopupComponent implements OnInit, OnDestroy 
     this.routeSub = this.route.params.subscribe((params) => {
       if (params['id']) {
         this.candidateProfilePicMgmtPopupService
-          .open(CandidateProfilePicMgmtPopupDialogComponent as Component, params['id']);
+          .open(ProfilePicMgmtPopupDialogComponent as Component, params['id']);
       } else {
         this.candidateProfilePicMgmtPopupService
-          .open(CandidateProfilePicMgmtPopupDialogComponent as Component, this.dataService.get(CANDIDATE_ID));
+          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.get(CANDIDATE_ID));
       }
     });
   }

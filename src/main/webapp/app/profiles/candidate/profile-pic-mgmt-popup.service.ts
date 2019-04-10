@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable()
-export class CandidateProfileMgmtPopupService {
+export class ProfileMgmtPopupService {
   private ngbModalRef: NgbModalRef;
   constructor(
     private modalService: NgbModal,

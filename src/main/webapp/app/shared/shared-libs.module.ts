@@ -30,8 +30,6 @@ import { CookieModule } from 'ngx-cookie';
         NgbModule,
         NgJhipsterModule,
         InfiniteScrollModule
-        
-
     ]
 })
 export class GradzcircleSharedLibsModule {}

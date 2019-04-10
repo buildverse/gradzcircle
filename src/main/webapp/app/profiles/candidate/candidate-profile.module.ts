@@ -29,8 +29,8 @@ import {GradzcircleCandidateEducationModule} from '../../entities/candidate-educ
 import { DataService } from '../../shared/helper/data.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
-import { CandidateProfileMgmtPopupService } from './candidate-profile-pic-mgmt-popup.service';
-import {CandidateProfilePicMgmtPopupDialogComponent,CandidateProfilePicMgmtPopupComponent} from './candidate-profile-pic-mgmt-popup.component';
+import { ProfileMgmtPopupService } from './profile-pic-mgmt-popup.service';
+import {ProfilePicMgmtPopupDialogComponent,ProfilePicMgmtPopupComponent} from './profile-pic-mgmt-popup.component';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -62,8 +62,8 @@ const ENTITY_STATES = [
     CandidatePublicProfilePopupDialogComponent,
     AppliedJobsComponent,
     ShortListedJobsForCandidateComponent,
-    CandidateProfilePicMgmtPopupComponent,
-    CandidateProfilePicMgmtPopupDialogComponent
+    ProfilePicMgmtPopupComponent,
+    ProfilePicMgmtPopupDialogComponent
 
   ],
   providers: [
@@ -84,14 +84,14 @@ const ENTITY_STATES = [
     DataService,
     NgbProgressbarConfig,
     CandidateProfileScoreService,
-    CandidateProfileMgmtPopupService
+    ProfileMgmtPopupService
 
   ],
   entryComponents: [
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
-    CandidateProfilePicMgmtPopupComponent,
-    CandidateProfilePicMgmtPopupDialogComponent
+    ProfilePicMgmtPopupComponent,
+    ProfilePicMgmtPopupDialogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
