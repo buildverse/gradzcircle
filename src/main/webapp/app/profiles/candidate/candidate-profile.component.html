@@ -5,7 +5,7 @@
 				<img class="rounded-circle media-object"
 					[src]="noImage ? defaultImage : userImage ">
 				<div class="overlay">
-           			<a class="info" (click)="setPublicProfilePicmgmtRouteParams(candidate.login.id)" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
+           			<a class="info" (click)="setPublicProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
 				</div>
 				<h3 class="profile-header-user">{{candidate.login.firstName}}
 					{{candidate.login.lastName}}</h3>
@@ -101,110 +101,3 @@
 	</div>
 
 </div>
-
-<!--  <figure class="figure w-100">
-	<div class="container-fluid">
-		<div class="row d-block d-xs-block d-sm-block d-lg-flex ">
-			 <div class="col db-right">
-				<div class="db-content">
-					<div class="row m-0 px-0 profile_page">
-						<div class="col-lg-12 profile_page_head w-100"></div>
-						<div class="col-lg-12 profile_page_head_content w-100">
-							<div class="col-lg-6 mx-auto text-center">
-								<div class="profile_page_head_content_image py-2">
-									<img class="rounded-circle media-object"
-										[src]="noImage ? defaultImage : userImage " />
-								</div>
-								<div class="profile_page_head_content_title">
-									<h2>{{candidate.login.firstName}}
-										{{candidate.login.lastName}}</h2>
-									<p>{{candidate.aboutMe}}</p>
-									<p>
-										<a [routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id+'/'+-1+'/'+-1 } } ]" ngbTooltip="Public Profile">
-											<span class="icon icon-eye" style="color: #007bff;"></span>
-										</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<ul class="nav nav-tabs" role="tablist" id="profileTab">
-					    <li class="nav-item">
-					      <a class="nav-link" id="details-tab" data-toggle="tab" aria-controls="details" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{detail:'details'}}]" [ngClass]="{ 'active':activeTab==='details'}" jhiTranslate="gradzcircleApp.candidate.profile.details" 
-					      		 (click)="setActiveTab('details')">
-					      		Details
-					      </a>
-					    </li>
-					    <li class="nav-item">
-					      <a class="nav-link" id="edu-tab" data-toggle="tab" aria-controls="edu" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{educations:'education'}}]" [ngClass]="{ 'active':activeTab==='edu'}" 
-					      		(click)="setActiveTab('edu')">Education
-					      </a>
-					    </li>
-					    <li class="nav-item">
-					      <a class="nav-link" id="emp-tab" data-toggle="tab" aria-controls="emp" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{employments:'employment'}}]" jhiTranslate="gradzcircleApp.candidate.profile.employment"
-					      		[ngClass]="{ 'active':activeTab==='emp'}" (click)="setActiveTab('emp')" >
-					      		My Experience
-					      </a>
-					    </li>
-					    <li class="nav-item">
-					      <a class="nav-link" id="lang-tab" data-toggle="tab" aria-controls="lang" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{languages:'language'}}]" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"
-					      		[ngClass]="{ 'active':activeTab==='lang'}" (click)="setActiveTab('lang')">
-					      		My Certification
-					      </a>
-					    </li>
-					    <li class="nav-item">
-					      <a class="nav-link" id="cert-tab" data-toggle="tab" aria-controls="certs" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{certifications:'certification'}}]" jhiTranslate="gradzcircleApp.candidate.profile.certifications" 
-					      		[ngClass]="{ 'active':activeTab==='certs'}" (click)="setActiveTab('certs')">
-					      		certs
-					      </a>
-					    </li>
-					     <li class="nav-item">
-					      <a class="nav-link" id="extras-tab" data-toggle="tab" aria-controls="extras" routerLinkActive="active" 
-					      		[routerLink]="[{outlets:{nonAcademics:'beyondAcademics'}}]"jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"
-					      		[ngClass]="{ 'active':activeTab==='extras'}" (click)="setActiveTab('extras')">
-					      		Extra Curriculars
-					      </a>
-					    </li>
-					 </ul>
-					 <div class="tab-content" id="profileTabContent">
-					 	<div id="details" class="container tab-pane " [ngClass]="{ 'active':activeTab==='details'}"  aria-labelledby="details-tab" role="tabpanel">
-					 		<div><router-outlet name="detail"></router-outlet></div>
-					 	</div>
-					 	<div id="edu" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='edu'}" aria-labelledby="edu-tab" role="tabpanel">
-       						<div class="tab_sub_section">
-       							<router-outlet name="educations"></router-outlet>
-       						</div>
-       					</div>
-       					<div id="emp" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='emp'}" aria-labelledby="emp-tab" role="tabpanel">
-       						<div class="tab_sub_section">
-       							<router-outlet name="employments"></router-outlet>
-       						</div>
-       					</div>
-       					<div id="lang" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='lang'}" aria-labelledby="lang-tab" role="tabpanel">
-       						<div class="tab_sub_section">
-       							<router-outlet name="languages"></router-outlet>
-       						</div>
-       					</div>
-       					<div id="certs" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='certs'}" aria-labelledby="cert-tab" role="tabpanel">
-       						<div class="tab_sub_section">
-       							<router-outlet name="certifications"></router-outlet>
-       						</div>
-       					</div>
-       					<div id="extras" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='extras'}" aria-labelledby="extras-tab" role="tabpanel">
-       						<div class="tab_sub_section">
-       							<router-outlet name="nonAcademics"></router-outlet>
-       						</div>
-       					</div>
-					 </div>
-				</div>
-			</div>
-		</div>
-	</div>
-</figure>-->
-
-

@@ -7,7 +7,7 @@ import {Principal, UserService, DataService} from '../../shared';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import { CandidateProfileScoreService } from './candidate-profile-score.service';
-import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
+import { JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID } from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
@@ -172,8 +172,8 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.dataService.put(CORPORATE_ID,-1);
   }
   
-  setPublicProfilePicmgmtRouteParams(candidateId) {
-    this.dataService.put(CANDIDATE_ID,candidateId);
+  setPublicProfilePicmgmtRouteParams() {
+    this.dataService.put(USER_ID,this.candidate.login.id);
   }
 
   private onError(error) {

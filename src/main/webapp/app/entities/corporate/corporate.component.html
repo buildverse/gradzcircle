@@ -1,150 +1,121 @@
 <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-	<figure class="figure w-100 after-header">
-		<div class="container-fluid">
-			<div class="row d-block d-xs-block d-sm-block d-lg-flex ">
-				<div class="col db-right">
-					<div class="db-content">
-						<div class="row m-0 px-4 shortlist_page">
-							<div class="col-lg-12 text-center my_profile">
-								<div class="row">
-									<div class="col-lg-12 profile_page_head"></div>
-									<div class="cmny_view row col-lg-12">
-										<div class="col-lg-2">
-											<img class="w-100" [src]="noImage ? defaultImage : imageUrl " />
-											<div class="mt-1">
-												<input #selectedPicture type="file" ng2FileSelect
-													[uploader]="uploader" [disabled]="uploader.queue?.length==1" />
-												<p class="text-danger" *ngIf="fileUploadErrorMessage">
-													{{fileUploadErrorMessage}}</p>
-												<p class="mb-0 profile-text-info small ml-1">Image size
-													should be 256 x 256 px.</p>
-												<p class="profile-text-info mt-0 small ml-1">Prefer using
-													white background for your picture</p>
-											</div>
-											<div *ngIf="!noImage && uploader.queue?.length==0"
-												class="clearfix">
-												<button type="submit"
-													class="btn btn-sm btn-pill btn-danger float-right"
-													(click)="removeImage()">
-													<span class="icon icon-trash"></span>&nbsp;<span>Remove</span>
-												</button>
-											</div>
-											<div *ngIf="uploader.queue?.length>0"
-												>
-												<div *ngFor="let item  of uploader.queue">
-													<button class="btn btn-sm btn-pill btn-success"
-														(click)="uploadImage(item)"
-														[disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
-														<span class="icon icon-arrow-with-circle-up"
-															style="color: white">Upload</span>
-													</button>
-													<button class="btn btn-sm btn-pill btn-danger"
-														(click)="clearSelectedPicture()">
-														<span class="icon icon-trash" style="color: white">Remove</span>
-													</button>
-											</div>
-									</div>
-										</div>
-										<div class="col-lg-7 py-5 text-left">
-											<p class="my_profile_title">{{corporate.name}}</p>
-											<span class="my_profile_detail">{{corporate.industry?.industryName}}</span>
-											<span class="my_profile_detail">{{corporate.tagline}}</span>
-										</div>
-									</div>
-									<div class=" col-lg-12 text-right">
-										<button type="submit" (click)="setRouterData()"
-											[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
-											replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
-											<span class="icon icon-edit"
-												jhiTranslate="entity.action.edit">Edit</span>
-
-										</button>
-									</div>
-									<div class="col-lg-12 text-center">
-										<h4 class="shortlist-title">About Us</h4>
-									</div>
-
-									<div class="col-lg-12 text-left">
-										<h5 class="shortlist-title">
-											<b><span jhiTranslate="gradzcircleApp.corporate.overview"></span></b>
-										</h5>
-										<p [innerHtml]="corporate.overview"></p>
-									</div>
-									<div class="col-lg-12 text-left">
-										<h5 class="shortlist-title">
-											<b><span jhiTranslate="gradzcircleApp.corporate.benefits"></span></b>
-										</h5>
-										<p [innerHtml]="corporate.benefits"></p>
-									</div>
-									<div class="col-lg-12 text-left">
-										<h5 class="shortlist-title">
-											<b><span jhiTranslate="gradzcircleApp.corporate.culture"></span></b>
-										</h5>
-										<p [innerHtml]="corporate.culture"></p>
-									</div>
-									<!--  <div class="col-lg-12 text-left mt-5 py-2">
-										<h4 class="shortlist-title">
-											<span
-												jhiTranslate="gradzcircleApp.corporate.corporateDetails"></span>
-										</h4>
-									</div>-->
-									<div class="col-lg-12 text-left">
-										<h5 class="shortlist-title">
-											<b><span
-												jhiTranslate="gradzcircleApp.corporate.establishedSince"></span></b>
-										</h5>
-										<p>{{corporate.establishedSince | date:'mediumDate'}}</p>
-										
-									</div>
-									<div class="col-lg-12 text-left">
-										<h5 class="shortlist-title">
-											<b><span
-												jhiTranslate="gradzcircleApp.corporate.companyType"></span></b>
-										</h5>
-										<p>{{corporate.industry?.industryName}}</p>
-										
-									</div>
-									<!--  <div class="col-lg-12 text-left">
-	                                              <h5 class="shortlist-title"><b>Company size</b></h5>
-	                                              <p>500-600 Employees</p><br>
-	                                           </div>
-	                                          <div class="col-lg-12 text-left">
-	                                              <h5 class="shortlist-title"><b>Specialties</b></h5>
-	                                              <p>Hiring Strategies, Recruitment, Sales Professionals, and Technology</p><br>
-	                                           </div>-->
-
-									<div class="clearfix"></div>
-									<div class="row col-lg-12 mt-5">
-										<div class="col-md-4 col-lg-4 text-center pt-4">
-											<div class="icon-decorate">
-												<span class="icon icon-mail"></span>
-											</div>
-											<p class="icon-detail pt-4">{{corporate.login.email}}</p>
-										</div>
-										<div class="col-md-4 col-lg-4 text-center pt-4">
-											<div class="icon-decorate">
-												<span class="icon icon-location-pin"></span>
-											</div>
-											<div *ngIf="corporate.city && corporate.country">
-												<p class="icon-detail pt-4">{{corporate.city}},
-													{{corporate.country[0]?.countryNiceName}}</p>
-											</div>
-										</div>
-										<div class="col-md-4 col-lg-4 text-center pt-4">
-											<div class="icon-decorate">
-												<span class="icon icon-globe"></span>
-											</div>
-											<p class="icon-detail pt-4">{{corporate.website}}</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+<div class="profile-header profile-mybackground">
+	<div class="container">
+		<div class="container-inner">
+			<div class="hovereffect">
+				<img class="rounded-circle media-object"
+					[src]="noImage ? defaultImage : imageUrl ">
+				<div class="overlay">
+           			<a class="info" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
 				</div>
+				<h3 class="profile-header-user">{{corporate.name}}</h3>
+				<h4 class="profile-header-user">{{corporate.industry?.industryName}}</h4>
+				<p class="profile-header-bio">{{corporate.tagline}}</p>
 			</div>
 		</div>
-	</figure>
+	</div>
+</div>
+<div *ngIf="corporate.overview || corporate.benefits || corporate.culture|| corporate.establishedSince || corporate.industry?.industryName; else hasNoDataStored" class="container mt-5">
+	<div class="col-lg-12 text-right">
+			<button type="submit" (click)="setRouterData()"
+				[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
+				replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
+				<span class="icon icon-edit"
+					jhiTranslate="entity.action.edit">Edit</span>
+	
+			</button>
+	</div>
+	<div class="col-lg-12 text-center">
+		<h4 class="shortlist-title">About Us</h4>
+	</div>
+
+	<div class="col-lg-12 text-left">
+		<h5 class="shortlist-title">
+			<b><span jhiTranslate="gradzcircleApp.corporate.overview"></span></b>
+		</h5>
+		<p [innerHtml]="corporate.overview"></p>
+	</div>
+	<div class="col-lg-12 text-left">
+		<h5 class="shortlist-title">
+			<b><span jhiTranslate="gradzcircleApp.corporate.benefits"></span></b>
+		</h5>
+		<p [innerHtml]="corporate.benefits"></p>
+	</div>
+	<div class="col-lg-12 text-left">
+		<h5 class="shortlist-title">
+			<b><span jhiTranslate="gradzcircleApp.corporate.culture"></span></b>
+		</h5>
+		<p [innerHtml]="corporate.culture"></p>
+	</div>
+   <!--   <div class="col-lg-12 text-left mt-5 py-2">
+		<h4 class="shortlist-title">
+			<span
+				jhiTranslate="gradzcircleApp.corporate.corporateDetails"></span>
+		</h4>
+	</div>-->
+	<div class="col-lg-12 text-left">
+		<h5 class="shortlist-title">
+			<b><span
+				jhiTranslate="gradzcircleApp.corporate.establishedSince"></span></b>
+		</h5>
+		<p>{{corporate.establishedSince | date:'mediumDate'}}</p>
+		
+	</div>
+	<div class="col-lg-12 text-left">
+		<h5 class="shortlist-title">
+			<b><span
+				jhiTranslate="gradzcircleApp.corporate.companyType"></span></b>
+		</h5>
+		<p>{{corporate.industry?.industryName}}</p>
+		
+	</div>
+	<!--  <div class="col-lg-12 text-left">
+                                       <h5 class="shortlist-title"><b>Company size</b></h5>
+                                       <p>500-600 Employees</p><br>
+                                    </div>
+                                   <div class="col-lg-12 text-left">
+                                       <h5 class="shortlist-title"><b>Specialties</b></h5>
+                                       <p>Hiring Strategies, Recruitment, Sales Professionals, and Technology</p><br>
+                                    </div>-->
+
+	<div class="clearfix"></div>
+	<div class="row col-lg-12 mt-5">
+		<div class="col-md-4 col-lg-4 text-center pt-4">
+			<div class="icon-decorate">
+				<span class="icon icon-mail"></span>
+			</div>
+			<p class="icon-detail pt-4">{{corporate.login.email}}</p>
+		</div>
+		<div class="col-md-4 col-lg-4 text-center pt-4">
+			<div class="icon-decorate">
+				<span class="icon icon-location-pin"></span>
+			</div>
+			<div *ngIf="corporate.city && corporate.country">
+				<p class="icon-detail pt-4">{{corporate.city}},
+					{{corporate.country[0]?.countryNiceName}}</p>
+			</div>
+		</div>
+		<div class="col-md-4 col-lg-4 text-center pt-4">
+			<div class="icon-decorate">
+				<span class="icon icon-globe"></span>
+			</div>
+			<p class="icon-detail pt-4">{{corporate.website}}</p>
+		</div>
+	</div>
+</div>
+<ng-template #hasNoDataStored>
+		<div class="container mt-5">
+			<div class="col-lg-12 text-right">
+				<button type="submit" (click)="setRouterData()"
+					[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
+					replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
+					<span class="icon icon-edit"
+						jhiTranslate="gradzcircleApp.corporate.home.addDetails">Add Details</span>
+		
+				</button>
+			</div>
+		</div>
+</ng-template>
 </div>
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="mt-5">

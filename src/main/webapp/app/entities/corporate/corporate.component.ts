@@ -1,16 +1,13 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Corporate} from './corporate.model';
 import {CorporateService} from './corporate.service';
-import {ITEMS_PER_PAGE, Principal, UserService, DataService} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
-import {FileSelectDirective, FileUploader, FileLikeObject} from 'ng2-file-upload';
-import {SERVER_API_URL} from '../../app.constants';
+import {Principal, UserService, DataService} from '../../shared';
+import {USER_ID} from '../../shared/constants/storage.constants';
 
 @Component({
   selector: 'jhi-corporate',
@@ -30,12 +27,8 @@ export class CorporateComponent implements OnInit, OnDestroy {
   imageUrl: any;
   noImage: boolean;
   defaultImage = require('../../../content/images/no-image.png');
-  fileUploadErrorMessage: string;
-  allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
-  maxFileSize = 100 * 1024;
-  imageDataNotAvailable: boolean;
-  uploader: FileUploader;
-  queueLimit = 1;
+
+
 
   constructor(
     private corporateService: CorporateService,
@@ -44,13 +37,11 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private userService: UserService,
-    private localStorage: LocalStorageService,
-    private sessionStorage: SessionStorageService,
-    private router: Router,
+
     private dataService: DataService
   ) {
-   this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+    this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
+      this.activatedRoute.snapshot.params['search'] : '';
   }
 
   loadAll() {
@@ -76,9 +67,9 @@ export class CorporateComponent implements OnInit, OnDestroy {
   /*LOAD one corp  that is being edited.*/
   loadCorporate() {
     this.corporateService.find(this.corporate.id).subscribe(
-     (res: HttpResponse<Corporate>) => this.corporate = res.body,
-     (res: HttpErrorResponse) => this.onError(res.message)
-      );
+      (res: HttpResponse<Corporate>) => this.corporate = res.body,
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
   }
 
   search(query) {
@@ -93,67 +84,24 @@ export class CorporateComponent implements OnInit, OnDestroy {
     this.currentSearch = '';
     this.loadAll();
   }
-  //  ngOnInit() {
-  //      this.loadAll();
-  //      this.principal.identity().then((account) => {
-  //          this.currentAccount = account;
-  //      });
-  //      this.registerChangeInCorporates();
-  //  }
 
   ngOnInit() {
     this.noImage = true;
-    // this.imageDataNotAvailable=true;
     this.activatedRoute.data.subscribe((data: {corporate: any}) => this.corporate = data.corporate.body);
-   // console.log('What am i getting'+JSON.stringify(this.corporate));
     this.currentSearch = this.corporate.id.toString();
-    //this.loginId = this.corporate.login.id;
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
-    const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
-    this.uploader = new FileUploader({
-      url: SERVER_API_URL + 'api/upload/' + this.corporate.login.id,
-      allowedMimeType: this.allowedMimeType,
-      maxFileSize: this.maxFileSize,
-      queueLimit: this.queueLimit,
-      removeAfterUpload: true
-    });
-    this.uploader.authTokenHeader = 'Authorization';
-    this.uploader.authToken = 'Bearer ' + token;
-    this.uploader.onWhenAddingFileFailed = (item, filter, options) => this.onWhenAddingFileFailed(item, filter, options);
-    this.uploader.onAfterAddingFile = (item) => this.onAfterAddingFile(item);
     this.reloadCorporateImage();
-   /* this.principal.identity().then((account) => {
-      this.currentAccount = account;
-      if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-        this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-          this.corporate = response.body;
-          console.log('Corprtate is '+ JSON.stringify(this.corporate));
-          this.currentCorporate = this.corporate.id.toString();
-          const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
-          this.uploader = new FileUploader({
-            url: SERVER_API_URL + 'api/upload/' + this.corporate.login.id,
-            allowedMimeType: this.allowedMimeType,
-            maxFileSize: this.maxFileSize,
-            queueLimit: this.queueLimit,
-            removeAfterUpload: true
-          });
-          this.uploader.authTokenHeader = 'Authorization';
-          this.uploader.authToken = 'Bearer ' + token;
-          this.uploader.onWhenAddingFileFailed = (item, filter, options) => this.onWhenAddingFileFailed(item, filter, options);
-          this.uploader.onAfterAddingFile = (item) => this.onAfterAddingFile(item);
-          this.reloadCorporateImage();
-        });
-      } else {
-        this.loadAll();
-      }
-
-    });*/
     this.registerChangeInCorporates();
     this.registerChangeInCorporateImage();
   }
-  
+
   setRouterData() {
     this.dataService.setRouteData(this.corporate.id);
+  }
+
+  setProfilePicmgmtRouteParams() {
+    this.dataService.put(USER_ID, this.corporate.login.id); 
+
   }
 
   ngOnDestroy() {
@@ -174,11 +122,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
       } else {
         this.eventSubscriber = this.eventManager.subscribe('corporateListModification', (response) => this.loadAll());
       }
-
-
     });
-
-
 
   }
 
@@ -186,66 +130,18 @@ export class CorporateComponent implements OnInit, OnDestroy {
     this.jhiAlertService.error(error.message, null, null);
   }
 
-  uploadImage(item) {
-    item.upload();
-    this.uploader.onCompleteItem = (item, response, status, header) => {
-      if (status === 200) {
-        this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
-        this.router.navigate(['/corporate']);
-      }
-    }
-
-
-  }
-  onAfterAddingFile(item) {
-    this.fileUploadErrorMessage = '';
-  }
-  onWhenAddingFileFailed(item: FileLikeObject, filter: any, options: any) {
-
-    switch (filter.name) {
-      case 'fileSize':
-        this.fileUploadErrorMessage = `File size must not be more than 100 Kb`;
-        break;
-      case 'mimeType':
-        const allowedTypes = this.allowedMimeType.join();
-        this.fileUploadErrorMessage = `File types allowed : png,jpg,jpeg,gif`;
-        break;
-      default:
-        this.fileUploadErrorMessage = `Unknown error (filter is ${filter.name})`;
-    }
-
-  }
-
-  clearSelectedPicture() {
-    this.uploader.clearQueue();
-    this.selectedPicture.nativeElement.value = '';
-  }
-
-  removeImage() {
-    let status;
-    this.userService.deleteImage(this.corporate.login.id).subscribe(response => {
-      status = response.status;
-      if (status === 200) {
-        this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
-        this.router.navigate(['/corporate']);
-      }
-    });
-
-
-  }
-
   reloadCorporateImage() {
     this.principal.identity(true).then((user) => {
       if (user) {
         if (user.imageUrl) {
-          this.userService.getImageData(user.id).subscribe(response => {
-            let responseJson = response.body;
+          this.userService.getImageData(user.id).subscribe((response) => {
+            const responseJson = response.body;
             this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
           });
           this.noImage = false;
-        }
-        else
+        } else {
           this.noImage = true;
+        }
       }
 
     });

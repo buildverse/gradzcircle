@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DataService} from '../../shared';
 import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
-import {CANDIDATE_ID} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileUploader, FileLikeObject} from 'ng2-file-upload';
@@ -11,6 +11,7 @@ import {SERVER_API_URL} from '../../app.constants';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Principal} from '../../shared/auth/principal.service';
 import {UserService} from '../../shared/';
+import { AuthoritiesConstants } from '../../shared/authorities.constant';
 
 @Component({
   selector: 'jhi-candidate-profile-pic-dialog',
@@ -76,7 +77,11 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     this.userService.deleteImage(this.candidateId).subscribe((response) => {
       status = response.status;
       if (status === 200) {
+         if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
         this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
+        } else if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CORPORATE])) {
+           this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
+       }
         this.clear();
         // this.router.navigate(['../details'], {relativeTo: this.route});
       }
@@ -88,7 +93,11 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     item.upload();
     this.uploader.onCompleteItem = (item, response, status, header) => {
       if (status === 200) {
+       if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
         this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
+        } else if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CORPORATE])) {
+           this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
+       }
         this.clear();
       } else {
         console.log('Status is ' + status + '   response is ' + JSON.stringify(response));
@@ -157,7 +166,7 @@ export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
           .open(ProfilePicMgmtPopupDialogComponent as Component, params['id']);
       } else {
         this.candidateProfilePicMgmtPopupService
-          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.get(CANDIDATE_ID));
+          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.get(USER_ID));
       }
     });
   }
