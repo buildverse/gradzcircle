@@ -13,7 +13,7 @@ import {Country, CountryService} from '../country';
 import {Industry, IndustryService} from '../industry';
 import {User, UserService} from '../../shared';
 import {EditorProperties, DataService} from '../../shared';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-corporate-dialog',
@@ -38,7 +38,8 @@ export class CorporateDialogComponent implements OnInit {
     private industryService: IndustryService,
     private eventManager: JhiEventManager,
     private userService: UserService,
-    private dataService: DataService
+    private dataService: DataService,
+    private spinnerService: NgxSpinnerService
   ) {
   }
 
@@ -65,6 +66,7 @@ export class CorporateDialogComponent implements OnInit {
   }
 
   save() {
+    this.spinnerService.show();
     this.isSaving = true;
     if (this.corporate.id !== undefined) {
       this.subscribeToSaveResponse(
@@ -89,10 +91,12 @@ export class CorporateDialogComponent implements OnInit {
   private onSaveSuccess(result: Corporate) {
     this.eventManager.broadcast({name: 'corporateListModification', content: 'OK'});
     this.isSaving = false;
+    this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 
   private onSaveError() {
+    this.spinnerService.hide();
     this.isSaving = false;
   }
 

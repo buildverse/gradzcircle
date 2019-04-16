@@ -1,61 +1,63 @@
 <div class="col db-right mt-6">
 	    <div class="db-content">
-	    <p> Applied Jobs </p>
-	    		 <div class="row m-0 px-4 pt-5 administer-prescription" *ngIf="jobs?.length>0; else noJobs">
-		          <div class="col p-0">
-		             <div class="table-responsive ">
-				              <table class="table table-striped table-light text-center table-hover">
-					                  <thead class="table-header-bg text-white">
-										<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
-											[callback]="transition.bind(this)">
-			
-										<th jhiSortBy="jobTitle" class="justfiy-content-center font-weight-light"><span
-											jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span><span
-											class="icon icon-select-arrows"></span></th>
-										<th jhiSortBy="jobType" class="justfiy-content-center font-weight-light"><span
-											jhiTranslate="gradzcircleApp.job.jobType">Job Type</span><span
-											class="icon icon-select-arrows"></span></th>
-										<th jhiSortBy="employmentType" class="justfiy-content-center font-weight-light"><span
-											jhiTranslate="gradzcircleApp.job.employmentType">Employment
-												Type</span><span class="icon icon-select-arrows"></span></th>
-										<th jhiSortBy="matchScore" class="justfiy-content-center font-weight-light"><span
-											jhiTranslate="gradzcircleApp.job.matchScore">matchScore</span><span
-											class="icon icon-select-arrows"></span></th>
+	    <p> Applied Jobs (Shud the header be different ? )</p>
+	    		<div *ngIf="jobs">
+		    		 <div class="row m-0 px-4 pt-5 administer-prescription" *ngIf="jobs?.length>0; else noJobs">
+			          <div class="col p-0">
+			             <div class="table-responsive ">
+					              <table class="table table-striped table-light text-center table-hover">
+						                  <thead class="table-header-bg text-white">
+											<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
+												[callback]="transition.bind(this)">
+				
+											<th jhiSortBy="jobTitle" class="justfiy-content-center font-weight-light"><span
+												jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span><span
+												class="icon icon-select-arrows"></span></th>
+											<th jhiSortBy="jobType" class="justfiy-content-center font-weight-light"><span
+												jhiTranslate="gradzcircleApp.job.jobType">Job Type</span><span
+												class="icon icon-select-arrows"></span></th>
+											<th jhiSortBy="employmentType" class="justfiy-content-center font-weight-light"><span
+												jhiTranslate="gradzcircleApp.job.employmentType">Employment
+													Type</span><span class="icon icon-select-arrows"></span></th>
+											<th jhiSortBy="matchScore" class="justfiy-content-center font-weight-light"><span
+												jhiTranslate="gradzcircleApp.job.matchScore">matchScore</span><span
+												class="icon icon-select-arrows"></span></th>
+											
+										</tr>
+								</thead>
+								<tbody class="font-weight-light">
+									<tr *ngFor="let job of jobs ;trackBy: trackId">
+										<td>{{job.jobTitle}}</td>
+										<td>
+											<div *ngIf="job.jobType">{{job.jobType?.jobType}}</div>
+										</td>
+										<td>
+											<div *ngIf="job.employmentType">
+												{{job.employmentType?.employmentType}}</div>
+										</td>
+										<td>
+											<div>{{job.matchScore}}%</div>
+										</td>
 										
 									</tr>
-							</thead>
-							<tbody class="font-weight-light">
-								<tr *ngFor="let job of jobs ;trackBy: trackId">
-									<td>{{job.jobTitle}}</td>
-									<td>
-										<div *ngIf="job.jobType">{{job.jobType?.jobType}}</div>
-									</td>
-									<td>
-										<div *ngIf="job.employmentType">
-											{{job.employmentType?.employmentType}}</div>
-									</td>
-									<td>
-										<div>{{job.matchScore}}%</div>
-									</td>
-									
-								</tr>
-							</tbody>
-						</table>
-						</div>
-						<div *ngIf="jobs && jobs.length">
-							<div class="row justify-content-center font-weight-light">
-								<jhi-item-count [page]="page" [total]="queryCount"
-									[itemsPerPage]="itemsPerPage"></jhi-item-count>
+								</tbody>
+							</table>
 							</div>
-							<div class="row justify-content-center">
-								<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
-									(pageChange)="loadPage(page)"></ngb-pagination>
+							<div *ngIf="jobs && jobs.length">
+								<div class="row justify-content-center font-weight-light">
+									<jhi-item-count [page]="page" [total]="queryCount"
+										[itemsPerPage]="itemsPerPage"></jhi-item-count>
+								</div>
+								<div class="row justify-content-center">
+									<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+										(pageChange)="loadPage(page)"></ngb-pagination>
+								</div>
 							</div>
-						</div>
-					
+						
+					</div>
 				</div>
+				
+				<ng-template #noJobs>No Jobs to show at the moment</ng-template>
 			</div>
-			
-			<ng-template #noJobs>No Jobs to show at the moment</ng-template>
 	    </div>
 	 </div>

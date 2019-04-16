@@ -8,6 +8,7 @@ import { CandidateCertificationService } from './candidate-certification.service
 import { Principal, DataService } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'jhi-candidate-certification',
@@ -29,7 +30,8 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
         private dataservice: DataService,
-        private candidateProfileScoreService : CandidateProfileScoreService
+        private candidateProfileScoreService : CandidateProfileScoreService,
+        private spinnerService: NgxSpinnerService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -37,12 +39,14 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
 
     /*To be removed once undertsand Elastic */
     loadCertificationsForCandidate() {
+      this.spinnerService.show();
       this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(
         (res: HttpResponse<CandidateCertification[]>) => {
           this.candidateCertifications = res.body;
           if (this.candidateCertifications && this.candidateCertifications.length > 0) {
             this.candidateProfileScoreService.changeScore(this.candidateCertifications[0].candidate.profileScore);
           }
+          this.spinnerService.hide();
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
@@ -124,6 +128,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
+      this.spinnerService.hide();
         this.jhiAlertService.error(error.message, null, null);
     }
 }

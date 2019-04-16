@@ -8,7 +8,7 @@ import { CandidateEmploymentService } from './candidate-employment.service';
 import { DataService, Principal } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'jhi-candidate-employment',
@@ -31,7 +31,8 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
         private dataService: DataService,
-        private candidateProfileScoreService: CandidateProfileScoreService
+        private candidateProfileScoreService: CandidateProfileScoreService,
+        private spinnerService: NgxSpinnerService
     ) {
           this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -47,21 +48,19 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
 
     /*To be removed once undertsand Elastic */
     loadEmploymentsForCandidate() {
-
+        this.spinnerService.show();
         this.candidateEmploymentService.findEmploymentsByCandidateId(this.candidateId).subscribe(
-           (res: HttpResponse<CandidateEmployment[]>) =>{
+           (res: HttpResponse<CandidateEmployment[]>) => {
              this.candidateEmployments = res.body;
-             if(this.candidateEmployments && this.candidateEmployments.length>0)
-               {
+             if (this.candidateEmployments && this.candidateEmployments.length > 0) {
                this.candidateProfileScoreService.changeScore(this.candidateEmployments[0].candidate.profileScore);
              } else {
                this.candidateProfileScoreService.changeScore(this.profileScore);
              }
-           } 
-             ,
-                    (res: HttpErrorResponse) => this.onError(res.message));
+             this.spinnerService.hide();
+           },
+          (res: HttpErrorResponse) => this.onError(res.message));
         return;
-
     }
 
     loadAll() {
@@ -73,8 +72,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-        }
-        else {
+        } else {
             this.candidateEmploymentService.query().subscribe(
                 (res: HttpResponse<CandidateEmployment[]>) => {
                 this.candidateEmployments = res.body;
@@ -124,13 +122,14 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         if (this.candidateId) {
             this.eventSubscriber = this.eventManager.subscribe('candidateEmploymentListModification', (response) => this.loadEmploymentsForCandidate());
             this.eventSubscriber = this.eventManager.subscribe('candidateProjectListModification', (response) => this.loadEmploymentsForCandidate());
-        }
-        else
+        } else {
             this.eventSubscriber = this.eventManager.subscribe('candidateEmploymentListModification', (response) => this.loadAll());
+      }
 
     }
 
     private onError(error) {
+      this.spinnerService.hide();
         this.jhiAlertService.error(error.message, null, null);
     }
 }

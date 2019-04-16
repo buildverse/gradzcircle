@@ -1,16 +1,11 @@
-import { Component, OnInit, AfterViewInit, Renderer, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormArray } from '@angular/forms'; 
+import { Component, OnInit, AfterViewInit} from '@angular/core';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms'; 
 import { JhiLanguageService } from 'ng-jhipster';
 import 'rxjs/add/operator/debounceTime';
 import { Register } from '../register/register.service';
-import { CountryService } from '../../entities/country/country.service';
-//import { Observable } from 'rxjs/Observable';
 import { Country } from '../../entities/country/country.model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ErrorMessagesService } from '../../entities/error-messages/error-messages.service';
-import { ErrorMessages } from '../../entities/error-messages/error-messages.model';
-import { CorporateRegisterValidationMessage } from './corporate-validation-message.model';
-
+import { ActivatedRoute  } from '@angular/router';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 function passwordMatcher(c: AbstractControl): {[key: string]: boolean} | null {
@@ -65,13 +60,9 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
     constructor(
         private languageService: JhiLanguageService,
         private registerService: Register,
-        private elementRef: ElementRef,
-        private renderer: Renderer,
         private formBuilder: FormBuilder,
-        private countryService: CountryService,
-      //  private router: Router,
         private route: ActivatedRoute,
-        private errorMessageService: ErrorMessagesService
+        private spinnerService: NgxSpinnerService
     ) {
         //this.languageService(['register']);
     }
@@ -130,20 +121,20 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
 
         this.success = false;
         this.registerAccount = {authorities:['ROLE_CORPORATE']};
-        
-
     }
 
-    onCountryChange(countrySelected){
-        if(countrySelected)
-            if(countrySelected.length === 0)
-                this.corporateRegisterForm.get('phoneNumber').reset();
-
-        for( let country of this.countries){
-            if(country.countryNiceName === countrySelected)
-                this.corporateRegisterForm.get('phoneNumber').setValue('+'+country.phoneCode);
+    onCountryChange(countrySelected) {
+      if (countrySelected) {
+        if (countrySelected.length === 0) {
+          this.corporateRegisterForm.get('phoneNumber').reset();
         }
-        
+      }
+      for (const country of this.countries) {
+        if (country.countryNiceName === countrySelected) {
+          this.corporateRegisterForm.get('phoneNumber').setValue('+' + country.phoneCode);
+        }
+      }
+
     }
 
     ngAfterViewInit() {
@@ -152,25 +143,27 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
     }
 
     register() {
-            this.error = null;
-            this.errorUserExists = null;
-            this.errorEmailExists = null;
-            this.languageService.getCurrent().then((key) => {
-            this.registerAccount.langKey = key;
-            this.registerAccount.firstName = this.corporateRegisterForm.get('firstName').value;
-            this.registerAccount.lastName = this.corporateRegisterForm.get('lastName').value;
-            this.registerAccount.companyName = this.corporateRegisterForm.get('companyName').value;
-            this.registerAccount.phoneNumber = this.corporateRegisterForm.get('phoneNumber').value;
-            this.registerAccount.password = this.corporateRegisterForm.get('passwordGroup.password').value;
-            this.registerAccount.email = this.corporateRegisterForm.get('email').value;
-            this.registerAccount.login = this.corporateRegisterForm.get('email').value;
-            this.registerAccount.country = this.corporateRegisterForm.get('country').value;
-            this.registerService.save(this.registerAccount).subscribe(() => {
-                this.success = true;
-                this.corporateRegisterForm.reset();
-            }, (response) => this.processError(response));
-            });
-        
+      this.error = null;
+      this.errorUserExists = null;
+      this.errorEmailExists = null;
+      this.languageService.getCurrent().then((key) => {
+        this.registerAccount.langKey = key;
+        this.registerAccount.firstName = this.corporateRegisterForm.get('firstName').value;
+        this.registerAccount.lastName = this.corporateRegisterForm.get('lastName').value;
+        this.registerAccount.companyName = this.corporateRegisterForm.get('companyName').value;
+        this.registerAccount.phoneNumber = this.corporateRegisterForm.get('phoneNumber').value;
+        this.registerAccount.password = this.corporateRegisterForm.get('passwordGroup.password').value;
+        this.registerAccount.email = this.corporateRegisterForm.get('email').value;
+        this.registerAccount.login = this.corporateRegisterForm.get('email').value;
+        this.registerAccount.country = this.corporateRegisterForm.get('country').value;
+        this.spinnerService.show();
+        this.registerService.save(this.registerAccount).subscribe(() => {
+          this.success = true;
+          this.corporateRegisterForm.reset();
+          this.spinnerService.hide();
+        }, (response) => this.processError(response));
+      });
+
     }
 
  
@@ -190,14 +183,15 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
 
 
     private processError(response) {
-        this.success = null;
+      this.success = null;
+      this.spinnerService.hide(); 
         if (response.status === 400 && response._body === 'login already in use') {
-            this.errorUserExists = 'ERROR';
+          this.errorUserExists = 'ERROR';
         } else if (response.status === 400 && response._body === 'email address already in use') {
-            this.errorEmailExists = 'ERROR';
+          this.errorEmailExists = 'ERROR';
         } else {
-            this.error = 'ERROR';
-        }
+        this.error = 'ERROR';
+      }
     }
 }
 

@@ -1,13 +1,13 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import {JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, DataService, DataStorageService} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import { USER_ID } from '../../shared/constants/storage.constants';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {USER_ID} from '../../shared/constants/storage.constants';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
   templateUrl: './applied-job-by-candidate.component.html'
 })
 export class AppliedJobsComponent implements OnInit, OnDestroy {
-  jobs: Job[];
+  jobs: Job[] = null;
   data: any;
   routeData: any;
   links: any;
@@ -27,7 +27,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   previousPage: any;
   reverse: any;
   candidateId: number;
-  corporateId:number;
+  corporateId: number;
   eventSubscriber: Subscription;
   subscription: Subscription;
 
@@ -38,7 +38,8 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private dataService: DataService,
-    private localDataStorageService: DataStorageService
+    private localDataStorageService: DataStorageService,
+    private spinnerService: NgxSpinnerService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -47,17 +48,17 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
       this.reverse = data['pagingParams'].ascending;
       this.predicate = data['pagingParams'].predicate;
     });
-   // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+    // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
   }
 
- 
+
 
   reset() {
     this.page = 0;
     this.jobs = [];
     if (this.candidateId) {
       this.loadAppliedJobs();
-    } 
+    }
   }
 
   loadPage(page: number) {
@@ -73,15 +74,16 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
       {
         page: this.page,
         size: this.itemsPerPage,
-       // search: this.currentSearch,
+        // search: this.currentSearch,
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
 
-   this.loadAppliedJobs();
+    this.loadAppliedJobs();
   }
 
   loadAppliedJobs() {
+    this.spinnerService.show();
     this.jobService.queryAppliedJobsByCandidate({
       page: this.page - 1,
       //query: this.currentSearch,
@@ -110,14 +112,14 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-   // this.eventManager.destroy(this.eventSubscriber);
+    // this.eventManager.destroy(this.eventSubscriber);
   }
 
   trackId(index: number, item: Job) {
     return item.id;
   }
-  
- 
+
+
 
   sort() {
     const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
@@ -128,7 +130,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    console.log(error);
+    this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -140,5 +142,6 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.jobs = data;
+    this.spinnerService.hide();
   }
 }

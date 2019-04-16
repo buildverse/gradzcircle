@@ -2,20 +2,20 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
-import { DataService, DataStorageService} from '../../shared';
+import {DataService, DataStorageService} from '../../shared';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import { USER_ID } from '../../shared/constants/storage.constants';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {USER_ID} from '../../shared/constants/storage.constants';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'jhi-shortlisted-job-list',
   templateUrl: './shortlisted-for-job.component.html'
 })
 export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
-  jobs: Job[];
+  jobs: Job[] = null;
   data: any;
   routeData: any;
   links: any;
@@ -27,7 +27,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   previousPage: any;
   reverse: any;
   candidateId: number;
-  corporateId:number;
+  corporateId: number;
   eventSubscriber: Subscription;
   subscription: Subscription;
 
@@ -38,7 +38,8 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private dataService: DataService,
-    private localDataStorageService: DataStorageService
+    private localDataStorageService: DataStorageService,
+    private spinnerService: NgxSpinnerService
 
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -48,17 +49,17 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
       this.reverse = data['pagingParams'].ascending;
       this.predicate = data['pagingParams'].predicate;
     });
-   // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
+    // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
   }
 
- 
+
 
   reset() {
     this.page = 0;
     this.jobs = [];
     if (this.candidateId) {
       this.loadShortListedJobs();
-    } 
+    }
   }
 
   loadPage(page: number) {
@@ -74,15 +75,16 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
       {
         page: this.page,
         size: this.itemsPerPage,
-       // search: this.currentSearch,
+        // search: this.currentSearch,
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
 
-   this.loadShortListedJobs();
+    this.loadShortListedJobs();
   }
 
   loadShortListedJobs() {
+    this.spinnerService.show();
     this.jobService.queryShortListedJobsForCandidate({
       page: this.page - 1,
       //query: this.currentSearch,
@@ -102,9 +104,9 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
         this.candidateId = params['id'];
       } else {
         this.candidateId = this.dataService.getRouteData();
-      } 
-      
-      if(!this.candidateId) {
+      }
+
+      if (!this.candidateId) {
         this.candidateId = this.localDataStorageService.getData(USER_ID);
       }
       this.loadShortListedJobs();
@@ -114,14 +116,14 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-   // this.eventManager.destroy(this.eventSubscriber);
+    // this.eventManager.destroy(this.eventSubscriber);
   }
 
   trackId(index: number, item: Job) {
     return item.id;
   }
-  
- 
+
+
 
   sort() {
     const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
@@ -132,7 +134,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    console.log(error);
+    this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -144,5 +146,6 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.jobs = data;
+    this.spinnerService.hide();
   }
 }

@@ -6,6 +6,7 @@ import {FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormAr
 import {Register} from './register.service';
 import 'rxjs/add/operator/debounceTime';
 import {LoginModalService, EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE} from '../../shared';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 function passwordMatcher(c: AbstractControl): {[key: string]: boolean} | null {
   let passwordControl = c.get('password');
@@ -51,7 +52,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private registerService: Register,
     private elementRef: ElementRef,
     private renderer: Renderer,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private spinnerService: NgxSpinnerService
 
   ) {
   }
@@ -95,9 +97,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.registerAccount.email = this.registerForm.get('email').value;
       this.registerAccount.firstName = this.registerForm.get('firstName').value;
       this.registerAccount.lastName = this.registerForm.get('lastName').value;
+      this.spinnerService.show();
       this.registerService.save(this.registerAccount).subscribe(() => {
         this.success = true;
         this.registerForm.reset();
+        this.spinnerService.hide();
       }, (response) => this.processError(response));
     });
   }
@@ -118,6 +122,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
   private processError(response: HttpErrorResponse) {
     this.success = null;
+    this.spinnerService.hide();
     if (response.status === 400 && response.error.type === LOGIN_ALREADY_USED_TYPE) {
       this.errorUserExists = 'ERROR';
     } else if (response.status === 400 && response.error.type === EMAIL_ALREADY_USED_TYPE) {

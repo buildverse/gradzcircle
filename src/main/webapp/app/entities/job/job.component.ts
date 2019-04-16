@@ -1,5 +1,5 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Component, OnInit, OnDestroy,ViewChild} from '@angular/core';
+import {ActivatedRoute, Router,Event, NavigationCancel,NavigationEnd,NavigationStart} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobConstants} from './job.constants';
@@ -13,6 +13,7 @@ import {JOB_ID, CORPORATE_ID, MATCH_SCORE} from '../../shared/constants/storage.
 import {CandidateService} from '../candidate/candidate.service';
 import {CorporateService} from '../corporate/corporate.service';
 import {Corporate} from '../corporate/corporate.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-job',
@@ -20,7 +21,7 @@ import {Corporate} from '../corporate/corporate.model';
   styleUrls :['job.css']
 })
 export class JobComponent implements OnInit, OnDestroy {
-  jobs: Job[];
+  jobs: Job[] = null;
   currentAccount: any;
   corporateId: number;
   eventSubscriber: Subscription;
@@ -55,7 +56,8 @@ export class JobComponent implements OnInit, OnDestroy {
     private paginationUtil: JhiPaginationUtil,
     private paginationConfig: PaginationConfig,
     private dataService: DataService,
-    private dataStorageService : DataStorageService
+    private dataStorageService : DataStorageService,
+    private spinnerService: NgxSpinnerService
 
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -69,6 +71,7 @@ export class JobComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot.params['search'] : '';
   }
 
+  
   loadAll() {
     if (this.corporateId) {
       this.loadActiveJobs();
@@ -177,12 +180,14 @@ export class JobComponent implements OnInit, OnDestroy {
     this.principal.identity().then((account) => {
       this.currentAccount = account;
       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
+        this.spinnerService.show();
         this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
           this.corporateId = response.body.id;
           this.corporate = response.body;
           this.loadActiveJobs();
         });
       } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
+        this.spinnerService.show();
         this.candidateService.getCandidateByLoginId(account.id).subscribe((response) => {
           this.candidateId = response.body.id;
           this.loadActiveAndMatchedJobsForCandidates();
@@ -211,6 +216,7 @@ export class JobComponent implements OnInit, OnDestroy {
     this.eventManager.destroy(this.eventSubscriber);
   }
 
+
   trackId(index: number, item: Job) {
     return item.id;
   }
@@ -225,6 +231,7 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   loadActiveAndMatchedJobsForCandidates() {
+    
     this.jobService.queryActiveJobsForCandidates({
       page: this.page - 1,
       //query: this.currentSearch,
@@ -232,8 +239,14 @@ export class JobComponent implements OnInit, OnDestroy {
       sort: this.sort(),
       id: this.candidateId
     }).subscribe(
-      (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
-       (res: HttpResponse<any>) => this.onError(res.body)
+      (res: HttpResponse<Job[]>) => {
+        this.onSuccess(res.body, res.headers);
+       // console.log('Loading in success is '+this.loading);
+      },
+      (res: HttpResponse<any>) => {
+        this.onError(res.body);
+
+      }
       );
 
   }
@@ -247,6 +260,7 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
+    this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -258,6 +272,7 @@ export class JobComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.jobs = data;
+    this.spinnerService.hide();
     if (this.jobs.length === 0)    {
       //this.job = new Job();
       this.job.totalNumberOfJobs = 0;

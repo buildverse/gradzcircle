@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Job } from './job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
@@ -19,7 +19,8 @@ export class JobDeleteDialogComponent {
     constructor(
         private jobService: JobService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private spinnerService: NgxSpinnerService
     ) {
     }
 
@@ -28,13 +29,15 @@ export class JobDeleteDialogComponent {
     }
 
     confirmDelete(id: number) {
-        this.jobService.delete(id).subscribe((response) => {
-            this.eventManager.broadcast({
-                name: 'jobListModification',
-                content: 'Deleted an job'
-            });
-            this.activeModal.dismiss(true);
+      this.spinnerService.show();
+      this.jobService.delete(id).subscribe((response) => {
+        this.eventManager.broadcast({
+          name: 'jobListModification',
+          content: 'Deleted an job'
         });
+        this.spinnerService.hide();
+        this.activeModal.dismiss(true);
+      });
     }
 }
 

@@ -1,71 +1,74 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
-import { DataService } from '../../shared';
-import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
-import { CandidateNonAcademicWorkPopupService } from './candidate-non-academic-work-popup.service';
-import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
+import {DataService} from '../../shared';
+import {CandidateNonAcademicWork} from './candidate-non-academic-work.model';
+import {CandidateNonAcademicWorkPopupService} from './candidate-non-academic-work-popup.service';
+import {CandidateNonAcademicWorkService} from './candidate-non-academic-work.service';
 
 @Component({
-    selector: 'jhi-candidate-non-academic-work-delete-dialog',
-    templateUrl: './candidate-non-academic-work-delete-dialog.component.html'
+  selector: 'jhi-candidate-non-academic-work-delete-dialog',
+  templateUrl: './candidate-non-academic-work-delete-dialog.component.html'
 })
 export class CandidateNonAcademicWorkDeleteDialogComponent {
 
-    candidateNonAcademicWork: CandidateNonAcademicWork;
+  candidateNonAcademicWork: CandidateNonAcademicWork;
 
-    constructor(
-        private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+  constructor(
+    private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
+    public activeModal: NgbActiveModal,
+    private eventManager: JhiEventManager,
+    private spinnerService: NgxSpinnerService
+  ) {
+  }
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    confirmDelete(id: number) {
-        this.candidateNonAcademicWorkService.delete(id).subscribe((response) => {
-            this.eventManager.broadcast({
-                name: 'candidateNonAcademicWorkListModification',
-                content: 'Deleted an candidateNonAcademicWork'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.spinnerService.show();
+    this.candidateNonAcademicWorkService.delete(id).subscribe((response) => {
+      this.eventManager.broadcast({
+        name: 'candidateNonAcademicWorkListModification',
+        content: 'Deleted an candidateNonAcademicWork'
+      });
+      this.activeModal.dismiss(true);
+      this.spinnerService.hide();
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-candidate-non-academic-work-delete-popup',
-    template: ''
+  selector: 'jhi-candidate-non-academic-work-delete-popup',
+  template: ''
 })
 export class CandidateNonAcademicWorkDeletePopupComponent implements OnInit, OnDestroy {
 
-    routeSub: any;
+  routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService,
-        private dataService: DataService
-    ) {}
+  constructor(
+    private route: ActivatedRoute,
+    private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService,
+    private dataService: DataService
+  ) {}
 
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-          if(params['id']) {
-            this.candidateNonAcademicWorkPopupService
-                .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, params['id']);
-          } else {
-            const id = this.dataService.getRouteData();
-            this.candidateNonAcademicWorkPopupService
-                .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, id);
-          }
-        });
-    }
+  ngOnInit() {
+    this.routeSub = this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.candidateNonAcademicWorkPopupService
+          .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, params['id']);
+      } else {
+        const id = this.dataService.getRouteData();
+        this.candidateNonAcademicWorkPopupService
+          .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, id);
+      }
+    });
+  }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+  }
 }

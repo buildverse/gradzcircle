@@ -9,6 +9,7 @@ import {CorporateService} from './corporate.service';
 import {Principal, UserService, DataService} from '../../shared';
 import {USER_ID} from '../../shared/constants/storage.constants';
 
+
 @Component({
   selector: 'jhi-corporate',
   templateUrl: './corporate.component.html',
@@ -37,7 +38,6 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private userService: UserService,
-
     private dataService: DataService
   ) {
     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?

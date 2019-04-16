@@ -5,7 +5,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
-
+import {NgxSpinnerService} from 'ngx-spinner';
 import {CandidateEducation} from './candidate-education.model';
 import {CandidateEducationPopupService} from './candidate-education-popup.service';
 import {CandidateEducationService} from './candidate-education.service';
@@ -71,7 +71,9 @@ export class CandidateEducationDialogComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private dateUtils: JhiDateUtils,
-    dataService: DataService
+    private dataService: DataService,
+    private spinnerService: NgxSpinnerService
+    
 
   ) {
   }
@@ -269,6 +271,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   save() {
     this.isSaving = true;
     this.validateAndResetScoreBeforeSave();
+    this.spinnerService.show();
     if (this.candidateEducation.id !== undefined) {
       this.subscribeToSaveResponse(
         this.candidateEducationService.update(this.candidateEducation));
@@ -329,11 +332,12 @@ export class CandidateEducationDialogComponent implements OnInit {
    // console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
     this.isSaving = false;
+    this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 
   private onSaveError(result:any) {
-   // console.log(JSON.stringify(result));
+   this.spinnerService.hide();
     this.isSaving = false;
   }
 

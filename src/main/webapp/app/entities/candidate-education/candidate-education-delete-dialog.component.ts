@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import {DataService} from '../../shared';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-
+import {NgxSpinnerService} from 'ngx-spinner';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationPopupService } from './candidate-education-popup.service';
 import { CandidateEducationService } from './candidate-education.service';
@@ -19,7 +19,8 @@ export class CandidateEducationDeleteDialogComponent {
     constructor(
         private candidateEducationService: CandidateEducationService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private spinnerService: NgxSpinnerService
     ) {
     }
 
@@ -28,13 +29,15 @@ export class CandidateEducationDeleteDialogComponent {
     }
 
     confirmDelete(id: number) {
+      this.spinnerService.show(); 
         this.candidateEducationService.delete(id).subscribe((response) => {
-            this.eventManager.broadcast({
-                name: 'candidateEducationListModification',
-                content: 'Deleted an candidateEducation'
-            });
-            this.activeModal.dismiss(true);
+        this.eventManager.broadcast({
+          name: 'candidateEducationListModification',
+          content: 'Deleted an candidateEducation'
         });
+        this.spinnerService.hide();
+        this.activeModal.dismiss(true);
+      });
     }
 }
 

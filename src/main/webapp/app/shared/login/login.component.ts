@@ -3,7 +3,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {JhiLanguageService, JhiEventManager} from 'ng-jhipster';
 import {FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormArray} from '@angular/forms';
-
+import {NgxSpinnerService} from 'ngx-spinner';
 import {LoginService} from './login.service';
 import {StateStorageService} from '../../shared/auth/state-storage.service';
 import {SocialService} from '../../shared/social/social.service';
@@ -36,7 +36,8 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private principal: Principal,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private spinnerService: NgxSpinnerService
   ) {
     this.credentials = {};
   }
@@ -67,7 +68,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
   }
 
   login() {
-
+    this.spinnerService.show();
     this.loginService.login({
       username: this.loginForm.get('login').value,
       password: this.loginForm.get('password').value,
@@ -97,6 +98,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
         this.stateStorageService.storeUrl(null);
         this.router.navigate([redirect]);
       }
+      this.spinnerService.hide();
       this.activeModal.dismiss('to login success');
     }).catch(() => {
       this.authenticationError = true;

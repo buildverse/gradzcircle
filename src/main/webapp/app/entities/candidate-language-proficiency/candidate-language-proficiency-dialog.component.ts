@@ -13,6 +13,7 @@ import {Candidate, CandidateService} from '../candidate';
 import {Language, LanguageService} from '../language';
 import {Principal, DataService} from '../../shared';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-candidate-language-proficiency-dialog',
@@ -47,7 +48,8 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     private languageService: LanguageService,
     private eventManager: JhiEventManager,
     private route: ActivatedRoute,
-    private principal: Principal
+    private principal: Principal,
+    private spinnerService: NgxSpinnerService
   ) {
 
   }
@@ -145,6 +147,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    this.spinnerService.show();
     if (this.candidateLanguageProficiency.id !== undefined) {
       this.subscribeToSaveResponse(
         this.candidateLanguageProficiencyService.update(this.candidateLanguageProficiency));
@@ -157,21 +160,24 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
 
   private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateLanguageProficiency>>) {
     result.subscribe((res: HttpResponse<CandidateLanguageProficiency>) =>
-      this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+      this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onError(res.error));
   }
 
   private onSaveSuccess(result: CandidateLanguageProficiency) {
     this.eventManager.broadcast({name: 'candidateLanguageProficiencyListModification', content: 'OK'});
     this.isSaving = false;
+     this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 
   private onSaveError() {
     this.isSaving = false;
+    this.spinnerService.hide();
   }
 
   private onError(error: any) {
     this.jhiAlertService.error(error.message, null, null);
+    this.onSaveError();
   }
 
   trackCandidateById(index: number, item: Candidate) {

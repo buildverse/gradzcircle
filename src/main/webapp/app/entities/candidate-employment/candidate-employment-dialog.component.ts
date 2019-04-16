@@ -4,7 +4,7 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
-
+import {NgxSpinnerService} from 'ngx-spinner';
 import {CandidateEmployment} from './candidate-employment.model';
 import {CandidateEmploymentPopupService} from './candidate-employment-popup.service';
 import {CandidateEmploymentPopupServiceNew} from './candidate-employment-popup-new.service';
@@ -15,7 +15,7 @@ import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Country, CountryService} from '../country';
 import {JobType, JobTypeService} from '../job-type';
 import {JhiDateUtils} from 'ng-jhipster';
-import {EditorProperties,DataService} from '../../shared';
+import {EditorProperties, DataService} from '../../shared';
 
 @Component({
   selector: 'jhi-candidate-employment-dialog',
@@ -47,7 +47,8 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     private countryService: CountryService,
     private jobTypeService: JobTypeService,
     private eventManager: JhiEventManager,
-    private dateUtils: JhiDateUtils
+    private dateUtils: JhiDateUtils,
+    private spinnerService: NgxSpinnerService
   ) {
   }
 
@@ -78,46 +79,47 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     }
   }
 
-    ngOnInit() {
-      this.editorConfig = {
-        'toolbarGroups': [
-          {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
-          {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-          {name: 'paragraph', groups: ['list', 'indent', 'align']},
-        ],
-        'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
-      };
-      this.isSaving = false;
-      this.endDateLesser = false;
-      this.candidateEmployment.isCurrentEmployment ? this.endDateControl = true : this.endDateControl = false;
-      this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-      this.options = new EditorProperties().options;
-      this.candidateService.query()
-        .subscribe((res: HttpResponse<Candidate[]>) => {this.candidates = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
-      this.employmentTypeService.query()
-        .subscribe((res: HttpResponse<EmploymentType[]>) => {this.employmenttypes = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
-      this.countryService.query()
-        .subscribe((res: HttpResponse<Country[]>) => {this.countries = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
-      this.jobTypeService.query()
-        .subscribe((res: HttpResponse<JobType[]>) => {this.jobtypes = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
-    }
+  ngOnInit() {
+    this.editorConfig = {
+      'toolbarGroups': [
+        {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+        {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+        {name: 'paragraph', groups: ['list', 'indent', 'align']},
+      ],
+      'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+    };
+    this.isSaving = false;
+    this.endDateLesser = false;
+    this.candidateEmployment.isCurrentEmployment ? this.endDateControl = true : this.endDateControl = false;
+    this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
+    this.options = new EditorProperties().options;
+    this.candidateService.query()
+      .subscribe((res: HttpResponse<Candidate[]>) => this.candidates = res.body, (res: HttpErrorResponse) => this.onError(res.message));
+    this.employmentTypeService.query()
+      .subscribe((res: HttpResponse<EmploymentType[]>) => this.employmenttypes = res.body, (res: HttpErrorResponse) => this.onError(res.message));
+    this.countryService.query()
+      .subscribe((res: HttpResponse<Country[]>) => this.countries = res.body, (res: HttpErrorResponse) => this.onError(res.message));
+    this.jobTypeService.query()
+      .subscribe((res: HttpResponse<JobType[]>) => this.jobtypes = res.body, (res: HttpErrorResponse) => this.onError(res.message));
+  }
 
-    clear() {
-      this.activeModal.dismiss('cancel');
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    save() {
-      this.isSaving = true;
-      if (this.candidateEmployment.id !== undefined) {
-        this.subscribeToSaveResponse(
-          this.candidateEmploymentService.update(this.candidateEmployment));
-      } else {
-        this.subscribeToSaveResponse(
-          this.candidateEmploymentService.create(this.candidateEmployment));
-      }
+  save() {
+    this.isSaving = true;
+    this.spinnerService.show();
+    if (this.candidateEmployment.id !== undefined) {
+      this.subscribeToSaveResponse(
+        this.candidateEmploymentService.update(this.candidateEmployment));
+    } else {
+      this.subscribeToSaveResponse(
+        this.candidateEmploymentService.create(this.candidateEmployment));
     }
+  }
 
- private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateEmployment>>) {
+  private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateEmployment>>) {
     result.subscribe((res: HttpResponse<CandidateEmployment>) =>
       this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
   }
@@ -125,11 +127,14 @@ export class CandidateEmploymentDialogComponent implements OnInit {
   private onSaveSuccess(result: CandidateEmployment) {
     this.eventManager.broadcast({name: 'candidateEmploymentListModification', content: 'OK'});
     this.isSaving = false;
+    this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 
   private onSaveError() {
     this.isSaving = false;
+    this.spinnerService.hide(); 
+
   }
 
   private onError(error: any) {
@@ -175,17 +180,17 @@ export class CandidateEmploymentPopupComponent implements OnInit, OnDestroy {
           .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
         const id = this.dataService.getRouteData();
-        if(id) {
+        if (id) {
           console.log('Or Am here');
           this.candidateEmploymentPopupService
-          .open(CandidateEmploymentDialogComponent as Component,id);
+            .open(CandidateEmploymentDialogComponent as Component, id);
         } else {
           console.log('Or Am here------');
           this.candidateEmploymentPopupService
             .open(CandidateEmploymentDialogComponent as Component);
-        }  
-      } 
-      
+        }
+      }
+
     });
   }
 
@@ -213,13 +218,13 @@ export class CandidateEmploymentPopupComponentNew implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
-      if(params['id']) {
-      this.candidateEmploymentPopupService
-        .open(CandidateEmploymentDialogComponent as Component, params['id']);
+      if (params['id']) {
+        this.candidateEmploymentPopupService
+          .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
         const id = this.dataService.getRouteData();
         this.candidateEmploymentPopupService
-        .open(CandidateEmploymentDialogComponent as Component, id);
+          .open(CandidateEmploymentDialogComponent as Component, id);
       }
 
     });

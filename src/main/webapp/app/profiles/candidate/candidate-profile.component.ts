@@ -1,24 +1,23 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, NavigationEnd, NavigationStart, NavigationCancel, Event} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {Principal, UserService, DataService} from '../../shared';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import { CandidateProfileScoreService } from './candidate-profile-score.service';
-import { JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID } from '../../shared/constants/storage.constants';
+import {CandidateProfileScoreService} from './candidate-profile-score.service';
+import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  moduleId: module.id,
   selector: 'jhi-candidate-profile',
   templateUrl: 'candidate-profile.component.html',
   styleUrls: ['candidate.css']
 
 })
 
-export class CandidateProfileComponent implements OnInit ,AfterViewInit {
+export class CandidateProfileComponent implements OnInit, AfterViewInit {
 
   candidate: Candidate;
   imageUrl: any;
@@ -37,7 +36,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
   activeTab: string;
   message: string;
   profileScore: number;
-  
+
   constructor(private route: ActivatedRoute,
     private eventManager: JhiEventManager,
     private alertService: JhiAlertService,
@@ -46,9 +45,10 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     private principal: Principal,
     private userService: UserService,
     private candidateProfileScoreService: CandidateProfileScoreService,
-    private cd: ChangeDetectorRef ,
-    private dataService: DataService) {
-    this.activeTab ='details';
+    private cd: ChangeDetectorRef,
+    private dataService: DataService,
+    private router: Router) {
+    this.activeTab = 'details';
     this.detailsCollapsed = true;
     this.educationCollapsed = true;
     this.employmentCollapsed = true;
@@ -61,6 +61,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.progressBarConfig.animated = true;
     this.progressBarConfig.height = '20px';
     this.message = 'Profile Completeness';
+
   }
 
   toggleDetails() {
@@ -68,7 +69,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.educationCollapsed = true;
     this.employmentCollapsed = true;
     this.nonAcademicCollapsed = true;
-    this.languageCollapsed  = true;
+    this.languageCollapsed = true;
     this.certificationsCollapsed = true;
   }
 
@@ -77,7 +78,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.educationCollapsed = !this.educationCollapsed;
     this.employmentCollapsed = true;
     this.nonAcademicCollapsed = true;
-    this.languageCollapsed  = true;
+    this.languageCollapsed = true;
     this.certificationsCollapsed = true;
   }
 
@@ -86,7 +87,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.educationCollapsed = true;
     this.employmentCollapsed = !this.employmentCollapsed;
     this.nonAcademicCollapsed = true;
-    this.languageCollapsed  = true;
+    this.languageCollapsed = true;
     this.certificationsCollapsed = true;
   }
   toggleNonAcads() {
@@ -94,7 +95,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.educationCollapsed = true;
     this.employmentCollapsed = true;
     this.nonAcademicCollapsed = !this.nonAcademicCollapsed;
-    this.languageCollapsed  = true;
+    this.languageCollapsed = true;
     this.certificationsCollapsed = true;
   }
 
@@ -103,23 +104,23 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
     this.educationCollapsed = true;
     this.employmentCollapsed = true;
     this.nonAcademicCollapsed = true;
-    this.languageCollapsed  = true;
+    this.languageCollapsed = true;
     this.certificationsCollapsed = !this.certificationsCollapsed;
   }
-  
-   toggleLanguage() {
+
+  toggleLanguage() {
     this.detailsCollapsed = true;
     this.educationCollapsed = true;
     this.employmentCollapsed = true;
     this.nonAcademicCollapsed = true;
     this.certificationsCollapsed = true;
-     this.languageCollapsed = ! this.languageCollapsed;
+    this.languageCollapsed = !this.languageCollapsed;
   }
-  
-  setActiveTab( activeTab) {
+
+  setActiveTab(activeTab) {
     this.activeTab = activeTab;
   }
-  
+
   ngOnInit() {
     this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
     this.currentSearch = this.candidate.id.toString();
@@ -140,7 +141,7 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
   ngAfterViewInit() {
     this.cd.detectChanges();
   }
- 
+
   getCandidateByCandidateId(id) {
     this.candidateService.getCandidateByCandidateId(id).subscribe(
       (res: HttpResponse<Candidate>) => {
@@ -156,8 +157,8 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
   reloadCandidate() {
     this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
       (res: HttpResponse<Candidate>) => {
-       this.candidate = res.body;
-        this.candidateProfileScoreService.changeScore(this.candidate.profileScore); 
+        this.candidate = res.body;
+        this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
@@ -165,15 +166,15 @@ export class CandidateProfileComponent implements OnInit ,AfterViewInit {
 
 
   }
-  
+
   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID,candidateId);
-    this.dataService.put(JOB_ID,-1);
-    this.dataService.put(CORPORATE_ID,-1);
+    this.dataService.put(CANDIDATE_ID, candidateId);
+    this.dataService.put(JOB_ID, -1);
+    this.dataService.put(CORPORATE_ID, -1);
   }
-  
+
   setPublicProfilePicmgmtRouteParams() {
-    this.dataService.put(USER_ID,this.candidate.login.id);
+    this.dataService.put(USER_ID, this.candidate.login.id);
   }
 
   private onError(error) {

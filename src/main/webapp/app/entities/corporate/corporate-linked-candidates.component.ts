@@ -7,6 +7,7 @@ import {USER_ID, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constant
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
 import {HttpResponse } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-linked-candidate-list',
@@ -37,7 +38,8 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private dataService: DataService,
-    private dataStorageService: DataStorageService
+    private dataStorageService: DataStorageService,
+    private spinnerService: NgxSpinnerService
 
 
   ) {
@@ -89,6 +91,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
   
   loadLinkedCandidates() {
+    this.spinnerService.show();
     this.corporateService.queryLinkedCandidates({
       page: this.page - 1,
       //query: this.currentSearch,
@@ -135,7 +138,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    console.log(error);
+      this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -145,6 +148,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     this.candidateList = data;
     this.setImageUrl();
+    
   }
   
    private setImageUrl() {
@@ -159,6 +163,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
                 //this.noImage = true;
               }
             }
+            this.spinnerService.hide();
           });
         }
     });

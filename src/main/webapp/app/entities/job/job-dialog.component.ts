@@ -30,6 +30,7 @@ import * as equal from 'fast-deep-equal';
 import {AppConfig} from '../app-config/app-config.model';
 import {AppConfigService} from '../app-config/app-config.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 function deepcopy<T>(o: T): T {
   return JSON.parse(JSON.stringify(o));
@@ -121,7 +122,8 @@ export class JobDialogComponent implements OnInit {
     private jobFilterService: JobFilterService,
     private appConfigService: AppConfigService,
     private router: Router,
-    private principal: Principal
+    private principal: Principal,
+    private spinnerService: NgxSpinnerService
 
   ) {
   }
@@ -1028,6 +1030,7 @@ export class JobDialogComponent implements OnInit {
         this.prepareJobData();
       }
       this.job.jobStatus = saveType;
+      this.spinnerService.show();
       if (this.job.id !== undefined) {
         this.job.updatedBy = this.account.id;
         this.removeDates(this.job);
@@ -1103,7 +1106,7 @@ export class JobDialogComponent implements OnInit {
     //console.log('result is ' + JSON.stringify(this.job));
     this.eventManager.broadcast({name: 'jobListModification', content: 'OK'});
     this.isSaving = false;
-
+    this.spinnerService.hide();
     if (saveType === JobConstants.ACTIVE || this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.ADMIN])) {
       this.activeModal.dismiss(result);
     }
@@ -1112,6 +1115,7 @@ export class JobDialogComponent implements OnInit {
   private onSaveError(error: any) {
     //console.log('in error' + JSON.stringify(error));
     this.isSaving = false;
+    this.spinnerService.hide();
     this.onError(error);
   }
 

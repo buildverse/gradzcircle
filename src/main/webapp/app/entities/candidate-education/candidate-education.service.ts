@@ -9,7 +9,6 @@ import {College} from '../college/college.model';
 import {University} from '../university/university.model';
 import {Qualification} from '../qualification/qualification.model';
 import {Course} from '../course/course.model';
-import { stringify } from 'querystring';
 
 export type EntityResponseType = HttpResponse<CandidateEducation>;
 
@@ -67,7 +66,7 @@ export class CandidateEducationService {
 
   private convertResponse(res: EntityResponseType): EntityResponseType {
     const body: CandidateEducation = this.convertItemFromServer(res.body);
-  //  console.log('body is '+JSON.stringify(body));
+    //  console.log('body is '+JSON.stringify(body));
     return res.clone({body});
   }
 
@@ -75,7 +74,7 @@ export class CandidateEducationService {
    * Convert a returned JSON object to CandidateEmployment.
    */
   private convertItemFromServer(candidateEducation: CandidateEducation): CandidateEducation {
-   // console.log('kya hai ==='+JSON.stringify(candidateEducation));
+    // console.log('kya hai ==='+JSON.stringify(candidateEducation));
     const copy: CandidateEducation = Object.assign({}, candidateEducation);
     copy.educationFromDate = this.dateUtils
       .convertLocalDateFromServer(candidateEducation.educationFromDate);
@@ -86,7 +85,7 @@ export class CandidateEducationService {
   }
 
   private convertArrayResponse(res: HttpResponse<CandidateEducation[]>): HttpResponse<CandidateEducation[]> {
-   // console.log('============'+JSON.stringify(res.body));
+    // console.log('============'+JSON.stringify(res.body));
     const jsonResponse: CandidateEducation[] = res.body;
     const body: CandidateEducation[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {

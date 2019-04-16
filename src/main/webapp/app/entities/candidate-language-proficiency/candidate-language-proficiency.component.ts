@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
 import { Principal,DataService } from '../../shared';
@@ -31,7 +31,8 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
         private dataService: DataService,
-        private candidateProfileScoreService : CandidateProfileScoreService
+        private candidateProfileScoreService : CandidateProfileScoreService,
+        private spinnerService: NgxSpinnerService
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
@@ -78,13 +79,15 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     }
 
     loadCandidateLanguages(){
+      this.spinnerService.show();
         this.candidateLanguageProficiencyService.findByCandidateId(this.candidateId)
             .subscribe(
                 (res: HttpResponse<CandidateLanguageProficiency[]>) => {
                  this.candidateLanguageProficiencies = res.body;
                   if(this.candidateLanguageProficiencies && this.candidateLanguageProficiencies.length >0){
                     this.candidateProfileScoreService.changeScore(this.candidateLanguageProficiencies[0].candidate.profileScore);
-                  } 
+                  }
+                  this.spinnerService.hide(); 
                 },
                     (res: HttpErrorResponse) => this.onError(res.message)
             );
@@ -126,6 +129,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     }
 
     private onError(error) {
+      this.spinnerService.hide();
         this.jhiAlertService.error(error.message, null, null);
     }
 }

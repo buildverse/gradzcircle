@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import {NgxSpinnerService} from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 import { DataService } from '../../shared';
@@ -19,7 +19,8 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
     constructor(
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private spinnerService: NgxSpinnerService
     ) {
     }
 
@@ -28,13 +29,15 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
     }
 
     confirmDelete(id: number) {
+      this.spinnerService.show(); 
         this.candidateLanguageProficiencyService.delete(id).subscribe((response) => {
-            this.eventManager.broadcast({
-                name: 'candidateLanguageProficiencyListModification',
-                content: 'Deleted an candidateLanguageProficiency'
-            });
-            this.activeModal.dismiss(true);
+        this.eventManager.broadcast({
+          name: 'candidateLanguageProficiencyListModification',
+          content: 'Deleted an candidateLanguageProficiency'
         });
+        this.spinnerService.hide();
+        this.activeModal.dismiss(true);
+      });
     }
 }
 

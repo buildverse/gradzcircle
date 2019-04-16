@@ -69,7 +69,6 @@
 	 		<p><ngb-progressbar [value]="profileScore">{{message}}&nbsp;&nbsp;&nbsp;&nbsp;{{profileScore}}%</ngb-progressbar></p>
 	 </div>
 	<div class="tab-content" id="profileTabContent">
-		
 		<div id="details" class="container tab-pane " [ngClass]="{ 'active':activeTab==='details'}"  aria-labelledby="details-tab" role="tabpanel">
 			<div><router-outlet name="detail"></router-outlet></div>
 		</div>

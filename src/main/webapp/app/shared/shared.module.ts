@@ -22,6 +22,7 @@ import {
     JhiLoginModalComponent,
     DataService,
     DataStorageService
+    
    
 } from './';
 
@@ -33,6 +34,7 @@ import {
         MultiselectDropdownModule,
         TagInputModule,
         CKEditorModule
+        
   
     ],
     declarations: [
@@ -66,6 +68,7 @@ import {
         MultiselectDropdownModule,
         TagInputModule,
         CKEditorModule
+        
      
 
     ],
