@@ -1,11 +1,20 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.EmploymentType;
-import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
-import com.drishika.gradzcircle.repository.search.EmploymentTypeSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +30,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.EmploymentType;
+import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
+import com.drishika.gradzcircle.repository.search.EmploymentTypeSearchRepository;
+import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the EmploymentTypeResource REST controller.
@@ -59,6 +66,9 @@ public class EmploymentTypeResourceIntTest {
 
     @Autowired
     private ExceptionTranslator exceptionTranslator;
+    
+    @Autowired
+    private JobStatisticsCacheManager<String, Map<String,EmploymentType>> cacheManager;
 
     @Autowired
     private EntityManager em;
@@ -70,7 +80,7 @@ public class EmploymentTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository, employmentTypeSearchRepository);
+        final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository, employmentTypeSearchRepository,cacheManager);
         this.restEmploymentTypeMockMvc = MockMvcBuilders.standaloneSetup(employmentTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

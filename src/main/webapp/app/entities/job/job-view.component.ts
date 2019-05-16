@@ -8,7 +8,8 @@ import {JhiDateUtils} from 'ng-jhipster';
 import {Job} from './job.model';
 import {JobPopupService} from './job-popup.service';
 import {JobService} from './job.service';
-import {of} from 'rxjs/observable/of';
+import { LoginModalService, LoginService} from '../../shared';
+import { JobListEmitterService } from './job-list-change.service';
 import {Observable} from 'rxjs/Rx';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
@@ -22,6 +23,7 @@ export class JobViewComponent implements OnInit {
  //hasCandidateApplied: boolean;
   currentAccount: any;
   isSaving: boolean;
+  modalRef: NgbModalRef;
 
   constructor(
     private jobService: JobService,
@@ -31,7 +33,10 @@ export class JobViewComponent implements OnInit {
     private principal: Principal,
     private router: Router,
     private jhiAlertService: JhiAlertService,
-    private dataService: DataService
+    private dataService: DataService,
+    private loginService: LoginService,
+    private loginModalService: LoginModalService,
+    private jobListEmitterService :JobListEmitterService,
   ) {
   }
 
@@ -59,6 +64,11 @@ export class JobViewComponent implements OnInit {
     }
   }
 
+  login() {
+    this.clear();
+    this.modalRef = this.loginModalService.open();
+  }
+  
   applyForJob() {
     this.isSaving = true;
     this.subscribeToSaveResponse(this.jobService.applyforJob(this.job.id,this.currentAccount.id));
@@ -70,9 +80,9 @@ export class JobViewComponent implements OnInit {
   }
 
   private onSaveSuccess(result: Job) {
-    this.activeModal.dismiss();
+   this.activeModal.dismiss();
    this.eventManager.broadcast({name: 'jobListModification', content: 'OK'});
-    //this.hasCandidateApplied = true;
+   this.jobListEmitterService.jobChanges(true);    
   }
 
   private onSaveError(error: any) {

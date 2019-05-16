@@ -119,6 +119,10 @@ public class CandidateJob implements Serializable {
 	public Candidate getCandidate() {
 		return candidate;
 	}
+	
+	public Long getCandidateId() {
+		return candidate.getId();
+	}
 
 	/**
 	 * @param candidate

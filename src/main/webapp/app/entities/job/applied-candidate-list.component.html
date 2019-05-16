@@ -1,4 +1,4 @@
-<div class="table-responsive" *ngIf="candidateList">
+<div class="mt-5 table-responsive" *ngIf="candidateList">
 	<div class="ml-5 mr-5 mt-5">
 		<table class="table table-hover ">
 			<thead class="bg-primary text-white ">
@@ -21,8 +21,8 @@
 					<td>{{candidate.firstName}}</td>
 					<td>{{candidate.lastName}}</td>
 					<td>{{candidate.qualificationWithHighestCourse}}</td>
-					<td><a
-						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id } }]"><span
+					<td><a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
+						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"><span
 							class="icon icon-eye"></span></a></td>
 				</tr>
 			</tbody>

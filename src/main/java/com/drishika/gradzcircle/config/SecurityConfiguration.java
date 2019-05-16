@@ -2,7 +2,10 @@ package com.drishika.gradzcircle.config;
 
 import com.drishika.gradzcircle.security.*;
 import com.drishika.gradzcircle.security.jwt.*;
+import com.drishika.gradzcircle.web.rest.AccountResource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
 
     private final SecurityProblemSupport problemSupport;
+    
+    private final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,TokenProvider tokenProvider,CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -101,6 +106,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/countries/enabled").permitAll()
             .antMatchers("/api/errMsgByComp/corporateRegister").permitAll()
             .antMatchers("/api/profile-info").permitAll()
+            .antMatchers("/api/activeJobs").permitAll()
+            .antMatchers("/api/countOfActiveJobs").permitAll()
+            .antMatchers("/api/activeJobsByEmploymentType/{employmentType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByOneJobType/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByTwoJobTypes/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByThreeJobTypes/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByOneEmploymentTypeAndOneJobType/{employmentType}/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByOneEmploymentTypeAndTwoJobType/{employmentType}/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/activeJobsByOneEmploymentTypeAndThreeJobType/{employmentType}/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
+            .antMatchers("/api/jobs/{id}").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/websocket/tracker").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/websocket/**").permitAll()

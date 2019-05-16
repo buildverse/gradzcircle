@@ -53,8 +53,6 @@ export class JobComponent implements OnInit, OnDestroy {
     private candidateService: CandidateService,
     private corporateService: CorporateService,
     private router: Router,
-    private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig,
     private dataService: DataService,
     private dataStorageService : DataStorageService,
     private spinnerService: NgxSpinnerService
@@ -139,7 +137,7 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   loadActiveJobs() {
-    this.jobService.queryActiveJobs({
+    this.jobService.queryActiveJobsByCorporate({
       page: this.page - 1,
       query: this.currentSearch,
       size: this.itemsPerPage,
@@ -178,37 +176,29 @@ export class JobComponent implements OnInit, OnDestroy {
     this.corporate = new Corporate();
     this.DRAFT = JobConstants.DRAFT;
     this.principal.identity().then((account) => {
-      this.currentAccount = account;
-      if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-        this.spinnerService.show();
-        this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-          this.corporateId = response.body.id;
-          this.corporate = response.body;
-          this.loadActiveJobs();
-        });
-      } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
-        this.spinnerService.show();
-        this.candidateService.getCandidateByLoginId(account.id).subscribe((response) => {
-          this.candidateId = response.body.id;
-          this.loadActiveAndMatchedJobsForCandidates();
-        });
-      } else {
+      if(account) {
+        this.currentAccount = account;
+        if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
+          this.spinnerService.show();
+          this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
+            this.corporateId = response.body.id;
+            this.corporate = response.body;
+            this.loadActiveJobs();
+          });
+        } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
+          this.spinnerService.show();
+          this.candidateService.getCandidateByLoginId(account.id).subscribe((response) => {
+            this.candidateId = response.body.id;
+            this.loadActiveAndMatchedJobsForCandidates();
+          });
+        } else {
+          this.loadAll();
+        }
+        this.registerChangeInJobs();
+        } else {
         this.loadAll();
       }
-      this.registerChangeInJobs();
-      /* this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-         this.corporateId = response.id;
-         this.registerChangeInJobs();
-         if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-           this.loadActiveJobs();
-         } else {
-           console.log('Am Admin yes!!!!!!!');
-           this.loadAll();
-           this.registerChangeInJobs();
-         }
-       });*/
     });
-    // this.registerChangeInJobs();
 
   }
 
@@ -220,6 +210,7 @@ export class JobComponent implements OnInit, OnDestroy {
   trackId(index: number, item: Job) {
     return item.id;
   }
+  
   registerChangeInJobs() {
     if (this.corporateId) {
       this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadActiveJobs());

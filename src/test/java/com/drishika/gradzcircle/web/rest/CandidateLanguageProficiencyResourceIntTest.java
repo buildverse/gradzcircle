@@ -338,6 +338,8 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		nonAcad = createNonAcadProfile(em);
 		edu = createEduProfile(em);
 		lang = createLangProfile(em);
+		
+		
 		profileCategoryRepository.saveAndFlush(basic);
 		profileCategoryRepository.saveAndFlush(personal);
 		profileCategoryRepository.saveAndFlush(cert);
@@ -345,6 +347,23 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		profileCategoryRepository.saveAndFlush(edu);
 		profileCategoryRepository.saveAndFlush(nonAcad);
 		profileCategoryRepository.saveAndFlush(lang);
+		
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
 		
 	}
 
@@ -354,7 +373,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
-		languageRepository.saveAndFlush(hindiLanguage);
+	//	languageRepository.saveAndFlush(hindiLanguage);
 		candidateLanguageProficiency.language(hindiLanguage);
 		candidateLanguageProficiency.candidate(candidate);
 		// Create the CandidateLanguageProficiency
@@ -400,7 +419,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidate.addCandidateProfileScore(candidateProfileScore2);
 		candidate.addCandidateProfileScore(candidateProfileScore3);
 		candidate.setProfileScore(55D);
-		languageRepository.saveAndFlush(hindiLanguage);
+		//languageRepository.saveAndFlush(hindiLanguage);
 		candidateLanguageProficiency.language(hindiLanguage);
 		candidateLanguageProficiency.candidate(candidate);
 		
@@ -443,22 +462,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 				.candidate(candidate);
 
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		// jobRepository.saveAndFlush(jobC);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
+		
 		
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
@@ -542,22 +546,6 @@ public class CandidateLanguageProficiencyResourceIntTest {
 				.candidate(candidate);
 
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		// jobRepository.saveAndFlush(jobC);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
 		candidateLanguageProficiency.language(englishLanguage);
@@ -628,22 +616,6 @@ public class CandidateLanguageProficiencyResourceIntTest {
 				.candidate(candidate);
 
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		// jobRepository.saveAndFlush(jobC);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
 		// CandidateLanguageProficiency profHindi = new
 		// CandidateLanguageProficiency().language(hindiLanguage).candidate(candidate);
 		// CandidateLanguageProficiency profMarathi = new
@@ -828,7 +800,6 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
-		languageRepository.saveAndFlush(hindiLanguage);
 		candidateLanguageProficiency.language(hindiLanguage);
 		candidateLanguageProficiency.candidate(candidate);
 
@@ -851,7 +822,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void deleteTheOnlyCandidateLanguageProficiencyShouldRemoveLanguageProfileScore() throws Exception {
 		// Initialize the database
-		languageRepository.saveAndFlush(hindiLanguage);
+		//languageRepository.saveAndFlush(hindiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
@@ -901,8 +872,8 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void deleteTheOneOfManyCandidateLanguageProficiencyShouldNotChangeLanguageProfileScore() throws Exception {
 		// Initialize the database
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
+	//	languageRepository.saveAndFlush(hindiLanguage);
+	//	languageRepository.saveAndFlush(englishLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profEng = new CandidateLanguageProficiency().language(englishLanguage);
@@ -992,22 +963,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 				.candidate(candidate);
 
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		genderRepository.saveAndFlush(femaleGender);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
+
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
 		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi);
@@ -1066,22 +1022,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void createGenderAndEducationThenLanguage() throws Exception {
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		genderRepository.saveAndFlush(femaleGender);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
+
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(femaleGender);
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);
@@ -1127,22 +1068,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void createEducationThenLanguage() throws Exception {
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		genderRepository.saveAndFlush(femaleGender);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
-		filterRepository.saveAndFlush(qualificationFilter);
-		filterRepository.saveAndFlush(courseFilter);
-		filterRepository.saveAndFlush(gradDateFilter);
-		filterRepository.saveAndFlush(genderFilter);
-		filterRepository.saveAndFlush(collegeFilter);
-		filterRepository.saveAndFlush(universityFilter);
-		filterRepository.saveAndFlush(scoreFilter);
-		filterRepository.saveAndFlush(languageFilter);
+
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);

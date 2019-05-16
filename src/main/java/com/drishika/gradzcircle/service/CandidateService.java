@@ -182,7 +182,7 @@ public class CandidateService {
 		candidate.setMatchEligible(true);
 		candidate = candidateRepository.save(candidate);
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_BASIC_PROFILE,false);
-		candidateRepository.save(candidate);
+		candidate = candidateRepository.save(candidate);
 		// Replace with Future
 		matcher.match(candidate);
 		// candidateSearchRepository.save(result);
@@ -256,11 +256,18 @@ public class CandidateService {
 	public Candidate getCandidateByLoginId(Long id) {
 		logger.debug("REST request to get Candidate : {}", id);
 		Candidate candidate = candidateRepository.findByLoginId(id);
-		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-		if (candidate != null)
-			candidate.setAddresses(addresses);
+		//Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
+		//if (candidate != null)
+		//	candidate.setAddresses(addresses);
 		logger.debug("Retruning candidate {}", candidate);
 		return candidate;
+	}
+	
+	/*Return zero if no education score*/
+	public Double getEducationScore(Long candidateId) {
+		Double educaitonScore = candidateRepository.hasEducationScore(candidateId);
+		logger.debug("education score is {}", educaitonScore);
+		return educaitonScore;
 	}
 
 	public void deleteCandidate(Long id) {

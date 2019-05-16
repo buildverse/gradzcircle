@@ -49,10 +49,12 @@ export class Candidate implements BaseEntity {
         public visaType?: VisaType,
         public jobs?: Job[],
         public profileCategories?: BaseEntity[],
+        public hasEducationScore?: boolean
     ) {
         this.differentlyAbled = false;
         this.availableForHiring = false;
         this.openToRelocate = false;
         this.matchEligible = false;
+      this.hasEducationScore  = false;
     }
 }

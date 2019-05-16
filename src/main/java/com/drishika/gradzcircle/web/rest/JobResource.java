@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,16 +28,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
 import com.drishika.gradzcircle.service.JobService;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
+import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
@@ -134,18 +139,21 @@ public class JobResource {
 			// BeanUtils.copyProperties(updatedJob, result);
 			log.info("Updated job is {},{}", updatedJob, updatedJob.getJobFilters());
 		} catch (BeanCopyException e) {
+		
 			result = job;
 			result.setJobDescription(e.getMessage());
-			log.error("Error updating job {} , {}", e.getMessage(), e.getCause());
+			log.error("Error updating job {} , {}", e.getMessage(), e);
 		} catch (JobEditException e) {
+			
 			result = job;
 			result.setJobDescription(e.getMessage());
-			log.error("Error updating job {} , {}", e.getMessage(), e.getCause());
+			log.error("Error updating job {} , {}", e.getMessage(), e);
 			throw new CustomParameterizedException(e.getMessage());
 		} catch (Exception ex) {
+		
 			result = job;
 			result.setJobDescription(ex.getMessage());
-			log.error("Error updating job {} , {}", ex.getMessage(), ex.getCause());
+			log.error("Error updating job {} , {}", ex.getMessage(), ex);
 			throw new CustomParameterizedException(ex.getMessage());
 		}
 
@@ -159,6 +167,26 @@ public class JobResource {
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
+	@GetMapping("/countOfActiveJobs")
+	@Timed
+	public ResponseEntity<Long> getCountOfActiveJobs() {
+		log.debug("REST request to get count of active Jobs");
+		Long countofJobs;
+		try {
+			countofJobs = jobService.getCountOfAcitveJobs();
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}", e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, countofJobs.toString()))
+		.body(countofJobs);
+	}
+	
+	/**
+	 * GET /activeJobCount : get count of all active jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
 	@GetMapping("/jobs")
 	@Timed
 	public ResponseEntity<List<Job>> getAllJobs(@ApiParam Pageable pageable) {
@@ -167,7 +195,196 @@ public class JobResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(jobs, "/api/jobs");
 		return new ResponseEntity<>(jobs.getContent(), headers, HttpStatus.OK);
 	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobs")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getAllActiveJobs(@ApiParam Pageable pageable) {
+		log.debug("REST request to get all Jobs with Stats");
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findAllActiveJobsOnPortal(ApplicationConstants.JOB_ACTIVE, pageable);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobs");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByEmploymentType/{employmentType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByEmploymentType(@PathVariable String employmentType,
+			@ApiParam Pageable pageable, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo,
+			@PathVariable Long candidateId) {
+		log.debug("REST request to get Jobs and stats by employment Type for candidate  {} , {} with macth score from {} to {} ",
+				employmentType,candidateId, matchScoreFrom, matchScoreTo);
+		Page<CandidateJobDTO> page = null;
+		try {
+			page = jobService.findActiveJobsByEmploymentType(ApplicationConstants.JOB_ACTIVE, employmentType, pageable,
+					matchScoreFrom, matchScoreTo,candidateId);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}", e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByEmploymentType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
 
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByOneJobType/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneJobType(@PathVariable String jobType, @PathVariable Long candidateId,
+			@PathVariable Double matchScoreFrom,@PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by one job Type --> {} for candidate {} matchScore from {} to {}",
+				jobType,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findActiveJobsByOneJobType(ApplicationConstants.JOB_ACTIVE, jobType, candidateId,matchScoreFrom,matchScoreTo,pageable);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByOneJobType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByTwoJobTypes/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByTwoJobTypes(@PathVariable String jobType1,@PathVariable String jobType2, 
+			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom , @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by two job Types --> {}, {} for candidate {} with scores from {} to {}",
+					jobType1,jobType2,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findActiveJobsByTwoJobType(ApplicationConstants.JOB_ACTIVE, jobType1, jobType2, candidateId,
+					matchScoreFrom,matchScoreTo,pageable);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByTwoJobTypes");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByThreeJobTypes/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByThreeJobTypes(@PathVariable String jobType1, 
+			@PathVariable String jobType2,@PathVariable String jobType3, @PathVariable Long candidateId, @PathVariable Double matchScoreFrom,
+			@PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by three job Types --> {}, {}, {} for candidate {} for match score from {} to {} "
+				,jobType1,jobType2,jobType3,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findActiveJobsByThreeJobType(ApplicationConstants.JOB_ACTIVE, jobType1, jobType2, 
+					jobType3, candidateId, matchScoreFrom,matchScoreTo, pageable);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByThreeJobTypes");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByOneEmploymentTypeAndOneJobType/{employmentType}/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndOneJobType(
+			@PathVariable String employmentType, @PathVariable String jobType,
+			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by one employment and job Type {}, {} for Canidate {} with MatcScore from {} to {} ", employmentType, 
+				jobType,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page = null;
+		try {
+			page = jobService.findActiveJobsByOneEmploymentTypeAndOneJobType(ApplicationConstants.JOB_ACTIVE,
+					employmentType, jobType, pageable,candidateId, matchScoreFrom,matchScoreTo);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}", e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,
+				"/api/activeJobsByOneEmploymentTypeAndOneJobType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByOneEmploymentTypeAndTwoJobType/{employmentType}/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndTwoJobType(@PathVariable String employmentType,@PathVariable String jobType1,
+			@PathVariable String jobType2, @PathVariable Long candidateId,@PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by one Employent and two job Type -> {}, {}, {} for candidate {} with Match scores from {} to {}",
+					employmentType,jobType1,jobType2,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findActiveJobsByOneEmploymentTypeAndTwoJobType(ApplicationConstants.JOB_ACTIVE, employmentType, jobType1, jobType2, candidateId,
+					matchScoreFrom,matchScoreTo, pageable);
+			
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByOneEmploymentTypeAndTwoJobType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /jobs : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/activeJobsByOneEmploymentTypeAndThreeJobType/{employmentType}/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndThreeJobType(@PathVariable String employmentType,@PathVariable String jobType1, 
+			@PathVariable String jobType2,@PathVariable String jobType3, @PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, 
+				@ApiParam Pageable pageable) {
+		log.debug("REST request to get Jobs and stats by One EmploymentType and three job Type ---> {}, {}, {}, {} for candidate {} with matchScore From {} matchScoreTo {}",
+				employmentType,jobType1,jobType2,jobType3,candidateId,matchScoreFrom,matchScoreTo);
+		Page<CandidateJobDTO> page =null;
+		try {
+			page = jobService.findActiveJobsByOneEmploymentTypeAndThreeJobType(ApplicationConstants.JOB_ACTIVE, employmentType, jobType1, jobType2, jobType3,
+					candidateId,matchScoreFrom,matchScoreTo ,pageable);
+		} catch (Exception e) {
+			log.error("Exception occured while gtting Job data {}",e);
+			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
+		}
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/activeJobsByOneEmploymentTypeAndThreeJobType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+
+	
 	/**
 	 * GET /activeJobs for Corporates: get all the jobs.
 	 *
@@ -201,12 +418,54 @@ public class JobResource {
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
-	@GetMapping("/newActiveJobsForCandidate/{candidateId}")
+	@GetMapping("/newActiveJobsForCandidate/{candidateId}/{matchScoreFrom}/{matchScoreTo}")
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getNewActiveJobsListForCandidates(@ApiParam Pageable pageable,
-			@PathVariable Long candidateId) {
-		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidates(pageable, candidateId);
+			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo) {
+		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidates(pageable, candidateId,matchScoreFrom,matchScoreTo);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/newActiveJobsForCandidate");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /activeJobs for Candidates by Employment Type: get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/newActiveJobsForCandidateByEmploymentType/{candidateId}/{employmentTypeId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getNewActiveJobsListForCandidatesByEmploymentType(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId,@PathVariable Long employmentTypeId) {
+		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidatesByEmploymentType(pageable, candidateId,employmentTypeId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/newActiveJobsForCandidateByEmploymentType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /activeJobs for Candidates By Job Type : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/newActiveJobsForCandidateByJobType/{candidateId}/{jobTypeId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getNewActiveJobsListForCandidatesByJobType(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId,@PathVariable Long jobTypeId) {
+		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidatesByJobType(pageable, candidateId,jobTypeId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/newActiveJobsForCandidateByJobType");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /activeJobs for Candidates By Job and Employment Type : get all the jobs.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	@GetMapping("/newActiveJobsForCandidateByEmploymentAndJobType/{candidateId}/{employmentTypeId}/{jobTypeId}")
+	@Timed
+	public ResponseEntity<List<CandidateJobDTO>> getNewActiveJobsListForCandidatesByJobAndEmploymentType(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId,@PathVariable Long employmentTypeId,@PathVariable Long jobTypeId) {
+		final Page<CandidateJobDTO> page = jobService.getNewActiveJobsListForCandidatesByEmploymentTypeAndJobType(pageable, candidateId,employmentTypeId,jobTypeId);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/newActiveJobsForCandidateByEmploymentAndJobType");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
@@ -406,5 +665,44 @@ public class JobResource {
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 
 	}
+	
+	/**
+	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	/*@GetMapping("/jobStatsByEmploymentType/{employmentTypeId}")
+	@Timed
+	public ResponseEntity<List<JobStatistics>> getJobStatsByEmploymentType(@PathVariable Long employmentTypeId) {
+		List<JobStatistics> jobStatsByEmploymentType = jobService.getJobStatsByEmploymentType(employmentTypeId);
+		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByEmploymentType.toString()))
+				.body(jobStatsByEmploymentType);
+	}*/
+	
+	/**
+	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	/*@GetMapping("/jobStatsByJobType/{jobTypeId}")
+	@Timed
+	public ResponseEntity<List<JobStatistics>> getJobStatsByJobType(@PathVariable Long jobTypeId) {
+		List<JobStatistics> jobStatsByJobType = jobService.getJobStatsByJobType(jobTypeId);
+		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByJobType.toString()))
+				.body(jobStatsByJobType);
+	}
+	*/
+	/**
+	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
+	 */
+	/*@GetMapping("/jobStatsByEmploymentType")
+	@Timed
+	public ResponseEntity<List<JobStatistics>> getJobStatsByAll() {
+		List<JobStatistics> jobStatsByAllType = jobService.getJobStatsByEmploymentType(employmentType)
+		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByAllType.toString()))
+				.body(jobStatsByAllType);
+	}*/
 
 }

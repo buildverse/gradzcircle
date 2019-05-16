@@ -4,6 +4,7 @@
 package com.drishika.gradzcircle.service.util;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Address;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
@@ -41,6 +43,7 @@ import com.drishika.gradzcircle.service.dto.CollegeDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
 import com.drishika.gradzcircle.service.dto.CourseDTO;
+import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.QualificationDTO;
 
@@ -60,6 +63,7 @@ public class DTOConverters {
 		dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
+		dto.setId(candidate.getId());
 		CandidateEducation highestCandidateEducation = candidate.getEducations().stream()
 				.filter(education -> education.isHighestQualification()).findFirst().get();
 		dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
@@ -155,10 +159,7 @@ public class DTOConverters {
 
 	public CandidateJobDTO convertToJobListingForCandidate(Job job, Long candidateId, Boolean appliedJobs) {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
-		jobListingData.setJobStatus(job.getJobStatus());
-		jobListingData.setJobTitle(job.getJobTitle());
-		jobListingData.setEmploymentType(job.getEmploymentType());
-		jobListingData.setJobType(job.getJobType());
+		setCandidateJobDTOCoreFields(job, jobListingData);
 		logger.debug("Job and Candidates matched are {}--{}",job, job.getCandidateJobs());
 		jobListingData.setMatchScore(job.getCandidateJobs().stream()
 				.filter(candidateJob -> candidateJob.getCandidate().getId().equals(candidateId)).findAny().get()
@@ -169,21 +170,106 @@ public class DTOConverters {
 		else
 			job.getAppliedCandidates().stream()
 					.filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId));
-	
-		jobListingData.setId(job.getId());
 		return jobListingData;
 	}
 	
 	public CandidateJobDTO convertToJobListingForCandidateWithNoEducation(Job job, Long candidateId) {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
+		setCandidateJobDTOCoreFields(job, jobListingData);
+		jobListingData.setMatchScore(0d);
+		return jobListingData;
+	}
+	
+	public CandidateJobDTO convertToJobListingForPortalAnonymous(Job job,Long totalNumberOfActiveJobs,
+				List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType) {
+		CandidateJobDTO jobListingData = new CandidateJobDTO();
+		setCandidateJobDTOCoreFields(job, jobListingData);
+		jobListingData.setTotalNumberOfJobs(totalNumberOfActiveJobs);
+		setJobStatistics(jobListingData,jobStatisticsByEmploymentType);
+		setJobStatistics(jobListingData,jobStatisticsByJobType);
+		return jobListingData;
+	}
+	
+	public CandidateJobDTO convertToJobListingForCandidateOrGuest(Job job,Long totalNumberOfActiveJobs,
+			List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType,Long candidateId) {
+	//	logger.debug("Coverting to DTO candidateJob for job {} with total number of jobs {}",job,totalNumberOfActiveJobs);
+		CandidateJobDTO jobListingData = new CandidateJobDTO();
+		setCandidateJobDTOCoreFields(job, jobListingData,candidateId);
+		jobListingData.setTotalNumberOfJobs(totalNumberOfActiveJobs);
+		setJobStatistics(jobListingData,jobStatisticsByEmploymentType);
+		setJobStatistics(jobListingData,jobStatisticsByJobType);
+		return jobListingData;
+}
+	
+	private void setJobStatistics(CandidateJobDTO jobListingData,List<JobStatistics> jobStatistics) {
+		if(jobStatistics == null)
+			return;
+		jobStatistics.forEach(stat -> {
+			//logger.debug("Job Stats being processed is {}",jobStatistics);
+			if(ApplicationConstants.EMPLOYMENT_TYPE_CONTRACT.equals(stat.getType()))
+				jobListingData.setCountOfContractEmployment(stat.getCount());
+			else if (ApplicationConstants.EMPLOYMENT_TYPE_PERMANENT.equals(stat.getType()))
+				jobListingData.setCountOfPermanentEmployment(stat.getCount());
+			else if (ApplicationConstants.JOB_TYPE_FULL_TIME.equals(stat.getType()))
+				jobListingData.setCountOfFullTimeJob(stat.getCount());
+			else if (ApplicationConstants.JOB_TYPE_PART_TIME.equals(stat.getType()))
+				jobListingData.setCountOfPartTimeJob(stat.getCount());
+			else if (ApplicationConstants.JOB_TYPE_INTERNSHIP.equals(stat.getType()))
+				jobListingData.setCountOfInternJob(stat.getCount());
+			else if (ApplicationConstants.JOB_TYPE_SUMMER_JOB.equals(stat.getType()))
+				jobListingData.setCountOfSummerJob(stat.getCount());	
+		});
+	}
+	
+	private void setCandidateJobDTOCoreFields(Job job, CandidateJobDTO jobListingData,Long candidateId) {
+		logger.debug("Incoming canidate Is is {}",candidateId);
 		jobListingData.setJobStatus(job.getJobStatus());
 		jobListingData.setJobTitle(job.getJobTitle());
 		jobListingData.setEmploymentType(job.getEmploymentType());
 		jobListingData.setJobType(job.getJobType());
-		jobListingData.setMatchScore(0d);
 		jobListingData.setId(job.getId());
-		return jobListingData;
+		jobListingData.setCity(convertToCamelCase(job.getCorporate().getCity()));
+		jobListingData.setCorporateName(convertToCamelCase(job.getCorporate().getName()));
+		jobListingData.setSalary(job.getSalary());
+		jobListingData.setUpdateDate(job.getUpdateDate());
+		if(!job.getAppliedCandidates().stream().filter(candidate->candidateId.equals(candidate.getId())).findFirst().isPresent())
+			jobListingData.setHasCandidateApplied(false);
+		logger.debug("---------------{}",job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent());
+		if(candidateId!= null)
+			if(job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent())
+				jobListingData.setMatchScore(job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().get().getMatchScore());
+		if(job.getJobDescription().length()>500)
+			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
+		else
+			jobListingData.setJobDescription(job.getJobDescription());
 	}
+	
+	private void setCandidateJobDTOCoreFields(Job job, CandidateJobDTO jobListingData) {
+		jobListingData.setJobStatus(job.getJobStatus());
+		jobListingData.setJobTitle(job.getJobTitle());
+		jobListingData.setEmploymentType(job.getEmploymentType());
+		jobListingData.setJobType(job.getJobType());
+		jobListingData.setId(job.getId());
+		jobListingData.setCity(convertToCamelCase(job.getCorporate().getCity()));
+		jobListingData.setCorporateName(convertToCamelCase(job.getCorporate().getName()));
+		jobListingData.setSalary(job.getSalary());
+		jobListingData.setUpdateDate(job.getUpdateDate());
+		if(job.getJobDescription().length()>500)
+			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
+		else
+			jobListingData.setJobDescription(job.getJobDescription());
+	}
+	
+	private String convertToCamelCase(String string) {
+		if(string == null)
+			return "";
+		char[] charArray = string.toLowerCase().toCharArray();
+        charArray[0] = Character.toUpperCase(charArray[0]);
+        for(int i=1 ; i<charArray.length ;i++ )
+        		charArray[i] = Character.toLowerCase(charArray[i]);
+        return new String(charArray);
+	}
+	
 	
 	/**
 	 * @param candidateNonAcademicWorks

@@ -8,6 +8,7 @@ import {LoginService} from './login.service';
 import {StateStorageService} from '../../shared/auth/state-storage.service';
 import {SocialService} from '../../shared/social/social.service';
 import {Principal} from '../../shared/auth/principal.service';
+import { LoginEmitterService } from './login-emitter.service';
 
 @Component({
   selector: 'jhi-login-modal',
@@ -37,7 +38,8 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private principal: Principal,
     public activeModal: NgbActiveModal,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private loginEmitterService: LoginEmitterService
   ) {
     this.credentials = {};
   }
@@ -86,7 +88,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
         name: 'authenticationSuccess',
         content: 'Sending Authentication Success'
       });
-
+      this.loginEmitterService.loginSuccess(true);
       // // previousState was set in the authExpiredInterceptor before being redirected to login modal.
       // // since login is succesful, go to stored previousState and clear previousState
       const redirect = this.stateStorageService.getUrl();
@@ -114,7 +116,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     this.principal.identity().then((value) => {
       if (value.authorities.indexOf('ROLE_CANDIDATE') > -1) {
        //this.router.navigate(['/candidate-profile',{outlets:{detail:'details'}}]);
-           this.router.navigate(['/job']);
+           this.router.navigate(['/viewjobs']);
       } else if (value.authorities.indexOf('ROLE_CORPORATE') > -1) {
         this.router.navigate(['/job']);
       } else if (value.authorities.indexOf('ROLE_ADMIN') > -1) {

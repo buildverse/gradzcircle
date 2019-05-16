@@ -126,6 +126,7 @@ export class CandidateEmploymentDialogComponent implements OnInit {
 
   private onSaveSuccess(result: CandidateEmployment) {
     this.eventManager.broadcast({name: 'candidateEmploymentListModification', content: 'OK'});
+     this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
     this.isSaving = false;
     this.spinnerService.hide();
     this.activeModal.dismiss(result);
@@ -175,17 +176,17 @@ export class CandidateEmploymentPopupComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
       if (params['id']) {
-        console.log('Am here');
+       
         this.candidateEmploymentPopupService
           .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
         const id = this.dataService.getRouteData();
         if (id) {
-          console.log('Or Am here');
+     
           this.candidateEmploymentPopupService
             .open(CandidateEmploymentDialogComponent as Component, id);
         } else {
-          console.log('Or Am here------');
+         
           this.candidateEmploymentPopupService
             .open(CandidateEmploymentDialogComponent as Component);
         }

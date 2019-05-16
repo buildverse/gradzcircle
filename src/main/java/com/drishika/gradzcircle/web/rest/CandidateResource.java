@@ -190,9 +190,13 @@ public class CandidateResource {
 	@GetMapping("/candidateByLogin/{id}")
 	@Timed
 	public ResponseEntity<CandidateDTO> getCandidateByLoginId(@PathVariable Long id) {
+		Boolean hasEducationScore = false;
 		log.debug("REST request to get Candidate by Login id for : {}", id);
 		Candidate candidate = candidateService.getCandidateByLoginId(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(convertCandidateToCandidateDTO(candidate)));
+		Double score = candidateService.getEducationScore(candidate.getId());
+		if( score !=null && score  > 0)
+			hasEducationScore = true;
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(convertCandidateToCandidateDTO(candidate,hasEducationScore)));
 	}
 	
 	/**
@@ -212,7 +216,7 @@ public class CandidateResource {
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.convertToCandidateDetailDTO(candidate)));
 	}
 
-	private CandidateDTO convertCandidateToCandidateDTO(Candidate candidate) {
+	private CandidateDTO convertCandidateToCandidateDTO(Candidate candidate,Boolean hasEducationScore) {
 
 		CandidateDTO candidateDTO = new CandidateDTO();
 		candidateDTO.setId(candidate.getId());
@@ -220,6 +224,8 @@ public class CandidateResource {
 		candidateDTO.setFirstName(candidate.getFirstName());
 		candidateDTO.setLastName(candidate.getLastName());
 		candidateDTO.setLogin(candidate.getLogin());
+		candidateDTO.setHasEducationScore(hasEducationScore);
+		candidateDTO.setProfileScore(candidate.getProfileScore());
 		return candidateDTO;
 	}
 

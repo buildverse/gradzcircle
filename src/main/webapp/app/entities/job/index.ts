@@ -15,5 +15,6 @@ export * from '../candidate-list/candidate-list-dialog.component';
 export * from './matched-candidate-list.component';
 export * from './applied-candidate-list.component';
 export * from './short-listed-candidate-list.component';
-
+export * from './job-for-anonymous.component';
+export * from './job-list-change.service';
 

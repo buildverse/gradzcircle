@@ -59,7 +59,7 @@ public class CorporateResourceIntTest {
 	private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
 
 	private static final String DEFAULT_CITY = "AAAAAAAAAA";
-	private static final String UPDATED_CITY = "BBBBBBBBBB";
+	private static final String UPDATED_CITY = "Bbbbbbbbbb";
 
 	private static final LocalDate DEFAULT_ESTABLISHED_SINCE = LocalDate.ofEpochDay(0L);
 	private static final LocalDate UPDATED_ESTABLISHED_SINCE = LocalDate.now(ZoneId.systemDefault());

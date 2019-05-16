@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router, NavigationEnd, NavigationStart, NavigationCancel, Event} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -10,6 +10,7 @@ import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
+
 @Component({
   selector: 'jhi-candidate-profile',
   templateUrl: 'candidate-profile.component.html',
@@ -17,14 +18,15 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 })
 
-export class CandidateProfileComponent implements OnInit, AfterViewInit {
+export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
   candidate: Candidate;
   imageUrl: any;
   loginId: string;
   noImage: boolean;
   userImage: string;
-  private eventSubscriber: Subscription;
+  eventSubscriberCandidate: Subscription;
+  eventSubscriberCandidateImage: Subscription;
   currentSearch: string;
   defaultImage = require('../../../content/images/no-image.png');
   detailsCollapsed: boolean;
@@ -36,10 +38,12 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
   activeTab: string;
   message: string;
   profileScore: number;
+  profileSubscriber: Subscription;
+  routerSub: Subscription;
 
   constructor(private route: ActivatedRoute,
     private eventManager: JhiEventManager,
-    private alertService: JhiAlertService,
+    private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
     private progressBarConfig: NgbProgressbarConfig,
     private principal: Principal,
@@ -61,7 +65,6 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     this.progressBarConfig.animated = true;
     this.progressBarConfig.height = '20px';
     this.message = 'Profile Completeness';
-
   }
 
   toggleDetails() {
@@ -71,6 +74,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     this.nonAcademicCollapsed = true;
     this.languageCollapsed = true;
     this.certificationsCollapsed = true;
+
   }
 
   toggleEducation() {
@@ -80,6 +84,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     this.nonAcademicCollapsed = true;
     this.languageCollapsed = true;
     this.certificationsCollapsed = true;
+
   }
 
   toggleEmployment() {
@@ -89,6 +94,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     this.nonAcademicCollapsed = true;
     this.languageCollapsed = true;
     this.certificationsCollapsed = true;
+
   }
   toggleNonAcads() {
     this.detailsCollapsed = true;
@@ -106,6 +112,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     this.nonAcademicCollapsed = true;
     this.languageCollapsed = true;
     this.certificationsCollapsed = !this.certificationsCollapsed;
+
   }
 
   toggleLanguage() {
@@ -122,27 +129,40 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
+    
+    this.routerSub = this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
     this.currentSearch = this.candidate.id.toString();
     this.loginId = this.candidate.login.id;
+    //console.log('Caling from init');
+    this.setAlerts();
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
     this.reloadUserImage();
-    // this.checkImageUrl();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
-    this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
+
+    this.profileSubscriber = this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
       if (profileScore) {
         this.profileScore = profileScore;
       }
     });
+    
 
+  }
+
+  setAlerts() {
+    if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
+      this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
+    } else if (!this.candidate.hasEducationScore) {
+      this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.educationAlert', timeout: 5000}, []);
+    }
   }
 
   ngAfterViewInit() {
     this.cd.detectChanges();
+
   }
 
-  getCandidateByCandidateId(id) {
+  /*getCandidateByCandidateId(id) {
     this.candidateService.getCandidateByCandidateId(id).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
@@ -152,12 +172,15 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
     );
     return;
   }
-
+*/
 
   reloadCandidate() {
     this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
+      //  console.log('Caling from reload');
+        this.setAlerts();
+       // console.log('-----------------------' + JSON.stringify(this.candidate));
         this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
@@ -178,14 +201,24 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit {
   }
 
   private onError(error) {
-    this.alertService.error(error.message, null, null);
+    this.jhiAlertService.error(error.message, null, null);
   }
   registerChangeInCandidateData() {
-    this.eventSubscriber = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
+    this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
+    //this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', (response) => {console.log('calling from subscribe '); this.reloadCandidate();});
+  //  console.log('Number os sunbscribe events s ');
   }
 
   registerChangeInCandidateImage() {
-    this.eventSubscriber = this.eventManager.subscribe('candidateImageModification', (response) => this.reloadUserImage());
+    this.eventSubscriberCandidateImage = this.eventManager.subscribe('candidateImageModification', (response) => this.reloadUserImage());
+  }
+
+  ngOnDestroy() {
+    this.eventManager.destroy(this.eventSubscriberCandidate);
+     this.eventManager.destroy(this.eventSubscriberCandidateImage);
+    this.eventManager.destroy(this.profileSubscriber);
+    this.eventManager.destroy(this.routerSub);
+   // console.log('Destroing parent profile');
   }
 
   reloadUserImage() {

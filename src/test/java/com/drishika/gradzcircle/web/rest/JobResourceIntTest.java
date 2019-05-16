@@ -19,11 +19,13 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,11 +42,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
-import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
@@ -69,6 +70,7 @@ import com.drishika.gradzcircle.repository.JobTypeRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.JobService;
+import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
@@ -163,7 +165,18 @@ public class JobResourceIntTest {
 
 	private static final Long DEFAULT_UPDATED_BY = 1L;
 	private static final Long UPDATED_UPDATED_BY = 2L;
-
+	
+	private static final String PERMANENT = ApplicationConstants.EMPLOYMENT_TYPE_PERMANENT;
+	private static final String FULL_TIME = ApplicationConstants.JOB_TYPE_FULL_TIME;
+	private static final String PART_TIME = ApplicationConstants.JOB_TYPE_PART_TIME;
+	private static final String INTERNSHIP = ApplicationConstants.JOB_TYPE_INTERNSHIP;
+	private static final String SUMMER_JOB = ApplicationConstants.JOB_TYPE_SUMMER_JOB;
+	private static final String CONTRACT = ApplicationConstants.EMPLOYMENT_TYPE_CONTRACT;
+	private static final String jobDescShort ="Hell Am fine";
+	private static final String jobDescLong ="Repository candidates for a particular Spring Data module. Using multiple persistence technology-specific annotations on the same domain type is possible and enables reuse of domain types across multiple persistence technologies. However, Spring Data can then no longer determine a unique module with which to bind the repository.\n" + 
+			"The last way to distinguish repositories is by scoping repository base packages. Base packages define the starting points for scanning for repository interface definitions, which implies having repository definitions located in the appropriate packages.\n" + 
+			"Repository candidates for a particular Spring Data module. Using multiple persistence technology-specific annotations on the same domain type is possible and enables reuse of domain types across multiple persistence technologies. However, Spring Data can then no longer determine a unique module with which to bind the repository.\n" + 
+			"The last way to distinguish repositories is by scoping repository base packages. Base packages define the starting points for scanning for repository interface definitions, which implies having repository definitions located in the appropriate packages. ";
 	@Autowired
 	private JobRepository jobRepository;
 
@@ -214,6 +227,12 @@ public class JobResourceIntTest {
 
 	@Autowired
 	private ExceptionTranslator exceptionTranslator;
+	
+	@Autowired
+	private JobStatisticsCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager;
+	
+	@Autowired
+	private JobStatisticsCacheManager<String, Map<String,JobType>> jobTypeCacheManager;
 
 	@Autowired
 	private EntityManager em;
@@ -227,10 +246,17 @@ public class JobResourceIntTest {
 	private Corporate corporate;
 
 	private Candidate candidateA, candidateB, candidateC;
+
+	private CandidateJob candidateJob1, candidateJob2, candidateJob3, candidateJob4, candidateJob5, candidateJob6,
+			candidateJob7, candidateJob8, candidateJob9, candidateJob10, candidateJob11, candidateJob12, candidateJob13,
+			candidateJob14, candidateJob15, candidateJob16, candidateJob17, candidateJob18, candidateJob19,
+			candidateJob20, candidateJob21, candidateJob22;
 	
-	private JobType jobType;
+	private JobType jobType,fullTime,partTime,internship,summerJob;
 	
-	private EmploymentType employmentType;
+	private EmploymentType employmentType,contract, permanent;
+	
+	private Job job0,job1,job2,job3,job4,job5,job6,job7,job8,job9,job10,job11,job12,job13,job14,job15,job16,job17,job18,job19,job20,job21,job22;
 
 	@Before
 	public void setup() {
@@ -242,6 +268,11 @@ public class JobResourceIntTest {
 				.setMessageConverters(jacksonMessageConverter).build();
 	}
 
+	public static Candidate createCandidate(EntityManager em) {
+		Candidate candidateA = new Candidate().firstName("Abhinav");
+		return candidateA;
+	}
+	
 	/**
 	 * Create an entity for this test.
 	 *
@@ -504,22 +535,215 @@ public class JobResourceIntTest {
 		JobType jobType = new JobType();
 		return jobType;
 	}
+	
+	public static JobType createJobTypeFullTime(EntityManager em) {
+		JobType fullTime = new JobType();
+		fullTime.jobType(FULL_TIME);
+		return fullTime;
+	}
+	
+	public static JobType createJobTypePartTime(EntityManager em) {
+		JobType partTime = new JobType();
+		partTime.jobType(PART_TIME);
+		return partTime;
+	}
+	
+	public static JobType createJobTypeSummer(EntityManager em) {
+		JobType summerJob = new JobType();
+		summerJob.jobType(SUMMER_JOB);
+		return summerJob;
+	}
+	
+	public static JobType createJobTypeIntern(EntityManager em) {
+		JobType intership = new JobType();
+		intership.jobType(INTERNSHIP);
+		 return intership;
+	}
+	
+	public static EmploymentType createEmploymentTypePermanent(EntityManager em) {
+		EmploymentType permanent = new EmploymentType();
+		permanent.employmentType(PERMANENT);
+		return permanent;
+	}
+	
+	public static EmploymentType createEmploymentTypeContract(EntityManager em) {
+		EmploymentType contract = new EmploymentType();
+		contract.employmentType(CONTRACT);
+		return contract;
+	}
+	
+	public static Job createJob0(EntityManager em) {
+		Job job0 = new Job().jobStatus(-1).jobDescription(jobDescLong);
+		return job0;
+	}
+	
+	public static Job createJob1(EntityManager em) {
+		Job job1 = new Job().jobStatus(1).jobDescription(jobDescLong);
+		return job1;
+	}
+
+	public static Job createJob2(EntityManager em) {
+		Job job2 = new Job().jobStatus(1).jobDescription(jobDescLong);
+		return job2;
+	}
+
+	public static Job createJob3(EntityManager em) {
+		Job job3 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job3;
+	}
+
+	public static Job createJob4(EntityManager em) {
+		Job job4 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job4;
+	}
+
+	public static Job createJob5(EntityManager em) {
+		Job job5 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job5;
+	}
+
+	public static Job createJob6(EntityManager em) {
+		Job job6 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job6;
+	}
+
+	public static Job createJob7(EntityManager em) {
+		Job job7 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job7;
+	}
+
+	public static Job createJob8(EntityManager em) {
+		Job job8 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job8;
+	}
+
+	public static Job createJob9(EntityManager em) {
+		
+		Job job9 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job9;
+	}
+
+	public static Job createJob10(EntityManager em) {
+		Job job10 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job10;
+	}
+
+	public static Job createJob11(EntityManager em) {
+		Job job11 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job11;
+	}
+
+	public static Job createJob12(EntityManager em) {
+		Job job12 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job12;
+	}
+
+	public static Job createJob13(EntityManager em) {
+		Job job13 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job13;
+	}
+
+	public static Job createJob14(EntityManager em) {
+		Job job14 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job14;
+	}
+
+	public static Job createJob15(EntityManager em) {
+		Job job15 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job15;
+	}
+
+	public static Job createJob16(EntityManager em) {
+		Job job16 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job16;
+	}
+
+	public static Job  createJob17(EntityManager em) {
+		Job job17 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job17;
+	}
+
+	public static Job  createJob18(EntityManager em) {
+		Job job18 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job18;
+	}
+
+	public static Job createJob19(EntityManager em) {
+		Job job19 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job19;
+	}
+
+	public static Job  createJob20(EntityManager em) {
+		Job job20 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job20;
+	}
+
+	public static Job createJob21(EntityManager em) {
+		Job job21 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		return job21;
+	}
+
+	public static Job  createJob22(EntityManager em) {
+		Job job22 = new Job().jobStatus(-1).jobDescription(jobDescShort);
+		return job22;
+	}
+
 
 	@Before
 	public void initTest() {
 		// jobSearchRepository.deleteAll();
-		job = createDraftJob(em);
+		job0 = createJob0(em);
+		job1 = createJob1(em);
+		job2 = createJob2(em);
+		job3 = createJob3(em);
+		job4 = createJob4(em);
+		job5 = createJob5(em);
+		job6 = createJob6(em);
+		job7 = createJob7(em);
+		job8 = createJob8(em);
+		job9 = createJob9(em);
+		job10 = createJob10(em);
+		job11 = createJob11(em);
+		job12 = createJob12(em);
+		job13 = createJob13(em);
+		job14 = createJob14(em);
+		job15 = createJob15(em);
+		job16 = createJob16(em);
+		job17 = createJob17(em);
+		job18 = createJob18(em);
+		job19 = createJob19(em);
+		job20 = createJob20(em);
+		job21 = createJob21(em);
+		job22 = createJob22(em);
+		job = createDraftJob(em);		
+		candidateA = createCandidate(em);
 		corporate = createCorporate(em);
 		employmentType = createEmploymentType(em);
 		jobType = createJobType(em);
+		permanent = createEmploymentTypePermanent(em);
+		contract = createEmploymentTypeContract(em);
+		fullTime = createJobTypeFullTime(em);
+		partTime = createJobTypePartTime(em);
+		internship = createJobTypeIntern(em);
+		summerJob = createJobTypeSummer(em);
 		employmentTypeRepository.saveAndFlush(employmentType);
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(internship);
+		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(jobType);
+		jobTypeCacheManager.removeFromCache(ApplicationConstants.JOB_TYPE);
+		employmentTypeCacheManager.removeFromCache(ApplicationConstants.EMPLOYMENT_TYPE);
+		
 	}
 
 	@Test
 	@Transactional
 	public void disableFutureEditsIfAlreadyEdited() throws Exception {
 		Job job = createJobActiveEditedCanEdit(em);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
@@ -905,8 +1129,7 @@ public class JobResourceIntTest {
 	public void updateDraftJobToActiveWithDefaultFilter() throws Exception {
 		// Create Draft Job
 		Job job = createDraftJob(em);
-		job.employmentType(employmentType);
-		job.jobType(jobType);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -932,6 +1155,7 @@ public class JobResourceIntTest {
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
 		jobFilters.add(jobFilter);
 		toBeUpdated.setJobFilters(jobFilters);
+		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		// No Prior History
 		// Execute Update
 		restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -1139,6 +1363,7 @@ public class JobResourceIntTest {
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
+		job.employmentType(employmentType).jobType(jobType);
 
 		JobFilter jobFilter = new JobFilter();
 		jobFilter.setFilterDescription(BASIC_FILTER);
@@ -1165,6 +1390,7 @@ public class JobResourceIntTest {
 		// to be updated
 		Job toBeUpdated = new Job();
 		toBeUpdated.setId(initializedJob.getId());
+		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
@@ -1265,6 +1491,7 @@ public class JobResourceIntTest {
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).employmentType(employmentType).jobType(jobType);
+		job.employmentType(employmentType).jobType(jobType);
 		JobFilter jobFilter = new JobFilter();
 		jobFilter.setFilterDescription(BASIC_FILTER);
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
@@ -1299,6 +1526,7 @@ public class JobResourceIntTest {
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		toBeUpdated.setJobFilters(jobFilters);
+		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		// Execute Update
 		restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(toBeUpdated))).andExpect(status().isOk());
@@ -1406,6 +1634,7 @@ public class JobResourceIntTest {
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		;
+		job.employmentType(employmentType).jobType(jobType);
 		JobFilter jobFilter = new JobFilter();
 		jobFilter.setFilterDescription(BASIC_FILTER);
 		jobFilter.job(job);
@@ -1442,6 +1671,7 @@ public class JobResourceIntTest {
 		toBeUpdatedFilter.setId(filter.getId());
 		Job toBeUpdated = new Job();
 		toBeUpdated.setId(initializedJob.getId());
+		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
@@ -1581,6 +1811,7 @@ public class JobResourceIntTest {
 		jobHistories.add(jobHistory1);
 		jobHistories.add(jobHistory2);
 		job.setHistories(jobHistories);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -1601,7 +1832,7 @@ public class JobResourceIntTest {
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
-				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
+				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).jobType(jobType).employmentType(employmentType);
 		Set<JobFilter> toBeUpdatedFilterSet = new HashSet<JobFilter>();
 		toBeUpdatedFilterSet.add(toBeUpdatedFilter.job(toBeUpdated));
 		toBeUpdated.setJobFilters(toBeUpdatedFilterSet);
@@ -1812,6 +2043,7 @@ public class JobResourceIntTest {
 
 		// Initialize the database
 		Job job = createJobDraftNotEditedCanEdit(em);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -2385,6 +2617,7 @@ public class JobResourceIntTest {
 		jobFilters.forEach(jobFilter -> jobFilter.job(job));
 		job.setJobFilters(jobFilters);
 		job.setHistories(jobHistories);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -2515,6 +2748,7 @@ public class JobResourceIntTest {
 		jobFilters.forEach(jobFilter -> jobFilter.job(job));
 		job.setJobFilters(jobFilters);
 		job.setHistories(jobHistories);
+		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
@@ -2687,15 +2921,17 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void testGetAllJobsForCandidateWithNoEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
 		Job job1 = new Job();
 		job1.jobTitle("Test Job1");
-		job1.jobStatus(1);
+		job1.jobStatus(1).corporate(corporate).jobDescription(jobDescShort);
 		Job job2 = new Job();
 		job2.jobTitle("Test Job2");
-		job2.jobStatus(1);
+		job2.jobStatus(1).corporate(corporate).jobDescription(jobDescShort);;
 		Job job3 = new Job();
 		job3.jobTitle("Test Job3");
-		job3.jobStatus(1);
+		job3.jobStatus(1).corporate(corporate).jobDescription(jobDescShort);;
 		Candidate c1 = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(c1);
 		jobRepository.saveAndFlush(job1);
@@ -2707,7 +2943,7 @@ public class JobResourceIntTest {
 		// Get all the jobList
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
-		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}/{matchScoreFrom}/{matchScoreTo}", c1.getId(),-1,-1)).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
 				.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job3")))
@@ -2719,15 +2955,27 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void testGetAllJobsForCandidateWithEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
+		String jobDescLong ="Repository candidates for a particular Spring Data module. Using multiple persistence technology-specific annotations on the same domain type is possible and enables reuse of domain types across multiple persistence technologies. However, Spring Data can then no longer determine a unique module with which to bind the repository.\n" + 
+				"The last way to distinguish repositories is by scoping repository base packages. Base packages define the starting points for scanning for repository interface definitions, which implies having repository definitions located in the appropriate packages.\n" + 
+				"Repository candidates for a particular Spring Data module. Using multiple persistence technology-specific annotations on the same domain type is possible and enables reuse of domain types across multiple persistence technologies. However, Spring Data can then no longer determine a unique module with which to bind the repository.\n" + 
+				"The last way to distinguish repositories is by scoping repository base packages. Base packages define the starting points for scanning for repository interface definitions, which implies having repository definitions located in the appropriate packages. ";
 		Job job1 = new Job();
 		job1.jobTitle("Test Job1");
 		job1.jobStatus(1);
+		job1.jobDescription(jobDescShort);
 		Job job2 = new Job();
 		job2.jobTitle("Test Job2");
+		job2.jobDescription(jobDescShort);
 		job2.jobStatus(1);
 		Job job3 = new Job();
 		job3.jobTitle("Test Job3");
 		job3.jobStatus(1);
+		job3.jobDescription(jobDescShort);
+		job1.corporate(corporate);
+		job2.corporate(corporate);
+		job3.corporate(corporate);
 		Candidate c1 = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(c1);
 		jobRepository.saveAndFlush(job1);
@@ -2767,7 +3015,7 @@ public class JobResourceIntTest {
 		// Get all the jobList
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
-		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidate/{candidateId}/{matchScoreFrom}/{matchScoreTo}", c1.getId(),0,50)).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
 				.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job3")))
@@ -2776,6 +3024,379 @@ public class JobResourceIntTest {
 		// resultActions.andDo(MockMvcResultHandlers.print());
 
 	}
+
+	@Test
+	@Transactional
+	public void testGetAllJobsByEmploymentTypeForCandidateWithNoEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
+		EmploymentType permanent = new EmploymentType();
+		EmploymentType contract = new EmploymentType();
+		JobType fullTime = new JobType();
+		JobType partTime = new JobType();
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		job1.employmentType(permanent);
+		job1.jobType(fullTime);
+		job1.corporate(corporate);
+		job1.jobDescription(jobDescShort);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		job2.employmentType(contract);
+		job2.jobType(fullTime);
+		job2.corporate(corporate);
+		job2.jobDescription(jobDescShort);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		job3.employmentType(permanent);
+		job3.jobType(partTime);
+		job3.corporate(corporate);
+		job3.jobDescription(jobDescShort);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		c1.addAppliedJob(job1);
+		candidateRepository.saveAndFlush(c1);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByEmploymentType/{candidateId}/{employmentTypeId}", c1.getId(),contract.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
+				.andExpect(jsonPath("$[*].employmentType.id", hasItem(contract.getId().intValue())))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(0d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+
+	@Test
+	@Transactional
+	public void testGetAllJobsByEmployementTypeForCandidateWithEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
+		EmploymentType permanent = new EmploymentType();
+		EmploymentType contract = new EmploymentType();
+		JobType fullTime = new JobType();
+		JobType partTime = new JobType();
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		job1.employmentType(permanent);
+		job1.jobType(fullTime);
+		job1.corporate(corporate);
+		job1.jobDescription(jobDescShort);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		job2.employmentType(contract);
+		job2.jobType(fullTime);
+		job2.corporate(corporate);
+		job2.jobDescription(jobDescShort);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		job3.employmentType(permanent);
+		job3.jobType(partTime);
+		job3.corporate(corporate);
+		job3.jobDescription(jobDescShort);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		c1.addAppliedJob(job1);
+		CandidateJob cj1 = new CandidateJob(c1,job1);
+		CandidateJob cj2 = new CandidateJob(c1,job2);
+		CandidateJob cj3 = new CandidateJob(c1,job3);
+		cj1.setMatchScore(30d);
+		cj2.setMatchScore(40d);
+		cj3.setMatchScore(50d);
+	//c1.addCandidateJob(cj1);c1.addCandidateJob(cj2);c1.addCandidateJob(cj3);
+		job1.addCandidateJob(cj1);job2.addCandidateJob(cj2);job3.addCandidateJob(cj3);
+		
+		candidateRepository.saveAndFlush(c1);
+		
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByEmploymentType/{candidateId}/{employmentId}", c1.getId(),permanent.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[*].employmentType.id", hasItem(permanent.getId().intValue())))
+				//.andExpect(jsonPath("$[*].matchScore", hasItem(40d)))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(50d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+	
+	@Test
+	@Transactional
+	public void testGetAllJobsByJobTypeForCandidateWithNoEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
+		EmploymentType permanent = new EmploymentType();
+		EmploymentType contract = new EmploymentType();
+		JobType fullTime = new JobType();
+		JobType partTime = new JobType();
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		job1.employmentType(permanent);
+		job1.jobType(fullTime);
+		job1.corporate(corporate).jobDescription(jobDescShort);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		job2.employmentType(contract);
+		job2.jobType(fullTime);
+		job2.corporate(corporate).jobDescription(jobDescShort);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		job3.employmentType(permanent);
+		job3.jobType(partTime);
+		job3.corporate(corporate).jobDescription(jobDescShort);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		c1.addAppliedJob(job1);
+		candidateRepository.saveAndFlush(c1);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByJobType/{candidateId}/{jobType}", c1.getId(),fullTime.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[*].jobType.id", hasItem(fullTime.getId().intValue())))
+				
+				.andExpect(jsonPath("$[*].matchScore", hasItem(0d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+
+	@Test
+	@Transactional
+	public void testGetAllJobsByJobTypeForCandidateWithEducation() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+		String jobDescShort ="Hell Am fine";
+		
+		EmploymentType permanent = new EmploymentType();
+		EmploymentType contract = new EmploymentType();
+		JobType fullTime = new JobType();
+		JobType partTime = new JobType();
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		job1.employmentType(permanent);
+		job1.jobType(fullTime);
+		job1.corporate(corporate);
+		job1.jobDescription(jobDescShort);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		job2.employmentType(contract);
+		job2.jobType(fullTime);
+		job2.corporate(corporate);
+		job2.jobDescription(jobDescShort);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		job3.employmentType(permanent);
+		job3.jobType(partTime);
+		job3.corporate(corporate);
+		job3.jobDescription(jobDescShort);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		c1.addAppliedJob(job1);
+		CandidateJob cj1 = new CandidateJob(c1,job1);
+		CandidateJob cj2 = new CandidateJob(c1,job2);
+		CandidateJob cj3 = new CandidateJob(c1,job3);
+		cj1.setMatchScore(30d);
+		cj2.setMatchScore(40d);
+		cj3.setMatchScore(50d);
+	//c1.addCandidateJob(cj1);c1.addCandidateJob(cj2);c1.addCandidateJob(cj3);
+		job1.addCandidateJob(cj1);job2.addCandidateJob(cj2);job3.addCandidateJob(cj3);
+		
+		candidateRepository.saveAndFlush(c1);
+		
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByJobType/{candidateId}/{jobType}", c1.getId(),partTime.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[*].jobType.id", hasItem(partTime.getId().intValue())))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(50d)));
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+
+	@Test
+	@Transactional
+	public void testGetAllJobsByEmploymentAndJobTypeForCandidateWithNoEducationWithNoMatchingJobAnEmploymentTypeCombination() throws Exception {
+		EmploymentType permanent = new EmploymentType();
+		EmploymentType contract = new EmploymentType();
+		JobType fullTime = new JobType();
+		JobType partTime = new JobType();
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobStatus(1);
+		job1.employmentType(permanent);
+		job1.jobType(fullTime);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobStatus(1);
+		job2.employmentType(contract);
+		job2.jobType(fullTime);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job3");
+		job3.jobStatus(1);
+		job3.employmentType(permanent);
+		job3.jobType(partTime);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(c1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		c1.addAppliedJob(job1);
+		candidateRepository.saveAndFlush(c1);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByEmploymentAndJobType/{candidateId}/{employmentTypeId}/{jobTypeId}", c1.getId(),contract.getId(),partTime.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(0)));
+				/*.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job2")))
+				.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job3")))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(0d)));*/
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+	
+		@Test
+		@Transactional
+		public void testGetAllJobsByEmploymentAndJobTypeForCandidateWithNoEducation() throws Exception {
+			corporateRepository.saveAndFlush(corporate.city("deLhI").name("choTa"));
+			String jobDescShort ="Hell Am fine";
+			EmploymentType permanent = new EmploymentType();
+			EmploymentType contract = new EmploymentType();
+			JobType fullTime = new JobType();
+			JobType partTime = new JobType();
+			employmentTypeRepository.saveAndFlush(permanent);
+			employmentTypeRepository.saveAndFlush(contract);
+			jobTypeRepository.saveAndFlush(fullTime);
+			jobTypeRepository.saveAndFlush(partTime);
+			Job job1 = new Job();
+			job1.jobTitle("Test Job1");
+			job1.jobStatus(1);
+			job1.employmentType(permanent);
+			job1.jobType(fullTime);
+			job1.corporate(corporate).jobDescription(jobDescShort);
+			Job job2 = new Job();
+			job2.jobTitle("Test Job2");
+			job2.jobStatus(1);
+			job2.employmentType(contract);
+			job2.jobType(fullTime);
+			job2.corporate(corporate).jobDescription(jobDescShort);
+			Job job3 = new Job();
+			job3.jobTitle("Test Job3");
+			job3.jobStatus(1);
+			job3.employmentType(permanent);
+			job3.jobType(partTime);
+			job3.corporate(corporate).jobDescription(jobDescShort);
+			Candidate c1 = new Candidate().firstName("Abhinav");
+			candidateRepository.saveAndFlush(c1);
+			jobRepository.saveAndFlush(job1);
+			jobRepository.saveAndFlush(job2);
+			jobRepository.saveAndFlush(job3);
+			c1.addAppliedJob(job1);
+			candidateRepository.saveAndFlush(c1);
+			
+			// Get all the jobList
+			// ResultActions resultActions =
+			// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+			restJobMockMvc.perform(get("/api/newActiveJobsForCandidateByEmploymentAndJobType/{candidateId}/{employmentTypeId}/{jobTypeId}", c1.getId(),permanent.getId(),partTime.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+					.andExpect(jsonPath("$", hasSize(1)))
+					.andExpect(jsonPath("$[*].jobType.id", hasItem(partTime.getId().intValue())))
+					.andExpect(jsonPath("$[*].employmentType.id", hasItem(permanent.getId().intValue())))
+					.andExpect(jsonPath("$[*].matchScore", hasItem(0d)));
+			// resultActions.andDo(MockMvcResultHandlers.print());
+
+		}
+		
+		
+
 	
 	
 
@@ -2897,7 +3518,7 @@ public class JobResourceIntTest {
 		Job job1 = new Job();
 		job1.jobTitle("Test Job 1");
 		Job job2 = new Job();
-		job1.jobTitle("Test Job 2");
+		job2.jobTitle("Test Job 2");
 		corporateRepository.saveAndFlush(corp);
 		
 		job1.corporate(corp);job2.corporate(corp);
@@ -2908,6 +3529,36 @@ public class JobResourceIntTest {
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
 		restJobMockMvc.perform(get("/api/totalJobsByCorporate/{corporateId}", corp.getId()))
+				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$").value(2));
+	}
+	
+	@Test
+	@Transactional
+	public void testGetTotalActiveJobsOnPortal() throws Exception {
+		Corporate corp = new Corporate();
+		corp.name("Drishika");
+		Job job1 = new Job();
+		job1.jobStatus(0);
+		job1.jobTitle("Test Job 1");
+		Job job2 = new Job();
+		job2.jobTitle("Test Job 2");
+		job2.jobStatus(1);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job 3");
+		job3.jobStatus(1);
+		corporateRepository.saveAndFlush(corp);
+		
+		job1.corporate(corp);job2.corporate(corp);job3.corporate(corp);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/countOfActiveJobs"))
 				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$").value(2));
@@ -3001,7 +3652,1847 @@ public class JobResourceIntTest {
 				.andExpect(jsonPath("$").value(1));
 	}
 
-
+/*
+	@Test
+	@Transactional
+	public void testGetJobByActiveStatus() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		String jobDescShort ="Hell Am fine";
+		
+		Job j1 =  new Job ();
+		Job j2= new Job ();
+		Job j3 = new Job ();
+		
+		j1.setJobStatus(1);
+		j2.setJobStatus(0);
+		j3.setJobStatus(-1);
+		j1.corporate(corporate).jobDescription(jobDescShort);
+		j2.corporate(corporate).jobDescription(jobDescShort);
+		j3.corporate(corporate).jobDescription(jobDescShort);
+		jobRepository.saveAndFlush(j1);
+		jobRepository.saveAndFlush(j2);
+		jobRepository.saveAndFlush(j3);
+		
+		restJobMockMvc.perform(get("/api/activeJobs?sort=id,desc"))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$",hasSize(1)))
+		.andExpect(jsonPath(("$.[*].jobStatus"),hasItem(ACTIVE_JOB_STATUS)));
+	}
+*/	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithOrWithoutEmploymentTypeAndJobTypeSelection() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		
+		restJobMockMvc.perform(get("/api/activeJobs?sort=id,desc"))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(20)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",hasItem(11)))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment",hasItem(10)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",hasItem(6)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",hasItem(7)))
+		.andExpect(jsonPath("$.[*].countOfInternJob",hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(3)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
 	
-
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypePermanentAndMatchScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		//candidateRepository.saveAndFlush(candidateA);
+		
+		
+		restJobMockMvc.perform(get("/api/activeJobsByEmploymentType/{employmentTypeId}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",permanent.getEmploymentType(),candidateA.getId(),51,70))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(2)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(67d,57d)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false,false)))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypeContract() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByEmploymentType/{employmentTypeId}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",contract.getEmploymentType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(10)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",Matchers.containsInAnyOrder(
+				Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),
+				Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),
+				Matchers.nullValue(), Matchers.nullValue(), 
+				Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(10)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",hasItem(1)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfInternJob",hasItem(2)))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(2)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypeContractAndJobTypeFullTime() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndOneJobType/{employmentType}/{jobType}/{id}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc"
+				,contract.getEmploymentType(),fullTime.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(1)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",Matchers.contains(Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(1)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",hasItem(1)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",Matchers.contains(Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfInternJob",Matchers.contains(Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",Matchers.contains(Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypePermanentAndJobTypeFullTimeWithMatchScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndOneJobType/{employmentType}/{jobType}/{id}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc"
+					,permanent.getEmploymentType(),fullTime.getJobType(),candidateA.getId(),86,100))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(2)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(87d,86d)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false,false)))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypePermanentAndJobTypeSummerAndFullTime() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndTwoJobType/{employmentTypeId}/{jobType1}/{jobType2}/{id}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				permanent.getEmploymentType(),fullTime.getJobType(),summerJob.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(6)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",hasItem(6)))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfInternJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(1)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypeContractAndJobTypePartTimeAndInternWithMatchScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndTwoJobType/{employmentTypeId}/{jobType1}/{jobType2}/{id}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				contract.getEmploymentType(),partTime.getJobType(),internship.getJobType(),candidateA.getId(),70,84))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(3)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(78d,75d,70d)))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false,false,false)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypeContractAndJobTypeFullTimeAndInternAndSummer() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndThreeJobType/{employmentTypeId}/{jobType1}/{jobType2}/{jobType3}/{id}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",contract.getEmploymentType(),fullTime.getJobType(),internship.getJobType(),summerJob.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(5)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob", hasItem(1)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfInternJob",hasItem(2)))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(2)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataWithEmploymentTypePermanentAndJobTypeFullTimeAndSummerAndPartTimeWithMatchScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneEmploymentTypeAndThreeJobType/{employmentTypeId}/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}"
+				+ "?sort=id,desc",permanent.getEmploymentType(),partTime.getJobType(),fullTime.getJobType(),summerJob.getJobType(),candidateA.getId(),0,50))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(1)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(45d)))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false)))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForPartTimeOnly() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneJobType/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}/?sort=id,desc",
+				partTime.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(7)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",hasItem(2)))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",hasItem(7)))
+		.andExpect(jsonPath("$.[*].countOfInternJob", Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForInternOnlyWithMatchScores() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByOneJobType/{jobType}/{candidateId}/{matchScoreFrom}/{matchScoreTo}/?sort=id,desc",
+				internship.getJobType(),candidateA.getId(),86,100))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(1)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(89d)))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForFulltimeAndSummer() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByTwoJobTypes/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				fullTime.getJobType(),summerJob.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(9)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",hasItem(6)))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(3)))
+		.andExpect(jsonPath("$.[*].countOfFullTimeJob",hasItem(6)))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfInternJob", Matchers.containsInAnyOrder(Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue(),Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(3)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForPartTimeAndSummerWithMatchScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByTwoJobTypes/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				partTime.getJobType(),summerJob.getJobType(),candidateA.getId(),71,85))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(3)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(85d,78d,75d)))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false,false,false)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForInternAndPartTimeAndSummer() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByThreeJobTypes/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				partTime.getJobType(),summerJob.getJobType(),internship.getJobType(),-1,-1,-1))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(15)))
+		.andExpect(jsonPath("$.[*].countOfPermanentEmployment",hasItem(6)))
+		.andExpect(jsonPath("$.[*].countOfContractEmployment", hasItem(9)))
+				.andExpect(jsonPath("$.[*].countOfFullTimeJob",
+						Matchers.containsInAnyOrder(Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),
+								Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),
+								Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),Matchers.nullValue(), Matchers.nullValue(), Matchers.nullValue(),
+								Matchers.nullValue(), Matchers.nullValue())))
+		.andExpect(jsonPath("$.[*].countOfPartTimeJob",hasItem(7)))
+		.andExpect(jsonPath("$.[*].countOfInternJob", hasItem(5)))
+		.andExpect(jsonPath("$.[*].countOfSummerJob",hasItem(3)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetJobStatsAndJobDataForPartTimeAndFullTimeAndSummerWithScore() throws Exception {
+		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
+		employmentTypeRepository.saveAndFlush(permanent);
+		employmentTypeRepository.saveAndFlush(contract);
+		employmentTypeRepository.delete(employmentType.getId());
+		jobTypeRepository.delete(jobType.getId());
+		jobTypeRepository.saveAndFlush(fullTime);
+		jobTypeRepository.saveAndFlush(partTime);
+		jobTypeRepository.saveAndFlush(summerJob);
+		jobTypeRepository.saveAndFlush(internship);
+		candidateRepository.saveAndFlush(candidateA);
+		job0.employmentType(contract).jobType(partTime).corporate(corporate);
+		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
+		job2.employmentType(contract).jobType(partTime).corporate(corporate);
+		job3.employmentType(contract).jobType(partTime).corporate(corporate);
+		job4.employmentType(contract).jobType(partTime).corporate(corporate);
+		job5.employmentType(contract).jobType(partTime).corporate(corporate);
+		job6.employmentType(contract).jobType(partTime).corporate(corporate);
+		job7.employmentType(contract).jobType(internship).corporate(corporate);
+		job8.employmentType(contract).jobType(internship).corporate(corporate);
+		job9.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job10.employmentType(contract).jobType(summerJob).corporate(corporate);
+		job11.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job12.employmentType(permanent).jobType(internship).corporate(corporate);
+		job13.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job14.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job15.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job16.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job17.employmentType(permanent).jobType(fullTime).corporate(corporate);
+		job18.employmentType(permanent).jobType(partTime).corporate(corporate);
+		job19.employmentType(permanent).jobType(internship).corporate(corporate);
+		job20.employmentType(permanent).jobType(internship).corporate(corporate);
+		job21.employmentType(permanent).jobType(summerJob).corporate(corporate);
+		job22.employmentType(contract).jobType(partTime).corporate(corporate);	
+		jobRepository.saveAndFlush(job0);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		jobRepository.saveAndFlush(job7);
+		jobRepository.saveAndFlush(job8);
+		jobRepository.saveAndFlush(job9);
+		jobRepository.saveAndFlush(job10);
+		jobRepository.saveAndFlush(job11);
+		jobRepository.saveAndFlush(job12);
+		jobRepository.saveAndFlush(job13);
+		jobRepository.saveAndFlush(job14);
+		jobRepository.saveAndFlush(job15);
+		jobRepository.saveAndFlush(job16);
+		jobRepository.saveAndFlush(job17);
+		jobRepository.saveAndFlush(job18);
+		jobRepository.saveAndFlush(job19);
+		jobRepository.saveAndFlush(job20);
+		jobRepository.saveAndFlush(job21);
+		jobRepository.saveAndFlush(job22);
+		
+		CandidateJob cJ0 = new CandidateJob(candidateA,job0);
+		cJ0.setMatchScore(60d);
+		CandidateJob cJ1 = new CandidateJob(candidateA,job1);
+		cJ1.setMatchScore(30d);
+		CandidateJob cJ2 = new CandidateJob(candidateA,job2);
+		cJ2.setMatchScore(70d);
+		CandidateJob cJ3 = new CandidateJob(candidateA,job3);
+		cJ3.setMatchScore(78d);
+		CandidateJob cJ4 = new CandidateJob(candidateA,job4);
+		cJ4.setMatchScore(45d);
+		CandidateJob cJ5 = new CandidateJob(candidateA,job5);
+		cJ5.setMatchScore(66d);
+		CandidateJob cJ6 = new CandidateJob(candidateA,job6);
+		cJ6.setMatchScore(75d);
+		CandidateJob cJ7 = new CandidateJob(candidateA,job7);
+		cJ7.setMatchScore(63d);
+		CandidateJob cJ8 = new CandidateJob(candidateA,job8);
+		cJ8.setMatchScore(89d);
+		CandidateJob cJ9 = new CandidateJob(candidateA,job9);
+		cJ9.setMatchScore(100d);
+		CandidateJob cJ10 = new CandidateJob(candidateA,job10);
+		cJ10.setMatchScore(85d);
+		CandidateJob cJ11 = new CandidateJob(candidateA,job11);
+		cJ11.setMatchScore(86d);
+		CandidateJob cJ12 = new CandidateJob(candidateA,job12);
+		cJ12.setMatchScore(45d);
+		CandidateJob cJ13 = new CandidateJob(candidateA,job13);
+		cJ13.setMatchScore(87d);
+		CandidateJob cJ14 = new CandidateJob(candidateA,job14);
+		cJ14.setMatchScore(67d);
+		CandidateJob cJ15 = new CandidateJob(candidateA,job15);
+		cJ15.setMatchScore(77d);
+		CandidateJob cJ16 = new CandidateJob(candidateA,job16);
+		cJ16.setMatchScore(86d);
+		CandidateJob cJ17 = new CandidateJob(candidateA,job17);
+		cJ17.setMatchScore(90d);
+		CandidateJob cJ18 = new CandidateJob(candidateA,job18);
+		cJ18.setMatchScore(45d);
+		CandidateJob cJ19 = new CandidateJob(candidateA,job19);
+		cJ19.setMatchScore(56d);
+		CandidateJob cJ20 = new CandidateJob(candidateA,job20);
+		cJ20.setMatchScore(78d);
+		CandidateJob cJ21 = new CandidateJob(candidateA,job21);
+		cJ21.setMatchScore(57d);
+		CandidateJob cJ22 = new CandidateJob(candidateA,job22);
+		cJ22.setMatchScore(77d);
+		
+		job0.addCandidateJob(cJ0);
+		job1.addCandidateJob(cJ1);
+		job2.addCandidateJob(cJ2);
+		job3.addCandidateJob(cJ3);
+		job4.addCandidateJob(cJ4);
+		job5.addCandidateJob(cJ5);
+		job6.addCandidateJob(cJ6);
+		job7.addCandidateJob(cJ7);
+		job8.addCandidateJob(cJ8);
+		job9.addCandidateJob(cJ9);
+		job10.addCandidateJob(cJ10);
+		job11.addCandidateJob(cJ11);
+		job12.addCandidateJob(cJ12);
+		job13.addCandidateJob(cJ13);
+		job14.addCandidateJob(cJ14);
+		job15.addCandidateJob(cJ15);
+		job16.addCandidateJob(cJ16);
+		job17.addCandidateJob(cJ17);
+		job18.addCandidateJob(cJ18);
+		job19.addCandidateJob(cJ19);
+		job20.addCandidateJob(cJ20);
+		job21.addCandidateJob(cJ21);
+		job22.addCandidateJob(cJ22);
+		
+		candidateA.addCandidateJob(cJ0);
+		candidateA.addCandidateJob(cJ1);
+		candidateA.addCandidateJob(cJ2);
+		candidateA.addCandidateJob(cJ3);
+		candidateA.addCandidateJob(cJ4);
+		candidateA.addCandidateJob(cJ5);
+		candidateA.addCandidateJob(cJ6);
+		candidateA.addCandidateJob(cJ7);
+		candidateA.addCandidateJob(cJ8);
+		candidateA.addCandidateJob(cJ9);
+		candidateA.addCandidateJob(cJ10);
+		candidateA.addCandidateJob(cJ11);
+		candidateA.addCandidateJob(cJ12);
+		candidateA.addCandidateJob(cJ13);
+		candidateA.addCandidateJob(cJ14);
+		candidateA.addCandidateJob(cJ15);
+		candidateA.addCandidateJob(cJ16);
+		candidateA.addCandidateJob(cJ17);
+		candidateA.addCandidateJob(cJ18);
+		candidateA.addCandidateJob(cJ19);
+		candidateA.addCandidateJob(cJ20);
+		candidateA.addCandidateJob(cJ21);
+		candidateA.addCandidateJob(cJ22);
+		job19.addAppliedCandidate(candidateA);
+		job17.addAppliedCandidate(candidateA);
+		
+		restJobMockMvc.perform(get("/api/activeJobsByThreeJobTypes/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}?sort=id,desc",
+				partTime.getJobType(),summerJob.getJobType(),fullTime.getJobType(),candidateA.getId(),51,70))
+		.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	//	LIMITING THIS TO 20 AS PAGE SIZE IS 20 - NEED TO BE DONE FOR ALL TEST CASES BEYOND DATA SIZE OF 20
+		.andExpect(jsonPath("$",hasSize(4)))
+		.andExpect(jsonPath("$.[*].matchScore",Matchers.contains(70d,67d,66d,57d)))
+		.andExpect(jsonPath("$.[*].hasCandidateApplied",Matchers.contains(false,false,false,false)))
+		.andExpect(jsonPath("$.[*].totalNumberOfJobs",hasItem(21)))
+		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
+		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
+	}
 }

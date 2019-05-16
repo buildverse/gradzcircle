@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager,  JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
@@ -31,10 +31,12 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private principal: Principal,
         private dataservice: DataService,
         private candidateProfileScoreService : CandidateProfileScoreService,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private router: Router
     ) {
         this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
             this.activatedRoute.snapshot.params['search'] : '';
+      
     }
 
     /*To be removed once undertsand Elastic */
@@ -113,6 +115,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+     // console.log('Destroy the component certification');
         this.eventManager.destroy(this.eventSubscriber);
     }
 

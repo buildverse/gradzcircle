@@ -27,7 +27,9 @@ import {
   JobResolvePagingParams,
   MatchedCandidateListComponent,
   AppliedCandidateListComponent,
-  ShortListedCandidateListComponent
+  ShortListedCandidateListComponent,
+  JobComponentAnonymous,
+  JobListEmitterService
 
 } from './';
 
@@ -60,7 +62,8 @@ const ENTITY_STATES = [
     CandidateListPopupComponent,
     MatchedCandidateListComponent,
     AppliedCandidateListComponent,
-    ShortListedCandidateListComponent
+    ShortListedCandidateListComponent,
+    JobComponentAnonymous
     //MatchTrackerComponent
   ],
   entryComponents: [
@@ -80,7 +83,8 @@ const ENTITY_STATES = [
     CandidateListPopupComponent,
     MatchedCandidateListComponent,
     AppliedCandidateListComponent,
-    ShortListedCandidateListComponent
+    ShortListedCandidateListComponent,
+    JobComponentAnonymous
     //  MatchTrackerComponent
   ],
   providers: [
@@ -88,7 +92,8 @@ const ENTITY_STATES = [
     JobPopupService,
     // MatchTrackerService,
     JobPopupServiceNew,
-    JobResolvePagingParams
+    JobResolvePagingParams,
+    JobListEmitterService
 
 
   ],

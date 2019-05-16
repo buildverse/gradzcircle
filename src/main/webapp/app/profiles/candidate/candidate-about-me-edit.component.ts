@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit,OnDestroy} from '@angular/core';
 
 import {Principal} from '../../shared/auth/principal.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
@@ -28,6 +28,7 @@ import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {JobCategoryService} from '../../entities//job-category/job-category.service';
 import {NationalityService} from '../../entities/nationality/nationality.service';
 import {CountryService} from '../../entities/country/country.service';
+import { Subscription } from 'rxjs';
 
 
 /**
@@ -51,7 +52,7 @@ import {CountryService} from '../../entities/country/country.service';
   styleUrls: ['candidate.css']
 })
 
-export class CandidateProfileAboutMeEditComponent implements OnInit {
+export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
   candidateAboutMeForm: FormGroup;
   candidate: Candidate;
   address: Address;
@@ -73,6 +74,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
   enableLanguageProfiency: boolean;
   charsLeft: number;
   maxAboutMeLength: number;
+      subscription: Subscription;
 
   mySettings: IMultiSelectSettings = {
     enableSearch: true,
@@ -372,5 +374,11 @@ export class CandidateProfileAboutMeEditComponent implements OnInit {
     }
   }
 
+   ngOnDestroy() {
+      if (this.subscription) {
+        this.eventManager.destroy(this.subscription); 
+
+      }
+    }
 
 }

@@ -1,9 +1,11 @@
-import { Component, OnInit, Output,EventEmitter} from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Candidate } from '../../entities/candidate/candidate.model';
 import 'rxjs/add/operator/debounceTime';
 import { ActivatedRoute} from '@angular/router';
 import {DataService} from '../../shared';
 import { CandidateProfileScoreService } from './candidate-profile-score.service';
+import { JhiEventManager } from 'ng-jhipster';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'jhi-candidate-details',
@@ -11,10 +13,11 @@ import { CandidateProfileScoreService } from './candidate-profile-score.service'
     styleUrls : ['candidate.css']
 })
 
-export class CandidateProfileAboutMeDetailsComponent implements OnInit {
+export class CandidateProfileAboutMeDetailsComponent implements OnInit{
 
+    routeSub: any;
     candidate: Candidate;
-
+    subscription: Subscription;
     errorMessage: String;
     constructor(
         private route: ActivatedRoute,
@@ -26,7 +29,7 @@ export class CandidateProfileAboutMeDetailsComponent implements OnInit {
         this.candidate = this.route.snapshot.data['candidate'].body;
         this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
     }
-  
+
   setRouteParams() {
     this.dataService.setRouteData(this.candidate.id);
   }

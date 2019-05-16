@@ -56,7 +56,9 @@
                 "employment": "My Experience",
                 "nonAcademic": "Extra Curriculars",
                 "certifications": "My Certifications",
-                "candidateLanguageProficiency": "Languages"
+                "candidateLanguageProficiency": "Languages",
+                "profileAlert": "Please <b>complete</b> your profile !! It will <b>enhance your profile.</b>",
+                "educationAlert": "Please add Education to review matched jobs"
             }
         }
     }

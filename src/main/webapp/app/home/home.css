@@ -30,3 +30,11 @@ header {
     margin-top: 25px;
 }
 
+a {
+  color: #0d96d4;
+  font-size: 24px;
+}
+
+a:hover{
+    text-decoration: none;
+}

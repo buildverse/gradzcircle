@@ -35,6 +35,7 @@ export class CandidateEducationDeleteDialogComponent {
           name: 'candidateEducationListModification',
           content: 'Deleted an candidateEducation'
         });
+           this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
         this.spinnerService.hide();
         this.activeModal.dismiss(true);
       });

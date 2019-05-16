@@ -61,8 +61,22 @@ public class CorporateService {
 		Corporate corporateFromRepo = corporateRepository.findOne(corporate.getId());
 		corporate.setShortlistedCandidates(corporateFromRepo.getShortlistedCandidates());
 		injestCountryDetails(corporate);
+		corporate.setCity(convertToCamelCase(corporate.getCity()));
+		//corporate.setCity(convertToCamelCase(corporate.getCity()));
+		//Put code to convert name to camel case before save
 		Corporate result = corporateRepository.save(corporate);
 		return result;
+	}
+	
+	
+	private String convertToCamelCase(String string) {
+		if(string == null)
+			return "";
+		char[] charArray = string.toLowerCase().toCharArray();
+        charArray[0] = Character.toUpperCase(charArray[0]);
+        for(int i=1 ; i<charArray.length ;i++ )
+        		charArray[i] = Character.toLowerCase(charArray[i]);
+        return new String(charArray);
 	}
 
 	private void injestCountryDetails(Corporate corporate) {

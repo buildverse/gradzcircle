@@ -5,6 +5,50 @@
 	<button type="button" class="close" data-dismiss="modal" style="color:white;"
 		aria-hidden="true" (click)="clear()">&times;</button>
 </div>
+<div class="mt-6 mb-5">
+		<div *ngIf="!currentAccount" class="row mx-4 mt-4">
+			<div class="col-md-12 d-flex justify-content-center">
+				<div class="growl growl-static">
+				  <div class="alert alert-primary text-center"   role="alert ">
+				  	<a  (click)="login()" class="alert-link"
+						routerLinkActive="nav-item active">
+						<span jhiTranslate="global.menu.account.login">Sign In</span> 
+					</a>
+				    to Apply and Explore More !!
+				  </div>
+				</div>
+			</div>
+		</div>
+		<div class="row mx-4 mt-4">
+			<div class="col-md-6 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.jobTitle"></div>
+			<div class="col-md-6 d-flex justify-content-center font-weight-light">{{job.jobTitle}}</div>
+		</div>
+		<div class="row mx-4 my-4">
+			<div class="col-md-6 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.jobType"></div>
+			<div class="col-md-6 d-flex justify-content-center font-weight-light">{{job.jobType?.jobType}}</div>
+	
+		</div>
+		<div class="row mx-4 mt-4">
+			<div class="col-md-6 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.employmentType"></div>
+			<div class="col-md-6 d-flex justify-content-center font-weight-light">{{job.employmentType?.employmentType}}</div>
+		</div>
+		<div class="row mx-4 mt-4 justify-content-center">
+			<div class="col-md-3 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.jobDescription"></div>
+		</div>
+		<div class="row mx-4 mt-4">
+			<div class="col-md-12 font-weight-light" [innerHtml]="job.jobDescription"></div>
+		</div>
+		<div class="row mx-4 mt-4">
+			<div class="col-md-6 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.salary"></div>
+			<div class="col-md-6 d-flex justify-content-center font-weight-light">{{job?.salary?job.salary:'Not
+				declared'}}</div>
+		</div>
+</div>
 <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
 	<div class="row mx-4 mt-4">
 		<div class="col-md-6 font-weight-bold "

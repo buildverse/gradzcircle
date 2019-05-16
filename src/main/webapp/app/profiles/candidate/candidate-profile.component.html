@@ -21,45 +21,48 @@
 		</div>
 	</div>
 </div>
+<div class="mt-2 mb-1">
+	<jhi-alert></jhi-alert>
+</div>
 <div class="mt-2 col db-right">
 	<ul class="nav nav-tabs  justify-content-center" role="tablist" id="profileTab">
 			    <li class="nav-item">
 			      <a class="nav-link" id="details-tab" data-toggle="tab" aria-controls="details" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{detail:'details'}}]" [ngClass]="{ 'active':activeTab==='details'}" jhiTranslate="gradzcircleApp.candidate.profile.details" 
+			      		[routerLink]="[{outlets:{educations:null,employments:null,languages:null,certifications:null,nonAcademics:null,detail:'details'}}]" [ngClass]="{ 'active':activeTab==='details'}" jhiTranslate="gradzcircleApp.candidate.profile.details" 
 			      		 (click)="setActiveTab('details')">
 			      		Details
 			      </a>
 			    </li>
 			    <li class="nav-item">
 			      <a class="nav-link" id="edu-tab" data-toggle="tab" aria-controls="edu" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{educations:'education'}}]" [ngClass]="{ 'active':activeTab==='edu'}" 
+			      		[routerLink]="[{outlets:{educations:'education',employments:null,languages:null,certifications:null,nonAcademics:null,detail:null}}]" [ngClass]="{ 'active':activeTab==='edu'}" 
 			      		(click)="setActiveTab('edu')">Education
 			      </a>
 			    </li>
 			    <li class="nav-item">
 			      <a class="nav-link" id="emp-tab" data-toggle="tab" aria-controls="emp" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{employments:'employment'}}]" jhiTranslate="gradzcircleApp.candidate.profile.employment"
+			      		[routerLink]="[{outlets:{employments:'employment',educations:null,languages:null,certifications:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.employment"
 			      		[ngClass]="{ 'active':activeTab==='emp'}" (click)="setActiveTab('emp')" >
 			      		My Experience
 			      </a>
 			    </li>
 			    <li class="nav-item">
 			      <a class="nav-link" id="lang-tab" data-toggle="tab" aria-controls="lang" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{languages:'language'}}]" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"
+			      		[routerLink]="[{outlets:{languages:'language',educations:null,employments:null,certifications:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"
 			      		[ngClass]="{ 'active':activeTab==='lang'}" (click)="setActiveTab('lang')">
 			      		My Certification
 			      </a>
 			    </li>
 			    <li class="nav-item">
 			      <a class="nav-link" id="cert-tab" data-toggle="tab" aria-controls="certs" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{certifications:'certification'}}]" jhiTranslate="gradzcircleApp.candidate.profile.certifications" 
+			      		[routerLink]="[{outlets:{certifications:'certification',educations:null,employments:null,languages:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.certifications" 
 			      		[ngClass]="{ 'active':activeTab==='certs'}" (click)="setActiveTab('certs')">
 			      		certs
 			      </a>
 			    </li>
 			     <li class="nav-item">
 			      <a class="nav-link" id="extras-tab" data-toggle="tab" aria-controls="extras" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{nonAcademics:'beyondAcademics'}}]"jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"
+			      		[routerLink]="[{outlets:{nonAcademics:'beyondAcademics',educations:null,employments:null,languages:null,certifications:null,detail:null}}]"jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"
 			      		[ngClass]="{ 'active':activeTab==='extras'}" (click)="setActiveTab('extras')">
 			      		Extra Curriculars
 			      </a>

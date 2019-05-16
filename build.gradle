@@ -97,6 +97,7 @@ if (OperatingSystem.current().isWindows()) {
     }
 }
 
+
 test {
     exclude '**/CucumberTest*'
 
@@ -116,6 +117,7 @@ task cucumberTest(type: Test) {
     // ignoreFailures true
     reports.html.enabled = false
 }
+
 
 check.dependsOn cucumberTest
 task testReport(type: TestReport) {

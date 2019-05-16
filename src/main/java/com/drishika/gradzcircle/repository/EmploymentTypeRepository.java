@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface EmploymentTypeRepository extends JpaRepository<EmploymentType, Long> {
+	
+	public EmploymentType findByEmploymentType(String employmentType);
 
 }

@@ -1,27 +1,38 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.JobType;
-
-import com.drishika.gradzcircle.repository.JobTypeRepository;
-import com.drishika.gradzcircle.repository.search.JobTypeSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.constants.ApplicationConstants;
+import com.drishika.gradzcircle.domain.JobType;
+import com.drishika.gradzcircle.repository.JobTypeRepository;
+import com.drishika.gradzcircle.repository.search.JobTypeSearchRepository;
+import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing JobType.
@@ -37,10 +48,13 @@ public class JobTypeResource {
     private final JobTypeRepository jobTypeRepository;
 
     private final JobTypeSearchRepository jobTypeSearchRepository;
+    
+    private final JobStatisticsCacheManager<String, Map<String,JobType>> cacheManager;
 
-    public JobTypeResource(JobTypeRepository jobTypeRepository, JobTypeSearchRepository jobTypeSearchRepository) {
+    public JobTypeResource(JobTypeRepository jobTypeRepository, JobTypeSearchRepository jobTypeSearchRepository, JobStatisticsCacheManager<String, Map<String,JobType>> cacheManager) {
         this.jobTypeRepository = jobTypeRepository;
         this.jobTypeSearchRepository = jobTypeSearchRepository;
+        this.cacheManager = cacheManager;
     }
 
     /**
@@ -58,6 +72,7 @@ public class JobTypeResource {
             throw new BadRequestAlertException("A new jobType cannot already have an ID", ENTITY_NAME, "idexists");
         }
         JobType result = jobTypeRepository.save(jobType);
+        cacheManager.removeFromCache(ApplicationConstants.JOB_TYPE);
         jobTypeSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/job-types/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

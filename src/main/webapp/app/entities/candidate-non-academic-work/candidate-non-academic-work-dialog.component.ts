@@ -110,6 +110,8 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
 
   private onSaveSuccess(result: CandidateNonAcademicWork) {
     this.eventManager.broadcast({name: 'candidateNonAcademicWorkListModification', content: 'OK'});
+     this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
+  
     this.isSaving = false;
     this.spinnerService.hide(); 
     this.activeModal.dismiss(result);

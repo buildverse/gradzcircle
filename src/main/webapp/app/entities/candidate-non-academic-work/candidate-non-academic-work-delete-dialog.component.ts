@@ -35,6 +35,7 @@ export class CandidateNonAcademicWorkDeleteDialogComponent {
         name: 'candidateNonAcademicWorkListModification',
         content: 'Deleted an candidateNonAcademicWork'
       });
+       this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
       this.activeModal.dismiss(true);
       this.spinnerService.hide();
     });

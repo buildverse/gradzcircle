@@ -235,4 +235,37 @@ tbody>tr>td {
   font-size: 16px;
   font-family: 'proxima_nova_rgregular';
 }
-/* Candidate dashboard css*/
+
+.bottom-border {
+    border-bottom: 1px solid rgba(91,91,91,.2);
+    padding-bottom: 15px;
+}
+
+.applied-filters-header{
+    border-bottom: 1px solid #979797;
+}
+
+.tab-content {
+  background: #fff;
+    padding: 25px 8px 12px;
+    box-sizing: border-box;
+    box-shadow: -1px 0 5px 1px #d6d6d6;
+    margin: 8px 0;
+}
+
+.card-summary {
+    display: block;
+    display: -webkit-box;
+    font-size: 14px;
+    line-height: 21px;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 105px;
+}
+
+.card-text {
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

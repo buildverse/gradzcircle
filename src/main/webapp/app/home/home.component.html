@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="jumbotron text-center">
 				<h1 class="banner_heading" jhiTranslate="home.mainHeader"></h1>
-				<p class="banner_p" jhiTranslate="home.subHeader"></p>
+				<a [routerLink]="['/viewjobs']"><p class="banner_p" jhiTranslate="home.subHeader"></p></a>
 				<!-- 			<div class="row mar-50 pad-0-20">
 				<div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 pad-right">
 					<div class="wrapper-demo">
@@ -41,31 +41,32 @@
 	<div class="container mt-5">
 		<div class="row">
 			<h1
-				class="col-sm-12 col-md-12 col-lg-12 col-xl-12  section_1_heading text-center" jhiTranslate="home.sectionContent_1"></h1>
-			<p
-				class="col-sm-12 col-md-12 col-lg-12 col-xl-12  section_1_heading_content text-center" jhiTranslate="home.sectionContent_2"></p>
+				class="col-sm-12 col-md-12 col-lg-12 col-xl-12  font-weight-light text-center" jhiTranslate="home.sectionContent_1"></h1>
+			<a class="col-sm-12 col-md-12 col-lg-12 col-xl-12  font-weight-light text-center" [routerLink]="['/register']">
+			<span  jhiTranslate="home.sectionContent_2"></span>
+			</a>
 		</div>
 			<div class="row mt-5">
 				<div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center mar-40">
 					<div class="icon-1 active">
 						<img src="../../content/images/user-icon.png">
 					</div>
-					<h3 class="section-1-tab-heading" jhiTranslate="home.createProfile"></h3>
-					<p class="section-1-tab-heading-content" jhiTranslate="home.createProfileDescription"></p>
+					<h2 class=" font-weight-light" jhiTranslate="home.createProfile"></h2>
+					<h5><p class=" font-weight-light" jhiTranslate="home.createProfileDescription"></p></h5>
 				</div>
 				<div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center mar-40">
 					<div class="icon-1">
 						<img src="../../content/images/right.png">
 					</div>
-					<h3 class="section-1-tab-heading" jhiTranslate="home.applyJob"></h3>
-					<p class="section-1-tab-heading-content" jhiTranslate="home.applyJobDescription"></p>
+					<h2 class="font-weight-light" jhiTranslate="home.applyJob"></h2>
+					<h5><p class=" font-weight-light" jhiTranslate="home.applyJobDescription"></p></h5>
 				</div>
 				<div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center mar-40">
 					<div class="icon-1">
 						<img src="../../content/images/get-hired.png">
 					</div>
-					<h3 class="section-1-tab-heading" jhiTranslate="home.getNoticed"></h3>
-					<p class="section-1-tab-heading-content" jhiTranslate="home.getNoticedDescription"></p>
+					<h2 class=" font-weight-light" jhiTranslate="home.getNoticed"></h2>
+					<h5><p class=" font-weight-light" jhiTranslate="home.getNoticedDescription"></p></h5>
 				</div>
 			</div>
 			<!--<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12  text-center">

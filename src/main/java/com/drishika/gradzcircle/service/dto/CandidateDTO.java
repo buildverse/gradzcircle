@@ -21,6 +21,7 @@ public class CandidateDTO implements Serializable {
 	private String aboutMe;
 	private User login;
 	private Double profileScore;
+	private Boolean hasEducationScore;
 
 	/**
 	 * @return the id
@@ -108,6 +109,20 @@ public class CandidateDTO implements Serializable {
 	 */
 	public void setProfileScore(Double profileScore) {
 		this.profileScore = profileScore;
+	}
+
+	/**
+	 * @return the hasEducationScore
+	 */
+	public Boolean getHasEducationScore() {
+		return hasEducationScore;
+	}
+
+	/**
+	 * @param hasEducationScore the hasEducationScore to set
+	 */
+	public void setHasEducationScore(Boolean hasEducationScore) {
+		this.hasEducationScore = hasEducationScore;
 	}
 	
 	

@@ -1,3 +1,4 @@
+
 package com.drishika.gradzcircle.config;
 
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,9 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Audit.class.getName(), jcacheConfiguration);
-           /* cm.createCache(com.drishika.gradzcircle.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
+            /* cm.createCache(com.drishika.gradzcircle.domain.EmploymentType.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.JobType.class.getName(), jcacheConfiguration);
+            cm.createCache(com.drishika.gradzcircle.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".addresses", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Candidate.class.getName() + ".educations", jcacheConfiguration);
@@ -64,7 +67,7 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.VisaType.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.VisaType.class.getName() + ".candidates", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.MaritalStatus.class.getName(), jcacheConfiguration);
-            cm.createCache(com.drishika.gradzcircle.domain.EmploymentType.class.getName(), jcacheConfiguration);
+        
             cm.createCache(com.drishika.gradzcircle.domain.EmploymentType.class.getName() + ".candidateEmployments", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Qualification.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Qualification.class.getName() + ".candidateEducations", jcacheConfiguration);
@@ -81,7 +84,7 @@ public class CacheConfiguration {
             cm.createCache(com.drishika.gradzcircle.domain.Industry.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Industry.class.getName() + ".corporates", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.Skills.class.getName(), jcacheConfiguration);
-            cm.createCache(com.drishika.gradzcircle.domain.JobType.class.getName(), jcacheConfiguration);
+          
             cm.createCache(com.drishika.gradzcircle.domain.JobType.class.getName() + ".candidateEmployments", jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.College.class.getName(), jcacheConfiguration);
             cm.createCache(com.drishika.gradzcircle.domain.College.class.getName() + ".candidateEducations", jcacheConfiguration);

@@ -331,6 +331,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   private onSaveSuccess(result: CandidateEducation) {
    // console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
+     this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
     this.isSaving = false;
     this.spinnerService.hide();
     this.activeModal.dismiss(result);

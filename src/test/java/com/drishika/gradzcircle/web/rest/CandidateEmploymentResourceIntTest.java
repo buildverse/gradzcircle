@@ -342,13 +342,13 @@ public class CandidateEmploymentResourceIntTest {
 		candidate.setProfileScore(55D);
 		candidateRepository.saveAndFlush(candidate);
 		candidateEmployment.setCandidate(candidate);
-		// Create the CandidateCertification
+		// Create the CandidateEmployment
 		restCandidateEmploymentMockMvc
 		.perform(post("/api/candidate-employments").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(candidateEmployment)))
 		.andExpect(status().isCreated());
 
-		// Validate the CandidateCertification in the database
+		// Validate the CandidateEmployment in the database
 		List<CandidateEmployment> candidateEmploymentList = candidateEmploymentRepository.findAll();
 		assertThat(candidateEmploymentList).hasSize(databaseSizeBeforeCreate + 1);
 		CandidateEmployment testCandidateEmployment = candidateEmploymentList.get(candidateEmploymentList.size() - 1);

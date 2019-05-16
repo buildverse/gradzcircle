@@ -165,8 +165,9 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
 
   private onSaveSuccess(result: CandidateLanguageProficiency) {
     this.eventManager.broadcast({name: 'candidateLanguageProficiencyListModification', content: 'OK'});
+    this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
     this.isSaving = false;
-     this.spinnerService.hide();
+    this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 

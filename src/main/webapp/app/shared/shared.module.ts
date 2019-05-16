@@ -21,9 +21,8 @@ import {
     SocialService,
     JhiLoginModalComponent,
     DataService,
-    DataStorageService
-    
-   
+    DataStorageService,
+    LoginEmitterService
 } from './';
 
 @NgModule({
@@ -55,7 +54,8 @@ import {
         UserService,
         DatePipe,
         DataService,
-        DataStorageService
+        DataStorageService,
+        LoginEmitterService
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [

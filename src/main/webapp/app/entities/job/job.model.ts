@@ -57,7 +57,15 @@ export class Job implements BaseEntity {
     public newApplicants?: number,
     public totalLinkedCandidates?: number,
     public noOfShortListedCandidate?: number,
-    public noOfApplicantLeft?: number
+    public noOfApplicantLeft?: number,
+    public corporateName?: string,
+    public city?: string,
+    public countOfPermanentEmployment?: number,
+    public countOfContractEmployment?: number,
+    public countOfFullTimeJob?: number,
+    public countOfPartTimeJob?: number,
+    public countOfInternJob?: number,
+    public countOfSummerJob?: number,
 
   ) {
     this.hasBeenEdited = false;

@@ -5,8 +5,10 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+import { DataService } from '../../shared/helper/data.service';
 import{ HttpResponse } from '@angular/common/http';
 import {CandidateList} from './candidate-list.model';
+import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
 
 @Component({
   selector: 'jhi-applied-candidate-list',
@@ -39,6 +41,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     private router: Router,
     private paginationUtil: JhiPaginationUtil,
     private paginationConfig: PaginationConfig,
+    private dataService: DataService
 
 
   ) {
@@ -104,6 +107,12 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     });
 
 
+  }
+  
+    setPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    this.dataService.put(CANDIDATE_ID, candidateId);
+    this.dataService.put(JOB_ID, this.jobId);
+    this.dataService.put(CORPORATE_ID, -1);
   }
 
   ngOnDestroy() {

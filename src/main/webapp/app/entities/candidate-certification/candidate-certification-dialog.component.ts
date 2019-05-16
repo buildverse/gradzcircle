@@ -70,6 +70,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
 
     private onSaveSuccess(result: CandidateCertification) {
         this.eventManager.broadcast({ name: 'candidateCertificationListModification', content: 'OK'});
+       this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }

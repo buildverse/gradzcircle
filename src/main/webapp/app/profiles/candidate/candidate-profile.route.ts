@@ -52,7 +52,7 @@ export const candidateProfileRoutes: Routes = [
     canActivate: [UserRouteAccessService],
 
     children: [
-      {
+    /*  {
         path: '',
         component: SideMenuComponent,
         data: {
@@ -61,7 +61,7 @@ export const candidateProfileRoutes: Routes = [
         },
         canActivate: [UserRouteAccessService],
         outlet: 'sidemenu'
-      },
+      },*/
       {
         path: 'details',
         component: CandidateProfileAboutMeDetailsComponent,

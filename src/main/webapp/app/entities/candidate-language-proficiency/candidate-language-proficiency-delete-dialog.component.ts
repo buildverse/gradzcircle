@@ -35,6 +35,7 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
           name: 'candidateLanguageProficiencyListModification',
           content: 'Deleted an candidateLanguageProficiency'
         });
+           this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
         this.spinnerService.hide();
         this.activeModal.dismiss(true);
       });

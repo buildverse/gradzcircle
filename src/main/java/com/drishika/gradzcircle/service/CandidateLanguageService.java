@@ -69,7 +69,7 @@ public class CandidateLanguageService {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, false);
 		}
 		candidate.addCandidateLanguageProficiency(candidateLanguageProficiency);
-		candidateRepository.save(candidate);
+		candidate = candidateRepository.save(candidate);
 		//CandidateLanguageProficiency result = candidateLanguageProficiencyRepository
 			//	.save(candidateLanguageProficiency);
 		//Candidate candidate = candidateRepository.findOne(result.getCandidate().getId());

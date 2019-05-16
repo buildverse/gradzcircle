@@ -33,6 +33,7 @@ export class CandidateCertificationDeleteDialogComponent {
                 name: 'candidateCertificationListModification',
                 content: 'Deleted an candidateCertification'
             });
+           this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
             this.activeModal.dismiss(true);
         });
     }
