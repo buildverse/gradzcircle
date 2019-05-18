@@ -2,8 +2,10 @@ package com.drishika.gradzcircle.service;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -29,7 +31,6 @@ import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Country;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.Nationality;
-import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
@@ -51,18 +52,11 @@ import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearch
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.dto.AddressDTO;
-import com.drishika.gradzcircle.service.dto.CandidateCertificationDTO;
 import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
-import com.drishika.gradzcircle.service.dto.CandidateEducationDTO;
-import com.drishika.gradzcircle.service.dto.CandidateEmploymentDTO;
-import com.drishika.gradzcircle.service.dto.CandidateLanguageProficiencyDTO;
-import com.drishika.gradzcircle.service.dto.CandidateNonAcademicWorkDTO;
-import com.drishika.gradzcircle.service.dto.CandidateProjectDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
 import com.drishika.gradzcircle.service.dto.GenderDTO;
 import com.drishika.gradzcircle.service.dto.JobCategoryDTO;
-import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.MaritalStatusDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
@@ -283,7 +277,7 @@ public class CandidateService {
 	}
 
 	public CandidatePublicProfileDTO getCandidatePublicProfile(Long candidateId, Long jobId, Long corporateId) {
-		logger.debug("REST request to get Candidate public profile for candidate {}", candidateId);
+		logger.debug("REST request to get Candidate public profile for candidate {} {} {}", candidateId, jobId, corporateId);
 		Boolean shortListed = false;
 		Candidate candidate = candidateRepository.findOne(candidateId);
 		if (candidate == null)
@@ -312,12 +306,13 @@ public class CandidateService {
 				candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId()));
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
+		CandidateJob candidateJob = null;
 		if(jobId >0 && corporateId >0) {
-			setCandidateReviewedForJob(candidate, jobId);
+			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
 			shortListed = isShortListed(candidate, jobId, corporateId);
 		}
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
-				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed);
+				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed, candidateJob);
 	}
 
 	private Boolean isShortListed(Candidate candidate, Long jobId, Long corporateId) {
@@ -331,7 +326,8 @@ public class CandidateService {
 
 	}
 
-	private void setCandidateReviewedForJob(Candidate candidate, Long JobId) {
+	private CandidateJob setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(Candidate candidate, Long JobId) {
+		logger.debug("Entering setReview and get match score  {}, {}",candidate.getId(), JobId);
 		Job job = jobRepository.findOne(JobId);
 		CandidateJob cJ = new CandidateJob(candidate, job);
 		CandidateJob candidateJobForReview = null;
@@ -339,20 +335,23 @@ public class CandidateService {
 				.isPresent())
 			candidateJobForReview = candidate.getCandidateJobs().stream()
 					.filter(candidateJob -> candidateJob.equals(cJ)).findFirst().get();
+		logger.debug("The candidateJob is {}",candidateJobForReview);
 		if (candidateJobForReview != null) {
 			candidateJobForReview.setReviewed(true);
 			candidateRepository.save(candidate);
-		}
-
+		} 
+		return candidateJobForReview;
 	}
 
 	private CandidatePublicProfileDTO convertToCandidatePublicProfileDTO(Candidate candidate, Set<Address> addresses,
 			Set<CandidateEducation> candidateEducations, Set<CandidateEmployment> candidateEmployments,
 			Set<CandidateCertification> candidateCertifications,
 			Set<CandidateNonAcademicWork> candidateNonAcademicWorks,
-			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed) {
+			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		dto.setShortListed(isShortListed);
+		dto.setMatchScore(candidateJob.getMatchScore());
+		dto.setReviewed(candidateJob.getReviewed());
 		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
 		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));
 		dto.setEducations(dtoConverter.convertCandidateEducations(candidateEducations, false,candidate));

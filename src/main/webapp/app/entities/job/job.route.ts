@@ -78,7 +78,7 @@ export const jobRoute: Routes = [
           canActivate: [UserRouteAccessService]
       },
      {
-          path: 'appliedCandidateList/:id',
+          path: 'appliedCandidateList',
           component: AppliedCandidateListComponent,
           resolve: {
               'pagingParams': JobResolvePagingParams
@@ -90,7 +90,7 @@ export const jobRoute: Routes = [
           canActivate: [UserRouteAccessService]
       },
      {
-          path: 'shortListedCandidateList/:id/:corporateId',
+          path: 'shortListedCandidateList',
           component: ShortListedCandidateListComponent,
           resolve: {
               'pagingParams': JobResolvePagingParams

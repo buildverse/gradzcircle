@@ -900,7 +900,7 @@ public class JobService {
 		Page<CandidateAppliedJobs> candidatePage = jobRepository.findByAppliedCandidates(jobId, pageable);
 		final Page<CandidateProfileListDTO> page = candidatePage
 				.map(candidateAppliedJob -> converter.convertToCandidateProfileListingDTO(candidateAppliedJob,
-						candidateRepository.findOne(candidateAppliedJob.getId().getCandidateId())));
+						candidateRepository.findOne(candidateAppliedJob.getId().getCandidateId()),jobRepository.findOne(jobId)));
 		return page;
 	}
 

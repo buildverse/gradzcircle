@@ -3405,6 +3405,9 @@ public class JobResourceIntTest {
 	public void testGetAppliedCandidatesForJob() throws Exception {
 		Job job = new Job();
 		job.jobTitle("Test Job");
+		Corporate corp = new Corporate();
+		corporateRepository.saveAndFlush(corp);
+		job.corporate(corp);
 		//job.jobStatus(1);
 		Candidate c1 = new Candidate().firstName("Abhinav");
 		Candidate c2 = new Candidate().firstName("Aveer");

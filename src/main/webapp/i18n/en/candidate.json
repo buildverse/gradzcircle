@@ -58,7 +58,8 @@
                 "certifications": "My Certifications",
                 "candidateLanguageProficiency": "Languages",
                 "profileAlert": "Please <b>complete</b> your profile !! It will <b>enhance your profile.</b>",
-                "educationAlert": "Please add Education to review matched jobs"
+                "educationAlert": "Please add Education to review matched jobs",
+                "reviewAlert": "You have reviewed this candidate earlier"
             }
         }
     }

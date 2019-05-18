@@ -23,6 +23,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private Long id;
 	private Boolean reviewed;
 	private Long jobId;
+	private Long corporateId;
 
 	/**
 	 * @return the reviewed
@@ -141,6 +142,30 @@ public class CandidateProfileListDTO implements Serializable {
 	 */
 	public void setJobId(Long jobId) {
 		this.jobId = jobId;
+	}
+
+	/**
+	 * @return the corporateId
+	 */
+	public Long getCorporateId() {
+		return corporateId;
+	}
+
+	/**
+	 * @param corporateId the corporateId to set
+	 */
+	public void setCorporateId(Long corporateId) {
+		this.corporateId = corporateId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CandidateProfileListDTO [firstName=" + firstName + ", lastName=" + lastName + ", tagLine=" + tagLine
+				+ ", qualificationWithHighestCourse=" + qualificationWithHighestCourse + ", login=" + login + ", id="
+				+ id + ", reviewed=" + reviewed + ", jobId=" + jobId + ", corporateId=" + corporateId + "]";
 	}
 
 	

@@ -5,10 +5,11 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import { DataService } from '../../shared/helper/data.service';
+import { DataService, DataStorageService } from '../../shared';
 import{ HttpResponse } from '@angular/common/http';
 import {CandidateList} from './candidate-list.model';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
+
 
 @Component({
   selector: 'jhi-applied-candidate-list',
@@ -41,7 +42,8 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     private router: Router,
     private paginationUtil: JhiPaginationUtil,
     private paginationConfig: PaginationConfig,
-    private dataService: DataService
+    private dataService: DataService,
+    private dataStorageService: DataStorageService
 
 
   ) {
@@ -73,7 +75,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/appliedCandidateList/:id'], {
+    this.router.navigate(['/appliedCandidateList/'], {
       queryParams:
       {
         page: this.page,
@@ -101,18 +103,14 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.jobId = params['id'];
+      this.jobId = +this.dataStorageService.getData(JOB_ID);
       this.loadMatchedCandidates();
-    });
-
-
   }
   
     setPublicProfileRouteParams(candidateId, jobId, corporateId) {
     this.dataService.put(CANDIDATE_ID, candidateId);
     this.dataService.put(JOB_ID, this.jobId);
-    this.dataService.put(CORPORATE_ID, -1);
+    this.dataService.put(CORPORATE_ID, corporateId);
   }
 
   ngOnDestroy() {
@@ -136,7 +134,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-    console.log(error);
+    //console.log(error);
     this.jhiAlertService.error(error.message, null, null);
   }
 

@@ -18,6 +18,10 @@ public class CandidatePublicProfileDTO implements Serializable {
 	private CandidateDetailDTO candidateDetails;
 
 	private Boolean shortListed;
+	
+	private Double matchScore;
+	
+	private Boolean reviewed;
 
 	Set<CandidateEducationDTO> educations = new HashSet<>();
 
@@ -150,5 +154,37 @@ public class CandidatePublicProfileDTO implements Serializable {
 	public void setAddresses(Set<AddressDTO> addresses) {
 		this.addresses = addresses;
 	}
+
+	/**
+	 * @return the matchScore
+	 */
+	public Double getMatchScore() {
+		return matchScore;
+	}
+
+	/**
+	 * @param matchScore the matchScore to set
+	 */
+	public void setMatchScore(Double matchScore) {
+		this.matchScore = matchScore;
+	}
+
+	/**
+	 * @return the reviewed
+	 */
+	public Boolean getReviewed() {
+		return reviewed;
+	}
+
+	/**
+	 * @param reviewed the reviewed to set
+	 */
+	public void setReviewed(Boolean reviewed) {
+		this.reviewed = reviewed;
+	}
+
+	
+	
+	
 
 }

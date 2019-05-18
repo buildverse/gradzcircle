@@ -21,7 +21,7 @@
 					<td>{{candidate.firstName}}</td>
 					<td>{{candidate.lastName}}</td>
 					<td>{{candidate.qualificationWithHighestCourse}}</td>
-					<td><a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
+					<td><a (click)="setPublicProfileRouteParams(candidate.id,candidate.jobId,candidate.corporateId)"
 						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"><span
 							class="icon icon-eye"></span></a></td>
 				</tr>

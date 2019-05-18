@@ -12,6 +12,7 @@ export class CandidatePublicProfile implements BaseEntity {
   constructor(
     public id?: BaseEntity,
     public shortListed?: boolean,
+    public reviewed?: boolean, 
     public candidateDetails?: CandidateDetail,
     public addresses?: Address[],
     public educations?: CandidateEducation[],
@@ -19,5 +20,6 @@ export class CandidatePublicProfile implements BaseEntity {
     public certifications?: CandidateCertification[],
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
-  ) { this.shortListed = false; }
+    public matchScore?: number
+  ) { this.shortListed = false; this.reviewed = false}
 }

@@ -6,6 +6,8 @@ import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, UserService} from '../../shared';
 import {CandidateList} from './candidate-list.model';
 import { HttpResponse } from '@angular/common/http';
+import { DataService } from '../../shared/helper/data.service';
+import {JOB_ID, CORPORATE_ID,CANDIDATE_ID} from '../../shared/constants/storage.constants';
 
 @Component({
   selector: 'jhi-short-listed-candidate-list',
@@ -37,7 +39,8 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private parseLinks: JhiParseLinks,
-    private router: Router
+    private router: Router,
+    private dataService: DataService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -67,7 +70,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/shortListedCandidateList/:id/:corpId'], {
+    this.router.navigate(['/shortListedCandidateList/'], {
       queryParams:
       {
         page: this.page,
@@ -94,18 +97,25 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.subscription = this.activatedRoute.params.subscribe((params) => {
-      this.jobId = params['id'];
-        this.corporateId = params['corporateId'];
+      this.jobId = +this.dataService.get(JOB_ID);
+     this.corporateId = +this.dataService.get(CORPORATE_ID);
       this.loadShortListedCandidates(); 
         this.registerChangeInShortListed();
-    });
+  
    
 
   }
 
+   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    this.dataService.put(CANDIDATE_ID, candidateId);
+    this.dataService.put(JOB_ID, this.jobId);
+    this.dataService.put(CORPORATE_ID, corporateId);
+  }
+  
   ngOnDestroy() {
-   // this.eventManager.destroy(this.eventSubscriber);
+    if(this.eventSubscriber) {
+      this.eventManager.destroy(this.eventSubscriber);
+    }
   }
 
   trackId(index: number, item: CandidateList) {

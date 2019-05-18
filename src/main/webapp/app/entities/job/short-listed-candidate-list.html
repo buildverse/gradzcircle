@@ -13,7 +13,8 @@
 			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
 			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
 			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
-			         <button class="btn btn-outline-primary btn-sm" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile/'+ candidate.id+'/'+jobId+'/'+corporateId} }]">
+			         <button class="btn btn-outline-primary btn-sm" (click)="setPublicProfileRouteParams(candidate.id,candidate.jobId,corporateId)" 
+			         [routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
 			           <span class="icon icon-add-user"></span> View
 			         </button>
 			       </div>

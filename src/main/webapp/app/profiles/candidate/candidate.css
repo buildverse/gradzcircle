@@ -80,7 +80,21 @@
 	margin-bottom: 0;
 	background-size: cover;
 	border: 0;
-	  background: #3F51B5;
+	  background: #3700B3;
+}
+
+.btn-teal {
+	background: #018786;
+	color: white;
+}
+
+.star {
+	font-size: 1rem;
+	color: #03dac5;
+}
+
+.filled {
+	color: #03dac5;
 }
 
 .progress-bar {

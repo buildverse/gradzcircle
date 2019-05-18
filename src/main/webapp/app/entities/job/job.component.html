@@ -131,9 +131,10 @@
 								<td class="font-weight-light"><a
 									[routerLink]="['../matchedCandidateList']" (click)="setJobAndCorporateRouteParam(job.id,corporateId)">
 										{{job.noOfMatchedCandidates}}</a></td>
-								<td class="font-weight-light"><a [routerLink]="['../appliedCandidateList',job.id ]">{{job.noOfCandidatesApplied}}</a></td>
-								<td class="font-weight-light"><a
-									[routerLink]="['../shortListedCandidateList',job.id,corporateId]">
+								<td class="font-weight-light"><a 
+								(click)="setParamsToGetListForAppliedCandidate(job.id)" [routerLink]="['../appliedCandidateList']">{{job.noOfCandidatesApplied}}</a></td>
+								<td class="font-weight-light"><a (click)="setParamsToGetListForShortlistedCandidate(job.id,corporateId)"
+									[routerLink]="['../shortListedCandidateList']">
 										{{job.noOfShortListedCandidate}}</a></td>
 								<td class="icons-edit">
 			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>

@@ -1,8 +1,8 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {JhiEventManager} from 'ng-jhipster';
+import {NgbActiveModal, NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Principal, UserService, DataService} from '../../shared';
 import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-profile.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
@@ -26,6 +26,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
   corporateId: number;
   errorMessage: String;
   isSaving: boolean;
+  rating: number;
 
   constructor(
     private candidateService: CandidateService,
@@ -33,12 +34,31 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
     private eventManager: JhiEventManager,
     private principal: Principal,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    public ratingConfig: NgbRatingConfig,
+    public alertService: JhiAlertService
   ) {
+    this.ratingConfig.max = 5;
+    this.ratingConfig.readonly = true;
   }
 
   ngOnInit() {
     this.reloadUserImage();
+    if(this.candidate.reviewed) {
+      this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert', timeout: 5000}, [])
+    }
+  }
+  
+  setMatchConfigRate() {
+    if(this.candidate.matchScore >= 85 && this.candidate.matchScore < 101){
+      this.rating = 5;
+    } else if (this.candidate.matchScore >= 71 && this.candidate.matchScore < 85) {
+      this.rating = 4;
+    } else if ( this.candidate.matchScore >= 55 && this.candidate.matchScore < 71) {
+      this.rating = 3;
+    } else if(this.candidate.matchScore < 55 ){
+      this.rating = 2;
+    }
   }
 
  reloadUserImage() {

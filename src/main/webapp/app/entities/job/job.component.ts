@@ -15,6 +15,7 @@ import {CorporateService} from '../corporate/corporate.service';
 import {Corporate} from '../corporate/corporate.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+
 @Component({
   selector: 'jhi-job',
   templateUrl: './job.component.html',
@@ -169,6 +170,14 @@ export class JobComponent implements OnInit, OnDestroy {
     this.dataStorageService.setdata(CORPORATE_ID, corporateId); 
   }
   
+ setParamsToGetListForAppliedCandidate(jobId){
+   this.dataStorageService.setdata(JOB_ID, jobId);
+  }
+  
+  setParamsToGetListForShortlistedCandidate(jobId,corporateId) {
+    this.dataService.put(JOB_ID,jobId);
+    this.dataService.put(CORPORATE_ID,corporateId);
+  }
   
   ngOnInit() {
     this.corporateId = null;

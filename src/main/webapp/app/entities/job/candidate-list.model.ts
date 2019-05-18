@@ -10,7 +10,8 @@ export class CandidateList implements BaseEntity {
     public qualificationWithHighestCourse?: string,
     public login?: User,
     public reviewed?: boolean,
-    public jobId?: number
+    public jobId?: number,
+    public corporateId?: number
   ) {
     this.reviewed = false;
   }
