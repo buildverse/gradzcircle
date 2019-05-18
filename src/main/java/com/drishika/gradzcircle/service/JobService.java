@@ -530,6 +530,7 @@ public class JobService {
 				return jobTypeRepository.findAll().stream().collect(Collectors.toMap(JobType::getJobType, jobType->jobType));
 			}
 		} );
+		log.debug("The jobType type map is {}",jobTypeMap.get(jobTypeName));
 		return jobTypeMap.get(jobTypeName);
 
 	}
@@ -540,6 +541,7 @@ public class JobService {
 				return employmentTypeRepository.findAll().stream().collect(Collectors.toMap(EmploymentType::getEmploymentType, employmenType->employmenType));
 			}
 		} );
+		log.debug("The employment type map is {}",employmentTypeMap);
 		return employmentTypeMap.get(employmentTypeName);
 
 	}
@@ -551,7 +553,9 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findByJobType(jobTypeName);
 		JobType jobType = getJobType(jobTypeName);
+		
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);//employmentTypeRepository.findByEmploymentType(employmentTypeName);
+		log.debug("Job Type and Employment Type are {} {}",jobType,employmentType);
 		if(candidateId > 0) {
 			if(matchScoreFrom > -1 && matchScoreTo > -1)
 				jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedFilteredByEmploymentTypeAndJobTypeForCandidateWithMatchScore(candidateId,
@@ -569,6 +573,7 @@ public class JobService {
 		final List<JobStatistics> jobStatisticsJobTypeForEmploymentTypeSelected;
 		
 		if(matchScoreFrom <0 && matchScoreTo <0 ) {
+			log.debug("Job Type and Employment Type are {} {}",jobType,employmentType);
 		jobStatisticsEmploymentTypeForEmploymentTypeSelected = getJobStatisticsEmploymentType(ApplicationConstants.STATS_FOR_EMPLOYMENT_TYPE_BY_ONE_EMPLOYMENT_TYPE_AND_ONE_JOB_TYPE
 						+ employmentTypeName + jobTypeName, employmentType, jobType, Boolean.FALSE);
 		jobStatisticsJobTypeForEmploymentTypeSelected = getJobStatisticsJobType( ApplicationConstants.STATS_FOR_JOB_TYPE_BY_ONE_EMPLOYMENT_TYPE_AND_ONE_JOB_TYPE + employmentTypeName
@@ -779,7 +784,7 @@ public class JobService {
 		} else {
 			return jobStatsCacheManager.getValue(statsByEmploymentType, new Callable<List<JobStatistics>>() {
 				public List<JobStatistics> call() throws Exception {
-					log.debug("Fetching stats for {}, {}", jobType.getId(), employmentType.getId());
+					log.debug("Fetching stats for {}, {}", jobType, employmentType);
 					return jobRepository.findStatisticsCountByEmploymentTypeWhenOneEmploymentTypeAndOneJobTypeSelected(
 							jobType.getId(), employmentType.getId());
 				}

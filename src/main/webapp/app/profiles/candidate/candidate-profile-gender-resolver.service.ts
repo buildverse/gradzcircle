@@ -11,7 +11,7 @@ export class CandidateGenderResolverService implements Resolve<Gender []> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Gender []>{
           return this.profileHelperService.getGender()
           .catch((error: any )=> {
-           console.log (`${error}`);
+         //  console.log (`${error}`);
            this.router.navigate(['/error']);
            return Observable.of(null);
        })

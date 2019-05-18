@@ -100,7 +100,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
        }
         this.clear();
       } else {
-        console.log('Status is ' + status + '   response is ' + JSON.stringify(response));
+       // console.log('Status is ' + status + '   response is ' + JSON.stringify(response));
       }
     };
   }

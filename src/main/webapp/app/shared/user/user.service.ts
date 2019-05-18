@@ -55,7 +55,7 @@ export class UserService {
                 })
                 .subscribe(m => {
                     
-                    console.log("m in user sevice is "+ JSON.stringify(m));
+                  //  console.log("m in user sevice is "+ JSON.stringify(m));
                     objectUrl = URL.createObjectURL(m.blob());
                     observer.next(objectUrl);
                 });

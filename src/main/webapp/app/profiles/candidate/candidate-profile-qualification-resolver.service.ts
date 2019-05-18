@@ -11,7 +11,7 @@ export class CandidateQualificationResolverService implements Resolve<Qualificat
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Qualification[]>{
         return  this.profileHelperService.getQualification()
             .catch((error: any) => {
-                        console.log(`${error}`);
+                   //     console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     }); 

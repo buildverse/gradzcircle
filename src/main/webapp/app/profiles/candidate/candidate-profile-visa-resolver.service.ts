@@ -13,7 +13,7 @@ export class CandidateVisaResolverService implements Resolve<VisaType[]> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<VisaType[]>{
         return  this.profileHelperService.getVisa()
              .catch((error: any) => {
-                        console.log(`${error}`);
+                       // console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     }); 

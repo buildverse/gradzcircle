@@ -15,7 +15,7 @@ export class CandidateResolverService implements Resolve<any> {
         return  this.principal.identity().then((account) => {
              return this.candidateService.getCandidateByLoginId(account.id).toPromise()
                     .catch((error: any) => {
-                        console.log(`${error}`);
+                      //  console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     });

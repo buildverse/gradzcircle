@@ -10,7 +10,7 @@ export class CandidateCareerInterestResolverService implements Resolve<JobCatego
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<JobCategory[]>{
         return this.profileHelper.getCareerInterests().catch((error: any) => {
-                        console.log(`${error}`);
+                       // console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     });       

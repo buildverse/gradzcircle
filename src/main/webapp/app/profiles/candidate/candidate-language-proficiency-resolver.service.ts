@@ -18,7 +18,7 @@ export class CandidateLanguageProficiencyResolverService implements Resolve<Http
         return this.candidateLanguageProficiencyService.search({
                 query: candidateId
                 }).map((res: HttpResponse<CandidateLanguageProficiency[]>)=> this.candidateLanguageProficiencies).catch((error: any) => {
-                        console.log(`${error}`);
+                  //      console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     }) ;

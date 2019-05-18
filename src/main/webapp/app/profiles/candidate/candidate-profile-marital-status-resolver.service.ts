@@ -11,7 +11,7 @@ export class CandidateMaritalStatusResolverService implements Resolve<MaritalSta
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<MaritalStatus[]>{
        return this.profileHelperService.getMaritalStatus()
        .catch((error: any )=> {
-           console.log (`${error}`);
+          // console.log (`${error}`);
            this.router.navigate(['/error']);
            return Observable.of(null);
        });

@@ -137,7 +137,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
 
   loadActiveJobsByUserFilter() {
     this.setMatchScoreRange();
-    console.log('canidate id is for matchScoreFrom to macthScore' + this.candidateId + ' ' + this.matchScoreFrom + ' ' + this.matchScoreTo);
+  //  console.log('canidate id is for matchScoreFrom to macthScore' + this.candidateId + ' ' + this.matchScoreFrom + ' ' + this.matchScoreTo);
     //console.log('Select employment Types as permananet is ' + this.permanent + ' and contract is ' + this.contract);
     //console.log('Select Job Types as full time  is ' + this.fullTime + ' and part time  is ' + this.partTime + ' and summerjob  is ' + this.summerJob + ' and internship  is ' + this.internship);
     if (this.permanent || this.contract) {
@@ -345,7 +345,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
       query: this.currentSearch,
       size: this.itemsPerPage,
       sort: this.sort(),
-    }, employmentType, (this.candidateId > 0 ? this.candidateId : null), this.matchScoreFrom, this.matchScoreTo
+    }, employmentType, (this.candidateId > 0 ? this.candidateId : -1), this.matchScoreFrom, this.matchScoreTo
     ).subscribe(
       (res: HttpResponse<Job[]>) => this.onSuccess(res.body, res.headers),
       (res: HttpResponse<any>) => this.onError(res.body)
@@ -463,7 +463,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
   }
 
   loadActiveJobsForCandidate() {
-    console.log('Calling job data for candidate ');
+   // console.log('Calling job data for candidate ');
     this.spinnerService.show();
     this.jobService.queryActiveJobsForCandidates({
       page: this.page - 1,
@@ -539,14 +539,14 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
 
 
   loadCandidateInfo(account?: any) {
-    console.log('Calling reload candidate ');
+  //  console.log('Calling reload candidate ');
     this.principal.identity().then((account) => {
       this.currentAccount = account;
       if (this.currentAccount) {
         this.spinnerService.show();
         this.candidateService.getCandidateByLoginId(this.currentAccount.id).subscribe((response) => {
           this.candidateId = response.body.id;
-          console.log('Candidate id is '+this.candidateId);
+        //  console.log('Candidate id is '+this.candidateId);
           this.candidate = response.body;
           if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
             this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
@@ -588,7 +588,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
   }
 
   registerChangeInJobs() {
-   console.log('Registering chnage in job');
+  // console.log('Registering chnage in job');
    if (this.candidateId > 0) {
       // this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.loadActiveAndMatchedJobsForCandidates());
         this.eventSubscriberCandidate = this.eventManager.subscribe('jobListModification', (response) => this.loadActiveJobsByUserFilter());

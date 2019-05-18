@@ -38,7 +38,7 @@ export class MatchTrackerService {
         const loc = this.$window.nativeWindow.location;
         let url;
         url = '//' + loc.host + loc.pathname + 'websocket/tracker';
-        console.log('the url created is '+JSON.stringify(url));
+    //    console.log('the url created is '+JSON.stringify(url));
         const authToken = this.authServerProvider.getToken();
         if (authToken) {
             url += '?access_token=' + authToken;
@@ -90,7 +90,7 @@ export class MatchTrackerService {
     subscribe() {
         this.connection.then(() => {
             this.subscriber = this.stompClient.subscribe('/topic/match', (data) => {
-              console.log('DATA BODY IS '+JSON.stringify(data.body));
+          //    console.log('DATA BODY IS '+JSON.stringify(data.body));
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });

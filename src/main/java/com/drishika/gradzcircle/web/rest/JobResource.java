@@ -322,6 +322,9 @@ public class JobResource {
 			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
 		log.debug("REST request to get Jobs and stats by one employment and job Type {}, {} for Canidate {} with MatcScore from {} to {} ", employmentType, 
 				jobType,candidateId,matchScoreFrom,matchScoreTo);
+		log.debug("Length on job type is {}",jobType.length());
+		log.debug("Length on trimmed job type is {}",jobType.trim().length());
+		jobType = jobType.trim();
 		Page<CandidateJobDTO> page = null;
 		try {
 			page = jobService.findActiveJobsByOneEmploymentTypeAndOneJobType(ApplicationConstants.JOB_ACTIVE,
@@ -347,6 +350,8 @@ public class JobResource {
 		log.debug("REST request to get Jobs and stats by one Employent and two job Type -> {}, {}, {} for candidate {} with Match scores from {} to {}",
 					employmentType,jobType1,jobType2,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
+		jobType1 = jobType1.trim();
+		jobType2 = jobType2.trim();
 		try {
 			page = jobService.findActiveJobsByOneEmploymentTypeAndTwoJobType(ApplicationConstants.JOB_ACTIVE, employmentType, jobType1, jobType2, candidateId,
 					matchScoreFrom,matchScoreTo, pageable);
@@ -372,6 +377,7 @@ public class JobResource {
 		log.debug("REST request to get Jobs and stats by One EmploymentType and three job Type ---> {}, {}, {}, {} for candidate {} with matchScore From {} matchScoreTo {}",
 				employmentType,jobType1,jobType2,jobType3,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
+		jobType3 = jobType3.trim();
 		try {
 			page = jobService.findActiveJobsByOneEmploymentTypeAndThreeJobType(ApplicationConstants.JOB_ACTIVE, employmentType, jobType1, jobType2, jobType3,
 					candidateId,matchScoreFrom,matchScoreTo ,pageable);

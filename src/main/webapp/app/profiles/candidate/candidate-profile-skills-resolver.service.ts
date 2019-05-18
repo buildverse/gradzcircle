@@ -11,7 +11,7 @@ export class CandidateSkillsResolverService implements Resolve<Skills[]> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Skills[]>{
         return  this.profileHelperService.getSkills()
               .catch((error: any) => {
-                        console.log(`${error}`);
+                       // console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     }); 

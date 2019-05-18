@@ -11,7 +11,7 @@ export class CandidateLanguageResolverService implements Resolve<Language[]> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Language[]>{
       return this.profileHelperService.getLanguages()
          .catch((error: any )=> {
-           console.log (`${error}`);
+      //     console.log (`${error}`);
            this.router.navigate(['/error']);
            return Observable.of(null);
        })

@@ -17,7 +17,7 @@ export class CandidateLanguageResolverService implements Resolve<HttpResponse<Ca
       this.id = this.dataService.getRouteData();
         return this.candidateLanguageProficiencyService.findByCandidateId(this.id).map(this.extractData)
             .catch((error: any) => {
-                console.log(`${error}`);
+                //console.log(`${error}`);
                 this.router.navigate(['/error']);
                 return Observable.of(null);
             });

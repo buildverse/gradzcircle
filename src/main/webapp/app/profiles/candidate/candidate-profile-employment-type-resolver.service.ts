@@ -11,7 +11,7 @@ export class CandidateEmploymentTypeResolverService implements Resolve<Employmen
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EmploymentType[]>{
         return  this.profileHelperService.getEmploymentType()
                  .catch((error: any )=> {
-                    console.log (`${error}`);
+                 //   console.log (`${error}`);
                     this.router.navigate(['/error']);
                     return Observable.of(null);
        })

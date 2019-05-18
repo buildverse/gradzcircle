@@ -13,7 +13,7 @@ export class CorporateResolverService implements Resolve<any> {
         return  this.principal.identity().then((account) => {
              return this.corporateService.findCorporateByLoginId(account.id).toPromise()
                     .catch((error: any) => {
-                        console.log(`${error}`);
+                     //   console.log(`${error}`);
                         this.router.navigate(['/error']);
                         return Observable.of(null);
                     });

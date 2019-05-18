@@ -11,7 +11,7 @@ export class CountryResolverService implements Resolve<Country[]> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Country[]>{
         return this.profileHelperService.getCountries()
             .catch((error: any )=> {
-            console.log (`${error}`);
+          //  console.log (`${error}`);
             this.router.navigate(['/error']);
             return Observable.of(null);
         })

@@ -11,7 +11,7 @@ export class CandidateNationalityResolverService implements Resolve<Nationality[
 
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Nationality[]>{
         return this.profileHelper.getNationalities().catch((error: any )=> {
-           console.log (`${error}`);
+          // console.log (`${error}`);
            this.router.navigate(['/error']);
            return Observable.of(null);
        });

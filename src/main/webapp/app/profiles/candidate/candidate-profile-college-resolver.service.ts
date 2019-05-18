@@ -11,7 +11,7 @@ export class CandidateAccountResolverService implements Resolve<College[]> {
     resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<College[]>{
         return  this.profileHelperService.getColleges()
           .catch((error: any )=> {
-           console.log (`${error}`);
+          // console.log (`${error}`);
            this.router.navigate(['/error']);
            return Observable.of(null);
        })
