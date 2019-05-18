@@ -58,16 +58,19 @@ public class DTOConverters {
 	private final Logger logger = LoggerFactory.getLogger(DTOConverters.class);
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CandidateAppliedJobs candidateAppliedJob,
-			Candidate candidate) {
+			Candidate candidate, Job job) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
 		dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setId(candidate.getId());
+		dto.setCorporateId(job.getCorporate().getId());
+		dto.setJobId(job.getId());
 		CandidateEducation highestCandidateEducation = candidate.getEducations().stream()
 				.filter(education -> education.isHighestQualification()).findFirst().get();
 		dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
 				+ highestCandidateEducation.getCourse().getCourse());
+		logger.debug("The CandidateProfileListDTO is {}",dto);
 		return dto;
 	}
 
