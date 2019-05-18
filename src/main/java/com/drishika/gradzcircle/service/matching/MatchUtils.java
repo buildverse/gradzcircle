@@ -468,6 +468,7 @@ public class MatchUtils {
 			// matchScoreEligible.add(jobFilterWeightMap.get(Constants.GENDER));
 
 			Gender gender = genderRepository.findByGender(jobfilterObject.getGender().getGender());
+			log.debug("Gender from repo is {}",gender);
 			if (gender != null && gender.equals(candidate.getGender())) {
 				// matchScoreGained.add(jobFilterWeightMap.get(Constants.GENDER));
 				genderScore = new Double((jobFilterWeightMap.get(Constants.GENDER)));
