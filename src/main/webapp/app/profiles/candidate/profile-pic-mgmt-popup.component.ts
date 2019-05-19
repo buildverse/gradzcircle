@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {DataService} from '../../shared';
+import {DataStorageService} from '../../shared';
 import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
 import {CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
@@ -156,7 +156,7 @@ export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateProfilePicMgmtPopupService: ProfileMgmtPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -166,7 +166,7 @@ export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
           .open(ProfilePicMgmtPopupDialogComponent as Component, params['id']);
       } else {
         this.candidateProfilePicMgmtPopupService
-          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.get(USER_ID));
+          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.getData(USER_ID));
       }
     });
   }

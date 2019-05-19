@@ -5,7 +5,6 @@ import { JhiEventManager } from 'ng-jhipster';
 import { HttpResponse } from '@angular/common/http';
 import { Corporate } from './corporate.model';
 import { CorporateService } from './corporate.service';
-import { DataService } from '../../shared';
 
 @Component({
     selector: 'jhi-corporate-detail',
@@ -20,8 +19,8 @@ export class CorporateDetailComponent implements OnInit, OnDestroy {
     constructor(
         private eventManager: JhiEventManager,
         private corporateService: CorporateService,
-        private route: ActivatedRoute,
-        private dataService: DataService
+        private route: ActivatedRoute
+       
     ) {
     }
 

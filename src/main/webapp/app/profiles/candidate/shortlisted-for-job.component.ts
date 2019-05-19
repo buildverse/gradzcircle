@@ -2,12 +2,12 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
-import {DataService, DataStorageService} from '../../shared';
+import {DataStorageService} from '../../shared';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {USER_ID} from '../../shared/constants/storage.constants';
+import {USER_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
@@ -37,7 +37,6 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private dataService: DataService,
     private localDataStorageService: DataStorageService,
     private spinnerService: NgxSpinnerService
 
@@ -103,12 +102,12 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.candidateId = params['id'];
       } else {
-        this.candidateId = this.dataService.getRouteData();
+        this.candidateId = this.localDataStorageService.getData(CANDIDATE_ID);
       }
 
-      if (!this.candidateId) {
+      /*if (!this.candidateId) {
         this.candidateId = this.localDataStorageService.getData(USER_ID);
-      }
+      }*/
       this.loadShortListedJobs();
     });
 

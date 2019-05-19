@@ -11,7 +11,8 @@ import {CandidateLanguageProficiencyPopupServiceNew} from './candidate-language-
 import {CandidateLanguageProficiencyService} from './candidate-language-proficiency.service';
 import {Candidate, CandidateService} from '../candidate';
 import {Language, LanguageService} from '../language';
-import {Principal, DataService} from '../../shared';
+import {Principal, DataStorageService} from '../../shared';
+import { CANDIDATE_ID, CANDIDATE_LANGUAGE_ID } from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {NgxSpinnerService} from 'ngx-spinner';
 
@@ -203,7 +204,7 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
   constructor(
     private route: ActivatedRoute,
     private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -213,7 +214,7 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
         this.candidateLanguageProficiencyPopupService
           .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.languageLocked);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_LANGUAGE_ID);
         if(id) {
           this.languageLocked = true;
           this.candidateLanguageProficiencyPopupService
@@ -245,7 +246,7 @@ export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, On
   constructor(
     private route: ActivatedRoute,
     private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupServiceNew,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -256,7 +257,7 @@ export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, On
       this.candidateLanguageProficiencyPopupService
         .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.currentCandidateLanguageProficiencies);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_ID);
         this.candidateLanguageProficiencyPopupService
         .open(CandidateLanguageProficiencyDialogComponent as Component, id, this.currentCandidateLanguageProficiencies);
       }

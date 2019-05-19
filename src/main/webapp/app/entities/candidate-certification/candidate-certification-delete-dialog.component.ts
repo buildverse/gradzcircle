@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import {DataService} from '../../shared';
+import { CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { CandidateCertification} from './candidate-certification.model';
 import { CandidateCertificationPopupService } from './candidate-certification-popup.service';
 import { CandidateCertificationService } from './candidate-certification.service';
@@ -50,7 +50,7 @@ export class CandidateCertificationDeletePopupComponent implements OnInit, OnDes
     constructor(
         private route: ActivatedRoute,
         private candidateCertificationPopupService: CandidateCertificationPopupService,
-        private dataService : DataService
+        private dataService : DataStorageService
     ) {}
 
     ngOnInit() {
@@ -59,7 +59,7 @@ export class CandidateCertificationDeletePopupComponent implements OnInit, OnDes
             this.candidateCertificationPopupService
                 .open(CandidateCertificationDeleteDialogComponent as Component, params['id']);
           } else {
-            const id = this.dataService.getRouteData();
+            const id = this.dataService.getData(CANDIDATE_CERTIFICATION_ID);
              this.candidateCertificationPopupService
                 .open(CandidateCertificationDeleteDialogComponent as Component, id);
           }

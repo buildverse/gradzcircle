@@ -29,7 +29,7 @@ import com.drishika.gradzcircle.service.dto.JobStatistics;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
 
-	@Query("select j from Job j where j.jobStatus>-1 and j.corporate.id=?1")
+	@Query("select j from Job j where j.jobStatus>-1 and j.corporate.id=?1 order by j.updateDate")
 	Page<Job> findByActiveJobAndCorporateId(Long corporateId, Pageable pageable);
 
 	@Query(" select j from Job j where j.jobStatus=1")

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {DataService} from '../../shared';
+import {DataStorageService} from '../../shared';
+import { CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -53,7 +54,7 @@ export class CandidateEducationDeletePopupComponent implements OnInit, OnDestroy
     constructor(
         private route: ActivatedRoute,
         private candidateEducationPopupService: CandidateEducationPopupService,
-        private dataService: DataService
+        private dataService: DataStorageService
     ) {}
 
     ngOnInit() {
@@ -62,7 +63,7 @@ export class CandidateEducationDeletePopupComponent implements OnInit, OnDestroy
             this.candidateEducationPopupService
                 .open(CandidateEducationDeleteDialogComponent as Component, params['id']);
           } else { 
-            const id = this.dataService.getRouteData();
+            const id = this.dataService.getData(CANDIDATE_EDUCATION_ID);
             this.candidateEducationPopupService
                 .open(CandidateEducationDeleteDialogComponent as Component, id);
             

@@ -6,9 +6,10 @@ import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {CandidateNonAcademicWork} from './candidate-non-academic-work.model';
 import {CandidateNonAcademicWorkService} from './candidate-non-academic-work.service';
-import {DataService, Principal} from '../../shared';
+import {DataStorageService, Principal} from '../../shared';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {CandidateProfileScoreService} from '../../profiles/candidate/candidate-profile-score.service';
+import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
 @Component({
   selector: 'jhi-candidate-non-academic-work',
   templateUrl: './candidate-non-academic-work.component.html',
@@ -27,7 +28,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
     private eventManager: JhiEventManager,
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
-    private dataService: DataService,
+    private dataService: DataStorageService,
     private candidateProfileScoreService: CandidateProfileScoreService,
     private spinnerService: NgxSpinnerService
   ) {
@@ -52,11 +53,11 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
   }
 
   setAddRouterParam() {
-    this.dataService.setRouteData(this.candidateId);
+    this.dataService.setdata(CANDIDATE_ID,this.candidateId);
   }
 
   setEditDeleteRouteParam(candidateNonAcademicWorkId) {
-    this.dataService.setRouteData(candidateNonAcademicWorkId);
+    this.dataService.setdata(CANDIDATE_NON_ACADEMIC_ID,candidateNonAcademicWorkId);
   }
 
   loadAll() {

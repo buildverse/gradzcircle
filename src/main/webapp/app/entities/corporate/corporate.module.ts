@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-import { GradzcircleSharedModule, DataService } from '../../shared';
+import { GradzcircleSharedModule, DataStorageService } from '../../shared';
 import { GradzcircleAdminModule } from '../../admin/admin.module';
 import { FileUploadModule } from 'ng2-file-upload'
 import {
@@ -55,7 +55,7 @@ const ENTITY_STATES = [
         CorporatePopupService,
         CorporateResolverService,
         LinkedCandidatesResolvePagingParams,
-        DataService
+        DataStorageService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

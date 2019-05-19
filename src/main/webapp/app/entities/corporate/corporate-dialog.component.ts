@@ -12,7 +12,8 @@ import {CorporateService} from './corporate.service';
 import {Country, CountryService} from '../country';
 import {Industry, IndustryService} from '../industry';
 import {User, UserService} from '../../shared';
-import {EditorProperties, DataService} from '../../shared';
+import {EditorProperties, DataStorageService} from '../../shared';
+import { CORPORATE_ID } from '../../shared/constants/storage.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -38,7 +39,7 @@ export class CorporateDialogComponent implements OnInit {
     private industryService: IndustryService,
     private eventManager: JhiEventManager,
     private userService: UserService,
-    private dataService: DataService,
+    private dataService: DataStorageService,
     private spinnerService: NgxSpinnerService
   ) {
   }
@@ -128,7 +129,7 @@ export class CorporatePopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private corporatePopupService: CorporatePopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -137,7 +138,7 @@ export class CorporatePopupComponent implements OnInit, OnDestroy {
         this.corporatePopupService
           .open(CorporateDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CORPORATE_ID);
         if (id) {
           this.corporatePopupService
             .open(CorporateDialogComponent as Component, id);

@@ -119,9 +119,9 @@ public class DTOConverters {
 	}
 	
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CorporateCandidate corporateCandidate) {
-		CandidateProfileListDTO dto = new CandidateProfileListDTO();
 		Candidate candidate = corporateCandidate.getCandidate();
-		dto.setFirstName(candidate.getFirstName());
+		return convertToCandidateProfileListingDTO(candidate);
+		/*dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setId(candidate.getId());
@@ -134,7 +134,7 @@ public class DTOConverters {
 		if(highestCandidateEducation != null)
 			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
 				+ highestCandidateEducation.getCourse().getCourse());
-		return dto;
+		return dto;*/
 	}
 
 	public CorporateJobDTO convertToJobListingForCorporate(Job job,Long totalLinkedCandidates, Long totalNumberOfJobs, 

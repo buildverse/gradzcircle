@@ -5,9 +5,10 @@ import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, 
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
-import { DataService, Principal } from '../../shared';
+import { DataStorageService, Principal } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -30,7 +31,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataService: DataService,
+        private dataService: DataStorageService,
         private candidateProfileScoreService : CandidateProfileScoreService,
         private spinnerService: NgxSpinnerService
     ) {
@@ -39,11 +40,11 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     }
 
     setRouterAddEducationParams() {
-      this.dataService.setRouteData(this.candidateId);
+      this.dataService.setdata(CANDIDATE_ID,this.candidateId);
     }
   
    setEducationRouteParam(event) {
-      this.dataService.setRouteData(event);
+      this.dataService.setdata(CANDIDATE_EDUCATION_ID,event);
     }
   
     loadAll() {

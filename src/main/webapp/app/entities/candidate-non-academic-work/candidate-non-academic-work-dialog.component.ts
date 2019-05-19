@@ -10,7 +10,9 @@ import {CandidateNonAcademicWork} from './candidate-non-academic-work.model';
 import {CandidateNonAcademicWorkPopupService} from './candidate-non-academic-work-popup.service';
 import {CandidateNonAcademicWorkService} from './candidate-non-academic-work.service';
 import {Candidate, CandidateService} from '../candidate';
-import {EditorProperties, DataService} from '../../shared';
+import {EditorProperties} from '../../shared';
+import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 
 
 @Component({
@@ -143,7 +145,7 @@ export class CandidateNonAcademicWorkPopupComponent implements OnInit, OnDestroy
   constructor(
     private route: ActivatedRoute,
     private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -152,7 +154,7 @@ export class CandidateNonAcademicWorkPopupComponent implements OnInit, OnDestroy
         this.candidateNonAcademicWorkPopupService
           .open(CandidateNonAcademicWorkDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_NON_ACADEMIC_ID);
         if (id) {
           this.candidateNonAcademicWorkPopupService
             .open(CandidateNonAcademicWorkDialogComponent as Component, id);
@@ -180,7 +182,7 @@ export class CandidateNonAcademicWorkPopupComponentNew implements OnInit, OnDest
   constructor(
     private route: ActivatedRoute,
     private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupServiceNew,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -189,7 +191,7 @@ export class CandidateNonAcademicWorkPopupComponentNew implements OnInit, OnDest
         this.candidateNonAcademicWorkPopupService
           .open(CandidateNonAcademicWorkDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_ID);
         this.candidateNonAcademicWorkPopupService
           .open(CandidateNonAcademicWorkDialogComponent as Component, id);
       }

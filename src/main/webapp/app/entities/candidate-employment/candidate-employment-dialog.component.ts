@@ -15,7 +15,8 @@ import {EmploymentType, EmploymentTypeService} from '../employment-type';
 import {Country, CountryService} from '../country';
 import {JobType, JobTypeService} from '../job-type';
 import {JhiDateUtils} from 'ng-jhipster';
-import {EditorProperties, DataService} from '../../shared';
+import {EditorProperties,DataStorageService} from '../../shared';
+import { CANDIDATE_ID, CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
 
 @Component({
   selector: 'jhi-candidate-employment-dialog',
@@ -170,7 +171,7 @@ export class CandidateEmploymentPopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateEmploymentPopupService: CandidateEmploymentPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -180,7 +181,7 @@ export class CandidateEmploymentPopupComponent implements OnInit, OnDestroy {
         this.candidateEmploymentPopupService
           .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_EMPLOYMENT_ID);
         if (id) {
      
           this.candidateEmploymentPopupService
@@ -214,7 +215,7 @@ export class CandidateEmploymentPopupComponentNew implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateEmploymentPopupService: CandidateEmploymentPopupServiceNew,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -223,7 +224,7 @@ export class CandidateEmploymentPopupComponentNew implements OnInit, OnDestroy {
         this.candidateEmploymentPopupService
           .open(CandidateEmploymentDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_ID);
         this.candidateEmploymentPopupService
           .open(CandidateEmploymentDialogComponent as Component, id);
       }

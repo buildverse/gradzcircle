@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {DataService, Principal} from '../../shared';
+import {DataStorageService, Principal} from '../../shared';
 import { JOB_ID, MATCH_SCORE } from '../../shared/constants/storage.constants';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -33,7 +33,7 @@ export class JobViewComponent implements OnInit {
     private principal: Principal,
     private router: Router,
     private jhiAlertService: JhiAlertService,
-    private dataService: DataService,
+    private dataService: DataStorageService,
     private loginService: LoginService,
     private loginModalService: LoginModalService,
     private jobListEmitterService :JobListEmitterService,
@@ -110,7 +110,7 @@ export class JobViewPopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private jobPopupService: JobPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -119,10 +119,10 @@ export class JobViewPopupComponent implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobViewComponent as Component, params['id'], params['matchScore']);
       } else {
-        let id = this.dataService.getRouteData();
-        const matchScore = this.dataService.get(MATCH_SCORE);
+        let id = this.dataService.getData(JOB_ID);
+        const matchScore = this.dataService.getData(MATCH_SCORE);
         if (!id) {
-          id = this.dataService.get(JOB_ID);
+          id = this.dataService.getData(JOB_ID);
 
         }
         this.jobPopupService

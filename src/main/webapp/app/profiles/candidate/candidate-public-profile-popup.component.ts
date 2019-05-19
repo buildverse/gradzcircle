@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {NgbActiveModal, NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
-import {Principal, UserService, DataService} from '../../shared';
+import {Principal, UserService, DataStorageService} from '../../shared';
 import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-profile.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
@@ -32,9 +32,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
     private candidateService: CandidateService,
     public activeModal: NgbActiveModal,
     private eventManager: JhiEventManager,
-    private principal: Principal,
     private userService: UserService,
-    private router: Router,
     public ratingConfig: NgbRatingConfig,
     public alertService: JhiAlertService
   ) {
@@ -131,7 +129,7 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidatePublicProfilePopupService: CandidatePublicProfilePopupService,
-    private dataService : DataService
+    private dataService : DataStorageService
   ) {}
 
   ngOnInit() {
@@ -141,8 +139,8 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
         .open(CandidatePublicProfilePopupDialogComponent as Component, params['id'], params['jobId'], params['corporateId']);
       } else {
         this.candidatePublicProfilePopupService
-        .open(CandidatePublicProfilePopupDialogComponent as Component, this.dataService.get(CANDIDATE_ID),
-            parseFloat(this.dataService.get(JOB_ID)), parseFloat(this.dataService.get(CORPORATE_ID)));
+        .open(CandidatePublicProfilePopupDialogComponent as Component, this.dataService.getData(CANDIDATE_ID),
+            parseFloat(this.dataService.getData(JOB_ID)), parseFloat(this.dataService.getData(CORPORATE_ID)));
       }
     });
   }

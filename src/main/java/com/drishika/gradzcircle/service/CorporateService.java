@@ -104,9 +104,9 @@ public class CorporateService {
 	}
 
 	public Page<CandidateProfileListDTO> getLinkedCandidates(Pageable pageable, Long corporateId) {
-		Page<CorporateCandidate> candidatePage = corporateRepository.findLinkedCandidates(corporateId, pageable);
+		Page<Candidate> candidatePage = corporateRepository.findLinkedCandidates(corporateId, pageable);
 		final Page<CandidateProfileListDTO> page = candidatePage.map(
-				corporateCandidate -> converter.convertToCandidateProfileListingDTO(corporateCandidate));
+				candidate -> converter.convertToCandidateProfileListingDTO(candidate));
 		return page;
 	}
 	

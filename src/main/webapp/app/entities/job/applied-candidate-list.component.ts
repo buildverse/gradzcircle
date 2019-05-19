@@ -5,7 +5,7 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, Principal} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
-import { DataService, DataStorageService } from '../../shared';
+import {DataStorageService } from '../../shared';
 import{ HttpResponse } from '@angular/common/http';
 import {CandidateList} from './candidate-list.model';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
@@ -35,14 +35,9 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   constructor(
     private jobService: JobService,
     private jhiAlertService: JhiAlertService,
-    private eventManager: JhiEventManager,
     private activatedRoute: ActivatedRoute,
-    private principal: Principal,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig,
-    private dataService: DataService,
     private dataStorageService: DataStorageService
 
 
@@ -108,9 +103,9 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   }
   
     setPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID, candidateId);
-    this.dataService.put(JOB_ID, this.jobId);
-    this.dataService.put(CORPORATE_ID, corporateId);
+    this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
+    this.dataStorageService.setdata(JOB_ID, this.jobId);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId);
   }
 
   ngOnDestroy() {

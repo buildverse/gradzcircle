@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {DataService, DataStorageService} from '../../shared';
+import { DataStorageService} from '../../shared';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -15,7 +15,7 @@ import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import { USER_ID } from '../../shared/constants/storage.constants';
+import { USER_ID, CORPORATE_ID } from '../../shared/constants/storage.constants';
 import { QualificationService} from '../qualification';
 import {Course, CourseService} from '../course';
 import {College, CollegeService} from '../college';
@@ -108,8 +108,6 @@ export class JobDialogComponent implements OnInit {
     private jobService: JobService,
     private jobTypeService: JobTypeService,
     private employmentTypeService: EmploymentTypeService,
-    private corporateService: CorporateService,
-    private candidateService: CandidateService,
     private eventManager: JhiEventManager,
     private qualificationService: QualificationService,
     private courseService: CourseService,
@@ -119,7 +117,6 @@ export class JobDialogComponent implements OnInit {
     private filterService: FilterService,
     private genderService: GenderService,
     private dateUtils: JhiDateUtils,
-    private jobFilterService: JobFilterService,
     private appConfigService: AppConfigService,
     private router: Router,
     private principal: Principal,
@@ -1197,7 +1194,6 @@ export class JobPopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private jobPopupService: JobPopupService,
-    private dataService: DataService,
     private dataStorageService: DataStorageService
   ) {}
 
@@ -1207,7 +1203,7 @@ export class JobPopupComponent implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobDialogComponent as Component, params['id']);
       } else {
-        let id = this.dataService.getRouteData();
+        let id = this.dataStorageService.getData(CORPORATE_ID);
         if(id) {
           this.jobPopupService
           .open(JobDialogComponent as Component, id);
@@ -1236,7 +1232,6 @@ export class JobPopupComponentNew implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private jobPopupService: JobPopupServiceNew,
-    private dataService: DataService,
     private dataStorageService: DataStorageService
   ) {}
 
@@ -1246,10 +1241,10 @@ export class JobPopupComponentNew implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobDialogComponent as Component, params['id']);
       } else {
-        let id = this.dataService.getRouteData();
-        if(!id) {
+        let id = this.dataStorageService.getData(CORPORATE_ID);
+       /* if(!id) {
           id = this.dataStorageService.getData(USER_ID);
-        }
+        }*/
         this.jobPopupService
           .open(JobDialogComponent as Component, id);
       }

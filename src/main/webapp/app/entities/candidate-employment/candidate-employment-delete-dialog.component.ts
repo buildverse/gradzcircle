@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import {DataService} from '../../shared';
+import {DataStorageService} from '../../shared';
+import { CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentPopupService } from './candidate-employment-popup.service';
 import { CandidateEmploymentService } from './candidate-employment.service';
@@ -55,7 +56,7 @@ export class CandidateEmploymentDeletePopupComponent implements OnInit, OnDestro
     constructor(
         private route: ActivatedRoute,
         private candidateEmploymentPopupService: CandidateEmploymentPopupService,
-        private dataService : DataService
+        private dataService : DataStorageService
     ) {}
 
     ngOnInit() {
@@ -64,7 +65,7 @@ export class CandidateEmploymentDeletePopupComponent implements OnInit, OnDestro
             this.candidateEmploymentPopupService
                 .open(CandidateEmploymentDeleteDialogComponent as Component, params['id']);
           } else {
-            const id = this.dataService.getRouteData();
+            const id = this.dataService.getData(CANDIDATE_EMPLOYMENT_ID);
             this.candidateEmploymentPopupService
                 .open(CandidateEmploymentDeleteDialogComponent as Component, id);
           }

@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
-import {ITEMS_PER_PAGE, UserService, DataService, DataStorageService} from '../../shared';
+import {ITEMS_PER_PAGE, UserService, DataStorageService} from '../../shared';
 import {USER_ID, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
@@ -37,7 +37,6 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private dataService: DataService,
     private dataStorageService: DataStorageService,
     private spinnerService: NgxSpinnerService
 
@@ -85,9 +84,9 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
    setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID,candidateId);
-    this.dataService.put(JOB_ID,jobId);
-    this.dataService.put(CORPORATE_ID,corporateId);
+    this.dataStorageService.setdata(CANDIDATE_ID,candidateId);
+    this.dataStorageService.setdata(JOB_ID,jobId);
+    this.dataStorageService.setdata(CORPORATE_ID,corporateId);
   }
   
   loadLinkedCandidates() {
@@ -109,11 +108,11 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
       if(params['id']) {
       this.corporateId = params['id'];
       } else {
-        this.corporateId = this.dataService.getRouteData();
+        this.corporateId = this.dataStorageService.getData(CORPORATE_ID);
       }
-      if(!this.corporateId) {
+    /*  if(!this.corporateId) {
         this.corporateId = this.dataStorageService.getData(USER_ID);
-      }
+      }*/
       this.loadLinkedCandidates();
     });
 

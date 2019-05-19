@@ -1,9 +1,10 @@
+import { DataStorageService } from '../../shared';
+import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager} from 'ng-jhipster';
-import {DataService} from '../../shared';
 import {CandidateNonAcademicWork} from './candidate-non-academic-work.model';
 import {CandidateNonAcademicWorkPopupService} from './candidate-non-academic-work-popup.service';
 import {CandidateNonAcademicWorkService} from './candidate-non-academic-work.service';
@@ -53,7 +54,7 @@ export class CandidateNonAcademicWorkDeletePopupComponent implements OnInit, OnD
   constructor(
     private route: ActivatedRoute,
     private candidateNonAcademicWorkPopupService: CandidateNonAcademicWorkPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -62,7 +63,7 @@ export class CandidateNonAcademicWorkDeletePopupComponent implements OnInit, OnD
         this.candidateNonAcademicWorkPopupService
           .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, params['id']);
       } else {
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_NON_ACADEMIC_ID);
         this.candidateNonAcademicWorkPopupService
           .open(CandidateNonAcademicWorkDeleteDialogComponent as Component, id);
       }

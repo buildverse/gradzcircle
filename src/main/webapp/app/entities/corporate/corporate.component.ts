@@ -6,9 +6,10 @@ import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Corporate} from './corporate.model';
 import {CorporateService} from './corporate.service';
-import {Principal, UserService, DataService} from '../../shared';
-import {USER_ID} from '../../shared/constants/storage.constants';
-
+import {Principal, UserService} from '../../shared';
+import {USER_ID, USER_DATA,USER_TYPE, CORPORATE_ID} from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-corporate',
@@ -21,8 +22,10 @@ export class CorporateComponent implements OnInit, OnDestroy {
   selectedPicture: any;
   corporates: Corporate[];
   corporate: Corporate;
+  corporateId: number;
   currentAccount: any;
   eventSubscriber: Subscription;
+  userLoadSubscriber: Subscription;
   currentSearch: string;
   currentCorporate: string;
   imageUrl: any;
@@ -38,7 +41,8 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private userService: UserService,
-    private dataService: DataService
+     private localStorageService: DataStorageService,
+     private spinnerService: NgxSpinnerService
   ) {
     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
       this.activatedRoute.snapshot.params['search'] : '';
@@ -87,8 +91,32 @@ export class CorporateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.noImage = true;
-    this.activatedRoute.data.subscribe((data: {corporate: any}) => this.corporate = data.corporate.body);
+    /*this.activatedRoute.data.subscribe((data: {corporate: any}) => this.corporate = data.corporate.body);
     this.currentSearch = this.corporate.id.toString();
+    this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
+    this.reloadCorporateImage();
+    this.registerChangeInCorporates();
+    this.registerChangeInCorporateImage();*/
+    this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA));
+      if(!this.corporate) {
+        this.principal.identity(true).then((user) => {
+        this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
+              this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.CORPORATE);
+              this.localStorageService.setdata(USER_ID, response.body.id);
+              this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
+              this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA)); 
+              this.corporateId = this.localStorageService.getData(USER_ID);
+          this.currentSearch = this.corporate.id.toString();
+              this.eventManager.broadcast({
+                name: 'userDataLoadedSuccess',
+                content: 'User Data Load Success'
+              });
+              console.log('Loaded Corporate info');
+            });
+        });
+    } else {
+      this.currentSearch = this.corporate.id.toString();
+    }
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
     this.reloadCorporateImage();
     this.registerChangeInCorporates();
@@ -96,15 +124,17 @@ export class CorporateComponent implements OnInit, OnDestroy {
   }
 
   setRouterData() {
-    this.dataService.setRouteData(this.corporate.id);
+    this.localStorageService.setdata(CORPORATE_ID,this.corporate.id);
   }
 
   setProfilePicmgmtRouteParams() {
-    this.dataService.put(USER_ID, this.corporate.login.id); 
-
+    this.localStorageService.setdata(USER_ID, this.corporate.login.id);
   }
 
   ngOnDestroy() {
+    if(this.userLoadSubscriber) {
+      this.eventManager.destroy(this.userLoadSubscriber);
+    }
     this.eventManager.destroy(this.eventSubscriber);
   }
 

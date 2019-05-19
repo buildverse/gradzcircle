@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import { DataService } from '../../shared';
+import { DataStorageService } from '../../shared';
+import { CANDIDATE_LANGUAGE_ID } from '../../shared/constants/storage.constants';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyPopupService } from './candidate-language-proficiency-popup.service';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
@@ -53,7 +54,7 @@ export class CandidateLanguageProficiencyDeletePopupComponent implements OnInit,
     constructor(
         private route: ActivatedRoute,
         private candidateLanguageProficiencyPopupService: CandidateLanguageProficiencyPopupService,
-        private dataService: DataService
+        private dataService: DataStorageService
     ) {}
 
     ngOnInit() {
@@ -62,7 +63,7 @@ export class CandidateLanguageProficiencyDeletePopupComponent implements OnInit,
             this.candidateLanguageProficiencyPopupService
                 .open(CandidateLanguageProficiencyDeleteDialogComponent as Component, params['id']);
           } else {
-            const id = this.dataService.getRouteData(); 
+            const id = this.dataService.getData(CANDIDATE_LANGUAGE_ID); 
             this.candidateLanguageProficiencyPopupService
               .open(CandidateLanguageProficiencyDeleteDialogComponent as Component, id);
           }

@@ -16,7 +16,8 @@ import {College, CollegeService} from '../college';
 import {University, UniversityService} from '../university';
 import {CandidateEducationPopupServiceNew} from './candidate-education-popup-new.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {Principal,DataService} from '../../shared';
+import {Principal,DataStorageService} from '../../shared';
+import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
 import {JhiDateUtils} from 'ng-jhipster';
 //import {EducationCollegeService} from './education-college.service';
 
@@ -71,7 +72,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private dateUtils: JhiDateUtils,
-    private dataService: DataService,
+    private dataService: DataStorageService,
     private spinnerService: NgxSpinnerService
     
 
@@ -377,7 +378,7 @@ export class CandidateEducationPopupComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateEducationPopupService: CandidateEducationPopupService,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -387,7 +388,7 @@ export class CandidateEducationPopupComponent implements OnInit, OnDestroy {
         this.candidateEducationPopupService
           .open(CandidateEducationDialogComponent as Component, params['id']);
       } else {
-       const id = this.dataService.getRouteData();
+       const id = this.dataService.getData(CANDIDATE_EDUCATION_ID);
         if (id) {
           this.candidateEducationPopupService
           .open(CandidateEducationDialogComponent as Component, id);
@@ -415,7 +416,7 @@ export class CandidateEducationPopupComponentNew implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private candidateEducationPopupService: CandidateEducationPopupServiceNew,
-    private dataService: DataService
+    private dataService: DataStorageService
   ) {}
 
   ngOnInit() {
@@ -425,7 +426,7 @@ export class CandidateEducationPopupComponentNew implements OnInit, OnDestroy {
       this.candidateEducationPopupService
         .open(CandidateEducationDialogComponent as Component, params['id']);
       } else { 
-        const id = this.dataService.getRouteData();
+        const id = this.dataService.getData(CANDIDATE_ID);
         if (id) {
            this.candidateEducationPopupService
         .open(CandidateEducationDialogComponent as Component, id);

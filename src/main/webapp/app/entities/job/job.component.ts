@@ -5,11 +5,11 @@ import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, J
 import {JobConstants} from './job.constants';
 import {Job} from './job.model';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, Principal, DataService, DataStorageService} from '../../shared';
+import {ITEMS_PER_PAGE, Principal, DataStorageService} from '../../shared';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {JOB_ID, CORPORATE_ID, MATCH_SCORE} from '../../shared/constants/storage.constants';
+import {JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA} from '../../shared/constants/storage.constants';
 import {CandidateService} from '../candidate/candidate.service';
 import {CorporateService} from '../corporate/corporate.service';
 import {Corporate} from '../corporate/corporate.model';
@@ -26,6 +26,7 @@ export class JobComponent implements OnInit, OnDestroy {
   currentAccount: any;
   corporateId: number;
   eventSubscriber: Subscription;
+  userLoadSubscriber: Subscription;
   currentSearch: string;
   DRAFT: number;
   error: any;
@@ -51,10 +52,7 @@ export class JobComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private principal: Principal,
     private parseLinks: JhiParseLinks,
-    private candidateService: CandidateService,
-    private corporateService: CorporateService,
     private router: Router,
-    private dataService: DataService,
     private dataStorageService : DataStorageService,
     private spinnerService: NgxSpinnerService
 
@@ -151,21 +149,19 @@ export class JobComponent implements OnInit, OnDestroy {
   }
 
   setJobRouterParam() {
-    this.dataService.setRouteData(this.corporateId);
+    this.dataStorageService.setdata(CORPORATE_ID,this.corporateId);
   }
   
   setJobEditOrViewRouteParam(jobId) {
-    this.dataService.setRouteData(jobId);
+       this.dataStorageService.setdata(JOB_ID,jobId);
   }
   
   setJobViewParamForCandidate(jobId,matchScore) {
-    this.dataService.put(JOB_ID,jobId);
-    this.dataService.put(MATCH_SCORE,matchScore);
+    this.dataStorageService.setdata(JOB_ID,jobId);
+    this.dataStorageService.setdata(MATCH_SCORE,matchScore);
   }
   
   setJobAndCorporateRouteParam(jobId,corporateId) {
-    this.dataService.put(JOB_ID,jobId);
-    this.dataService.put(CORPORATE_ID,corporateId);
     this.dataStorageService.setdata(JOB_ID, jobId);
     this.dataStorageService.setdata(CORPORATE_ID, corporateId); 
   }
@@ -175,8 +171,8 @@ export class JobComponent implements OnInit, OnDestroy {
   }
   
   setParamsToGetListForShortlistedCandidate(jobId,corporateId) {
-    this.dataService.put(JOB_ID,jobId);
-    this.dataService.put(CORPORATE_ID,corporateId);
+   this.dataStorageService.setdata(JOB_ID, jobId);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId); 
   }
   
   ngOnInit() {
@@ -184,10 +180,37 @@ export class JobComponent implements OnInit, OnDestroy {
     this.job = new Job();
     this.corporate = new Corporate();
     this.DRAFT = JobConstants.DRAFT;
-    this.principal.identity().then((account) => {
+    //this.userLoadSubscriber = this.eventManager.subscribe('userDataLoadedSuccess', (response) => {
+      this.principal.identity().then((account) => {
+        if (account) {
+          this.currentAccount = account;
+          this.spinnerService.show();
+          this.corporate = JSON.parse(this.dataStorageService.getData(USER_DATA));
+          this.currentSearch = this.corporate.id.toString();
+          this.corporateId = this.corporate.id;
+          console.log('Load active jobs');
+          this.loadActiveJobs();
+          this.registerChangeInJobs();
+        } 
+         else {
+        this.loadAll();
+        }
+      });
+   // });
+    
+     this.principal.identity(false).then((account) => {
+      if (account) {
+        this.loadActiveJobs();
+      } else {
+         this.loadAll();
+      }
+    });
+    
+   /*  this.principal.identity().then((account) => {
       if(account) {
         this.currentAccount = account;
-        if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
+      
+       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
           this.spinnerService.show();
           this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
             this.corporateId = response.body.id;
@@ -207,12 +230,17 @@ export class JobComponent implements OnInit, OnDestroy {
         } else {
         this.loadAll();
       }
-    });
+    });*/
 
   }
 
   ngOnDestroy() {
-    this.eventManager.destroy(this.eventSubscriber);
+    if(this.eventSubscriber){
+      this.eventManager.destroy(this.eventSubscriber);
+    }
+    if(this.userLoadSubscriber) {
+      this.eventManager.destroy(this.userLoadSubscriber);
+    }
   }
 
 

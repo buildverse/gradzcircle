@@ -3,7 +3,7 @@ import {ActivatedRoute, Router, NavigationEnd, NavigationStart, NavigationCancel
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
-import {Principal, UserService, DataService} from '../../shared';
+import {Principal, UserService, DataStorageService} from '../../shared';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidateProfileScoreService} from './candidate-profile-score.service';
@@ -50,7 +50,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     private userService: UserService,
     private candidateProfileScoreService: CandidateProfileScoreService,
     private cd: ChangeDetectorRef,
-    private dataService: DataService,
+    private dataService: DataStorageService,
     private router: Router) {
     this.activeTab = 'details';
     this.detailsCollapsed = true;
@@ -191,13 +191,13 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID, candidateId);
-    this.dataService.put(JOB_ID, -1);
-    this.dataService.put(CORPORATE_ID, -1);
+    this.dataService.setdata(CANDIDATE_ID, candidateId);
+    this.dataService.setdata(JOB_ID, -1);
+    this.dataService.setdata(CORPORATE_ID, -1);
   }
 
   setPublicProfilePicmgmtRouteParams() {
-    this.dataService.put(USER_ID, this.candidate.login.id);
+    this.dataService.setdata(USER_ID, this.candidate.login.id);
   }
 
   private onError(error) {

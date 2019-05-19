@@ -93,7 +93,7 @@ public class JobResource {
 	@PostMapping("/jobs")
 	@Timed
 	public ResponseEntity<Job> createJob(@RequestBody Job job) throws URISyntaxException {
-		log.debug("REST request to save Job with JobFilter : {} , {}", job, job.getJobFilters());
+		log.info("REST request to save Job with JobFilter : {} , {}", job, job.getJobFilters());
 		 if (job.getId() != null) {
 	            throw new BadRequestAlertException("A new job cannot already have an ID", ENTITY_NAME, "idexists");
 		 }
@@ -126,7 +126,7 @@ public class JobResource {
 	@PutMapping("/jobs")
 	@Timed
 	public ResponseEntity<Job> updateJob(@RequestBody Job job) throws URISyntaxException {
-		log.debug("REST request to update Job with JobFilter : {} , {}, {} ,{}", job, job.getEmploymentType(),
+		log.info("REST request to update Job with JobFilter : {} , {}, {} ,{}", job, job.getEmploymentType(),
 				job.getJobType(), job.getJobFilters());
 		if (job.getId() == null) {
 			return createJob(job);
@@ -170,7 +170,7 @@ public class JobResource {
 	@GetMapping("/countOfActiveJobs")
 	@Timed
 	public ResponseEntity<Long> getCountOfActiveJobs() {
-		log.debug("REST request to get count of active Jobs");
+		log.info("REST request to get count of active Jobs");
 		Long countofJobs;
 		try {
 			countofJobs = jobService.getCountOfAcitveJobs();
@@ -190,7 +190,7 @@ public class JobResource {
 	@GetMapping("/jobs")
 	@Timed
 	public ResponseEntity<List<Job>> getAllJobs(@ApiParam Pageable pageable) {
-		log.debug("REST request to get all Jobs");
+		log.info("REST request to get all Jobs");
 		Page<Job> jobs = jobRepository.findAll(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(jobs, "/api/jobs");
 		return new ResponseEntity<>(jobs.getContent(), headers, HttpStatus.OK);
@@ -204,7 +204,7 @@ public class JobResource {
 	@GetMapping("/activeJobs")
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getAllActiveJobs(@ApiParam Pageable pageable) {
-		log.debug("REST request to get all Jobs with Stats");
+		log.info("REST request to get all Jobs with Stats");
 		Page<CandidateJobDTO> page =null;
 		try {
 			page = jobService.findAllActiveJobsOnPortal(ApplicationConstants.JOB_ACTIVE, pageable);
@@ -226,7 +226,7 @@ public class JobResource {
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByEmploymentType(@PathVariable String employmentType,
 			@ApiParam Pageable pageable, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo,
 			@PathVariable Long candidateId) {
-		log.debug("REST request to get Jobs and stats by employment Type for candidate  {} , {} with macth score from {} to {} ",
+		log.info("REST request to get Jobs and stats by employment Type for candidate  {} , {} with macth score from {} to {} ",
 				employmentType,candidateId, matchScoreFrom, matchScoreTo);
 		Page<CandidateJobDTO> page = null;
 		try {
@@ -250,7 +250,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneJobType(@PathVariable String jobType, @PathVariable Long candidateId,
 			@PathVariable Double matchScoreFrom,@PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by one job Type --> {} for candidate {} matchScore from {} to {}",
+		log.info("REST request to get Jobs and stats by one job Type --> {} for candidate {} matchScore from {} to {}",
 				jobType,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
 		try {
@@ -272,7 +272,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByTwoJobTypes(@PathVariable String jobType1,@PathVariable String jobType2, 
 			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom , @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by two job Types --> {}, {} for candidate {} with scores from {} to {}",
+		log.info("REST request to get Jobs and stats by two job Types --> {}, {} for candidate {} with scores from {} to {}",
 					jobType1,jobType2,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
 		try {
@@ -296,7 +296,7 @@ public class JobResource {
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByThreeJobTypes(@PathVariable String jobType1, 
 			@PathVariable String jobType2,@PathVariable String jobType3, @PathVariable Long candidateId, @PathVariable Double matchScoreFrom,
 			@PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by three job Types --> {}, {}, {} for candidate {} for match score from {} to {} "
+		log.info("REST request to get Jobs and stats by three job Types --> {}, {}, {} for candidate {} for match score from {} to {} "
 				,jobType1,jobType2,jobType3,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
 		try {
@@ -320,7 +320,7 @@ public class JobResource {
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndOneJobType(
 			@PathVariable String employmentType, @PathVariable String jobType,
 			@PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by one employment and job Type {}, {} for Canidate {} with MatcScore from {} to {} ", employmentType, 
+		log.info("REST request to get Jobs and stats by one employment and job Type {}, {} for Canidate {} with MatcScore from {} to {} ", employmentType, 
 				jobType,candidateId,matchScoreFrom,matchScoreTo);
 		log.debug("Length on job type is {}",jobType.length());
 		log.debug("Length on trimmed job type is {}",jobType.trim().length());
@@ -347,7 +347,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndTwoJobType(@PathVariable String employmentType,@PathVariable String jobType1,
 			@PathVariable String jobType2, @PathVariable Long candidateId,@PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, @ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by one Employent and two job Type -> {}, {}, {} for candidate {} with Match scores from {} to {}",
+		log.info("REST request to get Jobs and stats by one Employent and two job Type -> {}, {}, {} for candidate {} with Match scores from {} to {}",
 					employmentType,jobType1,jobType2,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
 		jobType1 = jobType1.trim();
@@ -374,7 +374,7 @@ public class JobResource {
 	public ResponseEntity<List<CandidateJobDTO>> getActiveJobsByOneEmploymentTypeAndThreeJobType(@PathVariable String employmentType,@PathVariable String jobType1, 
 			@PathVariable String jobType2,@PathVariable String jobType3, @PathVariable Long candidateId, @PathVariable Double matchScoreFrom, @PathVariable Double matchScoreTo, 
 				@ApiParam Pageable pageable) {
-		log.debug("REST request to get Jobs and stats by One EmploymentType and three job Type ---> {}, {}, {}, {} for candidate {} with matchScore From {} matchScoreTo {}",
+		log.info("REST request to get Jobs and stats by One EmploymentType and three job Type ---> {}, {}, {}, {} for candidate {} with matchScore From {} matchScoreTo {}",
 				employmentType,jobType1,jobType2,jobType3,candidateId,matchScoreFrom,matchScoreTo);
 		Page<CandidateJobDTO> page =null;
 		jobType3 = jobType3.trim();
@@ -414,6 +414,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getShortListedJobsListForCcandidate(@ApiParam Pageable pageable,
 			@PathVariable Long candidateId) {
+		log.info("Request to get jobs that candidate {} got shortlisted for ",candidateId);
 		final Page<CandidateJobDTO> page = jobService.getShortListedJobsListForCandidate(pageable, candidateId);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/shortListedJobsForCandidate");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -512,6 +513,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateJobDTO>> getAppliedJobsByCandidate(@ApiParam Pageable pageable,
 			@PathVariable Long candidateId) {
+		log.info("Request to get applied jobs by candidate {}", candidateId);
 		final Page<CandidateJobDTO> page = jobService.getAppliedJobsListForCandidates(pageable, candidateId);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedJobsByCandidate");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -566,7 +568,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<Job> applyForJob(@PathVariable Long jobId, @PathVariable Long loginId)
 			throws URISyntaxException {
-		log.debug("REST request to ApplyForJob ");
+		log.info("REST request to ApplyForJob {} by login {}",jobId,loginId);
 		Job result = jobService.applyJobForCandidate(jobId, loginId);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
@@ -594,7 +596,7 @@ public class JobResource {
 	@GetMapping("/jobs/{id}")
 	@Timed
 	public ResponseEntity<Job> getJob(@PathVariable Long id) {
-		log.debug("REST request to get Job : {}", id);
+		log.info("REST request to get Job : {}", id);
 		Set<JobFilter> jobFilters = null;
 		Job job = jobRepository.findOne(id);
 
@@ -625,7 +627,7 @@ public class JobResource {
 	@DeleteMapping("/jobs/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
-		log.debug("REST request to delete Job : {}", id);
+		log.info("REST request to delete Job : {}", id);
 		jobRepository.delete(id);
 		jobSearchRepository.delete(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -641,7 +643,7 @@ public class JobResource {
 	@DeleteMapping("/deActivateJob/{id}")
 	@Timed
 	public ResponseEntity<Void> removeJob(@PathVariable Long id) {
-		log.debug("REST request to remove Job : {}", id);
+		log.info("REST request to remove Job : {}", id);
 		try {
 			jobService.deActivateJob(id);
 
@@ -665,7 +667,7 @@ public class JobResource {
 	@GetMapping("/_search/jobs")
 	@Timed
 	public ResponseEntity<List<Job>> searchJobs(@RequestParam String query, @ApiParam Pageable pageable) {
-		log.debug("REST request to search Jobs for query {}", query);
+		log.info("REST request to search Jobs for query {}", query);
 		Page<Job> page = jobSearchRepository.search(queryStringQuery(query), pageable);
 		HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/jobs");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

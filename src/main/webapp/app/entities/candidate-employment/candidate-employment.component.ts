@@ -5,9 +5,10 @@ import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, 
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
-import { DataService, Principal } from '../../shared';
+import { DataStorageService, Principal } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { CANDIDATE_ID, CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -30,7 +31,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataService: DataService,
+        private dataService: DataStorageService,
         private candidateProfileScoreService: CandidateProfileScoreService,
         private spinnerService: NgxSpinnerService
     ) {
@@ -39,11 +40,11 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     }
 
   setAddRouteParams() {
-    this.dataService.setRouteData(this.candidateId);
+    this.dataService.setdata(CANDIDATE_ID,this.candidateId);
   }
   
   setEditDeleteRouteParams(candidateEmploymentId) {
-    this.dataService.setRouteData(candidateEmploymentId);
+    this.dataService.setdata(CANDIDATE_EMPLOYMENT_ID,candidateEmploymentId);
   }
 
     /*To be removed once undertsand Elastic */

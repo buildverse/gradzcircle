@@ -26,7 +26,7 @@ import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me
 import {CandidateLanguageProficiencyResolverService} from './candidate-language-proficiency-resolver.service';
 import {SafeHtml} from './image.pipe';
 import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
-import { DataService } from '../../shared/helper/data.service';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import { ProfileMgmtPopupService } from './profile-pic-mgmt-popup.service';
@@ -81,7 +81,7 @@ const ENTITY_STATES = [
     CandidateLanguageProficiencyResolverService,
     CandidatePublicProfilePopupService,
     JobResolvePagingParams,
-    DataService,
+    DataStorageService,
     NgbProgressbarConfig,
     CandidateProfileScoreService,
     ProfileMgmtPopupService

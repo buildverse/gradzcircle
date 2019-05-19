@@ -5,8 +5,9 @@ import { JhiEventManager,  JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
-import { Principal, DataService } from '../../shared';
+import { Principal, DataStorageService } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
+import { CANDIDATE_ID, CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -29,7 +30,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dataservice: DataService,
+        private dataservice: DataStorageService,
         private candidateProfileScoreService : CandidateProfileScoreService,
         private spinnerService: NgxSpinnerService,
         private router: Router
@@ -57,11 +58,13 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     }
   
     setAddRouteParam() {
-      this.dataservice.setRouteData(this.candidateId);  
+      this.dataservice.setdata(CANDIDATE_ID,this.candidateId);
+      //this.dataservice.setRouteData(this.candidateId);  
     }
   
     setEditDeleteRouteParam(candidateCertificationId) {
-      this.dataservice.setRouteData(candidateCertificationId);
+      this.dataservice.setdata(CANDIDATE_CERTIFICATION_ID,candidateCertificationId);
+      //this.dataservice.setRouteData(candidateCertificationId);
     }
   
 

@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
-import {ITEMS_PER_PAGE, UserService, DataService,DataStorageService} from '../../shared';
+import {ITEMS_PER_PAGE, UserService,DataStorageService} from '../../shared';
 import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
@@ -41,9 +41,6 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private paginationUtil: JhiPaginationUtil,
-    private paginationConfig: PaginationConfig,
-    private dataService: DataService,
     private dataStorageService: DataStorageService
     
 
@@ -109,8 +106,8 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
         this.jobId = params['id'];
         this.corporateId = params['corporateId'];
       } else {
-        this.jobId = parseFloat(this.dataService.get(JOB_ID));
-        this.corporateId = parseFloat(this.dataService.get(CORPORATE_ID));
+        this.jobId = parseFloat(this.dataStorageService.getData(JOB_ID));
+        this.corporateId = parseFloat(this.dataStorageService.getData(CORPORATE_ID));
       }
       if (!(this.jobId || this.corporateId)) {
         this.jobId = this.dataStorageService.getData(JOB_ID);
@@ -124,9 +121,9 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   }
   
   setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID,candidateId);
-    this.dataService.put(JOB_ID,jobId);
-    this.dataService.put(CORPORATE_ID,corporateId);
+    this.dataStorageService.setdata(CANDIDATE_ID,candidateId);
+    this.dataStorageService.setdata(JOB_ID,jobId);
+    this.dataStorageService.setdata(CORPORATE_ID,corporateId);
   }
 
   ngOnDestroy() {

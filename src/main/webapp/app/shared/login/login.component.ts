@@ -1,3 +1,5 @@
+import { CandidateService } from '../../entities/candidate';
+import { CorporateService } from '../../entities/corporate';
 import {Component, OnInit, AfterViewInit, Renderer, ElementRef} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
@@ -8,7 +10,11 @@ import {LoginService} from './login.service';
 import {StateStorageService} from '../../shared/auth/state-storage.service';
 import {SocialService} from '../../shared/social/social.service';
 import {Principal} from '../../shared/auth/principal.service';
+import { AuthoritiesConstants } from '../authorities.constant';
+import { USER_TYPE, USER_ID, USER_DATA } from '../constants/storage.constants';
+import { DataStorageService } from '../helper/localstorage.service';
 import { LoginEmitterService } from './login-emitter.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-login-modal',
@@ -23,6 +29,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
   credentials: any;
   loginForm: FormGroup;
   account: any;
+  subscriber : Subscription;
 
 
 
@@ -39,7 +46,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     private principal: Principal,
     public activeModal: NgbActiveModal,
     private spinnerService: NgxSpinnerService,
-    private loginEmitterService: LoginEmitterService
+    private loginEmitterService: LoginEmitterService,
   ) {
     this.credentials = {};
   }
@@ -105,7 +112,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
     }).catch(() => {
       this.authenticationError = true;
       this.spinnerService.hide();
-    });
+    });//
 
     //   this.redirectAfterLogin ();
    
@@ -113,18 +120,25 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
 
   redirectAfterLogin() {
     const redirectTo = null;
-    this.principal.identity().then((value) => {
-      if (value.authorities.indexOf('ROLE_CANDIDATE') > -1) {
-       //this.router.navigate(['/candidate-profile',{outlets:{detail:'details'}}]);
-           this.router.navigate(['/viewjobs']);
-      } else if (value.authorities.indexOf('ROLE_CORPORATE') > -1) {
-        this.router.navigate(['/job']);
-      } else if (value.authorities.indexOf('ROLE_ADMIN') > -1) {
-        this.router.navigate(['']);
-      }
-   });
-  }
+    this.subscriber = this.eventManager.subscribe('userDataLoadedSuccess', (response) => {
+         console.log('Navigate after subscirber retruens');
+      this.principal.identity().then((value) => {
+        // this.loadId();
+        if (value.authorities.indexOf('ROLE_CANDIDATE') > -1) {
+          //this.router.navigate(['/candidate-profile',{outlets:{detail:'details'}}]);
+          this.router.navigate(['/viewjobs']);
+        } else if (value.authorities.indexOf('ROLE_CORPORATE') > -1) {
+          this.router.navigate(['/job']);
+        } else if (value.authorities.indexOf('ROLE_ADMIN') > -1) {
+          this.router.navigate(['']);
+        }
+      });
+    });
 
+  }
+  
+ /*
+*/
   register() {
     //  this.activeModal.dismiss('to state register');
     this.router.navigate(['/register']);

@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { GradzcircleSharedModule, DataService } from '../../shared';
+import { GradzcircleSharedModule, DataStorageService } from '../../shared';
 
 
 import {
@@ -54,7 +54,7 @@ const ENTITY_STATES = [
         CandidateEducationService,
         CandidateEducationPopupService,
         CandidateEducationPopupServiceNew,
-        DataService
+        DataStorageService
        // CollegeResolverService,
       //  CourseResolverService,
       //  QualificationResolverService

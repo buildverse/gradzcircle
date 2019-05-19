@@ -350,8 +350,10 @@ public class CandidateService {
 			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		dto.setShortListed(isShortListed);
-		dto.setMatchScore(candidateJob.getMatchScore());
-		dto.setReviewed(candidateJob.getReviewed());
+		if(candidateJob != null ) {
+			dto.setMatchScore(candidateJob.getMatchScore());
+			dto.setReviewed(candidateJob.getReviewed());
+		}
 		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
 		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));
 		dto.setEducations(dtoConverter.convertCandidateEducations(candidateEducations, false,candidate));

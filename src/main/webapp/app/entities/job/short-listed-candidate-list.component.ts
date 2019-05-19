@@ -6,8 +6,8 @@ import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, UserService} from '../../shared';
 import {CandidateList} from './candidate-list.model';
 import { HttpResponse } from '@angular/common/http';
-import { DataService } from '../../shared/helper/data.service';
 import {JOB_ID, CORPORATE_ID,CANDIDATE_ID} from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 
 @Component({
   selector: 'jhi-short-listed-candidate-list',
@@ -40,7 +40,8 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private dataService: DataService
+    private dataStorageService :  DataStorageService
+
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -97,8 +98,8 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.jobId = +this.dataService.get(JOB_ID);
-     this.corporateId = +this.dataService.get(CORPORATE_ID);
+      this.jobId = +this.dataStorageService.getData(JOB_ID);
+     this.corporateId = +this.dataStorageService.getData(CORPORATE_ID);
       this.loadShortListedCandidates(); 
         this.registerChangeInShortListed();
   
@@ -107,9 +108,9 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
   }
 
    setPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataService.put(CANDIDATE_ID, candidateId);
-    this.dataService.put(JOB_ID, this.jobId);
-    this.dataService.put(CORPORATE_ID, corporateId);
+    this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
+    this.dataStorageService.setdata(JOB_ID, this.jobId);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId);
   }
   
   ngOnDestroy() {

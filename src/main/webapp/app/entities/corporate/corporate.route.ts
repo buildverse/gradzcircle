@@ -35,7 +35,7 @@ export const corporateRoute: Routes = [
         authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
         pageTitle: 'gradzcircleApp.corporate.home.title'
       }, resolve: {
-        corporate: CorporateResolverService
+       // corporate: CorporateResolverService
       },
       canActivate: [UserRouteAccessService],
       children: [

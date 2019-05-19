@@ -1,9 +1,10 @@
+import { JOB_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import {DataService} from '../../shared';
 import { Job } from './job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
@@ -49,7 +50,7 @@ export class JobRemovePopupComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private jobPopupService: JobPopupService,
-        private dataService: DataService
+        private dataService: DataStorageService
     ) {}
 
     ngOnInit() {
@@ -59,7 +60,7 @@ export class JobRemovePopupComponent implements OnInit, OnDestroy {
                 .open(JobRemoveDialogComponent as Component, params['id']);
           } else {
             this.jobPopupService
-                .open(JobRemoveDialogComponent as Component, this.dataService.getRouteData());
+                .open(JobRemoveDialogComponent as Component, this.dataService.getData(JOB_ID));
           }
             
         });
