@@ -18,7 +18,7 @@ header {
 .jumbotron .banner_heading {
 	margin-top:30px;
     font-size: 45px;
-    font-family: 'proxima_nova_rgbold';
+   /* font-family: 'proxima_nova_rgbold';*/
     color: #fff;
     font-weight: bold;
 }

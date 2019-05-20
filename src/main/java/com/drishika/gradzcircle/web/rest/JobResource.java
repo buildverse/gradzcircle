@@ -485,6 +485,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateProfileListDTO>> getMatchedCandidatesForJob(@ApiParam Pageable pageable,
 			@PathVariable Long jobId) {
+		log.info("Getting matched candidates for job {}",jobId);
 		final Page<CandidateProfileListDTO> page = jobService.getMatchedCandidatesForJob(pageable, jobId);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/matchedCandiatesForJob");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -499,6 +500,7 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<List<CandidateProfileListDTO>> getAppliedCandidatesForJob(@ApiParam Pageable pageable,
 			@PathVariable Long jobId) {
+		log.info("Getting applied candidates for job {}",jobId);
 		final Page<CandidateProfileListDTO> page = jobService.getAppliedCandidatesForJob(pageable, jobId);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedCandiatesForJob");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

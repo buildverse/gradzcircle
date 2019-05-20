@@ -97,25 +97,29 @@ export class CorporateComponent implements OnInit, OnDestroy {
     this.reloadCorporateImage();
     this.registerChangeInCorporates();
     this.registerChangeInCorporateImage();*/
-    this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA));
-      if(!this.corporate) {
-        this.principal.identity(true).then((user) => {
-        this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
-              this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.CORPORATE);
-              this.localStorageService.setdata(USER_ID, response.body.id);
-              this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
-              this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA)); 
-              this.corporateId = this.localStorageService.getData(USER_ID);
-          this.currentSearch = this.corporate.id.toString();
-              this.eventManager.broadcast({
-                name: 'userDataLoadedSuccess',
-                content: 'User Data Load Success'
-              });
-              console.log('Loaded Corporate info');
-            });
-        });
+    if (this.localStorageService.getData(USER_TYPE) === AuthoritiesConstants.ADMIN) {
+      this.loadAll();
     } else {
-      this.currentSearch = this.corporate.id.toString();
+      this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA));
+      if (!this.corporate) {
+        this.principal.identity(true).then((user) => {
+          this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
+            this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.CORPORATE);
+            this.localStorageService.setdata(USER_ID, response.body.id);
+            this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
+            this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA));
+            this.corporateId = this.localStorageService.getData(USER_ID);
+            this.currentSearch = this.corporate.id.toString();
+            this.eventManager.broadcast({
+              name: 'userDataLoadedSuccess',
+              content: 'User Data Load Success'
+            });
+            console.log('Loaded Corporate info');
+          });
+        });
+      } else {
+        this.currentSearch = this.corporate.id.toString();
+      }
     }
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
     this.reloadCorporateImage();

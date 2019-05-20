@@ -60,50 +60,77 @@ public class DTOConverters {
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CandidateAppliedJobs candidateAppliedJob,
 			Candidate candidate, Job job) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
+		setCoreCandidateFields(candidate,dto);
+	/*	CandidateEducation highestCandidateEducation =null;
 		dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
-		dto.setId(candidate.getId());
+		dto.setId(candidate.getId());*/
 		dto.setCorporateId(job.getCorporate().getId());
 		dto.setJobId(job.getId());
-		CandidateEducation highestCandidateEducation = candidate.getEducations().stream()
-				.filter(education -> education.isHighestQualification()).findFirst().get();
-		dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
-				+ highestCandidateEducation.getCourse().getCourse());
-		logger.debug("The CandidateProfileListDTO is {}",dto);
+		/*if (candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst()
+				.isPresent()) {
+			highestCandidateEducation = candidate.getEducations().stream()
+					.filter(education -> education.isHighestQualification()).findFirst().get();
+			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification()
+					+ " in " + highestCandidateEducation.getCourse().getCourse());
+		}*/
+		logger.debug("The CandidateProfileListDTO is {}", dto);
 		return dto;
+	}
+	
+	private void setCoreCandidateFields(Candidate candidate,CandidateProfileListDTO dto) {
+		CandidateEducation highestCandidateEducation =null;
+		dto.setFirstName(candidate.getFirstName());
+		dto.setId(candidate.getId());
+		dto.setLastName(candidate.getLastName());
+		dto.setLogin(candidate.getLogin());
+		if (candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst()
+				.isPresent()) {
+			highestCandidateEducation = candidate.getEducations().stream()
+					.filter(education -> education.isHighestQualification()).findFirst().get();
+			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification()
+					+ " in " + highestCandidateEducation.getCourse().getCourse());
+		}
 	}
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CandidateJob candidateJob) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
+		setCoreCandidateFields(candidate,dto);
+		/*CandidateEducation highestCandidateEducation = null;
 		dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
-		dto.setId(candidate.getId());
+		dto.setId(candidate.getId());*/
 		dto.setReviewed(candidateJob.getReviewed());
-		CandidateEducation highestCandidateEducation = candidate.getEducations().stream()
-				.filter(education -> education.isHighestQualification()).findFirst().get();
-		dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
-				+ highestCandidateEducation.getCourse().getCourse());
+		/*if (candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst()
+				.isPresent()) {
+			highestCandidateEducation = candidate.getEducations().stream()
+					.filter(education -> education.isHighestQualification()).findFirst().get();
+			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification()
+					+ " in " + highestCandidateEducation.getCourse().getCourse());
+		}*/
 		return dto;
 	}
 	
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CorporateCandidate corporateCandidate) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		dto.setFirstName(candidate.getFirstName());
+		setCoreCandidateFields(candidate,dto);
+	/*	dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setId(candidate.getId());
 		CandidateEducation highestCandidateEducation = candidate.getEducations().stream()
 				.filter(education -> education.isHighestQualification()).findFirst().get();
 		dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
-				+ highestCandidateEducation.getCourse().getCourse());
+				+ highestCandidateEducation.getCourse().getCourse());*/
 		return dto;
 	}
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		dto.setFirstName(candidate.getFirstName());
+		setCoreCandidateFields(candidate,dto);
+		/*dto.setFirstName(candidate.getFirstName());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setId(candidate.getId());
@@ -114,7 +141,7 @@ public class DTOConverters {
 				.filter(education -> education.isHighestQualification()).findFirst().get();
 		if(highestCandidateEducation != null)
 			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification() + " in "
-				+ highestCandidateEducation.getCourse().getCourse());
+				+ highestCandidateEducation.getCourse().getCourse());*/
 		return dto;
 	}
 	

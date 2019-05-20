@@ -93,7 +93,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   loadId() {
     if (!this.localStorageService.getData(USER_TYPE)) {
       this.principal.identity(true).then((user) => {
-        console.log('Begin loading user info');
+      //  console.log('Begin loading user info');
         if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
           this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
             this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.CORPORATE);
@@ -104,7 +104,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
               name: 'userDataLoadedSuccess',
               content: 'User Data Load Success'
             });
-            console.log('Loaded Corporate info');
+           // console.log('Loaded Corporate info');
           });
         } else {
           if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
@@ -117,8 +117,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
                 name: 'userDataLoadedSuccess',
                 content: 'User Data Load Success'
               });
-              console.log('Loaded Candidate info');
+            //  console.log('Loaded Candidate info');
             });
+          } else if (user && user.authorities.indexOf('ROLE_ADMIN') > -1){
+             this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.ADMIN);
+            this.eventManager.broadcast({
+                name: 'userDataLoadedSuccess',
+                content: 'User Data Load Success'
+              });
+            //console.log('Loaded Admin info');
           }
         }
       });

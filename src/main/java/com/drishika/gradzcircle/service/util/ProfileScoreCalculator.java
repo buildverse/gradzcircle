@@ -111,6 +111,7 @@ public class ProfileScoreCalculator {
 	}
 	
 	public void updateProfileScore(Candidate candidate,String categoryName, Boolean remove) {
+		//Comment If while running local tests
 		if(profileCategoryWeightMap.isEmpty())
 			init();
 		Double totalScore = candidate.getProfileScore()!=null?candidate.getProfileScore():0D;

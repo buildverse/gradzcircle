@@ -228,12 +228,12 @@ tbody>tr>td {
 .db-right .db-content tbody td {
   padding: 12px 21px !important;
   font-size: 14px;
-  font-family: 'proxima_nova_rgregular';
+ /* font-family: 'proxima_nova_rgregular';*/
 }
 .db-right .db-content thead th {
   padding: 12px 21px !important;
   font-size: 16px;
-  font-family: 'proxima_nova_rgregular';
+ /* font-family: 'proxima_nova_rgregular';*/
 }
 
 .bottom-border {

@@ -28,7 +28,7 @@ public class ElasticsearchConfiguration {
 
 	// USE in DEV
 	@Bean
-	@Profile("dev")
+	@Profile({"default" , "dev"})
 	public ElasticsearchTemplate elasticsearchTemplate(Client client,
 			Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
 		return new ElasticsearchTemplate(client,
@@ -38,14 +38,14 @@ public class ElasticsearchConfiguration {
 	/* USED for PROD */
 
 	@Bean
-	@Profile("!dev")
+	@Profile({"prod" , "uat"})
 	public ElasticsearchTemplate elasticsearchTemplate(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
 		return new ElasticsearchTemplate(client(),
 				new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));
 	}
 
 	@Bean
-	@Profile("!dev")
+	@Profile({"prod" , "uat"})
 	public TransportClient client() {
 		TransportClient client = null;
 		boolean enableSsl = true;
@@ -64,7 +64,7 @@ public class ElasticsearchConfiguration {
 		return client;
 	}
 
-	
+
 	public class CustomEntityMapper implements EntityMapper {
 
 		private ObjectMapper objectMapper;

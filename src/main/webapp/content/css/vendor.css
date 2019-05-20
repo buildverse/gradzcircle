@@ -1,3 +1,5 @@
 /* after changing this file run 'yarn run webpack:build' */
 /*@import '~froala-editor/css/froala_editor.pkgd.min.css';*/
-@import '~font-awesome/css/font-awesome.min.css';
+/*@import '~font-awesome/css/font-awesome.min.css';*/
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~font-awesome/css/font-awesome.css';

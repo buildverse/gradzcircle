@@ -563,7 +563,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
     this.candidate = JSON.parse(this.dataStorageService.getData(USER_DATA));
     this.candidateId = this.candidate.id;
     //console.log('What is userid'+JSON.stringify(this.candidateId));
-   // console.log('What is userData'+JSON.stringify(this.candidate));
+   //  console.log('What is userData'+JSON.stringify(this.candidate));
     if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
     } else if (!this.candidate.hasEducationScore) {

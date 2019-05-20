@@ -1,17 +1,14 @@
-import {Component, OnInit, OnDestroy,ViewChild} from '@angular/core';
-import {ActivatedRoute, Router,Event, NavigationCancel,NavigationEnd,NavigationStart} from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import {JhiEventManager, JhiParseLinks, JhiAlertService} from 'ng-jhipster';
 import {JobConstants} from './job.constants';
 import {Job} from './job.model';
 import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, Principal, DataStorageService} from '../../shared';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA} from '../../shared/constants/storage.constants';
-import {CandidateService} from '../candidate/candidate.service';
-import {CorporateService} from '../corporate/corporate.service';
+import {JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA, USER_TYPE} from '../../shared/constants/storage.constants';
 import {Corporate} from '../corporate/corporate.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -180,58 +177,41 @@ export class JobComponent implements OnInit, OnDestroy {
     this.job = new Job();
     this.corporate = new Corporate();
     this.DRAFT = JobConstants.DRAFT;
-    //this.userLoadSubscriber = this.eventManager.subscribe('userDataLoadedSuccess', (response) => {
-      this.principal.identity().then((account) => {
-        if (account) {
+    this.principal.identity().then((account) => {
+      if (account) {
+        if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
           this.currentAccount = account;
           this.spinnerService.show();
           this.corporate = JSON.parse(this.dataStorageService.getData(USER_DATA));
           this.currentSearch = this.corporate.id.toString();
           this.corporateId = this.corporate.id;
-          console.log('Load active jobs');
+          //  console.log('Load active jobs');
           this.loadActiveJobs();
           this.registerChangeInJobs();
-        } 
-         else {
-        this.loadAll();
+        } else if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.ADMIN){
+           this.jobService.query({
+              page: this.page - 1,
+              size: this.itemsPerPage,
+              sort: this.sort()
+            }).subscribe(
+                 (res: HttpResponse<Job[]>) => {
+                  this.jobs = res.body;
+                  this.currentSearch = '';
+              },
+              (res: HttpErrorResponse) => this.onError(res.message)
+              );
         }
-      });
-   // });
-    
-     this.principal.identity(false).then((account) => {
+      } else {
+      this.loadAll();
+    }
+   });
+    this.principal.identity(false).then((account) => {
       if (account) {
         this.loadActiveJobs();
       } else {
-         this.loadAll();
-      }
-    });
-    
-   /*  this.principal.identity().then((account) => {
-      if(account) {
-        this.currentAccount = account;
-      
-       if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-          this.spinnerService.show();
-          this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-            this.corporateId = response.body.id;
-            this.corporate = response.body;
-            this.loadActiveJobs();
-          });
-        } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
-          this.spinnerService.show();
-          this.candidateService.getCandidateByLoginId(account.id).subscribe((response) => {
-            this.candidateId = response.body.id;
-            this.loadActiveAndMatchedJobsForCandidates();
-          });
-        } else {
-          this.loadAll();
-        }
-        this.registerChangeInJobs();
-        } else {
         this.loadAll();
       }
-    });*/
-
+    });
   }
 
   ngOnDestroy() {

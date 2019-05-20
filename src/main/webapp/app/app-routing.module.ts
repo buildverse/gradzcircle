@@ -5,6 +5,10 @@ import { DEBUG_INFO_ENABLED } from './app.constants';
 
 const LAYOUT_ROUTES = [
     navbarRoute,
+   /* {
+        path: 'candidate-profile',
+        loadChildren: './profiles/candidate/candidate-profile.module#CandidateProfileModule'
+     },*/
     ...errorRoute
 ];
 
