@@ -1128,8 +1128,140 @@ public class CandidateEducationResourceIntTest {
 
 	@Test
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
-	public void deleteTheOnlyEducationRecordWithNoSavedLanguageAndGender() throws Exception {
+	public void createCandidateEducationOneThenAddAnotherThenUpdateOneRemoveEducationThenAddAgainThenRemoveAllTheScoreShouldMoveFrom20To70AndBackTo20() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 
+		university = universityRepository.saveAndFlush(university);
+		college = collegeRepository.saveAndFlush(college);
+		qualification = qualificationRepository.saveAndFlush(qualification);
+		course = courseRepository.saveAndFlush(course);
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		candidate = candidateRepository.saveAndFlush(candidate);
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,personal);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(15d);
+		candidate.addCandidateProfileScore(candidateProfileScore1).addCandidateProfileScore(candidateProfileScore2);
+		candidate.setProfileScore(20D);
+		candidateRepository.saveAndFlush(candidate);
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
+				.university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+
+		candidateEducation.college(college).course(course).qualification(qualification).candidate(candidate);
+
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		Candidate testCandidate = testCandidateEducation.getCandidate();
+		assertThat(candidateEducationList.size()).isEqualTo(1);
+		
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+
+		CandidateEducation candidateEducation2 = new CandidateEducation().grade(UPDATED_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		candidateEducation2.college(college).course(course).qualification(qualification).candidate(candidate);
+		
+		restCandidateEducationMockMvc
+		.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEducation2)))
+		.andExpect(status().isCreated());
+
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		CandidateEducation updatedCandidateEducation = candidateEducationRepository.findOne(testCandidateEducation.getId());
+		updatedCandidateEducation.grade(UPDATED_GRADE).educationFromDate(UPDATED_EDUCATION_FROM_DATE)
+				.educationToDate(UPDATED_EDUCATION_TO_DATE).isPursuingEducation(UPDATED_IS_PURSUING_EDUCATION)
+				.gradeScale(UPDATED_GRADE_SCALE).highestQualification(UPDATED_HIGHEST_QUALIFICATION)
+				.roundOfGrade(UPDATED_ROUND_OF_GRADE).gradeDecimal(UPDATED_GRADE_DECIMAL)
+				.capturedCourse(UPDATED_CAPTURED_COURSE).capturedQualification(UPDATED_CAPTURED_QUALIFICATION)
+				.capturedCollege(UPDATED_CAPTURED_COLLEGE).capturedUniversity(UPDATED_CAPTURED_UNIVERSITY)
+				.percentage(UPDATED_PERCENTAGE).scoreType(UPDATED_SCORE_TYPE)
+				.educationDuration(UPDATED_EDUCATION_DURATION).candidate(candidate);
+		
+		restCandidateEducationMockMvc
+		.perform(put("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidateEducation)))
+		.andExpect(status().isOk());
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testCandidateEducation.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(1);
+		CandidateEducation testEducation2 = candidateEducationList.get(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEducationMockMvc
+		.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+		.andExpect(status().isCreated());
+		
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		testCandidateEducation = candidateEducationList.get(0);
+		testEducation2 = candidateEducationList.get(1);
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testCandidateEducation.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testEducation2.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(20D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(0D);
+		
+		
 	}
 
 	@Test

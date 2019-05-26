@@ -86,6 +86,7 @@ public class CandidateLanguageService {
 		injestLanguageInformation(candidateLanguageProficiency);
 		CandidateLanguageProficiency fromRepo = candidateLanguageProficiencyRepository.findOne(candidateLanguageProficiency.getId());
 		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency.candidate(fromRepo.getCandidate()));
+		
 		// Candidate candidate =
 		// candidateRepository.findOne(result.getCandidate().getId());
 		// //candidate.addCandidateLanguageProficiency(result);

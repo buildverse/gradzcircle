@@ -3557,10 +3557,7 @@ public class JobResourceIntTest {
 		jobRepository.saveAndFlush(job1);
 		jobRepository.saveAndFlush(job2);
 		jobRepository.saveAndFlush(job3);
-		
-		// Get all the jobList
-		// ResultActions resultActions =
-		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+
 		restJobMockMvc.perform(get("/api/countOfActiveJobs"))
 				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

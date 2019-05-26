@@ -1013,7 +1013,7 @@ public class CandidateResourceIntTest {
 
 	@Test
 	@Transactional
-	public void updateCandidate() throws Exception {
+	public void updateCandidatePersonalDetailsFromBasic() throws Exception {
 		// Initialize the database
 		candidateRepository.saveAndFlush(candidate);
 		int databaseSizeBeforeUpdate = candidateRepository.findAll().size();
@@ -1077,7 +1077,7 @@ public class CandidateResourceIntTest {
 		candidate.addCandidateProfileScore(candidateProfileScore3);
 		candidate.setProfileScore(60D);
 		candidateRepository.saveAndFlush(candidate);
-		System.out.println("========================="+profileCategoryRepository.findAll());
+
 		// Update the candidate
 		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
 		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
@@ -1200,4 +1200,6 @@ public class CandidateResourceIntTest {
 		candidate1.setId(null);
 		assertThat(candidate1).isNotEqualTo(candidate2);
 	}
+	
+
 }

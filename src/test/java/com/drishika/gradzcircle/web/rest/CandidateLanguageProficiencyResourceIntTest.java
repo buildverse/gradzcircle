@@ -402,6 +402,127 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		// candidateLanguageProficiencySearchRepository.findOne(testCandidateLanguageProficiency.getId());
 		// assertThat(candidateLanguageProficiencyEs).isEqualToComparingFieldByField(testCandidateLanguageProficiency);
 	}
+	
+	@Test
+	@Transactional
+	public void testCreateLanguageCreatAnotherOneDeleteOneUpdateRemainingDeleteAllScoreFrom10to5() throws Exception {
+		
+		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		candidateRepository.saveAndFlush(candidate);
+		candidateLanguageProficiency.language(hindiLanguage);
+		candidateLanguageProficiency.candidate(candidate);
+		CandidateProfileScore scoreBasic = new CandidateProfileScore(candidate, basic);
+		scoreBasic.setScore(5d);
+		candidate.addCandidateProfileScore(scoreBasic);
+		candidate.setProfileScore(5d);;
+		candidateRepository.saveAndFlush(candidate);
+		// Create the CandidateLanguageProficiency
+		restCandidateLanguageProficiencyMockMvc
+				.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateLanguageProficiency in the database
+		List<CandidateLanguageProficiency> candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+
+		assertThat(candidateLanguageProficiencyList).hasSize(1);
+		CandidateLanguageProficiency testCandidateLanguageProficiency = candidateLanguageProficiencyList
+				.get(candidateLanguageProficiencyList.size() - 1);
+		Candidate testCandidate = testCandidateLanguageProficiency.getCandidate();
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(DEFAULT_PROFICIENCY);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(10d);
+		assertThat(testCandidate.getProfileScores().size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		System.out.println("======================" + testCandidate.getProfileScores());
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		
+		restCandidateLanguageProficiencyMockMvc
+		.perform(post("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateLanguageProficiency)))
+		.andExpect(status().isCreated());
+		
+		 candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+				.findAll();
+
+		assertThat(candidateLanguageProficiencyList).hasSize(2);
+		testCandidate = candidateRepository.findAll().get(0);
+		testCandidateLanguageProficiency = candidateLanguageProficiencyList
+				.get(candidateLanguageProficiencyList.size() - 1);
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(DEFAULT_PROFICIENCY);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(10d);
+		assertThat(testCandidate.getProfileScores().size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		
+		restCandidateLanguageProficiencyMockMvc
+		.perform(delete("/api/candidate-language-proficiencies/{id}", testCandidateLanguageProficiency.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+		
+		 candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+					.findAll();
+
+			assertThat(candidateLanguageProficiencyList).hasSize(1);
+			testCandidate = candidateRepository.findAll().get(0);
+			testCandidateLanguageProficiency = candidateLanguageProficiencyList
+					.get(candidateLanguageProficiencyList.size() - 1);
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(DEFAULT_PROFICIENCY);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(10d);
+		assertThat(testCandidate.getProfileScores().size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		
+		
+        CandidateLanguageProficiency updatedCandidateLanguageProficiency = candidateLanguageProficiencyRepository
+				.findOne(testCandidateLanguageProficiency.getId());
+      //  System.out.println("=========== to update is "+updatedCandidateLanguageProficiency);
+		restCandidateLanguageProficiencyMockMvc
+		.perform(put("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidateLanguageProficiency.proficiency(UPDATED_PROFICIENCY))))
+		.andExpect(status().isOk());
+		
+		 candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+					.findAll();
+
+			assertThat(candidateLanguageProficiencyList).hasSize(1);
+			testCandidate = candidateRepository.findAll().get(0);
+			testCandidateLanguageProficiency = candidateLanguageProficiencyList
+					.get(candidateLanguageProficiencyList.size() - 1);
+		assertThat(testCandidateLanguageProficiency.getProficiency()).isEqualTo(UPDATED_PROFICIENCY);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(10d);
+		assertThat(testCandidate.getProfileScores().size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		
+		restCandidateLanguageProficiencyMockMvc
+		.perform(delete("/api/candidate-language-proficiencies/{id}", testCandidateLanguageProficiency.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+		
+		 candidateLanguageProficiencyList = candidateLanguageProficiencyRepository
+					.findAll();
+
+			assertThat(candidateLanguageProficiencyList).hasSize(0);
+			testCandidate = candidateRepository.findAll().get(0);
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(5d);
+		assertThat(testCandidate.getProfileScores().size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isEqualTo(0d);
+		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		
+		
+	}
 
 	@Test
 	@Transactional

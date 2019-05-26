@@ -99,7 +99,7 @@ public class CandidateCertificationResourceIntTest {
 
 	private MockMvc restCandidateCertificationMockMvc;
 
-	private CandidateCertification candidateCertification;
+	private CandidateCertification candidateCertification, candidateCertification2;
 	
 	private Candidate candidate;
 
@@ -124,6 +124,13 @@ public class CandidateCertificationResourceIntTest {
 				.certificationTitle(DEFAULT_CERTIFICATION_TITLE).certificationDate(DEFAULT_CERTIFICATION_DATE)
 				.certificationDetails(DEFAULT_CERTIFICATION_DETAILS);
 		return candidateCertification;
+	}
+	
+	public static CandidateCertification createEntity2(EntityManager em) {
+		CandidateCertification candidateCertification2 = new CandidateCertification()
+				.certificationTitle(DEFAULT_CERTIFICATION_TITLE).certificationDate(DEFAULT_CERTIFICATION_DATE)
+				.certificationDetails(DEFAULT_CERTIFICATION_DETAILS);
+		return candidateCertification2;
 	}
 	
 	/**
@@ -171,6 +178,7 @@ public class CandidateCertificationResourceIntTest {
 	public void initTest() {
 		candidateCertificationSearchRepository.deleteAll();
 		candidateCertification = createEntity(em);
+		candidateCertification2 = createEntity2(em);
 		candidate = createCandidateEntity(em);
 		basic = createBasicProfile(em);
 		personal = createPersonalProfile(em);
@@ -218,6 +226,8 @@ public class CandidateCertificationResourceIntTest {
 		//assertThat(candidateCertificationEs).isEqualToComparingFieldByField(testCandidateCertification);
 	}
 	
+	
+	
 	@Test
 	@Transactional
 	public void createFirstCandidateCertificationShouldCreateCertProfileScoreAndMaintainAlreadyExistingScore() throws Exception {
@@ -253,6 +263,122 @@ public class CandidateCertificationResourceIntTest {
 		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
 		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
 
+	}
+	
+	@Test
+	@Transactional
+	public void createCertificationAndAnotherCertificationUpdateOneRemoveOneAndRemoveAllAndAddBackScoreShouldMoveFrom20To25To20To25() throws Exception {
+		
+		int databaseSizeBeforeCreate = candidateCertificationRepository.findAll().size();
+		candidateRepository.saveAndFlush(candidate);
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,personal);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(15d);
+		candidate.addCandidateProfileScore(candidateProfileScore1);
+		candidate.addCandidateProfileScore(candidateProfileScore2);
+		candidate.setProfileScore(20D);
+		candidateRepository.saveAndFlush(candidate);
+		candidateCertification.setCandidate(candidate);
+		candidateCertification2.setCandidate(candidate);
+		// Create the CandidateCertification
+		restCandidateCertificationMockMvc
+				.perform(post("/api/candidate-certifications").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateCertification)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateCertification in the database
+		List<CandidateCertification> candidateCertificationList = candidateCertificationRepository.findAll();
+		assertThat(candidateCertificationList).hasSize(databaseSizeBeforeCreate + 1);
+		CandidateCertification testCandidateCertification = candidateCertificationList
+				.get(candidateCertificationList.size() - 1);
+		assertThat(testCandidateCertification.getCertificationTitle()).isEqualTo(DEFAULT_CERTIFICATION_TITLE);
+		assertThat(testCandidateCertification.getCertificationDate()).isEqualTo(DEFAULT_CERTIFICATION_DATE);
+		assertThat(testCandidateCertification.getCertificationDetails()).isEqualTo(DEFAULT_CERTIFICATION_DETAILS);
+		assertThat(testCandidateCertification.getCandidate()).isEqualTo(candidate);
+		assertThat(testCandidateCertification.getCandidate().getCertifications().size()).isEqualTo(1);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateCertification.getCandidate().getProfileScore()).isEqualTo(25D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		
+		restCandidateCertificationMockMvc
+		.perform(post("/api/candidate-certifications").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateCertification2)))
+		.andExpect(status().isCreated());
+
+		candidateCertificationList = candidateCertificationRepository.findAll();
+		assertThat(candidateCertificationList).hasSize(2);
+		assertThat(testCandidateCertification.getCandidate().getCertifications().size()).isEqualTo(2);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateCertification.getCandidate().getProfileScore()).isEqualTo(25D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		
+		CandidateCertification updatedCandidateCertification = candidateCertificationRepository
+				.findOne(testCandidateCertification.getId());
+		updatedCandidateCertification.certificationTitle(UPDATED_CERTIFICATION_TITLE)
+				.certificationDate(UPDATED_CERTIFICATION_DATE).certificationDetails(UPDATED_CERTIFICATION_DETAILS).candidate(candidate);
+		
+		restCandidateCertificationMockMvc
+		.perform(put("/api/candidate-certifications").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidateCertification)))
+		.andExpect(status().isOk());
+		
+		candidateCertificationList = candidateCertificationRepository.findAll();
+		testCandidateCertification = candidateCertificationList.get(0);
+		assertThat(candidateCertificationList).hasSize(2);
+		assertThat(testCandidateCertification.getCandidate().getCertifications().size()).isEqualTo(2);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateCertification.getCandidate().getProfileScore()).isEqualTo(25D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		
+		restCandidateCertificationMockMvc
+		.perform(delete("/api/candidate-certifications/{id}", testCandidateCertification.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+		
+		candidateCertificationList = candidateCertificationRepository.findAll();
+		assertThat(candidateCertificationList).hasSize(1);
+		testCandidateCertification = candidateCertificationList
+				.get(candidateCertificationList.size() - 1);
+		assertThat(testCandidateCertification.getCandidate().getCertifications().size()).isEqualTo(1);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateCertification.getCandidate().getProfileScore()).isEqualTo(25D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+
+		
+		restCandidateCertificationMockMvc
+		.perform(delete("/api/candidate-certifications/{id}", testCandidateCertification.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+		
+		candidateCertificationList = candidateCertificationRepository.findAll();
+		assertThat(candidateCertificationList).hasSize(0);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getCertifications().size()).isEqualTo(0);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(0d);
+		assertThat(candidate.getProfileScore()).isEqualTo(20D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		
+		restCandidateCertificationMockMvc
+		.perform(post("/api/candidate-certifications").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateCertification)))
+		.andExpect(status().isCreated());
+
+		candidateCertificationList = candidateCertificationRepository.findAll();
+		testCandidateCertification = candidateCertificationList.get(0);
+		assertThat(candidateCertificationList).hasSize(1);
+		assertThat(testCandidateCertification.getCandidate().getCertifications().size()).isEqualTo(1);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateCertification.getCandidate().getProfileScore()).isEqualTo(25D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateCertification.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		
+		
 	}
 	
 	@Test

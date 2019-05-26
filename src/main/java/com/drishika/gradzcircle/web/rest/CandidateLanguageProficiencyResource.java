@@ -106,6 +106,7 @@ public class CandidateLanguageProficiencyResource {
 		} catch (Exception ex) {
 			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
 		}
+		log.debug("Returning the Language data {}",result);
 		return ResponseEntity.ok().headers(
 				HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateLanguageProficiency.getId().toString()))
 				.body(result);

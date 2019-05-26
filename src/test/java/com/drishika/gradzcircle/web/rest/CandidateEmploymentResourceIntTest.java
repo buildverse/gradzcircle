@@ -276,6 +276,119 @@ public class CandidateEmploymentResourceIntTest {
 	
 	@Test
 	@Transactional
+	public void createEmployementAndAnotherUpdateONEDeleteALLAndAddOneAndDeleteScoreShouldGoFrom55to70to55() throws Exception {
+		candidateRepository.saveAndFlush(candidate);
+		int databaseSizeBeforeCreate = candidateEmploymentRepository.findAll().size();
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,edu);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(50d);
+		candidate.addCandidateProfileScore(candidateProfileScore1);
+		candidate.addCandidateProfileScore(candidateProfileScore2);
+
+		candidate.setProfileScore(55D);
+		candidateRepository.saveAndFlush(candidate);
+		candidateEmployment.setCandidate(candidate);
+		// Create the CandidateEmployment
+		restCandidateEmploymentMockMvc
+				.perform(post("/api/candidate-employments").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEmployment)))
+				.andExpect(status().isCreated());
+		
+		List<CandidateEmployment> candidateEmploymentList = candidateEmploymentRepository.findAll();
+		CandidateEmployment testCandidateEmployment = candidateEmploymentList.get(candidateEmploymentList.size() - 1);
+		assertThat(candidateEmploymentList).hasSize(1);
+		assertThat(testCandidateEmployment.getCandidate().getEmployments().size()).isEqualTo(1);
+		assertThat(testCandidateEmployment.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(15d);
+		assertThat(testCandidateEmployment.getCandidate().getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidateEmployment.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateEmployment.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+
+		CandidateEmployment candidateEmployment2 = new CandidateEmployment().jobTitle("BBB");
+		candidateEmployment2.candidate(candidate);
+		
+		restCandidateEmploymentMockMvc
+		.perform(post("/api/candidate-employments").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEmployment2)))
+		.andExpect(status().isCreated());
+
+		candidateEmploymentList = candidateEmploymentRepository.findAll();
+		assertThat(candidateEmploymentList).hasSize(2);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getEmployments().size()).isEqualTo(2);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(15d);
+		assertThat(candidate.getProfileScore()).isEqualTo(70D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+
+		CandidateEmployment updatedCandidateEmployment = candidateEmploymentRepository
+				.findOne(testCandidateEmployment.getId());
+		updatedCandidateEmployment.location(UPDATED_LOCATION).jobTitle(UPDATED_JOB_TITLE)
+				.employerName(UPDATED_EMPLOYER_NAME).employmentStartDate(UPDATED_EMPLOYMENT_START_DATE)
+				.employmentEndDate(UPDATED_EMPLOYMENT_END_DATE).employmentDuration(UPDATED_EMPLOYMENT_DURATION)
+				// .employmentPeriod(UPDATED_EMPLOYMENT_PERIOD)
+				.isCurrentEmployment(UPDATED_IS_CURRENT_EMPLOYMENT).jobDescription(UPDATED_JOB_DESCRIPTION);
+		// .roleAndResponsibilities(UPDATED_ROLE_AND_RESPONSIBILITIES);
+
+		restCandidateEmploymentMockMvc
+				.perform(put("/api/candidate-employments").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(updatedCandidateEmployment)))
+				.andExpect(status().isOk());
+
+		candidateEmploymentList = candidateEmploymentRepository.findAll();
+		assertThat(candidateEmploymentList).hasSize(2);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getEmployments().size()).isEqualTo(2);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(15d);
+		assertThat(candidate.getProfileScore()).isEqualTo(70D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEmploymentMockMvc.perform(delete("/api/candidate-employments/{id}", candidateEmploymentList.get(0).getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		restCandidateEmploymentMockMvc.perform(delete("/api/candidate-employments/{id}", candidateEmploymentList.get(1).getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		
+		candidateEmploymentList = candidateEmploymentRepository.findAll();
+		assertThat(candidateEmploymentList).hasSize(0);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getEmployments().size()).isEqualTo(0);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(0d);
+		assertThat(candidate.getProfileScore()).isEqualTo(55D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEmploymentMockMvc
+		.perform(post("/api/candidate-employments").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEmployment)))
+		.andExpect(status().isCreated());
+		
+		candidateEmploymentList = candidateEmploymentRepository.findAll();
+		assertThat(candidateEmploymentList).hasSize(1);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getEmployments().size()).isEqualTo(1);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(15d);
+		assertThat(candidate.getProfileScore()).isEqualTo(70D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		restCandidateEmploymentMockMvc.perform(delete("/api/candidate-employments/{id}", candidateEmploymentList.get(0).getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		
+		candidateEmploymentList = candidateEmploymentRepository.findAll();
+		assertThat(candidateEmploymentList).hasSize(0);
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getEmployments().size()).isEqualTo(0);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isEqualTo(0d);
+		assertThat(candidate.getProfileScore()).isEqualTo(55D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+	}
+	
+	@Test
+	@Transactional
 	public void createSecondCandidateEmploymentShouldNotChangeExpProfileScore() throws Exception {
 		
 		candidate.addEmployment(new CandidateEmployment().jobTitle("AAA"));

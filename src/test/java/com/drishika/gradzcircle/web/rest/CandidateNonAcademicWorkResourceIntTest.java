@@ -288,6 +288,116 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	//	assertThat(candidateNonAcademicWorkEs).isEqualToComparingFieldByField(testCandidateNonAcademicWork);
 	}
 	
+	@Test
+	@Transactional
+	public void testAddingNonAcadThenUpdatingThenAdingANotherThenDeletingAllThenAddingBackScoreFrom55to60to55() throws Exception {
+		int databaseSizeBeforeCreate = candidateNonAcademicWorkRepository.findAll().size();
+
+		candidateRepository.saveAndFlush(candidate);
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,edu);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(50d);
+		candidate.addCandidateProfileScore(candidateProfileScore1);
+		candidate.addCandidateProfileScore(candidateProfileScore2);
+		candidate.setProfileScore(55D);
+		candidateRepository.saveAndFlush(candidate);
+		candidateNonAcademicWork.setCandidate(candidate);
+		// Create the CandidateNonAcademicWork
+		restCandidateNonAcademicWorkMockMvc
+				.perform(post("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateNonAcademicWork)))
+				.andExpect(status().isCreated());
+
+		// Validate the CandidateNonAcademicWork in the database
+		List<CandidateNonAcademicWork> candidateNonAcademicWorkList = candidateNonAcademicWorkRepository.findAll();
+		assertThat(candidateNonAcademicWorkList).hasSize(databaseSizeBeforeCreate + 1);
+		CandidateNonAcademicWork testCandidateNonAcademicWork = candidateNonAcademicWorkList
+				.get(candidateNonAcademicWorkList.size() - 1);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getNonAcademics().size()).isEqualTo(1);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScores().size()).isEqualTo(3);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_NON_ACADEMIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScore()).isEqualTo(60D);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		CandidateNonAcademicWork updatedCandidateNonAcademicWork = candidateNonAcademicWorkRepository
+				.findOne(testCandidateNonAcademicWork.getId());
+		updatedCandidateNonAcademicWork.nonAcademicInitiativeTitle(UPDATED_NON_ACADEMIC_INITIATIVE_TITLE)
+				.nonAcademicInitiativeDescription(UPDATED_NON_ACADEMIC_INITIATIVE_DESCRIPTION)
+				.duration(UPDATED_DURATION).isCurrentActivity(UPDATED_IS_CURRENT_ACTIVITY)
+				.roleInInitiative(UPDATED_ROLE_IN_INITIATIVE)
+				.nonAcademicWorkStartDate(UPDATED_NON_ACADEMIC_WORK_START_DATE)
+				.nonAcademicWorkEndDate(UPDATED_NON_ACADEMIC_WORK_END_DATE);
+
+		restCandidateNonAcademicWorkMockMvc
+				.perform(put("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(updatedCandidateNonAcademicWork)))
+				.andExpect(status().isOk());
+		
+		candidateNonAcademicWorkList = candidateNonAcademicWorkRepository.findAll();
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getNonAcademics().size()).isEqualTo(1);
+		assertThat(candidate.getProfileScores().size()).isEqualTo(3);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_NON_ACADEMIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(candidate.getProfileScore()).isEqualTo(60D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		restCandidateNonAcademicWorkMockMvc
+		.perform(post("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateNonAcademicWork)))
+		.andExpect(status().isCreated());
+		
+		
+		candidateNonAcademicWorkList = candidateNonAcademicWorkRepository.findAll();
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getNonAcademics().size()).isEqualTo(2);
+		assertThat(candidate.getProfileScores().size()).isEqualTo(3);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_NON_ACADEMIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(candidate.getProfileScore()).isEqualTo(60D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+
+		restCandidateNonAcademicWorkMockMvc
+		.perform(delete("/api/candidate-non-academic-works/{id}", candidateNonAcademicWorkList.get(0).getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+		
+		restCandidateNonAcademicWorkMockMvc
+		.perform(delete("/api/candidate-non-academic-works/{id}", candidateNonAcademicWorkList.get(1).getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk());
+
+		
+		candidateNonAcademicWorkList = candidateNonAcademicWorkRepository.findAll();
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getNonAcademics().size()).isEqualTo(0);
+		assertThat(candidate.getProfileScores().size()).isEqualTo(3);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_NON_ACADEMIC_PROFILE)).findFirst().get().getScore()).isEqualTo(0d);
+		assertThat(candidate.getProfileScore()).isEqualTo(55D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateNonAcademicWorkMockMvc
+		.perform(post("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateNonAcademicWork)))
+		.andExpect(status().isCreated());
+		
+		candidateNonAcademicWorkList = candidateNonAcademicWorkRepository.findAll();
+		candidate = candidateRepository.findAll().get(0);
+		assertThat(candidate.getNonAcademics().size()).isEqualTo(1);
+		assertThat(candidate.getProfileScores().size()).isEqualTo(3);
+		assertThat(candidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_NON_ACADEMIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5d);
+		assertThat(candidate.getProfileScore()).isEqualTo(60D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(candidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+	}
+	
 	
 	@Test
 	@Transactional

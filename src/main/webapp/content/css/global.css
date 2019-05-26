@@ -11,12 +11,10 @@ html {
 }
 
 body {
-    padding-top: 0;
-    margin-bottom: 120px;
+    margin-bottom: 60px;
     /* font-family: "Helvetica"; */
     font-family: 'Proxima Nova', sans-serif;
     font-style: normal;
-    padding-bottom: 40vh;
 }
 
 /*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
