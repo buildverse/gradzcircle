@@ -1,7 +1,7 @@
 <div class="container-fill-height">
 	<div class="container-content-middle mt-5">
 
-		<form role="form" class="mx-auto text-center app-login-form"
+		<form role="form" class="mx-auto text-center app-login-form needs-validation"
 			novalidate (ngSubmit)="register()" [formGroup]="registerForm">
 
 
@@ -19,9 +19,8 @@
 			</div>
 
 			<div class="text-danger" *ngIf="errorUserExists"
-				jhiTranslate="register.messages.error.userexists">
-				<strong>Login name already registered!</strong> <br> Please
-				choose another one.
+				jhiTranslate="register.messages.error.emailexists">
+				<strong>Email is already in use!</strong> Please choose another one.
 			</div>
 
 			<div class="text-danger" *ngIf="errorEmailExists"
@@ -55,7 +54,7 @@
 						</span>
 					</div>
 				</div-->
-				<div class="form-group"  >
+				<!--  -<div class="form-group"  >
 					<div class="input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text icon icon-user" id="basic-addon1"></span>
@@ -90,7 +89,7 @@
 							
 						</span>
 					</div>
-				</div>
+				</div>-->
 				
 				<div class="form-group"  >
 					<div class="input-group">
@@ -98,26 +97,23 @@
 							<span class="input-group-text icon icon-mail" id="basic-addon3"></span>
 						</div>
 						<input class="form-control"
-							[ngClass]="{'is-invalid': (registerForm.get('email').touched || registerForm.get('email').dirty) && !registerForm.get('email').valid }"
+							
 							placeholder="{{'global.form.email.placeholder' | translate}}"
 							formControlName="email" aria-describedby="basic-addon3">
 					</div>
 					<div>
-						<span class="form-text text-left" *ngIf="(registerForm.get('email').touched || registerForm.get('email').dirty) &&
+						<span class="form-text text-left" *ngIf=" registerForm.get('email').dirty &&
                                                         registerForm.get('email').errors">
-							<div class="text-danger" *ngIf="registerForm.get('email').errors.required">Please enter your email address.</div>
-							<div class="text-danger" *ngIf="registerForm.get('email').errors.pattern">Please enter a valid email address</div>
+							<span class="text-danger" *ngIf="registerForm.get('email').errors.pattern"><small>Please enter a valid email address</small></span>
 						</span>
 					</div>
 				</div>
 
 				<div formGroupName="passwordGroup"
-					[ngClass]="{'is-invalid': registerForm.get('passwordGroup').errors}">
+					>
 
 					<div class="form-group mb-3"
-						[ngClass]="{'is-invalid': (registerForm.get('passwordGroup.password').touched ||
-                                                                            registerForm.get('passwordGroup.password').dirty) &&
-                                                                            !registerForm.get('passwordGroup.password').valid}">
+						>
 						<div class="input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text icon icon-key" id="basic-addon4"></span>
@@ -130,25 +126,23 @@
 
 						<div>
 							<span class="form-text text-left"
-								*ngIf="(registerForm.get('passwordGroup.password').touched ||
-                                                                        registerForm.get('passwordGroup.password').dirty) &&
+								*ngIf="
+                                                                        registerForm.get('passwordGroup.password').dirty &&
                                                                         (registerForm.get('passwordGroup.password').errors)">
 
-								<div class="text-danger"
+								<!--  <div class="text-danger"
 									*ngIf="registerForm.get('passwordGroup.password').errors.required">
-									Please confirm your password.</div>
-								<div class="text-danger"
+									Please confirm your password.</div>-->
+								<span class="text-danger"
 									*ngIf="registerForm.get('passwordGroup.password').errors.minlength">
-									Passwords should be atleast 8 characters.</div>
+									<small>Passwords should be at least 8 characters.</small></span>
 							</span>
 						</div>
 					</div>
 					<!--jhi-password-strength-bar [passwordToCheck]="registerForm.get('passwordGroup.password')"></jhi-password-strength-bar-->
 
 					<div class="form-group mb-3"
-						[ngClass]="{'is-invalid': (registerForm.get('passwordGroup.confirmPassword').touched ||
-                                                                            registerForm.get('passwordGroup.confirmPassword').dirty) &&
-                                                                            !registerForm.get('passwordGroup.confirmPassword').valid }">
+					>
 
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -162,20 +156,13 @@
 
 						<div>
 							<span class="form-text text-left"
-								*ngIf="(registerForm.get('passwordGroup.confirmPassword').touched ||
-                                                                            registerForm.get('passwordGroup.confirmPassword').dirty) &&
+																*ngIf="
+                                                                            registerForm.get('passwordGroup.confirmPassword').dirty &&
                                                                         (registerForm.get('passwordGroup.confirmPassword').errors ||
                                                                         registerForm.get('passwordGroup').errors)">
-
-								<div class="text-danger"
-									*ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.required">
-									Please confirm your password.</div>
-								<div class="text-danger"
-									*ngIf="registerForm.get('passwordGroup.confirmPassword').errors?.minlength">
-									Passwords should be atleast 8 characters.</div>
-								<div class="text-danger"
+								<span class="text-danger"
 									*ngIf="registerForm.get('passwordGroup').errors?.match">
-									Passwords do not match.</div>
+									<small>Passwords do not match.</small></span>
 							</span>
 						</div>
 					</div>
@@ -196,7 +183,7 @@
 	</div>
 </div>
 
-<br>Dirty: {{ registerForm.dirty }}
+<!--  <br>Dirty: {{ registerForm.dirty }}
 <br>Touched: {{ registerForm.touched }}
 <br>Valid: {{ registerForm.valid }}
-<br>Value: {{ registerForm.value | json }}
+<br>Value: {{ registerForm.value | json }}-->

@@ -18,7 +18,6 @@ export class DataStorageService {
   }
 
   getData(key): any {
-    const incomeingKey = key;
   //  console.log('getting data for key  '+key+'   its encrypted vlaue is '+CryptoJS.SHA3(key));
     let value = '';
     if (key) {

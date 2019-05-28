@@ -28,7 +28,7 @@ import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.search.EmploymentTypeSearchRepository;
-import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
+import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -49,10 +49,10 @@ public class EmploymentTypeResource {
 
     private final EmploymentTypeSearchRepository employmentTypeSearchRepository;
     
-    private final JobStatisticsCacheManager<String, Map<String,EmploymentType>> cacheManager;
+    private final GradzcircleCacheManager<String, Map<String,EmploymentType>> cacheManager;
 
     public EmploymentTypeResource(EmploymentTypeRepository employmentTypeRepository, EmploymentTypeSearchRepository employmentTypeSearchRepository,
-    		JobStatisticsCacheManager<String, Map<String,EmploymentType>> cacheManager) {
+    		GradzcircleCacheManager<String, Map<String,EmploymentType>> cacheManager) {
         this.employmentTypeRepository = employmentTypeRepository;
         this.employmentTypeSearchRepository = employmentTypeSearchRepository;
         this.cacheManager = cacheManager;

@@ -14,6 +14,7 @@ public interface ApplicationConstants {
 	public static final String JOB_TYPE_PART_TIME = "Part Time";
 	public static final String JOB_TYPE_INTERNSHIP = "Internship";
 	public static final String JOB_TYPE_SUMMER_JOB = "Summer Job";
+	public static final String ENABLED_COUNTRIES ="ENABLED_COUNTRIES";
 	
 	public static final String JOB_TYPE = "JOB_TYPE";
 	public static final String EMPLOYMENT_TYPE = "EMPLOYMENT_TYPE";

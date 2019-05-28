@@ -55,7 +55,7 @@ import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
-import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
+import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 
 @Service
@@ -87,13 +87,13 @@ public class JobService {
 
 	private final DTOConverters converter;
 	
-	private final JobStatisticsCacheManager <String,List<JobStatistics>> jobStatsCacheManager;
+	private final GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager;
 	
-	private final JobStatisticsCacheManager <String,Long> jobCountCacheManager;
+	private final GradzcircleCacheManager <String,Long> jobCountCacheManager;
 	
-	private final JobStatisticsCacheManager<String, Map<String,JobType>> jobTypeCacheManager;
+	private final GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager;
 	
-	private final JobStatisticsCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager;
+	private final GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager;
 	private final EmploymentTypeRepository employmentTypeRepository;
 	
 	private final JobTypeRepository jobTypeRepository;
@@ -107,9 +107,9 @@ public class JobService {
 			JobHistorySearchRepository jobHistorySearchRepository,
 			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher,
 			CandidateRepository candidateRepository, DTOConverters converter, CandidateAppliedJobsRepository candidateAppliedJobsRepository,
-			CorporateService corporateService, JobStatisticsCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
-			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,JobStatisticsCacheManager <String,Long> jobCountCacheManager,
-			JobStatisticsCacheManager<String, Map<String,JobType>> jobTypeCacheManager, JobStatisticsCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager
+			CorporateService corporateService, GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
+			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,GradzcircleCacheManager <String,Long> jobCountCacheManager,
+			GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager, GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager
 			) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;

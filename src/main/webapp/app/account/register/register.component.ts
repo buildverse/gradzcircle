@@ -60,12 +60,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
+    /*  firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],*/
       email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
       passwordGroup: this.formBuilder.group({
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
       }, {validator: passwordMatcher})
 
     });
@@ -82,10 +82,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   register() {
-    // if (this.registerAccount.password !== this.confirmPassword) {
-    //     this.doNotMatch = 'ERROR';
-    // } else {
-    //     this.doNotMatch = null;
+   
     this.error = null;
     this.errorUserExists = null;
     this.errorEmailExists = null;
@@ -95,8 +92,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.registerAccount.login = this.registerForm.get('email').value;
       this.registerAccount.password = this.registerForm.get('passwordGroup.password').value;
       this.registerAccount.email = this.registerForm.get('email').value;
-      this.registerAccount.firstName = this.registerForm.get('firstName').value;
-      this.registerAccount.lastName = this.registerForm.get('lastName').value;
+    //  this.registerAccount.firstName = this.registerForm.get('firstName').value;
+   //   this.registerAccount.lastName = this.registerForm.get('lastName').value;
       this.spinnerService.show();
       this.registerService.save(this.registerAccount).subscribe(() => {
         this.success = true;

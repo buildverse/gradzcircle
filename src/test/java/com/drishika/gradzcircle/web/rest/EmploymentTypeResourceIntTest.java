@@ -34,7 +34,7 @@ import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.search.EmploymentTypeSearchRepository;
-import com.drishika.gradzcircle.service.util.JobStatisticsCacheManager;
+import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
@@ -68,7 +68,7 @@ public class EmploymentTypeResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
     
     @Autowired
-    private JobStatisticsCacheManager<String, Map<String,EmploymentType>> cacheManager;
+    private GradzcircleCacheManager<String, Map<String,EmploymentType>> cacheManager;
 
     @Autowired
     private EntityManager em;

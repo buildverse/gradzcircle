@@ -1,6 +1,13 @@
 {
     "gradzcircleApp": {
         "corporate" : {
+        		"registrationForm" : {
+        			"corporateName" :"Corporate Name",
+        			"corporateEmail" : "Email",
+        			"phoneNumber" : "Phone Number",
+        			"password" : "Password",
+        			"confirmPassword": "Confirm Password" 
+        		},
             "home": {
                 "title": "Corporates",
                 "createLabel": "Create a new Corporate",

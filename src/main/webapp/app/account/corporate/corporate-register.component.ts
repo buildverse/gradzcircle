@@ -81,10 +81,10 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
      //  this.route.data.subscribe((data:{validationMessages: ErrorMessages[]})=> this.setValidationMessages(data.validationMessages));
      //  console.log("Error messages "+ JSON.stringify(this.validationMessages));
        this.corporateRegisterForm = this.formBuilder.group({
-            firstName : [null,[Validators.required]],
-            lastName : [null,[Validators.required]],
+          //  firstName : [null,[Validators.required]],
+            //lastName : [null,[Validators.required]],
             companyName : [null,[Validators.required, Validators.minLength(5)]], 
-            phoneNumber : [null,[Validators.required, Validators.pattern('[+.0-9]+'),Validators.minLength(6)]],
+            phoneNumber : [null,[Validators.required, Validators.pattern('[+.0-9]+'), Validators.minLength(13),Validators.maxLength(13)]],
             email : [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
             passwordGroup: this.formBuilder.group({
                     password :[null,[Validators.required, Validators.minLength(8)]],
@@ -92,8 +92,9 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
             },{validator:passwordMatcher}),
             country : [null],
             callingCode: null
+           
         })
-
+          console.log(this.corporateRegisterForm.get('phoneNumber').errors);
           this.corporateRegisterForm.get('country').valueChanges.
               subscribe(value=>this.onCountryChange((value)));
 

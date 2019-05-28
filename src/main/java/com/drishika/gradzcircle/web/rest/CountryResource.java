@@ -34,6 +34,7 @@ import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
 import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
 import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
+import com.drishika.gradzcircle.service.CountryService;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,15 +54,12 @@ public class CountryResource {
 	private static final String ENTITY_NAME = "country";
 
 	private final CountryRepository countryRepository;
-
-	private final CountrySearchRepository countrySearchRepository;
 	
-	private final ElasticsearchTemplate elasticSearchTemplate;
+	private final CountryService countryService;
 
-	public CountryResource(CountryRepository countryRepository, CountrySearchRepository countrySearchRepository,ElasticsearchTemplate elasticSearchTemplate) {
+	public CountryResource(CountryRepository countryRepository, CountryService countryService) {
 		this.countryRepository = countryRepository;
-		this.countrySearchRepository = countrySearchRepository;
-		this.elasticSearchTemplate = elasticSearchTemplate;
+		this.countryService = countryService;
 	}
 
 	/**
@@ -79,13 +77,10 @@ public class CountryResource {
 	@Timed
 	public ResponseEntity<Country> createCountry(@RequestBody Country country) throws URISyntaxException {
 		log.debug("REST request to save Country : {}", country);
-		 if (country.getId() != null) {
-	            throw new BadRequestAlertException("A new country cannot already have an ID", ENTITY_NAME, "idexists");
-	        }
-		Country result = countryRepository.save(country);
-		elasticSearchTemplate.index(new CountryEntityBuilder(result.getId()).name(result.getCountryNiceName())
-				.suggest(new String[] { result.getCountryNiceName() }).buildIndex());
-		elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
+		if (country.getId() != null) {
+			throw new BadRequestAlertException("A new country cannot already have an ID", ENTITY_NAME, "idexists");
+		}
+		Country result = countryService.createCountry(country);
 		return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -109,10 +104,7 @@ public class CountryResource {
 		if (country.getId() == null) {
 			return createCountry(country);
 		}
-		Country result = countryRepository.save(country);
-		elasticSearchTemplate.index(new CountryEntityBuilder(result.getId()).name(result.getCountryNiceName())
-				.suggest(new String[] { result.getCountryNiceName() }).buildIndex());
-		elasticSearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Country.class);
+		Country result = countryService.updateCountry(country);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, country.getId().toString()))
 				.body(result);
 	}
@@ -171,8 +163,7 @@ public class CountryResource {
 	@Timed
 	public ResponseEntity<Void> deleteCountry(@PathVariable Long id) {
 		log.debug("REST request to delete Country : {}", id);
-		countryRepository.delete(id);
-		countrySearchRepository.delete(id);
+		countryService.deleteCountry(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -184,10 +175,14 @@ public class CountryResource {
 
 	@GetMapping("/countries/enabled")
 	@Timed
-
 	public List<Country> getEnabledCountries() {
 		log.debug("Call to get enabled countries");
-		List<Country> countries = countryRepository.findEnabledCountries();
+		List<Country> countries =null;
+		try {
+			countries = countryService.getEnabledCountries();
+		} catch (Exception e) {
+			log.error("Unable to get enabled Countries {}",e);
+		}
 		return countries;
 	}
 
@@ -203,8 +198,8 @@ public class CountryResource {
 	@Timed
 	public List<Country> searchCountries(@RequestParam String query) {
 		log.debug("REST request to search Countries for query {}", query);
-		return StreamSupport.stream(countrySearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		return countryService.searchCountries(query);
+		
 	}
 	
 	 /**
@@ -217,27 +212,10 @@ public class CountryResource {
 	 */
 	@GetMapping("/_search/countryBySuggest")
 	@Timed
-	public String searchNationalityBySuggest(@RequestParam String query) {
+	public String searchCountryBySuggest(@RequestParam String query) {
 		log.debug("REST request to search Country for query {}", query);
-		String suggest = null;
-		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("country-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Country.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("country-suggest");
-		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
-		List<GenericElasticSuggest> countries = new ArrayList<GenericElasticSuggest>();
-		ObjectMapper objectMapper = new ObjectMapper();
-		options.forEach(option -> {
-			countries.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
-			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
-		});
-		try {
-			suggest = objectMapper.writeValueAsString(countries);
-		} catch (JsonProcessingException e) {
-			log.error("Error parsing object to JSON {},{}", e.getMessage(), e);
-		}
-		return suggest;
+		return countryService.searchCountryBySuggest(query);
+		
 	}
 
 }

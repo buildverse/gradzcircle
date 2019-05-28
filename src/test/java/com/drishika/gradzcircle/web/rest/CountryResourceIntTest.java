@@ -31,11 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.Country;
-import com.drishika.gradzcircle.domain.Industry;
 import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
 import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.search.CountrySearchRepository;
+import com.drishika.gradzcircle.service.CountryService;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
@@ -88,7 +87,10 @@ public class CountryResourceIntTest {
 
 	private MockMvc restCountryMockMvc;
 
-	private Country country;
+	private Country country,country2;
+	
+	@Autowired 
+	CountryService countryService;
 	
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
@@ -96,7 +98,7 @@ public class CountryResourceIntTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final CountryResource countryResource = new CountryResource(countryRepository, countrySearchRepository,elasticsearchTemplate);
+		final CountryResource countryResource = new CountryResource(countryRepository, countryService);
 		this.restCountryMockMvc = MockMvcBuilders.standaloneSetup(countryResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();
@@ -113,6 +115,13 @@ public class CountryResourceIntTest {
 				.shortCodeThreeChar(DEFAULT_SHORT_CODE_THREE_CHAR).countryNiceName(DEFAULT_COUNTRY_NICE_NAME)
 				.numCode(DEFAULT_NUM_CODE).phoneCode(DEFAULT_PHONE_CODE).enabled(DEFAULT_ENABLED);
 		return country;
+	}
+	
+	public static Country createEntity2(EntityManager em) {
+		Country country2 = new Country().countryName(DEFAULT_COUNTRY_NAME).shortCode(DEFAULT_SHORT_CODE)
+				.shortCodeThreeChar(DEFAULT_SHORT_CODE_THREE_CHAR).countryNiceName(DEFAULT_COUNTRY_NICE_NAME)
+				.numCode(DEFAULT_NUM_CODE).phoneCode(DEFAULT_PHONE_CODE).enabled(UPDATED_ENABLED);
+		return country2;
 	}
 	
 	 /**
@@ -144,6 +153,7 @@ public class CountryResourceIntTest {
 	public void initTest() {
 		countrySearchRepository.deleteAll();
 		country = createEntity(em);
+		country2 = createEntity2(em);
 	}
 
 	@Test
@@ -171,6 +181,40 @@ public class CountryResourceIntTest {
 		Country countryEs = countrySearchRepository.findOne(testCountry.getId());
 		assertThat(countryEs.getId()).isEqualTo(testCountry.getId());
 		assertThat(countryEs.getCountryNiceName()).isEqualTo(testCountry.getCountryNiceName());
+	}
+	
+	@Test
+	@Transactional
+	public void getEnabledCountry() throws Exception {
+		countryRepository.saveAndFlush(country);
+		countryRepository.saveAndFlush(country2);
+		
+		//FIRST CALL GET FROM DB
+		restCountryMockMvc.perform(get("/api/countries/enabled")).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.[*].id").value(hasItem(country2.getId().intValue())))
+		.andExpect(jsonPath("$.[*].countryName").value(hasItem(DEFAULT_COUNTRY_NAME.toString())))
+		.andExpect(jsonPath("$.[*].shortCode").value(hasItem(DEFAULT_SHORT_CODE.toString())))
+		.andExpect(
+				jsonPath("$.[*].shortCodeThreeChar").value(hasItem(DEFAULT_SHORT_CODE_THREE_CHAR.toString())))
+		.andExpect(jsonPath("$.[*].countryNiceName").value(hasItem(DEFAULT_COUNTRY_NICE_NAME.toString())))
+		.andExpect(jsonPath("$.[*].numCode").value(hasItem(DEFAULT_NUM_CODE)))
+		.andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
+		.andExpect(jsonPath("$.[*].enabled").value(hasItem(UPDATED_ENABLED.booleanValue())));
+		
+		//SECOND CALL GET FROM CACHE
+		restCountryMockMvc.perform(get("/api/countries/enabled")).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.[*].id").value(hasItem(country2.getId().intValue())))
+		.andExpect(jsonPath("$.[*].countryName").value(hasItem(DEFAULT_COUNTRY_NAME.toString())))
+		.andExpect(jsonPath("$.[*].shortCode").value(hasItem(DEFAULT_SHORT_CODE.toString())))
+		.andExpect(
+				jsonPath("$.[*].shortCodeThreeChar").value(hasItem(DEFAULT_SHORT_CODE_THREE_CHAR.toString())))
+		.andExpect(jsonPath("$.[*].countryNiceName").value(hasItem(DEFAULT_COUNTRY_NICE_NAME.toString())))
+		.andExpect(jsonPath("$.[*].numCode").value(hasItem(DEFAULT_NUM_CODE)))
+		.andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
+		.andExpect(jsonPath("$.[*].enabled").value(hasItem(UPDATED_ENABLED.booleanValue())));
+		
 	}
 
 	@Test
@@ -266,6 +310,11 @@ public class CountryResourceIntTest {
 		assertThat(testCountry.getNumCode()).isEqualTo(UPDATED_NUM_CODE);
 		assertThat(testCountry.getPhoneCode()).isEqualTo(UPDATED_PHONE_CODE);
 		assertThat(testCountry.isEnabled()).isEqualTo(UPDATED_ENABLED);
+		
+		//Get country to check if cache is refreshed
+		restCountryMockMvc.perform(get("/api/countries/{id}", testCountry.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.enabled").value(UPDATED_ENABLED.booleanValue()));
 
 		// Validate the Country in Elasticsearch
 		Country countryEs = countrySearchRepository.findOne(testCountry.getId());

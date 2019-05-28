@@ -7,10 +7,11 @@
         "messages": {
             "validate": {
                 "login": {
-                    "required": "Your username is required.",
-                    "minlength": "Your username is required to be at least 1 character.",
-                    "maxlength": "Your username cannot be longer than 50 characters.",
-                    "pattern": "Your username can only contain lower-case letters and digits."
+                    "required": "Username is required.",
+                    "minlength": "Username is required to be at least 1 character.",
+                    "maxlength": "Username cannot be longer than 50 characters.",
+                    "pattern": "Username can only contain lower-case letters and digits.",
+                    "companyName": "Company Name is Required"
                 }
             },
             "success": "<strong>Thanks for interest in Gradzcircle!</strong><p>Please check your email and click the verification link to complete registration.</p>",

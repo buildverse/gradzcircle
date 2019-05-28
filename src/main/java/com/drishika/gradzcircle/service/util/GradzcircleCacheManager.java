@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class JobStatisticsCacheManager<K, V> {
+public class GradzcircleCacheManager<K, V> {
 	
-	private final Logger log = LoggerFactory.getLogger(JobStatisticsCacheManager.class);
+	private final Logger log = LoggerFactory.getLogger(GradzcircleCacheManager.class);
 
 	private final ConcurrentMap<K, Future<V>> jobStatCache = new ConcurrentHashMap<>();
 
