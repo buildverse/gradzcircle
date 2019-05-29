@@ -5495,4 +5495,76 @@ public class JobResourceIntTest {
 		.andExpect(jsonPath("$.[*].corporateName",hasItem("Chota")))
 		.andExpect(jsonPath("$.[*].city",hasItem("Delhi")));		
 	}
+	
+	@Test
+	@Transactional
+	public void testGetAppliedJobsForCandidateWithAndWithoutMatchedJobs() throws Exception {
+		
+		Job job = new Job();
+		job.jobTitle("Test Job");
+		job.jobDescription("Testv Job ");
+		Corporate corp = new Corporate();
+		corporateRepository.saveAndFlush(corp);
+		job.corporate(corp);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job1");
+		job1.jobDescription("Testv Job ");
+		job1.corporate(corp);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job2");
+		job2.jobDescription("Testv Job ");
+		job2.corporate(corp);
+		//job.jobStatus(1);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		candidateRepository.saveAndFlush(c1);
+
+		jobRepository.saveAndFlush(job);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		CandidateJob cJ1 = new CandidateJob(c1, job);
+		cJ1.setMatchScore(20D);
+		CandidateJob cJ2 = new CandidateJob(c1, job1);
+		cJ2.setMatchScore(10D);
+		c1.addCandidateJob(cJ1);
+		c1.addCandidateJob(cJ2);
+		job.addCandidateJob(cJ1);
+		job1.addCandidateJob(cJ2);
+		c1.addAppliedJob(job);
+		c1.addAppliedJob(job1);
+		c1.addAppliedJob(job2);
+	//	candidateRepository.saveAndFlush(c2);
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/appliedJobsByCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].jobTitle", Matchers.containsInAnyOrder("Test Job","Test Job1","Test Job2")))
+				.andExpect(jsonPath("$[*].matchScore", Matchers.containsInAnyOrder(10D,20D,0D)));
+				
+		
+	}
+	
+	@Test
+	@Transactional
+	public void testGetAppliedJobsForCandidateWithoutMatchedJobs() throws Exception {
+		
+	}
 }

@@ -12,3 +12,4 @@ export const CANDIDATE_NON_ACADEMIC_ID = 'candidateNonAcademicId';
 export const CANDIDATE_EDUCATION_ID = 'candidateEducationId';
 export const CANDIDATE_EMPLOYMENT_ID = 'candidateEmploymentId';
 export const CANDIDATE_LANGUAGE_ID = 'candidateLanguageId';
+export const ENABLED_COUNTRIES = 'enabledCountries';

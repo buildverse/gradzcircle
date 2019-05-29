@@ -191,9 +191,13 @@ public class DTOConverters {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobListingData);
 		logger.debug("Job and Candidates matched are {}--{}",job, job.getCandidateJobs());
-		jobListingData.setMatchScore(job.getCandidateJobs().stream()
-				.filter(candidateJob -> candidateJob.getCandidate().getId().equals(candidateId)).findAny().get()
-				.getMatchScore());
+		CandidateJob matchedCandidateJob = job.getCandidateJobs().stream()
+				.filter(candidateJob -> candidateJob.getCandidate().getId().equals(candidateId)).findAny().orElse(null);
+		if(matchedCandidateJob == null) {
+			jobListingData.setMatchScore(0D);
+		} else {
+			jobListingData.setMatchScore(matchedCandidateJob.getMatchScore());
+		}
 		if (!appliedJobs)
 			job.getAppliedCandidates().stream()
 					.filter(appliedCandidate -> !appliedCandidate.getId().equals(candidateId));
