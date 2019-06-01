@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService } from 'ng-jhipster';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
 import { DataStorageService, Principal } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
+import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID, IS_EMPLOYMENT_PROJECT,CANDIDATE_PROJECT_ID } from '../../shared/constants/storage.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -46,6 +46,11 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
    setEducationRouteParam(event) {
       this.dataService.setdata(CANDIDATE_EDUCATION_ID,event);
     }
+  
+  setProjectRouteParam(event) {
+    this.dataService.setdata(CANDIDATE_PROJECT_ID,event);
+    this.dataService.setdata(IS_EMPLOYMENT_PROJECT,'false');
+  }
   
     loadAll() {
         if (this.currentSearch) {

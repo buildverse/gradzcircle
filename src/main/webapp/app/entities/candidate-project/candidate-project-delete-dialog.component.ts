@@ -1,3 +1,5 @@
+import { CANDIDATE_PROJECT_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -48,13 +50,19 @@ export class CandidateProjectDeletePopupComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private candidateProjectPopupService: CandidateProjectPopupService
+        private candidateProjectPopupService: CandidateProjectPopupService,
+        private dataStorageService: DataStorageService
     ) {}
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params) => {
+          if(params['id']) {
             this.candidateProjectPopupService
                 .open(CandidateProjectDeleteDialogComponent as Component, params['id']);
+          } else if (this.dataStorageService.getData(CANDIDATE_PROJECT_ID)) {
+            this.candidateProjectPopupService
+                .open(CandidateProjectDeleteDialogComponent as Component, this.dataStorageService.getData(CANDIDATE_PROJECT_ID));
+          }
         });
     }
 

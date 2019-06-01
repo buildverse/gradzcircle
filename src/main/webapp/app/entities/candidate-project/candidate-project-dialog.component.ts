@@ -12,6 +12,8 @@ import {CandidateEmployment, CandidateEmploymentService} from '../candidate-empl
 import {CandidateEducationProjectPopupService} from './candidate-education-project-popup.service';
 import {CandidateEmploymentProjectPopupService} from './candidate-employment-project-popup.service';
 import {JhiDateUtils} from 'ng-jhipster';
+import { CANDIDATE_EDUCATION_ID, CANDIDATE_PROJECT_ID, CANDIDATE_EMPLOYMENT_ID, IS_EMPLOYMENT_PROJECT } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 
 
 @Component({
@@ -84,10 +86,12 @@ export class CandidateProjectDialogComponent implements OnInit {
     this.endDateLesser = false;
     this.candidateProject.isCurrentProject ? this.endDateControl = true : this.endDateControl = false;
     this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-    this.candidateEducationService.query()
-      .subscribe((res: HttpResponse<CandidateEducation[]>) => {this.candidateEducations = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+  console.log('Is employment is '+this.isEmploymentProject);
+/*    this.candidateEducationService.query()
+      .subscribe((res: HttpResponse<CandidateEducation[]>) => {this.candidateEducations = res.body;    console.log('edu sare '+JSON.stringify(this.candidateEducations));}, (res: HttpErrorResponse) => this.onError(res.message));
     this.candidateEmploymentService.query()
-      .subscribe((res: HttpResponse<CandidateEmployment[]>) => {this.candidateEmployments = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: HttpResponse<CandidateEmployment[]>) => {this.candidateEmployments = res.body;console.log('Employement sare '+JSON.stringify(this.candidateEducations));}, (res: HttpErrorResponse) => this.onError(res.message));
+ * */
   }
 
   clear() {
@@ -146,18 +150,23 @@ export class CandidateProjectPopupComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private candidateProjectPopupService: CandidateProjectPopupService
+    private candidateProjectPopupService: CandidateProjectPopupService,
+    private dataStorageService: DataStorageService
   ) {}
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
-      if (params['isEmploymentProject'] === 'true') {
+      if(this.dataStorageService.getData(IS_EMPLOYMENT_PROJECT) === 'true') {
         this.isEmploymentProject = true;
+      } else {
+        this.isEmploymentProject = false;
       }
-
       if (params['id']) {
         this.candidateProjectPopupService
           .open(CandidateProjectDialogComponent as Component, params['id'], this.isEmploymentProject);
+      } else if (this.dataStorageService.getData(CANDIDATE_PROJECT_ID)) {
+         this.candidateProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, this.dataStorageService.getData(CANDIDATE_PROJECT_ID), this.isEmploymentProject);
       } else {
         this.candidateProjectPopupService
           .open(CandidateProjectDialogComponent as Component, this.isEmploymentProject);
@@ -180,7 +189,8 @@ export class CandidateEducationProjectPopupComponent implements OnInit, OnDestro
 
   constructor(
     private route: ActivatedRoute,
-    private candidateEducationProjectPopupService: CandidateEducationProjectPopupService
+    private candidateEducationProjectPopupService: CandidateEducationProjectPopupService,
+    private dataStorageService :DataStorageService
   ) {}
 
   ngOnInit() {
@@ -189,6 +199,9 @@ export class CandidateEducationProjectPopupComponent implements OnInit, OnDestro
         this.candidateEducationProjectPopupService
           .open(CandidateProjectDialogComponent as Component, params['id']);
 
+      } else {
+         this.candidateEducationProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, this.dataStorageService.getData(CANDIDATE_EDUCATION_ID));
       }
     });
   }
@@ -209,7 +222,8 @@ export class CandidateEmploymentProjectPopupComponent implements OnInit, OnDestr
   isEmployment: boolean;
   constructor(
     private route: ActivatedRoute,
-    private candidateEmploymentProjectPopupService: CandidateEmploymentProjectPopupService
+    private candidateEmploymentProjectPopupService: CandidateEmploymentProjectPopupService,
+    private dataStorageService: DataStorageService
 
   ) {}
 
@@ -219,6 +233,9 @@ export class CandidateEmploymentProjectPopupComponent implements OnInit, OnDestr
       if (params['id']) {
         this.candidateEmploymentProjectPopupService
           .open(CandidateProjectDialogComponent as Component, params['id'], this.isEmployment);
+      } else if (this.dataStorageService.getData(CANDIDATE_EMPLOYMENT_ID)) {
+         this.candidateEmploymentProjectPopupService
+          .open(CandidateProjectDialogComponent as Component, this.dataStorageService.getData(CANDIDATE_EMPLOYMENT_ID), this.isEmployment);
       }
     });
   }

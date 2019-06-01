@@ -43,7 +43,7 @@ export const candidateProjectPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'candidate-education-project-new/:id',
+        path: 'candidate-education-project-new',
         component: CandidateEducationProjectPopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
@@ -53,7 +53,7 @@ export const candidateProjectPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'candidate-employment-project-new/:id',
+        path: 'candidate-employment-project-new',
         component: CandidateEmploymentProjectPopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
@@ -64,7 +64,7 @@ export const candidateProjectPopupRoute: Routes = [
     },
 
     {
-        path: 'candidate-project/:id/:isEmploymentProject/edit',
+        path: 'candidate-project/edit',
         component: CandidateProjectPopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
@@ -74,7 +74,7 @@ export const candidateProjectPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'candidate-project/:id/delete',
+        path: 'candidate-project/delete',
         component: CandidateProjectDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],

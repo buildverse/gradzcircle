@@ -53,7 +53,8 @@
 								  		 	<span class="education_title_2 w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;Project
 				                                  <span class="project_buttons">
 				                                      <a class="btn btn-sm btn-pill btn-primary" 
-															[routerLink]="['/', { outlets: { popup: 'candidate-education-project-new/'+ candidateEducation.id} }]">
+															[routerLink]="['/', { outlets: { popup: 'candidate-education-project-new'} }]"
+															(click)="setEducationRouteParam(candidateEducation.id)">
 															<span class="icon icon-circle-with-plus"
 															jhiTranslate="gradzcircleApp.candidateProject.home.title">
 																Add </span>
@@ -64,22 +65,24 @@
 										  <div *ngFor="let candidateProject of candidateEducation.projects ;let j= index">		
 				                                    <div class="col-lg-12"  [attr.aria-controls]="candidateProject.id" (click)="candidateProject.collapsed = !candidateProject.collapsed"
 		       				   												[attr.aria-expanded]="!candidateProject.collapsed">
-				                                      <span class="education_title_2 w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectTitle}}
+				                                      <span class="education_title_2 w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectTitle}} 
 				                                      	 <span class="project_buttons">
 																	 		<a class="btn btn-sm btn-pill btn-primary" 
-																				[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/false/edit'} }]">
+																				[routerLink]="['/', { outlets: { popup: 'candidate-project/edit'} }]"
+																				(click)="setProjectRouteParam(candidateProject.id)">
 																				<span class="icon icon-circle-with-plus"
 																				jhiTranslate="entity.action.edit">
 																					Add </span>
 																			</a>
 																			<a class="btn btn-sm btn-pill btn-danger" 
-																				[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]">
+																				[routerLink]="['/', { outlets: { popup: 'candidate-project/delete'} }]"
+																				(click)="setProjectRouteParam(candidateProject.id)">
 																				<span class="icon icon-circle-with-plus"
 																				jhiTranslate="entity.action.delete">
 																					Add </span>
 																			</a>
 														 </span>
-				                                      </span>
+				                                     </span>
 				                                    </div>
 				                                    <div id="{{candidateProject.id}}" [ngbCollapse]="candidateProject.collapsed">
 					                                    <div class="col-lg-12">

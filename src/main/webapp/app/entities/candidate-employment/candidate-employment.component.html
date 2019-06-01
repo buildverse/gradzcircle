@@ -52,7 +52,8 @@
 							  		 	<span class="education_title_2 w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;Projects
 			                                  <span class="project_buttons">
 			                                      <a class="btn btn-sm btn-pill btn-primary" 
-														[routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new/'+ candidateEmployment.id} }]">
+														[routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new' }}]"
+														(click)="setEditDeleteRouteParams(candidateEmployment.id)">
 														<span class="icon icon-circle-with-plus"
 														jhiTranslate="gradzcircleApp.candidateProject.home.title">
 															Add </span>
@@ -66,13 +67,15 @@
 			                                      <span class="education_title_2 w-100 editable mb-2">-&nbsp;&nbsp;&nbsp;{{candidateProject.projectTitle}}
 			                                      	 <span class="project_buttons">
 																 		<a class="btn btn-sm btn-pill btn-primary" 
-																			[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/true/edit'} }]">
+																			[routerLink]="['/', { outlets: { popup: 'candidate-project/edit'} }]"
+																			(click)="setProjectRouteParam(candidateProject.id)">
 																			<span class="icon icon-circle-with-plus"
 																			jhiTranslate="entity.action.edit">
 																				Add </span>
 																		</a>
 																		<a class="btn btn-sm btn-pill btn-danger" 
-																			[routerLink]="['/', { outlets: { popup: 'candidate-project/'+ candidateProject.id + '/delete'} }]">
+																			[routerLink]="['/', { outlets: { popup: 'candidate-project/delete'} }]"
+																			(click)="setProjectRouteParam(candidateProject.id)">
 																			<span class="icon icon-circle-with-plus"
 																			jhiTranslate="entity.action.delete">
 																				Add </span>

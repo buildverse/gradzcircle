@@ -493,14 +493,21 @@ public class DTOConverters {
 	 * @return
 	 */
 	public CandidateProjectDTO setCandidateProjects(CandidateProject project) {
+		if(project == null)
+			return null;
 		CandidateProjectDTO projectDTO = new CandidateProjectDTO();
 		projectDTO.setProjectTitle(project.getProjectTitle());
+		projectDTO.setId(project.getId());
 		projectDTO.setProjectDescription(project.getProjectDescription());
 		projectDTO.setProjectStartDate(project.getProjectStartDate());
 		projectDTO.setProjectEndDate(project.getProjectEndDate());
 		projectDTO.setContributionInProject(project.getContributionInProject());
 		projectDTO.setIsCurrentProject(project.isIsCurrentProject());
 		projectDTO.setProjectType(project.getProjectType());
+		if(project.getEducation()!= null)
+			projectDTO.setEducationId(project.getEducation().getId());
+		if(project.getEmployment() != null) 
+			projectDTO.setEmploymentId(project.getEmployment().getId());
 		return projectDTO;
 	}
 

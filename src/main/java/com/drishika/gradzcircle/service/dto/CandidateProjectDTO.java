@@ -17,6 +17,8 @@ public class CandidateProjectDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String projectTitle;
+	
+	private Long id;
 
 	private LocalDate projectStartDate;
 
@@ -31,6 +33,10 @@ public class CandidateProjectDTO implements Serializable {
 	private Boolean isCurrentProject;
 
 	private ProjectType projectType;
+	
+	private Long educationId;
+	
+	private Long employmentId;
 
 	/**
 	 * @return the projectTitle
@@ -151,5 +157,49 @@ public class CandidateProjectDTO implements Serializable {
 	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
 	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the educationId
+	 */
+	public Long getEducationId() {
+		return educationId;
+	}
+
+	/**
+	 * @param educationId the educationId to set
+	 */
+	public void setEducationId(Long educationId) {
+		this.educationId = educationId;
+	}
+
+	/**
+	 * @return the employmentId
+	 */
+	public Long getEmploymentId() {
+		return employmentId;
+	}
+
+	/**
+	 * @param employmentId the employmentId to set
+	 */
+	public void setEmploymentId(Long employmentId) {
+		this.employmentId = employmentId;
+	}
+	
+	
 
 }

@@ -4,6 +4,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
+import com.drishika.gradzcircle.service.dto.CandidateProjectDTO;
+import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -45,11 +48,14 @@ public class CandidateProjectResource {
 	private final CandidateProjectRepository candidateProjectRepository;
 
 	private final CandidateProjectSearchRepository candidateProjectSearchRepository;
+	
+	private final DTOConverters converter;
 
 	public CandidateProjectResource(CandidateProjectRepository candidateProjectRepository,
-			CandidateProjectSearchRepository candidateProjectSearchRepository) {
+			CandidateProjectSearchRepository candidateProjectSearchRepository,DTOConverters converter) {
 		this.candidateProjectRepository = candidateProjectRepository;
 		this.candidateProjectSearchRepository = candidateProjectSearchRepository;
+		this.converter = converter;
 	}
 
 	/**
@@ -102,7 +108,7 @@ public class CandidateProjectResource {
 	@Timed
 	public ResponseEntity<CandidateProject> updateCandidateProject(@RequestBody CandidateProject candidateProject)
 			throws URISyntaxException {
-		log.debug("REST request to update CandidateProject : {}", candidateProject);
+		log.debug("REST request to update CandidateProject : {} for educaiton {} or employment {}", candidateProject,candidateProject.getEducation(),candidateProject.getEmployment());
 		if (candidateProject.getId() == null) {
 			return createCandidateProject(candidateProject);
 		}
@@ -121,13 +127,12 @@ public class CandidateProjectResource {
 	 */
 	@GetMapping("/candidate-projects")
 	@Timed
-	public List<CandidateProject> getAllCandidateProjects() {
+	public List<CandidateProjectDTO> getAllCandidateProjects() {
 		log.debug("REST request to get all CandidateProjects");
 		List<CandidateProject> candidateProjects = candidateProjectRepository.findAll();
-		// candidateProjects.forEach(candidateProject->{
-		// calculateProjectDuration(candidateProject);
-		// });
-		return candidateProjects;
+		List<CandidateProjectDTO> candidateProjectDTOs= new ArrayList<>();
+		candidateProjects.forEach(project ->candidateProjectDTOs.add(converter.setCandidateProjects(project)));
+		return candidateProjectDTOs;
 	}
 
 	/**
@@ -140,11 +145,11 @@ public class CandidateProjectResource {
 	 */
 	@GetMapping("/candidate-projects/{id}")
 	@Timed
-	public ResponseEntity<CandidateProject> getCandidateProject(@PathVariable Long id) {
+	public ResponseEntity<CandidateProjectDTO> getCandidateProject(@PathVariable Long id) {
 		log.debug("REST request to get CandidateProject : {}", id);
 		CandidateProject candidateProject = candidateProjectRepository.findOne(id);
 		// calculateProjectDuration(candidateProject);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateProject));
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(converter.setCandidateProjects(candidateProject)));
 	}
 
 	/**
@@ -173,11 +178,15 @@ public class CandidateProjectResource {
 	 */
 	@GetMapping("/_search/candidate-projects")
 	@Timed
-	public List<CandidateProject> searchCandidateProjects(@RequestParam String query) {
+	public List<CandidateProjectDTO> searchCandidateProjects(@RequestParam String query) {
 		log.debug("REST request to search CandidateProjects for query {}", query);
-		return StreamSupport
+		List <CandidateProjectDTO> projectDTOs = new ArrayList<>();
+		List<CandidateProject> projects = StreamSupport
 				.stream(candidateProjectSearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
+		projects.forEach(project -> projectDTOs.add(converter.setCandidateProjects(project)));
+		return projectDTOs;
+		
 	}
 
 }

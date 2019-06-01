@@ -13,3 +13,5 @@ export const CANDIDATE_EDUCATION_ID = 'candidateEducationId';
 export const CANDIDATE_EMPLOYMENT_ID = 'candidateEmploymentId';
 export const CANDIDATE_LANGUAGE_ID = 'candidateLanguageId';
 export const ENABLED_COUNTRIES = 'enabledCountries';
+export const CANDIDATE_PROJECT_ID = 'candidateProjectId';
+export const IS_EMPLOYMENT_PROJECT = 'isEmploymentProject';

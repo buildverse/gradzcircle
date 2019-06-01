@@ -8,7 +8,7 @@ import { CandidateEmploymentService } from './candidate-employment.service';
 import { DataStorageService, Principal } from '../../shared';
 import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-import { CANDIDATE_ID, CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
+import { CANDIDATE_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_PROJECT_ID,IS_EMPLOYMENT_PROJECT } from '../../shared/constants/storage.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -45,6 +45,11 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
   
   setEditDeleteRouteParams(candidateEmploymentId) {
     this.dataService.setdata(CANDIDATE_EMPLOYMENT_ID,candidateEmploymentId);
+  }
+  
+  setProjectRouteParam(event) {
+    this.dataService.setdata(CANDIDATE_PROJECT_ID,event);
+    this.dataService.setdata(IS_EMPLOYMENT_PROJECT,'true');
   }
 
     /*To be removed once undertsand Elastic */

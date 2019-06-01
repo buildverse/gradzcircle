@@ -16,6 +16,8 @@ export class CandidateProject implements BaseEntity {
     public projectDuration?: number,
     public contributionInProject?: string,
     public isCurrentProject?: boolean,
+    public educationId?: number,
+    public employmentId?: number,
     public projectType?: ProjectType,
     public education?: BaseEntity,
     public employment?: BaseEntity,

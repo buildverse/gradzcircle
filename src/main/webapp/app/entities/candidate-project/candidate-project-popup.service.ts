@@ -46,14 +46,14 @@ export class CandidateProjectPopupService {
                             day: candidateProject.projectEndDate.getDate()
                         };
                     }
-                    if ( candidateProject.education ){
+                    if ( candidateProject.educationId ){
                         this.candidateEducation = new CandidateEducation();
-                        this.candidateEducation.id = candidateProject.education.id;
+                        this.candidateEducation.id = candidateProject.educationId;
                         candidateProject.education = this.candidateEducation;
                     }
-                    else if( candidateProject.employment ) {
+                    else if( candidateProject.employmentId ) {
                         this.candidateEmployment = new CandidateEmployment();
-                        this.candidateEmployment.id = candidateProject.employment.id;
+                        this.candidateEmployment.id = candidateProject.employmentId;
                         candidateProject.employment = this.candidateEmployment;
                     }
                     this.ngbModalRef = this.candidateProjectModalRef(component, candidateProject,isEmploymentProject);
