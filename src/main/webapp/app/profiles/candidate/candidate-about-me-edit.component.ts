@@ -268,8 +268,8 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     }
     //Update the data on the form
     this.candidateAboutMeForm.patchValue({
-      firstName: this.candidate.login.firstName,
-      lastName: this.candidate.login.lastName,
+      firstName: this.candidate.firstName,
+      lastName: this.candidate.lastName,
       middleName: this.candidate.middleName,
       aboutMe: this.candidate.aboutMe,
       email: this.candidate.login.email,

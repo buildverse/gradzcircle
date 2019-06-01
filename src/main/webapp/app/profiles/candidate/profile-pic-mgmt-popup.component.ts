@@ -77,18 +77,10 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     this.userService.deleteImage(this.candidateId).subscribe((response) => {
       status = response.status;
       if (status === 200) {
-        /* if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
-        this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
-        } else if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CORPORATE])) {
-           this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
-       }
-*/      
         this.eventManager.broadcast({name: 'userImageModification', content: 'OK'});
-          
         }
         this.clear();
         // this.router.navigate(['../details'], {relativeTo: this.route});
-      
     });
   }
 
