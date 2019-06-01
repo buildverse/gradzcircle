@@ -27,14 +27,14 @@
     <br/>
     <div class="table-responsive" *ngIf="colleges">
         <table class="table table-striped">
-            <thead>
+            <thead>	
             <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="gradzcircleApp.college.collegeName">College Name</span></th>
-            <th><span jhiTranslate="gradzcircleApp.college.domainName">Domain Name</span></th>
-            <th><span jhiTranslate="gradzcircleApp.college.affiliation">Affiliation</span></th>
-            <th><span jhiTranslate="gradzcircleApp.college.status">Status</span></th>
-            <th><span jhiTranslate="gradzcircleApp.college.university">University</span></th>
+            <th ><span jhiTranslate="global.field.id">ID</span></th>
+            <th ><span jhiTranslate="gradzcircleApp.college.collegeName">College Name</span></th>
+            <th ><span jhiTranslate="gradzcircleApp.college.domainName">Domain Name</span></th>
+            <th ><span jhiTranslate="gradzcircleApp.college.affiliation">Affiliation</span></th>
+            <th ><span jhiTranslate="gradzcircleApp.college.status">Status</span></th>
+            <th ><span jhiTranslate="gradzcircleApp.college.university">University</span></th>
             <th></th>
             </tr>
             </thead>
@@ -80,4 +80,14 @@
             </tbody>
         </table>
     </div>
+    <div *ngIf="colleges && colleges.length">
+		<div class="row justify-content-center">
+			<jhi-item-count [page]="page" [total]="queryCount"
+				[itemsPerPage]="itemsPerPage"></jhi-item-count>
+		</div>
+		<div class="row justify-content-center flex-wrap">
+			<ngb-pagination class="flex-wrap" [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
+				(pageChange)="loadPage(page)"></ngb-pagination>
+		</div>
+	</div>
 </div>

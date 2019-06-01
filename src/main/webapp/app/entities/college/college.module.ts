@@ -14,6 +14,7 @@ import {
     collegeRoute,
     collegePopupRoute,
 } from './';
+import { CollegeResolvePagingParams } from './college.route';
 
 const ENTITY_STATES = [
     ...collegeRoute,
@@ -43,6 +44,7 @@ const ENTITY_STATES = [
     providers: [
         CollegeService,
         CollegePopupService,
+        CollegeResolvePagingParams
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

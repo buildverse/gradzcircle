@@ -43,7 +43,7 @@ export class CollegeService {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }
 
-    search(req?: any): Observable<HttpResponse<College[]>> {
+    search(req?: any): Observable<HttpResponse<College[]>> { 
         const options = createRequestOption(req);
         return this.http.get<College[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));

@@ -18,7 +18,11 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,16 +36,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.College;
+import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
 import com.drishika.gradzcircle.repository.CollegeRepository;
 import com.drishika.gradzcircle.repository.search.CollegeSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing College.
@@ -143,9 +150,11 @@ public class CollegeResource {
 	 */
 	@GetMapping("/colleges")
 	@Timed
-	public List<College> getAllColleges() {
+	public ResponseEntity<List<College>> getAllColleges(@ApiParam Pageable pageable) {
 		log.debug("REST request to get all Colleges");
-		return collegeRepository.findAll();
+		Page<College> college =  collegeRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(college, "/api/colleges");
+		return new ResponseEntity<>(college.getContent(), headers, HttpStatus.OK);
 	}
 
 	/**

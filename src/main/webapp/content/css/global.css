@@ -35,7 +35,10 @@ overflow-x:visible;
     width: 100%;
   }
 */
-
+.pagination
+{
+  @extend .d-flex, .flex-wrap, .justify-content-center;
+}
 
 /*IMAGE MGMT CSS */
 
