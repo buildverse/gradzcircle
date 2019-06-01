@@ -19,6 +19,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationRegistryBasedSynchronizationStrategy;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -59,6 +60,8 @@ import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.CandidateService;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 /**
  * Test class for the CandidateResource REST controller.
@@ -1199,6 +1202,47 @@ public class CandidateResourceIntTest {
 		assertThat(candidate1).isNotEqualTo(candidate2);
 		candidate1.setId(null);
 		assertThat(candidate1).isNotEqualTo(candidate2);
+	}
+	
+	@Test
+	@Transactional
+	public void registerCandidateThenUpdateCandidateThenGetDetails() throws Exception {
+		
+		userRepository.saveAndFlush(user);
+		candidateRepository.saveAndFlush(candidate.login(user));
+		CandidateProfileScore score = new CandidateProfileScore(candidate,basic);
+		candidate.addCandidateProfileScore(score);
+		candidateRepository.saveAndFlush(candidate);
+		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
+		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
+				.facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
+				.aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)
+				.phoneNumber(UPDATED_PHONE_NUMBER).differentlyAbled(UPDATED_DIFFERENTLY_ABLED)
+				.availableForHiring(UPDATED_AVAILABLE_FOR_HIRING).openToRelocate(UPDATED_OPEN_TO_RELOCATE);
+		System.out.println("---------------"+updatedCandidate.getProfileScores());;
+		//updatedCandidate.addCandidateProfileScore(updatedCandidate.getProfileScores().iterator().next());
+
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		restCandidateMockMvc.perform(get("/api/candidateById/{id}", candidate.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.id").value(candidate.getId().intValue()))
+		.andExpect(jsonPath("$.firstName").value(UPDATED_FIRST_NAME.toString()))
+		.andExpect(jsonPath("$.lastName").value(UPDATED_LAST_NAME.toString()))
+		.andExpect(jsonPath("$.middleName").value(UPDATED_MIDDLE_NAME.toString()))
+		.andExpect(jsonPath("$.facebook").value(UPDATED_FACEBOOK.toString()))
+		.andExpect(jsonPath("$.linkedIn").value(UPDATED_LINKED_IN.toString()))
+		.andExpect(jsonPath("$.twitter").value(UPDATED_TWITTER.toString()))
+		.andExpect(jsonPath("$.aboutMe").value(UPDATED_ABOUT_ME.toString()))
+		.andExpect(jsonPath("$.dateOfBirth").value(UPDATED_DATE_OF_BIRTH.toString()))
+		.andExpect(jsonPath("$.phoneCode").value(UPDATED_PHONE_CODE.toString()))
+		.andExpect(jsonPath("$.phoneNumber").value(UPDATED_PHONE_NUMBER.toString()))
+		.andExpect(jsonPath("$.differentlyAbled").value(UPDATED_DIFFERENTLY_ABLED.booleanValue()))
+		.andExpect(jsonPath("$.availableForHiring").value(UPDATED_AVAILABLE_FOR_HIRING.booleanValue()))
+		.andExpect(jsonPath("$.openToRelocate").value(UPDATED_OPEN_TO_RELOCATE.booleanValue()));
+	//	.andExpect(jsonPath("$.hasEducation").value(Boolean.FALSE));
+		
 	}
 	
 

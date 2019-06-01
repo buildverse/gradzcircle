@@ -207,7 +207,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
       state: [null, [Validators.required]],
       country: [null, [Validators.required]],
       zip: [null],
-      phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+')]],
+      phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(10), Validators.maxLength(10) ]],
       phoneCode: ['+91', [Validators.required, Validators.pattern('[+.0-9]+')]]
     });
 

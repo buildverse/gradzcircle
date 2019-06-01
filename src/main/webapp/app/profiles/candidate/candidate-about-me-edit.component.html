@@ -297,6 +297,12 @@
 											Please enter your phone number. </span> <span
 										*ngIf="candidateAboutMeForm.get('address.phoneNumber').errors.pattern">
 											Please enter a valid phone number. </span>
+										<span
+										*ngIf="candidateAboutMeForm.get('address.phoneNumber').errors.minlength">
+											Phone number must be 10 digits. </span>
+										<span
+										*ngIf="candidateAboutMeForm.get('address.phoneNumber').errors.maxlength">
+											Phone number must be 10 digits. </span>
 									</span>
 								</div>
 								<div class="col-md-1 invisible"></div>

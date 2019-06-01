@@ -14,7 +14,7 @@
 						    [maintainAspectRatio]="false"
 						    [roundCropper]="true"
 						    [aspectRatio]="1/1"
-						    [resizeToWidth]="128"
+						    [resizeToWidth]="100"
 						    format="png"
 						    (imageCropped)="imageCropped($event)"
 						    (imageLoaded)="imageLoaded()"
@@ -64,5 +64,9 @@
 						</button>-->
 					</div>
 				</ng-template>
+				<div class="row justify-content-center mt-2">
+				<p class="text-danger" *ngIf="fileUploadErrorMessage">
+							{{fileUploadErrorMessage}}</p>
+				</div>
 		
 	</div>

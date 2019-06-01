@@ -28,7 +28,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
   croppedImage: any = '';
   uploader: FileUploader;
   fileUploadErrorMessage: string;
-  allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+  allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg'];
   candidateId: number;
   imageDataAvailable: boolean;
 
@@ -77,14 +77,18 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     this.userService.deleteImage(this.candidateId).subscribe((response) => {
       status = response.status;
       if (status === 200) {
-         if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
+        /* if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
         this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
         } else if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CORPORATE])) {
            this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
        }
+*/      
+        this.eventManager.broadcast({name: 'userImageModification', content: 'OK'});
+          
+        }
         this.clear();
         // this.router.navigate(['../details'], {relativeTo: this.route});
-      }
+      
     });
   }
 
@@ -93,11 +97,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     item.upload();
     this.uploader.onCompleteItem = (item, response, status, header) => {
       if (status === 200) {
-       if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
-        this.eventManager.broadcast({name: 'candidateImageModification', content: 'OK'});
-        } else if(this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CORPORATE])) {
-           this.eventManager.broadcast({name: 'corporateImageModification', content: 'OK'});
-       }
+       this.eventManager.broadcast({name: 'userImageModification', content: 'OK'});
         this.clear();
       } else {
        // console.log('Status is ' + status + '   response is ' + JSON.stringify(response));
@@ -115,7 +115,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
         break;
       case 'mimeType':
         const allowedTypes = this.allowedMimeType.join();
-        this.fileUploadErrorMessage = `File types allowed : png,jpg,jpeg,gif`;
+        this.fileUploadErrorMessage = `File types allowed : png, jpg, jpeg.`;
         break;
       case 'queueLimit':
         break;

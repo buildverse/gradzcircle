@@ -210,7 +210,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   registerChangeInCandidateImage() {
-    this.eventSubscriberCandidateImage = this.eventManager.subscribe('candidateImageModification', (response) => this.reloadUserImage());
+    this.eventSubscriberCandidateImage = this.eventManager.subscribe('userImageModification', (response) => this.reloadUserImage());
   }
 
   ngOnDestroy() {

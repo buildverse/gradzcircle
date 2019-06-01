@@ -147,7 +147,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInCorporateImage() {
-    this.eventSubscriber = this.eventManager.subscribe('corporateImageModification', (response) => this.reloadCorporateImage());
+    this.eventSubscriber = this.eventManager.subscribe('userImageModification', (response) => this.reloadCorporateImage());
   }
   registerChangeInCorporates() {
     this.principal.identity().then((account) => {

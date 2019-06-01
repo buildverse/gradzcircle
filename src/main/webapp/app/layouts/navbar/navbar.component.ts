@@ -216,11 +216,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }, 0);
     })
     );
-    if(this.candidateId) {
-      this.eventSubscriber = this.eventManager.subscribe('candidateImageModification', (response) => this.reloadUserImage());
-    } else if (this.corporateId) {
-      this.eventSubscriber = this.eventManager.subscribe('corporateImageModification', (response) => this.reloadUserImage());
-    }
+    this.eventSubscriber = this.eventManager.subscribe('userImageModification', (response) => this.reloadUserImage());
   }
 
   reloadUserImage() {
