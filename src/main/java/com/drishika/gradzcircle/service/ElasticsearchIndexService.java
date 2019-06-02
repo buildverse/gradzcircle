@@ -463,6 +463,14 @@ public class ElasticsearchIndexService {
 		
 	
 	}
+	
+	@Transactional(readOnly=true)
+	@SuppressWarnings("unchecked")
+	public <T, ID extends Serializable> void removeIndex (String entityName) {
+		log.info("Removing index {} from server ",entityName);
+		Boolean removed = elasticsearchTemplate.deleteIndex(entityName.toLowerCase());
+		log.info("index {} from server has been removed, status {}",entityName,removed);
+	}
 
 	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")

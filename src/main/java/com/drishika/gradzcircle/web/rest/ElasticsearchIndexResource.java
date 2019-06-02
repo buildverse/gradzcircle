@@ -70,4 +70,22 @@ public class ElasticsearchIndexResource {
 		
 		
 	}
+	
+	@RequestMapping(value = "/elasticsearch/removeByEntity/{entityName}", method = RequestMethod.DELETE, produces = MediaType.TEXT_PLAIN_VALUE)
+	@Timed
+	@PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
+	public ResponseEntity<Void> removeindexByEntity(@PathVariable String entityName) throws URISyntaxException {
+		log.info("REST request to remove {} index Elasticsearch by user : {}", entityName,SecurityUtils.getCurrentUserLogin());
+		try {
+			elasticsearchIndexService.removeIndex(entityName);
+			return ResponseEntity.accepted().headers(HeaderUtil.createAlert("elasticsearch.index.remove.accepted", null))
+					.build();
+		} catch(EntityNotFoundException enf) {
+			log.error(enf.getMessage());
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(entityName, enf.getLocalizedMessage(),enf.getMessage()))
+					.build();
+		}
+		
+		
+	}
 }
