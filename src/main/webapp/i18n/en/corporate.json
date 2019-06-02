@@ -50,7 +50,8 @@
             "uploadLogo":"Logo",
             "corporateDetails" :"Company Details",
             "companyType":"Compamy Type",
-            "companySize": "Company Size"
+            "companySize": "Company Size",
+            "firstLogin": "Please <b>post your First Job</b> !!"
         }
     }
 }

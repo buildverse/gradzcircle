@@ -205,13 +205,13 @@ export class JobComponent implements OnInit, OnDestroy {
       this.loadAll();
     }
    });
-    this.principal.identity(false).then((account) => {
+  /*  this.principal.identity(false).then((account) => {
       if (account) {
         this.loadActiveJobs();
       } else {
         this.loadAll();
       }
-    });
+    });*/
   }
 
   ngOnDestroy() {
@@ -220,6 +220,9 @@ export class JobComponent implements OnInit, OnDestroy {
     }
     if(this.userLoadSubscriber) {
       this.eventManager.destroy(this.userLoadSubscriber);
+    }
+    if(this.jhiAlertService) {
+      this.jhiAlertService.clear();
     }
   }
 
@@ -287,6 +290,7 @@ export class JobComponent implements OnInit, OnDestroy {
       this.job.jobsLastMonth = 0;
       this.job.newApplicants = 0;
       this.job.totalLinkedCandidates = 0;
+      this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.corporate.firstLogin'}, []);
     } else {
      // this.job = new Job();
       this.job.totalNumberOfJobs = this.jobs[0].totalNumberOfJobs;

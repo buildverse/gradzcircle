@@ -149,8 +149,8 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
       this.errorEmailExists = null;
       this.languageService.getCurrent().then((key) => {
         this.registerAccount.langKey = key;
-        this.registerAccount.firstName = this.corporateRegisterForm.get('firstName').value;
-        this.registerAccount.lastName = this.corporateRegisterForm.get('lastName').value;
+      //  this.registerAccount.firstName = this.corporateRegisterForm.get('firstName').value;
+     //   this.registerAccount.lastName = this.corporateRegisterForm.get('lastName').value;
         this.registerAccount.companyName = this.corporateRegisterForm.get('companyName').value;
         this.registerAccount.phoneNumber = this.corporateRegisterForm.get('phoneNumber').value;
         this.registerAccount.password = this.corporateRegisterForm.get('passwordGroup.password').value;

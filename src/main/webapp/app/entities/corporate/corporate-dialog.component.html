@@ -50,10 +50,9 @@
 					jhiTranslate="gradzcircleApp.corporate.email"
 					for="field_corporateEmail">Corporate Email</label>
 			</div>
-			<div class="col-md-4"
-				[class.has-danger]="corpEmail.invalid && corpEmail.touched">
+			<div class="col-md-4">
 				<input type="text" class="form-control" name="email"
-					id="field_corporateEmail" #corpEmail="ngModel" required
+					id="field_corporateEmail" #corpEmail="ngModel" required disabled
 					[(ngModel)]="corporate.login.email" /> <span
 					*ngIf="corpEmail.invalid && corpEmail.touched" class="text-danger">
 					<small> Please enter your email </small>

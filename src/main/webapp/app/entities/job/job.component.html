@@ -147,8 +147,8 @@
 			                      </td>
 						</tbody>
 					</table>
-		</div>
-		<div *ngIf="jobs && jobs.length">
+				 </div>
+			</div>
 			<div class="row justify-content-center font-weight-light">
 				<jhi-item-count [page]="page" [total]="queryCount"
 					[itemsPerPage]="itemsPerPage"></jhi-item-count>
@@ -158,10 +158,10 @@
 					(pageChange)="loadPage(page)"></ngb-pagination>
 			</div>
 		</div>
-	</div>
-	<ng-template #noJobs> </ng-template>
-	       </div>
-	    </div>
+		<ng-template #noJobs>
+			<div class="mt-5 justify-content-center font-weight-light"><jhi-alert></jhi-alert></div>
+		</ng-template>
+	  </div>
 	</div>
 </div>
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="mt-6">
