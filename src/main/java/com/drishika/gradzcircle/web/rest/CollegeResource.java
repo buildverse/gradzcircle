@@ -207,13 +207,20 @@ public class CollegeResource {
 		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
 				com.drishika.gradzcircle.domain.elastic.College.class);
 		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("college-suggest");
-		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+		log.info("Suggestion is {}",completionSuggestion.getEntries());
+		List<CompletionSuggestion.Entry.Option> options = null;
+		if(completionSuggestion.getEntries() != null)
+			options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> colleges = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();
-		options.forEach(option -> {
-			colleges.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
-			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
-		});
+		if(options != null) {
+			options.forEach(option -> {
+				colleges.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
+				// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+			});
+		} else {
+			colleges.add(new GenericElasticSuggest("Other", "Other"));
+		}
 		try {
 			suggest = objectMapper.writeValueAsString(colleges);
 		} catch (JsonProcessingException e) {

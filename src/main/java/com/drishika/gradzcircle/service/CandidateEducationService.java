@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -154,7 +155,7 @@ public class CandidateEducationService {
 		if (isDelete) {
 			candidateEducations.remove(candidateEducation);
 			if (candidateEducations.size() > 0) {
-				candidateEducations.sort((education1, education2) -> education1.getEducationToDate()
+				candidateEducations.stream().filter(education -> education.getEducationToDate() != null).collect(Collectors.toList()).sort((education1, education2) -> education1.getEducationToDate()
 						.compareTo(education2.getEducationToDate()));
 				candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
 				log.debug("Soretd education by dates {}", candidateEducations);

@@ -9,7 +9,7 @@
 							<a class="card-link " 
 		       				   [attr.aria-controls]="candidateEducation.id" (click)="candidateEducation.collapsed = !candidateEducation.collapsed"
 		       				   [attr.aria-expanded]="!candidateEducation.collapsed"
-							> {{candidateEducation.qualification[0].qualification}} In {{candidateEducation.course[0].course}} </a>
+							> {{candidateEducation.qualification[0].qualification}} In {{candidateEducation.course[0].course}} {{candidateEducation.highestQualification?' (Highest Education)':''}}</a>
 							<span class="project_buttons">
 								<a class="btn btn-sm btn-pill btn-primary mb-2" (click)="setEducationRouteParam(candidateEducation.id)"
 														[routerLink]="['/', { outlets: { popup: 'candidate-education/edit'} }]"
