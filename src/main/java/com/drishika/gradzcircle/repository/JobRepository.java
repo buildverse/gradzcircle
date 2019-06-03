@@ -101,8 +101,13 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
 	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId, Pageable pageable);
 
-	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus>-1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) order by cJ.matchScore desc")
+	//@Query("select cJ from Job j inner join CandidateJob cJ on j.id=cJ.job.id join CorporateCandidate cc on  cc.id.jobId = cJ.job.id and cJ.candidate.id = cJ.job.id where j.jobStatus=1 and j.id=?1")
+	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) order by cJ.matchScore desc")
 	Page<CandidateJob> findMatchedCandidatesForJob(Long jobId, Pageable pageable);
+	
+//	@Query("select cJ from Job j inner join CandidateJob cJ on j.id=cJ.job.id left outer join CorporateCandidate cc on cc.id.jobId = cJ.job.id and cJ.candidate.id = cJ.job.id where j.jobStatus=1 and j.id=?1 and cJ.matchScore between ?2 and ?3")
+	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) and cJ.matchScore between ?2 and ?3 order by cJ.matchScore desc")
+	Page<CandidateJob> findMatchedCandidatesForJobWithMatchScoreFilter(Long jobId, Double fromScore, Double toScore, Pageable pageable);
 
 	@Query("select j from Job j, CandidateAppliedJobs cJA where cJA.id.jobId = j.id and cJA.id.candidateId=?1")
 	Page<Job> findAppliedJobByCandidate(Long candidateId, Pageable pageable);

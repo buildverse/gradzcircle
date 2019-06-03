@@ -11,7 +11,8 @@ export class CandidateList implements BaseEntity {
     public login?: User,
     public reviewed?: boolean,
     public jobId?: number,
-    public corporateId?: number
+    public corporateId?: number,
+    public matchScore?: number
   ) {
     this.reviewed = false;
   }

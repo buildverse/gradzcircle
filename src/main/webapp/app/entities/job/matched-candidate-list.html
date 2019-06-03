@@ -1,33 +1,135 @@
 <div class="mt-6" *ngIf="candidateList">
-	<div class="mt-1 justify-content-center">
-		<h1 class="text-center" style="color:#455A64;">Matched Candidates</h1>
+	<div class="mt-1 ml-4 justify-content-center">
+		<h1 class="text-left" style="color: #455A64;">Matched Candidates</h1>
+	</div>
+	<div class="row mt-5 ml-1">
+		<div class="col-md-2">
+			<div class="card">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-8 ">
+							<h5 class="text-muted font-weight-light pt-2"
+								jhiTranslate="gradzcircleApp.job.filters.matchScore">Filters</h5>
+						</div>
+						<div class="col-lg-4">
+							<a class="card-link "
+								(click)="isMatchScoreCollapsed = !isMatchScoreCollapsed"
+								[attr.aria-expanded]="!isMatchScoreCollapsed"
+								aria-controls="matchScoreCollapse">
+								<h4>
+									<span class="pb-1 float-right icon "
+										[ngClass]="{'icon-squared-plus' :isMatchScoreCollapsed, 'icon-squared-minus': !isMatchScoreCollapsed }"
+										style="color: #6c757d;"></span>
+								</h4>
+							</a>
+						</div>
+					</div>
+
+					<div id="matchScoreCollapse" [ngbCollapse]="isMatchScoreCollapsed">
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScore90To100"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 " jhiTranslate="gradzcircleApp.job.filters.90To100"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScore80To89"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 " jhiTranslate="gradzcircleApp.job.filters.80To89"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScore70To79"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 " jhiTranslate="gradzcircleApp.job.filters.70To79"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScore60To69"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 " jhiTranslate="gradzcircleApp.job.filters.60To69"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScore50To59"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 " jhiTranslate="gradzcircleApp.job.filters.50To59"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ml-5">
+							<label class="text-muted font-weight-light"> <input
+								type="radio" [(ngModel)]="matchScoreRange"
+								value="matchScorelessThan50"
+								(ngModelChange)="loadMatchedCandidates()" /> <span
+								class="ml-3 "
+								jhiTranslate="gradzcircleApp.job.filters.lessThan50"></span>
+
+							</label>
+						</div>
+						<div class=" row mt-3 ">
+							<div class="col-md-12 justify-content-center d-flex">
+								<button type="button" class="btn btn-sm btn-pill btn-primary"
+									(click)="clearMatchScores()">Clear Selected Scores</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="candidateList?.length>0" class="col-md-10">
+			<div class="row">
+				<div *ngFor="let candidate of candidateList" class="col-md-6">
+					<div class="card card-profile h-100">
+						<div class="card-header" style="background-color: #2196F3;"></div>
+						<div class="card-body text-xs-center">
+							<img class="card-profile-img"
+								[src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
+							<h5 class="card-title">{{candidate.firstName}}
+								{{candidate.lastName}}</h5>
+							<p class="mb-2 font-weight-light">{{candidate.qualificationWithHighestCourse}}</p>
+							<p *ngIf="candidate.tagline" class="mb-2 font-weight-light">{{candidate.tagline}}</p>
+							<p class="mb-2 font-weight-light">
+								<span jhiTranslate="gradzcircleApp.job.matchScore"></span>&nbsp;{{candidate.matchScore}}
+								%
+							</p>
+							<button class="btn btn-outline-primary btn-sm"
+								(click)="setViewPublicProfileRouteParams(candidate.id,jobId,corporateId)"
+								[routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
+								<span class="icon icon-add-user"></span> View
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mt-5" *ngIf="candidateList">
+				<div class="row justify-content-center font-weight-light">
+					<jhi-item-count [page]="page" [total]="queryCount"
+						[itemsPerPage]="itemsPerPage"></jhi-item-count>
+				</div>
+				<div class="row justify-content-center font-weight-light">
+					<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+						[pageSize]="itemsPerPage" (pageChange)="loadPage(page)"></ngb-pagination>
+				</div>
+			</div>
+		</div>
 	</div>
 
-		<div class="row justify-content-center" >
-			   <div *ngFor="let candidate of candidateList" class="m-2 col-lg-3">
-			   	<div class="card card-profile h-100">			     
-			       <div class="card-header" style="background-color: #2196F3;"></div>
-			       <div class="card-body text-xs-center">
-			         <img class="card-profile-img" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
-			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
-			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
-			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
-			         <button class="btn btn-outline-primary btn-sm" (click)="setViewPublicProfileRouteParams(candidate.id,jobId,corporateId)" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
-			           <span class="icon icon-add-user"></span> View
-			         </button>
-			       </div>
-			   </div>
-			   </div>  
-		</div>
-		<div class="mt-2" *ngIf="candidateList">
-					<div class="row justify-content-center font-weight-light">
-						<jhi-item-count [page]="page" [total]="queryCount"
-							[itemsPerPage]="itemsPerPage"></jhi-item-count>
-					</div>
-					<div class="row justify-content-center font-weight-light">
-						<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
-							(pageChange)="loadPage(page)"></ngb-pagination>
-					</div>
-		</div>
+
 
 </div>

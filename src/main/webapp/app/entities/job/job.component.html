@@ -128,14 +128,25 @@
 								<ng-template #draft>
 								<td class="font-weight-light">Draft</td>
 								</ng-template>
-								<td class="font-weight-light"><a
+								<td *ngIf="job.noOfMatchedCandidates>0; else noMatchedCandidates" class="font-weight-light"><a
 									[routerLink]="['../matchedCandidateList']" (click)="setJobAndCorporateRouteParam(job.id,corporateId)">
 										{{job.noOfMatchedCandidates}}</a></td>
-								<td class="font-weight-light"><a 
+								<ng-template #noMatchedCandidates>
+									<td class="font-weight-light" ><a class="disabled">
+										{{job.noOfMatchedCandidates}}</a></td>
+								</ng-template>
+								<td *ngIf="job.noOfCandidatesApplied>0; else noCandidateApplied" class="font-weight-light"><a 
 								(click)="setParamsToGetListForAppliedCandidate(job.id)" [routerLink]="['../appliedCandidateList']">{{job.noOfCandidatesApplied}}</a></td>
-								<td class="font-weight-light"><a (click)="setParamsToGetListForShortlistedCandidate(job.id,corporateId)"
+								<ng-template #noCandidateApplied>
+									<td class="font-weight-light"><a class="disabled">{{job.noOfCandidatesApplied}}</a></td>
+								</ng-template>
+								<td *ngIf="job.noOfShortListedCandidate>0;else noShortListedCandidates" class="font-weight-light"><a (click)="setParamsToGetListForShortlistedCandidate(job.id,corporateId)"
 									[routerLink]="['../shortListedCandidateList']">
 										{{job.noOfShortListedCandidate}}</a></td>
+								<ng-template #noShortListedCandidates>
+									<td class="font-weight-light"><a class="disabled">
+										{{job.noOfShortListedCandidate}}</a></td>
+								</ng-template>
 								<td class="icons-edit">
 			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>
 			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true"> <span class="icon icon-edit"></span> 
@@ -149,14 +160,14 @@
 					</table>
 				 </div>
 			</div>
-			<div class="row justify-content-center font-weight-light">
+		</div>
+		<div class="row justify-content-center font-weight-light">
 				<jhi-item-count [page]="page" [total]="queryCount"
 					[itemsPerPage]="itemsPerPage"></jhi-item-count>
 			</div>
 			<div class="row justify-content-center font-weight-light">
-				<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+				<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
 					(pageChange)="loadPage(page)"></ngb-pagination>
-			</div>
 		</div>
 		<ng-template #noJobs>
 			<div class="mt-5 justify-content-center font-weight-light"><jhi-alert></jhi-alert></div>
@@ -219,7 +230,7 @@
 										[itemsPerPage]="itemsPerPage"></jhi-item-count>
 								</div>
 								<div class="row justify-content-center">
-									<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+									<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
 										(pageChange)="loadPage(page)"></ngb-pagination>
 								</div>
 							</div>
@@ -444,7 +455,7 @@
 				[itemsPerPage]="itemsPerPage"></jhi-item-count>
 		</div>
 		<div class="row justify-content-center">
-			<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+			<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
 				(pageChange)="loadPage(page)"></ngb-pagination>
 		</div>
 	</div>

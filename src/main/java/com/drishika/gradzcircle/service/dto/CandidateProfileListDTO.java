@@ -24,6 +24,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private Boolean reviewed;
 	private Long jobId;
 	private Long corporateId;
+	private Double matchScore;
 
 	/**
 	 * @return the reviewed
@@ -156,6 +157,22 @@ public class CandidateProfileListDTO implements Serializable {
 	 */
 	public void setCorporateId(Long corporateId) {
 		this.corporateId = corporateId;
+	}
+	
+	
+
+	/**
+	 * @return the matchScore
+	 */
+	public Double getMatchScore() {
+		return matchScore;
+	}
+
+	/**
+	 * @param matchScore the matchScore to set
+	 */
+	public void setMatchScore(Double matchScore) {
+		this.matchScore = matchScore;
 	}
 
 	/* (non-Javadoc)

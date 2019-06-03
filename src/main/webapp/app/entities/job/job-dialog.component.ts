@@ -15,7 +15,7 @@ import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import { USER_ID, CORPORATE_ID } from '../../shared/constants/storage.constants';
+import { USER_ID, CORPORATE_ID, JOB_ID } from '../../shared/constants/storage.constants';
 import { QualificationService} from '../qualification';
 import {Course, CourseService} from '../course';
 import {College, CollegeService} from '../college';
@@ -1203,7 +1203,7 @@ export class JobPopupComponent implements OnInit, OnDestroy {
         this.jobPopupService
           .open(JobDialogComponent as Component, params['id']);
       } else {
-        let id = this.dataStorageService.getData(CORPORATE_ID);
+        let id = this.dataStorageService.getData(JOB_ID);
         if(id) {
           this.jobPopupService
           .open(JobDialogComponent as Component, id);
