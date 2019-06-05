@@ -116,4 +116,19 @@ public class MailService {
         String subject = messageSource.getMessage("email.social.registration.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
+    
+    
+    public void sendNewMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates) {
+    		log.info("Sending new matched candidate email to '{}'", user.getEmail());
+    		 Locale locale = Locale.forLanguageTag(user.getLangKey());
+    	        Context context = new Context(locale);
+    	        context.setVariable(USER, user);
+    	        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+    	        context.setVariable("jobTitle", StringUtils.capitalize(jobTitle));
+    	        context.setVariable("numberOfCandidates", numberOfNewCandidates);
+    	        String content = templateEngine.process("newMatchedCandidateForJobEmail", context);
+    	        String subject = messageSource.getMessage("email.new.matched.candidate.title", null, locale);
+    	        sendEmail(user.getEmail(), subject, content, false, true);
+    		
+    }
 }

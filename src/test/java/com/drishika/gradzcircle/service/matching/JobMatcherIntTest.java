@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
-import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
@@ -55,6 +54,7 @@ import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.CandidateEducationService;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
 import com.drishika.gradzcircle.service.JobService;
+import com.drishika.gradzcircle.service.MailService;
 
 /**
  * @author abhinav
@@ -108,6 +108,9 @@ public class JobMatcherIntTest {
 	private JobSearchRepository jobSearchRepository;
 	@Autowired
 	private JobService jobService;
+	@Autowired
+	private MailService mailService;
+	
 
 	private final static String BACHELORS = "BACHELORS";
 	private final static String MASTERS = "MASTERS";
@@ -178,7 +181,7 @@ public class JobMatcherIntTest {
 		jobMatcher = new JobMatcher(candidateEducationService, candidateLanguageService, jobFilterParser,
 				filterRepository, courseRepository, qualificationRepository, collegeRepository, universityRepository,
 				genderRepository, languageRepository, jobRepository, jobSearchRepository, matchUtils,
-				candidateJobRepository, candidateRepository, applicationEventPublisher);
+				candidateJobRepository, candidateRepository, applicationEventPublisher,mailService);
 
 		
 	}

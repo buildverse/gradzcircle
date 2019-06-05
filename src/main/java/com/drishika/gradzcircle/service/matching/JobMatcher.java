@@ -1,6 +1,7 @@
 package com.drishika.gradzcircle.service.matching;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +31,7 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.CandidateEducationService;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
-import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
+import com.drishika.gradzcircle.service.MailService;
 
 /**
  * @author abhinav Matcher that will be called whenever a job's filter is
@@ -48,6 +49,7 @@ public class JobMatcher implements Matcher<Job> {
 	private final CandidateRepository candidateRepository;
 	private final MatchUtils matchUtils;
 	private final ApplicationEventPublisher applicationEventPublisher;
+	private final MailService mailService;
 
 	public JobMatcher(CandidateEducationService candidateEducationService,
 			CandidateLanguageService candidateLanguageService, JobFilterParser jobfilterParser,
@@ -56,20 +58,22 @@ public class JobMatcher implements Matcher<Job> {
 			UniversityRepository universityRepository, GenderRepository genderRepository,
 			LanguageRepository languageRepository, JobRepository jobRepository, JobSearchRepository jobSearchRepository,
 			MatchUtils matchUtils, CandidateJobRepository candidateJobRepository,
-			CandidateRepository candidateRepository, ApplicationEventPublisher applicationEventPublisher) {
+			CandidateRepository candidateRepository, ApplicationEventPublisher applicationEventPublisher,
+			MailService mailService) {
 		this.candidateEducationService = candidateEducationService;
 		this.candidateLanguageService = candidateLanguageService;
 		this.jobRepository = jobRepository;
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
 		this.applicationEventPublisher = applicationEventPublisher;
+		this.mailService = mailService;
 	}
 
 	@Override
 	public void match(Job job) {
 		long startTime = System.currentTimeMillis();
 		matchUtils.populateJobFilterWeightMap();
-
+		Long numberOfNewCandidates=0L;
 		JobFilterObject jobfilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
 		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject)
 				.parallel();
@@ -77,32 +81,29 @@ public class JobMatcher implements Matcher<Job> {
 		candidateJobs = candidateEducationStream
 				.map(candidateEducation -> beginMatchingOnEducation(job, jobfilterObject, candidateEducation))
 				.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
-		// Iterator<CandidateJob> candidateJobIterator = candidateJobs.iterator();
-		candidateJobs.forEach(matchedCandidateJob -> {
+		Iterator<CandidateJob> iterator = candidateJobs.iterator();
+		while(iterator.hasNext()) {
+			CandidateJob matchedCandidateJob = iterator.next();
 			if (job.getCandidateJobs().contains(matchedCandidateJob)) {
 				job.getCandidateJobs().remove(matchedCandidateJob);
 				job.getCandidateJobs().add(matchedCandidateJob);
 			} else {
 				job.getCandidateJobs().add(matchedCandidateJob);
+				numberOfNewCandidates++;
 			}
-		});
+		}
+/*		candidateJobs.forEach(matchedCandidateJob -> {
+			if (job.getCandidateJobs().contains(matchedCandidateJob)) {
+				job.getCandidateJobs().remove(matchedCandidateJob);
+				job.getCandidateJobs().add(matchedCandidateJob);
+			} else {
+				job.getCandidateJobs().add(matchedCandidateJob);
+				numberOfNewCandidates++;
+			}
+		});*/
 		jobRepository.save(job);
-		/*
-		 * Set<Double> matchScores =
-		 * candidateJobs.stream().map(CandidateJob::getMatchScore).collect(Collectors.
-		 * toSet()); Set<CandidateJob> deltaMatchSet =
-		 * job.getCandidateJobs().stream().filter(candidateJob ->
-		 * matchScores.contains(candidateJob.getMatchScore())).collect(Collectors.toSet(
-		 * )); Set<MatchActivityDTO> matchedActivityDTO = new HashSet<>();
-		 * deltaMatchSet.forEach(matchSet -> { MatchActivityDTO dto = new
-		 * MatchActivityDTO(); dto.setCandidateId(matchSet.getCandidate().getId());
-		 * dto.setJobId(matchSet.getJob().getId());
-		 * dto.setMatchScore(matchSet.getMatchScore());
-		 * dto.setCorporateId(matchSet.getJob().getCorporate().getId());
-		 * matchedActivityDTO.add(dto); }); MatchEvent matchEvent = new MatchEvent(this,
-		 * matchedActivityDTO); applicationEventPublisher.publishEvent(matchEvent);
-		 */
-		log.info("Job Matching completed in {} ms", (System.currentTimeMillis() - startTime));
+		log.info("Job Matching completed in {} ms and number of new candidates matched are {}", (System.currentTimeMillis() - startTime),numberOfNewCandidates);
+		mailService.sendNewMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates);
 
 	}
 
