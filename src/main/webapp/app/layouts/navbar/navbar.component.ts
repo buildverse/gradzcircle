@@ -10,7 +10,7 @@ import {VERSION} from '../../app.constants';
 import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE} from '../../shared/constants/storage.constants';
+import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE, CANDIDATE_CERTIFICATION_ID, CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID} from '../../shared/constants/storage.constants';
 import { OnDestroy } from '@angular/core';
 
 @Component({
@@ -196,7 +196,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.localStorageService.removeData(CORPORATE_ID);
     this.localStorageService.removeData(CANDIDATE_ID);
     this.localStorageService.removeData(MATCH_SCORE);
-    this.localStorageService.removeData('');
+    this.localStorageService.removeData(CANDIDATE_CERTIFICATION_ID);
+    this.localStorageService.removeData(CANDIDATE_NON_ACADEMIC_ID);
+    this.localStorageService.removeData(CANDIDATE_EDUCATION_ID);
+    this.localStorageService.removeData(CANDIDATE_EMPLOYMENT_ID);
+    this.localStorageService.removeData(CANDIDATE_LANGUAGE_ID);
+    this.localStorageService.removeData(CANDIDATE_PROJECT_ID);
     this.router.navigate(['']);
   }
 

@@ -8,6 +8,7 @@ import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage
 import {CandidateList} from './candidate-list.model';
 import {JobConstants} from './job.constants';
 import {HttpResponse} from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-matched-candidate-list',
@@ -44,8 +45,8 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private dataStorageService: DataStorageService
-
+    private dataStorageService: DataStorageService,
+    private spinnerService : NgxSpinnerService
 
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -107,7 +108,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
         page: this.page,
         size: this.itemsPerPage,
         // search: this.currentSearch,
-        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+      //  sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
 
@@ -116,11 +117,12 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
 
   loadMatchedCandidates() {
     this.setMatchScoreRange();
+    this.spinnerService.show();
     this.jobService.queryMatchedCandidatesForJob({
       page: this.page - 1,
       //query: this.currentSearch,
       size: this.itemsPerPage,
-      sort: this.sort(),
+    //  sort: this.sort(),
       id: this.jobId,
     }, this.matchScoreFrom, this.matchScoreTo).subscribe(
       (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
@@ -187,6 +189,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
 
   private onError(error) {
     // console.log(error);
+    this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -199,6 +202,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     // this.page = pagingParams.page;
     this.candidateList = data;
     this.setImageUrl();
+   
   }
 
   private setImageUrl() {
@@ -213,8 +217,10 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
               //this.noImage = true;
             }
           }
+         
         });
       }
+      this.spinnerService.hide();
     });
   }
 }

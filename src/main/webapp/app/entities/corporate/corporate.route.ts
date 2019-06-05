@@ -9,7 +9,6 @@ import { CorporateDetailComponent } from './corporate-detail.component';
 import { CorporatePopupComponent } from './corporate-dialog.component';
 import { CorporateDeletePopupComponent } from './corporate-delete-dialog.component';
 import {SideMenuComponent} from '../../account/side-menu/side-menu.component';
-import { CorporateResolverService } from './corporate-resolver.service';
 
 @Injectable()
 export class LinkedCandidatesResolvePagingParams implements Resolve<any> {

@@ -26,7 +26,7 @@
 							[itemsPerPage]="itemsPerPage"></jhi-item-count>
 					</div>
 					<div class="row justify-content-center font-weight-light">
-						<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+						<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
 							(pageChange)="loadPage(page)"></ngb-pagination>
 					</div>
 		</div>

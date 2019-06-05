@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
+import {JhiParseLinks, JhiAlertService,JhiEventManager} from 'ng-jhipster';
 import {ITEMS_PER_PAGE, UserService, DataStorageService} from '../../shared';
 import {USER_ID, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
 import {CandidateList} from '../job/candidate-list.model';
@@ -38,7 +38,8 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private dataStorageService: DataStorageService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private eventManager: JhiEventManager
 
 
   ) {
@@ -74,9 +75,9 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
       queryParams:
       {
         page: this.page,
-        size: this.itemsPerPage,
+        size: this.itemsPerPage
         // search: this.currentSearch,
-        sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+      //  sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
 
@@ -91,11 +92,13 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   
   loadLinkedCandidates() {
     this.spinnerService.show();
+    console.log('Page resusted is '+(this.page -1));
+    console.log('Page size is '+(this.itemsPerPage));
     this.corporateService.queryLinkedCandidates({
       page: this.page - 1,
       //query: this.currentSearch,
       size: this.itemsPerPage,
-      sort: this.sort(),
+    //  sort: this.sort(),
       id: this.corporateId
     }).subscribe(
        (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
@@ -110,9 +113,6 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
       } else {
         this.corporateId = this.dataStorageService.getData(CORPORATE_ID);
       }
-    /*  if(!this.corporateId) {
-        this.corporateId = this.dataStorageService.getData(USER_ID);
-      }*/
       this.loadLinkedCandidates();
     });
 
@@ -120,7 +120,9 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.eventManager.destroy(this.eventSubscriber);
+    if(this.eventSubscriber) {
+      this.eventManager.destroy(this.eventSubscriber);
+    }
   }
 
   trackId(index: number, item: CandidateList) {
@@ -146,13 +148,17 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     this.totalItems = headers.get('X-Total-Count');
     this.queryCount = this.totalItems;
     this.candidateList = data;
+    console.log('The candidate List is '+JSON.stringify(this.candidateList));
     this.setImageUrl();
     
   }
   
-   private setImageUrl() {
-    this.candidateList.forEach((candidate) => {
-      if (candidate.login.imageUrl !== undefined) {
+  private setImageUrl() {
+    if (this.candidateList.length === 0) {
+      this.spinnerService.hide();
+    } else {
+      this.candidateList.forEach((candidate) => {
+        if (candidate.login.imageUrl !== undefined) {
           this.userService.getImageData(candidate.login.id).subscribe((response) => {
             if (response !== undefined) {
               const responseJson = response.body;
@@ -165,6 +171,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
             this.spinnerService.hide();
           });
         }
-    });
+      });
+    }
   }
 }
