@@ -334,6 +334,7 @@ export class JobDialogComponent implements OnInit {
             this.gender = jobFilter.filterDescription.gender;
             if (this.gender) {
               this.filterCost += this.filterMap.get(this.GENDER);
+              this.genderAdded = true;
             }
           });
         }
@@ -468,11 +469,16 @@ export class JobDialogComponent implements OnInit {
         this.removeLanguageCost();
       }
 
-      this.gender = undefined;
-      this.updateGenderCost();
+      if(this.gender){
+        this.gender = undefined;
+        this.genderAdded = false;
+        this.updateGenderCost();
+      }
+      
     }
     //console.log('Filter cost add on is ' + this.filterCost);
   }
+  
 
   addQualificationCost() {
     if (this.qualifications && this.qualifications.length <= 1) {
@@ -511,14 +517,16 @@ export class JobDialogComponent implements OnInit {
 
   updateGenderCost() {
     if (this.gender && !this.genderAdded) {
+      console.log('The gender cost added');
       this.genderCost += this.filterMap.get(this.GENDER);
       this.filterCost += this.filterMap.get(this.GENDER);
       this.genderAdded = true;
-    } else if (!this.gender && this.genderAdded) {
+    } else if (!this.gender) {
+      console.log('The gender cost removed');
       this.genderCost -= this.filterMap.get(this.GENDER);
       this.filterCost -= this.filterMap.get(this.GENDER);
       this.genderAdded = false;
-    }
+    } 
     this.updateJobCost();
   }
 

@@ -206,21 +206,25 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   }
 
   private setImageUrl() {
-    this.candidateList.forEach((candidate) => {
-      if (candidate.login.imageUrl !== undefined) {
-        this.userService.getImageData(candidate.login.id).subscribe((response) => {
-          if (response !== undefined) {
-            const responseJson = response.body;
-            if (responseJson) {
-              candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-            } else {
-              //this.noImage = true;
-            }
-          }
-         
-        });
-      }
+    if (this.candidateList.length == 0) {
       this.spinnerService.hide();
-    });
+    } else {
+      this.candidateList.forEach((candidate) => {
+        if (candidate.login.imageUrl !== undefined) {
+          this.userService.getImageData(candidate.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true;
+              }
+            }
+
+          });
+        }
+        this.spinnerService.hide();
+      });
+    }
   }
 }
