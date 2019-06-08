@@ -36,6 +36,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   matchScoreFrom?: number;
   matchScoreTo?: number;
   matchScoreRange?: string;
+  reviewed?: boolean;
 
   constructor(
     private jobService: JobService,
@@ -58,6 +59,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     });
     // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
     this.isMatchScoreCollapsed = true;
+    this.reviewed = false;
   }
 
   setMatchScoreRange() {
@@ -86,6 +88,11 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   }
 
 
+  toggleReviewedFilter(event:any){
+    this.reviewed = event;
+    this.loadMatchedCandidates();
+  }
+  
   reset() {
     this.page = 0;
     this.candidateList = [];
@@ -124,7 +131,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
       size: this.itemsPerPage,
     //  sort: this.sort(),
       id: this.jobId,
-    }, this.matchScoreFrom, this.matchScoreTo).subscribe(
+    }, this.matchScoreFrom, this.matchScoreTo,this.reviewed).subscribe(
       (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
       (res: HttpResponse<any>) => this.onError(res.body)
       );

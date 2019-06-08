@@ -909,12 +909,12 @@ public class JobService {
 		return page;
 	}
 
-	public Page<CandidateProfileListDTO> getMatchedCandidatesForJob(Pageable pageable, Long jobId, Double fromScore, Double toScore) {
+	public Page<CandidateProfileListDTO> getMatchedCandidatesForJob(Pageable pageable, Long jobId, Double fromScore, Double toScore, Boolean reviewed) {
 		Page<CandidateJob> candidatePage = null;
 		if(fromScore == -1 && toScore == -1) {
-			candidatePage = jobRepository.findMatchedCandidatesForJob(jobId, pageable);
+			candidatePage = jobRepository.findMatchedCandidatesForJob(jobId, reviewed,pageable);
 		} else {
-			candidatePage = jobRepository.findMatchedCandidatesForJobWithMatchScoreFilter(jobId, fromScore, toScore, pageable);
+			candidatePage = jobRepository.findMatchedCandidatesForJobWithMatchScoreFilter(jobId, fromScore, toScore,reviewed, pageable);
 		}
 		final Page<CandidateProfileListDTO> page = candidatePage.map(candidateJob -> converter
 				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob));

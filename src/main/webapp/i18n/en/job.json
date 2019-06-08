@@ -103,6 +103,7 @@
 				"title": "Filters",
 				"employmentType": "Employment Type",
 				"matchScore": "Match Score",
+				"reviewed": "Reviewed",
 				"jobType": "Job Type",
 				"85To100": "85% up To 100%",
 				"71To84": "71% up To 84%",

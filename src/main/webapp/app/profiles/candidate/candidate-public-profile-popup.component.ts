@@ -43,7 +43,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit {
   ngOnInit() {
     this.reloadUserImage();
     if(this.candidate.reviewed) {
-      this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert', timeout: 5000}, [])
+      this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, [])
     }
   }
   

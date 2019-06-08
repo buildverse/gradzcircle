@@ -134,9 +134,9 @@ export class JobService {
       .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 
-  queryMatchedCandidatesForJob(req?: any, fromMatchScore?: number, toMatchScore?: number): Observable<HttpResponse<CandidateList[]>> {
+  queryMatchedCandidatesForJob(req?: any, fromMatchScore?: number, toMatchScore?: number, reviewed?: boolean): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);
-    return this.http.get<CandidateList[]>(`${this.resourceMatchedCandidatedForJobUrl}/${req.id}/${fromMatchScore}/${toMatchScore}`, {params: options, observe: 'response'})
+    return this.http.get<CandidateList[]>(`${this.resourceMatchedCandidatedForJobUrl}/${req.id}/${fromMatchScore}/${toMatchScore}/${reviewed}`, {params: options, observe: 'response'})
       .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
   }
 

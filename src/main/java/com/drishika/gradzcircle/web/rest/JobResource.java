@@ -481,12 +481,12 @@ public class JobResource {
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
-	@GetMapping("/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}")
+	@GetMapping("/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}/{reviewed}")
 	@Timed
 	public ResponseEntity<List<CandidateProfileListDTO>> getMatchedCandidatesForJob(@ApiParam Pageable pageable,
-			@PathVariable Long jobId, @PathVariable Double fromScore,@PathVariable Double toScore) {
-		log.info("Getting matched candidates for job {} with match score from {} to {}",jobId,fromScore,toScore);
-		final Page<CandidateProfileListDTO> page = jobService.getMatchedCandidatesForJob(pageable, jobId,fromScore,toScore);
+			@PathVariable Long jobId, @PathVariable Double fromScore,@PathVariable Double toScore, @PathVariable Boolean reviewed) {
+		log.info("Getting matched candidates for job {} with match score from {} to {} and reviwe status {}",jobId,fromScore,toScore,reviewed);
+		final Page<CandidateProfileListDTO> page = jobService.getMatchedCandidatesForJob(pageable, jobId,fromScore,toScore,reviewed);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/matchedCandiatesForJob");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}

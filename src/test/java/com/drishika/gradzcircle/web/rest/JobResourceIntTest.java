@@ -2873,7 +2873,97 @@ public class JobResourceIntTest {
 
 	@Test
 	@Transactional
-	public void testGetMatchedCandidatesForJob() throws Exception {
+	public void testGetMatchedCandidatesForJobWithReviwedCandidates() throws Exception {
+		Job job = new Job();
+		job.jobTitle("Test Job");
+		job.jobStatus(1);
+		Corporate c = new Corporate();
+		corporateRepository.saveAndFlush(c);
+		job.corporate(c);
+		
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		Candidate c2 = new Candidate().firstName("Aveer");
+		Candidate c3 = new Candidate().firstName("AAAA");
+		Candidate c4 = new Candidate().firstName("BBBB");
+		Candidate c5 = new Candidate().firstName("CCCC");
+		Candidate c6 = new Candidate().firstName("DDDD");
+		CandidateEducation ce1 = new CandidateEducation();
+		CandidateEducation ce2 = new CandidateEducation();
+		Course course = new Course();
+		course.course("Computer");
+		Qualification qual = new Qualification();
+		qual.qualification("Master");
+		Course course2 = new Course();
+		course2.course("Arts");
+		Qualification qual2 = new Qualification();
+		qual.qualification("Bach");
+		ce1.qualification(qual).course(course).highestQualification(true);
+		ce2.qualification(qual2).course(course2).highestQualification(false);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		corporateRepository.saveAndFlush(c);
+		jobRepository.saveAndFlush(job);
+		courseRepository.saveAndFlush(course);
+		courseRepository.saveAndFlush(course2);
+		qualificationRepository.saveAndFlush(qual);
+		qualificationRepository.saveAndFlush(qual2);
+		c1.addEducation(ce1).addEducation(ce2);
+		c2.addEducation(ce1).addEducation(ce2);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		candidateRepository.saveAndFlush(c4);
+		candidateRepository.saveAndFlush(c5);
+		candidateRepository.saveAndFlush(c6);
+		CandidateJob cJ1 = new CandidateJob(c1, job);
+		cJ1.setMatchScore(20d);		
+		CandidateJob cJ2 = new CandidateJob(c2, job);
+		cJ2.setMatchScore(50d);
+		CandidateJob cJ3 = new CandidateJob(c3, job);
+		CandidateJob cJ4 = new CandidateJob(c4, job);
+		CandidateJob cJ5 = new CandidateJob(c5, job);
+		CandidateJob cJ6 = new CandidateJob(c6, job);
+		cJ3.setMatchScore(30d);
+		cJ4.setMatchScore(40d);
+		cJ5.setMatchScore(60d);
+		cJ6.setMatchScore(70d);
+		c1.addCandidateJob(cJ1);
+		c2.addCandidateJob(cJ2);
+		c3.addCandidateJob(cJ3);
+		cJ4.setReviewed(true);
+		c4.addCandidateJob(cJ4);
+		c5.addCandidateJob(cJ5);
+		c6.addCandidateJob(cJ6);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		candidateRepository.saveAndFlush(c4);
+		candidateRepository.saveAndFlush(c5);
+		candidateRepository.saveAndFlush(c6);
+		//CorporateCandidate(Corporate corporate, Candidate candidate, Long jobId)
+		CorporateCandidate cc1 = new CorporateCandidate(c,c1,job.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(c,c2,job.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(c,c3,job.getId());
+		c.addCorporateCandidate(cc3);c.addCorporateCandidate(cc1);c.addCorporateCandidate(cc2);
+		c1.addCorporateCandidate(cc1);c2.addCorporateCandidate(cc2);c1.addCorporateCandidate(cc3);
+		// Get all the jobList
+		// ResultActions resultActions =
+		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}/{reviewed}", job.getId(),-1,-1,true)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[*].firstName", hasItem("BBBB")))
+				.andExpect(jsonPath("$[*].matchScore", hasItem(40d)));
+				
+			
+				
+				
+		// resultActions.andDo(MockMvcResultHandlers.print());
+
+	}
+	
+	@Test
+	@Transactional
+	public void testGetMatchedCandidatesForJobWithoutReviwedCandidates() throws Exception {
 		Job job = new Job();
 		job.jobTitle("Test Job");
 		job.jobStatus(1);
@@ -2948,7 +3038,7 @@ public class JobResourceIntTest {
 		// Get all the jobList
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
-		restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}", job.getId(),-1,-1)).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}/{reviewed}", job.getId(),-1,-1,false)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].firstName", hasItem("BBBB")))
 				.andExpect(jsonPath("$[*].firstName", hasItem("CCCC")))
