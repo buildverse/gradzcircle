@@ -159,6 +159,8 @@ public class CandidateResourceIntTest {
 
 	private Candidate candidate;
 	
+	private Corporate corporate;
+	
 	private User user;
 	
 	private ProfileCategory basic, personal, edu, exp, lang, cert, nonAcad;
@@ -344,6 +346,12 @@ public class CandidateResourceIntTest {
 		
 		return candidate;
 	}
+	
+	public static Corporate createCorporate(EntityManager em) {
+		Corporate corporate = new Corporate().name("Drishika");
+		
+		return corporate;
+	}
 
 	@Before
 	public void initTest() {
@@ -351,7 +359,7 @@ public class CandidateResourceIntTest {
 		candidate = createEntity(em);
 		maleGender = createMaleGender(em);
 		femaleGender = createFemaleGender(em);
-		
+		corporate = createCorporate(em);
 		user = createUser(em);
 		jobA = createJobA(em);
 		jobB = createJobB(em);
@@ -373,7 +381,7 @@ public class CandidateResourceIntTest {
 		scoreFilter = createScoreFilter(em);
 		languageFilter = createLanguagefilter(em);
 		genderFilter = createGenderFilter(em);
-		
+		corporateRepository.saveAndFlush(corporate);
 		userRepository.saveAndFlush(user);
 		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
@@ -1005,6 +1013,34 @@ public class CandidateResourceIntTest {
 				.andExpect(jsonPath("$.hasEducationScore").value(Boolean.FALSE))
 				.andExpect(jsonPath("$.login.id").value(user.getId()));
 				
+	}
+	
+	@Test
+	@Transactional
+	public void getCandidatePublicProfileWhenShortlistedForJobsMustShowIndicatorShorListedOrNot() throws Exception {
+		candidateRepository.saveAndFlush(candidate.login(user));
+/*		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);*/
+		corporate.addJob(jobA).addJob(jobB).addJob(jobC).addJob(jobF).addJob(jobG);
+		CorporateCandidate cc1 = new CorporateCandidate(corporate,candidate,jobA.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(corporate,candidate,jobB.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(corporate,candidate,jobC.getId());
+		corporate.addCorporateCandidate(cc1).addCorporateCandidate(cc2).addCorporateCandidate(cc3);
+		candidate.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
+		//corporateRepository.saveAndFlush(corporate);
+		//candidateRepository.saveAndFlush(candidate);
+		restCandidateMockMvc.perform(get("/api/candidates/candidatePublicProfile/{candidateId}/{jobId}/{corporateId}", candidate.getId(),jobF.getId(),corporate.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$.candidateDetails.id").value(candidate.getId().intValue()))
+		.andExpect(jsonPath("$.candidateDetails.firstName").value(DEFAULT_FIRST_NAME.toString()))
+		.andExpect(jsonPath("$.candidateDetails.lastName").value(DEFAULT_LAST_NAME.toString()))
+		.andExpect(jsonPath("$.candidateDetails.aboutMe").value(DEFAULT_ABOUT_ME.toString()))
+		.andExpect(jsonPath("$.shortListed").value(Boolean.TRUE));
+		
+		
 	}
 
 	@Test

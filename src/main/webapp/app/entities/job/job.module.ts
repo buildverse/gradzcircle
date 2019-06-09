@@ -29,9 +29,13 @@ import {
   AppliedCandidateListComponent,
   ShortListedCandidateListComponent,
   JobComponentAnonymous,
-  JobListEmitterService
+  JobListEmitterService,
+  JobListPopupService,
+  
 
 } from './';
+import {JobListForLinkedCandidateComponent, JobListForLinkedCandidatePopUpComponent} from './job-list-for-linked-candidate.component';
+import {JobListForLinkedCandidate} from './job-list-linked-candidate.model';
 
 
 const ENTITY_STATES = [
@@ -63,8 +67,11 @@ const ENTITY_STATES = [
     MatchedCandidateListComponent,
     AppliedCandidateListComponent,
     ShortListedCandidateListComponent,
-    JobComponentAnonymous
-    //MatchTrackerComponent
+    JobComponentAnonymous,
+    JobListForLinkedCandidateComponent,
+    JobListForLinkedCandidatePopUpComponent
+    
+
   ],
   entryComponents: [
     JobComponent,
@@ -84,8 +91,10 @@ const ENTITY_STATES = [
     MatchedCandidateListComponent,
     AppliedCandidateListComponent,
     ShortListedCandidateListComponent,
-    JobComponentAnonymous
-    //  MatchTrackerComponent
+    JobComponentAnonymous,
+    JobListForLinkedCandidateComponent,
+    JobListForLinkedCandidatePopUpComponent
+
   ],
   providers: [
     JobService,
@@ -93,8 +102,8 @@ const ENTITY_STATES = [
     // MatchTrackerService,
     JobPopupServiceNew,
     JobResolvePagingParams,
-    JobListEmitterService
-
+    JobListEmitterService,
+    JobListPopupService
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

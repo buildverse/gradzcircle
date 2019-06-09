@@ -15,6 +15,7 @@ import { MatchedCandidateListComponent } from './matched-candidate-list.componen
 import { AppliedCandidateListComponent } from './applied-candidate-list.component';
 import { ShortListedCandidateListComponent } from './short-listed-candidate-list.component';
 import {JobComponentAnonymous} from './job-for-anonymous.component'  ;
+import { JobListForLinkedCandidatePopUpComponent } from './job-list-for-linked-candidate.component';
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
@@ -192,5 +193,15 @@ export const jobPopupRoute: Routes = [
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
-    }
+    },
+     {
+    path: 'job-list-for-linked-candidate',
+    component: JobListForLinkedCandidatePopUpComponent,
+    data: {
+      authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
+      pageTitle: 'gradzcircleApp.candidate.home.title'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];

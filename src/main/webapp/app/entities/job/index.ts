@@ -17,4 +17,4 @@ export * from './applied-candidate-list.component';
 export * from './short-listed-candidate-list.component';
 export * from './job-for-anonymous.component';
 export * from './job-list-change.service';
-
+export * from './job-list-popup.service';

@@ -171,6 +171,11 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     this.dataStorageService.setdata(JOB_ID, jobId);
     this.dataStorageService.setdata(CORPORATE_ID, corporateId);
   }
+  
+  setJobListRouteParamsForLinkedCandidates(candidateId,corporateId) {
+    this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId);
+  }
 
   ngOnDestroy() {
     if (this.eventSubscriber) {

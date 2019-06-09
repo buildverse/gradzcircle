@@ -25,6 +25,22 @@ public class CandidateProfileListDTO implements Serializable {
 	private Long jobId;
 	private Long corporateId;
 	private Double matchScore;
+	private  Boolean shortListed; 
+	
+
+	/**
+	 * @return the shortListed
+	 */
+	public Boolean getShortListed() {
+		return shortListed;
+	}
+
+	/**
+	 * @param shortListed the shortListed to set
+	 */
+	public void setShortListed(Boolean shortListed) {
+		this.shortListed = shortListed;
+	}
 
 	/**
 	 * @return the reviewed

@@ -309,7 +309,7 @@ public class CandidateService {
 		CandidateJob candidateJob = null;
 		if(jobId >0 && corporateId >0) {
 			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
-			shortListed = isShortListed(candidate, jobId, corporateId);
+			shortListed = isShortListedForAnotherJob(candidate, corporateId);
 		}
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
 				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed, candidateJob);
@@ -323,9 +323,20 @@ public class CandidateService {
 			return true;
 		else
 			return false;
+	}
+
+	private Boolean isShortListedForAnotherJob(Candidate candidate, Long corporateId) {
+		Corporate corporate = corporateRepository.findOne(corporateId);
+		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates().size());
+		List<CorporateCandidate> linkedCandidates = corporate.getShortlistedCandidates().stream().filter(candidateCorporateLink -> candidateCorporateLink.getCandidate().equals(candidate)).collect(Collectors.toList());
+		if (linkedCandidates != null && !linkedCandidates.isEmpty())
+			return true;
+		else
+			return false;
 
 	}
 
+	
 	private CandidateJob setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(Candidate candidate, Long JobId) {
 		logger.debug("Entering setReview and get match score  {}, {}",candidate.getId(), JobId);
 		Job job = jobRepository.findOne(JobId);
@@ -352,7 +363,7 @@ public class CandidateService {
 		dto.setShortListed(isShortListed);
 		if(candidateJob != null ) {
 			dto.setMatchScore(candidateJob.getMatchScore());
-			dto.setReviewed(candidateJob.getReviewed());
+			//dto.setReviewed(candidateJob.getReviewed());
 		}
 		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
 		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));

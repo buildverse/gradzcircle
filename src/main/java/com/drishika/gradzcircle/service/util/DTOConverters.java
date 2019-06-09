@@ -6,7 +6,6 @@ package com.drishika.gradzcircle.service.util;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -82,11 +81,19 @@ public class DTOConverters {
 		}
 	}
 
-	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CandidateJob candidateJob) {
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CandidateJob candidateJob,Set<CorporateCandidate> linkedCandidates) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
+		logger.debug("Linked candidate and Corporate are {}",linkedCandidates);
+		logger.debug("Candidate is {}",candidate.getId());
+		CorporateCandidate linkedCorporateCandidate = linkedCandidates.stream().filter(link->link.getCandidate().equals(candidate)).findFirst().orElse(null);
+		logger.debug("Linked {}",linkedCorporateCandidate);
 		setCoreCandidateFields(candidate,dto);		
 		dto.setReviewed(candidateJob.getReviewed());
 		dto.setMatchScore(candidateJob.getMatchScore());
+		if(linkedCorporateCandidate != null)
+			dto.setShortListed(true);
+		else 
+			dto.setShortListed(false);
 		return dto;
 	}
 	
@@ -120,7 +127,7 @@ public class DTOConverters {
 		jobListingData.setJobType(job.getJobType());
 		// FILTER OUT REVIEWED CANDIDATES
 		//jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream().filter(candidateJob -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
-		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size());
+		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size()-numberOfCandidatesShortListedByJob.intValue());
 		jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
 		jobListingData.setNoOfShortListedCandidate(numberOfCandidatesShortListedByJob);
 		jobListingData.setId(job.getId());

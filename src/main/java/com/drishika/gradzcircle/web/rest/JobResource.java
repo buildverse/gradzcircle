@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
@@ -36,12 +34,11 @@ import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
-import com.drishika.gradzcircle.security.AuthoritiesConstants;
 import com.drishika.gradzcircle.service.JobService;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
-import com.drishika.gradzcircle.service.dto.JobStatistics;
+import com.drishika.gradzcircle.service.dto.JobListDTO;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.errors.CustomParameterizedException;
@@ -489,6 +486,21 @@ public class JobResource {
 		final Page<CandidateProfileListDTO> page = jobService.getMatchedCandidatesForJob(pageable, jobId,fromScore,toScore,reviewed);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/matchedCandiatesForJob");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * Get Jobs Candidate ShortListed For
+	 * @param pageable
+	 * @param CorproateId
+	 * @param CandidateId
+	 * @return
+	 */
+	@GetMapping("/jobListForCandidateShortlistedByCorporate/{candidateId}/{corporateId}")
+	@Timed
+	public List<JobListDTO> getJobListCandidatesShortListedFor(@ApiParam Pageable pageable,
+			@PathVariable Long candidateId, @PathVariable Long corporateId) {
+		log.info("Getting List of jobs for that corporate {} shortlisted candidate {} for",corporateId,candidateId);
+		return jobService.getShortlistedJobListForCorporateByCandidate(corporateId,candidateId);
 	}
 
 	

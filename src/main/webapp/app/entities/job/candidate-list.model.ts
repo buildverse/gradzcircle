@@ -9,11 +9,11 @@ export class CandidateList implements BaseEntity {
     public lastName?: string,
     public qualificationWithHighestCourse?: string,
     public login?: User,
-    public reviewed?: boolean,
+    public shortListed?: boolean,
     public jobId?: number,
     public corporateId?: number,
     public matchScore?: number
   ) {
-    this.reviewed = false;
+    this.shortListed = false;
   }
 }

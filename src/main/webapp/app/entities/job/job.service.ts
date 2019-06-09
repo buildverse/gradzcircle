@@ -33,6 +33,7 @@ export class JobService {
   private resourceGetJobsByTwoJobTypes = SERVER_API_URL + 'api/activeJobsByTwoJobTypes';
   private resourceGetJobsByThreeJobTypes = SERVER_API_URL + 'api/activeJobsByThreeJobTypes';
   private resourceGetActiveJobCount = SERVER_API_URL + 'api/countOfActiveJobs';
+  private resourceGetJobListForLinkedCandidate = SERVER_API_URL + 'api/jobListForCandidateShortlistedByCorporate';
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
@@ -156,6 +157,14 @@ export class JobService {
   queryActiveJobsForCandidates(req?: any,candidateId? :number, matchScoreFrom? :number, matchScoreTo? :number): Observable<HttpResponse<Job[]>> {
     const options = createRequestOption(req);
     return this.http.get<Job[]>(`${this.resourceActiveJobsForCandidateUrl}/${candidateId}/${matchScoreFrom}/${matchScoreTo}`, {params: options, observe: 'response'})
+      .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+  }
+  
+  
+  queryJobListForLinkedCandidates(req?: any,candidateId? :number, corporateId? :number): Observable<HttpResponse<Job[]>> {
+    const options = createRequestOption(req);
+    console.log('Candidate and corp id for request are '+candidateId+' '+corporateId);
+    return this.http.get<Job[]>(`${this.resourceGetJobListForLinkedCandidate}/${candidateId}/${corporateId}`, {params: options, observe: 'response'})
       .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
   }
 

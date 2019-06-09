@@ -99,6 +99,7 @@
 			"internship" : "Internship",
 			"summerJob" : "Summer Job",
 			"view" : "View Job",
+			"jobList": "Shotlisted for Jobs",
 			"filters": {
 				"title": "Filters",
 				"employmentType": "Employment Type",

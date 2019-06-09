@@ -580,17 +580,17 @@ public class JobResourceIntTest {
 	}
 	
 	public static Job createJob1(EntityManager em) {
-		Job job1 = new Job().jobStatus(1).jobDescription(jobDescLong);
+		Job job1 = new Job().jobStatus(1).jobDescription(jobDescLong).jobTitle("AAAAAA");
 		return job1;
 	}
 
 	public static Job createJob2(EntityManager em) {
-		Job job2 = new Job().jobStatus(1).jobDescription(jobDescLong);
+		Job job2 = new Job().jobStatus(1).jobDescription(jobDescLong).jobTitle("BBBBBB");
 		return job2;
 	}
 
 	public static Job createJob3(EntityManager em) {
-		Job job3 = new Job().jobStatus(1).jobDescription(jobDescShort);
+		Job job3 = new Job().jobStatus(1).jobDescription(jobDescShort).jobTitle("CCCCCC");
 		return job3;
 	}
 
@@ -2963,20 +2963,91 @@ public class JobResourceIntTest {
 	
 	@Test
 	@Transactional
-	public void testGetMatchedCandidatesForJobWithoutReviwedCandidates() throws Exception {
-		Job job = new Job();
-		job.jobTitle("Test Job");
-		job.jobStatus(1);
+	public void testGetJobListForLinkedCandidatedByCorporate() throws Exception {
 		Corporate c = new Corporate();
 		corporateRepository.saveAndFlush(c);
-		job.corporate(c);
-		
+		Candidate candidate = new Candidate();
+		candidate.firstName("AAAAA");
+		candidateRepository.saveAndFlush(candidate);
+		Job job1 = new Job();
+		job1.jobTitle("Test Job 1");
+		job1.jobStatus(1);
+		Job job2 = new Job();
+		job2.jobTitle("Test Job 2");
+		job2.jobStatus(1);
+		Job job3 = new Job();
+		job3.jobTitle("Test Job 3");
+		job3.jobStatus(1);
+		Job job4 = new Job();
+		job4.jobTitle("Test Job 4");
+		job4.jobStatus(1);
+		Job job5 = new Job();
+		job5.jobTitle("Test Job5");
+		job5.jobStatus(1);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		c.addJob(job5).addJob(job4).addJob(job3).addJob(job2).addJob(job1);
+		CorporateCandidate cc1 = new CorporateCandidate(c, candidate, job5.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(c, candidate, job2.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(c, candidate, job3.getId());
+		c.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
+		candidate.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
+		CandidateJob cJ1 = new CandidateJob(candidate,job1);cJ1.setMatchScore(20d);
+		CandidateJob cJ2 = new CandidateJob(candidate,job2);cJ2.setMatchScore(30d);
+		CandidateJob cJ3 = new CandidateJob(candidate,job3);cJ3.setMatchScore(40d);
+		CandidateJob cJ4 = new CandidateJob(candidate,job4);cJ4.setMatchScore(50d);
+		CandidateJob cJ5 = new CandidateJob(candidate,job5);cJ5.setMatchScore(70d);
+		job5.addCandidateJob(cJ5);job4.addCandidateJob(cJ4);job1.addCandidateJob(cJ1);job3.addCandidateJob(cJ3);job2.addCandidateJob(cJ2);
+		candidate.addCandidateJob(cJ5).addCandidateJob(cJ4).addCandidateJob(cJ1).addCandidateJob(cJ3).addCandidateJob(cJ2);
+		//candidateRepository.saveAndFlush(candidate);
+		//corporateRepository.saveAndFlush(c);
+		restJobMockMvc.perform(get("/api/jobListCandidateShortlistedForByCandidate/{candidateId}/{corporateId}", candidate.getId(),c.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job5")))
+		.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job 2")))
+		.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job 3")))
+		.andExpect(jsonPath("$[*].matchScore", hasItem(40d)))
+		.andExpect(jsonPath("$[*].matchScore", hasItem(30d)))
+		.andExpect(jsonPath("$[*].matchScore", hasItem(70d)));
+	
+	
+	}
+	
+	@Test
+	@Transactional
+	public void testGetMatchedCandidatesForJobWithoutReviwedCandidatesAndShowShortListedForOtherJobs() throws Exception {
 		Candidate c1 = new Candidate().firstName("Abhinav");
 		Candidate c2 = new Candidate().firstName("Aveer");
 		Candidate c3 = new Candidate().firstName("AAAA");
 		Candidate c4 = new Candidate().firstName("BBBB");
 		Candidate c5 = new Candidate().firstName("CCCC");
 		Candidate c6 = new Candidate().firstName("DDDD");
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		candidateRepository.saveAndFlush(c4);
+		candidateRepository.saveAndFlush(c5);
+		candidateRepository.saveAndFlush(c6);
+		corporateRepository.saveAndFlush(corporate);
+		job1.corporate(corporate);
+		job2.corporate(corporate);
+		job3.corporate(corporate);
+		job4.corporate(corporate);
+		job5.corporate(corporate);
+		job6.corporate(corporate);
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		corporate.addJob(job3).addJob(job2).addJob(job1).addJob(job4).addJob(job5).addJob(job6);
+		
 		CandidateEducation ce1 = new CandidateEducation();
 		CandidateEducation ce2 = new CandidateEducation();
 		Course course = new Course();
@@ -2989,10 +3060,7 @@ public class JobResourceIntTest {
 		qual.qualification("Bach");
 		ce1.qualification(qual).course(course).highestQualification(true);
 		ce2.qualification(qual2).course(course2).highestQualification(false);
-		candidateRepository.saveAndFlush(c1);
-		candidateRepository.saveAndFlush(c2);
-		corporateRepository.saveAndFlush(c);
-		jobRepository.saveAndFlush(job);
+		
 		courseRepository.saveAndFlush(course);
 		courseRepository.saveAndFlush(course2);
 		qualificationRepository.saveAndFlush(qual);
@@ -3005,15 +3073,18 @@ public class JobResourceIntTest {
 		candidateRepository.saveAndFlush(c4);
 		candidateRepository.saveAndFlush(c5);
 		candidateRepository.saveAndFlush(c6);
-		CandidateJob cJ1 = new CandidateJob(c1, job);
+		CandidateJob cJ1 = new CandidateJob(c1, job1);
 		cJ1.setMatchScore(20d);		
-		CandidateJob cJ2 = new CandidateJob(c2, job);
+//	cJ1.setReviewed(true);
+		CandidateJob cJ2 = new CandidateJob(c2, job1);
 		cJ2.setMatchScore(50d);
-		CandidateJob cJ3 = new CandidateJob(c3, job);
-		CandidateJob cJ4 = new CandidateJob(c4, job);
-		CandidateJob cJ5 = new CandidateJob(c5, job);
-		CandidateJob cJ6 = new CandidateJob(c6, job);
+		//cJ2.setReviewed(true);
+		CandidateJob cJ3 = new CandidateJob(c3, job1);
+		CandidateJob cJ4 = new CandidateJob(c4, job1);
+		CandidateJob cJ5 = new CandidateJob(c5, job1);
+		CandidateJob cJ6 = new CandidateJob(c6, job1);
 		cJ3.setMatchScore(30d);
+	//	cJ3.setReviewed(true);
 		cJ4.setMatchScore(40d);
 		cJ5.setMatchScore(60d);
 		cJ6.setMatchScore(70d);
@@ -3023,27 +3094,33 @@ public class JobResourceIntTest {
 		c4.addCandidateJob(cJ4);
 		c5.addCandidateJob(cJ5);
 		c6.addCandidateJob(cJ6);
-		candidateRepository.saveAndFlush(c1);
-		candidateRepository.saveAndFlush(c2);
-		candidateRepository.saveAndFlush(c3);
-		candidateRepository.saveAndFlush(c4);
-		candidateRepository.saveAndFlush(c5);
-		candidateRepository.saveAndFlush(c6);
+		
 		//CorporateCandidate(Corporate corporate, Candidate candidate, Long jobId)
-		CorporateCandidate cc1 = new CorporateCandidate(c,c1,job.getId());
-		CorporateCandidate cc2 = new CorporateCandidate(c,c2,job.getId());
-		CorporateCandidate cc3 = new CorporateCandidate(c,c3,job.getId());
-		c.addCorporateCandidate(cc3);c.addCorporateCandidate(cc1);c.addCorporateCandidate(cc2);
-		c1.addCorporateCandidate(cc1);c2.addCorporateCandidate(cc2);c1.addCorporateCandidate(cc3);
+		CorporateCandidate cc1 = new CorporateCandidate(corporate,c1,job1.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(corporate,c2,job1.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(corporate,c3,job1.getId());
+		CorporateCandidate cc4 = new CorporateCandidate(corporate,c1,job2.getId());
+		CorporateCandidate cc5 = new CorporateCandidate(corporate,c4,job4.getId());
+		CorporateCandidate cc6 = new CorporateCandidate(corporate,c5,job5.getId());
+		CorporateCandidate cc7 = new CorporateCandidate(corporate,c5,job6.getId());
+		System.out.println("Job id 123 are "+job1.getId()+" "+job2.getId()+" "+job3.getId());
+		System.out.println("candidate id 123 are "+c1.getId()+" "+c2.getId()+" "+c3.getId()+" "+c4.getId()+" "+c5.getId()+" "+c6.getId());
+
+		corporate.addCorporateCandidate(cc3);corporate.addCorporateCandidate(cc1);corporate.addCorporateCandidate(cc2).addCorporateCandidate(cc4).addCorporateCandidate(cc5).addCorporateCandidate(cc6).addCorporateCandidate(cc7);
+		c1.addCorporateCandidate(cc1);c2.addCorporateCandidate(cc2);c3.addCorporateCandidate(cc3);c1.addCorporateCandidate(cc4);c2.addCorporateCandidate(cc5);;
+		System.out.println("My links are "+corporate.getShortlistedCandidates());
 		// Get all the jobList
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
-		restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}/{reviewed}", job.getId(),-1,-1,false)).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}/{fromScore}/{toScore}/{reviewed}", job1.getId(),-1,-1,false)).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].firstName", hasItem("BBBB")))
 				.andExpect(jsonPath("$[*].firstName", hasItem("CCCC")))
 				.andExpect(jsonPath("$[*].firstName", hasItem("DDDD")))
 				.andExpect(jsonPath("$[*].matchScore", hasItem(40d)))
+				.andExpect(jsonPath("$[*].shortListed", hasItem(true)))
+				.andExpect(jsonPath("$[*].shortListed", hasItem(true)))
+				.andExpect(jsonPath("$[*].shortListed", hasItem(false)))
 				.andExpect(jsonPath("$[*].matchScore", hasItem(60d)))
 				.andExpect(jsonPath("$[*].matchScore", hasItem(70d)));
 			

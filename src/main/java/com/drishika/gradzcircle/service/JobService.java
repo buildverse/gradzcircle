@@ -52,6 +52,7 @@ import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
+import com.drishika.gradzcircle.service.dto.JobListDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
@@ -277,6 +278,23 @@ public class JobService {
 		jobSearchRepository.save(job);
 		log.info("Deactivated job {}", id);
 		return job;
+	}
+	
+	public List<JobListDTO> getShortlistedJobListForCorporateByCandidate(Long corporateId, Long candidateId) {
+		log.debug("Corproate is {}",corporateRepository.getOne(corporateId));
+		Set<CorporateCandidate> linkedCandidates = corporateRepository.getOne(corporateId).getShortlistedCandidates();
+		log.debug("Linked date set is {}",linkedCandidates);
+		return linkedCandidates.stream().map(linkedCandidate -> convertToJobListDTO(linkedCandidate,candidateId)).collect(Collectors.toList());
+		
+	}
+	
+	private JobListDTO convertToJobListDTO(CorporateCandidate linkedCandidate,Long candidateId) {
+		Job job = jobRepository.findOne(linkedCandidate.getId().getJobId());
+		log.debug("job is {}",job);
+		Candidate candidate = candidateRepository.getOne(candidateId);	
+		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(matchedJob -> matchedJob.getJob().equals(job)).findFirst().orElse(null);
+		JobListDTO jobDto = new JobListDTO(job.getJobTitle(),candidateJob.getMatchScore());
+		return jobDto;
 	}
 
 	public Page<CorporateJobDTO> getActiveJobsListForCorporates(Pageable pageable, Long corporateId) {
@@ -917,7 +935,7 @@ public class JobService {
 			candidatePage = jobRepository.findMatchedCandidatesForJobWithMatchScoreFilter(jobId, fromScore, toScore,reviewed, pageable);
 		}
 		final Page<CandidateProfileListDTO> page = candidatePage.map(candidateJob -> converter
-				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob));
+				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob,candidateJob.getJob().getCorporate().getShortlistedCandidates()));
 		return page;
 	}
 
