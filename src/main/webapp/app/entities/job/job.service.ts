@@ -34,6 +34,8 @@ export class JobService {
   private resourceGetJobsByThreeJobTypes = SERVER_API_URL + 'api/activeJobsByThreeJobTypes';
   private resourceGetActiveJobCount = SERVER_API_URL + 'api/countOfActiveJobs';
   private resourceGetJobListForLinkedCandidate = SERVER_API_URL + 'api/jobListForCandidateShortlistedByCorporate';
+  private resourceGetJobEconomics = SERVER_API_URL + 'api/jobForAddingCandidates';
+  private resourceAdditionalCandidatesToJob = SERVER_API_URL + 'api/addCandidatesToJob';
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
@@ -48,6 +50,12 @@ export class JobService {
     return this.http.put<Job>(this.resourceUrl, copy, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
+  
+  addtionalCandidatesForJob(job: Job): Observable<EntityResponseType> {
+    const copy = this.convert(job);
+    return this.http.put<Job>(this.resourceAdditionalCandidatesToJob, copy, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
+  }
 
   applyforJob(jobId: number, loginId: number): Observable<EntityResponseType> {
     return this.http.get<Job>(`${this.resourceApplyForJobByCandidateUrl}/${jobId}/${loginId}`, {observe: 'response'})
@@ -56,6 +64,11 @@ export class JobService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<Job>(`${this.resourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
+  }
+  
+   getJobEconomics(id: number): Observable<EntityResponseType> {
+    return this.http.get<Job>(`${this.resourceGetJobEconomics}/${id}`, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
 

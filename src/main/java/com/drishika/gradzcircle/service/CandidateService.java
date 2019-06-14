@@ -315,7 +315,7 @@ public class CandidateService {
 				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed, candidateJob);
 	}
 
-	private Boolean isShortListed(Candidate candidate, Long jobId, Long corporateId) {
+	/*private Boolean isShortListed(Candidate candidate, Long jobId, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
 		CorporateCandidate cC = new CorporateCandidate(corporate, candidate, jobId);
 		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates());
@@ -323,7 +323,7 @@ public class CandidateService {
 			return true;
 		else
 			return false;
-	}
+	}*/
 
 	private Boolean isShortListedForAnotherJob(Candidate candidate, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
@@ -341,17 +341,17 @@ public class CandidateService {
 		logger.debug("Entering setReview and get match score  {}, {}",candidate.getId(), JobId);
 		Job job = jobRepository.findOne(JobId);
 		CandidateJob cJ = new CandidateJob(candidate, job);
-		CandidateJob candidateJobForReview = null;
-		if (candidate.getCandidateJobs().stream().filter(candidateJob -> candidateJob.equals(cJ)).findFirst()
-				.isPresent())
-			candidateJobForReview = candidate.getCandidateJobs().stream()
-					.filter(candidateJob -> candidateJob.equals(cJ)).findFirst().get();
-		logger.debug("The candidateJob is {}",candidateJobForReview);
-		if (candidateJobForReview != null) {
-			candidateJobForReview.setReviewed(true);
+		CandidateJob candidateJobToReturn = null;
+		CandidateJob prevCandidateJob = null;
+		prevCandidateJob = candidate.getCandidateJobs().stream().filter(candidateJob -> candidateJob.equals(cJ)).findFirst().orElse(null);
+		candidateJobToReturn = new CandidateJob(prevCandidateJob);
+		candidateJobToReturn.setReviewed(prevCandidateJob.getReviewed());
+		logger.debug("The candidateJob is {}",prevCandidateJob);
+		if (prevCandidateJob != null) {
+			prevCandidateJob.setReviewed(true);
 			candidateRepository.save(candidate);
 		} 
-		return candidateJobForReview;
+		return candidateJobToReturn;
 	}
 
 	private CandidatePublicProfileDTO convertToCandidatePublicProfileDTO(Candidate candidate, Set<Address> addresses,
@@ -363,7 +363,7 @@ public class CandidateService {
 		dto.setShortListed(isShortListed);
 		if(candidateJob != null ) {
 			dto.setMatchScore(candidateJob.getMatchScore());
-			//dto.setReviewed(candidateJob.getReviewed());
+			dto.setReviewed(candidateJob.getReviewed());
 		}
 		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
 		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));

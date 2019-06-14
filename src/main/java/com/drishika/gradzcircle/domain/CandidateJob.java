@@ -71,6 +71,11 @@ public class CandidateJob implements Serializable {
 	public CandidateJob() {
 
 	}
+	
+	public CandidateJob(CandidateJob candidateJob) {
+		this.candidate = candidateJob.getCandidate();
+		this.job = candidateJob.getJob();
+	}
 
 	/**
 	 * @return the id

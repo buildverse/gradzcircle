@@ -55,6 +55,7 @@ public class CandidateJobDTO implements Serializable {
 	private String corporateName;
 	
 	private String city;
+	
 
 	/**
 	 * @return the id

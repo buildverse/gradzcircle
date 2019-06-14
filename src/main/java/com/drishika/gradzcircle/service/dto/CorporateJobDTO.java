@@ -52,6 +52,10 @@ public class CorporateJobDTO implements Serializable {
 	private Boolean canEdit;
 	
 	private Long noOfShortListedCandidate;
+	
+	private Long numberOfCandidatesRemaining;
+	
+
 
 
 	/**
@@ -286,7 +290,18 @@ public class CorporateJobDTO implements Serializable {
 		this.noOfShortListedCandidate = noOfShortListedCandidate;
 	}
 
-	
-	
+	/**
+	 * @return the numberOfCandidatesRemaining
+	 */
+	public Long getNumberOfCandidatesRemaining() {
+		return numberOfCandidatesRemaining;
+	}
+
+	/**
+	 * @param numberOfCandidatesRemaining the numberOfCandidatesRemaining to set
+	 */
+	public void setNumberOfCandidatesRemaining(Long numberOfCandidatesRemaining) {
+		this.numberOfCandidatesRemaining = numberOfCandidatesRemaining;
+	}
 
 }

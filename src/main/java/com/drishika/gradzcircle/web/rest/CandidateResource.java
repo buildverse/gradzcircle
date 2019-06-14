@@ -266,14 +266,6 @@ public class CandidateResource {
 		log.debug("REquest to get Candidate Public Profile non ElasticSearch");
 		CandidatePublicProfileDTO candidate = candidateService.getCandidatePublicProfile(candidateId, jobId,
 				corporateId);
-		/*
-		 * trimCandidateAddressData(candidate.getAddresses());
-		 * trimCandidateEducationData(candidate.getEducations());
-		 * trimCandidateEmploymentData(candidate.getEmployments());
-		 * trimCandidateCertifications(candidate.getCertifications());
-		 * trimCandidateLanguageProficienies(candidate.getCandidateLanguageProficiencies
-		 * ()); trimCandidateNonAcademics(candidate.getNonAcademics());
-		 */
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
 
 	}

@@ -42,6 +42,7 @@ import com.drishika.gradzcircle.service.dto.CollegeDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
 import com.drishika.gradzcircle.service.dto.CourseDTO;
+import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.QualificationDTO;
@@ -94,6 +95,10 @@ public class DTOConverters {
 			dto.setShortListed(true);
 		else 
 			dto.setShortListed(false);
+		if (candidateJob.getJob().getNoOfApplicantLeft() == 0)
+			dto.setCanBuy(false);
+		else
+			dto.setCanBuy(true);		
 		return dto;
 	}
 	
@@ -134,7 +139,23 @@ public class DTOConverters {
 		jobListingData.setCanEdit(job.getCanEdit());
 		jobListingData.setHasBeenEdited(job.getHasBeenEdited());
 		jobListingData.setEverActive(job.getEverActive());
+		jobListingData.setNumberOfCandidatesRemaining(job.getNoOfApplicantLeft());
 		return jobListingData;
+	}
+	
+	public JobEconomicsDTO convertToJobEconomicsDTO(Job job,Double filterCost) {
+		JobEconomicsDTO jobEconomicsDTO = new JobEconomicsDTO();
+		jobEconomicsDTO.setId(job.getId());
+		if(job.getNoOfApplicantLeft() != null && job.getNoOfApplicantLeft() == 0 ) {
+			jobEconomicsDTO.setJobCost(job.getJobCost());
+			jobEconomicsDTO.setFilterCost(filterCost);
+		}
+		if(job.getPaymentType().name().equals("AS_YOU_GO"))
+			jobEconomicsDTO.setPayAsYouGo(true);
+		else
+			jobEconomicsDTO.setPayAsYouGo(false);
+		jobEconomicsDTO.setCorporateEscrowAmount(job.getCorporate().getEscrowAmount());
+		return jobEconomicsDTO;
 	}
 
 	public CandidateJobDTO convertToJobListingForCandidate(Job job, Long candidateId, Boolean appliedJobs) {

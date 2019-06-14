@@ -167,7 +167,9 @@
             "open": "Open",
             "save": "Save",
             "view": "View",
-            "archive": "Archive"
+            "archive": "Archive",
+            "update":"Update",
+            "pay": "Pay"
         },
         "detail": {
             "field": "Field",

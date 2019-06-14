@@ -14,8 +14,18 @@ public interface ApplicationConstants {
 	public static final String JOB_TYPE_PART_TIME = "Part Time";
 	public static final String JOB_TYPE_INTERNSHIP = "Internship";
 	public static final String JOB_TYPE_SUMMER_JOB = "Summer Job";
-	public static final String ENABLED_COUNTRIES ="ENABLED_COUNTRIES";
+	public static final String COLLEGES = "colleges";
+	public static final String UNIVERSITIES = "universities";
+	public static final String GRADUATION_DATE = "gradDate";
+	public static final String SCORES = "score";
+	public static final String QUALIFICATIONS = "qualification";
+	public static final String COURSES = "course";
+	public static final String GENDER = "gender";
+	public static final String LANGUAGES = "languages";
 	
+	
+	public static final String ENABLED_COUNTRIES ="ENABLED_COUNTRIES";
+	public static final String FILTER = "FILTER";
 	public static final String JOB_TYPE = "JOB_TYPE";
 	public static final String EMPLOYMENT_TYPE = "EMPLOYMENT_TYPE";
 	public static final String COUNT_OF_ACTIVE_JOBS = "COUNT_OF_ACTIVE_JOBS";

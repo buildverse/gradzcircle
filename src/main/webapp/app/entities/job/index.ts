@@ -18,3 +18,6 @@ export * from './short-listed-candidate-list.component';
 export * from './job-for-anonymous.component';
 export * from './job-list-change.service';
 export * from './job-list-popup.service';
+export * from './add-more-candidate-to-job-popup.component';
+export * from './add-more-canddiate-to-job-popup.service';
+export * from './min.directive';

@@ -7,10 +7,15 @@ import {Subscription} from 'rxjs/Rx';
 import {ProfileService} from '../profiles/profile.service';
 import {JhiLanguageHelper, Principal, LoginModalService, LoginService, UserService, DataStorageService} from '../../shared';
 import {VERSION} from '../../app.constants';
+import { AppConfig } from '../../entities/app-config/app-config.model';
+import { AppConfigService } from '../../entities/app-config/app-config.service';
 import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
-import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE, CANDIDATE_CERTIFICATION_ID, CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID} from '../../shared/constants/storage.constants';
+import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE, CANDIDATE_CERTIFICATION_ID, 
+  CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
+import { HttpErrorResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { OnDestroy } from '@angular/core';
 
 @Component({
@@ -38,6 +43,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   candidate: Candidate;
   noImage: boolean;
   authorities: string[];
+  appConfigs: AppConfig[];
+  
   constructor(
     private loginService: LoginService,
     private languageService: JhiLanguageService,
@@ -50,7 +57,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private candidateService: CandidateService,
     private corporateService: CorporateService,
-    private localStorageService: DataStorageService
+    private localStorageService: DataStorageService,
+    private appConfigService: AppConfigService,
 
   ) {
     this.version = VERSION ? 'v' + VERSION : '';
@@ -100,6 +108,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
             this.localStorageService.setdata(USER_ID, response.body.id);
             this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
             this.corporateId = this.localStorageService.getData(USER_ID);
+             this.appConfigService.query()
+                  .subscribe((res: HttpResponse<AppConfig[]>) => { this.appConfigs = res.body; 
+                    this.appConfigs.forEach((appConfig) => {
+                      if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1) {
+                        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED,appConfig.configValue);
+                                   console.log('biz plab enable is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
+                      }
+                    });
+                  }
+                  , (res: HttpErrorResponse) => this.onError(res.message));
             this.eventManager.broadcast({
               name: 'userDataLoadedSuccess',
               content: 'User Data Load Success'
@@ -159,6 +177,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   changeLanguage(languageKey: string) {
     this.languageService.changeLanguage(languageKey);
   }
+  
+  private onError(error: any) {
+    this.router.navigate(['/error']);
+  }
 
   collapseNavbar() {
     this.isNavbarCollapsed = true;
@@ -202,6 +224,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.localStorageService.removeData(CANDIDATE_EMPLOYMENT_ID);
     this.localStorageService.removeData(CANDIDATE_LANGUAGE_ID);
     this.localStorageService.removeData(CANDIDATE_PROJECT_ID);
+    this.localStorageService.removeData(BUSINESS_PLAN_ENABLED);
     this.router.navigate(['']);
   }
 

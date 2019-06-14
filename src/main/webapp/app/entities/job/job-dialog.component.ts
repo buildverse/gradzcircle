@@ -15,7 +15,7 @@ import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import { USER_ID, CORPORATE_ID, JOB_ID } from '../../shared/constants/storage.constants';
+import { USER_ID, CORPORATE_ID, JOB_ID, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { QualificationService} from '../qualification';
 import {Course, CourseService} from '../course';
 import {College, CollegeService} from '../college';
@@ -31,6 +31,7 @@ import {AppConfig} from '../app-config/app-config.model';
 import {AppConfigService} from '../app-config/app-config.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+
 
 function deepcopy<T>(o: T): T {
   return JSON.parse(JSON.stringify(o));
@@ -120,7 +121,8 @@ export class JobDialogComponent implements OnInit {
     private appConfigService: AppConfigService,
     private router: Router,
     private principal: Principal,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private localDataStorageService: DataStorageService
 
   ) {
   }
@@ -166,17 +168,7 @@ export class JobDialogComponent implements OnInit {
         .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.employmentTypeService.query()
       .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmentTypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-    this.appConfigService.query()
-      .subscribe((res: HttpResponse<AppConfig[]>) => { this.appConfigs = res.body; 
-        this.appConfigs.forEach((appConfig) => {
-          if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1) {
-            this.businessPlanEnabled = appConfig.configValue;
-            // console.log('biz plab enable is ' + this.businessPlanEnabled);
-          }
-        });
-      }
-      , (res: HttpErrorResponse) => this.onError(res.message));
-    
+    this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED);
     this.genderService.query()
       .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -238,16 +230,19 @@ export class JobDialogComponent implements OnInit {
 
   initializeFormFilterData() {
     this.filterCost = 0;
+   
     this.filterMap.get(this.LANGUAGE);
     if (this.job.employmentType) {
       this.employmentTypeCost.push(this.job.employmentType.employmentTypeCost);
       this.filterCost += this.job.employmentType.employmentTypeCost;
+     
     }
 
     this.prevEmploymentType = this.job.employmentType;
     if (this.job.jobType) {
       this.jobTypeCost.push(this.job.jobType.jobTypeCost);
       this.filterCost += this.job.jobType.jobTypeCost;
+
     }
 
     this.jobCostDifference = null;
@@ -295,10 +290,12 @@ export class JobDialogComponent implements OnInit {
             this.courses = jobFilter.filterDescription.courses;
             if (this.courses) {
               this.filterCost += this.filterMap.get(this.COURSE);
+              
             }
             this.qualifications = jobFilter.filterDescription.qualifications;
             if (this.qualifications) {
               this.filterCost += this.filterMap.get(this.QUALIFICATION);
+            
             }
 
             this.scoreType = jobFilter.filterDescription.scoreType;
@@ -313,18 +310,17 @@ export class JobDialogComponent implements OnInit {
               }
               this.shouldDisableDecimal();
               this.filterCost += this.filterMap.get(this.SCORE);
+             
 
             }
 
             this.addOn = jobFilter.filterDescription.addOn;
             this.graduationDateType = jobFilter.filterDescription.graduationDateType;
-            if (this.graduationDateType) {
-              this.filterCost += this.filterMap.get(this.GRADUATION_DATE);
-            }
             this.graduationDate = jobFilter.filterDescription.graduationDate;
             this.graduationFromDate = jobFilter.filterDescription.graduationFromDate;
             this.graduationToDate = jobFilter.filterDescription.graduationToDate;
             this.showDateControl();
+            
             this.languages = jobFilter.filterDescription.languages;
             if (this.languages) {
               this.filterCost += this.filterMap.get(this.LANGUAGE);

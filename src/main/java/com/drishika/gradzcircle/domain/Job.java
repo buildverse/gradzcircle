@@ -521,7 +521,10 @@ public class Job implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 	
-	
+	public Job noOfApplicantsLeft(Long noOfApplicantLeft) {
+		this.noOfApplicantLeft = noOfApplicantLeft;
+		return this;
+	}
 
 	/**
 	 * @return the noOfApplicantLeft

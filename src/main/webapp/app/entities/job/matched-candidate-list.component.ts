@@ -181,6 +181,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     if (this.eventSubscriber) {
       this.eventManager.destroy(this.eventSubscriber);
     }
+    this.jhiAlertService.clear();
   }
 
   trackId(index: number, item: CandidateList) {
@@ -213,6 +214,11 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.candidateList = data;
+    if (this.candidateList && this.candidateList.length > 0){
+      if (!this.candidateList[0].canBuy) {
+        this.jhiAlertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
+      }
+    }
     this.setImageUrl();
    
   }

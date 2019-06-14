@@ -26,6 +26,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private Long corporateId;
 	private Double matchScore;
 	private  Boolean shortListed; 
+	private Boolean canBuy;
 	
 
 	/**
@@ -189,6 +190,22 @@ public class CandidateProfileListDTO implements Serializable {
 	 */
 	public void setMatchScore(Double matchScore) {
 		this.matchScore = matchScore;
+	}
+
+	
+	
+	/**
+	 * @return the canBuy
+	 */
+	public Boolean getCanBuy() {
+		return canBuy;
+	}
+
+	/**
+	 * @param canBuy the canBuy to set
+	 */
+	public void setCanBuy(Boolean canBuy) {
+		this.canBuy = canBuy;
 	}
 
 	/* (non-Javadoc)

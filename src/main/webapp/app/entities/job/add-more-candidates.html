@@ -1,0 +1,113 @@
+<form name="addtionalCandidateForm" role="form" novalidate
+	 #addtionalCandidateForm="ngForm">
+
+	<div class="modal-header modal-header-decorate">
+		<h6 class="modal-title" id="myJobLabel"
+			jhiTranslate="gradzcircleApp.job.home.addMoreCandidates">Add
+			more Candidates</h6>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
+	</div>
+	<div *ngIf="businessPlanEnabled && addtionalCandidates>0  " class="d-flex justify-content-end">
+		<div class="growl growl-static ">
+			<div
+				class=" alert alert-dark alert-dismissable d-flex justify-content-center"
+				role="alert">
+				Your current cost is &#8377;<strong> {{newJobCost}}</strong>.
+			</div>
+		</div>
+	</div>
+	<div class="modal-body">
+		<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
+			<div class="row mt-2 mr-2 ml-2">
+				<div class="col-md-8 font-weight-light">
+					<span jhiTranslate="gradzcircleApp.job.currentFilterCost"></span>
+				</div>
+				<div class="col-md-4 text-center">{{job.filterCost}}</div>
+			</div>
+
+			<div class="form-group row mt-1 mr-2 ml-2">
+				<div class="col-md-8 font-weight-light">
+
+					<label for="noOfAddtionalCandidates"><span
+						jhiTranslate="gradzcircleApp.job.noOfAdditionalCandidates"></span></label>
+				</div>
+				<div class="col-md-4">
+					<input type="text" required #numOfAdditionalCandidates="ngModel"
+						class="form-control " name="numOfAdditionalCandidates"
+						pattern="[0-9]+" id="noOfAddtionalCandidates" customMin="1"
+						[(ngModel)]="addtionalCandidates"
+						(ngModelChange)="updateJobCost()" />
+					<div
+						*ngIf="numOfAdditionalCandidates.invalid && numOfAdditionalCandidates.touched"
+						class="text-danger">
+						<div *ngIf="numOfAdditionalCandidates.errors.required">
+							<small>Please enter number of candidates</small>
+						</div>
+						<div *ngIf="numOfAdditionalCandidates.errors.pattern">
+							<small>Please enter whole numbers</small>
+						</div>
+						<div *ngIf="numOfAdditionalCandidates.errors.customMin">
+							<small>Please enter value greater than 0</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-1 mr-2 ml-2" *ngIf="transientCorpEscrowAmount>=0 && businessPlanEnabled">
+				<div class="col-md-8 d-flex font-weight-light  ">Escrow Amount</div>
+				<div class="form-inline col-md-4 d-flex font-weight-light  justify-content-center">
+					&#8377; {{transientCorpEscrowAmount?transientCorpEscrowAmount:0}}
+					<div class="form-check ml-3 font-weight-light" *ngIf="!job.payAsYouGo ">
+						<label for="use_escrow"> 
+							<input type="checkbox" class="form-check-input " name="useEscrow" id="use_escrow" [(ngModel)]="useEscrow" (ngModelChange)="offsetEscrow(useEscrow)" [disabled]="isEscrowCheckBoxDisabled">
+							Use Escrow
+						</label>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="costDiff && businessPlanEnabled" class="row mt-1 mr-2 ml-2">
+				<div class="col-md-8 d-flex font-weight-light  ">Payment Amount</div>
+				<div *ngIf="costDiff<0; else checkIfZero" class="form-inline col-md-4 d-flex font-weight-light text-success justify-content-center">N/A</div>
+				<ng-template #checkIfZero>
+					<div *ngIf="costDiff==0; else pay" class="form-inline col-md-4 d-flex font-weight-light text-success justify-content-center">N/A</div>
+					<ng-template #pay>
+						<div class="form-inline col-md-4 d-flex font-weight-light  justify-content-center">&#8377;{{costDiff}}</div>
+					</ng-template>
+				</ng-template>
+			</div>
+		</div>
+		<div class="row mt-2 mr-2 ml-2"></div>
+	</div>
+	<div class="modal-footer  modal-footer-decorate-delete">
+		<button type="button" class="btn btn-pill btn-sm btn-secondary"
+			data-dismiss="modal" (click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button> 
+		<div *ngIf="businessPlanEnabled==true; else bizPlanDisabled">
+			<div *ngIf="costDiff<=0; else payButton">
+				<button type="submit" class="btn btn-pill btn-sm btn-primary" (click)="updateJob()"
+				[disabled]="addtionalCandidateForm.form.invalid || isSaving  ">
+				<span class="fa fa-edit"></span>&nbsp;<span
+					jhiTranslate="entity.action.update">Update</span>
+			</button>	
+			</div>
+			<ng-template #payButton>
+				<button type="submit" class="btn btn-pill btn-sm btn-primary" (click)="updateJob()"
+				[disabled]="addtionalCandidateForm.form.invalid || isSaving  ">
+				<span class="fa fa-edit"></span>&nbsp;<span
+					>Pay</span>
+			</button>
+			</ng-template>
+		</div>
+		<ng-template #bizPlanDisabled>
+			<button type="submit" class="btn btn-pill btn-sm btn-primary" (click)="updateJob()"
+				[disabled]="addtionalCandidateForm.form.invalid || isSaving  ">
+				<span class="fa fa-edit"></span>&nbsp;<span
+					jhiTranslate="entity.action.update">Update</span>
+			</button>
+		</ng-template>
+		
+	</div>
+
+</form>

@@ -65,6 +65,10 @@ export class JobComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot.params['search'] : '';
   }
 
+  setAddCandidateToJobRouteData(jobId) {
+    this.dataStorageService.setdata(JOB_ID,jobId);
+    
+  }
   
   loadAll() {
     if (this.corporateId) {

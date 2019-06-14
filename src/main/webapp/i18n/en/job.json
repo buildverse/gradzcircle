@@ -6,7 +6,8 @@
 				"createLabel": "Create a new Job",
 				"createOrEditLabel": "Post or edit a Job",
 				"search": "Search for Job",
-				"delete": "Remove Posted Job"
+				"delete": "Remove Posted Job",
+				"addMoreCandidates": "Add More Candidates"
 			},
 			"created": "A new Job is created with identifier {{ param }}",
 			"updated": "A Job is updated with identifier {{ param }}",
@@ -17,6 +18,8 @@
 			"detail": {
 				"title": "Job"
 			},
+			"noOfAdditionalCandidates": "Please let us know how many candidates would you like to explore",
+			"currentFilterCost": "Your Job Filter cost is", 
 			"jobTitle": "Job Title",
 			"jobDescription": "Description",
 			"salary": "Salary (p.a)",
@@ -49,6 +52,7 @@
 			"universitiesSelected": "Universities Selected",
 			"noOfApplicants": "Applicants",
 			"noOfApplicantsShotlisted": "Shorlitsed Applicants",
+			"noOfApplicantsRemaining": "Remaining Candidates",
 			"prevNoOfApplicants": "Previous Number of Candidates",
 			"currNoOfApplicants": "New Number of Candidates",
 			"coursesSelected": "Courses",
@@ -100,6 +104,7 @@
 			"summerJob" : "Summer Job",
 			"view" : "View Job",
 			"jobList": "Shotlisted for Jobs",
+			"topUpAlert": "You can't buy more candidates for this job as you have reached limit. Please top up your balance to buy more",
 			"filters": {
 				"title": "Filters",
 				"employmentType": "Employment Type",

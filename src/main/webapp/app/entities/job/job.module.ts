@@ -1,8 +1,7 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {GradzcircleSharedModule} from '../../shared';
-//import { GradzcircleTrackerModule, MatchTrackerComponent } from '../match-tracker/';
-//import { MatchTrackerService } from '../match-tracker/match-tracker.service';
+
 import {
   JobService,
   JobPopupService,
@@ -31,11 +30,14 @@ import {
   JobComponentAnonymous,
   JobListEmitterService,
   JobListPopupService,
-  
+  AddMoreCandidatesToJobPopUpComponent,
+  AddMoreCandidatesToPopupService,
+  AddMoreCandidatesToJobComponent,
+  MinDirective
 
 } from './';
 import {JobListForLinkedCandidateComponent, JobListForLinkedCandidatePopUpComponent} from './job-list-for-linked-candidate.component';
-import {JobListForLinkedCandidate} from './job-list-linked-candidate.model';
+
 
 
 const ENTITY_STATES = [
@@ -69,9 +71,10 @@ const ENTITY_STATES = [
     ShortListedCandidateListComponent,
     JobComponentAnonymous,
     JobListForLinkedCandidateComponent,
-    JobListForLinkedCandidatePopUpComponent
-    
-
+    JobListForLinkedCandidatePopUpComponent,
+    AddMoreCandidatesToJobPopUpComponent,
+    AddMoreCandidatesToJobComponent,
+    MinDirective
   ],
   entryComponents: [
     JobComponent,
@@ -93,7 +96,9 @@ const ENTITY_STATES = [
     ShortListedCandidateListComponent,
     JobComponentAnonymous,
     JobListForLinkedCandidateComponent,
-    JobListForLinkedCandidatePopUpComponent
+    JobListForLinkedCandidatePopUpComponent,
+    AddMoreCandidatesToJobPopUpComponent,
+    AddMoreCandidatesToJobComponent
 
   ],
   providers: [
@@ -103,7 +108,8 @@ const ENTITY_STATES = [
     JobPopupServiceNew,
     JobResolvePagingParams,
     JobListEmitterService,
-    JobListPopupService
+    JobListPopupService,
+    AddMoreCandidatesToPopupService
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

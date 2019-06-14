@@ -59,7 +59,8 @@
                 "candidateLanguageProficiency": "Languages",
                 "profileAlert": "Please <b>complete</b> your profile !! It will <b>enhance your profile.</b>",
                 "educationAlert": "Please add Education to review matched jobs",
-                "reviewAlert": "You have reviewed this candidate earlier"
+                "reviewAlert": "You have reviewed this candidate earlier",
+                "notShortListedAlert": "Please short list candidate to see name and contact details"
             }
         }
     }

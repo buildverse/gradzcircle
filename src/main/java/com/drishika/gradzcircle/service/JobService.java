@@ -1,17 +1,18 @@
 package com.drishika.gradzcircle.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +30,7 @@ import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.EmploymentType;
+import com.drishika.gradzcircle.domain.Filter;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
@@ -40,6 +42,7 @@ import com.drishika.gradzcircle.repository.CandidateAppliedJobsRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
+import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.JobFilterRepository;
 import com.drishika.gradzcircle.repository.JobHistoryRepository;
@@ -52,12 +55,15 @@ import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
+import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobListDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
+import com.drishika.gradzcircle.service.matching.JobFilterObject;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 import com.drishika.gradzcircle.service.util.JobsUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
@@ -70,6 +76,8 @@ public class JobService {
 	private final JobSearchRepository jobSearchRepository;
 
 	private final JobFilterRepository jobFilterRepository;
+	
+	private FilterRepository filterRepository;
 
 	@Qualifier("JobMatcher")
 	private final Matcher<Job> matcher;
@@ -95,6 +103,9 @@ public class JobService {
 	private final GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager;
 	
 	private final GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager;
+	
+	private final GradzcircleCacheManager<String, Map<String,Double>> filtersCacheManager;
+	
 	private final EmploymentTypeRepository employmentTypeRepository;
 	
 	private final JobTypeRepository jobTypeRepository;
@@ -110,7 +121,8 @@ public class JobService {
 			CandidateRepository candidateRepository, DTOConverters converter, CandidateAppliedJobsRepository candidateAppliedJobsRepository,
 			CorporateService corporateService, GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
 			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,GradzcircleCacheManager <String,Long> jobCountCacheManager,
-			GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager, GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager
+			GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager, GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager, GradzcircleCacheManager<String, Map<String,Double>> filtersCacheManager,
+			FilterRepository filterRepository
 			) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
@@ -130,6 +142,8 @@ public class JobService {
 		this.jobCountCacheManager = jobCountCacheManager;
 		this.jobTypeCacheManager = jobTypeCacheManager;
 		this.employmentTypeCacheManager = employmentTypeCacheManager;
+		this.filtersCacheManager = filtersCacheManager;
+		this.filterRepository = filterRepository;
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
@@ -188,6 +202,7 @@ public class JobService {
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		candidateJobs.addAll(prevJob.getCandidateJobs());
 		job.setCandidateJobs(candidateJobs);
+		job.setNoOfApplicantLeft(job.getNoOfApplicants().longValue());
 
 	}
 
@@ -939,6 +954,11 @@ public class JobService {
 		return page;
 	}
 
+	/*public Job addCandidatesToExisitingJob(Long jobId, Long numberOfCandidates, Double jobCost,Double amountPaid) {
+		Job job = jobRepository.findOne(jobId);
+		Corporate corporate = job.getCorporate();
+	}*/
+	
 	public Job applyJobForCandidate(Long jobId, Long loginId) {
 		Job job = jobRepository.findOne(jobId);
 		Candidate candidate = candidateRepository.findByLoginId(loginId);
@@ -974,21 +994,101 @@ public class JobService {
 				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate));
 		return page;
 	}
-	
-	/*public List<JobStatistics> getJobStatsByEmploymentType(Long employmentType) {
-		List<JobStatistics> jobStatistics = null;
-		if(employmentType!=null) {
-			jobStatistics = jobRepository.findStatisticsCountByEmploymentTypeSelection(employmentType);
-		} 
-		return jobStatistics;
+
+	public JobEconomicsDTO getJobForAddingCandidates(Long id) {
+		Double  filterCost =0d ;
+		Job job = jobRepository.findOne(id);
+		Iterator<JobFilter> iterator = job.getJobFilters().iterator();
+		while(iterator.hasNext()) {
+			try {
+				filterCost = extractJobFilterCost(iterator.next(),job);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return converter.convertToJobEconomicsDTO(job,filterCost);
 	}
 	
-	public List<JobStatistics> getJobStatsByJobType(Long jobType) {
-		List<JobStatistics> jobStatistics = null;
-		if(jobType!=null) {
-			jobStatistics = jobRepository.findStatisticsCountByJobTypeSelection(jobType);
-		} 
-		return jobStatistics;
-	}*/
+	private Double extractJobFilterCost(JobFilter jobFilter,Job job) throws Exception{
+		Double filterCost = 0d; 
+		Map<String,Double> filterMap = getFiltersMap();
+		log.debug("Filter Map is {}",filterMap);
+		ObjectMapper mapper = new ObjectMapper();
+		JobFilterObject jobFilterObject = mapper.readValue(jobFilter.getFilterDescription(),JobFilterObject.class);
+		if(jobFilterObject.getColleges()!=null && jobFilterObject.getColleges().size()>0)
+			filterCost += filterMap.get(ApplicationConstants.COLLEGES);
+		if(jobFilterObject.getUniversities()!=null && jobFilterObject.getUniversities().size()>0)
+			filterCost += filterMap.get(ApplicationConstants.UNIVERSITIES);
+		if(jobFilterObject.getGpa()!=null || jobFilterObject.getPercentage()!=null)
+			filterCost += filterMap.get(ApplicationConstants.SCORES);
+		if(jobFilterObject.getQualifications()!=null && jobFilterObject.getQualifications().size()>0)
+			filterCost += filterMap.get(ApplicationConstants.QUALIFICATIONS);
+		if(jobFilterObject.getCourses()!=null && jobFilterObject.getCourses().size()>0)
+			filterCost += filterMap.get(ApplicationConstants.COURSES);
+		if(jobFilterObject.getLanguages()!=null && jobFilterObject.getLanguages().size()>0)
+			filterCost += filterMap.get(ApplicationConstants.LANGUAGES);
+		if(jobFilterObject.getGender()!=null )
+			filterCost += filterMap.get(ApplicationConstants.GENDER);
+		if(jobFilterObject.getGraduationDate()!=null || jobFilterObject.getGraduationFromDate() !=null|| jobFilterObject.getGraduationToDate()!=null )
+			filterCost += filterMap.get(ApplicationConstants.GRADUATION_DATE);
+		filterCost += job.getEmploymentType().getEmploymentTypeCost();
+		filterCost += job.getJobType().getJobTypeCost();
+		return filterCost;
+		
+	}
 	
+	private Map<String,Double> getFiltersMap() throws Exception {
+		Map<String,Double> filterMap = filtersCacheManager.getValue(ApplicationConstants.FILTER, new Callable<Map<String,Double>>() {
+			public Map<String,Double> call() throws Exception {
+				return filterRepository.findAll().stream().collect(Collectors.toMap(Filter::getFilterName, Filter::getFilterCost));
+			}
+		} );
+		return filterMap;
+	}
+	
+	public Job addCandidatesToJob(Job job) throws BeanCopyException {
+		
+		Double amountPaid = job.getAmountPaid();
+		Double jobCost = job.getJobCost();
+		Integer noOfApplicants = job.getNoOfApplicants();
+		Double escrowAmountUsed = job.getEscrowAmountUsed();
+		Double corporateEscrowAmount = job.getCorporate().getEscrowAmount();
+		Job prevJob = getJob(job.getId());
+		log.debug("The number of applicants lefts are {}",noOfApplicants);
+		log.debug("Incoming escrow is  {}",job.getCorporate().getEscrowAmount());
+		try {
+			BeanUtils.copyProperties(job, prevJob);
+			ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);
+			job.setUpdateDate(dateTime);
+			setJobHistory(job, prevJob);
+			Set<CandidateJob> candidateJobs = new HashSet<>();
+			candidateJobs.addAll(prevJob.getCandidateJobs());
+			job.setCandidateJobs(candidateJobs);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		log.debug("No of andidate jobs on prev job  is {} ",prevJob.getCandidateJobs().size());
+		Corporate corporateFromPrevJob = prevJob.getCorporate();
+		log.debug("Earlier escorw was  {} ",corporateFromPrevJob.getEscrowAmount());
+		job.setNoOfApplicantLeft(noOfApplicants.longValue());
+		job.setAmountPaid(amountPaid);
+		job.setJobCost(jobCost);
+		job.setNoOfApplicants(prevJob.getNoOfApplicants()+noOfApplicants);
+		job.setEscrowAmountUsed(escrowAmountUsed);
+		log.info("Updating job");
+		job = jobRepository.save(job);
+		log.info("Job updated {} ,{}", job);
+		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
+			corporateFromPrevJob.setEscrowAmount(corporateEscrowAmount);
+			log.debug("Setting escrow as {}",corporateEscrowAmount);
+			corporateRepository.save(corporateFromPrevJob);
+		}
+		return job;
+	}
 }

@@ -3,18 +3,13 @@
   	<button type="button" class="close mr-auto" data-dismiss="modal"
 				(click)="clear()">&times;</button>
 			<div class="public-profile-header public-profile-mybackground">
-				<div class="container-fluid">
-					<!-- <div class="row mb-0 pb-0">
-                        <div class="col-md-1 text-muted">Resume</div>
-                    </div> -->
+				<div  *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container">
 					<div class="row mt-4">
-						<div class="col-md-4">
-							<div class="public-profile-pic-square">
-								<img class="rounded-circle media-object image-fluid"
+						<div class="col-md-4 text-center">
+								<img class="rounded-circle media-object"
 									[src]="noImage ? defaultImage : userImage " />
-								<h4 class="public-profile-header-user text-center">{{candidate.candidateDetails.firstName}}
+								<h4  class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
 									{{candidate.candidateDetails.lastName}}</h4>
-							</div>
 						</div>
 
 						<div class="col-md-8">
@@ -139,6 +134,138 @@
 					</div>
 				</div>
 
+				<div  *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="container">
+						<div class="row mt-4">
+						<div class="col-md-4 text-center">
+								<img class="rounded-circle media-object"
+									[src]="noImage ? defaultImage : userImage " />
+								<h4 *ngIf="candidate.shortListed; else dontShowName" class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
+									{{candidate.candidateDetails.lastName}}</h4>
+								<ng-template #dontShowName>
+									<h6 class="public-profile-header-user text-center font-weight-light">xxxxxxxxxxx</h6>			
+								</ng-template>
+						</div>
+
+						<div class="col-md-8">
+							<div class="public-profile-header container-inner">
+
+								<div *ngIf="candidate.candidateDetails.aboutMe" class="row no-gutters mt-5 pl-0">
+									<div class="col-md-2" style="color: white">
+										<span class="icon icon-emoji-happy"></span>
+									</div>
+									<div class="col-md-10">
+										<span class="text-left public-profile-header-bio">{{candidate.candidateDetails.aboutMe}}</span>
+									</div>
+								</div>
+								<div class="row mt-0">
+									<div class="col-md-12">
+										<div class="public-profile-split"></div>
+									</div>
+								</div>
+								<div
+									*ngIf="candidate.shortListed; else showDefaultEmail">
+									<div class="row mt-1 no-gutters ">
+										<div class="col-md-2" style="color: white">
+											<span class="icon icon-paper-plane"></span>
+										</div>
+										<div class="col-md-4">
+											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.login.email}}</p>
+										</div>
+									</div>
+								</div>
+								<ng-template #showDefaultEmail>
+								<div class="row no-gutters">
+									<div class="col-md-2 align-item-right" style="color: white">
+										<span class="icon icon-paper-plane"></span>
+									</div>
+									<div class="col-md-4">
+										<p class="text-left public-profile-header-bio">xxxxxxxxxxx</p>
+									</div>
+								</div>
+								</ng-template>
+								<div
+									*ngIf="candidate.shortListed; else showDefaultPhone">
+									<div class="row no-gutters">
+										<div class="col-md-2" style="color: white">
+											<span class="icon icon-old-phone"></span>
+										</div>
+										<div class="col-md-4">
+											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.phoneNumber}}</p>
+										</div>
+									</div>
+								</div>
+								<ng-template #showDefaultPhone>
+								<div class="row no-gutters">
+									<div class="col-md-2" style="color: white">
+										<span class="icon icon-old-phone"></span>
+									</div>
+									<div class="col-md-4">
+										<p class="text-left public-profile-header-bio">xxxxxxxxxxx</p>
+									</div>
+								</div>
+								</ng-template>
+								<div
+									*ngIf="candidate.candidateDetails.dateOfBirth; else showDefaultDob">
+									<div class="row no-gutters">
+										<div class="col-md-2" style="color: white">
+											<span class="icon icon-cake"></span>
+										</div>
+										<div class="col-md-4">
+											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.dateOfBirth|date:'mediumDate'}}</p>
+										</div>
+									</div>
+								</div>
+								<ng-template #showDefaultDob>
+								<div class="row no-gutters">
+									<div class="col-md-2" style="color: white">
+										<span class="icon icon-cake"></span>
+									</div>
+									<div class="col-md-6">
+										<p class="text-left public-profile-header-bio">Date of
+											birth-Not available</p>
+									</div>
+								</div>
+								</ng-template>
+								<div
+									*ngIf="candidate.addresses[0]?.city || candidate.addresses[0]?.state; else showDefaultCity">
+									<div class="row no-gutters">
+										<div class="col-md-2" style="color: white">
+											<span class="icon icon-location"></span>
+										</div>
+										<div class="col-md-4">
+											<p class="text-left public-profile-header-bio">{{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}
+											</p>
+										</div>
+									</div>
+								</div>
+								<ng-template #showDefaultCity>
+								<div class="row no-gutters">
+									<div class="col-md-2" style="color: white">
+										<span class="icon icon-location"></span>
+									</div>
+									<div class="col-md-6">
+										<p class="text-left public-profile-header-bio">Current
+											location not available</p>
+									</div>
+								</div>
+								</ng-template>
+								<div
+									*ngIf="candidate.matchScore">
+									<div class="row no-gutters">
+										<div class="col-md-2" style="color: white">
+											<span class="icon icon-star"></span>
+										</div>
+										<div class="col-md-4">
+											<p class="text-left public-profile-header-bio">{{candidate.matchScore}}% match rate
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
 			</div>
 			<div class="mt-3">
 				<jhi-alert></jhi-alert>

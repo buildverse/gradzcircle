@@ -38,6 +38,7 @@ import com.drishika.gradzcircle.service.JobService;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
+import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobListDTO;
 import com.drishika.gradzcircle.service.util.JobsUtil;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
@@ -157,6 +158,36 @@ public class JobResource {
 		// JobsUtil.trimJobFromFilter(updatedJob);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
+	}
+	
+	@PutMapping("/addCandidatesToJob")
+	@Timed
+	public ResponseEntity<Job> addCandidatesToAnExistingJob(@RequestBody Job job) throws URISyntaxException {
+		log.info("REST request to add candidates to job {}", job);
+		if (job.getId() == null) {
+			log.error("Error updating job {} ", "Job Id is null");
+			throw new CustomParameterizedException("Job Id is null");
+		}
+		Job updatedJob;
+		try {
+			updatedJob = jobService.addCandidatesToJob(job);
+			// BeanUtils.copyProperties(updatedJob, result);
+			log.info("Updated job is {},{}", updatedJob);
+		} catch (BeanCopyException e) {
+		
+			updatedJob = job;
+			updatedJob.setJobDescription(e.getMessage());
+			log.error("Error updating job {} , {}", e.getMessage(), e);
+		} catch (Exception ex) {
+		
+			updatedJob = job;
+			updatedJob.setJobDescription(ex.getMessage());
+			log.error("Error updating job {} , {}", ex.getMessage(), ex);
+			throw new CustomParameterizedException(ex.getMessage());
+		}
+
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedJob.getId().toString()))
+				.body(updatedJob);
 	}
 
 	/**
@@ -631,6 +662,22 @@ public class JobResource {
 
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(job));
 	}
+	
+	/**
+	 * GET /jobs/:id : get the "id" job.
+	 *
+	 * @param id
+	 *            the id of the job to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the job, or
+	 *         with status 404 (Not Found)
+	 */
+	@GetMapping("/jobForAddingCandidates/{id}")
+	@Timed
+	public ResponseEntity<JobEconomicsDTO> getJobForAddingCandidate(@PathVariable Long id) {
+		log.info("REST request to get Job for Adding Candidates is : {}", id);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobService.getJobForAddingCandidates(id)));
+	}
+	
 
 	/**
 	 * DELETE /jobs/:id : delete the "id" job.
@@ -689,43 +736,5 @@ public class JobResource {
 
 	}
 	
-	/**
-	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
-	 *
-	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
-	 */
-	/*@GetMapping("/jobStatsByEmploymentType/{employmentTypeId}")
-	@Timed
-	public ResponseEntity<List<JobStatistics>> getJobStatsByEmploymentType(@PathVariable Long employmentTypeId) {
-		List<JobStatistics> jobStatsByEmploymentType = jobService.getJobStatsByEmploymentType(employmentTypeId);
-		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByEmploymentType.toString()))
-				.body(jobStatsByEmploymentType);
-	}*/
-	
-	/**
-	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
-	 *
-	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
-	 */
-	/*@GetMapping("/jobStatsByJobType/{jobTypeId}")
-	@Timed
-	public ResponseEntity<List<JobStatistics>> getJobStatsByJobType(@PathVariable Long jobTypeId) {
-		List<JobStatistics> jobStatsByJobType = jobService.getJobStatsByJobType(jobTypeId);
-		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByJobType.toString()))
-				.body(jobStatsByJobType);
-	}
-	*/
-	/**
-	 * GET /jobStatsByEmlpymentType : Applied Jobs by Candidate
-	 *
-	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
-	 */
-	/*@GetMapping("/jobStatsByEmploymentType")
-	@Timed
-	public ResponseEntity<List<JobStatistics>> getJobStatsByAll() {
-		List<JobStatistics> jobStatsByAllType = jobService.getJobStatsByEmploymentType(employmentType)
-		return  ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, jobStatsByAllType.toString()))
-				.body(jobStatsByAllType);
-	}*/
 
 }

@@ -110,6 +110,10 @@
 									class="justfiy-content-center font-weight-light"><span
 									jhiTranslate="gradzcircleApp.job.shortlistedCandidate">Applicants</span><span
 									></span></th>
+									<th 
+									class="justfiy-content-center font-weight-light"><span
+									jhiTranslate="gradzcircleApp.job.noOfApplicantsRemaining">Applicants</span><span
+									></span></th>
 								<th class="justfiy-content-center font-weight-light">Actions</th>
 		
 							</tr>
@@ -147,14 +151,21 @@
 									<td class="font-weight-light"><a class="disabled">
 										{{job.noOfShortListedCandidate}}</a></td>
 								</ng-template>
+								<td class="font-weight-light">
+									{{job.numberOfCandidatesRemaining}}
+								</td>
 								<td class="icons-edit">
-			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ><span class="icon icon-eye"></span></a>
-			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true"> <span class="icon icon-edit"></span> 
+			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ngbTooltip="View"><span class="icon icon-eye"></span></a>
+			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true" ngbTooltip="Edit"> <span class="icon icon-edit"></span> 
 									</a> 
-									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true"> <span class="icon icon-edit"></span> 
+									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true" ngbTooltip="Edit"> <span class="icon icon-edit"></span> 
 									</a>
-			                         <a  [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)" replaceUrl="true"> <span class="icon icon-trash"></span> 
+									<a *ngIf="!job.payAsYouGo && job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)" replaceUrl="true" ngbTooltip="More Candidates"><i class="fa fa-credit-card"></i>
 									</a>
+			                         <a  [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)" replaceUrl="true"> <span class="icon icon-trash" ngbTooltip="Remove"></span> 
+									</a>
+									
+									
 			                      </td>
 						</tbody>
 					</table>

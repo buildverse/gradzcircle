@@ -66,11 +66,15 @@ export class Job implements BaseEntity {
     public countOfPartTimeJob?: number,
     public countOfInternJob?: number,
     public countOfSummerJob?: number,
-
+    public numberOfCandidatesRemaining?: number,
+    public payAsYouGo?: boolean,
+    public filterCost?: number,
+    public corporateEscrowAmount?: number
   ) {
     this.hasBeenEdited = false;
     this.everActive = false;
     this.canEdit = false;
     this.hasCandidateApplied = false;
+    this.payAsYouGo = false;
   }
 }

@@ -41,7 +41,6 @@ export class JobListForLinkedCandidatePopUpComponent implements OnInit, OnDestro
     this.routeSub = this.route.params.subscribe((params) => {
       const corporateId = this.localStorageService.getData(CORPORATE_ID);
       const candidateId = this.localStorageService.getData(CANDIDATE_ID);
-      console.log('cadndiate id and corp id are'+candidateId,corporateId);
       this.jobPopupService
         .open(JobListForLinkedCandidateComponent as Component, candidateId, corporateId);
 
