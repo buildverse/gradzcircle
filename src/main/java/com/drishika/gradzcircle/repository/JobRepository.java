@@ -100,8 +100,13 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	
 	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
 	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId, Pageable pageable);
-
+/*SELECT * FROM candidate_job a join job j on (j.id = a.jobs_id and j.corporate_id=1351)
+WHERE JOBS_ID IN 
+(SELECT JOB_ID 
+ FROM corporate_candidate cc where
+  a.candidates_id != cc.candidate_id)*/
 	//@Query("select cJ from Job j inner join CandidateJob cJ on j.id=cJ.job.id join CorporateCandidate cc on  cc.id.jobId = cJ.job.id and cJ.candidate.id = cJ.job.id where j.jobStatus=1 and j.id=?1")
+	//@Query("Select from candidate_job cj join job j on (j.id = cj.jobs_id and j.corporate.id= ?1 where jobs_id in ()")
 	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) and cJ.reviewed=?2 order by cJ.matchScore desc")
 	Page<CandidateJob> findMatchedCandidatesForJob(Long jobId, Boolean reviewed,Pageable pageable);
 	
