@@ -7,7 +7,7 @@
 					<div class="row mt-4">
 						<div class="col-md-4 text-center">
 								<img class="rounded-circle media-object"
-									[src]="noImage ? defaultImage : userImage " />
+									[src]="(noImage||noImage==null) ? defaultImage : userImage " />
 								<h4  class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
 									{{candidate.candidateDetails.lastName}}</h4>
 						</div>
@@ -139,7 +139,7 @@
 						<div class="col-md-4 text-center">
 								<img class="rounded-circle media-object"
 									[src]="noImage ? defaultImage : userImage " />
-								<h4 *ngIf="candidate.shortListed; else dontShowName" class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
+								<h4 *ngIf="candidate.isShortListed; else dontShowName" class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
 									{{candidate.candidateDetails.lastName}}</h4>
 								<ng-template #dontShowName>
 									<h6 class="public-profile-header-user text-center font-weight-light">xxxxxxxxxxx</h6>			
@@ -163,7 +163,7 @@
 									</div>
 								</div>
 								<div
-									*ngIf="candidate.shortListed; else showDefaultEmail">
+									*ngIf="candidate.isShortListed else showDefaultEmail">
 									<div class="row mt-1 no-gutters ">
 										<div class="col-md-2" style="color: white">
 											<span class="icon icon-paper-plane"></span>
@@ -184,7 +184,7 @@
 								</div>
 								</ng-template>
 								<div
-									*ngIf="candidate.shortListed; else showDefaultPhone">
+									*ngIf="candidate.isShortListed; else showDefaultPhone">
 									<div class="row no-gutters">
 										<div class="col-md-2" style="color: white">
 											<span class="icon icon-old-phone"></span>
@@ -542,7 +542,7 @@
 			</div>
 			</ng-template>
 			<div *jhiHasAnyAuthority="['ROLE_CORPORATE']" >
-				<div *ngIf="!(candidate.shortListed)" class="row justify-content-center">
+				<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate" class="row justify-content-center">
 					<form name="linkForm" role="form" novalidate (ngSubmit)="save()"
 						#linkForm="ngForm" >
 						<button type="submit" 

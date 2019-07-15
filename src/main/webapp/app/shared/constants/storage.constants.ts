@@ -16,3 +16,4 @@ export const ENABLED_COUNTRIES = 'enabledCountries';
 export const CANDIDATE_PROJECT_ID = 'candidateProjectId';
 export const IS_EMPLOYMENT_PROJECT = 'isEmploymentProject';
 export const BUSINESS_PLAN_ENABLED = 'bizPlanEnabled';
+export const FROM_LINKED_CANDIDATE = 'fromLinkedCandidate';

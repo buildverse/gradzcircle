@@ -1,13 +1,13 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
 import {ITEMS_PER_PAGE, DataStorageService} from '../../shared';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {USER_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
-import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {JOB_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
+import {HttpResponse} from '@angular/common/http';
 
 
 @Component({
@@ -118,7 +118,10 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-
+ setJobViewParamForCandidate(jobId) {
+    this.localDataStorageService.setdata(JOB_ID, jobId);
+    this.localDataStorageService.setdata(CANDIDATE_ID, this.candidateId);
+  }
 
   sort() {
     const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];

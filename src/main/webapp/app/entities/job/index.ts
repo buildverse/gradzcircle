@@ -21,3 +21,4 @@ export * from './job-list-popup.service';
 export * from './add-more-candidate-to-job-popup.component';
 export * from './add-more-canddiate-to-job-popup.service';
 export * from './min.directive';
+export * from './job-view-candidate.component';

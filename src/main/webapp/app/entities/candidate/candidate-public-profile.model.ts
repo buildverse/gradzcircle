@@ -11,7 +11,8 @@ import {CandidateLanguageProficiency} from '../candidate-language-proficiency/ca
 export class CandidatePublicProfile implements BaseEntity {
   constructor(
     public id?: BaseEntity,
-    public shortListed?: boolean,
+    public isShortListed?: boolean,
+   // public shortListedForCurrentJob?: boolean,
     public reviewed?: boolean, 
     public candidateDetails?: CandidateDetail,
     public addresses?: Address[],
@@ -21,5 +22,5 @@ export class CandidatePublicProfile implements BaseEntity {
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
     public matchScore?: number
-  ) { this.shortListed = false; this.reviewed = false}
+  ) { this.isShortListed = false; this.reviewed = false;  }
 }

@@ -57,11 +57,49 @@ export class JobPopupService {
       }
     });
   }
+  
+  openForCandidateView(component: Component, jobId?: number | any, candidateId?: number | any): Promise<NgbModalRef> {
+    return new Promise<NgbModalRef>((resolve, reject) => {
+      const isOpen = this.ngbModalRef !== null;
+      if (isOpen) {
+        resolve(this.ngbModalRef);
+      }
+
+      if (jobId) {
+        this.jobService.getJobForCandidateView(jobId,candidateId)
+          .subscribe((jobResponse: HttpResponse<Job>) => {
+            const job: Job = jobResponse.body;
+            if (job.createDate) {
+              job.createDate = {
+                year: job.createDate.getFullYear(),
+                month: job.createDate.getMonth() + 1,
+                day: job.createDate.getDate()
+              };
+            }
+            if (job.updateDate) {
+              job.updateDate = {
+                year: job.updateDate.getFullYear(),
+                month: job.updateDate.getMonth() + 1,
+                day: job.updateDate.getDate()
+              };
+            }
+            this.ngbModalRef = this.jobModalRef(component, job);
+            resolve(this.ngbModalRef);
+          });
+      } else {
+        // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.ngbModalRef = this.jobModalRef(component, new Job());
+          resolve(this.ngbModalRef);
+        }, 0);
+      }
+    });
+  }
 
   jobModalRef(component: Component, job: Job, hasCandidateApplied?: boolean): NgbModalRef {
     const modalRef = this.modalService.open(component, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.job = job;
-    modalRef.componentInstance.hasCandidateApplied = hasCandidateApplied;
+    console.log('Job is '+JSON.stringify(job));
     modalRef.result.then((result) => {
       this.router.navigate([{outlets: {popup: null}}], {replaceUrl: true, queryParamsHandling: 'merge'});
       this.ngbModalRef = null;

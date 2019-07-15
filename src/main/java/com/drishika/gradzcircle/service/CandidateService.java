@@ -278,7 +278,8 @@ public class CandidateService {
 
 	public CandidatePublicProfileDTO getCandidatePublicProfile(Long candidateId, Long jobId, Long corporateId) {
 		logger.debug("REST request to get Candidate public profile for candidate {} {} {}", candidateId, jobId, corporateId);
-		Boolean shortListed = false;
+		Boolean isShortListed = false;
+	
 		Candidate candidate = candidateRepository.findOne(candidateId);
 		if (candidate == null)
 			return new CandidatePublicProfileDTO();
@@ -308,24 +309,16 @@ public class CandidateService {
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 		CandidateJob candidateJob = null;
 		if(jobId >0 && corporateId >0) {
-			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
-			shortListed = isShortListedForAnotherJob(candidate, corporateId);
+			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);		
 		}
+		isShortListed = isShortListed(candidate,corporateId);
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
-				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, shortListed, candidateJob);
+				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, isShortListed, candidateJob);
 	}
 
-	/*private Boolean isShortListed(Candidate candidate, Long jobId, Long corporateId) {
-		Corporate corporate = corporateRepository.findOne(corporateId);
-		CorporateCandidate cC = new CorporateCandidate(corporate, candidate, jobId);
-		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates());
-		if (corporate.getShortlistedCandidates().stream().filter(link -> link.equals(cC)).findAny().isPresent())
-			return true;
-		else
-			return false;
-	}*/
-
-	private Boolean isShortListedForAnotherJob(Candidate candidate, Long corporateId) {
+	
+	
+	private Boolean isShortListed(Candidate candidate, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
 		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates().size());
 		List<CorporateCandidate> linkedCandidates = corporate.getShortlistedCandidates().stream().filter(candidateCorporateLink -> candidateCorporateLink.getCandidate().equals(candidate)).collect(Collectors.toList());
@@ -360,7 +353,9 @@ public class CandidateService {
 			Set<CandidateNonAcademicWork> candidateNonAcademicWorks,
 			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
-		dto.setShortListed(isShortListed);
+		//dto.setShortListed(isShortListed);
+		//dto.setShortListedForAnotherJob(isShortListedForAnotherJob);
+		dto.setIsShortListed(isShortListed);
 		if(candidateJob != null ) {
 			dto.setMatchScore(candidateJob.getMatchScore());
 			dto.setReviewed(candidateJob.getReviewed());

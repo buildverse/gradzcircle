@@ -540,12 +540,12 @@ public class JobResource {
 	 *
 	 * @return the ResponseEntity with status 200 (OK) and the list of jobs in body
 	 */
-	@GetMapping("/appliedCandiatesForJob/{jobId}")
+	@GetMapping("/appliedCandiatesForJob/{jobId}/{fromScore}/{toScore}")
 	@Timed
 	public ResponseEntity<List<CandidateProfileListDTO>> getAppliedCandidatesForJob(@ApiParam Pageable pageable,
-			@PathVariable Long jobId) {
+			@PathVariable Long jobId, @PathVariable Double fromScore, @PathVariable Double toScore) {
 		log.info("Getting applied candidates for job {}",jobId);
-		final Page<CandidateProfileListDTO> page = jobService.getAppliedCandidatesForJob(pageable, jobId);
+		final Page<CandidateProfileListDTO> page = jobService.getAppliedCandidatesForJob(pageable, jobId,fromScore, toScore);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appliedCandiatesForJob");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
@@ -661,6 +661,21 @@ public class JobResource {
 		}
 
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(job));
+	}
+	
+	/**
+	 * GET /viewJobForCandidate/:id : get the "id" job.
+	 *
+	 * @param id
+	 *            the id of the job to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the job, or
+	 *         with status 404 (Not Found)
+	 */
+	@GetMapping("/viewJobForCandidate/{jobId}/{candidateId}")
+	@Timed
+	public ResponseEntity<CandidateJobDTO> getJobForCandidate(@PathVariable Long jobId,@PathVariable Long candidateId) {
+		log.info("REST request to get Job {} for Candidate View : {}", jobId,candidateId);
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobService.getJobForCandidateView(jobId,candidateId)));
 	}
 	
 	/**

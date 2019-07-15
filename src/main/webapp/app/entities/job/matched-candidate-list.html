@@ -118,7 +118,7 @@
 						<div class="card-body text-xs-center">
 							<img class="card-profile-img"
 								[src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
-							<h5 class="card-title">{{candidate.firstName}}
+							<h5 *ngIf="candidate.shortListed" class="card-title">{{candidate.firstName}}
 								{{candidate.lastName}}</h5>
 							<p class="mb-2 font-weight-light">{{candidate.qualificationWithHighestCourse}}</p>
 							<p *ngIf="candidate.shortListed" class="mb-2 font-weight-light">ShortListed for other <a 

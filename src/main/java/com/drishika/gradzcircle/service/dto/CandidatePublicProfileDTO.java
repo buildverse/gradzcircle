@@ -17,9 +17,11 @@ public class CandidatePublicProfileDTO implements Serializable {
 
 	private CandidateDetailDTO candidateDetails;
 
-	private Boolean shortListed;
+	private Boolean isShortListed;
 	
 	private Double matchScore;
+	
+	//private Boolean shortListedForCurrentJob;
 	
 	private Boolean reviewed;
 
@@ -34,20 +36,23 @@ public class CandidatePublicProfileDTO implements Serializable {
 	Set<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new HashSet<>();
 
 	Set<AddressDTO> addresses = new HashSet<>();
+	
+	
+
+	
 
 	/**
-	 * @return the shortListed
+	 * @return the isShortListed
 	 */
-	public Boolean getShortListed() {
-		return shortListed;
+	public Boolean getIsShortListed() {
+		return isShortListed;
 	}
 
 	/**
-	 * @param shortListed
-	 *            the shortListed to set
+	 * @param isShortListed the isShortListed to set
 	 */
-	public void setShortListed(Boolean shortListed) {
-		this.shortListed = shortListed;
+	public void setIsShortListed(Boolean isShortListed) {
+		this.isShortListed = isShortListed;
 	}
 
 	/**

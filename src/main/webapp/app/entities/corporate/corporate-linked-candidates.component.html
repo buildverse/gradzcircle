@@ -1,4 +1,5 @@
 
+
 <div class="mt-6" *ngIf="candidateList">
 	<div class="mt-1 justify-content-center">
 		<h1 class="text-center" style="color:#455A64;">Candidate Bank</h1>
@@ -13,7 +14,7 @@
 			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
 			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
 			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
-			         <button class="btn btn-outline-primary btn-sm" (click)="setViewPublicProfileRouteParams(candidate.id,candidate.jobId,corporateId)" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
+			         <button class="btn btn-outline-primary btn-sm" (click)="setViewPublicProfileRouteParams(candidate.id,corporateId,true)" [routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
 			           <span class="icon icon-add-user"></span> View
 			         </button>
 			       </div>

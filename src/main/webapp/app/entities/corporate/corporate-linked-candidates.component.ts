@@ -1,13 +1,13 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiParseLinks, JhiAlertService,JhiEventManager} from 'ng-jhipster';
+import {JhiParseLinks, JhiAlertService, JhiEventManager} from 'ng-jhipster';
 import {ITEMS_PER_PAGE, UserService, DataStorageService} from '../../shared';
-import {USER_ID, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
+import {FROM_LINKED_CANDIDATE, CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
 import {CandidateList} from '../job/candidate-list.model';
 import {CorporateService} from './corporate.service';
-import {HttpResponse } from '@angular/common/http';
-import { NgxSpinnerService } from 'ngx-spinner';
+import {HttpResponse} from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-linked-candidate-list',
@@ -29,6 +29,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   corporateId: number;
   eventSubscriber: Subscription;
   subscription: Subscription;
+  defaultImage = require('../../../content/images/no-image.png');
 
   constructor(
     private corporateService: CorporateService,
@@ -77,39 +78,38 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
         page: this.page,
         size: this.itemsPerPage
         // search: this.currentSearch,
-      //  sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+        //  sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     });
 
     this.loadLinkedCandidates();
   }
 
-   setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
-    this.dataStorageService.setdata(CANDIDATE_ID,candidateId);
-    this.dataStorageService.setdata(JOB_ID,jobId);
-    this.dataStorageService.setdata(CORPORATE_ID,corporateId);
+  setViewPublicProfileRouteParams(candidateId, corporateId, fromLinkedCandidate) {
+    this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
+    this.dataStorageService.setdata(JOB_ID, -1);
+    this.dataStorageService.setdata(CORPORATE_ID, corporateId);
+    this.dataStorageService.setdata(FROM_LINKED_CANDIDATE, fromLinkedCandidate);
   }
-  
+
   loadLinkedCandidates() {
     this.spinnerService.show();
-    console.log('Page resusted is '+(this.page -1));
-    console.log('Page size is '+(this.itemsPerPage));
     this.corporateService.queryLinkedCandidates({
       page: this.page - 1,
       //query: this.currentSearch,
       size: this.itemsPerPage,
-    //  sort: this.sort(),
+      //  sort: this.sort(),
       id: this.corporateId
     }).subscribe(
-       (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
-       (res: HttpResponse<any>) => this.onError(res.body)
+      (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
+      (res: HttpResponse<any>) => this.onError(res.body)
       );
   }
 
   ngOnInit() {
     this.subscription = this.activatedRoute.params.subscribe((params) => {
-      if(params['id']) {
-      this.corporateId = params['id'];
+      if (params['id']) {
+        this.corporateId = params['id'];
       } else {
         this.corporateId = this.dataStorageService.getData(CORPORATE_ID);
       }
@@ -120,7 +120,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.eventSubscriber) {
+    if (this.eventSubscriber) {
       this.eventManager.destroy(this.eventSubscriber);
     }
   }
@@ -139,7 +139,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
-      this.spinnerService.hide();
+    this.spinnerService.hide();
     this.jhiAlertService.error(error.message, null, null);
   }
 
@@ -148,11 +148,11 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     this.totalItems = headers.get('X-Total-Count');
     this.queryCount = this.totalItems;
     this.candidateList = data;
-    console.log('The candidate List is '+JSON.stringify(this.candidateList));
+  //  console.log('The candidate List is ' + JSON.stringify(this.candidateList));
     this.setImageUrl();
-    
+
   }
-  
+
   private setImageUrl() {
     if (this.candidateList.length === 0) {
       this.spinnerService.hide();

@@ -8,7 +8,7 @@ import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
-import {CANDIDATE_ID, JOB_ID, CORPORATE_ID} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, JOB_ID, CORPORATE_ID, FROM_LINKED_CANDIDATE} from '../../shared/constants/storage.constants';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 
@@ -28,6 +28,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   errorMessage: String;
   isSaving: boolean;
   rating: number;
+  fromLinkedCandidate: boolean;
   eventSubscriber: Subscription;
   imageSubscriber: Subscription;
   
@@ -37,7 +38,8 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     private eventManager: JhiEventManager,
     private userService: UserService,
     public ratingConfig: NgbRatingConfig,
-    public alertService: JhiAlertService
+    public alertService: JhiAlertService,
+    private dataService: DataStorageService
   ) {
     this.ratingConfig.max = 5;
     this.ratingConfig.readonly = true;
@@ -45,10 +47,10 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
 
   ngOnInit() {
     this.reloadUserImage();
-    if (this.candidate.reviewed) {
+    if (this.candidate.reviewed && !this.candidate.isShortListed) {
       this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
     }
-    if (!this.candidate.shortListed) {
+    if (! this.candidate.isShortListed) {
       this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
     }
   }
@@ -131,6 +133,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   }
 
   clear() {
+    this.dataService.removeData(FROM_LINKED_CANDIDATE);
     this.activeModal.dismiss('cancel');
   }
 }
@@ -157,7 +160,7 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
       } else {
         this.candidatePublicProfilePopupService
           .open(CandidatePublicProfilePopupDialogComponent as Component, this.dataService.getData(CANDIDATE_ID),
-          parseFloat(this.dataService.getData(JOB_ID)), parseFloat(this.dataService.getData(CORPORATE_ID)));
+          parseFloat(this.dataService.getData(JOB_ID)), parseFloat(this.dataService.getData(CORPORATE_ID)),this.dataService.getData(FROM_LINKED_CANDIDATE));
       }
     });
   }

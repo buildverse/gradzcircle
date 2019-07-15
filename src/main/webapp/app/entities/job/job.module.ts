@@ -33,8 +33,9 @@ import {
   AddMoreCandidatesToJobPopUpComponent,
   AddMoreCandidatesToPopupService,
   AddMoreCandidatesToJobComponent,
-  MinDirective
-
+  MinDirective,
+  JobViewForCandidateComponent,
+  JobViewPopupForCandidateComponent
 } from './';
 import {JobListForLinkedCandidateComponent, JobListForLinkedCandidatePopUpComponent} from './job-list-for-linked-candidate.component';
 
@@ -74,7 +75,9 @@ const ENTITY_STATES = [
     JobListForLinkedCandidatePopUpComponent,
     AddMoreCandidatesToJobPopUpComponent,
     AddMoreCandidatesToJobComponent,
-    MinDirective
+    MinDirective,
+    JobViewForCandidateComponent,
+    JobViewPopupForCandidateComponent
   ],
   entryComponents: [
     JobComponent,
@@ -98,8 +101,9 @@ const ENTITY_STATES = [
     JobListForLinkedCandidateComponent,
     JobListForLinkedCandidatePopUpComponent,
     AddMoreCandidatesToJobPopUpComponent,
-    AddMoreCandidatesToJobComponent
-
+    AddMoreCandidatesToJobComponent,
+    JobViewForCandidateComponent,
+    JobViewPopupForCandidateComponent
   ],
   providers: [
     JobService,
@@ -110,7 +114,6 @@ const ENTITY_STATES = [
     JobListEmitterService,
     JobListPopupService,
     AddMoreCandidatesToPopupService
-
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

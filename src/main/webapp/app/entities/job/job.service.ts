@@ -36,6 +36,7 @@ export class JobService {
   private resourceGetJobListForLinkedCandidate = SERVER_API_URL + 'api/jobListForCandidateShortlistedByCorporate';
   private resourceGetJobEconomics = SERVER_API_URL + 'api/jobForAddingCandidates';
   private resourceAdditionalCandidatesToJob = SERVER_API_URL + 'api/addCandidatesToJob';
+  private resourceViewJobForCandidate = SERVER_API_URL + 'api/viewJobForCandidate';
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
@@ -64,6 +65,11 @@ export class JobService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<Job>(`${this.resourceUrl}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
+  }
+  
+  getJobForCandidateView(jobId: number, candidateId: number) : Observable<EntityResponseType> {
+     return this.http.get<Job>(`${this.resourceViewJobForCandidate}/${jobId}/${candidateId}`, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
   
@@ -161,9 +167,9 @@ export class JobService {
   }
   
 
-  queryAppliedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
+  queryAppliedCandidatesForJob(req?: any,fromMatchScore?: number, toMatchScore?: number): Observable<HttpResponse<CandidateList[]>> {
     const options = createRequestOption(req);
-    return this.http.get<CandidateList[]>(`${this.resourceAppliedCandidatesForJobUrl}/${req.id}`, {params: options, observe: 'response'})
+    return this.http.get<CandidateList[]>(`${this.resourceAppliedCandidatesForJobUrl}/${req.id}/${fromMatchScore}/${toMatchScore}`, {params: options, observe: 'response'})
       .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
   }
 

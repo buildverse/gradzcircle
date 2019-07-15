@@ -22,7 +22,7 @@
 											<th jhiSortBy="matchScore" class="justfiy-content-center font-weight-light"><span
 												jhiTranslate="gradzcircleApp.job.matchScore">matchScore</span><span
 												class="icon icon-select-arrows"></span></th>
-											
+											<th class="justfiy-content-center font-weight-light">Actions</th>
 										</tr>
 								</thead>
 								<tbody class="font-weight-light">
@@ -38,7 +38,9 @@
 										<td>
 											<div>{{job.matchScore}}%</div>
 										</td>
-										
+										<td class="icons-edit">
+			                         		<a [routerLink]="['/', { outlets: { popup: 'job/viewJobForCandidate'} }]" (click)="setJobViewParamForCandidate(job.id)"   ngbTooltip="View"><span class="icon icon-eye"></span></a>
+			                         	</td>
 									</tr>
 								</tbody>
 							</table>

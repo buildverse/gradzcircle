@@ -61,10 +61,25 @@ public class DTOConverters {
 			Candidate candidate, Job job) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
 		setCoreCandidateFields(candidate,dto);
+		setMatchScore(candidate, job, dto);
 		dto.setCorporateId(job.getCorporate().getId());
 		dto.setJobId(job.getId());
+		CorporateCandidate corporateCandidate = candidate.getShortlistedByCorporates().stream().filter(cc->cc.getCorporate().equals(job.getCorporate())).findFirst().orElse(null);
+		if(corporateCandidate != null)
+			dto.setShortListed(true);
+		else
+			dto.setShortListed(false);
 		logger.debug("The CandidateProfileListDTO is {}", dto);
 		return dto;
+	}
+	
+	private void setMatchScore(Candidate candidate , Job job, CandidateProfileListDTO dto) {
+		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(cJ -> cJ.getJob().equals(job)).findAny().orElse(null);
+		if(candidateJob!=null) {
+			dto.setMatchScore(candidateJob.getMatchScore());
+		} else {
+			dto.setMatchScore(0d);
+		}
 	}
 	
 	private void setCoreCandidateFields(Candidate candidate,CandidateProfileListDTO dto) {
@@ -95,7 +110,8 @@ public class DTOConverters {
 			dto.setShortListed(true);
 		else 
 			dto.setShortListed(false);
-		if (candidateJob.getJob().getNoOfApplicantLeft() == 0)
+		logger.debug("Candidate Job is {} and job inside is {} and no of candidatesLeft are ",candidateJob,candidateJob.getJob(),candidateJob.getJob().getNoOfApplicantLeft());
+		if (candidateJob.getJob().getNoOfApplicantLeft() != null && candidateJob.getJob().getNoOfApplicantLeft() == 0)
 			dto.setCanBuy(false);
 		else
 			dto.setCanBuy(true);		
@@ -176,6 +192,21 @@ public class DTOConverters {
 			job.getAppliedCandidates().stream()
 					.filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId));
 		return jobListingData;
+	}
+	
+	public CandidateJobDTO convertJobViewForCandidate(Job job, Long candidateId) {
+		CandidateJobDTO jobData = new CandidateJobDTO();
+		setCandidateJobDTOCoreFields(job, jobData);
+		if(job.getAppliedCandidates().stream().filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId)).findAny().isPresent()) {
+			jobData.setHasCandidateApplied(true);
+		} else
+			jobData.setHasCandidateApplied(false);
+		CandidateJob candidateJob = job.getCandidateJobs().stream().filter(matchedCandidateJob -> matchedCandidateJob.getCandidateId().equals(candidateId)).findFirst().orElse(null);
+		if(candidateJob!=null)
+			jobData.setMatchScore(candidateJob.getMatchScore());
+		else
+			jobData.setMatchScore(0d);
+		return jobData;
 	}
 	
 	public CandidateJobDTO convertToJobListingForCandidateWithNoEducation(Job job, Long candidateId) {

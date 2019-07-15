@@ -934,8 +934,12 @@ public class JobService {
 		return page;
 	}
 
-	public Page<CandidateProfileListDTO> getAppliedCandidatesForJob(Pageable pageable, Long jobId) {
-		Page<CandidateAppliedJobs> candidatePage = jobRepository.findByAppliedCandidates(jobId, pageable);
+	public Page<CandidateProfileListDTO> getAppliedCandidatesForJob(Pageable pageable, Long jobId,Double fromScore, Double toScore) {
+		Page<CandidateAppliedJobs> candidatePage;
+		if(fromScore<0 && toScore <0) 
+			 candidatePage = jobRepository.findByAppliedCandidates(jobId, pageable);
+		else 
+			candidatePage = jobRepository.findByAppliedCandidates(jobId,fromScore,toScore, pageable);
 		final Page<CandidateProfileListDTO> page = candidatePage
 				.map(candidateAppliedJob -> converter.convertToCandidateProfileListingDTO(candidateAppliedJob,
 						candidateRepository.findOne(candidateAppliedJob.getId().getCandidateId()),jobRepository.findOne(jobId)));
@@ -945,7 +949,7 @@ public class JobService {
 	public Page<CandidateProfileListDTO> getMatchedCandidatesForJob(Pageable pageable, Long jobId, Double fromScore, Double toScore, Boolean reviewed) {
 		Page<CandidateJob> candidatePage = null;
 		if(fromScore == -1 && toScore == -1) {
-			candidatePage = jobRepository.findMatchedCandidatesForJob(jobId, reviewed,pageable);
+			candidatePage = jobRepository.findMatchedCandidatesForJob( jobId,reviewed,pageable);
 		} else {
 			candidatePage = jobRepository.findMatchedCandidatesForJobWithMatchScoreFilter(jobId, fromScore, toScore,reviewed, pageable);
 		}
@@ -1009,6 +1013,11 @@ public class JobService {
 		}
 		
 		return converter.convertToJobEconomicsDTO(job,filterCost);
+	}
+	
+	public CandidateJobDTO getJobForCandidateView(Long jobId,Long candidateId) {
+		Job job = jobRepository.findOne(jobId);
+		return converter.convertJobViewForCandidate(job, candidateId);		
 	}
 	
 	private Double extractJobFilterCost(JobFilter jobFilter,Job job) throws Exception{

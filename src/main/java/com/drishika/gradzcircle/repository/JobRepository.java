@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobType;
@@ -99,19 +100,15 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	
 	
 	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
-	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId, Pageable pageable);
-/*SELECT * FROM candidate_job a join job j on (j.id = a.jobs_id and j.corporate_id=1351)
-WHERE JOBS_ID IN 
-(SELECT JOB_ID 
- FROM corporate_candidate cc where
-  a.candidates_id != cc.candidate_id)*/
-	//@Query("select cJ from Job j inner join CandidateJob cJ on j.id=cJ.job.id join CorporateCandidate cc on  cc.id.jobId = cJ.job.id and cJ.candidate.id = cJ.job.id where j.jobStatus=1 and j.id=?1")
-	//@Query("Select from candidate_job cj join job j on (j.id = cj.jobs_id and j.corporate.id= ?1 where jobs_id in ()")
-	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) and cJ.reviewed=?2 order by cJ.matchScore desc")
-	Page<CandidateJob> findMatchedCandidatesForJob(Long jobId, Boolean reviewed,Pageable pageable);
+	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId,Pageable pageable);
 	
-//	@Query("select cJ from Job j inner join CandidateJob cJ on j.id=cJ.job.id left outer join CorporateCandidate cc on cc.id.jobId = cJ.job.id and cJ.candidate.id = cJ.job.id where j.jobStatus=1 and j.id=?1 and cJ.matchScore between ?2 and ?3")
-	@Query("select cJ from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and j.id=?1 and concat(cast(cJ.job.id as text),cast(cJ.candidate.id as text)) not in (select concat(cast(cc.id.jobId as text),cast(cc.candidate.id as text)) from CorporateCandidate cc) and cJ.matchScore between ?2 and ?3 and  cJ.reviewed=?4 order by cJ.matchScore desc")
+	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId and cJ.matchScore between ?2 and ?3")
+	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId,Double fromScore, Double toScore, Pageable pageable);
+	
+	@Query("SELECT cJ FROM CandidateJob cJ join Job j on (j.id = cJ.job.id and  j.id=?1 and j.jobStatus=1) WHERE cJ.candidate.id not IN (SELECT cc.candidate.id  FROM CorporateCandidate cc where cJ.candidate.id = cc.candidate.id and cJ.job.id = cc.id.jobId) and cJ.reviewed=?2 order by cJ.matchScore desc")
+	Page<CandidateJob> findMatchedCandidatesForJob(Long jobId,Boolean reviewed,Pageable pageable);
+	
+	@Query("SELECT cJ FROM CandidateJob cJ join Job j on (j.id = cJ.job.id and  j.id=?1 and j.jobStatus=1) WHERE cJ.candidate.id not IN (SELECT cc.candidate.id  FROM CorporateCandidate cc where cJ.candidate.id = cc.candidate.id and cJ.job.id = cc.id.jobId) and cJ.matchScore between ?2 and ?3 and  cJ.reviewed=?4 order by cJ.matchScore desc")
 	Page<CandidateJob> findMatchedCandidatesForJobWithMatchScoreFilter(Long jobId, Double fromScore, Double toScore, Boolean reviewed, Pageable pageable);
 
 	@Query("select j from Job j, CandidateAppliedJobs cJA where cJA.id.jobId = j.id and cJA.id.candidateId=?1")

@@ -1,14 +1,14 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import { JhiParseLinks,JhiAlertService} from 'ng-jhipster';
 import {DataStorageService} from '../../shared';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
+import {ITEMS_PER_PAGE} from '../../shared';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {USER_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
-import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import { CANDIDATE_ID, JOB_ID, MATCH_SCORE} from '../../shared/constants/storage.constants';
+import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'jhi-shortlisted-job-list',
@@ -37,7 +37,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private parseLinks: JhiParseLinks,
     private router: Router,
-    private localDataStorageService: DataStorageService,
+    private dataStorageService: DataStorageService,
     private spinnerService: NgxSpinnerService
 
   ) {
@@ -102,7 +102,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.candidateId = params['id'];
       } else {
-        this.candidateId = this.localDataStorageService.getData(CANDIDATE_ID);
+        this.candidateId = this.dataStorageService.getData(CANDIDATE_ID);
       }
 
       /*if (!this.candidateId) {
@@ -122,7 +122,10 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-
+  setJobViewParamForCandidate(jobId) {
+    this.dataStorageService.setdata(JOB_ID, jobId);
+    this.dataStorageService.setdata(CANDIDATE_ID, this.candidateId);
+  }
 
   sort() {
     const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];

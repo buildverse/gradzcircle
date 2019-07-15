@@ -5,7 +5,7 @@
 	<button type="button" class="close" data-dismiss="modal" style="color:white;"
 		aria-hidden="true" (click)="clear()">&times;</button>
 </div>
-<div class="mt-6 mb-5">
+<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="mt-6 mb-5">
 		<div *ngIf="!currentAccount" class="row mx-4 mt-4">
 			<div class="col-md-12 d-flex justify-content-center">
 				<div class="growl growl-static">
@@ -249,7 +249,12 @@
 		</div>
 	</div>
 </div>
-<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="mt-6">
+<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="mt-4 mb-5">
+		<div *ngIf="(job.hasCandidateApplied)" class="row mx-4">
+			<div class="col-md-12 text-center font-weight-light text-success">
+			You have applied for this job..
+			</div>
+		</div>
 		<div class="row mx-4 mt-4">
 			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.matchScore"></div>
@@ -278,18 +283,18 @@
 		<div class="row mx-4 mt-4">
 			<div class="col-md-12 font-weight-light" [innerHtml]="job.jobDescription"></div>
 		</div>
-		<div class="row mx-4 mt-4">
+		<div class="row mx-4 mt-4 mb-2">
 			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.salary"></div>
 			<div class="col-md-6 d-flex justify-content-center font-weight-light">{{job?.salary?job.salary:'Not
 				declared'}}</div>
 		</div>
-	
-		<div *ngIf="!(job.hasCandidateApplied)" class="mt-2 mb-2">
+		
+		<div *ngIf="!(job.hasCandidateApplied)" >
 				<hr>
 				<form name="applyForm" role="form" novalidate
-					(ngSubmit)="applyForJob()" #applyForm="ngForm">
-					<div class="row justify-content-end mr-5">
+					(ngSubmit)="applyForJob(job.id)" #applyForm="ngForm">
+					<div class="row justify-content-center mt-5	">
 						<button type="submit" [disabled]="applyForm.form.invalid || isSaving" 
 							class="btn btn-primary">
 							Apply<span class="icon icon-paper-plane"></span>
@@ -297,6 +302,7 @@
 					</div>
 				</form>
 		</div>
+		
 	
 </div>
 
