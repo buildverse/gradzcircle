@@ -166,10 +166,11 @@ public class DTOConverters {
 			jobEconomicsDTO.setJobCost(job.getJobCost());
 			jobEconomicsDTO.setFilterCost(filterCost);
 		}
-		if(job.getPaymentType().name().equals("AS_YOU_GO"))
-			jobEconomicsDTO.setPayAsYouGo(true);
-		else
-			jobEconomicsDTO.setPayAsYouGo(false);
+		if(job.getPaymentType()!=null)
+			if(job.getPaymentType().name().equals("AS_YOU_GO"))
+				jobEconomicsDTO.setPayAsYouGo(true);
+			else
+				jobEconomicsDTO.setPayAsYouGo(false);
 		jobEconomicsDTO.setCorporateEscrowAmount(job.getCorporate().getEscrowAmount());
 		return jobEconomicsDTO;
 	}

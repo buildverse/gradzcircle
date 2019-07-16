@@ -113,7 +113,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
                     this.appConfigs.forEach((appConfig) => {
                       if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1) {
                         this.localStorageService.setdata(BUSINESS_PLAN_ENABLED,appConfig.configValue);
-                                   console.log('biz plab enable is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
+                                 //  console.log('biz plab enable is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
                       }
                     });
                   }

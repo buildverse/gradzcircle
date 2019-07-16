@@ -99,7 +99,7 @@ export class JobPopupService {
   jobModalRef(component: Component, job: Job, hasCandidateApplied?: boolean): NgbModalRef {
     const modalRef = this.modalService.open(component, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.job = job;
-    console.log('Job is '+JSON.stringify(job));
+  //  console.log('Job is '+JSON.stringify(job));
     modalRef.result.then((result) => {
       this.router.navigate([{outlets: {popup: null}}], {replaceUrl: true, queryParamsHandling: 'merge'});
       this.ngbModalRef = null;

@@ -160,7 +160,7 @@
 									</a> 
 									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true" ngbTooltip="Edit"> <span class="icon icon-edit"></span> 
 									</a>
-									<a *ngIf="!job.payAsYouGo && job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)" replaceUrl="true" ngbTooltip="More Candidates"><i class="fa fa-credit-card"></i>
+									<a *ngIf="job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)" replaceUrl="true" ngbTooltip="More Candidates"><span class="icon icon-add-user"></span>
 									</a>
 			                         <a  [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)" replaceUrl="true"> <span class="icon icon-trash" ngbTooltip="Remove"></span> 
 									</a>

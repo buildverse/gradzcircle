@@ -168,7 +168,7 @@ export class JobDialogComponent implements OnInit {
         .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.employmentTypeService.query()
       .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmentTypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-    this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED);
+    this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
     this.genderService.query()
       .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

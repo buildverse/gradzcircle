@@ -18,121 +18,117 @@
 	{{job.upfrontDiscountRate}}; Payment Type : {{job.paymentType}} No Of
 	candidates Bought : {{job.noOfApplicantsBought}}; Corp escrow balance :
 	{{job.corporate.escrowAmount}} filtercost is {{filterCost}}
-
+    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}
 	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-		<div
-			*ngIf="businessPlanEnabled && job?.jobCost>0  && !preview && !job.everActive"
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div
-					class="alert alert-dark alert-dismissable d-flex justify-content-center"
-					role="alert">
-					Your candidate order is worth &#8377; <strong>
-						{{job.jobCost}}</strong>.
-
-				</div>
-			</div>
-		</div>
-		<div
-			*ngIf="businessPlanEnabled && job.hasBeenEdited && job.paymentType == 'UPFRONT' "
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div class="alert alert-danger alert-dismissable fade show"
-					style="background-color: #D32F2F; color: white" role="alert">
-					<button type="button" class="close" data-dismiss="alert"
-						aria-label="Close">
-						<span aria-hidden="true" style="color: white">&times;</span>
-					</button>
-					You will be charged additional {{filterMap.get(AMEND)}} % on cost
-					difference. You will not be able to edit this job after this.
-				</div>
-			</div>
-		</div>
-		<div
-			*ngIf="businessPlanEnabled && job.hasBeenEdited && job.paymentType == 'AS_YOU_GO' "
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div class="alert alert-danger alert-dismissable fade show"
-					style="background-color: #D32F2F; color: white" role="alert">
-					<button type="button" class="close" data-dismiss="alert"
-						aria-label="Close">
-						<span aria-hidden="true" style="color: white">&times;</span>
-					</button>
-					You will not be able to edit this job after this.
-				</div>
-			</div>
-		</div>
-		<div
-			*ngIf="businessPlanEnabled && jobCostDifference>0 && !preview && !isNew"
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div
-					class="alert alert-dark alert-dismissable d-flex justify-content-center"
-					role="alert">
-
-					<div class="row">
-						<div class="col-md-12">
-							Your job cost is increasing by &#8377; <strong>{{jobCostDifference}}</strong>
+		<div *ngIf="businessPlanEnabled">
+				<div *ngIf="job?.jobCost>0  && !preview && !job.everActive"
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div
+							class="alert alert-dark alert-dismissable d-flex justify-content-center"
+							role="alert">
+							Your candidate order is worth &#8377; <strong>
+								{{job.jobCost}}</strong>.
+		
 						</div>
-						<div class="col-md-12">Additional amount will be charged to
-							your account.</div>
 					</div>
-
-
 				</div>
-			</div>
-		</div>
-		<div *ngIf="businessPlanEnabled && jobCostDifference<0 && !preview"
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div
-					class="alert alert-dark alert-dismissable d-flex justify-content-center"
-					role="alert">
-					<div class="row">
-						<div class="col-md-12">Your job cost is reducing by
-							{{absoluteValue(jobCostDifference)}}, this amount will be added
-							to your escrow account that you can use later.</div>
-
-					</div>
-
-
-				</div>
-			</div>
-		</div>
-		jobDiff chnaged{{jobDifferenceChanged}}
-		<div
-			*ngIf="businessPlanEnabled && !preview && job.everActive && job.paymentType == 'AS_YOU_GO'"
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div
-					class="alert alert-dark alert-dismissable d-flex justify-content-center"
-					role="alert">
-					<div class="row">
-						<div class="col-md-12">
-							Job cost is &#8377; <strong>{{prevOriginalJobCost}}</strong>, and
-							payment outstanding &#8377; <strong>{{amountOutstanding}}</strong>.
+				<div *ngIf="job.hasBeenEdited && job.paymentType == 'UPFRONT' "
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div class="alert alert-danger alert-dismissable fade show"
+							style="background-color: #D32F2F; color: white" role="alert">
+							<button type="button" class="close" data-dismiss="alert"
+								aria-label="Close">
+								<span aria-hidden="true" style="color: white">&times;</span>
+							</button>
+							You will be charged additional {{filterMap.get(AMEND)}} % on cost
+							difference. You will not be able to edit this job after this.
 						</div>
-
 					</div>
-
 				</div>
-			</div>
-		</div>
-		<div
-			*ngIf="businessPlanEnabled && !preview && job.everActive && job.paymentType == 'UPFRONT' && !job.hasBeenEdited"
-			class="d-flex justify-content-end">
-			<div class="growl growl-static">
-				<div
-					class="alert alert-dark alert-dismissable d-flex justify-content-center"
-					role="alert">
-					<div class="row">
-						<div class="col-md-12">
-							You have paid &#8377; <strong>{{prevTotalAmount}}</strong> for
-							this job post
+				<div *ngIf="job.hasBeenEdited && job.paymentType == 'AS_YOU_GO' "
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div class="alert alert-danger alert-dismissable fade show"
+							style="background-color: #D32F2F; color: white" role="alert">
+							<button type="button" class="close" data-dismiss="alert"
+								aria-label="Close">
+								<span aria-hidden="true" style="color: white">&times;</span>
+							</button>
+							You will not be able to edit this job after this.
 						</div>
-
 					</div>
-
+				</div>
+				<div *ngIf=" jobCostDifference>0 && !preview && !isNew"
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div
+							class="alert alert-dark alert-dismissable d-flex justify-content-center"
+							role="alert">
+		
+							<div class="row">
+								<div class="col-md-12">
+									Your job cost is increasing by &#8377; <strong>{{jobCostDifference}}</strong>
+								</div>
+								<div class="col-md-12">Additional amount will be charged to
+									your account.</div>
+							</div>
+		
+		
+						</div>
+					</div>
+				</div>
+				<div *ngIf="jobCostDifference<0 && !preview"
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div
+							class="alert alert-dark alert-dismissable d-flex justify-content-center"
+							role="alert">
+							<div class="row">
+								<div class="col-md-12">Your job cost is reducing by
+									{{absoluteValue(jobCostDifference)}}, this amount will be added
+									to your escrow account that you can use later.</div>
+		
+							</div>
+		
+		
+						</div>
+					</div>
+				</div>
+				jobDiff chnaged{{jobDifferenceChanged}}
+				<div *ngIf="!preview && job.everActive && job.paymentType == 'AS_YOU_GO'"
+					class="d-flex justify-content-end">
+					<div class="growl growl-static">
+						<div
+							class="alert alert-dark alert-dismissable d-flex justify-content-center"
+							role="alert">
+							<div class="row">
+								<div class="col-md-12">
+									Job cost is &#8377; <strong>{{prevOriginalJobCost}}</strong>, and
+									payment outstanding &#8377; <strong>{{amountOutstanding}}</strong>.
+								</div>
+		
+							</div>
+		
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!preview && job.everActive && job.paymentType == 'UPFRONT' && !job.hasBeenEdited"
+				class="d-flex justify-content-end">
+				<div class="growl growl-static">
+					<div
+						class="alert alert-dark alert-dismissable d-flex justify-content-center"
+						role="alert">
+						<div class="row">
+							<div class="col-md-12">
+								You have paid &#8377; <strong>{{prevTotalAmount}}</strong> for
+								this job post
+							</div>
+	
+						</div>
+	
+					</div>
 				</div>
 			</div>
 		</div>

@@ -107,7 +107,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
         this.stateStorageService.storeUrl(null);
         this.router.navigate([redirect]);
       }
-      this.spinnerService.hide();
+     // this.spinnerService.hide();
       this.activeModal.dismiss('to login success');
     }).catch(() => {
       this.authenticationError = true;
