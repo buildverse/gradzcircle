@@ -172,6 +172,7 @@ public class JobService {
 		}
 		// jobSearchRepository.save(jobRepository.save(job));
 		Integer prevJobStatus = prevJob.getJobStatus();
+		log.info("Candidate Jobs before saving this job is {}",job.getCandidateJobs());
 		job = jobRepository.save(job);
 		//FIXME make cache refresh aysnc post update
 		if(!job.getJobStatus().equals(prevJobStatus))
@@ -200,9 +201,14 @@ public class JobService {
 		job.setUpdateDate(dateTime);
 		setJobHistory(job, prevJob);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
+		//log.info("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
+		//log.info("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
 		candidateJobs.addAll(prevJob.getCandidateJobs());
 		job.setCandidateJobs(candidateJobs);
-		job.setNoOfApplicantLeft(job.getNoOfApplicants().longValue());
+		//log.info("No of matched candidates after setting is {}",job.getCandidateJobs().size());
+		//log.info("content of matched candidates after setting is {}",job.getCandidateJobs());
+		log.debug("no of applicants left incoming are {} and from prev job are {}",job.getNoOfApplicantLeft(),prevJob.getNoOfApplicantLeft(),prevJob.getNoOfApplicants());
+		//job.setNoOfApplicantLeft(prevJob.getNoOfApplicants().longValue());
 
 	}
 

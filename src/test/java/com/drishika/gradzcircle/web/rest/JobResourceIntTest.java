@@ -3,7 +3,6 @@ package com.drishika.gradzcircle.web.rest;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -60,6 +59,7 @@ import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.domain.enumeration.PaymentType;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
@@ -72,6 +72,7 @@ import com.drishika.gradzcircle.repository.JobHistoryRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.JobTypeRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.JobService;
 import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
@@ -222,6 +223,9 @@ public class JobResourceIntTest {
 	
 	@Autowired
 	private QualificationRepository qualificationRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private JobService jobService;;
@@ -527,7 +531,7 @@ public class JobResourceIntTest {
 		Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(DEFAULT_JOB_DESCRIPTION)
 				.hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).canEdit(DEFAULT_CAN_EDIT)
 				.updateDate(DEFAULT_UPDATE_DATE).createdBy(DEFAULT_CREATED_BY).updatedBy(DEFAULT_UPDATED_BY)
-				.jobStatus(ACTIVE_JOB_STATUS);
+				.jobStatus(ACTIVE_JOB_STATUS).noOfApplicantsLeft(10l).noOfApplicants(20).noOfApplicantsBought(15);
 		return job;
 	}
 
@@ -2688,7 +2692,26 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void updateActiveTransisitonToActiveWithEqualJobAndUnEqualFilter() throws Exception {
-
+		Corporate corp = new Corporate();
+		User user = new User();user.setEmail("abhinav@abhinav.com");user.setPassword("$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG");user.setLogin("abhinav");
+		user.setLangKey("en");
+		userRepository.saveAndFlush(user);
+		corp.login(user);
+		
+		corporateRepository.saveAndFlush(corp);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		Candidate c2 = new Candidate().firstName("Aveer");
+		Candidate c3 = new Candidate().firstName("AAAA");
+		Candidate c4 = new Candidate().firstName("BBBB");
+		Candidate c5 = new Candidate().firstName("CCCC");
+		Candidate c6 = new Candidate().firstName("DDDD");
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		candidateRepository.saveAndFlush(c4);
+		candidateRepository.saveAndFlush(c5);
+		candidateRepository.saveAndFlush(c6);
+		corporateRepository.saveAndFlush(corporate);
 		Job job = createJobActiveNotEditedCanEdit(em);
 		Set<JobHistory> jobHistories = createActiveJobHistories(em);
 		jobHistories.forEach(jobHistory -> jobHistory.job(job));
@@ -2698,6 +2721,14 @@ public class JobResourceIntTest {
 		job.setHistories(jobHistories);
 		job.employmentType(employmentType).jobType(jobType);
 		jobRepository.saveAndFlush(job);
+		job.corporate(corp);
+		CandidateJob cJ1 = new CandidateJob(c1,job);
+		CandidateJob cJ2 = new CandidateJob(c2,job);
+		CandidateJob cJ3 = new CandidateJob(c3,job);
+		CandidateJob cJ4 = new CandidateJob(c4,job);
+		CandidateJob cJ5 = new CandidateJob(c5,job);
+		CandidateJob cJ6 = new CandidateJob(c6,job);
+		job.addCandidateJob(cJ1).addCandidateJob(cJ2).addCandidateJob(cJ3).addCandidateJob(cJ4).addCandidateJob(cJ5).addCandidateJob(cJ6);
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
@@ -2746,6 +2777,10 @@ public class JobResourceIntTest {
 		assertThat(testJob.isEverActive()).isEqualTo(UPDATED_EVER_ACTIVE);
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		assertThat(testJob.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(10l);
+		assertThat(testJob.getNoOfApplicants()).isEqualTo(20);
+		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(15);
+		assertThat(testJob.getCandidateJobs()).hasSize(6);
 
 		JobFilter testJobFilter = jobFilterList.get(jobFilterList.size() - 1);
 		assertThat(testJobFilter.getFilterDescription()).isEqualTo(UPDATED_FILTER);

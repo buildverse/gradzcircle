@@ -309,9 +309,10 @@ public class CandidateService {
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 		CandidateJob candidateJob = null;
 		if(jobId >0 && corporateId >0) {
-			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);		
+			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
+			isShortListed = isShortListed(candidate,corporateId);
 		}
-		isShortListed = isShortListed(candidate,corporateId);
+		
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
 				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, isShortListed, candidateJob);
 	}
