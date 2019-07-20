@@ -5,15 +5,16 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -128,35 +129,18 @@ public class CandidateEducationService {
 		return candidateEducation;
 	}
 
-	/*
-	 * private List<CandidateEducation> setHighestEducation(CandidateEducation
-	 * candidateEducation) { List<CandidateEducation> candidateEducations =
-	 * candidateEducationRepository.findByCandidateId(candidateEducation.
-	 * getCandidate().getId()); if(candidateEducations.size()>0)
-	 * candidateEducations.forEach(education->{
-	 * if(candidateEducation.getEducationToDate()!=null) {
-	 * if((education.getEducationToDate().isAfter(candidateEducation.
-	 * getEducationToDate())) && !(candidateEducation.isHighestQualification())) {
-	 * education.setHighestQualification(true);
-	 * candidateEducation.setHighestQualification(false); } else {
-	 * candidateEducation.setHighestQualification(true);
-	 * education.setHighestQualification(false); } } else
-	 * if(candidateEducation.getIsPursuingEducation()) {
-	 * candidateEducation.setHighestQualification(true);
-	 * education.setHighestQualification(false); }
-	 * 
-	 * 
-	 * }); else candidateEducation.setHighestQualification(true); return
-	 * candidateEducations; }
-	 */
+	
 	private Set<CandidateEducation> setHighestEducation(CandidateEducation candidateEducation, Boolean isDelete) {
 		List<CandidateEducation> candidateEducations = candidateEducationRepository
 				.findByCandidateId(candidateEducation.getCandidate().getId());
 		if (isDelete) {
 			candidateEducations.remove(candidateEducation);
 			if (candidateEducations.size() > 0) {
-				candidateEducations.stream().filter(education -> education.getEducationToDate() != null).collect(Collectors.toList()).sort((education1, education2) -> education1.getEducationToDate()
-						.compareTo(education2.getEducationToDate()));
+				candidateEducations.stream().filter(education -> education.getEducationToDate() != null)
+					.collect(Collectors.toList());
+				Comparator<CandidateEducation> comparator = (education1, education2) -> education1.getEducationToDate()
+						.compareTo(education2.getEducationToDate());
+				candidateEducations.sort(comparator);
 				candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
 				log.debug("Soretd education by dates {}", candidateEducations);
 			}
@@ -229,9 +213,10 @@ public class CandidateEducationService {
 					.findByQualification(candidateEducation.getCapturedQualification());
 			if (qualification == null) {
 				Qualification newQualification = new Qualification();
-				newQualification.setQualification(candidateEducation.getCapturedQualification());
+				newQualification.setQualification(convertToTitleCase(candidateEducation.getCapturedQualification()));
+				newQualification.setWeightage(setQualificationWeightage(newQualification.getQualification()));
 				updateQualificationIndex(qualififcationRepository.save(newQualification));
-				log.info("Saved new Qualifcation {} ", newQualification.getQualification());
+				log.info("Saved new Qualifcation {} with weight {}", newQualification.getQualification(),newQualification.getWeightage());
 				candidateEducation.setQualification(newQualification);
 			} else {
 				candidateEducation.setQualification(qualification);
@@ -240,6 +225,68 @@ public class CandidateEducationService {
 			candidateEducation.setQualification(qualififcationRepository
 					.findByQualification(candidateEducation.getQualification().getQualification()));
 		}
+	}
+
+	private String convertToThreeLetterDegree(String name[]) {	
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < name.length; i++) {
+			buffer.append(name[i].toUpperCase());
+			if (name.length - i != 1)
+				buffer.append(".");
+		}
+		return buffer.toString();
+	}
+	
+	private String convertToThreeLetterDegree(String name) {	
+		StringBuffer buffer = new StringBuffer(name);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < buffer.length(); i++) {
+			builder.append(Character.toUpperCase(buffer.charAt(i)));
+			if (buffer.length() - i != 1)
+				builder.append(".");
+		}
+		return builder.toString();
+	}
+	
+	private String convertToTitleCase(String qualificationName) {
+		log.debug("The incomeing qualification is {}",qualificationName.length());
+		if (StringUtils.isBlank(qualificationName)) {
+			return "";
+		}
+		String[] split = qualificationName.split("\\.");
+		log.debug("The split is {}",split.length);
+		if(split.length>1) {
+			return convertToThreeLetterDegree(split);	
+		} 
+		if(qualificationName.length()==3)
+			return convertToThreeLetterDegree(qualificationName);
+		
+		StringBuffer resultPlaceHolder = new StringBuffer(qualificationName.length());
+		
+		Stream.of(qualificationName.split(" ")).forEach(stringPart -> {
+			if (stringPart.length() > 1)
+				resultPlaceHolder.append(stringPart.substring(0, 1).toUpperCase())
+						.append(stringPart.substring(1).toLowerCase());
+			else
+				resultPlaceHolder.append(stringPart.toUpperCase());
+
+			resultPlaceHolder.append(" ");
+		});
+		return StringUtils.trim(resultPlaceHolder.toString());
+
+	}
+	
+	private Long setQualificationWeightage(String qualificationName) {
+		Long weightage  = 0l;
+		if(qualificationName == null)
+			weightage  = 0l;
+		if(qualificationName.indexOf("Bach")>-1) 
+			weightage  = 3l;
+		else if( qualificationName.indexOf("Mast")>-1  || qualificationName.indexOf("Post")>-1)
+			weightage  = 4l;
+		else
+			weightage  = -1l;
+		return weightage;	
 	}
 
 	private void injestCourseInformation(CandidateEducation candidateEducation) {

@@ -14,10 +14,10 @@
 (13, 'B.Ed',3),
 (14, 'BHM',3),
 (15, 'B.Sc',3),
-(16, 'C.A',null),
-(17, 'CS',null),
-(18, 'ICWA',null),
-(19, 'LLB',null),
+(16, 'C.A',-1),
+(17, 'CS',-1),
+(18, 'ICWA',-1),
+(19, 'LLB',-1),
 (20, 'MBBS',4),
 (21, 'B.Design',3),
 (22, 'B.FashionTech',3),
@@ -27,7 +27,7 @@
 (26, 'B.P.Ed',3),
 (27, 'B.F.Sc',3),
 (28, 'BSW',3),
-(29, 'Other',null),
+(29, 'Other',-1),
 (30, 'No Formal Qualification',0),
 (31,'Certificate Course ITI',1),
 (32, 'Diploma',2),
@@ -45,4 +45,13 @@
 (45, 'M.Pharm',4),
 (46, 'M.Arch',4),
 (47, 'M.Phil/PhD',5),
-(48, 'LLM',null);
+(48, 'LLM',-1),
+(49,'B.Sc Pharmacy',3),
+(50,'BBS - Bachelor of Business Studies',3),
+(51,'BMS - Bachelor in Management Studies',3),
+(52,'LT - Licentiate in Teaching',3),
+(53,'BHMCT - Bachelor of Hotel Management and Catering Technology',3),
+(54,'Bachelor of Accountancy',-1),
+(55,'Master of Surgery',4)
+(56,'PHD',4)
+(57,'Doctrate',4);

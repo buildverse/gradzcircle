@@ -162,9 +162,12 @@ public class JobService {
 		if (!job.getCanEdit())
 			throw new JobEditException("Cannot Edit job anymmore");
 		Job prevJob = getJob(job.getId());
-		if (!(job.equals(prevJob) && (job.getJobDescription().equals(prevJob.getJobDescription())
-				&& (job.getSalary().equals(prevJob.getSalary()) && (job.getJobTitle().equals(prevJob.getJobTitle()))
-						&& (job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job)))))) {
+		log.info("Previous job object is {}",prevJob);
+		if (! (job.getJobDescription().equals(prevJob.getJobDescription())
+				&& job.getSalary().equals(prevJob.getSalary()) && job.getJobTitle().equals(prevJob.getJobTitle())
+						&& job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job))) {
+			log.debug("What is true -> description, title, status, salary or fiters {} {} {} {} {}",job.getJobDescription().equals(prevJob.getJobDescription()),
+					job.getJobTitle().equals(prevJob.getJobTitle())	,job.getSalary().equals(prevJob.getSalary()),job.getJobStatus().equals(prevJob.getJobStatus()),jobFiltersSame(prevJob, job));
 			updateJobMetaActions(job, prevJob);
 			setJob(job, prevJob);
 			setJobFilters(job, prevJob);
@@ -201,8 +204,10 @@ public class JobService {
 		job.setUpdateDate(dateTime);
 		setJobHistory(job, prevJob);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		//log.info("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
-		//log.info("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
+		log.info("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
+		log.info("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
+		log.info("No of matched candidates from job is {}",job.getCandidateJobs().size());
+		log.info("content of matched candidates from job is {}",job.getCandidateJobs());
 		candidateJobs.addAll(prevJob.getCandidateJobs());
 		job.setCandidateJobs(candidateJobs);
 		//log.info("No of matched candidates after setting is {}",job.getCandidateJobs().size());
@@ -225,10 +230,22 @@ public class JobService {
 	private Boolean jobFiltersSame(Job job, Job prevJob) {
 		log.info(" Current filter is {}", job.getJobFilters());
 		log.info(" Prev filter is {}", prevJob.getJobFilters());
-		if (job.getJobFilters().equals(prevJob.getJobFilters()))
-			return true;
-		else
+		if(!job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()))
 			return false;
+		Boolean filtersSame = false;
+		Set<JobFilter> jobFilters = job.getJobFilters();
+		Set<JobFilter> prevJobFilters = prevJob.getJobFilters();
+		Iterator<JobFilter> jobFilterIterator = jobFilters.iterator();
+		Iterator<JobFilter> prevJobFilterIterator = prevJobFilters.iterator();
+		while(jobFilterIterator.hasNext()) {
+			JobFilter filter = jobFilterIterator.next();
+			while(prevJobFilterIterator.hasNext()) {
+				if(filter!=null && filter.getFilterDescription() != null &&
+						filter.getFilterDescription().equals(prevJobFilterIterator.next().getFilterDescription()))
+					filtersSame = true;
+			}
+		}
+		return filtersSame;
 	}
 
 	private void updateJobMetaActions(Job job, Job prevJob) {

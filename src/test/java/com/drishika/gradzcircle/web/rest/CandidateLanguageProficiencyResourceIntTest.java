@@ -670,7 +670,6 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
 		candidateLanguageProficiency.language(englishLanguage);
-		// System.out.println("====================="+candidateLanguageProficiency.hashCode());
 		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi)
 				.addCandidateLanguageProficiency(candidateLanguageProficiency);
 		candidateRepository.saveAndFlush(candidate);

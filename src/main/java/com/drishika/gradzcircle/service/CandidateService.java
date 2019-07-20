@@ -356,6 +356,7 @@ public class CandidateService {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		//dto.setShortListed(isShortListed);
 		//dto.setShortListedForAnotherJob(isShortListedForAnotherJob);
+		logger.debug("Shortlisted? {}",isShortListed);
 		dto.setIsShortListed(isShortListed);
 		if(candidateJob != null ) {
 			dto.setMatchScore(candidateJob.getMatchScore());

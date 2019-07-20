@@ -1028,6 +1028,12 @@ public class CandidateResourceIntTest {
 		CorporateCandidate cc1 = new CorporateCandidate(corporate,candidate,jobA.getId());
 		CorporateCandidate cc2 = new CorporateCandidate(corporate,candidate,jobB.getId());
 		CorporateCandidate cc3 = new CorporateCandidate(corporate,candidate,jobC.getId());
+		CandidateJob cJ1 = new CandidateJob(candidate,jobA);
+		CandidateJob cJ2= new CandidateJob(candidate,jobB);
+		CandidateJob cJ3 = new CandidateJob(candidate,jobC);
+		CandidateJob cJ4 = new CandidateJob(candidate,jobF);
+		CandidateJob cJ5 = new CandidateJob(candidate,jobG);
+		candidate.addCandidateJob(cJ5).addCandidateJob(cJ4).addCandidateJob(cJ3).addCandidateJob(cJ2).addCandidateJob(cJ1);
 		corporate.addCorporateCandidate(cc1).addCorporateCandidate(cc2).addCorporateCandidate(cc3);
 		candidate.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
 		//corporateRepository.saveAndFlush(corporate);
@@ -1038,7 +1044,7 @@ public class CandidateResourceIntTest {
 		.andExpect(jsonPath("$.candidateDetails.firstName").value(DEFAULT_FIRST_NAME.toString()))
 		.andExpect(jsonPath("$.candidateDetails.lastName").value(DEFAULT_LAST_NAME.toString()))
 		.andExpect(jsonPath("$.candidateDetails.aboutMe").value(DEFAULT_ABOUT_ME.toString()))
-		.andExpect(jsonPath("$.shortListed").value(Boolean.TRUE));
+		.andExpect(jsonPath("$.isShortListed").value(Boolean.TRUE));
 		
 		
 	}

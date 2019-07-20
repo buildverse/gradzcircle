@@ -694,14 +694,7 @@ public class Job implements Serializable {
 		Job job = (Job) o;
 		if (job.getId() == null || getId() == null) {
 			return false;
-		} /*
-			 * else if (getId().equals(job.getId()) &&
-			 * getJobTitle().equals(job.getJobTitle()) &&
-			 * getJobDescription().equals(job.getJobDescription()) &&
-			 * getSalary().equals(job.getSalary()) &&
-			 * getJobStatus().equals(job.getJobStatus())) return true;
-			 */
-
+		} 
 		return Objects.equals(getId(), job.getId());
 
 	}

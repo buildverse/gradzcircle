@@ -392,7 +392,7 @@ public class JobResourceIntTest {
 	public static Job createJobDraftNotEditedCanEdit(EntityManager em) {
 
 		Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(DEFAULT_SALARY)
-				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE)
+				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE).noOfApplicants(DEFAULT_NO_OF_APPLICANTS)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 
 		return job;
@@ -530,7 +530,7 @@ public class JobResourceIntTest {
 
 		Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(DEFAULT_JOB_DESCRIPTION)
 				.hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).canEdit(DEFAULT_CAN_EDIT)
-				.updateDate(DEFAULT_UPDATE_DATE).createdBy(DEFAULT_CREATED_BY).updatedBy(DEFAULT_UPDATED_BY)
+				.updateDate(DEFAULT_UPDATE_DATE).createdBy(DEFAULT_CREATED_BY).updatedBy(DEFAULT_UPDATED_BY).salary(DEFAULT_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).noOfApplicantsLeft(10l).noOfApplicants(20).noOfApplicantsBought(15);
 		return job;
 	}
@@ -1225,7 +1225,7 @@ public class JobResourceIntTest {
 
 		Job toBeUpdated = new Job();
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		toBeUpdated.setId(initializedJob.getId());
 		Job prevJob = new Job();
@@ -1444,7 +1444,7 @@ public class JobResourceIntTest {
 		// everActive must be true
 		// JobHistroy should have the previous Active record.
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		job.employmentType(employmentType).jobType(jobType);
 
@@ -1475,7 +1475,7 @@ public class JobResourceIntTest {
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		toBeUpdated.setJobFilters(jobFilters);
 		// Execute Update
@@ -1572,7 +1572,7 @@ public class JobResourceIntTest {
 		// canEdit must be true
 		// everctive is true
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).employmentType(employmentType).jobType(jobType);
 		job.employmentType(employmentType).jobType(jobType);
 		JobFilter jobFilter = new JobFilter();
@@ -1606,7 +1606,7 @@ public class JobResourceIntTest {
 		Job toBeUpdated = new Job();
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(DEFAULT_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		toBeUpdated.setJobFilters(jobFilters);
 		toBeUpdated.jobType(jobType).employmentType(employmentType);
@@ -1714,7 +1714,7 @@ public class JobResourceIntTest {
 		// canEdit must be False
 		// everActive must be true
 		Job job = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		;
 		job.employmentType(employmentType).jobType(jobType);
@@ -1756,7 +1756,7 @@ public class JobResourceIntTest {
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobType(jobType).employmentType(employmentType);
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		Set<JobFilter> toBeUpdatedFilterSet = new HashSet<JobFilter>();
 		toBeUpdatedFilterSet.add(toBeUpdatedFilter.job(toBeUpdated));
@@ -1869,7 +1869,7 @@ public class JobResourceIntTest {
 		// everActive must be true
 
 		Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY);
 		;
 		JobFilter jobFilter = new JobFilter();
@@ -1914,7 +1914,7 @@ public class JobResourceIntTest {
 		Job toBeUpdated = new Job();
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
-				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE).noOfApplicants(10)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).jobType(jobType).employmentType(employmentType);
 		Set<JobFilter> toBeUpdatedFilterSet = new HashSet<JobFilter>();
 		toBeUpdatedFilterSet.add(toBeUpdatedFilter.job(toBeUpdated));
@@ -2853,6 +2853,170 @@ public class JobResourceIntTest {
 
 	@Test
 	@Transactional
+	public void updateActiveTransisitonToActiveWithEqualJobAndEqualJobFiltersAndDifferentNumberOfCandidates() throws Exception {
+		Corporate corp = new Corporate();
+		User user = new User();user.setEmail("abhinav@abhinav.com");user.setPassword("$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG");user.setLogin("abhinav");
+		user.setLangKey("en");
+		userRepository.saveAndFlush(user);
+		corp.login(user);
+		
+		corporateRepository.saveAndFlush(corp);
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		Candidate c2 = new Candidate().firstName("Aveer");
+		Candidate c3 = new Candidate().firstName("AAAA");
+		Candidate c4 = new Candidate().firstName("BBBB");
+		Candidate c5 = new Candidate().firstName("CCCC");
+		Candidate c6 = new Candidate().firstName("DDDD");
+		candidateRepository.saveAndFlush(c1);
+		candidateRepository.saveAndFlush(c2);
+		candidateRepository.saveAndFlush(c3);
+		candidateRepository.saveAndFlush(c4);
+		candidateRepository.saveAndFlush(c5);
+		candidateRepository.saveAndFlush(c6);
+		corporateRepository.saveAndFlush(corporate);
+		Job job = createJobActiveNotEditedCanEdit(em);
+		Set<JobHistory> jobHistories = createActiveJobHistories(em);
+		jobHistories.forEach(jobHistory -> jobHistory.job(job));
+		Set<JobFilter> jobFilters = createJobFilter(em);
+		jobFilters.forEach(jobFilter -> jobFilter.job(job));
+		job.setJobFilters(jobFilters);
+		job.setHistories(jobHistories);
+		job.employmentType(employmentType).jobType(jobType);
+		jobRepository.saveAndFlush(job);
+		job.corporate(corp);
+		CandidateJob cJ1 = new CandidateJob(c1,job);
+		CandidateJob cJ2 = new CandidateJob(c2,job);
+		CandidateJob cJ3 = new CandidateJob(c3,job);
+		CandidateJob cJ4 = new CandidateJob(c4,job);
+		CandidateJob cJ5 = new CandidateJob(c5,job);
+		CandidateJob cJ6 = new CandidateJob(c6,job);
+		job.addCandidateJob(cJ1).addCandidateJob(cJ2).addCandidateJob(cJ3).addCandidateJob(cJ4).addCandidateJob(cJ5).addCandidateJob(cJ6);
+		// jobSearchRepository.save(job);
+		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
+		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
+		int jobFilterSizeBeforeUpdate = jobFilterRepository.findAll().size();
+		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
+
+		// Update the job
+		Job initializedJob = jobRepository.findOne(job.getId());
+
+		Job prevJob = new Job();
+		BeanUtils.copyProperties(prevJob, initializedJob);
+
+		Job toBeUpdated = new Job();
+		BeanUtils.copyProperties(toBeUpdated, initializedJob);
+		JobFilter initializedJobFilter = jobFilterRepository.findByJob(initializedJob);
+		Set<JobFilter> updatedJobFilters = createJobFilter(em);
+		JobFilter filterToBeUpdated = updatedJobFilters.iterator().next();
+		filterToBeUpdated.setId(initializedJobFilter.getId());
+		filterToBeUpdated.job(toBeUpdated);
+		toBeUpdated.setJobFilters(updatedJobFilters);
+		toBeUpdated.setNoOfApplicants(10);
+
+		restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(toBeUpdated))).andExpect(status().isOk());
+
+		// Validate Results
+		List<Job> jobList = jobRepository.findAll();
+		List<JobHistory> jobHistoryList = jobHistoryRepository.findAll();
+		List<JobFilter> jobFilterList = jobFilterRepository.findAll();
+		List<JobFilterHistory> jobFilterHistoryList = jobFilterHistoryRepository.findAll();
+
+		assertThat(jobList).hasSize(jobDatabaseSizeBeforeUpdate);
+		assertThat(jobHistoryList).hasSize(jobHistoryDatabaseSizeBeforeUpdate + 1);
+		assertThat(jobHistoryList).hasSize(4);
+		assertThat(jobFilterList).hasSize(jobFilterSizeBeforeUpdate);
+		assertThat(jobFilterList).hasSize(1);
+		assertThat(jobFilterHistoryList).hasSize(jobFilterHistorySizeBeforeUpdate + 1);
+		assertThat(jobFilterHistoryList).hasSize(1);
+		Job testJob = jobList.get(jobList.size() - 1);
+		assertThat(testJob.getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
+		assertThat(testJob.getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
+		// assertThat(testJob.getSalary()).isEqualTo(UPDATED_SALARY);
+		assertThat(testJob.getJobStatus()).isEqualTo(ACTIVE_JOB_STATUS);
+		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJob.isCanEdit()).isEqualTo(DEFAULT_CAN_EDIT);
+		assertThat(testJob.isHasBeenEdited()).isEqualTo(UPDATED_HAS_BEEN_EDITED);
+		assertThat(testJob.isEverActive()).isEqualTo(UPDATED_EVER_ACTIVE);
+		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJob.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(10l);
+		assertThat(testJob.getNoOfApplicants()).isEqualTo(10);
+		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(15);
+		assertThat(testJob.getCandidateJobs()).hasSize(6);
+
+		JobFilter testJobFilter = jobFilterList.get(jobFilterList.size() - 1);
+		assertThat(testJobFilter.getFilterDescription()).isEqualTo(DEFAULT_FILTER);
+		assertThat(testJobFilter.getId()).isEqualTo(initializedJobFilter.getId());
+
+		// Validate ES not saving Filter to ES
+
+		/*
+		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
+		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
+		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
+		 * assertThat(testJob.getJobStatus()).isEqualTo(jobEs.getJobStatus());
+		 * assertThat(testJob.getCreatedBy()).isEqualTo(jobEs.getCreatedBy());
+		 * assertThat(testJob.isCanEdit()).isEqualTo(jobEs.isCanEdit());
+		 * assertThat(testJob.isHasBeenEdited()).isEqualTo(jobEs.isHasBeenEdited());
+		 * assertThat(testJob.isEverActive()).isEqualTo(jobEs.isEverActive());
+		 * assertThat(testJob.getCreatedBy()).isEqualTo(jobEs.getCreatedBy());
+		 * assertThat(testJob.getUpdatedBy()).isEqualTo(jobEs.getUpdatedBy());
+		 */
+
+		List<JobHistory> testJobHistories = jobHistoryRepository.findByJobOrderByIdDesc(testJob);
+		assertThat(testJobHistories.size()).isEqualTo(4);
+
+		assertThat(testJobHistories.get(0).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
+		assertThat(testJobHistories.get(0).getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
+		assertThat(testJobHistories.get(0).getJobStatus()).isEqualTo(ACTIVE_JOB_STATUS);
+		// assertThat(testJobHistories.get(0).getSalary()).isEqualTo(DEFAULT_SALARY);
+		assertThat(testJobHistories.get(0).getHasBeenEdited()).isEqualTo(DEFAULT_HAS_BEEN_EDITED);
+		assertThat(testJobHistories.get(0).getCanEdit()).isEqualTo(DEFAULT_CAN_EDIT);
+		assertThat(testJobHistories.get(0).getEverActive()).isEqualTo(UPDATED_EVER_ACTIVE);
+		assertThat(testJobHistories.get(0).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJobHistories.get(0).getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+		assertThat(testJobHistories.get(0).getJob()).isEqualTo(testJob);
+
+		assertThat(testJobHistories.get(1).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
+		assertThat(testJobHistories.get(1).getJobDescription()).isEqualTo(UPDATED_JOB_DESCRIPTION);
+		assertThat(testJobHistories.get(1).getJobStatus()).isEqualTo(ACTIVE_JOB_STATUS);
+		assertThat(testJobHistories.get(1).getSalary()).isEqualTo(DEFAULT_SALARY);
+		assertThat(testJobHistories.get(1).getHasBeenEdited()).isEqualTo(DEFAULT_HAS_BEEN_EDITED);
+		assertThat(testJobHistories.get(1).getCanEdit()).isEqualTo(DEFAULT_CAN_EDIT);
+		assertThat(testJobHistories.get(1).getEverActive()).isEqualTo(DEFAULT_EVER_ACTIVE);
+		assertThat(testJobHistories.get(1).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJobHistories.get(1).getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+		assertThat(testJobHistories.get(1).getJob()).isEqualTo(testJob);
+
+		assertThat(testJobHistories.get(2).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
+		assertThat(testJobHistories.get(2).getJobDescription()).isEqualTo(UPDATED_JOB_DESCRIPTION);
+		assertThat(testJobHistories.get(2).getJobStatus()).isEqualTo(DRAFT_JOB_STATUS);
+		assertThat(testJobHistories.get(2).getSalary()).isEqualTo(DEFAULT_SALARY);
+		assertThat(testJobHistories.get(2).getHasBeenEdited()).isEqualTo(DEFAULT_HAS_BEEN_EDITED);
+		assertThat(testJobHistories.get(2).getCanEdit()).isEqualTo(DEFAULT_CAN_EDIT);
+		assertThat(testJobHistories.get(2).getEverActive()).isEqualTo(DEFAULT_EVER_ACTIVE);
+		assertThat(testJobHistories.get(2).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJobHistories.get(2).getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+		assertThat(testJobHistories.get(2).getJob()).isEqualTo(testJob);
+
+		assertThat(testJobHistories.get(3).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
+		assertThat(testJobHistories.get(3).getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
+		assertThat(testJobHistories.get(3).getJobStatus()).isEqualTo(DRAFT_JOB_STATUS);
+		assertThat(testJobHistories.get(3).getSalary()).isEqualTo(DEFAULT_SALARY);
+		assertThat(testJobHistories.get(3).getHasBeenEdited()).isEqualTo(DEFAULT_HAS_BEEN_EDITED);
+		assertThat(testJobHistories.get(3).getCanEdit()).isEqualTo(DEFAULT_CAN_EDIT);
+		assertThat(testJobHistories.get(3).getEverActive()).isEqualTo(DEFAULT_EVER_ACTIVE);
+		assertThat(testJobHistories.get(3).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+		assertThat(testJobHistories.get(3).getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+		assertThat(testJobHistories.get(3).getJob()).isEqualTo(testJob);
+
+	}
+
+	
+	@Test
+	@Transactional
 	public void updateActiveTransisitonToActiveWithUnEqualJobAndUnEqualFilter() throws Exception {
 
 		Job job = createJobActiveNotEditedCanEdit(em);
@@ -3206,7 +3370,7 @@ public class JobResourceIntTest {
 		candidate.addCandidateJob(cJ5).addCandidateJob(cJ4).addCandidateJob(cJ1).addCandidateJob(cJ3).addCandidateJob(cJ2);
 		//candidateRepository.saveAndFlush(candidate);
 		//corporateRepository.saveAndFlush(c);
-		restJobMockMvc.perform(get("/api/jobListCandidateShortlistedForByCandidate/{candidateId}/{corporateId}", candidate.getId(),c.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/jobListForCandidateShortlistedByCorporate/{candidateId}/{corporateId}", candidate.getId(),c.getId())).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job5")))
 		.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job 2")))
@@ -3985,7 +4149,7 @@ public class JobResourceIntTest {
 		// Get all the jobList
 		// ResultActions resultActions =
 		// restJobMockMvc.perform(get("/api/matchedCandiatesForJob/{jobId}",job.getId())).andExpect(status().isOk())
-		restJobMockMvc.perform(get("/api/appliedCandiatesForJob/{jobId}", job.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/appliedCandiatesForJob/{jobId}/{fromScore}/{toScore}", job.getId(),-1,-1)).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[*].firstName", hasItem("Abhinav")))
 				.andExpect(jsonPath("$[*].firstName", hasItem("Aveer")))
@@ -4080,6 +4244,7 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void testGetTotalActiveJobsOnPortal() throws Exception {
+		corporateRepository.deleteAll();
 		Corporate corp = new Corporate();
 		corp.name("Drishika");
 		Job job1 = new Job();
@@ -6113,7 +6278,7 @@ public class JobResourceIntTest {
 		jobRepository.saveAndFlush(job.corporate(corporate).noOfApplicantsLeft(0l).paymentType(PaymentType.AS_YOU_GO).noOfApplicants(20).employmentType(permanent).jobType(fullTime));
 		restJobMockMvc.perform(get("/api/jobForAddingCandidates/{id}", job.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-		.andExpect(jsonPath("$.filterCost").value(140d))
+		.andExpect(jsonPath("$.filterCost").value(145d))
 		.andExpect(jsonPath("$.payAsYouGo").value(true))
 		.andExpect(jsonPath("$.corporateEscrowAmount").value(100d))
 		.andExpect(jsonPath("$.jobCost").value(DEFAULT_JOB_COST.doubleValue()));
