@@ -55,6 +55,8 @@ public class CorporateJobDTO implements Serializable {
 	
 	private Long numberOfCandidatesRemaining;
 	
+	private Double corporateEscrowAmount;
+	
 
 
 
@@ -303,5 +305,23 @@ public class CorporateJobDTO implements Serializable {
 	public void setNumberOfCandidatesRemaining(Long numberOfCandidatesRemaining) {
 		this.numberOfCandidatesRemaining = numberOfCandidatesRemaining;
 	}
+
+	/**
+	 * @return the corporateEscrowAmount
+	 */
+	public Double getCorporateEscrowAmount() {
+		return corporateEscrowAmount;
+	}
+
+	/**
+	 * @param corporateEscrowAmount the corporateEscrowAmount to set
+	 */
+	public void setCorporateEscrowAmount(Double corporateEscrowAmount) {
+		this.corporateEscrowAmount = corporateEscrowAmount;
+	}
+
+
+	
+	
 
 }

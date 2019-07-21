@@ -8,7 +8,7 @@ import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, Principal, DataStorageService} from '../../shared';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA, USER_TYPE} from '../../shared/constants/storage.constants';
+import {JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA, USER_TYPE, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
 import {Corporate} from '../corporate/corporate.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -40,7 +40,7 @@ export class JobComponent implements OnInit, OnDestroy {
   candidateId: number;
   job: Job;
   corporate: Corporate;
-
+businessPlanEnabled: boolean;
 
   constructor(
     private jobService: JobService,
@@ -54,6 +54,7 @@ export class JobComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService
 
   ) {
+    this.businessPlanEnabled = false;
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
       this.page = data['pagingParams'].page;
@@ -181,6 +182,7 @@ export class JobComponent implements OnInit, OnDestroy {
     this.job = new Job();
     this.corporate = new Corporate();
     this.DRAFT = JobConstants.DRAFT;
+    this.businessPlanEnabled = this.dataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
     this.principal.identity().then((account) => {
       if (account) {
         if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
@@ -301,6 +303,7 @@ export class JobComponent implements OnInit, OnDestroy {
       this.job.jobsLastMonth = this.jobs[0].jobsLastMonth;
       this.job.newApplicants = this.jobs[0].newApplicants;
       this.job.totalLinkedCandidates = this.jobs[0].totalLinkedCandidates;
+      this.job.corporateEscrowAmount = this.jobs[0].corporateEscrowAmount;
     }
   }
 }

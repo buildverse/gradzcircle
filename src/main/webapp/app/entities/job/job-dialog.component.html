@@ -253,32 +253,54 @@
 				</div>
 				<div class="ml-0 pl-0 col-md-4"
 					*ngIf="businessPlanEnabled; else businessPlanJobNotEnabled">
-					<select class="form-control " required id="field_jobType"
-						#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
-						(ngModelChange)="captureJobTypeCost($event)">
-						<option [ngValue]="null"></option>
-						<option
-							[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
-							*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}--&#8377;{{jobTypeOption.jobTypeCost}}</option>
-					</select>
-					<div *ngIf="jobType.invalid && jobType.touched" class="text-danger">
-						<small>Please select Job Type</small>
+					<div *ngIf="!job.everActive; else disableEmploymentType">
+						<select class="form-control " required id="field_jobType"
+							#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
+							(ngModelChange)="captureJobTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
+								*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}--&#8377;{{jobTypeOption.jobTypeCost}}</option>
+						</select>
+						<div *ngIf="jobType.invalid && jobType.touched" class="text-danger">
+							<small>Please select Job Type</small>
+						</div>
 					</div>
+					<ng-template #disableEmploymentType>
+						<select class="form-control "  id="field_jobType" [attr.disabled]="true"
+							#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
+							(ngModelChange)="captureJobTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
+								*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}--&#8377;{{jobTypeOption.jobTypeCost}}</option>
+						</select>
+					</ng-template>
 				</div>
 				<ng-template #businessPlanJobNotEnabled>
-				<div class="ml-0 pl-0 col-md-4">
-					<select class="form-control " required id="field_jobType"
-						#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
-						(ngModelChange)="captureJobTypeCost($event)">
-						<option [ngValue]="null"></option>
-						<option
-							[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
-							*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}</option>
-					</select>
-					<div *ngIf="jobType.invalid && jobType.touched" class="text-danger">
-						<small>Please select Job Type</small>
+					<div *ngIf="!job.everActive; else disableEmploymentTypeNoBizPlan" class="ml-0 pl-0 col-md-4">
+						<select class="form-control " required id="field_jobType"
+							#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
+							(ngModelChange)="captureJobTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
+								*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}</option>
+						</select>
+						<div *ngIf="jobType.invalid && jobType.touched" class="text-danger">
+							<small>Please select Job Type</small>
+						</div>
 					</div>
-				</div>
+					<ng-template #disableEmploymentTypeNoBizPlan>
+						<select class="form-control "  id="field_jobType" [attr.disabled]="true"
+							#jobType="ngModel" name="jobType" [(ngModel)]="job.jobType"
+							(ngModelChange)="captureJobTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="jobTypeOption.id === job.jobType?.id ? job.jobType : jobTypeOption"
+								*ngFor="let jobTypeOption of jobtypes; trackBy: trackJobTypeById">{{jobTypeOption.jobType}}</option>
+						</select>
+					</ng-template>
 				</ng-template>
 
 				<div class="col-md-3 mr-0">
@@ -288,21 +310,34 @@
 				</div>
 				<div class="pl-0 ml-0 col-md-3"
 					*ngIf="businessPlanEnabled; else businessPlanNotEnabled">
-					<select class="form-control " required
-						id="field_employmentType" #empType="ngModel" name="employmentType"
-						[(ngModel)]="job.employmentType"
-						(ngModelChange)="captureEmploymentTypeCost($event)">
-						<option [ngValue]="null"></option>
-						<option
-							[ngValue]="employmentTypeOption.id === job.employmentType?.id ? job.employmentType : employmentTypeOption"
-							*ngFor="let employmentTypeOption of employmentTypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.employmentType}}--&#8377;{{employmentTypeOption.employmentTypeCost}}</option>
-					</select>
-					<div *ngIf="empType.invalid && empType.touched" class="text-danger">
-						<small>Please select Employment Type</small>
+					<div *ngIf="!job.everActive; else disableJobType">
+						<select class="form-control " required
+							id="field_employmentType" #empType="ngModel" name="employmentType"
+							[(ngModel)]="job.employmentType"
+							(ngModelChange)="captureEmploymentTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="employmentTypeOption.id === job.employmentType?.id ? job.employmentType : employmentTypeOption"
+								*ngFor="let employmentTypeOption of employmentTypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.employmentType}}--&#8377;{{employmentTypeOption.employmentTypeCost}}</option>
+						</select>
+						<div *ngIf="empType.invalid && empType.touched" class="text-danger">
+							<small>Please select Employment Type</small>
+						</div>
 					</div>
+					<ng-template #disableJobType>
+						<select class="form-control "  [attr.disabled]="true"
+							id="field_employmentType" #empType="ngModel" name="employmentType"
+							[(ngModel)]="job.employmentType"
+							(ngModelChange)="captureEmploymentTypeCost($event)">
+							<option [ngValue]="null"></option>
+							<option
+								[ngValue]="employmentTypeOption.id === job.employmentType?.id ? job.employmentType : employmentTypeOption"
+								*ngFor="let employmentTypeOption of employmentTypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.employmentType}}--&#8377;{{employmentTypeOption.employmentTypeCost}}</option>
+						</select>
+					</ng-template>
 				</div>
 				<ng-template #businessPlanNotEnabled>
-				<div class="pl-0 ml-0 col-md-3">
+				<div  *ngIf="!job.everActive; else disableJobTypeNoBizPlan" class="pl-0 ml-0 col-md-3">
 					<select class="form-control " required
 						id="field_employmentType" #empType="ngModel" name="employmentType"
 						[(ngModel)]="job.employmentType"
@@ -316,6 +351,17 @@
 						<small>Please select Employment Type</small>
 					</div>
 				</div>
+				<ng-template #disableJobTypeNoBizPlan>
+					<select class="form-control "  [attr.disabled]="true"
+						id="field_employmentType" #empType="ngModel" name="employmentType"
+						[(ngModel)]="job.employmentType"
+						(ngModelChange)="captureEmploymentTypeCost($event)">
+						<option [ngValue]="null"></option>
+						<option
+							[ngValue]="employmentTypeOption.id === job.employmentType?.id ? job.employmentType : employmentTypeOption"
+							*ngFor="let employmentTypeOption of employmentTypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.employmentType}}</option>
+					</select>
+				</ng-template>
 				</ng-template>
 
 			</div>
@@ -325,20 +371,28 @@
 						jhiTranslate="gradzcircleApp.job.noOfApplicants"
 						for="field_minApplicants">Min Applicants</label>
 				</div>
-				<div class="ml-0 pl-0 col-md-10">
+				<div *ngIf="!job.everActive;else disableNoOfCandidateEdit" class="ml-0 pl-0 col-md-10">
 					<input type="number" class="form-control "
 						name="minApplicants" id="field_minApplicants"
 						#noOfApplicates="ngModel" [(ngModel)]="job.noOfApplicants"
-						(ngModelChange)="numOfCandidateValueChange($event)" /> <small
-						class="form-text  profile-text-info"> <span
-						class="icon icon-info" style="color: #448AFF"></span> <small
-						style="color: #448AFF"> Minimum 20 candidate required </small>
-					</small>
+						(ngModelChange)="numOfCandidateValueChange($event)" /> 
+						<small class="form-text  profile-text-info"> 
+							<span class="icon icon-info" style="color: #448AFF"></span> 
+							<small style="color: #448AFF"> Minimum 20 candidate required </small> 
+						</small>
 					<div *ngIf="numberOfCandidateError && noOfApplicates.touched"
 						class="text-danger">
 						<small>Request at least 20 candidates</small>
 					</div>
 				</div>
+				<ng-template #disableNoOfCandidateEdit>
+					<div class="ml-0 pl-0 col-md-10">
+					<input type="number" class="form-control "
+						name="minApplicants" id="field_minApplicants"
+						#noOfApplicates="ngModel" [(ngModel)]="job.noOfApplicants"
+						(ngModelChange)="numOfCandidateValueChange($event)" disabled />
+					</div> 
+				</ng-template>
 			</div>
 
 			<div class="form-group row mx-4 my-4">
@@ -526,7 +580,7 @@
 			</div>
 			<div *ngIf="singleDateControl">
 				<div class="form-group row mx-4 my-4 d-flex justify-content-center">
-					<div class="col-md-6" (mouseleave)="graduationDateDp.close()">
+					<div class="col-md-4" (mouseleave)="graduationDateDp.close()">
 						<div class=" input-group">
 							<input id="field_graduationDate" #gradDat="ngModel" type="text"
 								class="form-control " name="gradDate" ngbDatepicker
@@ -1291,5 +1345,7 @@
 		</div>
 	</form>
 </div>
-<!--  <br>
-Value: {{ editForm.value | json }}-->
+  <br>
+Value: {{ editForm.value | json }}
+<br>
+{{(editForm.form.get('employmentType')?.valid)}}---{{ (editForm.form.get('jobType')?.valid)}}

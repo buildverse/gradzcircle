@@ -176,7 +176,7 @@ public class MatchUtils {
 		}
 
 		Double matchEligibleScore = getMatchScoreEligible(jobfilterObject);
-		log.debug("gender score , languageScore and educaitonScore are {},{},{}", genderScore, languageScore,
+		log.info("gender score , languageScore and educaitonScore are {},{},{}", genderScore, languageScore,
 				educationScore);
 		if (genderScore != null)
 			totalScore += genderScore;
@@ -222,9 +222,9 @@ public class MatchUtils {
 		 * }
 		 */
 		candidateJobMatched.setMatchScore(calculateMatchScore(totalScore, matchEligibleScore));
-		log.debug("seting the language score as {}", languageScore);
+		log.info("seting the language score as {}", languageScore);
 		candidateJobMatched.setLanguageMatchScore(languageScore);
-		log.debug("seting the gender score as {}", genderScore);
+		log.info("seting the gender score as {}", genderScore);
 		candidateJobMatched.setGenderMatchScore(genderScore);
 		candidateJobMatched.setEducationMatchScore(educationScore);
 		candidateJobMatched.setTotalEligibleScore(matchEligibleScore);
@@ -324,7 +324,7 @@ public class MatchUtils {
 					if (course != null && course.equals(education.getCourse())) {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.COURSE));
 						courseScore = new Double(jobFilterWeightMap.get(Constants.COURSE));
-						log.debug("Matching on Course");
+						log.info("Matching on Course");
 					}
 				}
 			return courseScore;
@@ -338,7 +338,6 @@ public class MatchUtils {
 			return qualificationScore;
 		else {
 			if (jobFilterQualification.size() > 0)
-				// matchScoreEligible.add(jobFilterWeightMap.get(Constants.QUALIFICATION));
 				for (Qualification filterQualification : jobFilterQualification) {
 					Qualification qualification = qualificationRepository
 							.findByQualification(filterQualification.getValue());
@@ -347,7 +346,7 @@ public class MatchUtils {
 					if (qualification != null) {
 						if (qualification.equals(education.getQualification())) {
 							qualificationScore = jobFilterWeightMap.get(Constants.QUALIFICATION);
-							log.debug("Perfect matching on Quaification");
+							log.info("Perfect matching on Quaification");
 							break;
 						} else {
 							qualificationScore = jobFilterWeightMap.get(Constants.QUALIFICATION) - Math
@@ -360,8 +359,7 @@ public class MatchUtils {
 						}
 					}
 				}
-			log.debug("final qualificaiton Score  {}", qualificationScore);
-			// matchScoreGained.add(qualificationScore);
+			log.info("final qualificaiton Score  {}", qualificationScore);
 			return qualificationScore;
 		}
 	}
@@ -378,7 +376,7 @@ public class MatchUtils {
 					if (college != null && college.equals(education.getCollege())) {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.COLLEGE));
 						collegeScore = jobFilterWeightMap.get(Constants.COLLEGE).doubleValue();
-						log.debug("Matching on College");
+						log.info("Matching on College");
 					}
 				}
 			return collegeScore;
@@ -397,7 +395,7 @@ public class MatchUtils {
 					if (university != null && university.equals(education.getCollege().getUniversity())) {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.UNIVERSITY));
 						universityScore = jobFilterWeightMap.get(Constants.UNIVERSITY).doubleValue();
-						log.debug("Matching on University");
+						log.info("Matching on University");
 					}
 				}
 			return universityScore;
@@ -413,7 +411,7 @@ public class MatchUtils {
 			Double gpaScoreForConversion = jobFilterGpa * 10;
 
 			if (gpaScoreForConversion <= candidateEducaionScore) {
-				log.debug("Matching on grade");
+				log.info("Matching on grade");
 				// matchScoreGained.add(jobFilterWeightMap.get(Constants.SCORE));
 				gpaScore = jobFilterWeightMap.get(Constants.SCORE).doubleValue();
 			} else {
@@ -425,7 +423,7 @@ public class MatchUtils {
 					// matchScoreGained.add(jobFilterWeightMap.get(Constants.SCORE) - 1);
 					gpaScore = jobFilterWeightMap.get(Constants.SCORE).doubleValue() - 1;
 				}
-				log.debug("condititonla Matching on grade");
+				log.info("condititonla Matching on grade");
 			}
 
 			return gpaScore;
@@ -441,7 +439,7 @@ public class MatchUtils {
 			if (jobFilterPercent <= candidateEducationScore) {
 				// matchScoreGained.add(jobFilterWeightMap.get(Constants.SCORE));
 				percentageScore = jobFilterWeightMap.get(Constants.SCORE).doubleValue();
-				log.debug("Matching on percent");
+				log.info("Matching on percent");
 			} else {
 				Double scoreDifference = jobFilterPercent - candidateEducationScore;
 				if (scoreDifference == 2) {
@@ -472,7 +470,7 @@ public class MatchUtils {
 			if (gender != null && gender.equals(candidate.getGender())) {
 				// matchScoreGained.add(jobFilterWeightMap.get(Constants.GENDER));
 				genderScore = new Double((jobFilterWeightMap.get(Constants.GENDER)));
-				log.debug("Matching on gender");
+				log.info("Matching on gender");
 			}
 			return genderScore;
 
@@ -499,7 +497,7 @@ public class MatchUtils {
 				for (CandidateLanguageProficiency proficiency : proficiencies) {
 					if (proficiency.getLanguage().equals(language)) {
 						numberOfMatchedLanguage++;
-						log.debug("Matching on language");
+						log.info("Matching on language");
 					}
 				}
 			}

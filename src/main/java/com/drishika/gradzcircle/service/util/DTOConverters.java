@@ -146,6 +146,7 @@ public class DTOConverters {
 		jobListingData.setJobTitle(job.getJobTitle());
 		jobListingData.setEmploymentType(job.getEmploymentType());
 		jobListingData.setJobType(job.getJobType());
+		jobListingData.setCorporateEscrowAmount(job.getCorporate().getEscrowAmount());
 		// FILTER OUT REVIEWED CANDIDATES
 		//jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream().filter(candidateJob -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
 		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size()-numberOfCandidatesShortListedByJob.intValue());

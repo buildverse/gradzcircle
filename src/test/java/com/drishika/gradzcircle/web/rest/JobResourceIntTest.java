@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -1084,23 +1085,33 @@ public class JobResourceIntTest {
 
 	@Test
 	@Transactional
-	public void getActiveJobsListForCorporatesFilteredByReviewStatusTrue() throws Exception {
+	public void getActiveJobsListForCorporates() throws Exception {
 		Candidate candidate1 = new Candidate();
 		Candidate candidate2 = new Candidate();
 		candidateRepository.saveAndFlush(candidate1);
 		candidateRepository.saveAndFlush(candidate2);
+		corporate.setEscrowAmount(20d);
 		corporateRepository.saveAndFlush(corporate);
 		job.setCorporate(corporate);
+		job1.setCorporate(corporate);
 		jobRepository.saveAndFlush(job);
+		jobRepository.saveAndFlush(job1);
 		CandidateJob cJ1 = new CandidateJob(candidate1, job);
 		cJ1.setMatchScore(100d);
 		CandidateJob cJ2 = new CandidateJob(candidate2, job);
 		cJ2.setMatchScore(10d);
+		CandidateJob cJ3 = new CandidateJob(candidate1, job1);
+		cJ1.setMatchScore(100d);
+		CandidateJob cJ4 = new CandidateJob(candidate2, job1);
+		cJ2.setMatchScore(10d);
 		job.addCandidateJob(cJ2).addCandidateJob(cJ1);
-		jobRepository.saveAndFlush(job);
+		job1.addCandidateJob(cJ4).addCandidateJob(cJ3);
 		restJobMockMvc.perform(get("/api/activeJobsForCorporate/{id}", corporate.getId()))
-				.andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$", hasSize(1)));
-				
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$", hasSize(2)))
+				.andExpect(jsonPath("$[*].escrowAmount").value(Matchers.containsInAnyOrder(20d,20d)))
+				.andExpect((jsonPath("$[*].totalNumberOfJobs").value(Matchers.containsInAnyOrder(2,2))))
+				.andExpect((jsonPath("$[*].noOfMatchedCandidates").value(Matchers.containsInAnyOrder(2,2))));
 	}
 
 	@Test

@@ -124,8 +124,8 @@ public class JobResource {
 	@PutMapping("/jobs")
 	@Timed
 	public ResponseEntity<Job> updateJob(@RequestBody Job job) throws URISyntaxException {
-		log.info("REST request to update Job with JobFilter : {} , {}, {} ,{}", job, job.getEmploymentType(),
-				job.getJobType(), job.getJobFilters());
+		log.info("REST request to update Job with JobFilter and escrow : {} , {}, {} ,{}, {}", job, job.getEmploymentType(),
+				job.getJobType(), job.getJobFilters(),job.getCorporate().getEscrowAmount());
 		if (job.getId() == null) {
 			return createJob(job);
 		}

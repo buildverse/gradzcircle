@@ -158,24 +158,28 @@ public class JobService {
 	}
 
 	public Job updateJob(Job job) throws BeanCopyException, JobEditException {
-		log.info("In updating job {}", job);
+		log.info("In updating job {} and escrow {}", job,job.getCorporate().getEscrowAmount());
 		if (!job.getCanEdit())
 			throw new JobEditException("Cannot Edit job anymmore");
 		Job prevJob = getJob(job.getId());
+		if (!job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()) && prevJob.getEverActive())
+			throw new JobEditException("Cannot Change number of candidates once Jobs is active");
 		log.info("Previous job object is {}",prevJob);
 		if (! (job.getJobDescription().equals(prevJob.getJobDescription())
 				&& job.getSalary().equals(prevJob.getSalary()) && job.getJobTitle().equals(prevJob.getJobTitle())
 						&& job.getJobStatus().equals(prevJob.getJobStatus()) && jobFiltersSame(prevJob, job))) {
-			log.debug("What is true -> description, title, status, salary or fiters {} {} {} {} {}",job.getJobDescription().equals(prevJob.getJobDescription()),
-					job.getJobTitle().equals(prevJob.getJobTitle())	,job.getSalary().equals(prevJob.getSalary()),job.getJobStatus().equals(prevJob.getJobStatus()),jobFiltersSame(prevJob, job));
 			updateJobMetaActions(job, prevJob);
+			log.debug("after updating sctions escrow {}", job.getCorporate().getEscrowAmount());
 			setJob(job, prevJob);
+			log.debug("after updating job and escrow {}", job.getCorporate().getEscrowAmount());
 			setJobFilters(job, prevJob);
+			log.debug("After updating filters and escrow {}", job.getCorporate().getEscrowAmount());
 			log.info("Updating job");
 		}
 		// jobSearchRepository.save(jobRepository.save(job));
 		Integer prevJobStatus = prevJob.getJobStatus();
-		log.info("Candidate Jobs before saving this job is {}",job.getCandidateJobs());
+		log.info("Candidate Jobs before saving this job is {} and escrow is {}",job.getCandidateJobs(),job.getCorporate().getEscrowAmount());
+		Double escrowAmount = job.getCorporate().getEscrowAmount();
 		job = jobRepository.save(job);
 		//FIXME make cache refresh aysnc post update
 		if(!job.getJobStatus().equals(prevJobStatus))
@@ -184,10 +188,11 @@ public class JobService {
 			jobStatsCacheManager.clearCache();
 		
 		
-		log.info("Job updated {} ,{}", job, job.getJobFilters());
+		log.info("Job updated {} ,{},{}", job, job.getJobFilters(),job.getCorporate().getEscrowAmount());
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
 			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
-			corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
+			log.debug("Escrow amount for coprateto be updated is {}",job.getCorporate().getEscrowAmount());
+			corporate.setEscrowAmount(escrowAmount);
 			// corporateSearchRepository.save(corporateRepository.save(corporate));
 			corporateRepository.save(corporate);
 		}
@@ -204,10 +209,10 @@ public class JobService {
 		job.setUpdateDate(dateTime);
 		setJobHistory(job, prevJob);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		log.info("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
-		log.info("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
-		log.info("No of matched candidates from job is {}",job.getCandidateJobs().size());
-		log.info("content of matched candidates from job is {}",job.getCandidateJobs());
+		log.debug("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
+		log.debug("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
+		log.debug("No of matched candidates from job is {}",job.getCandidateJobs().size());
+		log.debug("content of matched candidates from job is {}",job.getCandidateJobs());
 		candidateJobs.addAll(prevJob.getCandidateJobs());
 		job.setCandidateJobs(candidateJobs);
 		//log.info("No of matched candidates after setting is {}",job.getCandidateJobs().size());
