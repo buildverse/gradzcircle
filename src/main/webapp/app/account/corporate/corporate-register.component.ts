@@ -56,14 +56,13 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
     //     required: 'Please enter your password.',
     //     minlength: 'Password needs to be atleast 8 characters.'
     // };
-
+/* adding new acooment for test*/
     constructor(
         private languageService: JhiLanguageService,
         private registerService: Register,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private spinnerService: NgxSpinnerService
-        
     ) {
         //this.languageService(['register']);
     }
