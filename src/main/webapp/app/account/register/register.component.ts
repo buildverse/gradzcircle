@@ -62,7 +62,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.registerForm = this.formBuilder.group({
     /*  firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],*/
-      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]],
       passwordGroup: this.formBuilder.group({
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required, Validators.minLength(8)]]

@@ -85,7 +85,7 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
             //lastName : [null,[Validators.required]],
             companyName : [null,[Validators.required, Validators.minLength(5)]], 
             phoneNumber : [null,[Validators.required, Validators.pattern('[+.0-9]+'), Validators.minLength(13),Validators.maxLength(13)]],
-            email : [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
+            email : [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]],
             passwordGroup: this.formBuilder.group({
                     password :[null,[Validators.required, Validators.minLength(8)]],
                     confirmPassword : [null,[Validators.required, Validators.minLength(8)]]
