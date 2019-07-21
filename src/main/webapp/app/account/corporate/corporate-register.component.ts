@@ -63,6 +63,7 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private spinnerService: NgxSpinnerService
+        
     ) {
         //this.languageService(['register']);
     }
