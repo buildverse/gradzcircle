@@ -6,9 +6,10 @@
 	    <div class="db-content">
 	       <div class="row m-0 px-4">
 	          <div class="col-md-12 col-lg-12 tabs-panel">
-	          	<div *ngIf="businessPlanEnabled" class="row d-flex justify-content-end mr-2">
-	          		<p class="text-info"> You have <b>{{job.corporateEscrowAmount}}</b> in our Escrow account.
+	          	<div *ngIf="businessPlanEnabled &&  job.corporateEscrowAmount && job.corporateEscrowAmount>0" class="row d-flex justify-content-end mr-2">
+	          		<p class="text-info"> You have <b>&#8377; {{job.corporateEscrowAmount}}</b> in your Escrow account.
 	          	</div>
+
 	          	<div class="row d-flex justify-content-end mr-2">
 	         	 	 <button type="button" class="btn btn-sm btn-pill btn-success" (click)="setJobRouterParam()"
 						[routerLink]="['/', { outlets: { popup: 'new-job' } }]">Post New
