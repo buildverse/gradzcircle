@@ -188,10 +188,10 @@ public class JobService {
 			jobStatsCacheManager.clearCache();
 		
 		
-		log.info("Job updated {} ,{},{}", job, job.getJobFilters(),job.getCorporate().getEscrowAmount());
-		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
+		log.info("Job updated {} ,{}", job, job.getJobFilters());
+		if (job.getCorporate() != null && escrowAmount != null) {
 			Corporate corporate = corporateRepository.getOne(job.getCorporate().getId());
-			log.debug("Escrow amount for coprateto be updated is {}",job.getCorporate().getEscrowAmount());
+			log.debug("Escrow amount for coprateto be updated is {}",escrowAmount);
 			corporate.setEscrowAmount(escrowAmount);
 			// corporateSearchRepository.save(corporateRepository.save(corporate));
 			corporateRepository.save(corporate);
