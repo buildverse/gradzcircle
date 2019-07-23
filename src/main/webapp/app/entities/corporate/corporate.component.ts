@@ -114,7 +114,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
               name: 'userDataLoadedSuccess',
               content: 'User Data Load Success'
             });
-            console.log('Loaded Corporate info');
+           // console.log('Loaded Corporate info');
           });
         });
       } else {

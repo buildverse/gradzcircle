@@ -174,9 +174,15 @@ export class CandidateEducationDialogComponent implements OnInit {
       }
     }
   }
+  
+  setAlert() {
+     this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidateEducation.home.highestQualificationAlert', timeout: 5000}, []);
+  }
+  
   ngOnInit() {
     // this.showCollegeTextArea = false;
     this.validPercentScore = true;
+    this.setAlert();
     //  this.showQualificationTextArea = false;
     // this.showCourseTextArea = false;
     this.isSaving = false;

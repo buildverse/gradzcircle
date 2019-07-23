@@ -8,7 +8,8 @@
                 "search": "Search for Candidate Education",
                 "add": "Add",
                 "addProject": "Add Project",
-                "delete": "Remove Education "
+                "delete": "Remove Education ",
+                "highestQualificationAlert": "Your latest qualification will be marked as Highest Qualification. You can change highest qualification if you want."
             },
             "created": "A new Candidate Education is created with identifier {{ param }}",
             "updated": "A Candidate Education is updated with identifier {{ param }}",
