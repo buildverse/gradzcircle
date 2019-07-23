@@ -85,9 +85,9 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
   }
 
   updateJob() {
-    console.log('Fiansl poayment is ' + this.costDiff);
-    console.log('Fiansl escrow amount  is ' + this.transientCorpEscrowAmount);
-    console.log(' escrow amount used is ' + this.escrowAmountUsed);
+   // console.log('Fiansl poayment is ' + this.costDiff);
+  //  console.log('Fiansl escrow amount  is ' + this.transientCorpEscrowAmount);
+  //  console.log(' escrow amount used is ' + this.escrowAmountUsed);
        //console.log('Job Id is ' + this.jobId);
     this.job.escrowAmountUsed = this.escrowAmountUsed;
   //  this.job.id = this.jobId;

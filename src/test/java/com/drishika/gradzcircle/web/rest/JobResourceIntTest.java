@@ -3343,9 +3343,12 @@ public class JobResourceIntTest {
 	public void testGetJobListForLinkedCandidatedByCorporate() throws Exception {
 		Corporate c = new Corporate();
 		corporateRepository.saveAndFlush(c);
-		Candidate candidate = new Candidate();
-		candidate.firstName("AAAAA");
-		candidateRepository.saveAndFlush(candidate);
+		Candidate candidate1 = new Candidate();
+		Candidate candidate2 = new Candidate();
+		candidate1.firstName("AAAAA");
+		candidate2.firstName("BBBBB");
+		candidateRepository.saveAndFlush(candidate1);
+		candidateRepository.saveAndFlush(candidate2);
 		Job job1 = new Job();
 		job1.jobTitle("Test Job 1");
 		job1.jobStatus(1);
@@ -3367,21 +3370,33 @@ public class JobResourceIntTest {
 		jobRepository.saveAndFlush(job4);
 		jobRepository.saveAndFlush(job5);
 		c.addJob(job5).addJob(job4).addJob(job3).addJob(job2).addJob(job1);
-		CorporateCandidate cc1 = new CorporateCandidate(c, candidate, job5.getId());
-		CorporateCandidate cc2 = new CorporateCandidate(c, candidate, job2.getId());
-		CorporateCandidate cc3 = new CorporateCandidate(c, candidate, job3.getId());
-		c.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
-		candidate.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
-		CandidateJob cJ1 = new CandidateJob(candidate,job1);cJ1.setMatchScore(20d);
-		CandidateJob cJ2 = new CandidateJob(candidate,job2);cJ2.setMatchScore(30d);
-		CandidateJob cJ3 = new CandidateJob(candidate,job3);cJ3.setMatchScore(40d);
-		CandidateJob cJ4 = new CandidateJob(candidate,job4);cJ4.setMatchScore(50d);
-		CandidateJob cJ5 = new CandidateJob(candidate,job5);cJ5.setMatchScore(70d);
+		CorporateCandidate cc1 = new CorporateCandidate(c, candidate1, job5.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(c, candidate1, job2.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(c, candidate1, job3.getId());
+		CorporateCandidate cc4 = new CorporateCandidate(c, candidate2, job5.getId());
+		CorporateCandidate cc5 = new CorporateCandidate(c, candidate2, job2.getId());
+		CorporateCandidate cc6 = new CorporateCandidate(c, candidate2, job3.getId());
+		c.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1)
+			.addCorporateCandidate(cc6).addCorporateCandidate(cc5).addCorporateCandidate(cc4);
+		candidate1.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1)
+			.addCorporateCandidate(cc6).addCorporateCandidate(cc5).addCorporateCandidate(cc4);
+		CandidateJob cJ1 = new CandidateJob(candidate1,job1);cJ1.setMatchScore(20d);
+		CandidateJob cJ2 = new CandidateJob(candidate1,job2);cJ2.setMatchScore(30d);
+		CandidateJob cJ3 = new CandidateJob(candidate1,job3);cJ3.setMatchScore(40d);
+		CandidateJob cJ4 = new CandidateJob(candidate1,job4);cJ4.setMatchScore(50d);
+		CandidateJob cJ5 = new CandidateJob(candidate1,job5);cJ5.setMatchScore(70d);
+		CandidateJob cJ21 = new CandidateJob(candidate2,job1);cJ21.setMatchScore(20d);
+		CandidateJob cJ22 = new CandidateJob(candidate2,job2);cJ22.setMatchScore(30d);
+		CandidateJob cJ23 = new CandidateJob(candidate2,job3);cJ23.setMatchScore(40d);
+		CandidateJob cJ24 = new CandidateJob(candidate2,job4);cJ24.setMatchScore(50d);
+		CandidateJob cJ25 = new CandidateJob(candidate2,job5);cJ25.setMatchScore(70d);
 		job5.addCandidateJob(cJ5);job4.addCandidateJob(cJ4);job1.addCandidateJob(cJ1);job3.addCandidateJob(cJ3);job2.addCandidateJob(cJ2);
-		candidate.addCandidateJob(cJ5).addCandidateJob(cJ4).addCandidateJob(cJ1).addCandidateJob(cJ3).addCandidateJob(cJ2);
+		job5.addCandidateJob(cJ25);job4.addCandidateJob(cJ24);job1.addCandidateJob(cJ21);job3.addCandidateJob(cJ23);job2.addCandidateJob(cJ22);
+		candidate1.addCandidateJob(cJ5).addCandidateJob(cJ4).addCandidateJob(cJ1).addCandidateJob(cJ3).addCandidateJob(cJ2);
+		candidate2.addCandidateJob(cJ25).addCandidateJob(cJ24).addCandidateJob(cJ21).addCandidateJob(cJ23).addCandidateJob(cJ22);
 		//candidateRepository.saveAndFlush(candidate);
 		//corporateRepository.saveAndFlush(c);
-		restJobMockMvc.perform(get("/api/jobListForCandidateShortlistedByCorporate/{candidateId}/{corporateId}", candidate.getId(),c.getId())).andExpect(status().isOk())
+		restJobMockMvc.perform(get("/api/jobListForCandidateShortlistedByCorporate/{candidateId}/{corporateId}", candidate1.getId(),c.getId())).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$", hasSize(3))).andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job5")))
 		.andExpect(jsonPath("$[*].jobTitle", hasItem("Test Job 2")))
@@ -6314,7 +6329,7 @@ public class JobResourceIntTest {
 		//Create Job
 		Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
-				.canEdit(UPDATED_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).noOfApplicants(20).noOfApplicantsLeft(0l).noOfApplicantsBought(20);
+				.canEdit(UPDATED_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).noOfApplicants(4).noOfApplicantsLeft(0l).noOfApplicantsBought(4);
 		//Create orproate
 		Corporate corporate = new Corporate();
 		corporate.escrowAmount(100d);
@@ -6350,6 +6365,12 @@ public class JobResourceIntTest {
 		candidateJobs.add(candidateJob3);
 		candidateJobs.add(candidateJob2);
 		job.setCandidateJobs(candidateJobs);
+		//Create CorporateCandidate Links
+		CorporateCandidate corporateCandidate1 = new CorporateCandidate(corporate,candidateA,job.getId());
+		CorporateCandidate corporateCandidate2 = new CorporateCandidate(corporate,candidateB,job.getId());
+		CorporateCandidate corporateCandidate3 = new CorporateCandidate(corporate,candidateC,job.getId());
+		CorporateCandidate corporateCandidate4 = new CorporateCandidate(corporate,candidateD,job.getId());
+		corporate.addCorporateCandidate(corporateCandidate1).addCorporateCandidate(corporateCandidate2).addCorporateCandidate(corporateCandidate3).addCorporateCandidate(corporateCandidate4);
 		//create job history
 		JobHistory jobHistory1 = new JobHistory().jobTitle(DEFAULT_JOB_TITLE).jobDescription(DEFAULT_JOB_DESCRIPTION)
 				.salary(DEFAULT_SALARY).jobStatus(DRAFT_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED)
@@ -6395,6 +6416,7 @@ public class JobResourceIntTest {
 		Job testJob = jobList.get(jobList.size() - 1);
 		assertThat(testJob.getCandidateJobs()).hasSize(4);
 		assertThat(testJob.getHistories()).hasSize(3);
+		assertThat(testJob.getCorporate().getShortlistedCandidates()).hasSize(4);
 		/*
 		 * Job job = new Job().jobTitle(DEFAULT_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(UPDATED_HAS_BEEN_EDITED).everActive(UPDATED_EVER_ACTIVE)
@@ -6410,8 +6432,8 @@ public class JobResourceIntTest {
 		assertThat(testJob.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(30);
-		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(20);
-		assertThat(testJob.getNoOfApplicants()).isEqualTo(50);
+		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(4);
+		assertThat(testJob.getNoOfApplicants()).isEqualTo(34);
 		assertThat(testJob.getCorporate().getEscrowAmount()).isEqualTo(50d);
 		assertThat(testJob.getAmountPaid()).isEqualTo(20d);
 		assertThat(testJob.getEscrowAmountUsed()).isEqualTo(20d);

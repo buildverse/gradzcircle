@@ -102,7 +102,7 @@
 							formControlName="email" aria-describedby="basic-addon3">
 					</div>
 					<div>
-						<span class="form-text text-left" *ngIf=" registerForm.get('email').dirty &&
+						<span class="form-text text-left" *ngIf="registerForm.get('email').dirty &&
                                                         registerForm.get('email').errors">
 							<span class="text-danger" *ngIf="registerForm.get('email').errors.pattern"><small>Please enter a valid email address</small></span>
 						</span>

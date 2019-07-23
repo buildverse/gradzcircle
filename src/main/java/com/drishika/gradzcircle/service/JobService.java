@@ -40,6 +40,7 @@ import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.repository.CandidateAppliedJobsRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
+import com.drishika.gradzcircle.repository.CorporateCandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.FilterRepository;
@@ -106,6 +107,8 @@ public class JobService {
 	
 	private final GradzcircleCacheManager<String, Map<String,Double>> filtersCacheManager;
 	
+	private final CorporateCandidateRepository corporateCandidateRepository;
+	
 	private final EmploymentTypeRepository employmentTypeRepository;
 	
 	private final JobTypeRepository jobTypeRepository;
@@ -122,7 +125,7 @@ public class JobService {
 			CorporateService corporateService, GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
 			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,GradzcircleCacheManager <String,Long> jobCountCacheManager,
 			GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager, GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager, GradzcircleCacheManager<String, Map<String,Double>> filtersCacheManager,
-			FilterRepository filterRepository
+			FilterRepository filterRepository, CorporateCandidateRepository corporateCandidateRepository
 			) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
@@ -144,6 +147,7 @@ public class JobService {
 		this.employmentTypeCacheManager = employmentTypeCacheManager;
 		this.filtersCacheManager = filtersCacheManager;
 		this.filterRepository = filterRepository;
+		this.corporateCandidateRepository = corporateCandidateRepository;
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
@@ -325,18 +329,19 @@ public class JobService {
 	
 	public List<JobListDTO> getShortlistedJobListForCorporateByCandidate(Long corporateId, Long candidateId) {
 		log.debug("Corproate is {}",corporateRepository.getOne(corporateId));
-		Set<CorporateCandidate> linkedCandidates = corporateRepository.getOne(corporateId).getShortlistedCandidates();
+		List<CorporateCandidate> linkedCandidates = corporateCandidateRepository.findJobThatCorporateShortListedCandidateFor(corporateId, candidateId);
 		log.debug("Linked date set is {}",linkedCandidates);
-		return linkedCandidates.stream().map(linkedCandidate -> convertToJobListDTO(linkedCandidate,candidateId)).collect(Collectors.toList());
+		return linkedCandidates.stream().map(linkedCandidate -> convertToJobListDTO(linkedCandidate)).collect(Collectors.toList());
 		
 	}
 	
-	private JobListDTO convertToJobListDTO(CorporateCandidate linkedCandidate,Long candidateId) {
-		Job job = jobRepository.findOne(linkedCandidate.getId().getJobId());
-		log.debug("job is {}",job);
-		Candidate candidate = candidateRepository.getOne(candidateId);	
-		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(matchedJob -> matchedJob.getJob().equals(job)).findFirst().orElse(null);
-		JobListDTO jobDto = new JobListDTO(job.getJobTitle(),candidateJob.getMatchScore());
+	private JobListDTO convertToJobListDTO(CorporateCandidate linkedCandidate) {
+		JobListDTO jobDto = null;
+		Set<CandidateJob> candidateJobs = linkedCandidate.getCandidate().getCandidateJobs();
+		CandidateJob candidateJob = new CandidateJob(linkedCandidate.getCandidate(),jobRepository.findOne(linkedCandidate.getId().getJobId()));
+		CandidateJob filteredCandidateJob = candidateJobs.stream().filter(cJ -> cJ.equals(candidateJob)).findAny().orElse(null);
+		if(filteredCandidateJob != null)
+			jobDto = new JobListDTO(filteredCandidateJob.getJob().getJobTitle(),filteredCandidateJob.getMatchScore());
 		return jobDto;
 	}
 
@@ -1128,4 +1133,5 @@ public class JobService {
 		}
 		return job;
 	}
+	
 }
