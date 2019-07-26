@@ -154,7 +154,7 @@
 									<td class="font-weight-light"><a class="disabled">
 										{{job.noOfShortListedCandidate}}</a></td>
 								</ng-template>
-								<td *ngIf="job?.numberOfCandidatesRemaining>=0; else showTotalNoOfCandidates" class="font-weight-light">
+								<td *ngIf="job.numberOfCandidatesRemaining && numberOfCandidatesRemaining>=0; else showTotalNoOfCandidates" class="font-weight-light">
 									{{job.numberOfCandidatesRemaining}}
 								</td>
 								<ng-template #showTotalNoOfCandidates>
