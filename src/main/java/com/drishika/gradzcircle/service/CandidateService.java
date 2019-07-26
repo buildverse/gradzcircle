@@ -279,7 +279,7 @@ public class CandidateService {
 	public CandidatePublicProfileDTO getCandidatePublicProfile(Long candidateId, Long jobId, Long corporateId) {
 		logger.debug("REST request to get Candidate public profile for candidate {} {} {}", candidateId, jobId, corporateId);
 		Boolean isShortListed = false;
-	
+		Boolean canShortListMore = false;
 		Candidate candidate = candidateRepository.findOne(candidateId);
 		if (candidate == null)
 			return new CandidatePublicProfileDTO();
@@ -311,13 +311,24 @@ public class CandidateService {
 		if(jobId >0 && corporateId >0) {
 			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
 			isShortListed = isShortListed(candidate,corporateId);
+			canShortListMore = canShortListCandidate(corporateId,jobId);
 		}
 		
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
-				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, isShortListed, candidateJob);
+				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, isShortListed, candidateJob,canShortListMore);
 	}
 
 	
+	private Boolean canShortListCandidate(Long corporateId, Long jobId) {
+		logger.debug("The job id is {}",jobId);
+		Corporate corporate = corporateRepository.findOne(corporateId);
+		Job job = jobRepository.findOne(jobId);
+		if(corporate.getJobs().contains(job) && job.getNoOfApplicantLeft()!=null && job.getNoOfApplicantLeft()==0)
+			return false;
+		else
+			return true;
+			
+	}
 	
 	private Boolean isShortListed(Candidate candidate, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
@@ -352,7 +363,7 @@ public class CandidateService {
 			Set<CandidateEducation> candidateEducations, Set<CandidateEmployment> candidateEmployments,
 			Set<CandidateCertification> candidateCertifications,
 			Set<CandidateNonAcademicWork> candidateNonAcademicWorks,
-			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob) {
+			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob, Boolean canBeShortListed) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		//dto.setShortListed(isShortListed);
 		//dto.setShortListedForAnotherJob(isShortListedForAnotherJob);
@@ -362,6 +373,7 @@ public class CandidateService {
 			dto.setMatchScore(candidateJob.getMatchScore());
 			dto.setReviewed(candidateJob.getReviewed());
 		}
+		dto.setCanBeShortListed(canBeShortListed);
 		dto.setCandidateDetails(dtoConverter.convertCandidateDetails(candidate));
 		dto.setAddresses(dtoConverter.convertCandidateAddresses(addresses));
 		dto.setEducations(dtoConverter.convertCandidateEducations(candidateEducations, false,candidate));

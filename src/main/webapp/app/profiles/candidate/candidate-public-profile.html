@@ -542,7 +542,7 @@
 			</div>
 			</ng-template>
 			<div *jhiHasAnyAuthority="['ROLE_CORPORATE']" >
-				<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate" class="row justify-content-center">
+				<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate && candidate.canBeShortListed" class="row justify-content-center">
 					<form name="linkForm" role="form" novalidate (ngSubmit)="save()"
 						#linkForm="ngForm" >
 						<button type="submit" 

@@ -57,6 +57,8 @@ public class CorporateJobDTO implements Serializable {
 	
 	private Double corporateEscrowAmount;
 	
+	private Integer noOfApplicants;
+	
 
 
 
@@ -319,6 +321,22 @@ public class CorporateJobDTO implements Serializable {
 	public void setCorporateEscrowAmount(Double corporateEscrowAmount) {
 		this.corporateEscrowAmount = corporateEscrowAmount;
 	}
+
+	/**
+	 * @return the noOfApplicants
+	 */
+	public Integer getNoOfApplicants() {
+		return noOfApplicants;
+	}
+
+	/**
+	 * @param noOfApplicants the noOfApplicants to set
+	 */
+	public void setNoOfApplicants(Integer noOfApplicants) {
+		this.noOfApplicants = noOfApplicants;
+	}
+
+
 
 
 	

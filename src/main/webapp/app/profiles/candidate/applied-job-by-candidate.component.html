@@ -38,9 +38,14 @@
 										<td>
 											<div>{{job.matchScore}}%</div>
 										</td>
-										<td class="icons-edit">
+										<td *ngIf="job.jobStatus>0; else closedJob" class="icons-edit">
 			                         		<a [routerLink]="['/', { outlets: { popup: 'job/viewJobForCandidate'} }]" (click)="setJobViewParamForCandidate(job.id)"   ngbTooltip="View"><span class="icon icon-eye"></span></a>
 			                         	</td>
+			                         	<ng-template #closedJob>
+			                         	<td>
+			                         		<span class="badge badge-pill badge-danger">Closed</span>
+			                         	</td>
+			                         	</ng-template>
 									</tr>
 								</tbody>
 							</table>

@@ -37,7 +37,7 @@ public class CandidatePublicProfileDTO implements Serializable {
 
 	Set<AddressDTO> addresses = new HashSet<>();
 	
-	
+	Boolean canBeShortListed;
 
 	
 
@@ -186,6 +186,20 @@ public class CandidatePublicProfileDTO implements Serializable {
 	 */
 	public void setReviewed(Boolean reviewed) {
 		this.reviewed = reviewed;
+	}
+
+	/**
+	 * @return the canBeShortListed
+	 */
+	public Boolean getCanBeShortListed() {
+		return canBeShortListed;
+	}
+
+	/**
+	 * @param canBeShortListed the canBeShortListed to set
+	 */
+	public void setCanBeShortListed(Boolean canBeShortListed) {
+		this.canBeShortListed = canBeShortListed;
 	}
 
 	

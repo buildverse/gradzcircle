@@ -111,7 +111,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	@Query("SELECT cJ FROM CandidateJob cJ join Job j on (j.id = cJ.job.id and  j.id=?1 and j.jobStatus=1) WHERE cJ.candidate.id not IN (SELECT cc.candidate.id  FROM CorporateCandidate cc where cJ.candidate.id = cc.candidate.id and cJ.job.id = cc.id.jobId) and cJ.matchScore between ?2 and ?3 and  cJ.reviewed=?4 order by cJ.matchScore desc")
 	Page<CandidateJob> findMatchedCandidatesForJobWithMatchScoreFilter(Long jobId, Double fromScore, Double toScore, Boolean reviewed, Pageable pageable);
 
-	@Query("select j from Job j, CandidateAppliedJobs cJA where  j.jobStatus=1 and cJA.id.jobId = j.id and cJA.id.candidateId=?1")
+	@Query("select j from Job j, CandidateAppliedJobs cJA where cJA.id.jobId = j.id and cJA.id.candidateId=?1")
 	Page<Job> findAppliedJobByCandidate(Long candidateId, Pageable pageable);
 	
 	@Query("select count(j) from Job j where j.corporate.id=?1")

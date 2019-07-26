@@ -8,7 +8,7 @@ import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
-import {CANDIDATE_ID, JOB_ID, CORPORATE_ID, FROM_LINKED_CANDIDATE} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, JOB_ID, CORPORATE_ID, FROM_LINKED_CANDIDATE, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 
@@ -31,6 +31,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   fromLinkedCandidate: boolean;
   eventSubscriber: Subscription;
   imageSubscriber: Subscription;
+  businessPlanEnabled?: boolean;
   
   constructor(
     private candidateService: CandidateService,
@@ -46,12 +47,18 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   }
 
   ngOnInit() {
+      this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
     this.reloadUserImage();
     if (this.candidate.reviewed && !this.candidate.isShortListed) {
       this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
     }
     if (! this.candidate.isShortListed) {
       this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
+    }
+    if(!this.candidate.canBeShortListed && this.businessPlanEnabled ) {
+      this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
+    } else if(!this.candidate.canBeShortListed && !this.businessPlanEnabled) {
+      this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert'}, []);
     }
   }
 

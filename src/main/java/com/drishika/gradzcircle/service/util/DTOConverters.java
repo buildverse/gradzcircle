@@ -157,6 +157,8 @@ public class DTOConverters {
 		jobListingData.setHasBeenEdited(job.getHasBeenEdited());
 		jobListingData.setEverActive(job.getEverActive());
 		jobListingData.setNumberOfCandidatesRemaining(job.getNoOfApplicantLeft());
+		logger.debug("The number of candidates left are {}",job.getNoOfApplicantLeft());
+		jobListingData.setNoOfApplicants(job.getNoOfApplicants());
 		return jobListingData;
 	}
 	

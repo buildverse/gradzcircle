@@ -21,6 +21,7 @@ export class CandidatePublicProfile implements BaseEntity {
     public certifications?: CandidateCertification[],
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
-    public matchScore?: number
-  ) { this.isShortListed = false; this.reviewed = false;  }
+    public matchScore?: number,
+    public canBeShortListed?: boolean
+  ) { this.isShortListed = false; this.reviewed = false;  this.canBeShortListed = false;}
 }

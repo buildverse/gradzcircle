@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs/Rx';
 import {JhiEventManager, JhiParseLinks, JhiAlertService} from 'ng-jhipster';
 import {JobService} from './job.service';
 import {ITEMS_PER_PAGE, UserService, DataStorageService} from '../../shared';
-import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
+import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
 import {CandidateList} from './candidate-list.model';
 import {JobConstants} from './job.constants';
 import {HttpResponse} from '@angular/common/http';
@@ -37,6 +37,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
   matchScoreTo?: number;
   matchScoreRange?: string;
   reviewed?: boolean;
+  businessPlanEnabled?: boolean;
 
   constructor(
     private jobService: JobService,
@@ -146,6 +147,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     this.matchScoreFrom = -1;
     this.matchScoreTo = -1;
     this.matchScoreRange = undefined;
+    this.businessPlanEnabled = this.dataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
     this.subscription = this.activatedRoute.params.subscribe((params) => {
 
       if (params['id'] && params['corporateId']) {
@@ -215,12 +217,13 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     // this.page = pagingParams.page;
     this.candidateList = data;
     if (this.candidateList && this.candidateList.length > 0){
-      if (!this.candidateList[0].canBuy) {
+      if (!this.candidateList[0].canBuy && this.businessPlanEnabled) {
         this.jhiAlertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
+      } else if (!this.candidateList[0].canBuy && ! this.businessPlanEnabled){
+        this.jhiAlertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert'}, []);
       }
     }
     this.setImageUrl();
-   
   }
 
   private setImageUrl() {

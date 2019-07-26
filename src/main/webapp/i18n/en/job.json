@@ -105,6 +105,7 @@
 			"view" : "View Job",
 			"jobList": "Shotlisted for Jobs",
 			"topUpAlert": "You can't buy more candidates for this job as you have reached limit. Please top up your balance to buy more",
+			"requestMoreCandidateAlert": "Please request additional candidates from your dashboard for this job",
 			"filters": {
 				"title": "Filters",
 				"employmentType": "Employment Type",
