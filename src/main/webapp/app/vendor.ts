@@ -2,8 +2,11 @@
 /* tslint:disable */
 
 import '../content/css/vendor.css';
-/*import '../content/fonts/proximanova-bold-webfont.ttf';
-import '../content/fonts/proximanova-bold-webfont.woff';
+import '../content/fonts/LatoLatin-Light.ttf';
+import '../content/fonts/LatoLatin-Light.eot';
+import '../content/fonts/LatoLatin-Light.woff';
+import '../content/fonts/LatoLatin-Light.woff2';
+/*import '../content/fonts/proximanova-bold-webfont.woff';
 import '../content/fonts/proximanova-bold-webfont.woff2';
 import '../content/fonts/proximanova-light-webfont.ttf';
 import '../content/fonts/proximanova-light-webfont.woff';
@@ -15,10 +18,6 @@ import '../content/fonts/toolkit-entypo.eot';
 import '../content/fonts/toolkit-entypo.ttf';
 import '../content/fonts/toolkit-entypo.woff';
 import '../content/fonts/toolkit-entypo.woff2';
- //import './js/toolkit.min.js';
-/*import '../content/css/fonts.css';*/
-//import './js/custom.js';
-//import './js/select.js';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';

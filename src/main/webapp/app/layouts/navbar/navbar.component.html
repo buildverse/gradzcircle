@@ -17,12 +17,12 @@
     <ng-template #candidateOrGuest>
 	    	<div *ngIf="candidateId; else guest">
 	    		<a class="navbar-brand logo" [routerLink]="['/viewjobs']" (click)="collapseNavbar()">
-				<span class="logo-img"></span>
+				<span class="logo-img-white"></span>
 			</a>
 		</div>
 		<ng-template #guest>
 			<a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-					<span class="logo-img"></span>
+					<span class="logo-img-white"></span>
 			</a>
 		</ng-template>
     </ng-template>

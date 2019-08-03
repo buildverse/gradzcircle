@@ -1,6 +1,6 @@
-@import 'toolkit.min.css';
+/*@import 'toolkit.min.css';*/
 
-/*@import 'fonts.css';*/
+@import 'fonts.css';
 
 /*=======================================================================
 ADDED BY ABHINAV TO FIX FOOTER - FOOTER COMMENTED ABOVE FROM JHIPSTER
@@ -12,9 +12,22 @@ html {
 
 body {
     margin-bottom: 60px;
-    /* font-family: "Helvetica"; */
-    font-family: 'Proxima Nova', sans-serif;
-    font-style: normal;
+    background-color: #ffffff;
+    margin: 0;
+	font-family: LatoLatinWeb,sans-serif;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #212529;
+	text-align: left;
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
@@ -35,6 +48,43 @@ overflow-x:visible;
     width: 100%;
   }
 */
+/* This is for registration for both talent and employer */
+.clean-block.dark {
+  background-color: #f6f6f6;
+}
+
+@media (min-width:576px) {
+  .clean-block {
+    padding-bottom: 100px;
+  }
+}
+
+.clean-block {
+  padding-bottom: 600px;
+  padding-top: 50px;
+}
+
+@media (min-width:576px) {
+  .clean-block .block-heading {
+    padding-top: 80px;
+  }
+}
+
+.clean-block .block-heading {
+  padding-top: 200px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.clean-block.clean-form form {
+  border-top: 2px solid #5ea4f3;
+  background-color: #fff;
+  max-width: 500px;
+  margin: auto;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.075);
+}
+
 .pagination
 {
   @extend .d-flex, .flex-wrap, .justify-content-center;
@@ -126,19 +176,38 @@ transform:translatey(0);
 transition-delay:.2s;
 }
 
-
-.logo .logo-img {
-	height: 28px;
+.logo .logo-img-white {
+	height: 45px;
 	display: inline-block;
 	vertical-align: middle;
-	width: 70px;
+	width: 100px;
+	margin-left:40px;
 }
 
 .logo-img {
 	height: 100%;
-	background: url("../images/logo.png") no-repeat center center;
+	background: url("../images/mid-blue.png") no-repeat center center;
 	background-size: contain;
 	width: 100%;
+}
+
+.logo-img-white {
+	height: 100%;
+	background: url("../images/logo-white.png") no-repeat center center;
+	background-size: contain;
+	width: 100%;
+}
+
+.img-jobs {
+	background: url("../images/jobs.jpg");
+}
+
+.img-corporate {
+	background: url("../images/corporate.jpg");
+}
+
+.img-talent {
+	background: url("../images/talent.jpg");
 }
 
 ng2-dropdown-menu {
@@ -179,8 +248,47 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 	color: white;
 }
 
+.modal-body{
+	background-color: #ffffff;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .btn {
+    transition: none;
+  }
+}
+
+
+
+.close{
+	float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffff;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+}
+
 .modal-header-decorate {
-	background-color: #0D47A1;
+	background: linear-gradient(120deg,#7f70f5,#0ea0ff);
 	color: white;
 }
 
@@ -313,133 +421,6 @@ ul.square {
 	list-style-type: square;
 }
 
-/* ==========================================================================
-CSS for timleines 
-========================================================================== */
-.timeline {
-	position: relative;
-	padding: 21px 15px 10px;
-	margin-top: 4px;
-	margin-bottom: 30px;
-}
-
-.timeline .line {
-	position: absolute;
-	width: 4px;
-	display: block;
-	background: currentColor;
-	color: #3097D1;
-	top: 0px;
-	bottom: 0px;
-	margin-left: 30px;
-}
-
-.timeline .separator {
-	border-top: 1px solid currentColor;
-	padding: 5px;
-	padding-left: 40px;
-	font-style: italic;
-	font-size: .9em;
-	margin-left: 30px;
-}
-
-.timeline .line::before {
-	top: -4px;
-}
-
-.timeline .line::after {
-	bottom: -4px;
-}
-
-.timeline .line::before, .timeline .line::after {
-	content: '';
-	position: absolute;
-	left: -4px;
-	width: 12px;
-	height: 12px;
-	display: block;
-	border-radius: 50%;
-	background: currentColor;
-}
-
-.timeline .card {
-	position: relative;
-	margin: 10px 0px 21px 70px;
-	clear: both;
-}
-
-.timeline .card::before {
-	position: absolute;
-	display: block;
-	top: 8px;
-	left: -24px;
-	content: '';
-	width: 0px;
-	height: 0px;
-	border: inherit;
-	border-width: 12px;
-	border-top-color: transparent;
-	border-bottom-color: transparent;
-	border-left-color: transparent;
-}
-
-.timeline .card .card-header.icon * {
-	font-size: 20px;
-	vertical-align: middle;
-	line-height: 40px;
-}
-
-.timeline .card .card-header.icon {
-	position: absolute;
-	left: -59px;
-	display: block;
-	width: 40px;
-	height: 40px;
-	padding: 0px;
-	background-color: #3097D1;
-	border-radius: 50%;
-	text-align: center;
-	float: left;
-}
-
-.timeline .card-outline {
-	border-color: transparent;
-	background: transparent;
-	box-shadow: none;
-}
-
-.timeline .card-outline .card-block {
-	padding: 10px 0px;
-}
-
-.timeline .card-outline .card-header:not (.icon ), .timeline .card-outline .card-footer
-	{
-	display: none;
-}
-
-.p-upper {
-	margin-top: -0.5em;
-}
-
-.p-lower {
-	margin-top: -0.5em;
-	margin-bottom: -1em;
-}
-
-.p-lower-right {
-	margin-top: -.25em;
-	margin-bottom: -0.5em;
-}
-
-.p-lower-lower {
-	margin-bottom: -0.25em;
-}
-
-.time-period {
-	font-style: italic;
-	font-size: .9em;
-}
-
 /*========================================================
 picture overlay to edit
 ==========================================================*/
@@ -556,10 +537,6 @@ entity tables helpers
 	flex-direction: row;
 	-webkit-justify-content: flex-end;
 	justify-content: flex-end;
-}
-
-.btn-primary {
-	background-color: #1276ae;
 }
 
 /* ==========================================================================

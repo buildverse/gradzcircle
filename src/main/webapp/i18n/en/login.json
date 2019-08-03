@@ -9,7 +9,7 @@
         },
         "messages": {
             "error": {
-                "authentication": "<strong>Failed to sign in!</strong> Please check your credentials and try again."
+                "authentication": "Please check your credentials and try again."
             }
         },
         "password" : {

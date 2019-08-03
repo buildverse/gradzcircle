@@ -1,250 +1,98 @@
-<div class="container-fill-height">
-	<div class="container-content-middle">
-
-		<form role="form" class="mx-auto text-center app-login-form"
-			novalidate (ngSubmit)="register()"
-			[formGroup]="corporateRegisterForm">
-
-
-			<img class="app-brand mb-5" src="../../../content/images/brand.png"
-				alt="brand">
-			<div style="color: #3097D1" *ngIf="success"
+<main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading logo-img"></div>
+            <div class="text-center"> <h2 class="text-info">Looking For Talent? Check Us Out</h2></div>
+            	<div class="text-success text-center" *ngIf="success"
 				jhiTranslate="register.messages.success">
 				<strong>Thanks for interest in Gradzcircle!</strong> Please check
 				your email and click the verification link to complete registration.
 			</div>
 
-			<div class="text-danger" *ngIf="error"
+			<div class="text-danger text-center" *ngIf="error"
 				jhiTranslate="register.messages.error.fail">
 				<strong>Registration failed!</strong> Please try again later.
 			</div>
 
-			<div class="text-danger" *ngIf="errorUserExists"
-				jhiTranslate="register.messages.error.userexists">
-				<strong>Login name already registered!</strong> <br> Please
-				choose another one.
-			</div>
-
-			<div class="text-danger" *ngIf="errorEmailExists"
+			<div class="text-danger text-center" *ngIf="errorUserExists"
 				jhiTranslate="register.messages.error.emailexists">
 				<strong>Email is already in use!</strong> Please choose another one.
 			</div>
-
-			<fieldset>
-				<!--<div class="form-group"
-					[ngClass]="{'has-danger':  (corporateRegisterForm.get('firstName').touched || 
-                                                                  corporateRegisterForm.get('firstName').dirty) &&
-                                                                  !corporateRegisterForm.get('firstName').valid }">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-user" id="basic-addon1"></span>
-						</div>
-						<input class="form-control" placeholder="First Name..."
-							formControlName="firstName" id="firstname"
-							aria-describedby="basic-addon1">
-					</div>
-
-					  <div>
-						<span class="form-text text-left"
-							*ngIf="(corporateRegisterForm.get('firstName').touched || 
-                                                            corporateRegisterForm.get('firstName').dirty) && 
-                                                            corporateRegisterForm.get('firstName').errors">
-							<div class="text-danger"
-								*ngIf="corporateRegisterForm.get('firstName').errors.required">
-								Please enter your user name.</div>
-							<div class="text-danger"
-								*ngIf="corporateRegisterForm.get('firstName').errors.minlength">
-								The first name must be longer than 6 characters.</div>
-						</span>
-					</div>
-				</div>
-
-				<div class="form-group"
-					[ngClass]="{'has-danger':  (corporateRegisterForm.get('lastName').touched || 
-                                                                  corporateRegisterForm.get('lastName').dirty) &&
-                                                                  !corporateRegisterForm.get('lastName').valid }">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-user" id="basic-addon2"></span>
-						</div>
-						<input class="form-control" placeholder="Last Name..."
-							formControlName="lastName" aria-describedby="basic-addon2">
-					</div>
-
-					<div>
-						<span class="form-text text-left"
-							*ngIf="(corporateRegisterForm.get('lastName').touched || 
-                                                            corporateRegisterForm.get('lastName').dirty) && 
-                                                            corporateRegisterForm.get('lastName').errors">
-							<div class="text-danger"
-								*ngIf="corporateRegisterForm.get('lastName').errors.required">
-								Please enter your user name.</div>
-							<div class="text-danger"
-								*ngIf="corporateRegisterForm.get('lastName').errors.minlength">
-								The first name must be longer than 6 characters.</div>
-						</span>
-					</div>
-				</div>-->
-
-				<div class="form-group">
-
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-suitcase"
-								id="basic-addon3"></span> 
-						</div>		
-							<input class="form-control"
-								placeholder="{{'gradzcircleApp.corporate.registrationForm.corporateName' | translate}}" formControlName="companyName"
-								aria-describedby="basic-addon3">
-					</div>
-
-
-					<div>
-						<span class="form-text text-left "
-							*ngIf="corporateRegisterForm.get('companyName').dirty && 
-                                                            corporateRegisterForm.get('companyName').errors">
-							<span class="text-danger"
-								*ngIf="corporateRegisterForm.get('companyName').errors.minlength">
-								<small>	Corporate name must be atleast 6 characters.</small></span>
-						</span>
-					</div>
-				</div>
-
-
-				<div class="form-group">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-mail" id="basic-addon4"></span>
-						</div>
-						<input class="form-control" placeholder="{{'gradzcircleApp.corporate.registrationForm.corporateEmail' | translate}}"
-							formControlName="email" aria-describedby="basic-addon4">
-					</div>
-
-					<div>
-						<span class="form-text text-left"
-							*ngIf="corporateRegisterForm.get('email').dirty && 
-                                                            corporateRegisterForm.get('email').errors">
-							<span class="text-danger"
-								*ngIf="corporateRegisterForm.get('email').errors.pattern">
-								<small>Please enter a valid email address</small></span>
-						</span>
-					</div>
-				</div>
-
-				<div class="form-group">
-
-					<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text icon icon-location"></span>
-					</div> 
-						<select
-							class="form-control" title="Your Country"
-							formControlName="country">
-							<!--option [selected]="corporateRegisterForm.get('country').value==null" value="">**** Select **** </option-->
-						  	<option *ngFor="let country of countries"
-								[selected]="country.countryNiceName==country"
-								[value]="country.countryNiceName">
-								{{country.countryNiceName}}</option>
+            <form role="form" novalidate (ngSubmit)="register()" [formGroup]="corporateRegisterForm">
+                <div class="form-group">
+                		<label for="companyName">Employer Name</label>
+              		<input class="form-control" formControlName="companyName" aria-describedby="companyName"
+              		[ngClass]="{
+        							'is-invalid': !corporateRegisterForm.get('companyName').valid && (corporateRegisterForm.get('companyName').dirty || corporateRegisterForm.get('companyName').touched)				
+      						}"/>
+      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('companyName').errors && (corporateRegisterForm.get('companyName').dirty || corporateRegisterForm.get('companyName').touched)">
+			        		<p *ngIf="corporateRegisterForm.get('companyName').errors.required">Company Name is required and must be at least 5 characters</p>
+			        		<p *ngIf="corporateRegisterForm.get('companyName').errors.minlength">Company Name must be at least 5 characters</p>
+			     	</div>
+                	</div>
+                	 <div class="form-group">
+                		<label for="email">Email</label>
+              		<input class="form-control" formControlName="email" aria-describedby="email"
+              		[ngClass]="{
+        							'is-invalid': !corporateRegisterForm.get('email').valid && (corporateRegisterForm.get('email').dirty || corporateRegisterForm.get('email').touched)				
+      						}"/>
+      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('email').errors && (corporateRegisterForm.get('email').dirty || corporateRegisterForm.get('email').touched)">
+			        		<p *ngIf="corporateRegisterForm.get('email').errors.pattern">Please enter a valid email address</p>
+			     	</div>
+                	</div>
+                	<div class="form-group">
+                		<label for="country">Country</label>
+	              		<select class="form-control" title="Your Country" formControlName="country" aria-describedby="country">
+							  	<option *ngFor="let country of countries"
+									[selected]="country.countryNiceName==country"
+									[value]="country.countryNiceName">
+									{{country.countryNiceName}}</option>
 						</select>
-					</div>
-				</div>
+                	</div>
+                	<div class="form-group">
+                		<label for="phoneNumber">Phone Number</label>
+              		<input class="form-control" formControlName="phoneNumber" aria-describedby="phoneNumber"
+              		[ngClass]="{
+        							'is-invalid': !corporateRegisterForm.get('phoneNumber').valid && (corporateRegisterForm.get('phoneNumber').dirty || corporateRegisterForm.get('phoneNumber').touched)				
+      						}"/>
+      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('phoneNumber').errors && (corporateRegisterForm.get('phoneNumber').dirty || corporateRegisterForm.get('phoneNumber').touched)">
+			        		<p *ngIf="corporateRegisterForm.get('phoneNumber').errors.minlength">Phone Number must be of 10 characters</p>
+			        		<p *ngIf="corporateRegisterForm.get('phoneNumber').errors.maxlength">Phone Number must be of 10 characters</p>
+			        		<p *ngIf="corporateRegisterForm.get('phoneNumber').errors.pattern">Please enter a valid phone number</p>
+			     	</div>
+                	</div>
+                <div formGroupName="passwordGroup">
+                		<div class="form-group">
+	                		<label for="password">Password</label>
+	                		<input type="password" class="form-control" id="password" formControlName="password"
+	                		[ngClass]="{
+        							'is-invalid': !corporateRegisterForm.get('passwordGroup.password').valid && (corporateRegisterForm.get('passwordGroup.password').dirty || corporateRegisterForm.get('passwordGroup.password').touched)				
+      							}"/>
+	      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('passwordGroup.password').errors && (corporateRegisterForm.get('passwordGroup.password').dirty || corporateRegisterForm.get('passwordGroup.password').touched)">
+				        		<p *ngIf="corporateRegisterForm.get('passwordGroup.password').errors.minlength">Passwords should be at least 8 characters</p>
+				     	</div>
+	                	</div>
+	                	<div class="form-group">
+	                		<label for="repeatPassword">Confirm Password</label>
+	                		<input type="password" class="form-control" id="repeatPassword" formControlName="confirmPassword"
+	                		[ngClass]="{
+        							'is-invalid': !corporateRegisterForm.get('passwordGroup').valid && 
+        								(corporateRegisterForm.get('passwordGroup.confirmPassword').dirty || 
+        									corporateRegisterForm.get('passwordGroup.confirmPassword').touched)				
+      							}"/>
+	      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('passwordGroup').errors && 
+	      												(corporateRegisterForm.get('passwordGroup.confirmPassword').dirty || 
+	      														corporateRegisterForm.get('passwordGroup.confirmPassword').touched)">
+				        		<p *ngIf="!corporateRegisterForm.get('passwordGroup').errors?.match">Passwords do not match</p>
+				     	</div>
+				
+	                	</div>
+                	</div>
+                <button class="btn btn-primary btn-block" type="submit"[disabled]="!corporateRegisterForm.valid">Sign up</button>
+           </form>
+        </div>
+    </section>
+</main>
 
-				<div class="form-group">
 
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-phone" id="basic-addon5"></span>
-						</div>
 
-						<input class="form-control" placeholder="{{'gradzcircleApp.corporate.registrationForm.phoneNumber' | translate}}"
-							formControlName="phoneNumber" aria-describedby="basic-addon5">
-					</div>
-
-					<div>
-						<span class="form-text text-left"
-							*ngIf="corporateRegisterForm.get('phoneNumber').dirty && 
-                                                            corporateRegisterForm.get('phoneNumber').errors">
-							<span class="text-danger"
-								*ngIf="corporateRegisterForm.get('phoneNumber').errors.minlength">
-								<small>Phone Number must be of 10 characters</small></span>
-							<span class="text-danger"
-								*ngIf="corporateRegisterForm.get('phoneNumber').errors.maxlength">
-								<small>Phone Number must be of 10 characters</small></span>
-								
-							<span class="text-danger"
-								*ngIf="corporateRegisterForm.get('phoneNumber').errors.pattern">
-								<small>Please enter a valid phone number</small></span>
-						</span>
-					</div>
-				</div>
-
-				<div formGroupName="passwordGroup"
-					[ngClass]="{'has-danger': corporateRegisterForm.get('passwordGroup').errors}">
-
-					<div class="form-group mb-3">
-
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text icon icon-key" id="basic-addon6"></span>
-							</div>
-							<input type="password" class="form-control"
-								placeholder="{{'gradzcircleApp.corporate.registrationForm.password' | translate}}" formControlName="password"
-								aria-describedby="basic-addon6">
-						</div>
-
-						<div>
-							<span class="form-text text-left"
-								*ngIf="corporateRegisterForm.get('passwordGroup.password').dirty && 
-                                                                        (corporateRegisterForm.get('passwordGroup.password').errors)">
-								<span class="text-danger"
-									*ngIf="corporateRegisterForm.get('passwordGroup.password').errors.minlength">
-									<small>Passwords should be atleast 8 characters.</small></span>
-							</span>
-						</div>
-					</div>
-					<div class="form-group mb-3">
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text icon icon-key" id="basic-addon7"></span>
-							</div>
-							<input type="password" class="form-control"
-								placeholder="{{'gradzcircleApp.corporate.registrationForm.confirmPassword' | translate}}"
-								formControlName="confirmPassword"
-								aria-describedby="basic-addon7">
-						</div>
-
-						<div>
-							<span class="form-text text-left"
-								*ngIf="corporateRegisterForm.get('passwordGroup.confirmPassword').dirty && 
-                                                                        (corporateRegisterForm.get('passwordGroup.confirmPassword').errors ||
-                                                                        corporateRegisterForm.get('passwordGroup').errors)">
-								<span class="text-danger"
-									*ngIf="corporateRegisterForm.get('passwordGroup').errors?.match">
-									<small>Passwords do not match.</small></span>
-							</span>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="mb-5">
-					<button class="btn btn-primary" type="submit"
-						[disabled]="!corporateRegisterForm.valid">Sign up</button>
-				</div>
-
-				<footer class="screen-login">
-					<br />
-
-				</footer>
-			</fieldset>
-		</form>
-	</div>
-
-</div>
-
-<!--
-<br>Dirty: {{ corporateRegisterForm.dirty }} 
-<br>Touched: {{ corporateRegisterForm.touched }}
-<br>Valid: {{ corporateRegisterForm.valid }}
-<br>Value: {{ corporateRegisterForm.value | json }}
-<br> Countires : {{countries|json}}-->

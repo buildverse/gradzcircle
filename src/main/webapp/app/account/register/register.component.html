@@ -1,189 +1,64 @@
-<div class="container-fill-height">
-	<div class="container-content-middle mt-5">
-
-		<form role="form" class="mx-auto text-center app-login-form needs-validation"
-			novalidate (ngSubmit)="register()" [formGroup]="registerForm">
-
-
-			<img class="app-brand mb-5" src="../../../content/images/brand.png"
-				alt="brand">
-			<div style="color: #3097D1" *ngIf="success"
+<main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading logo-img"></div>
+            <div class="text-center"> <h2 class="text-info">Hello Talent</h2></div>
+            	<div class="text-success text-center" *ngIf="success"
 				jhiTranslate="register.messages.success">
 				<strong>Thanks for interest in Gradzcircle!</strong> Please check
 				your email and click the verification link to complete registration.
 			</div>
 
-			<div class="text-danger" *ngIf="error"
+			<div class="text-danger text-center" *ngIf="error"
 				jhiTranslate="register.messages.error.fail">
 				<strong>Registration failed!</strong> Please try again later.
 			</div>
 
-			<div class="text-danger" *ngIf="errorUserExists"
+			<div class="text-danger text-center" *ngIf="errorUserExists"
 				jhiTranslate="register.messages.error.emailexists">
 				<strong>Email is already in use!</strong> Please choose another one.
 			</div>
-
-			<div class="text-danger" *ngIf="errorEmailExists"
-				jhiTranslate="register.messages.error.emailexists">
-				<strong>Email is already in use!</strong> Please choose another one.
-			</div>
-
-			<fieldset>
-				<!--div class="form-group"
-					[ngClass]="{'has-danger':  (registerForm.get('login').touched ||
-                                                                  registerForm.get('login').dirty) &&
-                                                                  !registerForm.get('login').valid }">
-					<div class="input-group">
-						<span class="input-group-addon icon icon-user" id="basic-addon1"></span>
-						<input class="form-control"
-							placeholder="{{'global.form.username.placeholder' | translate}}"
-							formControlName="login" id="username"
-							aria-describedby="basic-addon1">
-					</div>
-					<div>
-						<span class="form-text text-left"
-							*ngIf="(registerForm.get('login').touched ||
-                                                         registerForm.get('login').dirty) &&
-                                                         registerForm.get('login').errors">
-							<div class="form-control-feedback"
-								*ngIf="registerForm.get('login').errors.required">Please
-								enter your user name.</div>
-							<div class="form-control-feedback"
-								*ngIf="registerForm.get('login').errors.minlength">The
-								first name must be longer than 6 characters.</div>
-						</span>
-					</div>
-				</div-->
-				<!--  -<div class="form-group"  >
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-user" id="basic-addon1"></span>
-						</div>
-						<input class="form-control"
-							[ngClass]="{'is-invalid': (registerForm.get('firstName').touched || registerForm.get('firstName').dirty) && !registerForm.get('firstName').valid }"
-							placeholder="{{'global.form.firstName.placeholder' | translate}}"
-							formControlName="firstName" aria-describedby="basic-addon1">
-					</div>
-					<div>
-						<span class="form-text text-left" *ngIf="(registerForm.get('firstName').touched || registerForm.get('firstName').dirty) &&
-                                                        registerForm.get('firstName').errors">
-							<div class="text-danger" *ngIf="registerForm.get('firstName').errors.required">Please enter your first name.</div>
-						
-						</span>
-					</div>
-				</div>
-				<div class="form-group"  >
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-user" id="basic-addon2"></span>
-						</div>
-						<input class="form-control"
-							[ngClass]="{'is-invalid': (registerForm.get('lastName').touched || registerForm.get('lastName').dirty) && !registerForm.get('lastName').valid }"
-							placeholder="{{'global.form.lastName.placeholder' | translate}}"
-							formControlName="lastName" aria-describedby="basic-addon2">
-					</div>
-					<div>
-						<span class="form-text text-left" *ngIf="(registerForm.get('lastName').touched || registerForm.get('lastName').dirty) &&
-                                                        registerForm.get('lastName').errors">
-							<div class="text-danger" *ngIf="registerForm.get('lastName').errors.required">Please enter your last name.</div>
-							
-						</span>
-					</div>
-				</div>-->
-				
-				<div class="form-group"  >
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-mail" id="basic-addon3"></span>
-						</div>
-						<input class="form-control"
-							
-							placeholder="{{'global.form.email.placeholder' | translate}}"
-							formControlName="email" aria-describedby="basic-addon3">
-					</div>
-					<div>
-						<span class="form-text text-left" *ngIf="registerForm.get('email').dirty &&
-                                                        registerForm.get('email').errors">
-							<span class="text-danger" *ngIf="registerForm.get('email').errors.pattern"><small>Please enter a valid email address</small></span>
-						</span>
-					</div>
-				</div>
-
-				<div formGroupName="passwordGroup"
-					>
-
-					<div class="form-group mb-3"
-						>
-						<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text icon icon-key" id="basic-addon4"></span>
-						</div>
-							<input type="password" class="form-control"
-								placeholder="{{'global.form.newpassword.placeholder' | translate}}"
-								formControlName="password" aria-describedby="basic-addon4">
-						</div>
+            <form role="form" novalidate (ngSubmit)="register()" [formGroup]="registerForm">
+                <div class="form-group">
+                		<label for="email">Email</label>
+              		<input class="form-control" formControlName="email" aria-describedby="email"
+              		[ngClass]="{
+        							'is-invalid': !registerForm.get('email').valid && (registerForm.get('email').dirty || registerForm.get('email').touched)				
+      						}"/>
+      				<div class="invalid-feedback" *ngIf="registerForm.get('email').errors && (registerForm.get('email').dirty || registerForm.get('email').touched)">
+			        		<p *ngIf="registerForm.get('email').errors.required">Email is required</p>
+			        		<p *ngIf="registerForm.get('email').errors.pattern">Please enter a valid email address</p>
+			     	</div>
+                	</div>
+                <div formGroupName="passwordGroup">
+                		<div class="form-group">
+	                		<label for="password">Password</label>
+	                		<input type="password" class="form-control" id="password" formControlName="password"
+	                		[ngClass]="{
+        							'is-invalid': !registerForm.get('passwordGroup.password').valid && (registerForm.get('passwordGroup.password').dirty || registerForm.get('passwordGroup.password').touched)				
+      							}"/>
+	      				<div class="invalid-feedback" *ngIf="registerForm.get('passwordGroup.password').errors && (registerForm.get('passwordGroup.password').dirty || registerForm.get('passwordGroup.password').touched)">
+				        		<p *ngIf="registerForm.get('passwordGroup.password').errors.minlength">Passwords should be at least 8 characters</p>
+				     	</div>
+	                	</div>
+	                	<div class="form-group">
+	                		<label for="repeatPassword">Confirm Password</label>
+	                		<input type="password" class="form-control" id="repeatPassword" formControlName="confirmPassword"
+	                		[ngClass]="{
+        							'is-invalid': !registerForm.get('passwordGroup').valid && (registerForm.get('passwordGroup.confirmPassword').dirty || registerForm.get('passwordGroup.confirmPassword').touched)				
+      							}"/>
+	      				<div class="invalid-feedback" *ngIf="registerForm.get('passwordGroup').errors && 
+	      												(registerForm.get('passwordGroup.confirmPassword').dirty || 
+	      														registerForm.get('passwordGroup.confirmPassword').touched)">
+				        		<p *ngIf="!registerForm.get('passwordGroup').errors?.match">Passwords do not match</p>
+				     	</div>
+	                	</div>
+                	</div>
+                <button class="btn btn-primary btn-block" type="submit"[disabled]="!registerForm.valid">Sign up</button>
+           </form>
+        </div>
+    </section>
+</main>
 
 
-						<div>
-							<span class="form-text text-left"
-								*ngIf="
-                                                                        registerForm.get('passwordGroup.password').dirty &&
-                                                                        (registerForm.get('passwordGroup.password').errors)">
 
-								<!--  <div class="text-danger"
-									*ngIf="registerForm.get('passwordGroup.password').errors.required">
-									Please confirm your password.</div>-->
-								<span class="text-danger"
-									*ngIf="registerForm.get('passwordGroup.password').errors.minlength">
-									<small>Passwords should be at least 8 characters.</small></span>
-							</span>
-						</div>
-					</div>
-					<!--jhi-password-strength-bar [passwordToCheck]="registerForm.get('passwordGroup.password')"></jhi-password-strength-bar-->
-
-					<div class="form-group mb-3"
-					>
-
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text icon icon-key" id="basic-addon5"></span>
-							</div>
-							<input type="password" class="form-control"
-								placeholder="{{'global.form.confirmpassword.placeholder' | translate}}"
-								formControlName="confirmPassword"
-								aria-describedby="basic-addon5">
-						</div>
-
-						<div>
-							<span class="form-text text-left"
-																*ngIf="
-                                                                            registerForm.get('passwordGroup.confirmPassword').dirty &&
-                                                                        (registerForm.get('passwordGroup.confirmPassword').errors ||
-                                                                        registerForm.get('passwordGroup').errors)">
-								<span class="text-danger"
-									*ngIf="registerForm.get('passwordGroup').errors?.match">
-									<small>Passwords do not match.</small></span>
-							</span>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="mb-5">
-					<button class="btn btn-primary" type="submit"
-						[disabled]="!registerForm.valid">Sign up</button>
-				</div>
-
-				<footer class="screen-login">
-					<br />
-
-				</footer>
-			</fieldset>
-		</form>
-	</div>
-</div>
-
-<!--  <br>Dirty: {{ registerForm.dirty }}
-<br>Touched: {{ registerForm.touched }}
-<br>Valid: {{ registerForm.valid }}
-<br>Value: {{ registerForm.value | json }}-->

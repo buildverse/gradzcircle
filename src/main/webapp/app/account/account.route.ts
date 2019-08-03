@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 import {
     activateRoute,
-    loginRoute,
     corporateAccountManageRoutes,
     passwordRoute,
     passwordResetFinishRoute,
@@ -19,7 +18,7 @@ const ACCOUNT_ROUTES = [
    passwordResetFinishRoute,
    passwordResetInitRoute,
    registerRoute,
-   loginRoute,
+  
     ...corporateAccountManageRoutes,
     socialAuthRoute,
     socialRegisterRoute,

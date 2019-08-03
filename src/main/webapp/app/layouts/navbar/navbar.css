@@ -61,7 +61,8 @@ Navbar
 }
 
 .nav-bg {
-	background-color : #0D47A1;
+	 background: linear-gradient(120deg,#7f70f5,#0ea0ff);
+color: #fff;
 	
 }
 
@@ -154,3 +155,6 @@ Logo styles
 	border: 1px solid #e6e6e6;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,1);
+}

@@ -21,12 +21,11 @@ import {
     CorporateRegisterComponent,
     EmployerAccountComponent,
     accountState,
-    CountryService,
-    LoginService,
+
     CorporateRegisterResolver,
-    LoginComponent,
+
     SideMenuComponent,
-    CorporateRegisterErrorMessagesResolver
+    
 } from './';
 
 @NgModule({
@@ -44,7 +43,7 @@ import {
         PasswordStrengthBarComponent,
         PasswordResetInitComponent,
         PasswordResetFinishComponent,
-        LoginComponent,
+
         SettingsComponent,
         EmployerAccountComponent,
         SideMenuComponent
@@ -56,7 +55,7 @@ import {
         PasswordResetInitService,
         PasswordResetFinishService,
         CorporateRegisterResolver,
-        LoginService
+
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
