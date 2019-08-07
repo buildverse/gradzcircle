@@ -15,7 +15,7 @@
                 "question": "Are you sure you want to remove {{ language }} as a Language ?"
             },
             "detail": {
-                "title": "Candidate Language Proficiency"
+                "title": "Languages"
             },
             "proficiency": "Proficiency",
             "candidate": "Candidate",

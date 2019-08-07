@@ -86,12 +86,6 @@ export class CandidateProjectDialogComponent implements OnInit {
     this.endDateLesser = false;
     this.candidateProject.isCurrentProject ? this.endDateControl = true : this.endDateControl = false;
     this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-  console.log('Is employment is '+this.isEmploymentProject);
-/*    this.candidateEducationService.query()
-      .subscribe((res: HttpResponse<CandidateEducation[]>) => {this.candidateEducations = res.body;    console.log('edu sare '+JSON.stringify(this.candidateEducations));}, (res: HttpErrorResponse) => this.onError(res.message));
-    this.candidateEmploymentService.query()
-      .subscribe((res: HttpResponse<CandidateEmployment[]>) => {this.candidateEmployments = res.body;console.log('Employement sare '+JSON.stringify(this.candidateEducations));}, (res: HttpErrorResponse) => this.onError(res.message));
- * */
   }
 
   clear() {
@@ -116,7 +110,7 @@ export class CandidateProjectDialogComponent implements OnInit {
 
   private onSaveSuccess(result: CandidateProject) {
     this.eventManager.broadcast({name: 'candidateProjectListModification', content: 'OK'});
-    this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
+  //  this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
     this.eventManager.broadcast({name: 'candidateEmploymentListModification', content: 'OK'});
     this.isSaving = false;
     this.activeModal.dismiss(result);

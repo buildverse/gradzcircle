@@ -246,6 +246,24 @@ public class CandidateService {
 		}
 		 return candidate;
 	}
+	
+	public CandidateDetailDTO getCandidateDetails(Long id ) {
+		logger.debug("REST request to get Candidate Profile : {}", id);
+		Candidate candidate = candidateRepository.findOne(id);
+		Boolean hasEducation = candidate.getEducations()!=null && !candidate.getEducations().isEmpty()? true:false;
+		Boolean hasCertification = candidate.getCertifications()!=null && !candidate.getCertifications().isEmpty()? true:false;
+		Boolean hasNonAcademics = candidate.getNonAcademics()!=null && !candidate.getNonAcademics().isEmpty()? true:false;
+		Boolean hasLanguages = candidate.getCandidateLanguageProficiencies()!=null && !candidate.getCandidateLanguageProficiencies().isEmpty()? true:false;
+		Boolean hasEmployment = candidate.getEmployments()!=null && !candidate.getEmployments().isEmpty()?true:false;
+		updateCountryAndNationalityDataForDisplay(candidate);
+		CandidateDetailDTO candidateDetailsDTO = convertToCandidateDetailDTO(candidate); 
+		candidateDetailsDTO.setHasCertification(hasCertification);
+		candidateDetailsDTO.setHasEducation(hasEducation);
+		candidateDetailsDTO.setHasNonAcademic(hasNonAcademics);
+		candidateDetailsDTO.setHasEmployment(hasEmployment);
+		candidateDetailsDTO.setHasLanguages(hasLanguages);
+		return candidateDetailsDTO;
+	}
 
 	public Candidate getCandidateByLoginId(Long id) {
 		logger.debug("REST request to get Candidate : {}", id);
@@ -284,10 +302,8 @@ public class CandidateService {
 		if (candidate == null)
 			return new CandidatePublicProfileDTO();
 		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-		Set<CandidateEducation> candidateEducations = new HashSet<CandidateEducation>(
-				candidateEducationRepository.findByCandidateId(candidate.getId()));
-		Set<CandidateEmployment> candidateEmployments = new HashSet<>(
-				candidateEmploymentRepository.findByCandidateId(candidate.getId()));
+		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(candidate.getId());
+		List<CandidateEmployment> candidateEmployments = candidateEmploymentRepository.findByCandidateId(candidate.getId());
 		if (candidateEducations != null & candidateEducations.size() > 0) {
 			candidateEducations.forEach(candidateEducation -> {
 				Set<CandidateProject> projects = candidateProjectRepository.findByEducation(candidateEducation);
@@ -301,10 +317,8 @@ public class CandidateService {
 				candidateEmployment.setProjects(candidateProjects);
 			});
 		}
-		Set<CandidateCertification> candidateCertifications = new HashSet<>(
-				candidateCertifcationRepository.findCertificationsByCandidateId(candidate.getId()));
-		Set<CandidateNonAcademicWork> candidateNonAcademicWorks = new HashSet<>(
-				candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId()));
+		List<CandidateCertification> candidateCertifications = candidateCertifcationRepository.findCertificationsByCandidateId(candidate.getId());
+		List<CandidateNonAcademicWork> candidateNonAcademicWorks = candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId());
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 		CandidateJob candidateJob = null;
@@ -360,9 +374,9 @@ public class CandidateService {
 	}
 
 	private CandidatePublicProfileDTO convertToCandidatePublicProfileDTO(Candidate candidate, Set<Address> addresses,
-			Set<CandidateEducation> candidateEducations, Set<CandidateEmployment> candidateEmployments,
-			Set<CandidateCertification> candidateCertifications,
-			Set<CandidateNonAcademicWork> candidateNonAcademicWorks,
+			List<CandidateEducation> candidateEducations, List<CandidateEmployment> candidateEmployments,
+			List<CandidateCertification> candidateCertifications,
+			List<CandidateNonAcademicWork> candidateNonAcademicWorks,
 			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob, Boolean canBeShortListed) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		//dto.setShortListed(isShortListed);
@@ -527,6 +541,24 @@ public class CandidateService {
 		// {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
 		// log.debug("Candidate details are {}",candidate);
 		return candidate;
+
+	}
+
+	public void updateCountryAndNationalityDataForDisplay(Candidate candidate) {
+		if (candidate == null)
+			return;
+		if (candidate.getNationality() != null) {
+			candidate.getNationality().setDisplay(candidate.getNationality().getNationality());
+			candidate.getNationality().setValue(candidate.getNationality().getNationality());
+		}
+		if (candidate.getAddresses() != null) {
+			candidate.getAddresses().forEach(address -> {
+				if(address.getCountry()!=null) {
+				address.getCountry().setValue(address.getCountry().getCountryNiceName());
+				address.getCountry().setDisplay(address.getCountry().getCountryNiceName());
+				}
+			});
+		}
 
 	}
 

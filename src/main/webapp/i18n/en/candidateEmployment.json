@@ -6,7 +6,7 @@
                 "createLabel": "Create a new Candidate Employment",
                 "createOrEditLabel": "Create or edit your Employment Information",
                 "search": "Search for Candidate Employment",
-                "add": "Add",
+                "add": "Add Experience",
                 "addProject": "Add Project",
                 "delete": "Remove Employment"
             },
@@ -18,7 +18,7 @@
                 "questionExtension" :"This will remove the associated projects as well."
             },
             "detail": {
-                "title": "Candidate Employment"
+                "title": "Employments"
             },
             "location": "Location",
             "role": "Role",

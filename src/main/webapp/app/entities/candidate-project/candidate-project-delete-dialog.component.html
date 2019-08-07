@@ -1,5 +1,5 @@
 <form name="deleteForm" (ngSubmit)="confirmDelete(candidateProject.id)">
-	<div class="modal-header modal-header-decorate-delete">
+	<div class="modal-header modal-header-decorate">
 		<h6 class="modal-title"
 			jhiTranslate="gradzcircleApp.candidateProject.home.removeLabel">Confirm
 			delete operation</h6>
@@ -14,13 +14,13 @@
 			you sure you want to delete this Candidate Project?</p>
 	</div>
 	<div class="modal-footer modal-footer-decorate-delete">
-		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+		<!--  <button type="button" class="btn btn-sm btn-pill btn-secondary"
 			data-dismiss="modal" (click)="clear()">
 			<span class="fa fa-ban"></span>&nbsp;<span
 				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
-		<button type="submit" class="btn btn-sm btn-pill btn-danger">
-			<span class="fa fa-remove"></span>&nbsp;<span
+		</button>-->
+		<button type="submit" class="btn btn-block btn-danger">
+			<span
 				jhiTranslate="entity.action.delete">Delete</span>
 		</button>
 	</div>

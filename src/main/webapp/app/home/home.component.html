@@ -9,17 +9,43 @@
 <section class="portfolio-block photography mt-5">
     
         <div class="row no-gutters ml-1 mr-1">
-            <div class="col-lg-4 item zoom-on-hover">
-            		<a href="#">
-            			<img class="img-fluid image "  src="../../content/images/talent.jpg"/>
-            		</a>
-            		<div class="centered font-overlay"><strong>Talent</strong></div>
+            <div class="col-lg-4">
+            		
+	            		<div class="flip-card">
+		            		<div class="flip-card-inner">
+		   					 <div class="flip-card-front">
+				            		<a href="#">
+				            			<img class="img-fluid image "  src="../../content/images/talent.jpg"/>
+				            		</a>
+				            	 </div>          	 
+		            		     <div class="flip-card-back ">
+		            		     	 <div>
+		            		     		<img class="img-fluid image blur-image"  src="../../content/images/talent.jpg"/>	
+		            		     	</div>
+		            		     	<div class="centered font-overlay"><strong>Talent</strong></div>
+		            		     </div>
+		            		</div>
+		            	</div>
+		         
             </div>
-            <div class="col-lg-4 item zoom-on-hover">
-            		<a href="#">
-            			<img class="img-fluid image" src="../../content/images/jobs.jpg" />
-            		</a>
-            		<div class="centered font-overlay"><strong>Opportunities</strong></div>
+            <div class="col-lg-4">
+            		<div class="flip-card">
+	            		<div class="flip-card-inner">
+	   					 <div class="flip-card-front">
+			            		<a href="#">
+			            			<img class="img-fluid image" src="../../content/images/jobs.jpg" />
+			            		</a>
+			            	 </div>
+            				<div class="flip-card-back ">
+            					<div>
+		            		     		<img class="img-fluid image blur-image"  src="../../content/images/jobs.jpg"/>   
+		            		     </div>
+		            		     <div class="centered font-overlay">
+		            		     	<a [routerLink]="['/viewjobs']" style="text-decoration: none; color: white;"><strong>Opportunities</strong></a>
+		            		     </div>
+            				</div>
+            			</div>
+            		</div>
             	</div>
             <div class="col-lg-4 item zoom-on-hover">
             		<a href="#">
@@ -32,8 +58,8 @@
 </section>
 <section class="portfolio-block call-to-action border-bottom mt-5 mb-5">
     <div class="container">
-        <div class="d-flex justify-content-center align-items-center content">
+        <!--  <div class="d-flex justify-content-center align-items-center content">
             <button class="btn btn-outline-primary btn-lg" type="button" [routerLink]="['/viewjobs']">Explore Jobs</button>
-        </div>
+        </div>-->
     </div>
 </section>

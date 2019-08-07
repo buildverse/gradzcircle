@@ -3,6 +3,8 @@
  */
 package com.drishika.gradzcircle.service.util;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -315,9 +317,9 @@ public class DTOConverters {
 	 * @param candidateNonAcademicWorks
 	 * @param dto
 	 */
-	public Set<CandidateNonAcademicWorkDTO>  convertCandidateNonAcademicWork(Set<CandidateNonAcademicWork> candidateNonAcademicWorks, Boolean withCandidateProfileScore,
+	public List<CandidateNonAcademicWorkDTO>  convertCandidateNonAcademicWork(List<CandidateNonAcademicWork> candidateNonAcademicWorks, Boolean withCandidateProfileScore,
 			Candidate candidate) {
-		Set<CandidateNonAcademicWorkDTO> nonAcadWorksDTOs = new HashSet<>();
+		List<CandidateNonAcademicWorkDTO> nonAcadWorksDTOs = new ArrayList<>();
 		if (candidateNonAcademicWorks != null && candidateNonAcademicWorks.isEmpty()) {
 			CandidateNonAcademicWorkDTO nonAcademicWorkDTO = new CandidateNonAcademicWorkDTO();
 			if (withCandidateProfileScore) {
@@ -424,9 +426,9 @@ public class DTOConverters {
 	 * @param candidateCertifications
 	 * @param dto
 	 */
-	public Set<CandidateCertificationDTO> convertCandidateCertifications(Set<CandidateCertification> candidateCertifications,
+	public List<CandidateCertificationDTO> convertCandidateCertifications(List<CandidateCertification> candidateCertifications,
 			Boolean withCandidateProfileScore,Candidate candidate) {
-		Set<CandidateCertificationDTO> candidateCertificationDTOs = new HashSet<>();
+		List<CandidateCertificationDTO> candidateCertificationDTOs = new ArrayList<>();
 		if(candidateCertifications != null && candidateCertifications.isEmpty()) {
 			CandidateCertificationDTO certificationDTO = new CandidateCertificationDTO();
 			if(withCandidateProfileScore) {
@@ -457,40 +459,37 @@ public class DTOConverters {
 	 * @param candidateEmployments
 	 * @param dto
 	 */
-	public Set<CandidateEmploymentDTO> convertCandidateEmployments(Set<CandidateEmployment> candidateEmployments, Boolean withCandidateProfileScore, Candidate candidate) {
-		Set<CandidateEmploymentDTO> employmentDTOs = new HashSet<>();
-		if(candidateEmployments != null && candidateEmployments.isEmpty()) {
+	public List<CandidateEmploymentDTO> convertCandidateEmployments(List<CandidateEmployment> candidateEmployments,
+			Boolean withCandidateProfileScore, Candidate candidate) {
+		List<CandidateEmploymentDTO> employmentDTOs = new ArrayList<>();
+		candidateEmployments.forEach(employment -> {
 			CandidateEmploymentDTO employmentDTO = new CandidateEmploymentDTO();
-			if(withCandidateProfileScore) {
+			employmentDTO.setJobTitle(employment.getJobTitle());
+			employmentDTO.setEmployerName(employment.getEmployerName());
+			employmentDTO.setEmploymentStartDate(employment.getEmploymentStartDate());
+			employmentDTO.setEmploymentEndDate(employment.getEmploymentEndDate());
+			employmentDTO.setEmploymentType(employment.getEmploymentType().getEmploymentType());
+			employmentDTO.setJobType(employment.getJobType().getJobType());
+			employmentDTO.setJobDescription(employment.getJobDescription());
+			employmentDTO.setId(employment.getId());
+			Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,
+					Comparator.nullsLast(Comparator.naturalOrder()));
+			List<CandidateProject> projects = new ArrayList<CandidateProject>(employment.getProjects());
+			projects.sort(comparator.reversed());
+			projects.forEach(project -> {
+				CandidateProjectDTO projectDTO = setCandidateProjects(project);
+				employmentDTO.getProjects().add(projectDTO);
+			});
+			employmentDTOs.add(employmentDTO);
+			if (withCandidateProfileScore) {
 				CandidateDTO candidateDTO = new CandidateDTO();
-				candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
+				candidateDTO.setProfileScore(employment.getCandidate().getProfileScore() != null
+						? employment.getCandidate().getProfileScore()
+						: 0d);
 				employmentDTO.setCandidate(candidateDTO);
 			}
-			
-			employmentDTOs.add(employmentDTO);
-		} else {
-			candidateEmployments.forEach(employment -> {
-				CandidateEmploymentDTO employmentDTO = new CandidateEmploymentDTO();
-				employmentDTO.setJobTitle(employment.getJobTitle());
-				employmentDTO.setEmployerName(employment.getEmployerName());
-				employmentDTO.setEmploymentStartDate(employment.getEmploymentStartDate());
-				employmentDTO.setEmploymentEndDate(employment.getEmploymentEndDate());
-				employmentDTO.setEmploymentType(employment.getEmploymentType().getEmploymentType());
-				employmentDTO.setJobType(employment.getJobType().getJobType());
-				employmentDTO.setJobDescription(employment.getJobDescription());
-				employmentDTO.setId(employment.getId());
-				employment.getProjects().forEach(project -> {
-					CandidateProjectDTO projectDTO = setCandidateProjects(project);
-					employmentDTO.getProjects().add(projectDTO);
-				});
-				employmentDTOs.add(employmentDTO);
-				if(withCandidateProfileScore) {
-					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(employment.getCandidate().getProfileScore()!=null?employment.getCandidate().getProfileScore():0d);
-					employmentDTO.setCandidate(candidateDTO);
-				}
-			});
-		}
+		});
+
 		return employmentDTOs;
 	}
 
@@ -521,9 +520,9 @@ public class DTOConverters {
 	 * @param candidateEducations
 	 * @param dto
 	 */
-	public Set<CandidateEducationDTO> convertCandidateEducations(Set<CandidateEducation> candidateEducations,
+	public List<CandidateEducationDTO> convertCandidateEducations(List<CandidateEducation> candidateEducations,
 			Boolean withCandidateProfileScore, Candidate candidate) {
-		Set<CandidateEducationDTO> educationDTOs = new HashSet<>();
+		List<CandidateEducationDTO> educationDTOs = new ArrayList<>();
 		if (candidateEducations != null && candidateEducations.isEmpty()) {
 			CandidateEducationDTO educationDTO = new CandidateEducationDTO();
 			if (withCandidateProfileScore) {
@@ -559,7 +558,10 @@ public class DTOConverters {
 				CourseDTO courseDTO = new CourseDTO();
 				courseDTO.setCourse((education.getCourse().getCourse()));
 				educationDTO.setCourse(courseDTO);
-				education.getProjects().forEach(project -> {
+				Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,Comparator.nullsLast(Comparator.naturalOrder()));
+				List<CandidateProject> projects = new ArrayList<CandidateProject>(education.getProjects());
+				projects.sort(comparator.reversed());
+				projects.forEach(project -> {
 					CandidateProjectDTO projectDTO = setCandidateProjects(project);
 					educationDTO.getProjects().add(projectDTO);
 				});

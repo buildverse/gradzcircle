@@ -175,11 +175,11 @@ public class CandidateCertificationResource {
 	@Timed
 	public List<CandidateCertificationDTO> getCertificationByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertifications by Candidate Id : {}", id);
-		List<CandidateCertificationDTO> certificationDTOs = new ArrayList<>();
+		List<CandidateCertificationDTO> certificationDTOs ;
 		List<CandidateCertification> candidateCertifications = candidateCertificationRepository
 				.findCertificationsByCandidateId(id);
 		Candidate candidate = candidateRepository.findOne(id);
-		certificationDTOs.addAll(converter.convertCandidateCertifications(new HashSet<CandidateCertification>(candidateCertifications), true,candidate));
+		certificationDTOs = converter.convertCandidateCertifications(candidateCertifications, true,candidate);
 		return certificationDTOs;
 	}
 

@@ -21,7 +21,9 @@ import {
     SocialService,
     JhiLoginModalComponent,
     DataStorageService,
-    LoginEmitterService
+    LoginEmitterService,
+    FutureDateValidatorDirective
+
 } from './';
 
 @NgModule({
@@ -32,13 +34,13 @@ import {
         MultiselectDropdownModule,
         TagInputModule,
         CKEditorModule
-        
-  
     ],
     declarations: [
         JhiSocialComponent,
         JhiLoginModalComponent,
-        HasAnyAuthorityDirective
+        HasAnyAuthorityDirective,
+        FutureDateValidatorDirective
+
     ],
     providers: [
         LoginService,
@@ -65,9 +67,8 @@ import {
         ArchwizardModule,
         MultiselectDropdownModule,
         TagInputModule,
-        CKEditorModule
-        
-     
+        CKEditorModule,
+        FutureDateValidatorDirective
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

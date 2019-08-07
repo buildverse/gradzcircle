@@ -4,7 +4,9 @@
 package com.drishika.gradzcircle.service.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,13 +27,13 @@ public class CandidatePublicProfileDTO implements Serializable {
 	
 	private Boolean reviewed;
 
-	Set<CandidateEducationDTO> educations = new HashSet<>();
+	List<CandidateEducationDTO> educations = new ArrayList<>();
 
-	Set<CandidateCertificationDTO> certifications = new HashSet<>();
+	List<CandidateCertificationDTO> certifications = new ArrayList<>();
 
-	Set<CandidateEmploymentDTO> employments = new HashSet<>();
+	List<CandidateEmploymentDTO> employments = new ArrayList<>();
 
-	Set<CandidateNonAcademicWorkDTO> nonAcademics = new HashSet<>();
+	List<CandidateNonAcademicWorkDTO> nonAcademics = new ArrayList<>();
 
 	Set<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new HashSet<>();
 
@@ -70,63 +72,61 @@ public class CandidatePublicProfileDTO implements Serializable {
 		this.candidateDetails = candidateDetails;
 	}
 
+	
+	
 	/**
 	 * @return the educations
 	 */
-	public Set<CandidateEducationDTO> getEducations() {
+	public List<CandidateEducationDTO> getEducations() {
 		return educations;
 	}
 
 	/**
-	 * @param educations
-	 *            the educations to set
+	 * @param educations the educations to set
 	 */
-	public void setEducations(Set<CandidateEducationDTO> educations) {
+	public void setEducations(List<CandidateEducationDTO> educations) {
 		this.educations = educations;
 	}
 
 	/**
 	 * @return the certifications
 	 */
-	public Set<CandidateCertificationDTO> getCertifications() {
+	public List<CandidateCertificationDTO> getCertifications() {
 		return certifications;
 	}
 
 	/**
-	 * @param certifications
-	 *            the certifications to set
+	 * @param certifications the certifications to set
 	 */
-	public void setCertifications(Set<CandidateCertificationDTO> certifications) {
+	public void setCertifications(List<CandidateCertificationDTO> certifications) {
 		this.certifications = certifications;
 	}
 
 	/**
 	 * @return the employments
 	 */
-	public Set<CandidateEmploymentDTO> getEmployments() {
+	public List<CandidateEmploymentDTO> getEmployments() {
 		return employments;
 	}
 
 	/**
-	 * @param employments
-	 *            the employments to set
+	 * @param employments the employments to set
 	 */
-	public void setEmployments(Set<CandidateEmploymentDTO> employments) {
+	public void setEmployments(List<CandidateEmploymentDTO> employments) {
 		this.employments = employments;
 	}
 
 	/**
 	 * @return the nonAcademics
 	 */
-	public Set<CandidateNonAcademicWorkDTO> getNonAcademics() {
+	public List<CandidateNonAcademicWorkDTO> getNonAcademics() {
 		return nonAcademics;
 	}
 
 	/**
-	 * @param nonAcademics
-	 *            the nonAcademics to set
+	 * @param nonAcademics the nonAcademics to set
 	 */
-	public void setNonAcademics(Set<CandidateNonAcademicWorkDTO> nonAcademics) {
+	public void setNonAcademics(List<CandidateNonAcademicWorkDTO> nonAcademics) {
 		this.nonAcademics = nonAcademics;
 	}
 

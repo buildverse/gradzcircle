@@ -18,6 +18,7 @@ export * from './login/login.service';
 export * from './login/login-modal.service';
 export * from './login/login-emitter.service';
 export * from './helper/localstorage.service';
+export * from './helper/future-date-validator.directive';
 export * from './user/account.model';
 export * from './user/user.model';
 export * from './user/user.service';

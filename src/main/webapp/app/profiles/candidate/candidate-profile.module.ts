@@ -26,14 +26,15 @@ import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me
 import {CandidateLanguageProficiencyResolverService} from './candidate-language-proficiency-resolver.service';
 import {SafeHtml} from './image.pipe';
 import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
-import { DataStorageService } from '../../shared/helper/localstorage.service';
+import {DataStorageService} from '../../shared/helper/localstorage.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
-import { ProfileMgmtPopupService } from './profile-pic-mgmt-popup.service';
-import {ProfilePicMgmtPopupDialogComponent,ProfilePicMgmtPopupComponent} from './profile-pic-mgmt-popup.component';
+import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
+import {ProfilePicMgmtPopupDialogComponent, ProfilePicMgmtPopupComponent} from './profile-pic-mgmt-popup.component';
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import {ImageCropperModule} from 'ngx-image-cropper';
+import {CandidateProfileComponentNew} from './candidate-profile-new.component';
 
 
 const ENTITY_STATES = [
@@ -44,11 +45,11 @@ const ENTITY_STATES = [
 @NgModule({
   imports: [
     GradzcircleSharedModule,
-   // GradzcircleAdminModule,
+    // GradzcircleAdminModule,
     MultiselectDropdownModule,
     FileUploadModule,
-   // GradzcircleCandidateLanguageProficiencyModule,
-   // GradzcircleCandidateEducationModule,
+    // GradzcircleCandidateLanguageProficiencyModule,
+    // GradzcircleCandidateEducationModule,
     ImageCropperModule,
     RouterModule.forChild(ENTITY_STATES)
   ],
@@ -63,22 +64,22 @@ const ENTITY_STATES = [
     AppliedJobsComponent,
     ShortListedJobsForCandidateComponent,
     ProfilePicMgmtPopupComponent,
-    ProfilePicMgmtPopupDialogComponent
-
+    ProfilePicMgmtPopupDialogComponent, 
+    CandidateProfileComponentNew
   ],
   providers: [
     ProfileHelperService,
     CandidateResolverService,
     CandidateCareerInterestResolverService,
     CandidateMaritalStatusResolverService,
-   // CountryResolverService,
+    // CountryResolverService,
     CandidateGenderResolverService,
-  //  CandidateVisaResolverService,
-  //  CandidateLanguageResolverService,
+    //  CandidateVisaResolverService,
+    //  CandidateLanguageResolverService,
     CandidateAboutMeEditGuard,
-  //  CandidateNationalityResolverService,
+    //  CandidateNationalityResolverService,
     CandidateDetailResolverService,
-   // CandidateLanguageProficiencyResolverService,
+    // CandidateLanguageProficiencyResolverService,
     CandidatePublicProfilePopupService,
     JobResolvePagingParams,
     DataStorageService,

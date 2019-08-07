@@ -35,14 +35,16 @@
 			</div>
 			<div class="col-lg-4"
 				[class.has-danger]="qualification.invalid && qualification.touched">
-				<tag-input name="qualifications"
-					[(ngModel)]="candidateEducation.qualification" theme='bootstrap'
+				<tag-input name="qualifications" 
+					[(ngModel)]="candidateEducation.qualification" theme='bootstrap' 
 					#qualification="ngModel" required [onlyFromAutocomplete]="true"
 					[placeholder]="'Qualification+'" [onTextChangeDebounce]="500"
-					id="field_qualification"
+					id="field_qualification" 
 					[secondaryPlaceholder]="'Enter your qualification'"
-					(onAdd)="isQualificationOther()" [maxItems]='1'> <tag-input-dropdown
-					[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
+					(onAdd)="isQualificationOther()" [maxItems]='1'> 
+					<tag-input-dropdown 
+						[autocompleteObservable]='requestQualificationData'>
+					</tag-input-dropdown>
 
 				</tag-input>
 				<div *ngIf="qualification.invalid && qualification.touched"
@@ -68,7 +70,7 @@
 					<small>Please enter your qualification.</small>
 				</div>
 				<small class="form-text text-muted form-text-primary"> <span
-					class="icon icon-emoji-sad" style="color: #F1AA06"></span> <small>
+					class="icon icon-emoji-sad" style="color: #F1AA06;"></span> <small>
 						Sorry! Please type in your qualification.</small>
 				</small>
 			</div>
@@ -278,14 +280,14 @@
 				<div class="col-lg-4" (mouseleave)="educationFromDateDp.close()"
 					[class.has-danger]="fromDate.invalid && fromDate.touched">
 					<div class="input-group">
-						<input id="field_educationFromDate" #fromDate="ngModel" required
-						    class="form-control "  placeholder="yyyy-mm-dd"
-							name="educationFromDate" ngbDatepicker
+						<input id="field_educationFromDate" #fromDate="ngModel" required 
+						    class="form-control border-primary"  placeholder="yyyy-mm-dd"
+							name="educationFromDate" ngbDatepicker 
 							#educationFromDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationFromDate"
 							(ngModelChange)="validateDates()" /> 
 							<span class="input-group-append" > 
-								<button class="btn btn-outline-secondary" (click)="educationFromDateDp.toggle()" type="button">
+								<button class="btn btn-outline-primary" (click)="educationFromDateDp.toggle()" type="button">
 									<i class="fa fa-calendar" style="color:#1276ae"></i>
 								</button>
 							</span>
@@ -302,14 +304,14 @@
 				</div>
 				<div class="col-lg-4" (mouseleave)="educationToDateDp.close()" [class.has-danger]="toDate.invalid && toDate.touched">
 					<div class="input-group">
-						<input id="field_educationToDate" #toDate="ngModel" required
-						    class="form-control " placeholder="yyyy-mm-dd"
+						<input id="field_educationToDate" #toDate="ngModel" required jhiNotFutureDate 
+						    class="form-control border-primary" placeholder="yyyy-mm-dd"
 							[disabled]="endDateControl" name="educationToDate" ngbDatepicker
 							#educationToDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationToDate"
 							(ngModelChange)="validateDates()" />
 							<span class=" input-group-append" >
-								<button class="btn btn-outline-secondary" (click)="educationToDateDp.toggle()" [disabled]="endDateControl" type="button">
+								<button class="btn btn-outline-primary" (click)="educationToDateDp.toggle()" [disabled]="endDateControl" type="button">
 											<i class="fa fa-calendar" style="color:#1276ae"></i>
 								</button>
 							</span>
@@ -320,18 +322,21 @@
 								style="width: 1.2rem; height: 1rem; cursor: pointer;" />
 						</button>-->
 					</div>
-					<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+					<div *ngIf="toDate.invalid && toDate.touched && toDate.errors?.required" class="text-danger">
 						<small>Please enter End Date</small>
 					</div>
 					<div *ngIf="endDateLesser" class="text-danger">
 						<small>End date cannot be before start date.</small>
+					</div>
+					<div *ngIf="toDate.touched && toDate.errors?.futureDate" class="text-danger">
+						<small>End date cannot be in future.</small>
 					</div>
 				</div>
 			</div>
 
 	
 		<div class="form-group row mx-4 my-4">
-			<div class="col-lg-6 form-check">
+			<div class="col-lg-6 form-check pl-5">
 				<label class="form-check-label" for="field_isPursuingEducation">
 
 					<input class="form-check-input font-weight-bold "
@@ -341,7 +346,7 @@
 					studying
 				</label>
 			</div>
-			<div class="col-lg-6 form-check">
+			<div class="col-lg-6 form-check pl-5">
 				<label class="form-check-label" for="field_highestQualification">
 
 					<input class="form-check-input font-weight-bold "
@@ -350,15 +355,16 @@
 					[(ngModel)]="candidateEducation.highestQualification" /> <span
 					jhiTranslate="gradzcircleApp.candidateEducation.highestQualification"></span>
 				</label>
+				<h6 class="form-text-primary" style="font-size:.75rem"><strong>You can override system by selecting highest education</strong></h6>
 			</div>
 
 		</div>
 
 		<div class="form-group row mx-4">
 			<div class="col-lg-11 ">
-				<small class="form-text  form-text-primary"> Type 'Other',
+				<span class="form-text  form-text-primary text-center" style="font-size:.8rem"> Type <strong>'Other'</strong>,
 					if can't find your desired entry for qualifications, college or
-					course </small>
+					course </span>
 			</div>
 		</div>
 
@@ -556,20 +562,20 @@
 			</select>
 		</div>
 	</div>
-	<div class="modal-footer modal-footer-decorate">
-		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+	<div class="mb-5 mr-5 ml-5">
+		<!--  <button type="button" class="btn btn-sm btn-pill btn-secondary"
 			data-dismiss="modal" (click)="clear()">
 			<span class="fa fa-ban"></span>&nbsp;<span
 				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
-		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
-			class="btn btn-sm btn-pill  btn-primary">
-			<span class="fa fa-save"></span>&nbsp;<span
+		</button>-->
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving || endDateLesser"
+			class="btn btn-block  btn-primary">
+			<span
 				jhiTranslate="entity.action.save">Save</span>
 		</button>
 	</div>
 </form>
-<!--<br>Dirty: {{ editForm.dirty }}
+<!--  <br>Dirty: {{ editForm.dirty }}
 <br>Touched: {{ editForm.touched }}
 <br>Valid: {{ editForm.valid }}
 <br>Value: {{ editForm.value | json }}-->

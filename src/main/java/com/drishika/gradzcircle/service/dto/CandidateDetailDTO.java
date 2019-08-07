@@ -60,6 +60,16 @@ public class CandidateDetailDTO implements Serializable {
 	private MaritalStatusDTO maritalStatus;
 	
 	private Double profileScore;
+	
+	private Boolean hasEducation;
+	
+	private Boolean hasCertification;
+	
+	private Boolean hasEmployment;
+	
+	private Boolean hasNonAcademic;
+	
+	private Boolean hasLanguages;
 
 	/**
 	 * @return the id
@@ -368,6 +378,76 @@ public class CandidateDetailDTO implements Serializable {
 	 */
 	public void setProfileScore(Double profileScore) {
 		this.profileScore = profileScore;
+	}
+
+	/**
+	 * @return the hasEducation
+	 */
+	public Boolean getHasEducation() {
+		return hasEducation;
+	}
+
+	/**
+	 * @param hasEducation the hasEducation to set
+	 */
+	public void setHasEducation(Boolean hasEducation) {
+		this.hasEducation = hasEducation;
+	}
+
+	/**
+	 * @return the hasCertification
+	 */
+	public Boolean getHasCertification() {
+		return hasCertification;
+	}
+
+	/**
+	 * @param hasCertification the hasCertification to set
+	 */
+	public void setHasCertification(Boolean hasCertification) {
+		this.hasCertification = hasCertification;
+	}
+
+	/**
+	 * @return the hasEmployment
+	 */
+	public Boolean getHasEmployment() {
+		return hasEmployment;
+	}
+
+	/**
+	 * @param hasEmployment the hasEmployment to set
+	 */
+	public void setHasEmployment(Boolean hasEmployment) {
+		this.hasEmployment = hasEmployment;
+	}
+
+	/**
+	 * @return the hasNonAcademic
+	 */
+	public Boolean getHasNonAcademic() {
+		return hasNonAcademic;
+	}
+
+	/**
+	 * @param hasNonAcademic the hasNonAcademic to set
+	 */
+	public void setHasNonAcademic(Boolean hasNonAcademic) {
+		this.hasNonAcademic = hasNonAcademic;
+	}
+
+	/**
+	 * @return the hasLanguages
+	 */
+	public Boolean getHasLanguages() {
+		return hasLanguages;
+	}
+
+	/**
+	 * @param hasLanguages the hasLanguages to set
+	 */
+	public void setHasLanguages(Boolean hasLanguages) {
+		this.hasLanguages = hasLanguages;
 	}
 	
 	

@@ -145,16 +145,7 @@ public class CandidateEducationResource {
 		log.debug("REST request to get CandidateEducation : {}", id);
 		List<CandidateEducationDTO> candidateEducations = candidateEducationService.getEducationByCandidateId(id);
 		candidateEducations.forEach(candidateEducation -> {
-			/*candidateEducation.getProjects().forEach(project -> {
-				project.setEducation(null);
-			});
-			;
-			candidateEducation.setCandidate(null);
-			if (candidateEducation.getCollege().getUniversity() != null) {
-				candidateEducation.getCollege().getUniversity().setCountry(null);
-			}*/
 			updateEducationDTODependentMetaForDisplay(candidateEducation);
-			//log.debug("College data is {}", candidateEducation.getCollege());
 		});
 
 		log.debug("Candidate Education returned is: {}", candidateEducations);

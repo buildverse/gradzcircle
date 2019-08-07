@@ -407,11 +407,12 @@
 					jhiTranslate="global.menu.candidate.dashboard">Dashboard</span>
 			</a></li>
 			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']"
-				class="nav-item " routerLinkActive="active"
-				[routerLink]="['/candidate-profile',{outlets:{educations:null,employments:null,languages:null,certifications:null,nonAcademics:null,detail:'details'}}]" (click)="collapseNavbar()">
+				class="nav-item " routerLinkActive="active" [routerLink]="['candidate-profile']" (click)="collapseNavbar()">
+				<!--  [routerLink]="['/candidate-profile',{outlets:{educations:null,employments:null,languages:null,certifications:null,nonAcademics:null,detail:'details'}}]" (click)="collapseNavbar()">-->
+				
 
 				<a class="nav-link" aria-haspopup="true" aria-expanded="false">
-					<span jhiTranslate="global.menu.candidate.profile">Profile</span>
+					<span jhiTranslate="global.menu.user.profile">Profile</span>
 			</a>
 			</li>
 			<li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CANDIDATE']" ngbDropdown
@@ -452,7 +453,7 @@
 				class="nav-item" routerLinkActive="active"
 				[routerLink]="['/corporate']" (click)="collapseNavbar()"><a
 				class="nav-link"> <span
-					jhiTranslate="global.menu.corporate.profile">Profile</span>
+					jhiTranslate="global.menu.user.profile">Profile</span>
 			</a></li>
 			<!-- <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active">
                     <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);">
@@ -547,10 +548,10 @@
 			</li>
 			
 			<li *ngSwitchCase="true" class="nav-item ml-2">
-				<button class="btn btn-default navbar-btn navbar-btn-avatar" >
-					<img class="rounded-circle"
+				
+					<img class="rounded-circle" style="height:2rem;width:2rem;"
 						[src]="noImage ? defaultImage : userImage ">
-				</button>
+				
 			</li>
 			<li *ngSwitchCase="true" ngbDropdown 
 				class="nav-item dropdown pointer">

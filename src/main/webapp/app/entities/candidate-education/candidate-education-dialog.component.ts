@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-
+import {NgForm} from "@angular/forms";
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +18,7 @@ import {CandidateEducationPopupServiceNew} from './candidate-education-popup-new
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Principal,DataStorageService} from '../../shared';
 import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
+import { ViewChild } from '@angular/core';
 import {JhiDateUtils} from 'ng-jhipster';
 //import {EducationCollegeService} from './education-college.service';
 
@@ -26,7 +27,8 @@ import {JhiDateUtils} from 'ng-jhipster';
   templateUrl: './candidate-education-dialog.component.html'
 })
 export class CandidateEducationDialogComponent implements OnInit {
-
+  @ViewChild('editForm') currentForm: NgForm;
+  
   candidateEducation: CandidateEducation;
   authorities: any[];
   isSaving: boolean;
@@ -52,7 +54,9 @@ export class CandidateEducationDialogComponent implements OnInit {
   validPercentScore: boolean;
   enableDecimal: boolean;
   endDateControl: boolean;
-  endDateLesser: boolean
+  endDateLesser: boolean;
+  endDateInFuture: boolean;
+  currentDate : Date;
   searching = false;
   searchFailed = false;
   hideSearchingWhenUnsubscribed = new Observable(() => () => this.searching = false);
@@ -77,6 +81,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     
 
   ) {
+    this.currentDate = new Date();
   }
 
   requestCollegeData = (text: string): Observable<HttpResponse<any>> => {
@@ -316,17 +321,20 @@ export class CandidateEducationDialogComponent implements OnInit {
       return;
     }
     this.endDateLesser = false;
+    this.endDateInFuture = false;
     if (this.candidateEducation.educationFromDate && this.candidateEducation.educationToDate) {
-      let fromDate = new Date(this.dateUtils
+      const startDate = new Date(this.dateUtils
         .convertLocalDateToServer(this.candidateEducation.educationFromDate));
-      let toDate = new Date(this.dateUtils
+      const endDate = new Date(this.dateUtils
         .convertLocalDateToServer(this.candidateEducation.educationToDate));
-
-      if (fromDate > toDate)
+      if (startDate > endDate) {
         this.endDateLesser = true;
-      else
+    //   this.currentForm.form.setErrors({ 'valid': false });
+      } else {
         this.endDateLesser = false;
-    }
+        //this.currentForm.form.setErrors(null);
+      }
+    } 
 
 
   }
@@ -336,7 +344,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
   private onSaveSuccess(result: CandidateEducation) {
-   // console.log('on suucess');
+    //console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
      this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
     this.isSaving = false;

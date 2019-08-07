@@ -160,10 +160,10 @@ public class CandidateEmploymentResource {
 	@Timed
 	public List<CandidateEmploymentDTO> getEmploymentsForCandidate(@PathVariable Long id) {
 		log.debug("REST request to get employemnt for Candidate: {}", id);
-		List<CandidateEmploymentDTO> candidateEmploymentDTOs = new ArrayList<>();
+		List<CandidateEmploymentDTO> candidateEmploymentDTOs;
 		Candidate candidate = candidateRepository.findOne(id);
 		List<CandidateEmployment> candidateEmployments = candidateEmploymentRepository.findByCandidateId(id);
-		candidateEmploymentDTOs.addAll(converter.convertCandidateEmployments(new HashSet<CandidateEmployment>(candidateEmployments), true,candidate));
+		candidateEmploymentDTOs =  converter.convertCandidateEmployments(candidateEmployments, true,candidate);
 		return candidateEmploymentDTOs;
 	}
 

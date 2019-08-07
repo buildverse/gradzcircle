@@ -1,5 +1,5 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router, NavigationEnd, NavigationStart, NavigationCancel, Event} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
@@ -18,7 +18,7 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 })
 
-export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDestroy {
 
   candidate: Candidate;
   imageUrl: any;
@@ -29,19 +29,13 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   eventSubscriberCandidateImage: Subscription;
   currentSearch: string;
   defaultImage = require('../../../content/images/no-image.png');
-  detailsCollapsed: boolean;
-  educationCollapsed: boolean;
-  employmentCollapsed: boolean;
-  nonAcademicCollapsed: boolean;
-  certificationsCollapsed: boolean;
-  languageCollapsed: boolean;
   activeTab: string;
-  message: string;
   profileScore: number;
   profileSubscriber: Subscription;
   routerSub: Subscription;
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private eventManager: JhiEventManager,
     private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
@@ -50,103 +44,25 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     private userService: UserService,
     private candidateProfileScoreService: CandidateProfileScoreService,
     private cd: ChangeDetectorRef,
-    private dataService: DataStorageService,
-    private router: Router) {
+    private dataService: DataStorageService
+  ) {
     this.activeTab = 'details';
-    this.detailsCollapsed = true;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = true;
-    this.certificationsCollapsed = true;
-    this.languageCollapsed = true;
     this.noImage = false;
     this.progressBarConfig.max = 100;
-    this.progressBarConfig.striped = true;
-    this.progressBarConfig.animated = true;
-    this.progressBarConfig.height = '20px';
-    this.message = 'Profile Completeness';
-  }
-
-  toggleDetails() {
-    this.detailsCollapsed = !this.detailsCollapsed;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = true;
-    this.languageCollapsed = true;
-    this.certificationsCollapsed = true;
-
-  }
-
-  toggleEducation() {
-    this.detailsCollapsed = true;
-    this.educationCollapsed = !this.educationCollapsed;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = true;
-    this.languageCollapsed = true;
-    this.certificationsCollapsed = true;
-
-  }
-
-  toggleEmployment() {
-    this.detailsCollapsed = true;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = !this.employmentCollapsed;
-    this.nonAcademicCollapsed = true;
-    this.languageCollapsed = true;
-    this.certificationsCollapsed = true;
-
-  }
-  toggleNonAcads() {
-    this.detailsCollapsed = true;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = !this.nonAcademicCollapsed;
-    this.languageCollapsed = true;
-    this.certificationsCollapsed = true;
-  }
-
-  toggleCertification() {
-    this.detailsCollapsed = true;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = true;
-    this.languageCollapsed = true;
-    this.certificationsCollapsed = !this.certificationsCollapsed;
-
-  }
-
-  toggleLanguage() {
-    this.detailsCollapsed = true;
-    this.educationCollapsed = true;
-    this.employmentCollapsed = true;
-    this.nonAcademicCollapsed = true;
-    this.certificationsCollapsed = true;
-    this.languageCollapsed = !this.languageCollapsed;
-  }
-
-  setActiveTab(activeTab) {
-    this.activeTab = activeTab;
+    this.progressBarConfig.height = '10px';
   }
 
   ngOnInit() {
-    
     this.routerSub = this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
-    this.currentSearch = this.candidate.id.toString();
-    this.loginId = this.candidate.login.id;
-    //console.log('Caling from init');
-    this.setAlerts();
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
     this.reloadUserImage();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
-
     this.profileSubscriber = this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
       if (profileScore) {
         this.profileScore = profileScore;
       }
     });
-    
-
   }
 
   setAlerts() {
@@ -162,25 +78,14 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  /*getCandidateByCandidateId(id) {
-    this.candidateService.getCandidateByCandidateId(id).subscribe(
-      (res: HttpResponse<Candidate>) => {
-        this.candidate = res.body;
-        this.loginId = this.candidate.login.id;
-      },
-      (res: HttpErrorResponse) => this.onError(res.message)
-    );
-    return;
-  }
-*/
 
   reloadCandidate() {
-    this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
+   // console.log('Reloading candidate??');
+    this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
-      //  console.log('Caling from reload');
+       // console.log('Candidate is '+JSON.stringify(this.candidate));
         this.setAlerts();
-       // console.log('-----------------------' + JSON.stringify(this.candidate));
         this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
@@ -189,7 +94,6 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
 
 
   }
-  
 
   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
     this.dataService.setdata(CANDIDATE_ID, candidateId);
@@ -201,6 +105,11 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     this.dataService.setdata(USER_ID, this.candidate.login.id);
   }
 
+ setRouterAddProfileCategoryParams() {
+    this.dataService.setdata(CANDIDATE_ID, this.candidate.id);
+  }
+
+  
   private onError(error) {
     this.jhiAlertService.error(error.message, null, null);
   }
@@ -214,10 +123,10 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
 
   ngOnDestroy() {
     this.eventManager.destroy(this.eventSubscriberCandidate);
-     this.eventManager.destroy(this.eventSubscriberCandidateImage);
+    this.eventManager.destroy(this.eventSubscriberCandidateImage);
     this.eventManager.destroy(this.profileSubscriber);
     this.eventManager.destroy(this.routerSub);
-   // console.log('Destroing parent profile');
+    // console.log('Destroing parent profile');
   }
 
   reloadUserImage() {

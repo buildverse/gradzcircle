@@ -1,4 +1,191 @@
-<div class="profile-header profile-mybackground">
+
+<div id="wrapper">
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">          
+	        <div class="container-fluid mt-5">
+	            <h3 class="text-dark mb-4" jhiTranslate="global.menu.user.profile"></h3>
+	            <div class="row mb-3">
+	                <div class="col-lg-4">
+	                    <div class="card mb-3">
+	                        <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" [src]="noImage ? defaultImage : userImage " width="160" height="160" />
+	                            <div class="mb-3"><button class="btn btn-primary btn-sm" type="button" (click)="setPublicProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Change Photo</button></div>
+	                        </div>
+	                    </div>
+	                    <div class="card shadow mb-4">
+	                        <div class="card-header py-3">
+	                            <h6 class="text-primary font-weight-bold m-0" jhiTranslate="global.menu.user.profileSettings"></h6>
+	                        </div>
+	                        <div class="card-body">
+	                        		<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateEducation.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate.hasEducation; else addEducation" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../education']">Add</span></div>
+	                            		<ng-template #addEducation>
+	                            			<div class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" (click)="setRouterAddProfileCategoryParams()"
+											[routerLink]="['/', { outlets: { popup: 'new-candidate-education' } }]"	>Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateEmployment.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate.hasEmployment; else addEmployment" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../employment']">Add</span></div>
+	                            		<ng-template #addEmployment>
+	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" (click)="setRouterAddProfileCategoryParams()"
+											[routerLink]="['/', { outlets: { popup: 'new-candidate-employment' } }]">Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateCertification.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate.hasCertification; else addCertification" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<ng-template #addCertification>
+	                            			<div class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate.hasNonAcademic; else addNonAcademic" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<ng-template #addNonAcademic>
+	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate.hasLanguages; else addLanguages" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<ng-template #addLanguages>
+	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold" jhiTranslate="gradzcircleApp.candidate.profileScore">Server migration</h4>
+	                            		</div>	                            
+	                            		<div  class="col-md-2"><h4 class="small font-weight-bold"> <span class="pb-0 pt-0 float-right">{{candidate.profileScore}}%</span></h4></div>
+	                           	</div>
+	                            	<div>
+	                            		<ngb-progressbar type="success" [value]="candidate.profileScore"></ngb-progressbar>
+	                           	</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="col-lg-8">
+	                    <div class="row mb-3 d-none">
+	                        <div class="col">
+	                            <div class="card text-white bg-primary shadow">
+	                                <div class="card-body">
+	                                    <div class="row mb-2">
+	                                        <div class="col">
+	                                            <p class="m-0">Peformance</p>
+	                                            <p class="m-0"><strong>65.2%</strong></p>
+	                                        </div>
+	                                        <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+	                                    </div>
+	                                    <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i> 5% since last month</p>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="col">
+	                            <div class="card text-white bg-success shadow">
+	                                <div class="card-body">
+	                                    <div class="row mb-2">
+	                                        <div class="col">
+	                                            <p class="m-0">Peformance</p>
+	                                            <p class="m-0"><strong>65.2%</strong></p>
+	                                        </div>
+	                                        <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+	                                    </div>
+	                                    <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i> 5% since last month</p>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="row">
+	                        <div class="col">
+	                            <div class="card shadow mb-3">
+	                                <div class="card-header py-3">
+	                                    <p class="text-primary m-0 font-weight-bold">User Settings</p>
+	                                </div>
+	                                <div class="card-body">
+	                                    <form>
+	                                        <div class="form-row">
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="username"><strong>Username</strong></label><input type="text" class="form-control" placeholder="user.name" name="username" /></div>
+	                                            </div>
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="email"><strong>Email Address</strong></label><input type="email" class="form-control" placeholder="user@example.com" name="email" /></div>
+	                                            </div>
+	                                        </div>
+	                                        <div class="form-row">
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input type="text" class="form-control" placeholder="John" name="first_name" /></div>
+	                                            </div>
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input type="text" class="form-control" placeholder="Doe" name="last_name" /></div>
+	                                            </div>
+	                                        </div>
+	                                        <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+	                                    </form>
+	                                </div>
+	                            </div>
+	                            <div class="card shadow">
+	                                <div class="card-header py-3">
+	                                    <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
+	                                </div>
+	                                <div class="card-body">
+	                                    <form>
+	                                        <div class="form-group"><label for="address"><strong>Address</strong></label><input type="text" class="form-control" placeholder="Sunset Blvd, 38" name="address" /></div>
+	                                        <div class="form-row">
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="city"><strong>City</strong></label><input type="text" class="form-control" placeholder="Los Angeles" name="city" /></div>
+	                                            </div>
+	                                            <div class="col">
+	                                                <div class="form-group"><label for="country"><strong>Country</strong></label><input type="text" class="form-control" placeholder="USA" name="country" /></div>
+	                                            </div>
+	                                        </div>
+	                                        <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+	                                    </form>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="card shadow mb-5">
+	                <div class="card-header py-3">
+	                    <p class="text-primary m-0 font-weight-bold">Forum Settings</p>
+	                </div>
+	                <div class="card-body">
+	                    <div class="row">
+	                        <div class="col-md-6">
+	                            <form>
+	                                <div class="form-group"><label for="signature"><strong>Signature</strong><br /></label><textarea class="form-control" rows="4" name="signature"></textarea></div>
+	                                <div class="form-group">
+	                                    <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="formCheck-1" /><label class="custom-control-label" for="formCheck-1"><strong>Notify me about new replies</strong></label></div>
+	                                </div>
+	                                <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		 </div>
+	</div>
+</div>
+{{candidate|json}}
+<!-- <div class="profile-header profile-mybackground">
 	<div class="container">
 		<div class="container-inner">
 			<div class="hovereffect">
@@ -104,4 +291,4 @@
 		</div>
 	</div>
 
-</div>
+</div>-->

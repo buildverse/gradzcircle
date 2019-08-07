@@ -5,7 +5,8 @@ package com.drishika.gradzcircle.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,7 +41,7 @@ public class CandidateEmploymentDTO implements Serializable {
 	
 	private CandidateDTO candidate;
 
-	private Set<CandidateProjectDTO> projects = new HashSet<>();
+	private List<CandidateProjectDTO> projects = new ArrayList<>();
 
 	/**
 	 * @return the location
@@ -192,18 +193,19 @@ public class CandidateEmploymentDTO implements Serializable {
 		this.jobType = jobType;
 	}
 
+	
+
 	/**
 	 * @return the projects
 	 */
-	public Set<CandidateProjectDTO> getProjects() {
+	public List<CandidateProjectDTO> getProjects() {
 		return projects;
 	}
 
 	/**
-	 * @param projects
-	 *            the projects to set
+	 * @param projects the projects to set
 	 */
-	public void setProjects(Set<CandidateProjectDTO> projects) {
+	public void setProjects(List<CandidateProjectDTO> projects) {
 		this.projects = projects;
 	}
 

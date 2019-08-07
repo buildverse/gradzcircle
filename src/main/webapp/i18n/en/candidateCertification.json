@@ -16,7 +16,7 @@
                 "question": "Are you sure you want to remove {{ certification }}?"
             },
             "detail": {
-                "title": "Candidate Certification"
+                "title": "Certifications"
             },
             "certificationTitle": "Certification",
             "certificationDate": "Certification Date",

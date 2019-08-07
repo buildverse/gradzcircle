@@ -30,6 +30,7 @@ body {
   margin-left: auto;
 }
 
+
 /*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
 /*.table-responsive{
 overflow-y:visible;
@@ -191,6 +192,14 @@ transition-delay:.2s;
 	width: 100%;
 }
 
+.education-img {
+	background-image:url('../images/education.jpg');
+}
+
+.employment-img {
+	background-image:url('../images/employment.jpg');
+}
+
 .logo-img-white {
 	height: 100%;
 	background: url("../images/logo-white.png") no-repeat center center;
@@ -204,6 +213,14 @@ transition-delay:.2s;
 
 .img-corporate {
 	background: url("../images/corporate.jpg");
+}
+
+.action-edit {
+	color: #1cc88a
+}
+
+.action-delete {
+	color: #e74a3b
 }
 
 .img-talent {
@@ -234,18 +251,27 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 }
 
 .btn-danger {
-	background-color: #D32F2F;
+	background-color: #e74a3b;
 	color: white;
 }
 
 .btn-warning {
-	background-color: #FF5722;
+	background-color: #f6c23e;
 	color: white;
 }
 
 .btn-success {
-	background-color: #43A047;
+	background-color: #1cc88a;
 	color: white;
+}
+
+.btn-info {
+	background-color: #36b9cc;
+	color: white;
+}
+
+.bg-success {
+	background-color: #1cc88a!important;
 }
 
 .modal-body{
@@ -296,19 +322,9 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 	background-color: rgb(243, 241, 241)
 }
 
-.modal-header-decorate-delete {
-	background-color: #3097D1;
-	color: white;
-	height: 40px;
-}
-
-.modal-footer-decorate-delete {
-	height: 40px;
-	background-color: #E0E0E0
-}
 
 .form-text-primary {
-	color: #0d65da!important
+	color:#4e73df!important
 }
 
 /* ==============================================================
@@ -457,6 +473,7 @@ Custom alerts for notification
 	color: inherit;
 	padding: 0;
 	margin: 0;
+	text-align: center;
 }
 
 .alert .popover pre {
@@ -482,6 +499,11 @@ Custom alerts for notification
 
 .alerts .toast.bottom {
 	bottom: 55px;
+}
+
+.alert-info{
+	background-color: #c2eaef;
+	color:#154a51;
 }
 
 @media screen and (min-width: 480px) {
@@ -675,3 +697,103 @@ Social Buttons
 span.project_buttons {
     float: right;
 }
+
+/* STYLING FOR CANDIDATE PROFILE CATEGORIES (EMPLOYMENT, EDUCATION CERTIFICATION, NON ACAD, PROJECT,LANGUAGES ETC.*/
+@media (min-width:768px) {
+  .portfolio-block {
+    padding-bottom: 100px;
+    padding-top: 100px;
+  }
+}
+
+.portfolio-block {
+  padding-bottom: 60px;
+  padding-top: 60px;
+}
+
+@media (min-width:768px) {
+  .portfolio-block .heading {
+    margin-bottom: 80px;
+  }
+}
+
+.portfolio-block .heading {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.portfolio-block.project .image {
+  height: 450px;
+  margin-bottom: 50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+}
+
+@media (min-width:768px) {
+  .portfolio-block.project .meta {
+    padding-left: 45px;
+  }
+}
+
+.portfolio-block.project .meta {
+  padding-left: 15px;
+}
+
+.portfolio-block.project .meta .tags {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  color: #979797;
+}
+
+.portfolio-block.project .meta .tags .meta-heading {
+  color: #22245b;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.portfolio-block.project .meta .tags {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  color: #979797;
+}
+
+.portfolio-block.project .more-projects {
+  margin-top: 50px;
+  border-top: 1px solid #ddd;
+  padding-top: 60px;
+}
+
+.portfolio-block.project .gallery {
+  margin-top: 30px;
+}
+
+.project-card-no-image .tags a {
+  color: #979797;
+}
+
+.project-card-no-image {
+  box-shadow: 0 2px 10px rgba(0,0,0,.075);
+  padding: 35px;
+  border-top: 4px solid #0ea0ff;
+  margin-bottom: 30px;
+  margin-right: 10px;
+}
+
+.project-card-no-image .tags {
+  text-transform: uppercase;
+  float: right;
+  font-size: .75rem;
+  margin-top: 7px;
+}
+
+.bootstrap .tag {
+	background-color: #007bff;
+}
+
+
+

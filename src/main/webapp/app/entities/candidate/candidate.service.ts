@@ -21,6 +21,7 @@ export class CandidateService {
   private resourceUrl = SERVER_API_URL + 'api/candidates';
   private resourceSearchUrl = SERVER_API_URL + 'api/_search/candidates';
   private resourceUrlGetCandidateById = SERVER_API_URL + 'api/candidateById';
+  private resourceUrlGetCandidateDetails = SERVER_API_URL + 'api/candidateDetails';
   private deleteImageUrl = 'api/remove';
   private resourceCandidateToCorporateLink = 'api/candidate-corporate-link'
   //  private resourcePublicProfileUrl ='api/candidates/public-profile';
@@ -54,6 +55,11 @@ export class CandidateService {
 
   getCandidateByCandidateId(id: string): Observable<EntityResponseType> {
     return this.http.get<Candidate>(`${this.resourceUrlGetCandidateById}/${id}`, {observe: 'response'})
+      .map((res: EntityResponseType) => this.convertResponse(res));
+  }
+  
+   getCandidateDetails(id: string): Observable<EntityResponseType> {
+    return this.http.get<Candidate>(`${this.resourceUrlGetCandidateDetails}/${id}`, {observe: 'response'})
       .map((res: EntityResponseType) => this.convertResponse(res));
   }
 

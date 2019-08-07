@@ -94,7 +94,7 @@ public class CandidateResource {
 		log.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
 
 		Candidate result = candidateService.updateCandidate(candidate);
-		updateCountryAndNationalityDataForDisplay(result);
+		candidateService.updateCountryAndNationalityDataForDisplay(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidate.getId().toString())).body(result);
 	}
@@ -212,7 +212,7 @@ public class CandidateResource {
 	public ResponseEntity<CandidateDetailDTO> getCandidateDetailsById(@PathVariable Long id) {
 		log.debug("REST request to get Candidate by Id for  : {}", id);
 		Candidate candidate = candidateService.getCandidate(id);
-		updateCountryAndNationalityDataForDisplay(candidate);
+		candidateService.updateCountryAndNationalityDataForDisplay(candidate);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.convertToCandidateDetailDTO(candidate)));
 	}
 
@@ -229,6 +229,22 @@ public class CandidateResource {
 		return candidateDTO;
 	}
 
+	/**
+	 * GET /candidateDetails/:id : get the "id" candidate.
+	 *
+	 * @param id
+	 *            the id of the candidate to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the candidate,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/candidateDetails/{id}")
+	@Timed
+	public ResponseEntity<CandidateDetailDTO> getCandidateDetails(@PathVariable Long id) {
+		log.debug("REST request to get Candidate Details for profile page ");
+		
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.getCandidateDetails(id)));
+		
+	}
 	/**
 	 * DELETE /candidates/:id : delete the "id" candidate.
 	 *
@@ -330,22 +346,5 @@ public class CandidateResource {
 
 	}
 	
-	private void updateCountryAndNationalityDataForDisplay(Candidate candidate) {
-		if (candidate == null)
-			return;
-		if (candidate.getNationality() != null) {
-			candidate.getNationality().setDisplay(candidate.getNationality().getNationality());
-			candidate.getNationality().setValue(candidate.getNationality().getNationality());
-		}
-		if (candidate.getAddresses() != null) {
-			candidate.getAddresses().forEach(address -> {
-				if(address.getCountry()!=null) {
-				address.getCountry().setValue(address.getCountry().getCountryNiceName());
-				address.getCountry().setDisplay(address.getCountry().getCountryNiceName());
-				}
-			});
-		}
-
-	}
-
+	
 }

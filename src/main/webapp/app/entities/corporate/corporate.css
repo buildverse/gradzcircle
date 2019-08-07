@@ -1,5 +1,5 @@
 .profile-mybackground {
-	background: url('../../../content/images/candidate-profile.jpg');
+	/*background: url('../../../content/images/candidate-profile.jpg');*/
 	height: 500px; /* You must set a specified height */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
@@ -17,7 +17,7 @@ figure {
 
 .profile_page_head {
 	height: 48vh;
-	background-image: url(../../../content/images/banner-1.jpg);
+	/*background-image: url(../../../content/images/banner-1.jpg);*/
 	background-position: top;
 	background-repeat: no-repeat;
 	background-size: cover;

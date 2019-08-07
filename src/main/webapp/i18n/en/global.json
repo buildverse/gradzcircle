@@ -1,206 +1,211 @@
 {
-    "global": {
-        "title": "Gradzcircle",
-        "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
-        "menu": {
-            "home": "Home",
-            "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
-            "entities": {
-                "main": "Entities",
-                "candidate": "Candidate",
-                "candidateCertification": "Candidate Certification",
-                "candidateEducation": "Candidate Education",
-                "candidateEmployment": "Candidate Employment",
-                "languageProficiency": "Language Proficiency",
-                "candidateNonAcademicWork": "Candidate Non Academic Work",
-                "candidateProject": "Candidate Project",
-                "visaType": "Visa Type",
-                "employmentType": "Employment Type",
-                "qualification": "Qualification",
-                "course": "Course",
-                "country": "Country",
-                "industry": "Industry",
-                "skills": "Skills",
-                "jobType": "Job Type",
-                "college": "College",
-                "university": "University",
-                "jobCategory": "Job Category",
-                "language": "Language",
-                "audit": "Audit",
-                "employability": "Employability",
-                "corporate": "Corporate",
-                "candidateLanguageProficiency": "Candidate Language Proficiency",
-                "errorMessages": "Error Messages",
-                "address": "Address",
-                "maritalStatus": "Marital Status",
-                "gender": "Gender",
-                "nationality": "Nationality",
-                "captureCourse": "Capture Course",
-                "captureUniversity": "Capture University",
-                "captureCollege": "Capture College",
-                "captureQualification": "Capture Qualification",
-                "job": "Job",
-                "filterCategory": "Filter Category",
-                "filter": "Filter",
-                "jobFilter": "Job Filter",
-                "jobHistory": "Job History",
-                "jobFilterHistory": "Job Filter History",
-                "appConfig": "App Config",
-                "states": "States",
-                "profileCategory": "Profile Category",
-                "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
-            },
-            "account": {
-                "main": "Account",
-                "settings": "Settings",
-                "password": "Password",
-                "sessions": "Sessions",
-                "login": "Sign in",
-                "logout": "Sign out",
-                "register": "Talent",
-                "corporate": "Employers"
-            },
-            "admin": {
-                "main": "Administration",
-                "userManagement": "User management",
-                "tracker": "User tracker",
-                "metrics": "Metrics",
-                "health": "Health",
-                "configuration": "Configuration",
-                "logs": "Logs",
-                "audits": "Audits",
-                "apidocs": "API",
-                "database": "Database",
-                "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
-            },
-            "candidate": {
-                "dashboard" : "Dashboard",
-                "profile" : "Profile",
-                "profileCategories":{
-                    "edit":"Edit Profile",
-                    "public":"Public Profile"
-                },
-                "jobs" :  "Jobs",
-                "job": {
-                     "applied" : "Applied Jobs",
-                     "active" : "All Jobs",
-                     "shortlisted" : "Shortlisted For"
-             }
-            },
-             "corporate": {
-                "dashboard" : "Dashboard",
-                "profile" : "Profile",
-                "jobs" :  "Jobs",
-                "linkedCandidates": "My Candidates",
-                "job": {
-                     "post" : "Post a Job",
-                     "allJobs" : "All Jobs"
-             },
-             "links" : "Linked Candidate"
-            },
-            "language": "Language"
-        },
-        "form": {
-            "username": "Username",
-            "username.placeholder": "Pick as Username",
-            "newpassword": "New password",
-            "newpassword.placeholder": "Choose a password",
-            "confirmpassword": "Confirm New password",
-            "confirmpassword.placeholder": "Confirm your password",
-            "email": "Email",
-            "email.placeholder": "Enter your email address",
-            "firstName.placeholder": "Enter your first name",
-            "lastName.placeholder": "Enter your last name",
-            "required":"Required"
-        },
-        "messages": {
-            "info": {
-                "authenticated": {
-                    "prefix": "If you want to ",
-                    "link": "sign in",
-                    "suffix": ", you can try the default accounts:<br/>- Administrator (login=\"admin\" and password=\"admin\") <br/>- User (login=\"user\" and password=\"user\")."
-                },
-                "register": {
-                    "noaccount": "You don't have an account yet?",
-                    "link": "Register a new account"
-                }
-            },
-            "error": {
-                "dontmatch": "The password and its confirmation do not match!"
-            },
-            "validate": {
-                "newpassword": {
-                    "required": "Your password is required.",
-                    "minlength": "Your password is required to be at least 4 characters.",
-                    "maxlength": "Your password cannot be longer than 50 characters.",
-                    "strength": "Password strength:"
-                },
-                "confirmpassword": {
-                    "required": "Your confirmation password is required.",
-                    "minlength": "Your confirmation password is required to be at least 4 characters.",
-                    "maxlength": "Your confirmation password cannot be longer than 50 characters."
-                },
-                "email": {
-                    "required": "Your email is required.",
-                    "invalid": "Your email is invalid.",
-                    "minlength": "Your email is required to be at least 5 characters.",
-                    "maxlength": "Your email cannot be longer than 50 characters."
-                }
-            }
-        },
-        "field": {
-            "id": "ID"
-        },
-        "ribbon": {
-            "dev":"Development"
-        },
-        "item-count": "Showing {{first}} - {{second}} of {{total}} items."
-    },
-    "entity": {
-        "action": {
-            "addblob": "Add blob",
-            "addimage": "Add image",
-            "back": "Back",
-            "cancel": "Cancel",
-            "delete": "Delete",
-            "edit": "Edit",
-            "open": "Open",
-            "save": "Save",
-            "view": "View",
-            "archive": "Archive",
-            "update":"Update",
-            "pay": "Pay"
-        },
-        "detail": {
-            "field": "Field",
-            "value": "Value"
-        },
-        "delete": {
-            "title": "Are you sure ?"
-        },
-        "validation": {
-            "required": "This field is required.",
-            "minlength": "This field is required to be at least {{ min }} characters.",
-            "maxlength": "This field cannot be longer than {{ max }} characters.",
-            "min": "This field should be at least {{ min }}.",
-            "max": "This field cannot be more than {{ max }}.",
-            "minbytes": "This field should be at least {{ min }} bytes.",
-            "maxbytes": "This field cannot be more than {{ max }} bytes.",
-            "pattern": "This field should follow pattern for {{ pattern }}.",
-            "number": "This field should be a number.",
-            "datetimelocal": "This field should be a date and time."
-        }
-    },
-    "error": {
-        "internalServerError": "Internal server error",
-        "server.not.reachable": "Server not reachable",
-        "url.not.found": "Not found",
-        "NotNull": "Field {{ fieldName }} cannot be empty!",
-        "Size": "Field {{ fieldName }} does not meet min/max size requirements!",
-        "userexists": "Login name already used!",
-        "emailexists": "Email is already in use!",
-        "idexists": "A new {{ entityName }} cannot already have an ID",
-        "generalError": "Oops something went wrong. Please try again later"
-    },
-    "footer": "This is your footer"
+	"global": {
+		"title": "Gradzcircle",
+		"browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
+		"menu": {
+			"home": "Home",
+			"jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+			"entities": {
+				"main": "Entities",
+				"candidate": "Candidate",
+				"candidateCertification": "Candidate Certification",
+				"candidateEducation": "Candidate Education",
+				"candidateEmployment": "Candidate Employment",
+				"languageProficiency": "Language Proficiency",
+				"candidateNonAcademicWork": "Candidate Non Academic Work",
+				"candidateProject": "Candidate Project",
+				"visaType": "Visa Type",
+				"employmentType": "Employment Type",
+				"qualification": "Qualification",
+				"course": "Course",
+				"country": "Country",
+				"industry": "Industry",
+				"skills": "Skills",
+				"jobType": "Job Type",
+				"college": "College",
+				"university": "University",
+				"jobCategory": "Job Category",
+				"language": "Language",
+				"audit": "Audit",
+				"employability": "Employability",
+				"corporate": "Corporate",
+				"candidateLanguageProficiency": "Candidate Language Proficiency",
+				"errorMessages": "Error Messages",
+				"address": "Address",
+				"maritalStatus": "Marital Status",
+				"gender": "Gender",
+				"nationality": "Nationality",
+				"captureCourse": "Capture Course",
+				"captureUniversity": "Capture University",
+				"captureCollege": "Capture College",
+				"captureQualification": "Capture Qualification",
+				"job": "Job",
+				"filterCategory": "Filter Category",
+				"filter": "Filter",
+				"jobFilter": "Job Filter",
+				"jobHistory": "Job History",
+				"jobFilterHistory": "Job Filter History",
+				"appConfig": "App Config",
+				"states": "States",
+				"profileCategory": "Profile Category",
+				"jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+			},
+			"account": {
+				"main": "Account",
+				"settings": "Settings",
+				"password": "Password",
+				"sessions": "Sessions",
+				"login": "Sign in",
+				"logout": "Sign out",
+				"register": "Talent",
+				"corporate": "Employers"
+			},
+			"admin": {
+				"main": "Administration",
+				"userManagement": "User management",
+				"tracker": "User tracker",
+				"metrics": "Metrics",
+				"health": "Health",
+				"configuration": "Configuration",
+				"logs": "Logs",
+				"audits": "Audits",
+				"apidocs": "API",
+				"database": "Database",
+				"jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
+			},
+			"user": {
+				"userSettings": "User Settings",
+				"contactSettings": "Contact Settings",
+				"profileSettings": "Profile Setting",
+				"profile": "Profile"
+			},
+			"candidate": {
+				"dashboard": "Dashboard",
+				"profileCategories": {
+					"edit": "Edit Profile",
+					"public": "Public Profile"
+				},
+				"jobs": "Jobs",
+				"job": {
+					"applied": "Applied Jobs",
+					"active": "All Jobs",
+					"shortlisted": "Shortlisted For"
+				}
+			},
+			"corporate": {
+				"dashboard": "Dashboard",
+				"jobs": "Jobs",
+				"linkedCandidates": "My Candidates",
+				"job": {
+					"post": "Post a Job",
+					"allJobs": "All Jobs"
+				},
+				"links": "Linked Candidate"
+			},
+			"language": "Language"
+		},
+		"form": {
+			"username": "Username",
+			"username.placeholder": "Pick as Username",
+			"newpassword": "New password",
+			"newpassword.placeholder": "Choose a password",
+			"confirmpassword": "Confirm New password",
+			"confirmpassword.placeholder": "Confirm your password",
+			"email": "Email",
+			"email.placeholder": "Enter your email address",
+			"firstName.placeholder": "Enter your first name",
+			"lastName.placeholder": "Enter your last name",
+			"required": "Required"
+		},
+		"messages": {
+			"info": {
+				"authenticated": {
+					"prefix": "If you want to ",
+					"link": "sign in",
+					"suffix": ", you can try the default accounts:<br/>- Administrator (login=\"admin\" and password=\"admin\") <br/>- User (login=\"user\" and password=\"user\")."
+				},
+				"register": {
+					"noaccount": "You don't have an account yet?",
+					"link": "Register a new account"
+				}
+			},
+			"error": {
+				"dontmatch": "The password and its confirmation do not match!"
+			},
+			"validate": {
+				"newpassword": {
+					"required": "Your password is required.",
+					"minlength": "Your password is required to be at least 4 characters.",
+					"maxlength": "Your password cannot be longer than 50 characters.",
+					"strength": "Password strength:"
+				},
+				"confirmpassword": {
+					"required": "Your confirmation password is required.",
+					"minlength": "Your confirmation password is required to be at least 4 characters.",
+					"maxlength": "Your confirmation password cannot be longer than 50 characters."
+				},
+				"email": {
+					"required": "Your email is required.",
+					"invalid": "Your email is invalid.",
+					"minlength": "Your email is required to be at least 5 characters.",
+					"maxlength": "Your email cannot be longer than 50 characters."
+				}
+			}
+		},
+		"field": {
+			"id": "ID"
+		},
+		"ribbon": {
+			"dev": "Development"
+		},
+		"item-count": "Showing {{first}} - {{second}} of {{total}} items."
+	},
+	"entity": {
+		"action": {
+			"addblob": "Add blob",
+			"addimage": "Add image",
+			"back": "Back",
+			"cancel": "Cancel",
+			"delete": "Remove",
+			"edit": "Edit",
+			"open": "Open",
+			"save": "Save",
+			"view": "View",
+			"add": "Add",
+			"archive": "Archive",
+			"update": "Update",
+			"pay": "Pay"
+		},
+		"detail": {
+			"field": "Field",
+			"value": "Value"
+		},
+		"delete": {
+			"title": "Are you sure ?"
+		},
+		"validation": {
+			"required": "This field is required.",
+			"minlength": "This field is required to be at least {{ min }} characters.",
+			"maxlength": "This field cannot be longer than {{ max }} characters.",
+			"min": "This field should be at least {{ min }}.",
+			"max": "This field cannot be more than {{ max }}.",
+			"minbytes": "This field should be at least {{ min }} bytes.",
+			"maxbytes": "This field cannot be more than {{ max }} bytes.",
+			"pattern": "This field should follow pattern for {{ pattern }}.",
+			"number": "This field should be a number.",
+			"datetimelocal": "This field should be a date and time."
+		}
+	},
+	"error": {
+		"internalServerError": "Internal server error",
+		"server.not.reachable": "Server not reachable",
+		"url.not.found": "Not found",
+		"NotNull": "Field {{ fieldName }} cannot be empty!",
+		"Size": "Field {{ fieldName }} does not meet min/max size requirements!",
+		"userexists": "Login name already used!",
+		"emailexists": "Email is already in use!",
+		"idexists": "A new {{ entityName }} cannot already have an ID",
+		"generalError": "Oops something went wrong. Please try again later"
+	},
+	"footer": "This is your footer"
 }

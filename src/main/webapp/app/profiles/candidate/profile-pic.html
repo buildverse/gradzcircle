@@ -26,13 +26,13 @@
 		
 				<div *ngIf="uploader?.queue?.length==0; else imageSelected">
 					<div *ngIf="!imageDataAvailable " class="upload-btn-wrapper d-flex justify-content-center">
-						<button type="button" class="btn btn-pill btn-primary" style="background-color:#0D47A1;">Select</button>
+						<button type="button" class="btn btn-pill btn-primary">Select</button>
 						<input #selectedPicture type="file" ng2FileSelect
 								[uploader]="uploader" (change)="fileChangeEvent($event)"/>	
 					</div>
 					<div *ngIf="imageDataAvailable" class=" d-flex justify-content-around">
 						<div class="upload-btn-wrapper">
-							<button type="button" class="btn btn-pill btn-primary" style="background-color:#0D47A1;">Select New</button>
+							<button type="button" class="btn btn-pill btn-primary" >Select New</button>
 							<input #selectedPicture type="file" ng2FileSelect
 									[uploader]="uploader" (change)="fileChangeEvent($event)"/>
 						</div>	
@@ -50,7 +50,7 @@
 					</div>-->
 					<div 
 						*ngFor="let item  of uploader?.queue" class="d-flex justify-content-center">
-						<button class="btn btn-pill" style="background-color:#0D47A1;"
+						<button class="btn btn-pill btn-primary" 
 							(click)="uploadImage(item)"
 							[disabled]="item.isReady || item.isUploading || item.isSuccess || fileUploadErrorMessage.length>0">
 							<span class="icon icon-arrow-with-circle-up" style="color: white">Upload</span>
