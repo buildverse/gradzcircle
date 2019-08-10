@@ -100,16 +100,16 @@
 		</div>
 
 	</div>
-	<div class="modal-footer modal-footer-decorate">
-		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+	<div class="mb-3 mr-5 ml-5">
+		<!--<button type="button" class="btn btn-sm btn-pill btn-secondary"
 			data-dismiss="modal" (click)="clear()">
 			<span class="fa fa-ban"></span>&nbsp;<span
 				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
+		</button>-->
 		<button type="submit"
 			[disabled]="editForm.form.invalid || isSaving || languageAlreadyPresentError || !selectLanguageProficiency"
-			class="btn btn-sm btn-pill btn-primary">
-			<span class="fa fa-save"></span>&nbsp;<span
+			class="btn btn-block btn-primary">
+			<span
 				jhiTranslate="entity.action.save">Save</span>
 		</button>
 

@@ -25,11 +25,10 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
   candidateId: any;
   subscription: Subscription;
   candidateEducationsForDisplay: CandidateEducation[];
-  /*This will always be highest by default* 
+  /*This will always be highest by default
    will chnage dynamically for display susequently
    */
   primaryCandidateEducation: CandidateEducation;
-
 
   constructor(
     private candidateEducationService: CandidateEducationService,
@@ -90,16 +89,15 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
           this.router.navigate(['./candidate-profile']);
         }
         this.setPrimaryEducationOnLoad();
-        if (this.candidateEducations && this.candidateEducations.length > 0) {
+     /*   if (this.candidateEducations && this.candidateEducations.length > 0) {
           this.candidateProfileScoreService.changeScore(this.candidateEducations[0].candidate.profileScore);
-        }
+        } */
         this.spinnerService.hide();
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
     return;
   }
-
 
   setPrimaryEducationOnLoad() {
     this.candidateEducationsForDisplay = [];
@@ -131,6 +129,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
         }
       });
     }
+    window.scroll(0, 0);
   }
 
   search(query) {
@@ -146,7 +145,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     this.loadAll();
   }
 
-
   ngOnInit() {
     this.candidateEducationsForDisplay = [];
     this.principal.identity().then((account) => {
@@ -160,8 +158,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
       }
       this.registerChangeInCandidateEducations();
     });
-   
-
   }
 
   ngOnDestroy() {
@@ -173,11 +169,9 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-
   registerChangeInCandidateEducations() {
-    console.log('Candidate Id is '+this.candidateId);
+   // console.log('Candidate Id is '+this.candidateId);
     if (this.candidateId) {
-      
       this.educationEventSubscriber = this.eventManager.subscribe('candidateEducationListModification', (response) => this.loadEducationForCandidate());
       this.projectEventSubscriber = this.eventManager.subscribe('candidateProjectListModification', (response) => this.loadEducationForCandidate());
     } else {

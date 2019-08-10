@@ -200,6 +200,19 @@ transition-delay:.2s;
 	background-image:url('../images/employment.jpg');
 }
 
+
+.certification-img {
+	background-image:url('../images/certification.jpg');
+}
+
+.nonAcademic-img {
+	background-image:url('../images/non-academic.jpg');
+}
+
+.languages-img {
+	background-image:url('../images/languages.jpg');
+}
+
 .logo-img-white {
 	height: 100%;
 	background: url("../images/logo-white.png") no-repeat center center;

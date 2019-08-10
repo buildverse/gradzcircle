@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
-import {JhiEventManager, JhiParseLinks, JhiPaginationUtil, JhiLanguageService, JhiAlertService} from 'ng-jhipster';
+import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {CandidateEmployment} from './candidate-employment.model';
 import {CandidateEmploymentService} from './candidate-employment.service';
@@ -55,9 +55,9 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     this.dataService.setdata(CANDIDATE_PROJECT_ID, event);
     this.dataService.setdata(IS_EMPLOYMENT_PROJECT, 'true');
   }
-  
+
   setAddRouteParams() {
-    this.dataService.setdata(CANDIDATE_ID,this.candidateId);
+    this.dataService.setdata(CANDIDATE_ID, this.candidateId);
   }
 
   loadEmploymentsForCandidate() {
@@ -65,16 +65,16 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     this.candidateEmploymentService.findEmploymentsByCandidateId(this.candidateId).subscribe(
       (res: HttpResponse<CandidateEmployment[]>) => {
         this.candidateEmployments = res.body;
-        console.log('Employment are '+JSON.stringify(this.candidateEmployments));
+       // console.log('Employment are '+JSON.stringify(this.candidateEmployments));
         if (this.candidateEmployments && this.candidateEmployments.length <= 0) {
           this.router.navigate(['./candidate-profile']);
         }
         this.candidateEmploymentsOnLoad();
-        if (this.candidateEmployments && this.candidateEmployments.length > 0) {
+       /* if (this.candidateEmployments && this.candidateEmployments.length > 0) {
           this.candidateProfileScoreService.changeScore(this.candidateEmployments[0].candidate.profileScore);
         } else {
           this.candidateProfileScoreService.changeScore(this.profileScore);
-        }
+        }*/
         this.spinnerService.hide();
       },
       (res: HttpErrorResponse) => this.onError(res.message));
@@ -111,6 +111,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
         }
       });
     }
+    window.scroll(0, 0) ;
   }
 
   loadAll() {

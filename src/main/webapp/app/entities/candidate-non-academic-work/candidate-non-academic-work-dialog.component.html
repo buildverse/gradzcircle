@@ -105,13 +105,13 @@
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
-						required type="text" class="form-control "
+						required type="text" class="form-control border-primary "
 						name="nonAcademicFromDate" ngbDatepicker
 						#nonAcademicFromDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
 						(ngModelChange)="validateDates()" /> 
 						<span class="input-group-append" > 
-							<button class="btn btn-outline-secondary" (click)="nonAcademicFromDateDp.toggle()" type="button">
+							<button class="btn btn-outline-primary" (click)="nonAcademicFromDateDp.toggle()" type="button">
 								<i class="fa fa-calendar" style="color:#1276ae"></i>
 							</button>
 						</span>
@@ -129,23 +129,26 @@
 			<div class="col-md-4"
 				[class.has-danger]="toDate.invalid && toDate.touched" (mouseleave)="nonAcademicToDateDp.close()">
 				<div class="input-group">
-					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required
-						type="text" class="form-control "
+					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required jhiNotFutureDate
+						type="text" class="form-control border-primary"
 						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker
 						#nonAcademicToDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
 						(ngModelChange)="validateDates()" />
 					<span class=" input-group-append" >
-						<button class="btn btn-outline-secondary" (click)="nonAcademicToDateDp.toggle()" [disabled]="endDateControl" type="button">
+						<button class="btn btn-outline-primary" (click)="nonAcademicToDateDp.toggle()" [disabled]="endDateControl" type="button">
 									<i class="fa fa-calendar" style="color:#1276ae"></i>
 						</button>
 					</span>
 				</div>
-				<div *ngIf="toDate.invalid && toDate.touched" class="text-danger">
+				<div *ngIf="toDate.invalid && toDate.touched && toDate.errors?.required" class="text-danger">
 					<small>Please enter End Date</small>
 				</div>
 				<div *ngIf="endDateLesser" class="text-danger">
 					<small>End date cannot be before start date.</small>
+                </div>
+                <div *ngIf="toDate.invalid && toDate.touched && toDate.errors?.futureDate" class="text-danger">
+					<small>End date cannot be in future.</small>
 				</div>
 			</div>
 		</div>
@@ -263,15 +266,15 @@
 			</select>
 		</div>
 	</div>
-	<div class="modal-footer modal-footer-decorate">
-		<button type="button" class="btn btn-sm btn-pill btn-secondary"
+	<div class="mb-5 mr-5 ml-5">
+		<!--<button type="button" class="btn btn-sm btn-pill btn-secondary"
 			data-dismiss="modal" (click)="clear()">
 			<span class="fa fa-ban"></span>&nbsp;<span
 				jhiTranslate="entity.action.cancel">Cancel</span>
-		</button>
-		<button type="submit" [disabled]="editForm.form.invalid || isSaving"
-			class="btn btn-sm btn-pill btn-primary">
-			<span class="fa fa-save"></span>&nbsp;<span
+		</button>-->
+		<button type="submit" [disabled]="editForm.form.invalid || isSaving || endDateLesser"
+			class="btn btn-block btn-primary">
+			<span
 				jhiTranslate="entity.action.save">Save</span>
 		</button>
 	</div>

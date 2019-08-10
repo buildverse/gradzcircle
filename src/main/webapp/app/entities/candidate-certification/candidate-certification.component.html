@@ -1,54 +1,56 @@
 <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
-	<div id="accordion">
-		<div *ngIf="candidateCertifications?.length>0;">
-			<div *ngFor="let candidateCertification of candidateCertifications ;">
-				 <div *ngIf="candidateCertification.id" class="card mb-2">
-					<div class="card-header justify-content-between education_title">
-						<a class="card-link " 
-	       				   [attr.aria-controls]="candidateCertification.id" (click)="candidateCertification.collapsed = !candidateCertification.collapsed"
-	       				   [attr.aria-expanded]="!candidateCertification.collapsed"
-						> {{candidateCertification.certificationTitle}}</a>
-						<span class="project_buttons">
-							<a class="btn btn-sm btn-pill btn-primary mb-2" (click)="setEditDeleteRouteParam(candidateCertification.id)"
-													[routerLink]="['/', { outlets: { popup: 'candidate-certification/edit'} }]"
-													replaceUrl="true"> 
-													<span class="icon icon-edit "  jhiTranslate="entity.action.edit">
-														Edit
-													</span>
-												</a>
-												<a class="btn btn-sm btn-pill btn-danger mb-2" (click)="setEditDeleteRouteParam(candidateCertification.id)"
-													[routerLink]="['/', { outlets: { popup: 'candidate-certification/delete'} }]"
-													replaceUrl="true"> 
-													<span class="icon icon-trash " jhiTranslate="entity.action.delete">
-														Delete
-													</span>
-												</a>
-						</span>
-					</div>
-					<div id="{{candidateCertification.id}}" data-parent="#accordion" [ngbCollapse]="candidateCertification.collapsed">	      
-				        <div class="card-body"> 
-				        		<div class="col-lg-12 row">
-						          <span class="education_title_2 w-100 editable mt-2 pb-0" [innerHtml]="candidateCertification.certificationDetails"></span>
-						     </div>
-						     <div class="col-lg-12 row">
-							        <span class="education_body w-100 editable mt-2">-&nbsp;&nbsp;&nbsp;{{candidateCertification.certificationDate|
-									date:'mediumDate'}}
-									</span>
-							 </div>
-					  	</div>				
-					</div>      
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-12  my-4 text-right d-block">
-			<a class="btn btn-sm btn-pill btn-primary" (click)="setAddRouteParam()"
-				[routerLink]="['/', { outlets: { popup: 'new-candidate-certification' } }]">
-				<span class="icon icon-circle-with-plus"
-				jhiTranslate="gradzcircleApp.candidateCertification.certificationTitle">
-					Add </span>
-			</a>
-		</div>
-	</div>
+    <main class="page project-page">
+        <section class="portfolio-block project">
+            <div class="row mr-5 ml-5">
+                <div class="col">
+                    <p jhiTranslate="gradzcircleApp.candidateCertification.detail.title" class="float-left h3 font-weight-bold"></p>
+                    <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button"
+                        jhiTranslate="gradzcircleApp.candidateCertification.home.add" [routerLink]="['/', { outlets: { popup: 'new-candidate-certification' } }]">Button</button>
+                </div>
+            </div>
+            <div class="container">
+                <div *ngIf="primaryCandidateCertification">
+                    <div class="heading">
+                        <h2>{{primaryCandidateCertification.certificationTitle}}</h2>
+                        <h6>{{primaryCandidateCertification.certificationDate | date:'mediumDate'}}</h6>
+                        <h6>
+                            <span class="fa fa-pencil action-edit" ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/edit'} }]"></span>
+                            <span class="fa fa-remove action-delete" ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/delete'} }]">
+    
+                            </span>
+                        </h6>
+                    </div>
+    
+                    <div class="image certification-img"></div>
+                    <div class="row mr-5 ml-5">
+                        <div class="col info">
+                            <h3 jhiTranslate="gradzcircleApp.candidateCertification.certificationDetails">Description</h3>
+                            <span class="font-size:1rem;" [innerHtml]="primaryCandidateCertification.certificationDetails"></span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="candidateCertificationForDisplay && candidateCertificationForDisplay?.length>0">
+    
+                    <div class="more-projects ">
+                        <h3 class="text-center">Other Certifications</h3>
+                        <div class="row gallery">
+                            <div *ngFor="let certification of candidateCertificationForDisplay">
+                                <div class="project-card-no-image">
+                                    <h3>{{certification.certificationTitle}} </h3>
+                                    <a class="btn btn-outline-primary btn-sm" role="button"
+                                        (click)="setPrimaryByUserSelection(certification.id)">See More</a>
+                                    <div class="tags ml-5">{{certification.certificationDate |date:'mediumDate'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5"></div>
+            </div>
+        </section>
+    </main>
 </div>
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">

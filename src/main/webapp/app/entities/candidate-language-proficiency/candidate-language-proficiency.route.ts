@@ -38,7 +38,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
         path: 'candidate-language-proficiency-new',
         component: CandidateLanguageProficiencyPopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         canActivate: [UserRouteAccessService],
@@ -48,7 +48,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
     path: 'new-candidate-language-proficiency',
         component: CandidateLanguageProficiencyPopupComponentNew,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         resolve: {
@@ -61,7 +61,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
         path: 'candidate-language-proficiency/:id/edit',
         component: CandidateLanguageProficiencyPopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         canActivate: [UserRouteAccessService],
@@ -71,7 +71,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
         path: 'candidate-language-proficiency/:id/delete',
         component: CandidateLanguageProficiencyDeletePopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         canActivate: [UserRouteAccessService],
@@ -81,7 +81,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
         path: 'candidate-language-proficiency/edit',
         component: CandidateLanguageProficiencyPopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         canActivate: [UserRouteAccessService],
@@ -91,7 +91,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
         path: 'candidate-language-proficiency/delete',
         component: CandidateLanguageProficiencyDeletePopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CANDIDATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'
         },
         canActivate: [UserRouteAccessService],

@@ -158,8 +158,8 @@ public class CandidateLanguageProficiencyResource {
 	@Timed
 	public List<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencyByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-		List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<CandidateLanguageProficiencyDTO>(candidateLanguageService
-				.getCandidateLanguageProficiencyByCandidate(id));
+		List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = candidateLanguageService
+				.getCandidateLanguageProficiencyByCandidate(id);
 		return candidateLanguageProficiencies;
 	}
 

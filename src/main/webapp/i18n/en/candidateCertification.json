@@ -2,11 +2,11 @@
     "gradzcircleApp": {
         "candidateCertification" : {
             "home": {
-                "title": "My Certifications",
+                "title": "Certification Name",
                 "createLabel": "Create a new Candidate Certification",
-                "createOrEditLabel": "Create or edit a Candidate Certification",
+                "createOrEditLabel": "Create or edit Certification",
                 "search": "Search for Candidate Certification",
-                "add":"Add",
+                "add":"Add Certification",
                 "delete": "Remove Certification"
             },
             "created": "A new Candidate Certification is created with identifier {{ param }}",
@@ -21,7 +21,8 @@
             "certificationTitle": "Certification",
             "certificationDate": "Certification Date",
             "certificationDetails": "Details",
-            "candidate": "Candidate"
+            "candidate": "Candidate",
+            "proficiency": "Proficiency"
         }
     }
 }

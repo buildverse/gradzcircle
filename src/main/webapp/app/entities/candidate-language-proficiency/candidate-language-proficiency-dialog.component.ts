@@ -1,8 +1,8 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {NgForm} from '@angular/Forms'
+import {NgForm} from '@angular/Forms';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {CandidateLanguageProficiency} from './candidate-language-proficiency.model';
@@ -34,7 +34,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
   editForm: NgForm;
   hasNoLanguageSelectedError: boolean;
   serverSideError: string;
-  selectLanguageProficiency: boolean
+  selectLanguageProficiency: boolean;
   notSelectedLanguage: boolean;
   default: string;
   languageLocked: boolean;
@@ -63,7 +63,6 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
       return null;
     }
   }
-  
   validateLanguage() {
     // console.log("Value passed is "+ JSON.stringify(value));
   //  console.log('selected data is '+JSON.stringify(this.candidateLanguageProficiency.language));
@@ -72,6 +71,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
       this.hasNoLanguageSelectedError = true;
       this.languageAlreadyPresentError = false;
       this.notSelectedLanguage = true;
+      this.candidateLanguageProficiency.proficiency  = undefined;
       // this.isLanguageAlreadyPresent();
     }  else {
       this.notSelectedLanguage = false;
@@ -88,7 +88,6 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
       query: text
     }).map((data) => data.body === '' ? '' : data.body);
   }
-
 
   isLanguageAlreadyPresent() {
    // console.log('---------------'+JSON.stringify(this.currentCandidateLanguageProficiencies));
@@ -119,14 +118,12 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     this.selectLanguageProficiency = false;
     if (this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN'])) {
       this.candidateService.query()
-        .subscribe((res: HttpResponse<Candidate[]>) => {this.candidates = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+        .subscribe((res: HttpResponse<Candidate[]>) => {this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
 
     }
 
     this.languageService.query()
-      .subscribe((res: HttpResponse<Language[]>) => {this.languages = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
-
-
+      .subscribe((res: HttpResponse<Language[]>) => {this.languages = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   clear() {
@@ -199,7 +196,7 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
 
   routeSub: any;
   languageLocked: boolean;
-  //currentCandidateLanguageProficiencies: CandidateLanguageProficiency[];
+  // currentCandidateLanguageProficiencies: CandidateLanguageProficiency[];
   // candidateAllLanguageSelections : CandidateLanguageProficiency[];
   constructor(
     private route: ActivatedRoute,
@@ -215,7 +212,7 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
           .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.languageLocked);
       } else {
         const id = this.dataService.getData(CANDIDATE_LANGUAGE_ID);
-        if(id) {
+        if (id) {
           this.languageLocked = true;
           this.candidateLanguageProficiencyPopupService
           .open(CandidateLanguageProficiencyDialogComponent as Component, id, this.languageLocked);
@@ -230,8 +227,6 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
-
-
 }
 
 @Component({
@@ -252,8 +247,7 @@ export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, On
   ngOnInit() {
     this.route.data.subscribe((data: {currentLanguageSelections: CandidateLanguageProficiency[]}) => this.currentCandidateLanguageProficiencies = data.currentLanguageSelections);
     this.routeSub = this.route.params.subscribe((params) => {
-      
-      if(params['id']) {
+      if (params['id']) {
       this.candidateLanguageProficiencyPopupService
         .open(CandidateLanguageProficiencyDialogComponent as Component, params['id'], this.currentCandidateLanguageProficiencies);
       } else {
@@ -267,6 +261,4 @@ export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, On
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
-
-
 }

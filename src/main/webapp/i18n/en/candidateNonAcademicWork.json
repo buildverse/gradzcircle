@@ -2,7 +2,7 @@
     "gradzcircleApp": {
         "candidateNonAcademicWork" : {
             "home": {
-                "add" : "Add",
+                "add" : "Add Activiy",
                 "title": "Extra Curriculars",
                 "createLabel": "Create a new Candidate Non Academic Work",
                 "createOrEditLabel": "Add your Extra Curricular Activities",
@@ -19,7 +19,7 @@
             "detail": {
                 "title": "Extra Curriculars"
             },
-            "nonAcademicInitiativeTitle": "Activity Name",
+            "nonAcademicInitiativeTitle": "Activity",
             "nonAcademicInitiativeDescription": "Description",
 
             "duration": "Duration",

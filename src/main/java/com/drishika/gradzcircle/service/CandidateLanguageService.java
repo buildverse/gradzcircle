@@ -129,7 +129,7 @@ public class CandidateLanguageService {
 		return candidateLanguageProficiencyDTO;
 	}
 */
-	public Set<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencyByCandidate(Long id) {
+	public List<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencyByCandidate(Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 				.findCandidateLanguageProficienciesByCandidateId(id);

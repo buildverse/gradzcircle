@@ -65,6 +65,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       }, {validator: passwordMatcher})
 
     });
+    const passwordControl = this.registerForm.get('passwordGroup.password');
+    passwordControl.valueChanges.debounceTime(1000);
+    this.registerAccount = {authorities: ['ROLE_CANDIDATE']};         //WHY AM I DOING THIS
+    this.success = false;
   }
 
   ngAfterViewInit() {

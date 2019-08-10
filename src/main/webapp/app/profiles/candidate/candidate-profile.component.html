@@ -42,9 +42,10 @@
 	                        			<div class="col-md-10 ">
 	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateCertification.detail.title"></h4>
 	                            		</div>
-	                            		<div *ngIf="candidate.hasCertification; else addCertification" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<div *ngIf="candidate.hasCertification; else addCertification" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../certification']"> Add</span></div>
 	                            		<ng-template #addCertification>
-	                            			<div class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+	                            			<div class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" (click)="setRouterAddProfileCategoryParams()"
+											[routerLink]="['/', { outlets: { popup: 'new-candidate-certification' } }]">Add</span></div>
 	                            		</ng-template>
 	                           	</div>
 	                           	<hr />
@@ -52,9 +53,10 @@
 	                        			<div class="col-md-10 ">
 	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateNonAcademicWork.detail.title"></h4>
 	                            		</div>
-	                            		<div *ngIf="candidate.hasNonAcademic; else addNonAcademic" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<div *ngIf="candidate.hasNonAcademic; else addNonAcademic" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../beyondAcademics']">Add</span></div>
 	                            		<ng-template #addNonAcademic>
-	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" (click)="setRouterAddProfileCategoryParams()"
+											[routerLink]="['/', { outlets: { popup: 'new-candidate-non-academic-work' } }]">Add</span></div>
 	                            		</ng-template>
 	                           	</div>
 	                           	<hr />
@@ -62,15 +64,16 @@
 	                        			<div class="col-md-10 ">
 	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateLanguageProficiency.detail.title"></h4>
 	                            		</div>
-	                            		<div *ngIf="candidate.hasLanguages; else addLanguages" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view">Add</span></div>
+	                            		<div *ngIf="candidate.hasLanguages; else addLanguages" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../languages']">Add</span></div>
 	                            		<ng-template #addLanguages>
-	                            			<div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add">Add</span></div>
+                                            <div  class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" 
+                                                        (click)="setRouterAddProfileCategoryParams()" [routerLink]="['/', { outlets: { popup: 'new-candidate-language-proficiency' } }]">Add</span></div>
 	                            		</ng-template>
 	                           	</div>
 	                           	<hr />
 	                           	<div class="row ">
 	                        			<div class="col-md-10 ">
-	                            			<h4 class="small font-weight-bold" jhiTranslate="gradzcircleApp.candidate.profileScore">Server migration</h4>
+	                            			<h4 class="small font-weight-bold" jhiTranslate="gradzcircleApp.candidate.profileScore"></h4>
 	                            		</div>	                            
 	                            		<div  class="col-md-2"><h4 class="small font-weight-bold"> <span class="pb-0 pt-0 float-right">{{candidate.profileScore}}%</span></h4></div>
 	                           	</div>

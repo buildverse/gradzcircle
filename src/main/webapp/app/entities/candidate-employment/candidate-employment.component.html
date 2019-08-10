@@ -3,7 +3,9 @@
 	 <main class="page project-page">
     <section class="portfolio-block project">
     		<div class="row mr-5 ml-5">
-    			<div class="col"><button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
+    			<div class="col">
+                    <p jhiTranslate="gradzcircleApp.candidateEmployment.detail.title" class="float-left h3 font-weight-bold"></p>
+                    <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
     					jhiTranslate="gradzcircleApp.candidateEmployment.home.add" 
 						[routerLink]="['/', { outlets: { popup: 'new-candidate-employment' } }]">Button</button>
 			</div>

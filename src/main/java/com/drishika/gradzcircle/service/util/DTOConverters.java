@@ -62,30 +62,32 @@ public class DTOConverters {
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CandidateAppliedJobs candidateAppliedJob,
 			Candidate candidate, Job job) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		setCoreCandidateFields(candidate,dto);
+		setCoreCandidateFields(candidate, dto);
 		setMatchScore(candidate, job, dto);
 		dto.setCorporateId(job.getCorporate().getId());
 		dto.setJobId(job.getId());
-		CorporateCandidate corporateCandidate = candidate.getShortlistedByCorporates().stream().filter(cc->cc.getCorporate().equals(job.getCorporate())).findFirst().orElse(null);
-		if(corporateCandidate != null)
+		CorporateCandidate corporateCandidate = candidate.getShortlistedByCorporates().stream()
+				.filter(cc -> cc.getCorporate().equals(job.getCorporate())).findFirst().orElse(null);
+		if (corporateCandidate != null)
 			dto.setShortListed(true);
 		else
 			dto.setShortListed(false);
 		logger.debug("The CandidateProfileListDTO is {}", dto);
 		return dto;
 	}
-	
-	private void setMatchScore(Candidate candidate , Job job, CandidateProfileListDTO dto) {
-		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(cJ -> cJ.getJob().equals(job)).findAny().orElse(null);
-		if(candidateJob!=null) {
+
+	private void setMatchScore(Candidate candidate, Job job, CandidateProfileListDTO dto) {
+		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(cJ -> cJ.getJob().equals(job))
+				.findAny().orElse(null);
+		if (candidateJob != null) {
 			dto.setMatchScore(candidateJob.getMatchScore());
 		} else {
 			dto.setMatchScore(0d);
 		}
 	}
-	
-	private void setCoreCandidateFields(Candidate candidate,CandidateProfileListDTO dto) {
-		CandidateEducation highestCandidateEducation =null;
+
+	private void setCoreCandidateFields(Candidate candidate, CandidateProfileListDTO dto) {
+		CandidateEducation highestCandidateEducation = null;
 		dto.setFirstName(candidate.getFirstName());
 		dto.setId(candidate.getId());
 		dto.setLastName(candidate.getLastName());
@@ -99,46 +101,50 @@ public class DTOConverters {
 		}
 	}
 
-	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CandidateJob candidateJob,Set<CorporateCandidate> linkedCandidates) {
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CandidateJob candidateJob,
+			Set<CorporateCandidate> linkedCandidates) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		logger.debug("Linked candidate and Corporate are {}",linkedCandidates);
-		logger.debug("Candidate is {}",candidate.getId());
-		CorporateCandidate linkedCorporateCandidate = linkedCandidates.stream().filter(link->link.getCandidate().equals(candidate)).findFirst().orElse(null);
-		logger.debug("Linked {}",linkedCorporateCandidate);
-		setCoreCandidateFields(candidate,dto);		
+		logger.debug("Linked candidate and Corporate are {}", linkedCandidates);
+		logger.debug("Candidate is {}", candidate.getId());
+		CorporateCandidate linkedCorporateCandidate = linkedCandidates.stream()
+				.filter(link -> link.getCandidate().equals(candidate)).findFirst().orElse(null);
+		logger.debug("Linked {}", linkedCorporateCandidate);
+		setCoreCandidateFields(candidate, dto);
 		dto.setReviewed(candidateJob.getReviewed());
 		dto.setMatchScore(candidateJob.getMatchScore());
-		if(linkedCorporateCandidate != null)
+		if (linkedCorporateCandidate != null)
 			dto.setShortListed(true);
-		else 
+		else
 			dto.setShortListed(false);
-		logger.debug("Candidate Job is {} and job inside is {} and no of candidatesLeft are ",candidateJob,candidateJob.getJob(),candidateJob.getJob().getNoOfApplicantLeft());
+		logger.debug("Candidate Job is {} and job inside is {} and no of candidatesLeft are ", candidateJob,
+				candidateJob.getJob(), candidateJob.getJob().getNoOfApplicantLeft());
 		if (candidateJob.getJob().getNoOfApplicantLeft() != null && candidateJob.getJob().getNoOfApplicantLeft() == 0)
 			dto.setCanBuy(false);
 		else
-			dto.setCanBuy(true);		
+			dto.setCanBuy(true);
 		return dto;
 	}
-	
-	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate, CorporateCandidate corporateCandidate) {
+
+	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate,
+			CorporateCandidate corporateCandidate) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		setCoreCandidateFields(candidate,dto);
+		setCoreCandidateFields(candidate, dto);
 		return dto;
 	}
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
-		setCoreCandidateFields(candidate,dto);
+		setCoreCandidateFields(candidate, dto);
 		return dto;
 	}
-	
+
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CorporateCandidate corporateCandidate) {
 		Candidate candidate = corporateCandidate.getCandidate();
 		return convertToCandidateProfileListingDTO(candidate);
 	}
 
-	public CorporateJobDTO convertToJobListingForCorporate(Job job,Long totalLinkedCandidates, Long totalNumberOfJobs, 
-			Long newApplicants, Long jobsLastMonth,Long numberOfCandidatesShortListedByJob) {
+	public CorporateJobDTO convertToJobListingForCorporate(Job job, Long totalLinkedCandidates, Long totalNumberOfJobs,
+			Long newApplicants, Long jobsLastMonth, Long numberOfCandidatesShortListedByJob) {
 		CorporateJobDTO jobListingData = new CorporateJobDTO();
 		jobListingData.setTotalLinkedCandidates(totalLinkedCandidates);
 		jobListingData.setTotalNumberOfJobs(totalNumberOfJobs);
@@ -150,8 +156,10 @@ public class DTOConverters {
 		jobListingData.setJobType(job.getJobType());
 		jobListingData.setCorporateEscrowAmount(job.getCorporate().getEscrowAmount());
 		// FILTER OUT REVIEWED CANDIDATES
-		//jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream().filter(candidateJob -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
-		jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().size()-numberOfCandidatesShortListedByJob.intValue());
+		// jobListingData.setNoOfMatchedCandidates(job.getCandidateJobs().stream().filter(candidateJob
+		// -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
+		jobListingData.setNoOfMatchedCandidates(
+				job.getCandidateJobs().size() - numberOfCandidatesShortListedByJob.intValue());
 		jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
 		jobListingData.setNoOfShortListedCandidate(numberOfCandidatesShortListedByJob);
 		jobListingData.setId(job.getId());
@@ -159,20 +167,20 @@ public class DTOConverters {
 		jobListingData.setHasBeenEdited(job.getHasBeenEdited());
 		jobListingData.setEverActive(job.getEverActive());
 		jobListingData.setNumberOfCandidatesRemaining(job.getNoOfApplicantLeft());
-		logger.debug("The number of candidates left are {}",job.getNoOfApplicantLeft());
+		logger.debug("The number of candidates left are {}", job.getNoOfApplicantLeft());
 		jobListingData.setNoOfApplicants(job.getNoOfApplicants());
 		return jobListingData;
 	}
-	
-	public JobEconomicsDTO convertToJobEconomicsDTO(Job job,Double filterCost) {
+
+	public JobEconomicsDTO convertToJobEconomicsDTO(Job job, Double filterCost) {
 		JobEconomicsDTO jobEconomicsDTO = new JobEconomicsDTO();
 		jobEconomicsDTO.setId(job.getId());
-		if(job.getNoOfApplicantLeft() != null && job.getNoOfApplicantLeft() == 0 ) {
+		if (job.getNoOfApplicantLeft() != null && job.getNoOfApplicantLeft() == 0) {
 			jobEconomicsDTO.setJobCost(job.getJobCost());
 			jobEconomicsDTO.setFilterCost(filterCost);
 		}
-		if(job.getPaymentType()!=null)
-			if(job.getPaymentType().name().equals("AS_YOU_GO"))
+		if (job.getPaymentType() != null)
+			if (job.getPaymentType().name().equals("AS_YOU_GO"))
 				jobEconomicsDTO.setPayAsYouGo(true);
 			else
 				jobEconomicsDTO.setPayAsYouGo(false);
@@ -183,10 +191,10 @@ public class DTOConverters {
 	public CandidateJobDTO convertToJobListingForCandidate(Job job, Long candidateId, Boolean appliedJobs) {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobListingData);
-		logger.debug("Job and Candidates matched are {}--{}",job, job.getCandidateJobs());
+		logger.debug("Job and Candidates matched are {}--{}", job, job.getCandidateJobs());
 		CandidateJob matchedCandidateJob = job.getCandidateJobs().stream()
 				.filter(candidateJob -> candidateJob.getCandidate().getId().equals(candidateId)).findAny().orElse(null);
-		if(matchedCandidateJob == null) {
+		if (matchedCandidateJob == null) {
 			jobListingData.setMatchScore(0D);
 		} else {
 			jobListingData.setMatchScore(matchedCandidateJob.getMatchScore());
@@ -199,56 +207,61 @@ public class DTOConverters {
 					.filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId));
 		return jobListingData;
 	}
-	
+
 	public CandidateJobDTO convertJobViewForCandidate(Job job, Long candidateId) {
 		CandidateJobDTO jobData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobData);
-		if(job.getAppliedCandidates().stream().filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId)).findAny().isPresent()) {
+		if (job.getAppliedCandidates().stream().filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId))
+				.findAny().isPresent()) {
 			jobData.setHasCandidateApplied(true);
 		} else
 			jobData.setHasCandidateApplied(false);
-		CandidateJob candidateJob = job.getCandidateJobs().stream().filter(matchedCandidateJob -> matchedCandidateJob.getCandidateId().equals(candidateId)).findFirst().orElse(null);
-		if(candidateJob!=null)
+		CandidateJob candidateJob = job.getCandidateJobs().stream()
+				.filter(matchedCandidateJob -> matchedCandidateJob.getCandidateId().equals(candidateId)).findFirst()
+				.orElse(null);
+		if (candidateJob != null)
 			jobData.setMatchScore(candidateJob.getMatchScore());
 		else
 			jobData.setMatchScore(0d);
 		return jobData;
 	}
-	
+
 	public CandidateJobDTO convertToJobListingForCandidateWithNoEducation(Job job, Long candidateId) {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobListingData);
 		jobListingData.setMatchScore(0d);
 		return jobListingData;
 	}
-	
-	public CandidateJobDTO convertToJobListingForPortalAnonymous(Job job,Long totalNumberOfActiveJobs,
-				List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType) {
+
+	public CandidateJobDTO convertToJobListingForPortalAnonymous(Job job, Long totalNumberOfActiveJobs,
+			List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType) {
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobListingData);
 		jobListingData.setTotalNumberOfJobs(totalNumberOfActiveJobs);
-		setJobStatistics(jobListingData,jobStatisticsByEmploymentType);
-		setJobStatistics(jobListingData,jobStatisticsByJobType);
+		setJobStatistics(jobListingData, jobStatisticsByEmploymentType);
+		setJobStatistics(jobListingData, jobStatisticsByJobType);
 		return jobListingData;
 	}
-	
-	public CandidateJobDTO convertToJobListingForCandidateOrGuest(Job job,Long totalNumberOfActiveJobs,
-			List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType,Long candidateId) {
-	//	logger.debug("Coverting to DTO candidateJob for job {} with total number of jobs {}",job,totalNumberOfActiveJobs);
+
+	public CandidateJobDTO convertToJobListingForCandidateOrGuest(Job job, Long totalNumberOfActiveJobs,
+			List<JobStatistics> jobStatisticsByEmploymentType, List<JobStatistics> jobStatisticsByJobType,
+			Long candidateId) {
+		// logger.debug("Coverting to DTO candidateJob for job {} with total number of
+		// jobs {}",job,totalNumberOfActiveJobs);
 		CandidateJobDTO jobListingData = new CandidateJobDTO();
-		setCandidateJobDTOCoreFields(job, jobListingData,candidateId);
+		setCandidateJobDTOCoreFields(job, jobListingData, candidateId);
 		jobListingData.setTotalNumberOfJobs(totalNumberOfActiveJobs);
-		setJobStatistics(jobListingData,jobStatisticsByEmploymentType);
-		setJobStatistics(jobListingData,jobStatisticsByJobType);
+		setJobStatistics(jobListingData, jobStatisticsByEmploymentType);
+		setJobStatistics(jobListingData, jobStatisticsByJobType);
 		return jobListingData;
-}
-	
-	private void setJobStatistics(CandidateJobDTO jobListingData,List<JobStatistics> jobStatistics) {
-		if(jobStatistics == null)
+	}
+
+	private void setJobStatistics(CandidateJobDTO jobListingData, List<JobStatistics> jobStatistics) {
+		if (jobStatistics == null)
 			return;
 		jobStatistics.forEach(stat -> {
-			//logger.debug("Job Stats being processed is {}",jobStatistics);
-			if(ApplicationConstants.EMPLOYMENT_TYPE_CONTRACT.equals(stat.getType()))
+			// logger.debug("Job Stats being processed is {}",jobStatistics);
+			if (ApplicationConstants.EMPLOYMENT_TYPE_CONTRACT.equals(stat.getType()))
 				jobListingData.setCountOfContractEmployment(stat.getCount());
 			else if (ApplicationConstants.EMPLOYMENT_TYPE_PERMANENT.equals(stat.getType()))
 				jobListingData.setCountOfPermanentEmployment(stat.getCount());
@@ -259,12 +272,12 @@ public class DTOConverters {
 			else if (ApplicationConstants.JOB_TYPE_INTERNSHIP.equals(stat.getType()))
 				jobListingData.setCountOfInternJob(stat.getCount());
 			else if (ApplicationConstants.JOB_TYPE_SUMMER_JOB.equals(stat.getType()))
-				jobListingData.setCountOfSummerJob(stat.getCount());	
+				jobListingData.setCountOfSummerJob(stat.getCount());
 		});
 	}
-	
-	private void setCandidateJobDTOCoreFields(Job job, CandidateJobDTO jobListingData,Long candidateId) {
-		logger.debug("Incoming canidate Is is {}",candidateId);
+
+	private void setCandidateJobDTOCoreFields(Job job, CandidateJobDTO jobListingData, Long candidateId) {
+		logger.debug("Incoming canidate Is is {}", candidateId);
 		jobListingData.setJobStatus(job.getJobStatus());
 		jobListingData.setJobTitle(job.getJobTitle());
 		jobListingData.setEmploymentType(job.getEmploymentType());
@@ -274,18 +287,23 @@ public class DTOConverters {
 		jobListingData.setCorporateName(convertToCamelCase(job.getCorporate().getName()));
 		jobListingData.setSalary(job.getSalary());
 		jobListingData.setUpdateDate(job.getUpdateDate());
-		if(!job.getAppliedCandidates().stream().filter(candidate->candidateId.equals(candidate.getId())).findFirst().isPresent())
+		if (!job.getAppliedCandidates().stream().filter(candidate -> candidateId.equals(candidate.getId())).findFirst()
+				.isPresent())
 			jobListingData.setHasCandidateApplied(false);
-		logger.debug("---------------{}",job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent());
-		if(candidateId!= null)
-			if(job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent())
-				jobListingData.setMatchScore(job.getCandidateJobs().stream().filter(candidateJob-> candidateId.equals(candidateJob.getCandidateId())).findFirst().get().getMatchScore());
-		if(job.getJobDescription().length()>500)
+		logger.debug("---------------{}", job.getCandidateJobs().stream()
+				.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent());
+		if (candidateId != null)
+			if (job.getCandidateJobs().stream()
+					.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent())
+				jobListingData.setMatchScore(job.getCandidateJobs().stream()
+						.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().get()
+						.getMatchScore());
+		if (job.getJobDescription().length() > 500)
 			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
 		else
 			jobListingData.setJobDescription(job.getJobDescription());
 	}
-	
+
 	private void setCandidateJobDTOCoreFields(Job job, CandidateJobDTO jobListingData) {
 		jobListingData.setJobStatus(job.getJobStatus());
 		jobListingData.setJobTitle(job.getJobTitle());
@@ -296,62 +314,53 @@ public class DTOConverters {
 		jobListingData.setCorporateName(convertToCamelCase(job.getCorporate().getName()));
 		jobListingData.setSalary(job.getSalary());
 		jobListingData.setUpdateDate(job.getUpdateDate());
-		if(job.getJobDescription().length()>500)
+		if (job.getJobDescription().length() > 500)
 			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
 		else
 			jobListingData.setJobDescription(job.getJobDescription());
 	}
-	
+
 	private String convertToCamelCase(String string) {
-		if(string == null)
+		if (string == null)
 			return "";
 		char[] charArray = string.toLowerCase().toCharArray();
-        charArray[0] = Character.toUpperCase(charArray[0]);
-        for(int i=1 ; i<charArray.length ;i++ )
-        		charArray[i] = Character.toLowerCase(charArray[i]);
-        return new String(charArray);
+		charArray[0] = Character.toUpperCase(charArray[0]);
+		for (int i = 1; i < charArray.length; i++)
+			charArray[i] = Character.toLowerCase(charArray[i]);
+		return new String(charArray);
 	}
-	
-	
+
 	/**
 	 * @param candidateNonAcademicWorks
 	 * @param dto
 	 */
-	public List<CandidateNonAcademicWorkDTO>  convertCandidateNonAcademicWork(List<CandidateNonAcademicWork> candidateNonAcademicWorks, Boolean withCandidateProfileScore,
+	public List<CandidateNonAcademicWorkDTO> convertCandidateNonAcademicWork(
+			List<CandidateNonAcademicWork> candidateNonAcademicWorks, Boolean withCandidateProfileScore,
 			Candidate candidate) {
 		List<CandidateNonAcademicWorkDTO> nonAcadWorksDTOs = new ArrayList<>();
-		if (candidateNonAcademicWorks != null && candidateNonAcademicWorks.isEmpty()) {
+
+		candidateNonAcademicWorks.forEach(nonAcademic -> {
 			CandidateNonAcademicWorkDTO nonAcademicWorkDTO = new CandidateNonAcademicWorkDTO();
+			nonAcademicWorkDTO.setId(nonAcademic.getId());
+			nonAcademicWorkDTO.setNonAcademicInitiativeTitle(nonAcademic.getNonAcademicInitiativeTitle());
+			nonAcademicWorkDTO.setNonAcademicInitiativeDescription(nonAcademic.getNonAcademicInitiativeDescription());
+			nonAcademicWorkDTO.setNonAcademicWorkEndDate(nonAcademic.getNonAcademicWorkEndDate());
+			nonAcademicWorkDTO.setNonAcademicWorkStartDate(nonAcademic.getNonAcademicWorkStartDate());
+			nonAcademicWorkDTO.setRoleInInitiative(nonAcademic.getRoleInInitiative());
+			nonAcademicWorkDTO.setDuration(nonAcademic.getDuration());
+			nonAcademicWorkDTO.setIsCurrentActivity(nonAcademic.isIsCurrentActivity());
+			// dto.getNonAcademics().add(nonAcademicWorkDTO);
+			nonAcadWorksDTOs.add(nonAcademicWorkDTO);
 			if (withCandidateProfileScore) {
 				CandidateDTO candidateDTO = new CandidateDTO();
-				candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
+				candidateDTO.setProfileScore(nonAcademic.getCandidate().getProfileScore() != null
+						? nonAcademic.getCandidate().getProfileScore()
+						: 0d);
 				nonAcademicWorkDTO.setCandidate(candidateDTO);
 			}
-			nonAcadWorksDTOs.add(nonAcademicWorkDTO);
-		} else {
-			candidateNonAcademicWorks.forEach(nonAcademic -> {
-				CandidateNonAcademicWorkDTO nonAcademicWorkDTO = new CandidateNonAcademicWorkDTO();
-				nonAcademicWorkDTO.setId(nonAcademic.getId());
-				nonAcademicWorkDTO.setNonAcademicInitiativeTitle(nonAcademic.getNonAcademicInitiativeTitle());
-				nonAcademicWorkDTO
-						.setNonAcademicInitiativeDescription(nonAcademic.getNonAcademicInitiativeDescription());
-				nonAcademicWorkDTO.setNonAcademicWorkEndDate(nonAcademic.getNonAcademicWorkEndDate());
-				nonAcademicWorkDTO.setNonAcademicWorkStartDate(nonAcademic.getNonAcademicWorkStartDate());
-				nonAcademicWorkDTO.setRoleInInitiative(nonAcademic.getRoleInInitiative());
-				nonAcademicWorkDTO.setDuration(nonAcademic.getDuration());
-				nonAcademicWorkDTO.setIsCurrentActivity(nonAcademic.isIsCurrentActivity());
-				// dto.getNonAcademics().add(nonAcademicWorkDTO);
-				nonAcadWorksDTOs.add(nonAcademicWorkDTO);
-				if (withCandidateProfileScore) {
-					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(nonAcademic.getCandidate().getProfileScore() != null
-							? nonAcademic.getCandidate().getProfileScore()
-							: 0d);
-					nonAcademicWorkDTO.setCandidate(candidateDTO);
-				}
 
-			});
-		}
+		});
+
 		return nonAcadWorksDTOs;
 	}
 
@@ -359,40 +368,32 @@ public class DTOConverters {
 	 * @param candidateLanguageProficiencies
 	 * @param dto
 	 */
-	public Set<CandidateLanguageProficiencyDTO> convertCandidateLanguageProficiencies(
+	public List<CandidateLanguageProficiencyDTO> convertCandidateLanguageProficiencies(
 			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean withCandidateProfileScore,
 			Candidate candidate) {
-		Set<CandidateLanguageProficiencyDTO> languageProficiencyDTOs = new HashSet<>();
-		if (candidateLanguageProficiencies != null && candidateLanguageProficiencies.isEmpty()) {
-			CandidateLanguageProficiencyDTO languageProficiencyDTO = new CandidateLanguageProficiencyDTO();
+		List<CandidateLanguageProficiencyDTO> languageProficiencyDTOs = new ArrayList<>();
+
+		candidateLanguageProficiencies.forEach(candidateLanguageProficiency -> {
+			CandidateLanguageProficiencyDTO candidateLanguageProficiencyDTO = new CandidateLanguageProficiencyDTO();
+			LanguageDTO languageDTO = new LanguageDTO();
+			candidateLanguageProficiencyDTO.setId(candidateLanguageProficiency.getId());
+			languageDTO.setLanguage(candidateLanguageProficiency.getLanguage().getLanguage());
+			languageDTO.setId(candidateLanguageProficiency.getLanguage().getId());
+			languageDTO.setValue(candidateLanguageProficiency.getLanguage().getLanguage());
+			languageDTO.setDisplay(candidateLanguageProficiency.getLanguage().getLanguage());
+			candidateLanguageProficiencyDTO.setLanguage(languageDTO);
+			candidateLanguageProficiencyDTO.setProficiency(candidateLanguageProficiency.getProficiency());
 			if (withCandidateProfileScore) {
 				CandidateDTO candidateDTO = new CandidateDTO();
-				candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
-				languageProficiencyDTO.setCandidate(candidateDTO);
+				candidateDTO.setProfileScore(candidateLanguageProficiency.getCandidate().getProfileScore() != null
+						? candidateLanguageProficiency.getCandidate().getProfileScore()
+						: 0d);
+				candidateLanguageProficiencyDTO.setCandidate(candidateDTO);
+
 			}
-			languageProficiencyDTOs.add(languageProficiencyDTO);
-		} else {
-			candidateLanguageProficiencies.forEach(candidateLanguageProficiency -> {
-				CandidateLanguageProficiencyDTO candidateLanguageProficiencyDTO = new CandidateLanguageProficiencyDTO();
-				LanguageDTO languageDTO = new LanguageDTO();
-				candidateLanguageProficiencyDTO.setId(candidateLanguageProficiency.getId());
-				languageDTO.setLanguage(candidateLanguageProficiency.getLanguage().getLanguage());
-				languageDTO.setId(candidateLanguageProficiency.getLanguage().getId());
-				languageDTO.setValue(candidateLanguageProficiency.getLanguage().getLanguage());
-				languageDTO.setDisplay(candidateLanguageProficiency.getLanguage().getLanguage());
-				candidateLanguageProficiencyDTO.setLanguage(languageDTO);
-				candidateLanguageProficiencyDTO.setProficiency(candidateLanguageProficiency.getProficiency());
-				if (withCandidateProfileScore) {
-					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(candidateLanguageProficiency.getCandidate().getProfileScore() != null
-							? candidateLanguageProficiency.getCandidate().getProfileScore()
-							: 0d);
-					candidateLanguageProficiencyDTO.setCandidate(candidateDTO);
-		
-				}
-				languageProficiencyDTOs.add(candidateLanguageProficiencyDTO);
-			});
-		}
+			languageProficiencyDTOs.add(candidateLanguageProficiencyDTO);
+		});
+
 		return languageProficiencyDTOs;
 	}
 
@@ -400,7 +401,8 @@ public class DTOConverters {
 	 * @param candidateLanguageProficiencies
 	 * @param dto
 	 */
-	public CandidateLanguageProficiencyDTO convertCandidateLanguageProficiency(CandidateLanguageProficiency candidateLanguageProficiency) {
+	public CandidateLanguageProficiencyDTO convertCandidateLanguageProficiency(
+			CandidateLanguageProficiency candidateLanguageProficiency) {
 
 		CandidateLanguageProficiencyDTO candidateLanguageProficiencyDTO = new CandidateLanguageProficiencyDTO();
 		LanguageDTO languageDTO = new LanguageDTO();
@@ -421,37 +423,30 @@ public class DTOConverters {
 		return candidateLanguageProficiencyDTO;
 	}
 
-	
 	/**
 	 * @param candidateCertifications
 	 * @param dto
 	 */
-	public List<CandidateCertificationDTO> convertCandidateCertifications(List<CandidateCertification> candidateCertifications,
-			Boolean withCandidateProfileScore,Candidate candidate) {
+	public List<CandidateCertificationDTO> convertCandidateCertifications(
+			List<CandidateCertification> candidateCertifications, Boolean withCandidateProfileScore,
+			Candidate candidate) {
 		List<CandidateCertificationDTO> candidateCertificationDTOs = new ArrayList<>();
-		if(candidateCertifications != null && candidateCertifications.isEmpty()) {
+		candidateCertifications.forEach(certification -> {
 			CandidateCertificationDTO certificationDTO = new CandidateCertificationDTO();
-			if(withCandidateProfileScore) {
+			certificationDTO.setId(certification.getId());
+			certificationDTO.setCertificationTitle(certification.getCertificationTitle());
+			certificationDTO.setCertificationDetails(certification.getCertificationDetails());
+			certificationDTO.setCertificationDate(certification.getCertificationDate());
+			candidateCertificationDTOs.add(certificationDTO);
+			if (withCandidateProfileScore) {
 				CandidateDTO candidateDTO = new CandidateDTO();
-				candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
+				candidateDTO.setProfileScore(certification.getCandidate().getProfileScore() != null
+						? certification.getCandidate().getProfileScore()
+						: 0d);
 				certificationDTO.setCandidate(candidateDTO);
 			}
-			candidateCertificationDTOs.add(certificationDTO);
-		} else {
-			candidateCertifications.forEach(certification -> {
-				CandidateCertificationDTO certificationDTO = new CandidateCertificationDTO();
-				certificationDTO.setId(certification.getId());
-				certificationDTO.setCertificationTitle(certification.getCertificationTitle());
-				certificationDTO.setCertificationDetails(certification.getCertificationDetails());
-				certificationDTO.setCertificationDate(certification.getCertificationDate());
-				candidateCertificationDTOs.add(certificationDTO);
-				if(withCandidateProfileScore) {
-					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(certification.getCandidate().getProfileScore()!=null?certification.getCandidate().getProfileScore():0d);
-					certificationDTO.setCandidate(candidateDTO);
-				}
-			});
-		}
+		});
+
 		return candidateCertificationDTOs;
 	}
 
@@ -498,7 +493,7 @@ public class DTOConverters {
 	 * @return
 	 */
 	public CandidateProjectDTO setCandidateProjects(CandidateProject project) {
-		if(project == null)
+		if (project == null)
 			return null;
 		CandidateProjectDTO projectDTO = new CandidateProjectDTO();
 		projectDTO.setProjectTitle(project.getProjectTitle());
@@ -509,9 +504,9 @@ public class DTOConverters {
 		projectDTO.setContributionInProject(project.getContributionInProject());
 		projectDTO.setIsCurrentProject(project.isIsCurrentProject());
 		projectDTO.setProjectType(project.getProjectType());
-		if(project.getEducation()!= null)
+		if (project.getEducation() != null)
 			projectDTO.setEducationId(project.getEducation().getId());
-		if(project.getEmployment() != null) 
+		if (project.getEmployment() != null)
 			projectDTO.setEmploymentId(project.getEmployment().getId());
 		return projectDTO;
 	}
@@ -558,7 +553,8 @@ public class DTOConverters {
 				CourseDTO courseDTO = new CourseDTO();
 				courseDTO.setCourse((education.getCourse().getCourse()));
 				educationDTO.setCourse(courseDTO);
-				Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,Comparator.nullsLast(Comparator.naturalOrder()));
+				Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,
+						Comparator.nullsLast(Comparator.naturalOrder()));
 				List<CandidateProject> projects = new ArrayList<CandidateProject>(education.getProjects());
 				projects.sort(comparator.reversed());
 				projects.forEach(project -> {
@@ -590,7 +586,8 @@ public class DTOConverters {
 			addressDTO.setAddressLineTwo(address.getAddressLineTwo());
 			addressDTO.setCity(address.getCity());
 			CountryDTO countryDTO = new CountryDTO();
-			countryDTO.setCountryNiceName(address.getCountry()!=null?address.getCountry().getCountryNiceName():null);
+			countryDTO.setCountryNiceName(
+					address.getCountry() != null ? address.getCountry().getCountryNiceName() : null);
 			addressDTO.setCountry(countryDTO);
 			addressDTO.setState(address.getState());
 			addressDTO.setZip(address.getZip());
@@ -622,6 +619,5 @@ public class DTOConverters {
 		candidateDetailDTO.setTwitter(candidate.getTwitter());
 		return candidateDetailDTO;
 	}
-	
 
 }

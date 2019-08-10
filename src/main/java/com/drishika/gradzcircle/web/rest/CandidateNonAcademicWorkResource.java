@@ -201,13 +201,13 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public List<CandidateNonAcademicWorkDTO> getNonAcadsByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertifications by Candidate Id : {}", id);
-		List<CandidateNonAcademicWorkDTO> candiateNonAcademicDTO = new ArrayList<>();
+		//<CandidateNonAcademicWorkDTO> candiateNonAcademicDTO = new ArrayList<>();
 		List<CandidateNonAcademicWork> candidateNonAcademicWorks = candidateNonAcademicWorkRepository
 				.findNonAcademicWorkByCandidateId(id);
 		Candidate candidate = candidateRepository.findOne(id);
 		log.debug("Canddiate Non Acad work is {}",candidateNonAcademicWorks);
-		candiateNonAcademicDTO.addAll(converter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, true,candidate));
-		return candiateNonAcademicDTO;
+		return converter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, true,candidate);
+		
 	}
 
 	/**

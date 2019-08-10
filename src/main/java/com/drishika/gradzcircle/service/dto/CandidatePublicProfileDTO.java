@@ -35,7 +35,7 @@ public class CandidatePublicProfileDTO implements Serializable {
 
 	List<CandidateNonAcademicWorkDTO> nonAcademics = new ArrayList<>();
 
-	Set<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new HashSet<>();
+	List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<>();
 
 	Set<AddressDTO> addresses = new HashSet<>();
 	
@@ -130,18 +130,13 @@ public class CandidatePublicProfileDTO implements Serializable {
 		this.nonAcademics = nonAcademics;
 	}
 
-	/**
-	 * @return the candidateLanguageProficiencies
-	 */
-	public Set<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencies() {
+	
+
+	public List<CandidateLanguageProficiencyDTO> getCandidateLanguageProficiencies() {
 		return candidateLanguageProficiencies;
 	}
 
-	/**
-	 * @param candidateLanguageProficiencies
-	 *            the candidateLanguageProficiencies to set
-	 */
-	public void setCandidateLanguageProficiencies(Set<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies) {
+	public void setCandidateLanguageProficiencies(List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies) {
 		this.candidateLanguageProficiencies = candidateLanguageProficiencies;
 	}
 

@@ -5,7 +5,8 @@
                 "title": "Candidate Language Proficiencies",
                 "createLabel": "Create a new Candidate Language Proficiency",
                 "createOrEditLabel": "Create or edit a Candidate Language Proficiency",
-                "search": "Search for Candidate Language Proficiency"
+                "search": "Search for Candidate Language Proficiency",
+                "add" : "Add Language"
             },
             "created": "A new Candidate Language Proficiency is created with identifier {{ param }}",
             "updated": "A Candidate Language Proficiency is updated with identifier {{ param }}",
@@ -22,7 +23,8 @@
             "language": "Language",
             "beginner": "Beginner",
             "intermediate": "Intermediate",
-            "expert": "Expert"
+            "expert": "Expert",
+            "actions": "Actions"
         }
     }
 }
