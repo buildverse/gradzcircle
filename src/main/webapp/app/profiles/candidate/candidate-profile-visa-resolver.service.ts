@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { Router,Resolve, RouterStateSnapshot,ActivatedRouteSnapshot } from '@angular/router';
 import { ProfileHelperService } from '../profile-helper.service';
 import { VisaType } from '../../entities/visa-type/visa-type.model';
@@ -19,4 +19,4 @@ export class CandidateVisaResolverService implements Resolve<VisaType[]> {
                     }); 
       
     }
-}
+}*/

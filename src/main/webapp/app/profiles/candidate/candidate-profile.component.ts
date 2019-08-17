@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+/*import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router, NavigationEnd, NavigationStart, NavigationCancel, Event} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -9,7 +9,6 @@ import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
-
 
 @Component({
   selector: 'jhi-candidate-profile',
@@ -129,7 +128,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit() {
-    
+
     this.routerSub = this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
     this.currentSearch = this.candidate.id.toString();
     this.loginId = this.candidate.login.id;
@@ -145,9 +144,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
         this.profileScore = profileScore;
       }
     });
-    
-
-  }
+}
 
   setAlerts() {
     if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
@@ -172,7 +169,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     );
     return;
   }
-*/
+*********-------------------
 
   reloadCandidate() {
     this.candidateService.getCandidateByLoginId(this.loginId).subscribe(
@@ -186,11 +183,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
       (res: HttpErrorResponse) => this.onError(res.message)
     );
     return;
-
-
   }
-  
-
   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
     this.dataService.setdata(CANDIDATE_ID, candidateId);
     this.dataService.setdata(JOB_ID, -1);
@@ -244,3 +237,4 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 }
+*/

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
 import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-import { CandidateProfileComponentNew } from './candidate-profile-new.component';
+import { CandidateProfileComponent } from './candidate-profile-settings.component';
 import { CandidateResolverService } from './candidate-profile-account-resolver.service';
 import { CandidateLanguageProficiencyComponent } from '../../entities/candidate-language-proficiency/candidate-language-proficiency.component';
 import { CandidateEducationComponent } from '../../entities/candidate-education/candidate-education.component';
@@ -11,9 +11,14 @@ import { CandidateCertificationComponent } from '../../entities/candidate-certif
 import { CandidateNonAcademicWorkComponent } from '../../entities/candidate-non-academic-work/candidate-non-academic-work.component';
 import { CandidatePublicProfilePopupComponent } from './candidate-public-profile-popup.component';
 import { AppliedJobsComponent } from './applied-job-by-candidate.component';
-
+import { CandidatePrimarySettingsEditComponent } from './candidate-primary-settings-edit.component';
 import { ShortListedJobsForCandidateComponent } from './shortlisted-for-job.component';
 import { ProfilePicMgmtPopupComponent } from './profile-pic-mgmt-popup.component';
+import { CandidateProfilePrimaryViewComponent } from './candidate-primary-settings-view.component';
+import { CandidateProfileContactViewComponent} from './candidate-profile-contact-setting-view.component';
+import { CandidateCareerInterestResolverService } from './candidate-profile-career-interest-resolver.service';
+import { CandidateGenderResolverService } from './candidate-profile-gender-resolver.service';
+import {CandidateContactSettingsEditComponent} from './candidate-profile-contact-settings-edit.component';
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
@@ -34,7 +39,7 @@ export class JobResolvePagingParams implements Resolve<any> {
 export const candidateProfileRoutes: Routes = [
     {
         path: 'candidate-profile',
-        component: CandidateProfileComponentNew,
+        component: CandidateProfileComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
@@ -42,7 +47,60 @@ export const candidateProfileRoutes: Routes = [
         canActivate: [UserRouteAccessService],
         resolve: {
             candidate: CandidateResolverService
-        }
+        },
+        children: [
+            {
+                path: '',
+                component: CandidateProfilePrimaryViewComponent,
+                data: {
+                    authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+                    pageTitle: 'gradzcircleApp.candidate.home.title'
+                },
+                canActivate: [UserRouteAccessService],
+                resolve: {
+                    candidate: CandidateResolverService
+                },
+                outlet: 'primarySetting'
+            },
+            {
+                path: 'editUserPrimarySetting',
+                component: CandidatePrimarySettingsEditComponent,
+                data: {
+                    authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+                    pageTitle: 'gradzcircleApp.candidate.home.title'
+                },
+                canActivate: [UserRouteAccessService],
+                resolve: {
+                    candidate: CandidateResolverService,
+                    jobCategory: CandidateCareerInterestResolverService,
+                    gender: CandidateGenderResolverService,
+                },
+                outlet: 'primarySetting'
+            },
+             {
+                path: '',
+                component: CandidateProfileContactViewComponent,
+                data: {
+                    authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+                    pageTitle: 'gradzcircleApp.candidate.home.title'
+                },
+                canActivate: [UserRouteAccessService],
+                outlet: 'contactSetting'
+            },
+            {
+                path: 'editUserContactSetting',
+                component: CandidateContactSettingsEditComponent,
+                data: {
+                    authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+                    pageTitle: 'gradzcircleApp.candidate.home.title'
+                },
+                canActivate: [UserRouteAccessService],
+                resolve: {
+                    candidate: CandidateResolverService
+                },
+                outlet: 'contactSetting'
+            },
+        ]
     },
     {
         path: 'education',
@@ -114,7 +172,6 @@ export const candidateProfileRoutes: Routes = [
             'pagingParams': JobResolvePagingParams
         },
     }
-
 ];
 
 export const candidateProfilePopupRoute: Routes = [

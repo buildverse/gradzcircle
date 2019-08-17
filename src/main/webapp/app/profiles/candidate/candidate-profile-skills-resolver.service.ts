@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { Router,Resolve, RouterStateSnapshot,ActivatedRouteSnapshot } from '@angular/router';
 import { Skills } from '../../entities/skills/skills.model';
 import { ProfileHelperService } from '../profile-helper.service';
@@ -18,4 +18,4 @@ export class CandidateSkillsResolverService implements Resolve<Skills[]> {
       
       
     }
-}
+}*/

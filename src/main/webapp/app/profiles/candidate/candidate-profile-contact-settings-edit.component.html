@@ -1,0 +1,37 @@
+<form novalidate (ngSubmit)="save()" [formGroup]="contactSettingForm">
+    <div class="form-group"><label for="address"><strong>Address</strong></label>
+        <input type="text" class="form-control" id="address" formControlName="addressLineOne">
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label for="city"><strong>City</strong></label>
+                <input type="text" class="form-control" id="city"
+                    placeholder="{{'global.form.required' | translate}}"
+                    formControlName="city"> 
+                    <span class="text-danger" *ngIf="(candidateAboutMeForm.get('address.city').touched || 
+                                                candidateAboutMeForm.get('address.city').dirty) && 
+                                                                        candidateAboutMeForm.get('address.city').errors">
+                    <span
+                    *ngIf="candidateAboutMeForm.get('address.city').errors.required">
+                        Please enter city. </span>
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group"><label for="country"><strong>Country</strong></label>
+                {{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0].countryNiceName:''):''}}
+            </div>
+        </div>
+        
+    </div>
+    <div *ngIf="candidate.phoneCode;else noPhone" class="form-group"><label for="country"><strong>Phone</strong></label>
+        {{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
+    </div>
+    <ng-template #noPhone>
+        <div class="form-group"><label for="country"><strong>Phone</strong></label>
+            
+        </div>        
+    </ng-template>
+    <div class="form-group"><button class="btn btn-primary btn-sm" type="submit" 
+        [routerLink]="['/','candidate-profile',{outlets:{ contactSetting: 'editUserContactSetting'}}]">Edit Settings</button></div>
+</form>

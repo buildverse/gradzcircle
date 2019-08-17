@@ -1,5 +1,5 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
@@ -10,7 +10,6 @@ import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
-
 @Component({
   selector: 'jhi-candidate-profile',
   templateUrl: 'candidate-profile.component.html',
@@ -18,7 +17,7 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 })
 
-export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDestroy {
+export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
   candidate: Candidate;
   imageUrl: any;
@@ -29,10 +28,11 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
   eventSubscriberCandidateImage: Subscription;
   currentSearch: string;
   defaultImage = require('../../../content/images/no-image.png');
-  activeTab: string;
+//  activeTab: string;
   profileScore: number;
   profileSubscriber: Subscription;
   routerSub: Subscription;
+  viewMode: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,10 +46,11 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
     private cd: ChangeDetectorRef,
     private dataService: DataStorageService
   ) {
-    this.activeTab = 'details';
+    // this.activeTab = 'details';
     this.noImage = false;
     this.progressBarConfig.max = 100;
     this.progressBarConfig.height = '10px';
+    this.viewMode = true;
   }
 
   ngOnInit() {
@@ -65,6 +66,11 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
     });
   }
 
+  /* setMode() {
+      this.viewMode = !this.viewMode;
+      console.log('View mode is '+ this.viewMode);
+  }*/
+
   setAlerts() {
     if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
@@ -78,7 +84,6 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
 
   }
 
-
   reloadCandidate() {
    // console.log('Reloading candidate??');
     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
@@ -91,8 +96,6 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
       (res: HttpErrorResponse) => this.onError(res.message)
     );
     return;
-
-
   }
 
   setPublicProfileRouteParams(candidateId, jobId, corporateId) {
@@ -109,7 +112,6 @@ export class CandidateProfileComponentNew implements OnInit, AfterViewInit, OnDe
     this.dataService.setdata(CANDIDATE_ID, this.candidate.id);
   }
 
-  
   private onError(error) {
     this.jhiAlertService.error(error.message, null, null);
   }

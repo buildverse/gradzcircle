@@ -2,30 +2,20 @@ import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {GradzcircleSharedModule} from '../../shared';
-import {GradzcircleAdminModule} from '../../admin/admin.module';
-import {GradzcircleCandidateLanguageProficiencyModule} from '../../entities/candidate-language-proficiency/candidate-language-proficiency.module';
 import {candidateProfileRoutes, candidateProfilePopupRoute, JobResolvePagingParams} from './candidate-profile.route';
-import {CandidateProfileAboutMeEditComponent} from './candidate-about-me-edit.component';
-import {CandidateProfileComponent} from './candidate-profile.component';
+import {CandidateProfileComponent} from './candidate-profile-settings.component';
 import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {CandidateResolverService} from './candidate-profile-account-resolver.service';
 import {CandidateCareerInterestResolverService} from './candidate-profile-career-interest-resolver.service';
 import {ProfileHelperService} from '../profile-helper.service';
-import {CandidateProfileAboutMeDetailsComponent} from './candidate-about-me-details.component';
-import {CandidateMaritalStatusResolverService} from './candidate-profile-marital-status-resolver.service';
-import {CountryResolverService} from './candidate-profile-country-resolver.service';
+// import {CandidateMaritalStatusResolverService} from './candidate-profile-marital-status-resolver.service';
 import {CandidateGenderResolverService} from './candidate-profile-gender-resolver.service';
 import {FileUploadModule} from 'ng2-file-upload'
 import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
-import {CandidateVisaResolverService} from './candidate-profile-visa-resolver.service';
-import {CandidateLanguageResolverService} from './candidate-profile-language-resolver.service';
-import {CandidateAboutMeEditGuard} from './candidate-profile-about-me-edit-guard';
-import {CandidateNationalityResolverService} from './candidate-profile-nationality-resolver.service';
+// import {CandidateAboutMeEditGuard} from './candidate-profile-about-me-edit-guard';
 import {CandidateDetailResolverService} from './candidate-detail-resolver.service';
-import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
-import {CandidateLanguageProficiencyResolverService} from './candidate-language-proficiency-resolver.service';
+// import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
 import {SafeHtml} from './image.pipe';
-import {GradzcircleCandidateEducationModule} from '../../entities/candidate-education/candidate-education.module';
 import {DataStorageService} from '../../shared/helper/localstorage.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
@@ -34,8 +24,10 @@ import {ProfilePicMgmtPopupDialogComponent, ProfilePicMgmtPopupComponent} from '
 import {AppliedJobsComponent} from './applied-job-by-candidate.component';
 import {ShortListedJobsForCandidateComponent} from './shortlisted-for-job.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
-import {CandidateProfileComponentNew} from './candidate-profile-new.component';
-
+import {CandidatePrimarySettingsEditComponent} from './candidate-primary-settings-edit.component';
+import {CandidateProfilePrimaryViewComponent} from './candidate-primary-settings-view.component';
+import { CandidateProfileContactViewComponent} from './candidate-profile-contact-setting-view.component';
+import {CandidateContactSettingsEditComponent} from './candidate-profile-contact-settings-edit.component';
 
 const ENTITY_STATES = [
   ...candidateProfileRoutes,
@@ -45,38 +37,36 @@ const ENTITY_STATES = [
 @NgModule({
   imports: [
     GradzcircleSharedModule,
-    // GradzcircleAdminModule,
     MultiselectDropdownModule,
     FileUploadModule,
-    // GradzcircleCandidateLanguageProficiencyModule,
-    // GradzcircleCandidateEducationModule,
     ImageCropperModule,
     RouterModule.forChild(ENTITY_STATES)
   ],
   declarations: [
     CandidateProfileComponent,
-    CandidateProfileAboutMeEditComponent,
-    CandidateProfileAboutMeDetailsComponent,
-    CandidateLanguageProficiencyDetailsComponent,
+    //CandidateLanguageProficiencyDetailsComponent,
     SafeHtml,
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
     AppliedJobsComponent,
     ShortListedJobsForCandidateComponent,
     ProfilePicMgmtPopupComponent,
-    ProfilePicMgmtPopupDialogComponent, 
-    CandidateProfileComponentNew
+    ProfilePicMgmtPopupDialogComponent,
+    CandidatePrimarySettingsEditComponent,
+    CandidateProfilePrimaryViewComponent,
+    CandidateProfileContactViewComponent,
+    CandidateContactSettingsEditComponent
   ],
   providers: [
     ProfileHelperService,
     CandidateResolverService,
     CandidateCareerInterestResolverService,
-    CandidateMaritalStatusResolverService,
+    //CandidateMaritalStatusResolverService,
     // CountryResolverService,
     CandidateGenderResolverService,
     //  CandidateVisaResolverService,
     //  CandidateLanguageResolverService,
-    CandidateAboutMeEditGuard,
+    //CandidateAboutMeEditGuard,
     //  CandidateNationalityResolverService,
     CandidateDetailResolverService,
     // CandidateLanguageProficiencyResolverService,
@@ -92,7 +82,11 @@ const ENTITY_STATES = [
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
     ProfilePicMgmtPopupComponent,
-    ProfilePicMgmtPopupDialogComponent
+    ProfilePicMgmtPopupDialogComponent,
+    CandidatePrimarySettingsEditComponent,
+    CandidateProfilePrimaryViewComponent,
+    CandidateProfileContactViewComponent,
+    CandidateContactSettingsEditComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

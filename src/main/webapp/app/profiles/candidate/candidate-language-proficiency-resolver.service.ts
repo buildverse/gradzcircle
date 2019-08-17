@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { Router,Resolve, RouterStateSnapshot,ActivatedRouteSnapshot } from '@angular/router';
 import { CandidateLanguageProficiency } from '../../entities/candidate-language-proficiency/candidate-language-proficiency.model'
 import { Principal } from '../../shared/auth/principal.service';
@@ -28,4 +28,4 @@ export class CandidateLanguageProficiencyResolverService implements Resolve<Http
     //     let body = response.json;
     //     return body || {};
     // }
-}
+}*/

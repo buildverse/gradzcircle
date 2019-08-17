@@ -1,0 +1,101 @@
+<form novalidate (ngSubmit)="save()" [formGroup]="primarySettingForm">
+        <div class="form-row">
+            <div class="col">
+                <div class="form-group">
+                    <strong><label for="firstName" jhiTranslate="gradzcircleApp.candidate.firstName"></label></strong>
+                    <input type="text" class="form-control" placeholder="First Name" formControlName="firstName" 
+                        [ngClass]="{
+        							'is-invalid': !primarySettingForm.get('firstName').valid && (primarySettingForm.get('firstName').dirty || primarySettingForm.get('firstName').touched)				
+                              }"/>
+                    <div class="invalid-feedback" *ngIf="primarySettingForm.get('firstName').errors && (primarySettingForm.get('firstName').dirty || primarySettingForm.get('firstName').touched)">
+			        		<p *ngIf="primarySettingForm.get('firstName').errors.required">First Name is required</p>
+			     	</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <strong><label for="lastName" jhiTranslate="gradzcircleApp.candidate.lastName"></label></strong>
+                    <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" 
+                        [ngClass]="{
+        							'is-invalid': !primarySettingForm.get('lastName').valid && (primarySettingForm.get('lastName').dirty || primarySettingForm.get('lastName').touched)				
+                              }"/>
+                     <div class="invalid-feedback" *ngIf="primarySettingForm.get('lastName').errors && (primarySettingForm.get('lastName').dirty || primarySettingForm.get('lastName').touched)">
+			        		<p *ngIf="primarySettingForm.get('lastName').errors.required">First Name is required</p>
+			     	</div>   
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <div class="form-group">
+                    <div >
+					</div>
+                    <strong><label for="jobCategory" jhiTranslate="gradzcircleApp.candidate.careerInterests"></label></strong>
+                    <ss-multiselect-dropdown [options]="careerInterestOptions"
+									formControlName="jobCategories" [texts]="myTexts"
+                                    [settings]="mySettings"> 
+                    </ss-multiselect-dropdown>
+                    <!--<span *ngIf="" class="text-info"> Please enter career interests</span>-->
+                    <span class="text-danger" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
+                                primarySettingForm.get('jobCategories').dirty) && 
+                                primarySettingForm.get('jobCategories').errors" > 
+                                Please enter career interests</span>
+                    <span class="text-info" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
+                                primarySettingForm.get('jobCategories').dirty) && 
+                                !primarySettingForm.get('jobCategories').errors" > 
+                                You can select upto 5 interests</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <strong><label for="email" jhiTranslate="userManagement.email">Email Address</label></strong>
+                    <input type="email" class="form-control" placeholder="user@example.com" formControlName="email" disabled/>
+                </div>
+            </div>
+        </div>
+            <div class="form-row">
+            <div class="col">
+                <div class="form-group">
+                     <div [ngClass]="{'is-invalid': (primarySettingForm.get('gender').touched || 
+                                              primarySettingForm.get('gender').dirty) &&
+                                              !primarySettingForm.get('gender').valid }">
+					</div>
+                    <strong><label for="gender" jhiTranslate="gradzcircleApp.candidate.gender"></label></strong>
+                    <select class="form-control" id="gender"
+									formControlName="gender"
+									[compareWith]="compareSelectControlValues">
+									<option *ngFor="let gender of genders" [ngValue]="gender">
+										{{gender.gender}}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="primarySettingForm.get('gender').errors && (primarySettingForm.get('gender').dirty || primarySettingForm.get('gender').touched)">
+			        		<p *ngIf="primarySettingForm.get('gender').errors.required">Please select your gender.</p>
+			     	</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <strong><label for="differentlyAbled" jhiTranslate="gradzcircleApp.candidate.differentlyAbled"></label></strong>
+                    <input type="checkbox" class="form-control " formControlName="differentlyAbled" />
+                </div>
+            </div>
+        </div>
+         <div class="form-row">
+              <div class="col">
+                   <div class="form-group">
+                       <strong><label for="aboutMe" jhiTranslate="gradzcircleApp.candidate.aboutMe"></label></strong>
+                       <textarea (keyup)="characterCount()" class="form-control"
+									id="aboutMe" rows="3" formControlName="aboutMe" maxlength="150"
+									placeholder="{{'gradzcircleApp.candidate.aboutMe.hint' | translate}}">
+                        </textarea>
+                        <span *ngIf="charsLeft>20; else reachingLimit" class="float-right text-success mt-1" style="font-size: 0.75rem;">{{charsLeft}}</span>
+                        <ng-template #reachingLimit>
+                            <span *ngIf="charsLeft<=20" class="float-right text-danger mt-1" style="font-size: 0.75rem;">{{charsLeft}}</span>
+                        </ng-template>
+                   </div>
+              </div>
+         </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-sm float-right" type="submit" [disabled]='!primarySettingForm.valid' >Save Settings</button>
+            <button class="btn btn-warning btn-sm float-left" type="submit" [routerLink]="['/','candidate-profile']" >Discard Changes</button>
+        </div>
+</form>

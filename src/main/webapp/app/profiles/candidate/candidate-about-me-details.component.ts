@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+/* import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Candidate } from '../../entities/candidate/candidate.model';
 import 'rxjs/add/operator/debounceTime';
 import { ActivatedRoute} from '@angular/router';
@@ -26,7 +26,7 @@ export class CandidateProfileAboutMeDetailsComponent implements OnInit{
       private candidateProfileScoreService : CandidateProfileScoreService
     ) {}
 
-    ngOnInit() { 
+    ngOnInit() {
         this.candidate = this.route.snapshot.data['candidate'].body;
         this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
     }
@@ -34,4 +34,4 @@ export class CandidateProfileAboutMeDetailsComponent implements OnInit{
   setRouteParams() {
     this.dataService.setdata(CANDIDATE_ID,this.candidate.id);
   }
-}
+} */

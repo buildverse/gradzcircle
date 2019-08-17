@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { CandidateProfileAboutMeEditComponent } from './candidate-about-me-edit.component';
 
@@ -12,4 +12,4 @@ export  class CandidateAboutMeEditGuard implements CanDeactivate<CandidateProfil
         }
         return true;
     }
-}
+}*/

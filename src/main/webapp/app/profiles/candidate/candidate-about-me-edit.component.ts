@@ -1,6 +1,4 @@
-import {Component, OnInit,OnDestroy} from '@angular/core';
-
-import {Principal} from '../../shared/auth/principal.service';
+/*import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -30,24 +28,21 @@ import {NationalityService} from '../../entities/nationality/nationality.service
 import {CountryService} from '../../entities/country/country.service';
 import { Subscription } from 'rxjs';
 
-
 /**
- * @TODO: 
+ * @TODO:
  *
  * 1. Update validations for type ahead need to ensure valid value is selected
  * 2. Clean up console logs
  * 3. Add config for url PROD vs DEV
  * 4. ADDRESS HANDLING IS VERY HACKY NEED TO FIX THIS AS PART OF UPLIFT.
- * 
+ *
  */
 
-
-
-//const URL = 'http://localhost:8080/api/upload'
-
+// const URL = 'http://localhost:8080/api/upload'
+/*
 @Component({
   moduleId: module.id,
-  selector: 'edit-profile',
+  selector: 'jhi-edit-profile',
   templateUrl: 'candidate-about-me-edit.component.html',
   styleUrls: ['candidate.css']
 })
@@ -95,12 +90,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     allSelected: 'All selected'
   };
 
-  // get languages(): FormArray{
-  //     return <FormArray>this.candidateAboutMeForm.get('candidateLanguageProficiency');
-  // }
-
   constructor(
-    private principal: Principal,
     private formBuilder: FormBuilder,
     private candidateService: CandidateService,
     private route: ActivatedRoute,
@@ -108,38 +98,29 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     private config: NgbDatepickerConfig,
     private dateUtils: JhiDateUtils,
     private eventManager: JhiEventManager,
-  
     private jobCategoryService: JobCategoryService,
     private nationalityService: NationalityService,
     private countryService: CountryService
   ) {}
 
-
   ngOnInit() {
-
-   
     this.route.data.subscribe((data: {jobCategory: any}) => this.jobCategories = data.jobCategory);
     this.route.data.subscribe((data: {maritalStatus: any}) => this.maritalStatuses = data.maritalStatus);
     this.route.data.subscribe((data: {gender: any}) => this.genders = data.gender);
     this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
-
-    
-    //   this.initializeCropper(); 
+    //   this.initializeCropper();
     this.careerInterestOptions = new Array();
     this.jobCategories.forEach((item) => {
       this.careerInterestOptions.push({id: item.id, name: item.jobCategory});
     });
     this.configureDatePicker();
-
     this.maxAboutMeLength = 150;
-
     this.candidateAboutMeForm = this.formBuilder.group({
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       middleName: [null],
       aboutMe: [null, [Validators.maxLength(150)]],
       email: [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
-      //  dateOfBirth: [null, [Validators.required]],
       jobCategories: [null, [Validators.required]],
       maritalStatus: [null],
       nationality: [null, [Validators.required]],
@@ -149,20 +130,16 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
       gender: [null, [Validators.required]],
       visaType: [null],
       address: this.buildAddressGroup()
-
     });
     this.onCandidateRetrieved();
-  
   //  this.uploader.onBeforeUploadItem = (item) => this.compressImage(item);
     // COMMENTING THIS FOR NOW.. EARLIER PLAN WAS TO HAVE ISD POPULATED ON COUNTRY SELECTION
     /* let control = <FormArray>this.candidateAboutMeForm.controls['address'];
-     control.get('country').valueChanges.subscribe(value => this.onCountrySelect(value));*/
+     control.get('country').valueChanges.subscribe(value => this.onCountrySelect(value));*
     this.candidateAboutMeForm.get('jobCategories').valueChanges
       .subscribe((value) => this.reCreateJobCategoryModelFromSelection(String(value)));
     this.characterCount();
   }
-
-
 
   requestJobCategoryData = (text: string): Observable<Response> => {
     return this.jobCategoryService.searchRemote({
@@ -182,9 +159,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     }).map((data) => data.body);
   }
 
-
   reCreateJobCategoryModelFromSelection(value) {
-
     let jobCategoryReformatted;
     jobCategoryReformatted = new Array();
     this.jobCategories.forEach((element) => {
@@ -197,7 +172,6 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     return jobCategoryReformatted;
   }
 
-  
   buildAddressGroup(): FormGroup {
     return this.formBuilder.group({
       id: [null],
@@ -240,7 +214,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
           v.countryNiceName.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
   countryFormatter = (c: {countryNiceName: string}) => c.countryNiceName;
 */
-  onCountrySelect(countrySelected) {
+  /*onCountrySelect(countrySelected) {
     if (!countrySelected) {
       this.candidateAboutMeForm.get('phoneCode').reset();
     }
@@ -266,7 +240,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     for (let j = 0; j < this.candidate.jobCategories.length; j++) {
       categories.push(this.candidate.jobCategories[j].id);
     }
-    //Update the data on the form
+    // Update the data on the form
     this.candidateAboutMeForm.patchValue({
       firstName: this.candidate.firstName,
       lastName: this.candidate.lastName,
@@ -299,14 +273,14 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
   compareSelectControlValues(entity1: BaseEntity, entity2: BaseEntity): boolean {
     return entity1 && entity2 ? entity1.id === entity2.id : entity1 === entity2;
   }
-
+*/
   /*setAddresses(addresses: Address[]) {
       const addressFormGroup = addresses.map(address => this.formBuilder.group(address));
       const adressFormArray = this.formBuilder.array(addressFormGroup);
       this.candidateAboutMeForm.setControl('addresses', adressFormArray);
   }
 */
-  save(): void {
+  /* save(): void {
     if (this.candidateAboutMeForm.dirty && this.candidateAboutMeForm.valid) {
       const candidate = this.prepareCandidateBeforeSave();
       this.candidateService.update(candidate).subscribe(
@@ -334,7 +308,6 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     return candidate;
   }
 
-
   setCandidateAddress(candidate) {
     const addresses = new Array();
     const address = this.candidateAboutMeForm.get('address').value;
@@ -349,9 +322,9 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
   onSaveComplete(): void {
     this.candidateAboutMeForm.reset();
     this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
-    this.router.navigate(['../details'], {relativeTo: this.route});
+   // this.router.navigate(['../details'], {relativeTo: this.route});
   }
-
+*/
  /* validNationality(c: AbstractControl): {[key: string]: boolean} | null {
     if (c.value === null)
       return null;
@@ -365,7 +338,7 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
     }
     return null;
   }
-*/
+
   characterCount() {
     if (this.candidateAboutMeForm.get('aboutMe').value) {
       this.charsLeft = this.maxAboutMeLength - this.candidateAboutMeForm.get('aboutMe').value.length;
@@ -376,9 +349,8 @@ export class CandidateProfileAboutMeEditComponent implements OnInit, OnDestroy {
 
    ngOnDestroy() {
       if (this.subscription) {
-        this.eventManager.destroy(this.subscription); 
+        this.eventManager.destroy(this.subscription);
 
       }
     }
-
-}
+}*/

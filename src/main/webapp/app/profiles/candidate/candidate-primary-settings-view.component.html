@@ -1,0 +1,60 @@
+ <div *ngIf="candidate">
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="first_name" jhiTranslate="gradzcircleApp.candidate.firstName"></label></strong>
+                <div>{{candidate.firstName}}</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="last_name" jhiTranslate="gradzcircleApp.candidate.lastName"></label></strong>
+                <div>{{candidate.lastName}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="careerInterests" jhiTranslate="gradzcircleApp.candidate.careerInterests"></label></strong>
+                <div *ngIf="candidate.jobCategories;else none"><span *ngFor="let jobCategory of candidate.jobCategories">{{jobCategory.jobCategory}}<br/></span></div>
+                <ng-template #none><div>None</div></ng-template>
+            </div>
+            
+            
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="email" jhiTranslate="userManagement.email">Email Address</label></strong>
+                <div>{{candidate.login.email}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="gender" jhiTranslate="gradzcircleApp.candidate.gender"></label></strong>
+                <div>{{candidate.gender?(candidate.gender.gender):''}}</div>
+            </div>
+            
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="differentlyAbled" jhiTranslate="gradzcircleApp.candidate.differentlyAbled"></label></strong>
+                <div>{{candidate.differentlyAbled?(candidate.differentlyAbled?'Yes':'No'):''}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="gender" jhiTranslate="gradzcircleApp.candidate.aboutMe"></label></strong>
+                <div>{{candidate.aboutMe?candidate.aboutMe:'Tell us about your self!!'}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary btn-sm" type="submit" 
+            [routerLink]="['/','candidate-profile',{outlets:{ primarySetting: 'editUserPrimarySetting'}}]">Edit Settings</button>
+    </div>
+</div>

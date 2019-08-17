@@ -1,6 +1,6 @@
 
 <div id="wrapper">
-    <div class="d-flex flex-column" id="content-wrapper">
+    <div class="d-flex flex-column mb-5" id="content-wrapper">
         <div id="content">          
 	        <div class="container-fluid mt-5">
 	            <h3 class="text-dark mb-4" jhiTranslate="global.menu.user.profile"></h3>
@@ -121,64 +121,17 @@
 	                                    <p class="text-primary m-0 font-weight-bold">User Settings</p>
 	                                </div>
 	                                <div class="card-body">
-	                                    <form>
-	                                        <div class="form-row">
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="username"><strong>Username</strong></label><input type="text" class="form-control" placeholder="user.name" name="username" /></div>
-	                                            </div>
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="email"><strong>Email Address</strong></label><input type="email" class="form-control" placeholder="user@example.com" name="email" /></div>
-	                                            </div>
-	                                        </div>
-	                                        <div class="form-row">
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input type="text" class="form-control" placeholder="John" name="first_name" /></div>
-	                                            </div>
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input type="text" class="form-control" placeholder="Doe" name="last_name" /></div>
-	                                            </div>
-	                                        </div>
-	                                        <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-	                                    </form>
-	                                </div>
+                                        <router-outlet name="primarySetting"></router-outlet>
+                                    </div>    
 	                            </div>
 	                            <div class="card shadow">
 	                                <div class="card-header py-3">
 	                                    <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
 	                                </div>
 	                                <div class="card-body">
-	                                    <form>
-	                                        <div class="form-group"><label for="address"><strong>Address</strong></label><input type="text" class="form-control" placeholder="Sunset Blvd, 38" name="address" /></div>
-	                                        <div class="form-row">
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="city"><strong>City</strong></label><input type="text" class="form-control" placeholder="Los Angeles" name="city" /></div>
-	                                            </div>
-	                                            <div class="col">
-	                                                <div class="form-group"><label for="country"><strong>Country</strong></label><input type="text" class="form-control" placeholder="USA" name="country" /></div>
-	                                            </div>
-	                                        </div>
-	                                        <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-	                                    </form>
+                                       <router-outlet name="contactSetting"></router-outlet>
 	                                </div>
 	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="card shadow mb-5">
-	                <div class="card-header py-3">
-	                    <p class="text-primary m-0 font-weight-bold">Forum Settings</p>
-	                </div>
-	                <div class="card-body">
-	                    <div class="row">
-	                        <div class="col-md-6">
-	                            <form>
-	                                <div class="form-group"><label for="signature"><strong>Signature</strong><br /></label><textarea class="form-control" rows="4" name="signature"></textarea></div>
-	                                <div class="form-group">
-	                                    <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="formCheck-1" /><label class="custom-control-label" for="formCheck-1"><strong>Notify me about new replies</strong></label></div>
-	                                </div>
-	                                <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-	                            </form>
 	                        </div>
 	                    </div>
 	                </div>
@@ -187,111 +140,3 @@
    		 </div>
 	</div>
 </div>
-{{candidate|json}}
-<!-- <div class="profile-header profile-mybackground">
-	<div class="container">
-		<div class="container-inner">
-			<div class="hovereffect">
-				<img class="rounded-circle media-object"
-					[src]="noImage ? defaultImage : userImage ">
-				<div class="overlay">
-           			<a class="info" (click)="setPublicProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
-				</div>
-				<h3 class="profile-header-user">{{candidate.firstName}}
-					{{candidate.lastName}}</h3>
-				<p class="profile-header-bio">{{candidate.aboutMe}}</p>
-			</div>
-			<div>
-				<p>
-					<a (click)="setPublicProfileRouteParams(candidate.id,-1,-1)"
-						[routerLink]="['/', { outlets: { popup: 'candidate-public-profile' } } ]"
-						ngbTooltip="Public Profile"> <span class="icon icon-eye"
-						style="color: #007bff;"></span>
-					</a>
-				</p>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="mt-2 mb-1">
-	<jhi-alert></jhi-alert>
-</div>
-<div class="mt-2 col db-right">
-	<ul class="nav nav-tabs  justify-content-center" role="tablist" id="profileTab">
-			    <li class="nav-item">
-			      <a class="nav-link" id="details-tab" data-toggle="tab" aria-controls="details" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{educations:null,employments:null,languages:null,certifications:null,nonAcademics:null,detail:'details'}}]" [ngClass]="{ 'active':activeTab==='details'}" jhiTranslate="gradzcircleApp.candidate.profile.details" 
-			      		 (click)="setActiveTab('details')">
-			      		Details
-			      </a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" id="edu-tab" data-toggle="tab" aria-controls="edu" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{educations:'education',employments:null,languages:null,certifications:null,nonAcademics:null,detail:null}}]" [ngClass]="{ 'active':activeTab==='edu'}" 
-			      		(click)="setActiveTab('edu')">Education
-			      </a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" id="emp-tab" data-toggle="tab" aria-controls="emp" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{employments:'employment',educations:null,languages:null,certifications:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.employment"
-			      		[ngClass]="{ 'active':activeTab==='emp'}" (click)="setActiveTab('emp')" >
-			      		My Experience
-			      </a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" id="lang-tab" data-toggle="tab" aria-controls="lang" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{languages:'language',educations:null,employments:null,certifications:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.candidateLanguageProficiency"
-			      		[ngClass]="{ 'active':activeTab==='lang'}" (click)="setActiveTab('lang')">
-			      		My Certification
-			      </a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" id="cert-tab" data-toggle="tab" aria-controls="certs" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{certifications:'certification',educations:null,employments:null,languages:null,nonAcademics:null,detail:null}}]" jhiTranslate="gradzcircleApp.candidate.profile.certifications" 
-			      		[ngClass]="{ 'active':activeTab==='certs'}" (click)="setActiveTab('certs')">
-			      		certs
-			      </a>
-			    </li>
-			     <li class="nav-item">
-			      <a class="nav-link" id="extras-tab" data-toggle="tab" aria-controls="extras" routerLinkActive="active" 
-			      		[routerLink]="[{outlets:{nonAcademics:'beyondAcademics',educations:null,employments:null,languages:null,certifications:null,detail:null}}]"jhiTranslate="gradzcircleApp.candidate.profile.nonAcademic"
-			      		[ngClass]="{ 'active':activeTab==='extras'}" (click)="setActiveTab('extras')">
-			      		Extra Curriculars
-			      </a>
-			    </li>
-	 </ul>
-	 <div class="mt-2 mb-2">
-	 		<p><ngb-progressbar [value]="profileScore">{{message}}&nbsp;&nbsp;&nbsp;&nbsp;{{profileScore}}%</ngb-progressbar></p>
-	 </div>
-	<div class="tab-content" id="profileTabContent">
-		<div id="details" class="container tab-pane " [ngClass]="{ 'active':activeTab==='details'}"  aria-labelledby="details-tab" role="tabpanel">
-			<div><router-outlet name="detail"></router-outlet></div>
-		</div>
-		<div id="edu" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='edu'}" aria-labelledby="edu-tab" role="tabpanel">
-			<div class="tab_sub_section">
-				<router-outlet name="educations"></router-outlet>
-			</div>
-		</div>
-		<div id="emp" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='emp'}" aria-labelledby="emp-tab" role="tabpanel">
-			<div class="tab_sub_section">
-				<router-outlet name="employments"></router-outlet>
-			</div>
-		</div>
-		<div id="lang" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='lang'}" aria-labelledby="lang-tab" role="tabpanel">
-			<div class="tab_sub_section">
-				<router-outlet name="languages"></router-outlet>
-			</div>
-		</div>
-		<div id="certs" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='certs'}" aria-labelledby="cert-tab" role="tabpanel">
-			<div class="tab_sub_section">
-				<router-outlet name="certifications"></router-outlet>
-			</div>
-		</div>
-		<div id="extras" class="container-fluid tab-pane" [ngClass]="{ 'active':activeTab==='extras'}" aria-labelledby="extras-tab" role="tabpanel">
-			<div class="tab_sub_section">
-				<router-outlet name="nonAcademics"></router-outlet>
-			</div>
-		</div>
-	</div>
-
-</div>-->

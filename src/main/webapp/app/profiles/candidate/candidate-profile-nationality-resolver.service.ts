@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { Router,Resolve, RouterStateSnapshot,ActivatedRouteSnapshot } from '@angular/router';
 import { Nationality } from '../../entities/Nationality/nationality.model';
 import { Principal } from '../../shared/auth/principal.service';
@@ -16,4 +16,4 @@ export class CandidateNationalityResolverService implements Resolve<Nationality[
            return Observable.of(null);
        });
     }
-}
+}*/

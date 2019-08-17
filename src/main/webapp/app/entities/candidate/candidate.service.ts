@@ -187,18 +187,17 @@ export class CandidateService {
     const country = new Country();
     if (candidate.nationality) {
       nationality.nationality = candidate.nationality[0].value;
+      candidate.nationality = nationality;
     }
-    if (candidate.addresses[0] && candidate.addresses[0].country[0]) {
+    if (candidate.addresses && candidate.addresses[0] && candidate.addresses[0].country[0]) {
       country.countryNiceName = candidate.addresses[0].country[0].value;
+      candidate.addresses[0].country = country;
     }
-    candidate.nationality = nationality;
-    candidate.addresses[0].country = country;
-
   }
 
   private handleError(error: Response) {
 
-    let msg = `Status code ${error.status} on url ${error.url}`;
+    const msg = `Status code ${error.status} on url ${error.url}`;
     return Observable.throw(msg);
   }
 
