@@ -250,13 +250,20 @@ public class CandidateService {
 	public CandidateDetailDTO getCandidateDetails(Long id ) {
 		logger.debug("REST request to get Candidate Profile : {}", id);
 		Candidate candidate = candidateRepository.findOne(id);
+		logger.debug("Candidate is {}",candidate);
+		logger.debug("Candidate educ details are {}",candidate.getEducations());
+		logger.debug("Candidate emp details are {}",candidate.getEmployments());
+		logger.debug("Candidate cert details are {}",candidate.getCertifications());
+		logger.debug("Candidate non acad details are {}",candidate.getNonAcademics());
+		logger.debug("Candidate lang details are {}",candidate.getCandidateLanguageProficiencies());
 		Boolean hasEducation = candidate.getEducations()!=null && !candidate.getEducations().isEmpty()? true:false;
 		Boolean hasCertification = candidate.getCertifications()!=null && !candidate.getCertifications().isEmpty()? true:false;
 		Boolean hasNonAcademics = candidate.getNonAcademics()!=null && !candidate.getNonAcademics().isEmpty()? true:false;
 		Boolean hasLanguages = candidate.getCandidateLanguageProficiencies()!=null && !candidate.getCandidateLanguageProficiencies().isEmpty()? true:false;
 		Boolean hasEmployment = candidate.getEmployments()!=null && !candidate.getEmployments().isEmpty()?true:false;
 		updateCountryAndNationalityDataForDisplay(candidate);
-		CandidateDetailDTO candidateDetailsDTO = convertToCandidateDetailDTO(candidate); 
+		CandidateDetailDTO candidateDetailsDTO = convertToCandidateDetailDTO(candidate);
+		
 		candidateDetailsDTO.setHasCertification(hasCertification);
 		candidateDetailsDTO.setHasEducation(hasEducation);
 		candidateDetailsDTO.setHasNonAcademic(hasNonAcademics);

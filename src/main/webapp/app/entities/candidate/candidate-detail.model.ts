@@ -18,6 +18,6 @@ export class CandidateDetail implements BaseEntity {
         public availableForHiring?: boolean,
         public openToRelocate?: boolean,
         public qualificationWithHighestCourse?: string,
-        public login?: User,
+        public login?: User
         ) {}
 }

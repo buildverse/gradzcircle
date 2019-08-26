@@ -49,7 +49,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
 
     ngOnInit() {
         this.route.data.subscribe((data: { candidate: any }) => this.candidate = data.candidate.body);
-        console.log('Candidates ' + JSON.stringify(this.candidate));
+       // console.log('Candidates ' + JSON.stringify(this.candidate));
         this.contactSettingForm = this.formBuilder.group({
             address: this.buildAddressGroup()
         });
@@ -81,7 +81,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
             // state: [null, [Validators.required]],
             country: [null, [Validators.required]],
             //   zip: [null],
-            phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+')]],
+            phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(10), Validators.maxLength(10) ]],
             phoneCode: ['+91', [Validators.required, Validators.pattern('[+.0-9]+')]]
         });
 
@@ -130,7 +130,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
     prepareCandidateBeforeSave(): any {
         const candidate = Object.assign({}, this.candidate, this.contactSettingForm.value);
         // candidate.jobCategories = this.reCreateJobCategoryModelFromSelection(candidate.jobCategories);
-        //  this.setCandidateAddress(candidate);
+        this.setCandidateAddress(candidate);
         return candidate;
     }
 

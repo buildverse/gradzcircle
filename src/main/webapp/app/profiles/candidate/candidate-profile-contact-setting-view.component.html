@@ -1,29 +1,34 @@
 <div *ngIf="candidate">
-    <div class="form-group"><label for="address"><strong>Address</strong></label>
-        {{candidate.addresses?(candidate.addresses[0]?.addressLineOne):''}}
-    </div>
-    <div class="form-row">
-        <div class="col">
-            <div class="form-group"><label for="city"><strong>City</strong></label>
-                {{candidate.addresses?(candidate.addresses[0]?.city):''}}
-            </div>
-        </div>
-        <div class="col">
-            <div class="form-group"><label for="country"><strong>Country</strong></label>
-                {{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0].countryNiceName:''):''}}
-            </div>
-        </div>
-        
-    </div>
-    <div *ngIf="candidate.phoneCode;else noPhone" class="form-group"><label for="country"><strong>Phone</strong></label>
-        {{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}
-    </div>
-    <ng-template #noPhone>
-        <div class="form-group"><label for="country"><strong>Phone</strong></label>
-            
-        </div>        
-    </ng-template>
-    <div class="form-group"><button class="btn btn-primary btn-sm" type="submit" 
-        [routerLink]="['/','candidate-profile',{outlets:{ contactSetting: 'editUserContactSetting'}}]">Edit Settings</button></div>
+	<div class="form-group">
+		<label for="address"><strong>Address</strong></label>
+		<div>{{candidate.addresses?(candidate.addresses[0]?.addressLineOne):''}}</div>
+	</div>
+	<div class="form-row">
+		<div class="col">
+			<div class="form-group">
+				<label for="city"><strong>City</strong></label>
+				<div>
+					{{candidate.addresses?(candidate.addresses[0]?.city):''}}</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="form-group">
+				<label for="country"><strong>Country</strong></label>
+				<div>{{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0].countryNiceName:''):''}}</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="candidate.phoneCode;else noPhone" class="form-group">
+		<label for="country"><strong>Phone</strong></label>
+		<div>{{candidate.phoneCode?candidate.phoneCode:''}}-{{candidate.phoneNumber?candidate.phoneNumber:''}}</div>
+	</div>
+	<ng-template #noPhone>
+	<div class="form-group">
+		<label for="country"><strong>Phone</strong></label>
+	</div>
+	</ng-template>
+	<div class="form-group">
+		<button class="btn btn-primary btn-sm" type="submit"
+			[routerLink]="['/','candidate-profile',{outlets:{ contactSetting: 'editUserContactSetting'}}]">Edit Settings</button>
+	</div>
 </div>
-    

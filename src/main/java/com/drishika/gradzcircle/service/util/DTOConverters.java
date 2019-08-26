@@ -591,7 +591,7 @@ public class DTOConverters {
 			addressDTO.setCountry(countryDTO);
 			addressDTO.setState(address.getState());
 			addressDTO.setZip(address.getZip());
-			// dto.getAddresses().add(addressDTO);
+			addressDTOs.add(addressDTO);
 		});
 		return addressDTOs;
 	}

@@ -8,7 +8,8 @@ import {CandidatePublicProfile} from '../../entities/candidate/candidate-public-
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
 import {Candidate} from '../../entities/candidate/candidate.model';
-import {CANDIDATE_ID, JOB_ID, CORPORATE_ID, FROM_LINKED_CANDIDATE, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
+import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import {CANDIDATE_ID, JOB_ID, CORPORATE_ID, FROM_LINKED_CANDIDATE, BUSINESS_PLAN_ENABLED, USER_TYPE} from '../../shared/constants/storage.constants';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 
@@ -47,18 +48,22 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   }
 
   ngOnInit() {
-      this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
+      this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) === 'true' ? true : false;
     this.reloadUserImage();
-    if (this.candidate.reviewed && !this.candidate.isShortListed) {
-      this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
-    }
-    if (! this.candidate.isShortListed) {
-      this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
-    }
-    if(!this.candidate.canBeShortListed && this.businessPlanEnabled ) {
-      this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
-    } else if(!this.candidate.canBeShortListed && !this.businessPlanEnabled) {
-      this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert'}, []);
+    if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE ) {
+      if (this.candidate.reviewed && !this.candidate.isShortListed) {
+        this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
+      }
+      if (!this.candidate.isShortListed) {
+        this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
+      }
+      if (!this.candidate.canBeShortListed && this.businessPlanEnabled) {
+        this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
+      } else if (!this.candidate.canBeShortListed && !this.businessPlanEnabled) {
+        this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert'}, []);
+      }
+    } else if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CANDIDATE) {
+        this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.publicProfileMessage', timeout: 5000 }, []);
     }
   }
 
@@ -85,6 +90,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
               this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
             } else {
               this.noImage = true;
+              this.userImage = this.defaultImage;
             }
           }
         });

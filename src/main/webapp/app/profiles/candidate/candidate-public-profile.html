@@ -1,557 +1,252 @@
-  <div class="modal-content">
-  	<div class="modal-body ">
-  	<button type="button" class="close mr-auto" data-dismiss="modal"
-				(click)="clear()">&times;</button>
-			<div class="public-profile-header public-profile-mybackground">
-				<div  *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="container">
-					<div class="row mt-4">
-						<div class="col-md-4 text-center">
-								<img class="rounded-circle media-object"
-									[src]="(noImage||noImage==null) ? defaultImage : userImage " />
-								<h4  class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
-									{{candidate.candidateDetails.lastName}}</h4>
-						</div>
-
-						<div class="col-md-8">
-							<div class="public-profile-header container-inner">
-
-								<div *ngIf="candidate.candidateDetails.aboutMe" class="row no-gutters mt-5 pl-0">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-emoji-happy"></span>
-									</div>
-									<div class="col-md-10">
-										<span class="text-left public-profile-header-bio">{{candidate.candidateDetails.aboutMe}}</span>
-									</div>
-								</div>
-								<div class="row mt-0">
-									<div class="col-md-12">
-										<div class="public-profile-split"></div>
-									</div>
-								</div>
-								<div
-									*ngIf="candidate.candidateDetails.login.email; else showDefaultEmail">
-									<div class="row mt-1 no-gutters ">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-paper-plane"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.login.email}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultEmail>
-								<div class="row no-gutters">
-									<div class="col-md-2 align-item-right" style="color: white">
-										<span class="icon icon-paper-plane"></span>
-									</div>
-									<div class="col-md-4">
-										<p class="text-left public-profile-header-bio">Your email
-											address</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.candidateDetails.phoneNumber; else showDefaultPhone">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-old-phone"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.phoneNumber}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultPhone>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-old-phone"></span>
-									</div>
-									<div class="col-md-4">
-										<p class="text-left public-profile-header-bio">999-999-9999</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.candidateDetails.dateOfBirth; else showDefaultDob">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-cake"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.dateOfBirth|date:'mediumDate'}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultDob>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-cake"></span>
-									</div>
-									<div class="col-md-6">
-										<p class="text-left public-profile-header-bio">Date of
-											birth-Not available</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.addresses[0]?.city || candidate.addresses[0]?.state; else showDefaultCity">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-location"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}
-											</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultCity>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-location"></span>
-									</div>
-									<div class="col-md-6">
-										<p class="text-left public-profile-header-bio">Current
-											location not available</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.matchScore">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-star"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.matchScore}}% match rate
-											</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-
-				<div  *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="container">
-						<div class="row mt-4">
-						<div class="col-md-4 text-center">
-								<img class="rounded-circle media-object"
-									[src]="noImage ? defaultImage : userImage " />
-								<h4 *ngIf="candidate.isShortListed; else dontShowName" class="public-profile-header-user ">{{candidate.candidateDetails.firstName}}
-									{{candidate.candidateDetails.lastName}}</h4>
-								<ng-template #dontShowName>
-									<h6 class="public-profile-header-user text-center font-weight-light">xxxxxxxxxxx</h6>			
-								</ng-template>
-						</div>
-
-						<div class="col-md-8">
-							<div class="public-profile-header container-inner">
-
-								<div *ngIf="candidate.candidateDetails.aboutMe" class="row no-gutters mt-5 pl-0">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-emoji-happy"></span>
-									</div>
-									<div class="col-md-10">
-										<span class="text-left public-profile-header-bio">{{candidate.candidateDetails.aboutMe}}</span>
-									</div>
-								</div>
-								<div class="row mt-0">
-									<div class="col-md-12">
-										<div class="public-profile-split"></div>
-									</div>
-								</div>
-								<div
-									*ngIf="candidate.isShortListed else showDefaultEmail">
-									<div class="row mt-1 no-gutters ">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-paper-plane"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.login.email}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultEmail>
-								<div class="row no-gutters">
-									<div class="col-md-2 align-item-right" style="color: white">
-										<span class="icon icon-paper-plane"></span>
-									</div>
-									<div class="col-md-4">
-										<p class="text-left public-profile-header-bio">xxxxxxxxxxx</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.isShortListed; else showDefaultPhone">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-old-phone"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.phoneNumber}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultPhone>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-old-phone"></span>
-									</div>
-									<div class="col-md-4">
-										<p class="text-left public-profile-header-bio">xxxxxxxxxxx</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.candidateDetails.dateOfBirth; else showDefaultDob">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-cake"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.candidateDetails.dateOfBirth|date:'mediumDate'}}</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultDob>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-cake"></span>
-									</div>
-									<div class="col-md-6">
-										<p class="text-left public-profile-header-bio">Date of
-											birth-Not available</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.addresses[0]?.city || candidate.addresses[0]?.state; else showDefaultCity">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-location"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}
-											</p>
-										</div>
-									</div>
-								</div>
-								<ng-template #showDefaultCity>
-								<div class="row no-gutters">
-									<div class="col-md-2" style="color: white">
-										<span class="icon icon-location"></span>
-									</div>
-									<div class="col-md-6">
-										<p class="text-left public-profile-header-bio">Current
-											location not available</p>
-									</div>
-								</div>
-								</ng-template>
-								<div
-									*ngIf="candidate.matchScore">
-									<div class="row no-gutters">
-										<div class="col-md-2" style="color: white">
-											<span class="icon icon-star"></span>
-										</div>
-										<div class="col-md-4">
-											<p class="text-left public-profile-header-bio">{{candidate.matchScore}}% match rate
-											</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div class="mt-3">
-				<jhi-alert></jhi-alert>
-			</div>
-		<!--  <div class="modal-header">
-           <div class="row mt-4">
-              <div class="col-md-4">
-                    <div class="public-profile-pic-square">
-								
-						<img class="rounded-circle media-object"
-							[src]="noImage ? defaultImage : userImage " />
-						<h4 class="public-profile-header-user text-center">{{candidate.candidateDetails.firstName}}
-							{{candidate.candidateDetails.lastName}}</h4>
-					</div>
-              </div>
-              <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
-	              <div class="col-md-8 text-center py-2 my-3">
-	              	<p>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-user"></span>&nbsp; {{candidate.candidateDetails.firstName}} {{candidate.candidateDetails.lastName}}</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-mail"></span>&nbsp; {{candidate.candidateDetails.login.email}}</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-old-phone"></span>&nbsp;{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span>     
-	                    <span class="applicant-profile-name py-1"><i class="icon icon-location-pin"></i>&nbsp; {{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}</span>                  
-	                 </p>
-                   </div>
-              </div>
-              <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-	              <div *ngIf="candidate?.shortListed; else notShortListed" class="col-lg-8 text-left py-2 my-3">
-	                 <p>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-user"></span>&nbsp; {{candidate.candidateDetails.firstName}} {{candidate.candidateDetails.lastName}}</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-mail"></span>&nbsp; {{candidate.candidateDetails.login.email}}</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-old-phone"></span>&nbsp;{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span>     
-	                    <span class="applicant-profile-name py-1"><i class="icon icon-location-pin"></i>&nbsp; {{candidate.addresses[0]?candidate.addresses[0].city:''}},{{candidate.addresses[0]?candidate.addresses[0].state:''}}</span>                  
-	                 </p>
-	              </div>
-	              <ng-template #notShortListed class="col-lg-8 text-left py-2 my-3">
-					   <p ngbTooltip="ShortList to view details" placement="right">
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-user"></span>&nbsp; xxxxxxxxxxx</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-mail"></span>&nbsp; xxxxxxxxxxx</span>
-	                    <span class="applicant-profile-name py-1"><span class="icon icon-old-phone"></span>&nbsp;xxxxxxxxxxx</span>     
-	                    <span class="applicant-profile-name py-1"><i class="icon icon-location-pin"></i>&nbsp; xxxxxxxxxxx</span>                  
-	                 </p>
-				  </ng-template>
-	           </div>
-           </div>
-           <button type="button" class="close" data-dismiss="modal"(click)="clear()" style="color:white;">&times;</button>
-        </div>
-        
-		<div class="modal-body "> -->
-			<div
-				*ngIf="candidate.educations?.length==0  || (!candidate.nonAcademics || !candidate.candidateLanguageProficiencies); else showProfile">
-				<div class="my-3  ml-4 mr-3">
-					<p class="public-profile-body profile-text-info">This is your
-						public profile that will be visible to employers. This will be
-						your first impression to an employer, first impression is the last
-						impression!!</p>
-					<p class="public-profile-body profile-text-info">Please improve
-						your profile by adding in atleast : -</p>
-					<ul class="public-profile-body profile-text-info">
-						<li>Education and Education Projects</li>
-						<li>Extra Curriculars like sports, dramatics, dance etc and
-							please mention awards won if any</li>
-						<li>Languages known with proficiency</li>
-						<li>Employments if any</li>
-					</ul>
-
-				</div>
-			</div>
-			<ng-template #showProfile>
-			<div class="my-3  ml-4 mr-3">
-				<div *ngIf="candidate.employments?.length>0 && candidate.employments[0].id">
-					<div class="row">
-						<div class="col-md-12">
-							<span style="color: grey; float: left; margin-left: -5px"
-								class="icon icon-briefcase"></span> <span
-								style="margin-left: 15px;"
-								class="underline-public-profile-headers public-profile-headers">EXPERIENCE</span>
-							<div *ngFor="let candidateEmployment of candidate.employments ; trackBy: trackId" >
-								<div style="margin-left: 15px;"  class="mt-4">
-										<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">
-											<span class="ico icon-chevron-right" style="color: #397598;"></span> {{candidateEmployment.jobTitle}} <span
-												class="public-profile-sub-header mb-0 font-weight-bold text-lowercase">at</span>
-											{{candidateEmployment.employerName}}<span
-												class="vertical-delimiter pr-1"> </span> <span class="pl-2">
-												{{candidateEmployment.employmentStartDate | date}} -
-												{{candidateEmployment.employmentEndDate?(candidateEmployment.employmentEndDate
-												|date): 'Till Date'}}</span> <span class="vertical-delimiter pr-1">
-											</span> <span class="pl-2"> Position :
-												{{candidateEmployment.employmentType}}</span>
-										</p>
-									
-									<p class="public-profile-body" style="margin-left: 20px;"
-										[innerHtml]=" candidateEmployment.jobDescription"></p>
-									<div *ngIf="candidateEmployment.projects?.length>0">
-										<div class="mt-1">
-											<span style="color: grey; float: left; margin-left: 5px"
-												class="icon icon-text-document"></span> <span
-												style="margin-left: 15px;"
-												class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
-										</div>
-										<div *ngFor="let candidateEmploymentProject of candidateEmployment.projects; trackBy:trackId">
-											<a class="card-link " 
-							       				   [attr.aria-controls]="candidateEmploymentProject.id" (click)="candidateEmploymentProject.collapsed = !candidateEmploymentProject.collapsed"
-							       				   [attr.aria-expanded]="!candidateEmploymentProject.collapsed">
-													
-													<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase" style="margin-left: 15px;">
-														<span class="icon icon-chevron-right" style="color: #397598;"></span>{{candidateEmploymentProject.projectTitle}} <span
-															class="vertical-delimiter pr-1"> </span> <span
-															class="pl-2">
-															{{candidateEmploymentProject.projectStartDate | date}} -
-															{{candidateEmploymentProject.projectEndDate?(candidateEmploymentProject.projectEndDate
-															|date): 'Till Date'}}</span>
-													</p>
-												</a>
-												<div id="{{candidateEmploymentProject.id}}" [ngbCollapse]="candidateEmploymentProject.collapsed" style="margin-left: 30px;">	
-													<p class="public-profile-body text-uppercase font-weight-bold">Description:</p>
-													<p class="public-profile-body" style="margin-left: 10px;"
-														[innerHtml]=" candidateEmploymentProject.projectDescription"></p>
-													<p class="public-profile-body text-uppercase font-weight-bold">Contribution:</p>
-													<p class="public-profile-body" style="margin-left: 10px;"
-														[innerHtml]=" candidateEmploymentProject.contributionInProject"></p>
-												</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>	
-				<div class="row mt-4">
-					<div class="col-md-12">
-						<span style="color: grey; float: left; margin-left: -5px"
-							class="icon icon-graduation-cap"></span> <span
-							style="margin-left: 15px;"
-							class="underline-public-profile-headers public-profile-headers">EDUCATION</span>
-						<div *ngIf="candidate.educations?.length>0 && candidate.educations[0].id ">
-							<div *ngFor="let candidateEducation of candidate.educations ; trackBy: trackId">
-								<div class="mt-3" style="margin-left: 15px;">
-									<p
-										class=" public-profile-sub-header mb-0 font-weight-bold text-uppercase">
-										<span class="ico icon-chevron-right" style="color: #397598;"></span> {{candidateEducation.qualification.qualification}}
-										<span
-											class="public-profile-sub-header mb-0 font-weight-bold text-lowercase">
-											in </span>
-										{{candidateEducation.course.course}}
-										<span class="vertical-delimiter pr-1"> </span> <span
-											class="pl-2">{{candidateEducation.educationFromDate |
-											date}} -
-											{{candidateEducation.educationToDate?(candidateEducation.educationToDate
-											|date): 'Till Date'}}</span>
-									</p>
-								
-									<p class="public-profile-sub-header mb-0" style="margin-left: 15px;">
-										{{candidateEducation.college.collegeName}} 
-										<span class="vertical-delimiter pr-1"></span> 
-										<span class="pl-2">{{candidateEducation.college.university.universityName}}</span>
-										<span class="vertical-delimiter pr-1"></span> 
-										<span class="pl-2"> {{candidateEducation.grade?"GPA
-											"+candidateEducation.grade+"/10":"Percentage
-											"+candidateEducation.percentage+"%"}}</span>
-									</p>
-								
-									<div *ngIf="candidateEducation.projects?.length>0">
-										<div class="mt-4">
-											<span style="color: grey; float: left; margin-left: 5px"
-												class="icon icon-text-document"></span> <span
-												style="margin-left: 15px;"
-												class="underline-public-profile-headers public-profile-headers">PROJECTS</span>
-										</div>
-										<div
-											*ngFor="let candidateEducationProject of candidateEducation.projects; trackBy:trackId">
-											<a class="card-link " 
-							       				   [attr.aria-controls]="candidateEducationProject.id" (click)="candidateEducationProject.collapsed = !candidateEducationProject.collapsed"
-							       				   [attr.aria-expanded]="!candidateEducationProject.collapsed">
-													
-													<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase" style="margin-left: 15px;">
-														<span class="icon icon-chevron-right" style="color: #397598;"></span>
-														{{candidateEducationProject.projectTitle}} <span
-															class="vertical-delimiter pr-1"> </span> <span
-															class="pl-2">
-															{{candidateEducationProject.projectStartDate | date}} -
-															{{candidateEducationProject.projectEndDate?(candidateEducationProject.projectEndDate
-															|date): 'Till Date'}}</span>
-													</p>
-												</a>
-												<div id="{{candidateEducationProject.id}}" [ngbCollapse]="candidateEducationProject.collapsed" style="margin-left: 30px;">	
-													<p class="public-profile-sub-header mb-0 font-weight-bold text-capitalize">
-														{{candidateEducationProject.projectType==='SELF_INTEREST'?'Self
-														Interest':'Academic'}} Project</p>
-													<p class="public-profile-body text-uppercase font-weight-bold" >Description:</p>
-													<p class="public-profile-body" style="margin-left: 10px;"
-														[innerHtml]=" candidateEducationProject.projectDescription"></p>
-													<p class="public-profile-body text-uppercase font-weight-bold" >Contribution:</p>
-													<p class="public-profile-body" style="margin-left: 10px;"
-														[innerHtml]=" candidateEducationProject.contributionInProject"></p>
-												</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row my-5">
-					<div class="col-md-6">
-						<div *ngIf="candidate.candidateLanguageProficiencies?.length>0 && candidate.candidateLanguageProficiencies[0].id">
-							<span style="color: grey; float: left; margin-left: -5px"
-								class="icon icon-chat"></span> <span style="margin-left: 15px;"
-								class="underline-public-profile-headers public-profile-headers">LANGUAGES</span>
-							<div
-								*ngFor="let candidateLanguageProficiency of candidate.candidateLanguageProficiencies ; trackBy: trackId">
-								<div class="row ml-3 mt-3">
-									<div class="col-md-2">{{candidateLanguageProficiency.language?.language}}</div>
-									<div class="col-md-8 ml-5 pt-1">
-										<div class="progress">
-											<div class="progress-bar align-items-right"
-												role="progressbar"
-												[style.width]="getWidth(candidateLanguageProficiency.proficiency)"
-												style="height: 15px" aria-valuenow="25" aria-valuemin="0"
-												aria-valuemax="100">{{candidateLanguageProficiency.proficiency}}</div>
-										</div>
-									</div>
-								</div>
-
-
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div *ngIf="candidate.nonAcademics?.length>0 && candidate.nonAcademics[0].id">
-							<span style="color: grey; float: left; margin-left: 5px"
-								class="icon icon-trophy"></span> <span
-								style="margin-left: 15px;"
-								class="underline-public-profile-headers public-profile-headers text-uppercase">Extra
-								- Curricular and Awards</span>
-					
-							<div *ngFor="let candidateNonAcademic of candidate.nonAcademics ; trackBy: trackId" >
-								<div class="mt-2" style="margin-left: 15px;">
-								
-									<p class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">
-									<span class="ico icon-chevron-right" style="color: #397598;"></span>
-										{{candidateNonAcademic.nonAcademicInitiativeTitle}}</p>
-									<p class="public-profile-body"  style="margin-left: 15px;"
-										[innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mt-4">
-					<div class="col-md-12">
-						<div *ngIf="candidate.certifications?.length>0 && candidate.certifications[0].id">
-							<span style="color: grey; float: left; margin-left: -5px"
-								class="icon icon-price-ribbon"></span> <span
-								style="margin-left: 15px;"
-								class="underline-public-profile-headers public-profile-headers">CERTIFICATIONS</span>
-							<div
-								*ngFor="let certification of candidate.certifications ; trackBy: trackId">
-								<div class="mt-2" style="margin-left: 15px;">
-									<p
-										class="public-profile-sub-header mb-0 font-weight-bold text-uppercase">
-										<span class="ico icon-chevron-right" style="color: #397598;"></span>
-										{{certification.certificationTitle}} <span
-											class="vertical-delimiter pr-1"> </span> <span class="pl-2">
-											{{certification.certificationDate | date}} </span>
-									</p>
-									<p class="public-profile-body"  style="margin-left: 15px;"
-										[innerHtml]=" certification.certificationDetails"></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			</ng-template>
-			<div *jhiHasAnyAuthority="['ROLE_CORPORATE']" >
-				<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate && candidate.canBeShortListed" class="row justify-content-center">
-					<form name="linkForm" role="form" novalidate (ngSubmit)="save()"
-						#linkForm="ngForm" >
-						<button type="submit" 
-							[disabled]="linkForm.form.invalid || isSaving"
-							class="btn btn-primary text-center d-block">
-							&nbsp;ShortList&nbsp;<span class="icon icon-thumbs-up"></span>
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
+<div class="modal-header modal-header-decorate">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
+<section class="portfolio-block block-intro border-bottom">
+    <div class="container">
+    		<div class="mt-1 mb-1">
+    			<jhi-alert></jhi-alert>
+    		</div>
+        <div class="avatar" [style.backgroundImage]="'url('+userImage+')'">
+        		
+        </div>
+        <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="about-me">
+            <p >Hello! I am <strong>{{candidate.candidateDetails.firstName}} {{candidate.candidateDetails.lastName}}</strong>. 
+            		{{candidate.candidateDetails.aboutMe}}
+            </p>
+            
+        </div>
+        <div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="about-me">
+            <p >Hello! I am <strong>John Smith</strong>. I work as interface and front end developer. I have passion for pixel perfect, minimal and easy to use interfaces.</p>
+            	<a class="btn btn-outline-primary" role="button" href="#">Hire me</a>
+        </div>  
+    </div>
+</section>
+<section class="portfolio-block cv">
+    <div class="container">
+        <div *ngIf="candidate.employments?.length>0 && candidate.employments[0].id" class="work-experience group">
+            <div class="heading">
+                <h2 class="text-center">Work Experience</h2>
+            </div>
+	        <div *ngFor="let candidateEmployment of candidate.employments ;" >
+	            <div class="item">
+	                <div class="row">
+	                    <div class="col-md-6">
+	                        <h3>{{candidateEmployment.jobTitle}}</h3>
+	                        <h4 class="organization">{{candidateEmployment.employerName}}</h4>
+	                    </div>
+	                    <div class="col-md-6"><span class="period">{{candidateEmployment.employmentStartDate | date}} -
+												{{candidateEmployment.employmentEndDate?(candidateEmployment.employmentEndDate
+												|date): 'Till Date'}}
+											</span>
+						</div>
+	                </div>
+	                <p class="text-muted" [innerHtml]=" candidateEmployment.jobDescription"></p>
+	                <div *ngIf="candidateEmployment.projects?.length>0">
+	                		 <div class="heading">
+                				<h3 class="text-center">Projects</h3>
+            				</div>
+	                		<div *ngFor="let candidateEmploymentProject of candidateEmployment.projects; ">
+		                		<div class="item ml-3">
+		                			<div class="row">
+		                				<div class="col-md-6">
+		                					 <h4 class="projects">{{candidateEmploymentProject.projectTitle}}</h4>
+		                				</div>
+		                				 <div class="col-md-6"><span class="period">{{candidateEmploymentProject.projectStartDate | date}} -
+															{{candidateEmploymentProject.projectEndDate?(candidateEmploymentProject.projectEndDate
+															|date): 'Till Date'}}
+												</span>
+									</div>
+									<div class="col-md-12">
+									 	<p>Description</p>
+									 </div>
+									 <div class="col-md-12">
+									 	<p class="text-muted" [innerHtml]="candidateEmploymentProject.projectDescription"></p>
+									 </div>
+									 <div class="col-md-12">
+									 	<p>Contribution</p>
+									 </div>
+									 <div class="col-md-12">
+									 	<p class="text-muted" [innerHtml]="candidateEmploymentProject.contributionInProject"></p>
+									 </div>
+		                			</div>
+		                		</div>
+		                	</div>
+	                </div>
+	            </div>
+	          </div>
+	        </div>
+        
+        <div *ngIf="candidate.educations?.length>0 && candidate.educations[0].id " class="education group">
+        		 <div class="heading">
+	                <h2 class="text-center">Education</h2>
+	          </div>
+	          <div *ngFor="let candidateEducation of candidate.educations">
+	          		<div class="item">
+	          			<div class="row">
+		                    <div class="col-md-6">
+		                        <h3>{{candidateEducation.qualification.qualification}}&nbsp;in&nbsp;{{candidateEducation.course.course}}</h3>
+		                        <h4 class="organization">{{candidateEducation.college.collegeName}} </h4>
+		                        <h4 class="score">{{candidateEducation.grade?"GPA
+												"+candidateEducation.grade+"/10":"Percentage
+												"+candidateEducation.percentage+"%"}}</h4>
+		                    </div>
+		                    <div class="col-md-6"><span class="period">{{candidateEducation.educationFromDate |
+												date}} -
+												{{candidateEducation.educationToDate?(candidateEducation.educationToDate
+												|date): 'Till Date'}}
+												</span>
+							</div>
+		                </div>
+		                <div *ngIf="candidateEducation.projects?.length>0">
+		                		<div class="heading">
+	                				<h3 class="text-center">Projects</h3>
+	            				</div>
+	            				<div *ngFor="let candidateEducationProject of candidateEducation.projects; ">
+            						<div class="item ml-3">
+									<div class="row">
+										<div class="col-md-6">
+											<h4 class="projects">{{candidateEducationProject.projectTitle}}</h4>
+											<h4 class="text-muted">{{candidateEducationProject.projectType==='SELF_INTEREST'?'Self
+												Interest':'Academic'}} Project</h4>
+										</div>
+										<div class="col-md-6">
+											<span class="period">{{candidateEducationProject.projectStartDate
+												| date}} -
+												{{candidateEducationProject.projectEndDate?(candidateEducationProject.projectEndDate
+												|date): 'Till Date'}} </span>
+										</div>
+										<div class="col-md-12">
+											<p>Description</p>
+										</div>
+										<div class="col-md-12">
+											<p class="text-muted"
+												[innerHtml]=" candidateEducationProject.projectDescription"></p>
+										</div>
+										<div class="col-md-12">
+											<p>Contribution</p>
+										</div>
+										<div class="col-md-12">
+											<p class="text-muted"
+												[innerHtml]="candidateEducationProject.contributionInProject"></p>
+										</div>
+									</div>
+								</div>
+	            				</div>
+		                </div>
+	          		</div>
+	          </div>
+        </div>
+         <div class="group">
+            <div class="row">
+            		<div *ngIf="candidate.candidateLanguageProficiencies?.length>0 && candidate.candidateLanguageProficiencies[0].id" class="col">
+	                    <div class="skills portfolio-info-card">
+	                        <h2>Languages</h2>
+	                        <div *ngFor="let candidateLanguageProficiency of candidate.candidateLanguageProficiencies">
+		                        <h3>{{candidateLanguageProficiency.language?.language}}</h3>
+		                        <div class="progress">
+		                            <div class="progress-bar" aria-valuemin="0" aria-valuemax="100" [style.width]="getWidth(candidateLanguageProficiency.proficiency)">
+		                            </div>
+		                        </div>
+		                     </div>
+	                    </div>
+	            </div>
+                <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="col">
+                    <div class="contact-info portfolio-info-card">
+                        <h2>Contact Info</h2>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.firstName}}&nbsp; {{candidate.candidateDetails.lastName}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.login.email}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
+                            <div class="col-9"><span>{{candidate.addresses[0]?candidate.addresses[0].city:'Not available'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
+                		<div *ngIf="candidate?.shortListed; else notShortListed" class="contact-info portfolio-info-card">
+                			<h2>Contact Info</h2>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.firstName}}&nbsp; {{candidate.candidateDetails.lastName}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
+                            <div class="col-9"><span>{{candidate.candidateDetails.login.email}}</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
+                            <div class="col-9"><span>{{candidate.addresses[0]?candidate.addresses[0].city:'Not available'}}</span></div>
+                        </div>
+                		</div>
+                		<ng-template #notShortListed class="contact-info portfolio-info-card">
+                			<h2 ngbTooltip="ShortList to view details" placement="right">Contact Info</h2>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
+                            <div class="col-9"><span> xxxxxxxxxxx</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
+                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
+                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
+                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+                        </div>
+                		</ng-template>
+                </div>
+            </div>
+        </div>
+		<div *ngIf="candidate.certifications?.length>0 && candidate.certifications[0].id" class="hobbies group">
+            <div class="heading">
+                <h2 class="text-center">Certifications</h2>
+            </div>
+            <div *ngFor="let certification of candidate.certifications;">
+          		<div class="item">
+               		<div class="row">
+               			<div class="col-md-6">
+               				<h4 class="certs">{{certification.certificationTitle}}</h4>
+               			</div>
+               			<div class="col-md-6"><span class="period">{{certification.certificationDate | date}}</span>
+						</div>
+               		</div>
+               		<p class="text-muted"  [innerHtml]=" certification.certificationDetails"></p>
+               	</div>
+            </div>
+            
+        </div>
+        <div *ngIf="candidate.nonAcademics?.length>0 && candidate.nonAcademics[0].id" class="hobbies group">
+            <div class="heading">
+                <h2 class="text-center">Hobbies</h2>
+            </div>
+            <div *ngFor="let candidateNonAcademic of candidate.nonAcademics">
+          		<div class="item">
+               		<div class="row">
+               			<div class="col-md-6">
+               				<h4 class="hobbies">{{candidateNonAcademic.nonAcademicInitiativeTitle}}</h4>
+               			</div>
+               		</div>
+               		<p class="text-muted" [innerHtml]=" candidateNonAcademic.nonAcademicInitiativeDescription"></p>
+               	</div>
+            </div>
+        </div>
+     </div>
+</section>
+

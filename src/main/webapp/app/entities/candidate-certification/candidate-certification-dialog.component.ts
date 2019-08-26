@@ -42,6 +42,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
             {name: 'paragraph', groups: ['list', 'indent', 'align']},
           ],
           'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+          /* 'stylesSet': {name: 'para', element: 'p', styles: { 'margin': '0px' } }*/
         };
         this.isSaving = false;
                 this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];

@@ -1,67 +1,68 @@
 {
-    "gradzcircleApp": {
-        "candidate" : {
-            "home": {
-                "title": "Candidates",
-                "createLabel": "Create a new Candidate",
-                "createOrEditLabel": "Create or edit a Candidate",
-                "search": "Search for Candidate"
-            },
-            "created": "A new Candidate is created with identifier {{ param }}",
-            "updated": "A Candidate is updated with identifier {{ param }}",
-            "deleted": "A Candidate is deleted with identifier {{ param }}",
-            "delete": {
-                "question": "Are you sure you want to delete Candidate {{ id }}?"
-            },
-            "detail": {
-                "title": "Candidate"
-            },
-            "firstName": "First Name",
-            "lastName": "Last Name",
-            "middleName": "Middle Name",
-            "facebook": "Facebook",
-            "linkedIn": "Linked In",
-            "twitter": "Twitter",
-            "aboutMe": "About Me",
-            "aboutMe.hint": "Short description of yourself",
-            "dateOfBirth": "Date Of Birth",
-            "phoneCode": "Phone Code",
-            "phoneNumber": "Phone Number",
-            "differentlyAbled": "Differently Abled",
-            "availableForHiring": "Available For Hiring",
-            "openToRelocate": "Open To Relocate",
-            "login": "Login",
-            "gender": "Gender",
-            "maritalStatus": "Marital Status",
-            "nationality": "Nationality",
-            "address": "Address",
-            "education": "Education",
-             "matchEligible": "Match Eligible",
-            "nonAcademic": "Non Academic",
-            "certification": "Certification",
-            "employment": "Employment",
-            "candidateLanguageProficiency": "Candidate Language Proficiency",
-            "jobCategory": "Job Category",
-            "visaType": "Visa Type",
-            "profilePic" : "Profile Pic",
-            "updateProfilePic" : "Update Profile Pic",
-            "careerInterests": "Carrer Interests",
-            "job": "Job",
-            "educationDescriptionShortForm": "Education Summary",
-            "profileScore": "Profile Score",
-            "profileCategory": "Profile Category",
+	"gradzcircleApp": {
+		"candidate": {
+			"home": {
+				"title": "Candidates",
+				"createLabel": "Create a new Candidate",
+				"createOrEditLabel": "Create or edit a Candidate",
+				"search": "Search for Candidate"
+			},
+			"created": "A new Candidate is created with identifier {{ param }}",
+			"updated": "A Candidate is updated with identifier {{ param }}",
+			"deleted": "A Candidate is deleted with identifier {{ param }}",
+			"delete": {
+				"question": "Are you sure you want to delete Candidate {{ id }}?"
+			},
+			"detail": {
+				"title": "Candidate"
+			},
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"middleName": "Middle Name",
+			"facebook": "Facebook",
+			"linkedIn": "Linked In",
+			"twitter": "Twitter",
+			"aboutMe": "About Me",
+			"aboutMe.hint": "Short description of yourself",
+			"dateOfBirth": "Date Of Birth",
+			"phoneCode": "Phone Code",
+			"phoneNumber": "Phone Number",
+			"differentlyAbled": "Differently Abled",
+			"availableForHiring": "Available For Hiring",
+			"openToRelocate": "Open To Relocate",
+			"login": "Login",
+			"gender": "Gender",
+			"maritalStatus": "Marital Status",
+			"nationality": "Nationality",
+			"address": "Address",
+			"education": "Education",
+			"matchEligible": "Match Eligible",
+			"nonAcademic": "Non Academic",
+			"certification": "Certification",
+			"employment": "Employment",
+			"candidateLanguageProficiency": "Candidate Language Proficiency",
+			"jobCategory": "Job Category",
+			"visaType": "Visa Type",
+			"profilePic": "Profile Pic",
+			"updateProfilePic": "Update Profile Pic",
+			"careerInterests": "Carrer Interests",
+			"job": "Job",
+			"educationDescriptionShortForm": "Education Summary",
+			"profileScore": "Profile Score",
+			"profileCategory": "Profile Category",
 			"profile": {
-                "details": "Details",
-                "education": "My Education",
-                "employment": "My Experience",
-                "nonAcademic": "Extra Curriculars",
-                "certifications": "My Certifications",
-                "candidateLanguageProficiency": "Languages",
-                "profileAlert": "Please <b>complete</b> your profile !! It will <b>enhance your profile.</b>",
-                "educationAlert": "Please add Education to review matched jobs",
-                "reviewAlert": "You have reviewed this candidate earlier",
-                "notShortListedAlert": "Please short list candidate to see name and contact details"
-            }
-        }
-    }
+				"details": "Details",
+				"education": "My Education",
+				"employment": "My Experience",
+				"nonAcademic": "Extra Curriculars",
+				"certifications": "My Certifications",
+				"candidateLanguageProficiency": "Languages",
+				"profileAlert": "Please <b>complete</b> your profile !! And we will create your <b>Resume</b>",
+				"educationAlert": "Please add Education to review matched jobs",
+				"reviewAlert": "You have reviewed this candidate earlier",
+				"notShortListedAlert": "Please short list candidate to see name and contact details",
+				"publicProfileMessage": "Your <b>Resume</b> for public view"
+			}
+		}
+	}
 }

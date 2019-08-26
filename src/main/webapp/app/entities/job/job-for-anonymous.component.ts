@@ -17,7 +17,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 @Component({
   selector: 'jhi-job',
   templateUrl: './job-for-anonymous.component.html',
-  styleUrls: ['job.css']
+  styleUrls: ['job_new.css']
 })
 export class JobComponentAnonymous implements OnInit, OnDestroy {
   candidateId: number;

@@ -6,7 +6,7 @@
     			<div class="col">
                     <p jhiTranslate="gradzcircleApp.candidateEducation.detail.title" class="float-left h3 font-weight-bold"></p>
                     <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
-    					jhiTranslate="gradzcircleApp.candidateEducation.home.add" (click)="setRouterAddEducationParams()"
+    					jhiTranslate="gradzcircleApp.candidateEducation.home.add" 
 						[routerLink]="['/', { outlets: { popup: 'new-candidate-education' } }]">Button</button></div>
 		</div>
         <div class="container">
@@ -58,9 +58,9 @@
 								</h4>
 								<h6>{{candidateProject.projectTitle}}</h6>
 								<h4>Project Description</h4>
-								<h6>{{candidateProject.projectDescription}}</h6>
+								<h6 [innerHtml]="candidateProject.projectDescription"></h6>
 								<h4>My Contribution</h4>
-								<h6>{{candidateProject.contributionInProject}}</h6>
+								<h6 [innerHtml]="candidateProject.contributionInProject"></h6>
 							</div>
 							<div class="col-12 col-md-3 offset-md-1 meta">
 								<div class="tags">

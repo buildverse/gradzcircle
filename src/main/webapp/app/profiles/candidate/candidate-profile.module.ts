@@ -15,7 +15,7 @@ import {MultiselectDropdownModule} from 'angular-2-dropdown-multiselect';
 // import {CandidateAboutMeEditGuard} from './candidate-profile-about-me-edit-guard';
 import {CandidateDetailResolverService} from './candidate-detail-resolver.service';
 // import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
-import {SafeHtml} from './image.pipe';
+//import {SafeHtml} from './image.pipe';
 import {DataStorageService} from '../../shared/helper/localstorage.service';
 import {CandidatePublicProfilePopupComponent, CandidatePublicProfilePopupDialogComponent} from './candidate-public-profile-popup.component';
 import {CandidatePublicProfilePopupService} from './candidate-public-profile-popup.service';
@@ -45,7 +45,7 @@ const ENTITY_STATES = [
   declarations: [
     CandidateProfileComponent,
     //CandidateLanguageProficiencyDetailsComponent,
-    SafeHtml,
+   // SafeHtml,
     CandidatePublicProfilePopupComponent,
     CandidatePublicProfilePopupDialogComponent,
     AppliedJobsComponent,

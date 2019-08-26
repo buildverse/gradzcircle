@@ -5,6 +5,8 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -130,47 +132,72 @@ public class CandidateEducationService {
 	}
 
 	
-	private Set<CandidateEducation> setHighestEducation(CandidateEducation candidateEducation, Boolean isDelete) {
+	private List<CandidateEducation> setHighestEducation(CandidateEducation candidateEducation, Boolean isDelete) {
 		List<CandidateEducation> candidateEducations = candidateEducationRepository
 				.findByCandidateId(candidateEducation.getCandidate().getId());
 		if (isDelete) {
 			candidateEducations.remove(candidateEducation);
 			if (candidateEducations.size() > 0) {
-				/*candidateEducations.stream().filter(education -> education.getEducationToDate() != null)
-					.collect(Collectors.toList());
-				Comparator<CandidateEducation> comparator = (education1, education2) -> education1.getEducationToDate()
-						.compareTo(education2.getEducationToDate());
-				candidateEducations.sort(comparator);*/
-				
-				Comparator<CandidateEducation> comparator = Comparator.comparing(CandidateEducation::getEducationToDate,Comparator.nullsLast(Comparator.naturalOrder()));
+			Comparator<CandidateEducation> comparator = Comparator.comparing(CandidateEducation::getEducationToDate,Comparator.nullsLast(Comparator.naturalOrder()));
 				candidateEducations.sort(comparator);
 				candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
 				log.debug("Soretd education by dates {}", candidateEducations);
 			}
 		} else {
 			if (candidateEducations.size() > 0) {
-				CandidateEducation edu = candidateEducations.stream().filter(education -> education.isHighestQualification()).findAny().orElse(null);
-				if(candidateEducation.getEducationToDate()==null) {
-					candidateEducation.setHighestQualification(true);
-					edu.setHighestQualification(false);
+				log.debug("Candidate Edcuaitons are {} ",candidateEducations);
+				CandidateEducation highestEducationInCollection = candidateEducations.stream().filter(education -> education.isHighestQualification()!=null && education.isHighestQualification())
+										.findAny().orElse(null);
+				if(highestEducationInCollection == null) {
+					Comparator<CandidateEducation> comparator = Comparator.comparing(CandidateEducation::getEducationToDate,Comparator.nullsLast(Comparator.naturalOrder()));
+					candidateEducations.sort(comparator);
+					candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
 				} else {
-					if(candidateEducation.getEducationToDate()!=null && edu.getEducationToDate() !=null && 
-							edu.getEducationToDate().isBefore(candidateEducation.getEducationToDate())) {
-						candidateEducation.setHighestQualification(true);
-						edu.setHighestQualification(false);
+					if(candidateEducation.getHighestQualification()!=null && candidateEducation.getHighestQualification()) {
+						candidateEducations.forEach(education->{
+							if(!education.equals(candidateEducation))
+								education.setHighestQualification(false);
+						});
+					} else {
+						Comparator<CandidateEducation> comparator = Comparator.comparing(CandidateEducation::getEducationToDate,Comparator.nullsLast(Comparator.naturalOrder()));
+						candidateEducations.sort(comparator);
+						CandidateEducation lastEducation = candidateEducations.get(candidateEducations.size()-1);
+						if(lastEducation.getEducationToDate()==null && candidateEducation.getEducationToDate()==null) {
+							lastEducation.setHighestQualification(false);
+							candidateEducation.setHighestQualification(true);
+						} else if (lastEducation.getEducationToDate()!=null && candidateEducation.getEducationToDate() == null) {
+							lastEducation.setHighestQualification(false);
+							candidateEducation.setHighestQualification(true);
+						} else if (lastEducation.getEducationToDate()!=null && candidateEducation.getEducationToDate() != null && 
+								lastEducation.getEducationToDate().isAfter(candidateEducation.getEducationToDate())) {
+							lastEducation.setHighestQualification(true);
+							candidateEducation.setHighestQualification(false);
+						} else if (lastEducation.getEducationToDate()!=null && candidateEducation.getEducationToDate() != null && 
+								candidateEducation.getEducationToDate().isAfter(lastEducation.getEducationToDate())) {
+							lastEducation.setHighestQualification(false);
+							candidateEducation.setHighestQualification(true);
+						} else if (lastEducation.getEducationToDate()==null && candidateEducation.getEducationToDate()!=null) {
+							lastEducation.setHighestQualification(true);
+							candidateEducation.setHighestQualification(false);
+						} else if (lastEducation.getEducationToDate()!=null && candidateEducation.getEducationToDate() != null && 
+								candidateEducation.getEducationToDate().isEqual(lastEducation.getEducationToDate())) {
+							lastEducation.setHighestQualification(false);
+							candidateEducation.setHighestQualification(true);
+						}
+							
 					}
 				}
 			} else {
 				candidateEducation.setHighestQualification(true);
 			}
 		}
-		return new HashSet<>(candidateEducations);
+		return candidateEducations;
 	}
 
 	private void injestCollegeInformation(CandidateEducation candidateEducation) {
 		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation,
 				candidateEducation.getCollege());
-		if (candidateEducation.getCollege().getCollegeName().equals(Constants.OTHER)) {
+		if (candidateEducation.getCollege()!=null && candidateEducation.getCollege().getCollegeName().equals(Constants.OTHER)) {
 			College college = collegeRepository.findByCollegeName(candidateEducation.getCapturedCollege());
 			University university = universityRepository
 					.findByUniversityName(candidateEducation.getCapturedUniversity());
@@ -311,19 +338,6 @@ public class CandidateEducationService {
 		injestCollegeInformation(candidateEducation);
 		injestCourseInformation(candidateEducation);
 		injestQualificationInformation(candidateEducation);
-		/* SHOULD WE ALLOW MULTIPLE HIGHEST QUALIFICATIONS ? - RUCHI SAYS YES */
-		/*
-		 * CandidateEducation educationWithHighestQualification =
-		 * candidateEducationRepository.findByCandidateAndHighestQualification(
-		 * candidateEducation.getCandidate(),Boolean.TRUE);
-		 * if(educationWithHighestQualification!=null &&
-		 * !educationWithHighestQualification.getId().equals(candidateEducation.getId())
-		 * && candidateEducation.isHighestQualification()){ throw new
-		 * CustomParameterizedException("You cannot have two highest qualifications"); }
-		 * 
-		 * log.debug("This candidate has a highest education already {}",
-		 * educationWithHighestQualification);
-		 */
 		candidateEducationRepository.save(setHighestEducation(candidateEducation, false));
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
 		// candidateEducationSearchRepository.save(result);
@@ -358,8 +372,27 @@ public class CandidateEducationService {
 		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(id);
 		if(candidateEducations==null || (candidateEducations != null && candidateEducations.isEmpty()))
 			return new ArrayList<CandidateEducationDTO>();
+		else
+			sortEducationsByHighest(candidateEducations);
 		Candidate candidate = candidateRepository.findOne(id);
 		return converter.convertCandidateEducations(candidateEducations, true,candidate);
+	}
+	
+	private void sortEducationsByHighest(List<CandidateEducation> candidateEducations) {
+		long countOfNullToDates = candidateEducations.stream().filter(education->education.getEducationToDate()==null).count();
+		if(countOfNullToDates>1) {
+			Comparator<CandidateEducation> comparator = new Comparator<CandidateEducation>() {
+				public int compare(final CandidateEducation e1, CandidateEducation e2) {
+					if(e1.getHighestQualification() && !e2.getHighestQualification()) {
+						return 1;
+					} else if(!e1.getHighestQualification() && e2.getHighestQualification()) {
+						return -1;
+					}
+					else return 0;
+				}
+			};
+			Collections.sort(candidateEducations,comparator);
+		}
 	}
 
 	public void deleteCandidateEducation(Long id) {
