@@ -312,8 +312,10 @@ public class DTOConverters {
 		jobListingData.setId(job.getId());
 		jobListingData.setCity(convertToCamelCase(job.getCorporate().getCity()));
 		jobListingData.setCorporateName(convertToCamelCase(job.getCorporate().getName()));
+		jobListingData.setCorporateUrl(job.getCorporate().getLogin().getImageUrl());
 		jobListingData.setSalary(job.getSalary());
 		jobListingData.setUpdateDate(job.getUpdateDate());
+		jobListingData.setCorporateLoginId(job.getCorporate().getLogin().getId());
 		if (job.getJobDescription().length() > 500)
 			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
 		else
@@ -323,11 +325,20 @@ public class DTOConverters {
 	private String convertToCamelCase(String string) {
 		if (string == null)
 			return "";
-		char[] charArray = string.toLowerCase().toCharArray();
-		charArray[0] = Character.toUpperCase(charArray[0]);
-		for (int i = 1; i < charArray.length; i++)
-			charArray[i] = Character.toLowerCase(charArray[i]);
-		return new String(charArray);
+		String[] splitString = string.split("\\s+");
+		StringBuilder builder = new StringBuilder();
+		for(int index=0;index<splitString.length;index++) {
+			char[] charArray = splitString[index].toLowerCase().toCharArray();
+			charArray[0] = Character.toUpperCase(charArray[0]);
+			for (int i = 1; i < charArray.length; i++)
+				charArray[i] = Character.toLowerCase(charArray[i]);
+			if(index<splitString.length-1)
+				builder.append(charArray).append(" ");
+			else
+				builder.append(charArray);
+			
+		}
+		return builder.toString();
 	}
 
 	/**

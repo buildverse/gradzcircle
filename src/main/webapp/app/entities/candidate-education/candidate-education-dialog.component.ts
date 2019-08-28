@@ -17,7 +17,7 @@ import {University, UniversityService} from '../university';
 import {CandidateEducationPopupServiceNew} from './candidate-education-popup-new.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Principal,DataStorageService} from '../../shared';
-import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID } from '../../shared/constants/storage.constants';
+import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID, USER_ID, USER_DATA } from '../../shared/constants/storage.constants';
 import { ViewChild } from '@angular/core';
 import {JhiDateUtils} from 'ng-jhipster';
 //import {EducationCollegeService} from './education-college.service';
@@ -347,11 +347,23 @@ export class CandidateEducationDialogComponent implements OnInit {
     //console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
      this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
+    this.reloadCandidate();
     this.isSaving = false;
     this.spinnerService.hide();
     this.activeModal.dismiss(result);
   }
 
+   reloadCandidate() {
+   // console.log('Reloading candidate??');
+    this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
+      (res: HttpResponse<Candidate>) => {
+        this.dataService.setdata(USER_DATA, JSON.stringify(res.body)); 
+  },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );
+    return;
+  }
+  
   private onSaveError(result:any) {
    this.spinnerService.hide();
     this.isSaving = false;

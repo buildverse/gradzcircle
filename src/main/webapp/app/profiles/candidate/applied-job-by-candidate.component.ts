@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs/Rx';
 import {JhiParseLinks, JhiAlertService} from 'ng-jhipster';
 import {JobService} from '../../entities/job/job.service';
 import {Job} from '../../entities/job/job.model';
-import {ITEMS_PER_PAGE, DataStorageService} from '../../shared';
+import {ITEMS_PER_PAGE, DataStorageService, UserService} from '../../shared';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {JOB_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse} from '@angular/common/http';
@@ -12,7 +12,8 @@ import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'jhi-applied-job-list',
-  templateUrl: './applied-job-by-candidate.component.html'
+  templateUrl: './applied-job-by-candidate.component.html',
+  styleUrls:['candidate.css']
 })
 export class AppliedJobsComponent implements OnInit, OnDestroy {
   jobs: Job[] = null;
@@ -38,7 +39,8 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private localDataStorageService: DataStorageService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private userService: UserService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -144,6 +146,32 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.jobs = data;
+    this.setImageUrl();
     this.spinnerService.hide();
+  }
+  
+   private setImageUrl() {
+    if (this.jobs.length === 0) {
+      this.spinnerService.hide();
+    } else {
+      this.jobs.forEach((job) => {
+        if (job.corporateUrl !== undefined) {
+          this.userService.getImageData(job.corporateLoginId).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                job.corporateUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true;
+              }
+            }
+
+          });
+        } else {
+          job.corporateUrl = undefined;
+        }
+        
+      });
+    }
   }
 }

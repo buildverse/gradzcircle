@@ -12,7 +12,8 @@ import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'jhi-shortlisted-job-list',
-  templateUrl: './shortlisted-for-job.component.html'
+  templateUrl: './shortlisted-for-job.component.html',
+   styleUrls:['candidate.css']
 })
 export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
   jobs: Job[] = null;

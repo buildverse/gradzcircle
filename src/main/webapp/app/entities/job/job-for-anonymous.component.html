@@ -2,48 +2,146 @@
 <section class="portfolio-block projects-with-sidebar">
 	<div class="container">
 		<div class="heading">
-			<h2><strong>{{totalNumberOfActiveJobs}}</strong>&nbsp;<span jhiTranslate="gradzcircleApp.job.home.title" ></span></h2>
+			<h1><strong>{{totalNumberOfActiveJobs}}</strong>&nbsp;<span jhiTranslate="gradzcircleApp.job.home.title" ></span></h1>
 		</div>
 		<div class="row">
 			<div class="col-md-3">
 		        <ul class="list-unstyled sidebar">
-		            <li><a class="active" href="#">Employment Type</a></li>
-		            <li><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		            <li style="margin-bottom: 15px;"><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		            <li><a class="active" href="#">Job Type</a></li>
-		            <li><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		            <li><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		            <li><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		            <li style="margin-bottom: 15px;"><input type="checkbox" /><a href="#"> Permanent</a><br /></li>
-		        		<div *ngIf="candidateId && candidate.hasEducationScore">
-			            <li><a class="active" href="#">Match Score</a></li>
-			            <li></li>
-			            <li><input type="radio" />  Name<br /></li>
-			            <li><input type="radio" />  List Item</li>
-			            <li><input type="radio" />  List Item</li>
-			            <li><input type="radio" />  List Item</li>
-			            <li><input type="radio" />  List Item</li>
-			        </div>
+		            <li class="font-weight-bold h5" jhiTranslate="gradzcircleApp.job.filters.employmentType">Employment Type</li>
+		            <li>
+		            		<label class="text-muted font-weight-light ml-3 mb-0">
+								<input type="checkbox" [(ngModel)]="permanent"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/>
+									<span *ngIf="countOfPermanentEmployment!==null;else noEmploymentTypeCount" >
+										<span jhiTranslate="gradzcircleApp.job.permanent"></span>&nbsp;({{countOfPermanentEmployment}})
+									</span>	
+									<ng-template #noEmploymentTypeCount>
+										<span  jhiTranslate="gradzcircleApp.job.permanent"></span>
+									</ng-template>
+						</label>
+					</li>
+		            <li style="margin-bottom: 15px;">
+		            		<label class="text-muted font-weight-light ml-3">
+								<input type="checkbox" [(ngModel)]="contract"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+									<span *ngIf="countOfContractEmployment!==null;else noJobTypeCount" >
+										<span jhiTranslate="gradzcircleApp.job.contract"></span>&nbsp;({{countOfContractEmployment}})
+									</span>
+									<ng-template #noJobTypeCount>
+										<span jhiTranslate="gradzcircleApp.job.contract"></span>
+									</ng-template>
+							</label>
+					</li>
+		            <li class="font-weight-bold h5" jhiTranslate="gradzcircleApp.job.filters.jobType">Job Type</li>
+		            <li>
+		            		<label class="text-muted font-weight-light ml-3">
+								<input type="checkbox" [(ngModel)]="fullTime"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+								<span *ngIf="countOfFullTimeJob!==null;else noFulltimeJobCount" >
+									<span jhiTranslate="gradzcircleApp.job.fullTime"></span>&nbsp;({{countOfFullTimeJob}})
+								</span>
+								<ng-template #noFulltimeJobCount>
+									<span jhiTranslate="gradzcircleApp.job.fullTime"></span>
+								</ng-template>
+						</label>
+		            </li>
+		            <li>
+		            		<label class="text-muted font-weight-light ml-3 ">
+								<input type="checkbox" [(ngModel)]="partTime"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+									<span *ngIf="countOfPartTimeJob!==null;else noPartTimeJobCount" >
+										<span jhiTranslate="gradzcircleApp.job.partTime"></span>&nbsp;({{countOfPartTimeJob}})
+									</span>
+									<ng-template #noPartTimeJobCount>
+										<span jhiTranslate="gradzcircleApp.job.partTime"></span>
+									</ng-template>
+						</label>
+					</li>
+		            <li>
+		            		<label class="text-muted font-weight-light ml-3">
+								<input type="checkbox" [(ngModel)]="internship"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+									<span *ngIf="countOfInternJob!==null;else noInternJobCount" >
+										<span jhiTranslate="gradzcircleApp.job.internship"></span>&nbsp;({{countOfInternJob}})
+									</span>
+									<ng-template #noInternJobCount>
+										<span jhiTranslate="gradzcircleApp.job.internship"></span>
+									</ng-template>
+							</label>
+					</li>
+		            <li style="margin-bottom: 15px;">
+		            		<label class="text-muted font-weight-light ml-3">
+								<input type="checkbox" [(ngModel)]="summerJob"
+										(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+									<span *ngIf="countOfSummerJob!==null;else noSummerJobCount" >
+										<span jhiTranslate="gradzcircleApp.job.summerJob"></span>&nbsp;({{countOfSummerJob}})
+									</span>
+									<ng-template #noSummerJobCount>
+										<span  jhiTranslate="gradzcircleApp.job.summerJob"></span>
+									</ng-template>
+							</label>
+		            </li>
+		        		<span *ngIf="candidateId && hasEducation">
+			            <li class="font-weight-bold h5" jhiTranslate="gradzcircleApp.job.filters.matchScore"></li>
+			            <li>
+			            		<label class="text-muted font-weight-light ml-3">
+									<input type="radio" [(ngModel)]="matchScoreRange" value="matchScore85To100"
+											(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+										<span jhiTranslate="gradzcircleApp.job.filters.85To100"></span>
+							</label>
+			            </li>
+			            <li>
+			            		<label class="text-muted font-weight-light ml-3">
+									<input type="radio" [(ngModel)]="matchScoreRange" value="matchScore71To84"
+											(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+											<span jhiTranslate="gradzcircleApp.job.filters.71To84"></span>		
+							</label>
+			            </li>
+			            <li>
+			            		<label class="text-muted font-weight-light ml-3 ">
+									<input type="radio" [(ngModel)]="matchScoreRange" value="matchScore55To70"
+											(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+											<span jhiTranslate="gradzcircleApp.job.filters.55To70"></span>
+							</label>
+			            </li>
+			            <li>
+			            		<label class="text-muted font-weight-light ml-3">
+									<input type="radio" [(ngModel)]="matchScoreRange" value="matchScoreLessThan55"
+											(ngModelChange)="loadActiveJobsByUserFilter()"/> 
+											<span jhiTranslate="gradzcircleApp.job.filters.lessThan55"></span>							
+							</label>
+			            </li>
+			            <li>
+			            		<button type="button" class="btn btn-sm btn-pill btn-outline-primary"
+									(click)="clearMatchScores()">Clear Selected Scores
+							</button>
+						</li>
+			        </span>
 		        </ul>
     			</div>
 			<div class="col-md-9">
 				<div class="row">
-					<div *ngFor="let job of jobs ;trackBy: trackId" class="project-card-no-image">
+					<div *ngFor="let job of jobs ;trackBy: trackId" class="project-card-no-image col-md-12">
 						    <h3>{{job.jobTitle}}<span class="float-right">{{job.corporateName}}</span></h3>
-						    <h4 [innerHtml]="job.jobDescription"></h4><a class="btn btn-outline-primary btn-sm" role="button" href="#">See More</a>
+						    <h4 [innerHtml]="job.jobDescription"></h4><a class="btn btn-outline-primary btn-sm" role="button" (click)="setJobViewParamForCandidate(job.id, job.matchScore)" [routerLink]="['/', { outlets: { popup: 'job/viewJobForCandidate'} }]" >See More</a>
 						    <div class="tags">{{job.employmentType.employmentType}}, {{job.jobType.jobType}} <br>
 						    		 {{job.updateDate | date : 'dd - MMM - yyyy'}}  <br> &#8377;&nbsp;{{job.salary?job.salary+' p.a.':'Not Available'}}
 						    		 <br> {{job.city}}
 						    </div>
 					</div>
-					<div *ngIf="jobs && jobs.length">
-						<div class="row justify-content-center font-weight-light">
-							<jhi-item-count [page]="page" [total]="queryCount"
-								[itemsPerPage]="itemsPerPage"></jhi-item-count>
-						</div>
-						<div class="row justify-content-center">
-							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
-								(pageChange)="loadPage(page)"></ngb-pagination>
+					<div *ngIf="jobs && jobs.length" class="container" >
+						<div class="row ">
+							<div class="col font-weight-light d-flex justify-content-start">
+								<jhi-item-count [page]="page" [total]="queryCount"
+											[itemsPerPage]="itemsPerPage">
+								</jhi-item-count>
+							</div>
+						
+							<div class="col font-weight-light d-flex justify-content-end ">
+								<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" 
+										(pageChange)="loadPage(page)">
+								</ngb-pagination>
+							</div>
 						</div>
 					</div>
 				</div>

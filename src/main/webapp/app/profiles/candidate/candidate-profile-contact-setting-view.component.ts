@@ -4,7 +4,7 @@ import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
 import {DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import {USER_ID} from '../../shared/constants/storage.constants';
+import {USER_ID, USER_DATA} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 @Component({

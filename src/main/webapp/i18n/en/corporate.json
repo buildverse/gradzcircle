@@ -51,6 +51,7 @@
             "corporateDetails" :"Company Details",
             "companyType":"Compamy Type",
             "companySize": "Company Size",
+            "companyName": "Company Name",
             "firstLogin": "Please <b>post your First Job</b> !!"
         }
     }

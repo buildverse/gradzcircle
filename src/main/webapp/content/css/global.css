@@ -30,7 +30,54 @@ body {
   margin-left: auto;
 }
 
+/*********** BUTTON STYLES **************/
 
+.btn-outline-primary:not(:disabled):not(.disabled).active:focus, .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .show > .btn-outline-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 .2rem rgba(14,160,255,.5);
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show > .btn-outline-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #0ea0ff;
+  border-color: #0ea0ff;
+}
+
+.btn-outline-primary.focus, .btn-outline-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(14,160,255,.5);
+}
+
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: #0ea0ff;
+  border-color: #0ea0ff;
+}
+
+.btn.focus, .btn:focus {
+  outline: 0;
+  box-shadow: 0 0 0 .2rem rgba(14,160,255,.25);
+}
+
+.btn:hover {
+  color: #212529;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0075c1;
+  text-decoration: underline;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+  padding: .25rem .8rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: 2em;
+}
+
+.btn-outline-primary {
+  color: #0ea0ff;
+  border-color: #0ea0ff;
+}
 /*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
 /*.table-responsive{
 overflow-y:visible;
@@ -276,6 +323,11 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 .btn-success {
 	background-color: #1cc88a;
 	color: white;
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #1cc88a;
 }
 
 .btn-info {

@@ -69,7 +69,9 @@ export class Job implements BaseEntity {
     public numberOfCandidatesRemaining?: number,
     public payAsYouGo?: boolean,
     public filterCost?: number,
-    public corporateEscrowAmount?: number
+    public corporateEscrowAmount?: number,
+    public corporateUrl?: string,
+    public corporateLoginId?: any
   ) {
     this.hasBeenEdited = false;
     this.everActive = false;

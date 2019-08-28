@@ -89,7 +89,7 @@
 				"job": {
 					"applied": "Applied Jobs",
 					"active": "All Jobs",
-					"shortlisted": "Shortlisted For"
+					"shortlisted": "Potential Jobs"
 				}
 			},
 			"corporate": {
@@ -112,10 +112,11 @@
 			"confirmpassword": "Confirm New password",
 			"confirmpassword.placeholder": "Confirm your password",
 			"email": "Email",
-			"email.placeholder": "Enter your email address",
+			"email.placeholder": "Enter your email address...",
 			"firstName.placeholder": "Enter your first name",
 			"lastName.placeholder": "Enter your last name",
-			"required": "Required"
+			"required": "Required",
+			"passwordReset": "Reset Password"
 		},
 		"messages": {
 			"info": {

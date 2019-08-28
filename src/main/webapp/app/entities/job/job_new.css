@@ -52,7 +52,7 @@ dl, ol, ul {
 }
 
 .portfolio-block.projects-with-sidebar a {
-  color: #212529;
+  /*color: #212529;*/
   font-weight: 300;
 }
 

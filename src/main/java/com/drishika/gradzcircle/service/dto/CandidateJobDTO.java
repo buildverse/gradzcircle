@@ -56,6 +56,10 @@ public class CandidateJobDTO implements Serializable {
 	
 	private String city;
 	
+	private String corporateUrl;
+	
+	private Long corporateLoginId;
+	
 
 	/**
 	 * @return the id
@@ -330,4 +334,33 @@ public class CandidateJobDTO implements Serializable {
 		this.city = city;
 	}
 
+	/**
+	 * @return the corporateUrl
+	 */
+	public String getCorporateUrl() {
+		return corporateUrl;
+	}
+
+	/**
+	 * @param corporateUrl the corporateUrl to set
+	 */
+	public void setCorporateUrl(String corporateUrl) {
+		this.corporateUrl = corporateUrl;
+	}
+
+	/**
+	 * @return the corporateLoginId
+	 */
+	public Long getCorporateLoginId() {
+		return corporateLoginId;
+	}
+
+	/**
+	 * @param corporateLoginId the corporateLoginId to set
+	 */
+	public void setCorporateLoginId(Long corporateLoginId) {
+		this.corporateLoginId = corporateLoginId;
+	}
+
+	
 }

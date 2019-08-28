@@ -32,6 +32,7 @@ public class JobsUtil {
 		corporate.setId(job.getCorporate().getId());
 		corporate.setEscrowAmount(job.getCorporate().getEscrowAmount());
 		corporate.setLogin(job.getCorporate().getLogin());
+		corporate.setName(job.getCorporate().getName());
 		job.setCorporate(corporate);
 	}
 

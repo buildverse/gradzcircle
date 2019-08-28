@@ -68,6 +68,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
   matchScoreTo?: number;
   matchScoreRange?: string;
   navigationSubscription?: any;
+  hasEducation: boolean;
 
 
   constructor(
@@ -559,11 +560,12 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
 
 
   loadCandidateInfo() {
-  //  console.log('Calling reload candidate ');
+ // console.log('Calling reload candidate ' + this.dataStorageService.getData(USER_DATA));
     this.candidate = JSON.parse(this.dataStorageService.getData(USER_DATA));
+    this.hasEducation = this.candidate.hasEducation ;
     this.candidateId = this.candidate.id;
-    //console.log('What is userid'+JSON.stringify(this.candidateId));
-   //  console.log('What is userData'+JSON.stringify(this.candidate));
+   // console.log      ('CandidateId is '+this.candidateId);
+  ///  console.log('hasEdcu is '+this.hasEducation);
     if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
     } else if (!this.candidate.hasEducationScore) {

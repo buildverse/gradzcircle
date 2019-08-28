@@ -8,7 +8,7 @@ import {JhiDateUtils} from 'ng-jhipster';
 import {Job} from './job.model';
 import {JobPopupService} from './job-popup.service';
 import {JobService} from './job.service';
-import { LoginModalService, LoginService} from '../../shared';
+import { LoginModalService, LoginService, UserService} from '../../shared';
 import { JobListEmitterService } from './job-list-change.service';
 import {Observable} from 'rxjs/Rx';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -24,6 +24,9 @@ export class JobViewComponent implements OnInit {
   currentAccount: any;
   isSaving: boolean;
   modalRef: NgbModalRef;
+  imageUrl: any;
+  noImage: boolean;
+  defaultImage = require('../../../content/images/no-image.png');
 
   constructor(
     private jobService: JobService,
@@ -37,6 +40,7 @@ export class JobViewComponent implements OnInit {
     private loginService: LoginService,
     private loginModalService: LoginModalService,
     private jobListEmitterService :JobListEmitterService,
+     private userService: UserService,
   ) {
   }
 
@@ -45,6 +49,7 @@ export class JobViewComponent implements OnInit {
   }
 
   ngOnInit() {
+   // console.log('The job is '+JSON.stringify(this.job));
     this.principal.identity().then((account) => {
       this.currentAccount = account;
     });
@@ -62,6 +67,7 @@ export class JobViewComponent implements OnInit {
         this.job.jobFilters[0].filterDescription.graduationFromDate = (this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationFromDate));
       }
     }
+    this.loadCorporateImage();
   }
 
   login() {
@@ -96,6 +102,19 @@ export class JobViewComponent implements OnInit {
     this.activeModal.dismiss();
     this.jhiAlertService.error(error.message, null, null);
   }
+  
+  loadCorporateImage() {
+    
+        if (this.job.corporate.login.imageUrl) {
+          this.userService.getImageData(this.job.corporate.login.id).subscribe((response) => {
+            const responseJson = response.body;
+            this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+          });
+          this.noImage = false;
+        } else {
+          this.noImage = true;
+        }
+      }
 }
 
 
