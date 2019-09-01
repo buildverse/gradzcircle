@@ -9,6 +9,7 @@ import {CandidateService} from '../../entities/candidate/candidate.service';
 import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-candidate-profile',
@@ -44,7 +45,8 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     private userService: UserService,
     private candidateProfileScoreService: CandidateProfileScoreService,
     private cd: ChangeDetectorRef,
-    private dataService: DataStorageService
+    private dataService: DataStorageService,
+    private router: Router
   ) {
     // this.activeTab = 'details';
     this.noImage = false;
@@ -114,6 +116,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
 
   private onError(error) {
     this.jhiAlertService.error(error.message, null, null);
+    this.router.navigate(['/error']);
   }
   registerChangeInCandidateData() {
     this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());

@@ -13,7 +13,8 @@ export class CandidateList implements BaseEntity {
     public jobId?: number,
     public corporateId?: number,
     public matchScore?: number,
-    public canBuy?: boolean
+    public canBuy?: boolean,
+    public aboutMe?: string
   ) {
     this.shortListed = false;
     this.canBuy = false;

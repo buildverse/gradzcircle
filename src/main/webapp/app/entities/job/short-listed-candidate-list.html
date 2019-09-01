@@ -1,35 +1,50 @@
-
-<div class="mt-6" *ngIf="candidateList">
-	<div class="mt-1 justify-content-center">
-		<h1 class="text-center" style="color:#455A64;">Shortlisted Candidates</h1>
-	</div>
-
-		<div class="row justify-content-center" >
-			   <div *ngFor="let candidate of candidateList" class="m-2 col-lg-3">
-			   	<div class="card card-profile h-100">			     
-			       <div class="card-header" style="background-color: #2196F3;"></div>
-			       <div class="card-body text-xs-center">
-			         <img class="card-profile-img" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl ">
-			         <h5 class="card-title">{{candidate.firstName}} {{candidate.lastName}}</h5>
-			         <p class="mb-4 font-weight-light" >{{candidate.qualificationWithHighestCourse}}</p>
-			         <p class="mb-4 font-weight-light">{{candidate.tagline}}</p>
-			         <button class="btn btn-outline-primary btn-sm" (click)="setPublicProfileRouteParams(candidate.id,candidate.jobId,corporateId)" 
-			         [routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
-			           <span class="icon icon-add-user"></span> View
-			         </button>
-			       </div>
-			   </div>
-			   </div>  
-		</div>
-		<div class="mt-2" *ngIf="candidateList">
-					<div class="row justify-content-center font-weight-light">
-						<jhi-item-count [page]="page" [total]="queryCount"
-							[itemsPerPage]="itemsPerPage"></jhi-item-count>
+<main class="page projects-page">
+	<section class="portfolio-block projects-cards">
+		<div class="container">
+			<div class="heading">
+				<h1><strong>ShortListed Candidates</strong></h1>
+			</div>
+			<div class="row">
+				
+				<div *ngIf="candidateList?.length>0;else noData" class="col-md-12">
+					<div class="row">
+					    <div *ngFor="let candidate of candidateList" class="col-md-6 col-lg-4">
+					        <div class="card border-0">
+					        		<img class="card-img-top scale-on-hover shadow" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl" />
+					            <div class="card-body">
+					                <h4 class="mb-0">{{candidate.firstName}}&nbsp;{{candidate.lastName}}</h4>
+					                <p class="text-muted card-text mb-0">
+										<span jhiTranslate="gradzcircleApp.job.matchScore"></span>&nbsp;<strong>{{candidate.matchScore}}%</strong>
+									</p>
+									<p class="text-muted card-text mb-0">{{candidate.qualificationWithHighestCourse}}</p>
+									<button class="btn btn-primary btn-sm btn-block mt-1"
+										(click)="setViewPublicProfileRouteParams(candidate.id,jobId,corporateId)"
+										[routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
+										<span class="icon icon-add-user"></span> View
+									</button>
+					                
+					            </div>
+					        </div>
+					    </div>
+					   
 					</div>
-					<div class="row justify-content-center font-weight-light">
-						<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
-							(pageChange)="loadPage(page)"></ngb-pagination>
+					<div *ngIf="candidateList" class="row">
+						<div class="col d-flex justify-content-start  font-weight-light text-muted">
+							<jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+						</div>
+						<div class="col font-weight-light d-flex justify-content-end ">
+							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" (pageChange)="loadPage(page)"></ngb-pagination>
+						</div>
 					</div>
+				</div>
+				<ng-template #noData>
+					<div class="row">
+						No Data Available
+					</div>
+				</ng-template>
+			</div>
+			
+			
 		</div>
-
-</div>
+	</section>
+</main>

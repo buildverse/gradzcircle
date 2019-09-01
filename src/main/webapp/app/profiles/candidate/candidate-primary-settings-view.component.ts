@@ -6,6 +6,7 @@ import { DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import { USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-candidate-primary-settings-view',
@@ -26,7 +27,8 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
     private eventManager: JhiEventManager,
     private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
-    private dataService: DataStorageService
+    private dataService: DataStorageService,
+    private router: Router
   ) {
   }
 
@@ -46,6 +48,7 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
   }
   private onError(error) {
     this.jhiAlertService.error(error.message, null, null);
+    this.router.navigate(['/error']);
   }
 
   registerChangeInCandidateData() {

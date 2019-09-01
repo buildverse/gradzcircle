@@ -1,0 +1,41 @@
+#wrapper {
+  display: flex;
+}
+
+#wrapper #content-wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#wrapper #content-wrapper #content {
+  flex: 1 0 auto;
+}
+
+.error {
+  color: #5a5c69;
+  font-size: 4rem;
+  position: relative;
+  line-height: 1;
+  width: 12.5rem;
+  background-color: #ffffff;
+}
+
+.text-dark {
+  color: #5a5c69!important;
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.text-black-50 {
+  color: rgba(0,0,0,.5)!important;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+

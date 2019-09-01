@@ -78,6 +78,75 @@ a:hover {
   color: #0ea0ff;
   border-color: #0ea0ff;
 }
+
+/************ table **************/
+
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #858796;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #e3e6f0;
+}
+
+.table td, .table th {
+  padding: .75rem;
+  vertical-align: top;
+  border-top: 1px solid #e3e6f0;
+}
+
+th {
+  text-align: inherit;
+}
+
+.table td, .table th {
+  padding: .75rem;
+  vertical-align: top;
+  border-top: 1px solid #e3e6f0;
+}
+
+/************************ job related **************************/
+@media (min-width:576px) {
+  .portfolio-navbar.fixed-top + .page {
+    padding-top: 5.5rem;
+  }
+}
+
+
+
+.portfolio-navbar.fixed-top + .page {
+  padding-top: 62px;
+}
+
+.portfolio-block {
+  padding-bottom: 60px;
+  padding-top: 60px;
+}
+
+.portfolio-block .heading {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+
+
+
+
 /*This break table responsive on bootstrap - WAS USING FOR ACTION DROP DOWN ON JOB PAGE TO NOT HIDE THE OPTIONS*/
 /*.table-responsive{
 overflow-y:visible;

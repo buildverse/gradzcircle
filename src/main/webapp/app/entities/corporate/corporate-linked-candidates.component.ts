@@ -11,7 +11,8 @@ import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-linked-candidate-list',
-  templateUrl: './corporate-linked-candidates.component.html'
+  templateUrl: './corporate-linked-candidates.component.html',
+  styleUrls: ['corporate.css']
 })
 export class LinkedCandidatesComponent implements OnInit, OnDestroy {
   candidateList: CandidateList[];

@@ -11,15 +11,40 @@
         		
         </div>
         <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="about-me">
-            <p >Hello! I am <strong>{{candidate.candidateDetails.firstName}} {{candidate.candidateDetails.lastName}}</strong>. 
+            <p >Hello! I am <strong>{{candidate.candidateDetails.firstName}}&nbsp;{{candidate.candidateDetails.lastName}}</strong>. 
             		{{candidate.candidateDetails.aboutMe}}
             </p>
             
         </div>
-        <div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="about-me">
-            <p >Hello! I am <strong>John Smith</strong>. I work as interface and front end developer. I have passion for pixel perfect, minimal and easy to use interfaces.</p>
-            	<a class="btn btn-outline-primary" role="button" href="#">Hire me</a>
-        </div>  
+        <ng-container *ngIf="!rerender">
+        
+	        <div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="about-me">
+	        		<div *ngIf="canCorporateViewDetails ; else notShortListed">
+		            <p>Hello! I am <strong>{{candidate.candidateDetails.firstName}}&nbsp;{{candidate.candidateDetails.lastName}}</strong>.
+		            		{{candidate.candidateDetails.aboutMe}}
+		            </p>
+	            </div>
+	            <ng-template #notShortListed>
+	            		<p *ngIf="!canCorporateViewDetails " >Hello! I am <strong>Gradzcircle Candidate</strong>.
+	            			{{candidate.candidateDetails.aboutMe}}
+	            		</p>
+	            		<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate && candidate.canBeShortListed" class="row justify-content-center">
+						<form name="linkForm" role="form" novalidate (ngSubmit)="save()"
+							#linkForm="ngForm" >
+							<button type="submit" 
+								[disabled]="linkForm.form.invalid || isSaving"
+								class="btn btn-outline-primary">
+								Contact Information
+							</button>
+						</form>
+					</div>
+	            		<!--  <a *ngIf="!candidate.isShortListed && ! fromLinkedCandidate && candidate.canBeShortListed" 
+	            				 class="btn btn-outline-primary" role="button" >Contact Information
+	            		</a>-->
+	            </ng-template>
+	            	
+	        </div>
+	     </ng-container>  
     </div>
 </section>
 <section class="portfolio-block cv">
@@ -139,7 +164,7 @@
         </div>
          <div class="group">
             <div class="row">
-            		<div *ngIf="candidate.candidateLanguageProficiencies?.length>0 && candidate.candidateLanguageProficiencies[0].id" class="col">
+            		<div *ngIf="candidate.candidateLanguageProficiencies?.length>0 && candidate.candidateLanguageProficiencies[0].id" class="col-md-6">
 	                    <div class="skills portfolio-info-card">
 	                        <h2>Languages</h2>
 	                        <div *ngFor="let candidateLanguageProficiency of candidate.candidateLanguageProficiencies">
@@ -151,7 +176,7 @@
 		                     </div>
 	                    </div>
 	            </div>
-                <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="col">
+                <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="col-md-6">
                     <div class="contact-info portfolio-info-card">
                         <h2>Contact Info</h2>
                         <div class="row">
@@ -172,46 +197,52 @@
                         </div>
                     </div>
                 </div>
-                <div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-                		<div *ngIf="candidate?.shortListed; else notShortListed" class="contact-info portfolio-info-card">
-                			<h2>Contact Info</h2>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
-                            <div class="col-9"><span>{{candidate.candidateDetails.firstName}}&nbsp; {{candidate.candidateDetails.lastName}}</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
-                            <div class="col-9"><span>{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
-                            <div class="col-9"><span>{{candidate.candidateDetails.login.email}}</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
-                            <div class="col-9"><span>{{candidate.addresses[0]?candidate.addresses[0].city:'Not available'}}</span></div>
-                        </div>
-                		</div>
-                		<ng-template #notShortListed class="contact-info portfolio-info-card">
-                			<h2 ngbTooltip="ShortList to view details" placement="right">Contact Info</h2>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
-                            <div class="col-9"><span> xxxxxxxxxxx</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
-                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
-                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
-                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
-                        </div>
-                		</ng-template>
-                </div>
+                <ng-container *ngIf="!rerender">
+	                <div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="col-md-6">
+	                		<div *ngIf="canCorporateViewDetails " >
+	                			<div class="contact-info portfolio-info-card">
+		                			<h2>Contact Info</h2>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
+		                            <div class="col-9"><span>{{candidate.candidateDetails.firstName}}&nbsp; {{candidate.candidateDetails.lastName}}</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
+		                            <div class="col-9"><span>{{candidate.candidateDetails.phoneCode}}-{{candidate.candidateDetails.phoneNumber}}</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
+		                            <div class="col-9"><span>{{candidate.candidateDetails.login.email}}</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
+		                            <div class="col-9"><span>{{candidate.addresses[0]?candidate.addresses[0].city:'Not available'}}</span></div>
+		                        </div>
+		                      </div>
+	                		</div>
+	                		<div *ngIf="!canCorporateViewDetails ">
+	                			<div class="contact-info portfolio-info-card">
+		                			<h2 ngbTooltip="ShortList to view details" placement="right">Contact Info</h2>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-user icon"></i></div>
+		                            <div class="col-9"><span> xxxxxxxxxxx</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-phone icon"></i></div>
+		                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-at icon"></i></div>
+		                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+		                        </div>
+		                        <div class="row">
+		                            <div class="col-1"><i class="icon fa fa-map-marker icon"></i></div>
+		                            <div class="col-9"><span>xxxxxxxxxxx</span></div>
+		                        </div>
+		                      </div>
+		                	</div>
+	                </div>
+	              </ng-container>
             </div>
         </div>
 		<div *ngIf="candidate.certifications?.length>0 && candidate.certifications[0].id" class="hobbies group">

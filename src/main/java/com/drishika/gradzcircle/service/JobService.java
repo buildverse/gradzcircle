@@ -1028,7 +1028,7 @@ public class JobService {
 	public Page<CandidateProfileListDTO> getShortListedCandidatesForJob(Pageable pageable,Long jobId) {
 		Page<CorporateCandidate> candidateCorporatePage = corporateRepository.findLinkedCandidatesByJob(jobId, pageable);
 		final Page<CandidateProfileListDTO> page = candidateCorporatePage.map(corporateCandidate -> converter
-				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate));
+				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate,jobId));
 		return page;
 	}
 

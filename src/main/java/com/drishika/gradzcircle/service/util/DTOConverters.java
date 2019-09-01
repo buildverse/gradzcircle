@@ -92,6 +92,7 @@ public class DTOConverters {
 		dto.setId(candidate.getId());
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
+		dto.setAboutMe(candidate.getAboutMe());
 		if (candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst()
 				.isPresent()) {
 			highestCandidateEducation = candidate.getEducations().stream()
@@ -112,6 +113,7 @@ public class DTOConverters {
 		setCoreCandidateFields(candidate, dto);
 		dto.setReviewed(candidateJob.getReviewed());
 		dto.setMatchScore(candidateJob.getMatchScore());
+		
 		if (linkedCorporateCandidate != null)
 			dto.setShortListed(true);
 		else
@@ -126,9 +128,13 @@ public class DTOConverters {
 	}
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(Candidate candidate,
-			CorporateCandidate corporateCandidate) {
+			CorporateCandidate corporateCandidate,Long jobId) {
 		CandidateProfileListDTO dto = new CandidateProfileListDTO();
 		setCoreCandidateFields(candidate, dto);
+		CandidateJob candidateJob =  candidate.getCandidateJobs().stream().filter(cJob->cJob.getJob().getId().equals(jobId)).findAny().orElse(null);
+		if(candidateJob!=null) {
+			dto.setMatchScore(candidateJob.getMatchScore());
+		}
 		return dto;
 	}
 

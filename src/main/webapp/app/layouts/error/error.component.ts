@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'jhi-error',
-    templateUrl: './error.component.html'
+    templateUrl: './error.component.html',
+    styleUrls: ['error.css']
 })
 export class ErrorComponent implements OnInit {
     errorMessage: string;

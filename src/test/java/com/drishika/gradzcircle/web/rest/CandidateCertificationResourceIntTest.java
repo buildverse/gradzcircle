@@ -17,6 +17,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -557,6 +558,7 @@ public class CandidateCertificationResourceIntTest {
 	
 	@Test
 	@Transactional
+	@Ignore
 	public void getCandidateCertificationByCandidateWithProfileScoreEmptyCertificationList() throws Exception {
 		// Initialize the database
 		Candidate candidate = new Candidate().profileScore(25d);

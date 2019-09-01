@@ -33,6 +33,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   eventSubscriber: Subscription;
   imageSubscriber: Subscription;
   businessPlanEnabled?: boolean;
+  canCorporateViewDetails?: boolean;
   
   constructor(
     private candidateService: CandidateService,
@@ -45,19 +46,22 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   ) {
     this.ratingConfig.max = 5;
     this.ratingConfig.readonly = true;
+    this.canCorporateViewDetails = false;
   }
 
   ngOnInit() {
       this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) === 'true' ? true : false;
     this.reloadUserImage();
+    this.alertService.clear();
     if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE ) {
+      this.canCorporateViewDetails = this.candidate.isShortListed;
       if (this.candidate.reviewed && !this.candidate.isShortListed) {
         this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
       }
       if (!this.candidate.isShortListed) {
         this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
       }
-      if (!this.candidate.canBeShortListed && this.businessPlanEnabled) {
+      if (!this.candidate.canBeShortListed && this.businessPlanEnabled && !this.candidate.isShortListed) {
         this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
       } else if (!this.candidate.canBeShortListed && !this.businessPlanEnabled) {
         this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert'}, []);
@@ -127,7 +131,9 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     this.eventManager.broadcast({name: 'shortListedCandidateListModification', content: 'OK'});
     this.eventManager.broadcast({name: 'jobListModification', content: 'OK'});
     this.isSaving = false;
-    this.activeModal.dismiss(result);
+    this.canCorporateViewDetails = !this.canCorporateViewDetails;
+   // this.activeModal.dismiss(result);
+    this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.job.candidateLinkedAlert', timeout: 5000 }, []);
   }
 
   private onSaveError() {
@@ -148,6 +154,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   clear() {
     this.dataService.removeData(FROM_LINKED_CANDIDATE);
     this.activeModal.dismiss('cancel');
+    this.alertService.clear();
   }
 }
 

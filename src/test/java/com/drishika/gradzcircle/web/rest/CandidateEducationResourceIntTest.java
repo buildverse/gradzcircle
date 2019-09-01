@@ -564,7 +564,7 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void createCandidateAEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(uniIIM);

@@ -1,266 +1,252 @@
-
-
-
-<div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="mt-6">
-	<div class="col db-right">
-	    <div class="db-content">
-	       <div class="row m-0 px-4">
-	          <div class="col-md-12 col-lg-12 tabs-panel">
-	          	<div *ngIf="businessPlanEnabled &&  job.corporateEscrowAmount && job.corporateEscrowAmount>0" class="row d-flex justify-content-end mr-2">
-	          		<p class="text-info"> You have <b>&#8377; {{job.corporateEscrowAmount}}</b> in your Escrow account.
-	          	</div>
-
-	          	<div class="row d-flex justify-content-end mr-2">
-	         	 	 <button type="button" class="btn btn-sm btn-pill btn-success" (click)="setJobRouterParam()"
-						[routerLink]="['/', { outlets: { popup: 'new-job' } }]">Post New
-						Job
-					 </button>
-		  		 </div>
-	             <div class="row mt-4">
-	                <div class="col-md-12 col-lg-6 col-xl-6  tabs">
-	                   <div class="row tab-content">
-	                      <div class="col-lg-12 col-xl-4  total-job-img text-center pad-0">
-	                         <!--  <span class="tab-1"><img src="../../../content/images/total-jobs.png"></span>-->
-	                      </div>
-	                      <div class="col-lg-12 col-xl-8  total-job-heading text-center  pad-0">
-	                         <p>{{job.totalNumberOfJobs}}<span jhiTranslate="gradzcircleApp.job.totalJobs"></span></p>
-	                      </div>
-	                      <div class="row tab-content2">
-	                         <div class="col-lg-12 total-job-content pad-0">
-	                            <span jhiTranslate="gradzcircleApp.job.postedSince">&nbsp;&nbsp;&nbsp; Posted since {{this.corporate.establishedSince | date:'mediumDate'}}</span>
-	                         </div>
-	                      </div>
-	                   </div>
-	                </div>
-	                <div class="col-md-12 col-lg-6 col-xl-6 tabs">
-	                   <div class="row tab-content">
-	                      <div class="col-lg-12 col-xl-4  total-job-img text-center pad-0">
-	                         <!--  <span class="tab-2"><img src="../../../content/images/posted-jobs.png"></span>-->
-	                      </div>
-	                      <div class="col-lg-12 col-xl-8  total-job-heading text-center  pad-0">
-	                         <p>{{job.jobsLastMonth}}<span jhiTranslate="gradzcircleApp.job.newJobs"></span></p>
-	                      </div>
-	                      <div class="row tab-content2">
-	                         <div class="col-lg-12 total-job-content  pad-0">
-	                            <span jhiTranslate="gradzcircleApp.job.postedInLastTwoMonths">&nbsp;&nbsp;&nbsp; Posted in last two weeks</span>
-	                         </div>
-	                      </div>
-	                   </div>
-	                </div>
-	                <div class="col-md-12 col-lg-6 col-xl-6  tabs">
-	                   <div class="row tab-content">
-	                      <div class="col-lg-12 col-xl-4  total-job-img text-center pad-0">
-	                         <!-- <span class="tab-3"><img src="../../../content/images/applicants.png"></span>-->
-	                      </div>
-	                      <div class="col-lg-12 col-xl-8  total-job-heading text-center  pad-0">
-	                         <p>{{job.newApplicants}}<span jhiTranslate="gradzcircleApp.job.newRequests">&nbsp; New Requests</span></p>
-	                      </div>
-	                      <div class="row tab-content2">
-	                         <div class="col-lg-12 total-job-content pad-0">
-	                            <span jhiTranslate="gradzcircleApp.job.candidatesApplied">&nbsp;&nbsp;&nbsp; Candidates applied to recent jobs</span>
-	                         </div>
-	                      </div>
-	                   </div>
-	                </div>
-	                <div class="col-md-12 col-lg-6 col-xl-6 tabs">
-	                   <div class="row tab-content">
-	                      <div class="col-lg-12 col-xl-4  total-job-img text-center pad-0">
-	                         <!--  <span class="tab-4"><img src="../../../content/images/saved-profiles.png"></span>-->
-	                      </div>
-	                      <div class="col-lg-12 col-xl-8  total-job-heading text-center  pad-0">
-	                         <p>{{job.totalLinkedCandidates}}<span jhiTranslate="gradzcircleApp.job.savedProfiles">Saved Profiles</span></p>
-	                      </div>
-	                      <div class="row tab-content2">
-	                         <div class="col-lg-12 total-job-content pad-0">
-	                            <span jhiTranslate="gradzcircleApp.job.candidateLinked">&nbsp;&nbsp;&nbsp;Profiles saved for future retention</span>
-	                         </div>
-	                      </div>
-	                   </div>
-	                </div>
-	             </div>
-	          </div>
-	        
-	       </div>
-	       <div class="row m-0 px-4 pt-5 administer-prescription" *ngIf="jobs?.length>0; else noJobs">
-	          <div class="col p-0">
-	             <div class="table-responsive">
-	                <table class="table table-striped table-light text-center table-hover">
-		                  <thead class="table-header-bg text-white ">
-							<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
-								[callback]="transition.bind(this)">
-		
-								<th class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span><span
-									class="icon icon-select-arrows"></span></th>
-								<th jhiSortBy="jobType" class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.jobType">Job Type</span><span
-									class="icon icon-select-arrows"></span></th>
-								<th jhiSortBy="employmentType" class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.employmentType">Employment
-										Type</span><span class="icon icon-select-arrows"></span></th>
-								<th jhiSortBy="jobStatus" class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span><span
-									class="icon icon-select-arrows"></span></th>
-								<th 
-									class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.noOfMatchedApplicants">Applicants</span><span
-									></span></th>
-								<th 
-									class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.noOfCandidatesApplied">Applicants</span><span
-									></span></th>
-								<th 
-									class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.shortlistedCandidate">Applicants</span><span
-									></span></th>
-									<th 
-									class="justfiy-content-center font-weight-light"><span
-									jhiTranslate="gradzcircleApp.job.noOfApplicantsRemaining">Applicants</span><span
-									></span></th>
-								<th class="justfiy-content-center font-weight-light">Actions</th>
-		
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="let job of jobs ;trackBy: trackId">
-								<td class="font-weight-light">{{job.jobTitle}}</td>
-								<td class="font-weight-light">
-									<div *ngIf="job.jobType">{{job.jobType?.jobType}}</div>
-								</td>
-								<td class="font-weight-light">
-									<div *ngIf="job.employmentType">
-										{{job.employmentType?.employmentType}}</div>
-								</td>
-								<td *ngIf="job?.jobStatus===1;else draft" class="font-weight-light">Active</td>
-								<ng-template #draft>
-								<td class="font-weight-light">Draft</td>
-								</ng-template>
-								<td *ngIf="job.noOfMatchedCandidates>0; else noMatchedCandidates" class="font-weight-light"><a
-									[routerLink]="['../matchedCandidateList']" (click)="setJobAndCorporateRouteParam(job.id,corporateId)">
-										{{job.noOfMatchedCandidates}}</a></td>
-								<ng-template #noMatchedCandidates>
-									<td class="font-weight-light" ><a class="disabled">
-										{{job.noOfMatchedCandidates}}</a></td>
-								</ng-template>
-								<td *ngIf="job.noOfCandidatesApplied>0; else noCandidateApplied" class="font-weight-light"><a 
-								(click)="setParamsToGetListForAppliedCandidate(job.id)" [routerLink]="['../appliedCandidateList']">{{job.noOfCandidatesApplied}}</a></td>
-								<ng-template #noCandidateApplied>
-									<td class="font-weight-light"><a class="disabled">{{job.noOfCandidatesApplied}}</a></td>
-								</ng-template>
-								<td *ngIf="job.noOfShortListedCandidate>0;else noShortListedCandidates" class="font-weight-light"><a (click)="setParamsToGetListForShortlistedCandidate(job.id,corporateId)"
-									[routerLink]="['../shortListedCandidateList']">
-										{{job.noOfShortListedCandidate}}</a></td>
-								<ng-template #noShortListedCandidates>
-									<td class="font-weight-light"><a class="disabled">
-										{{job.noOfShortListedCandidate}}</a></td>
-								</ng-template>
-								<td *ngIf="job.numberOfCandidatesRemaining && numberOfCandidatesRemaining>=0; else showTotalNoOfCandidates" class="font-weight-light">
-									{{job.numberOfCandidatesRemaining}}
-								</td>
-								<ng-template #showTotalNoOfCandidates>
-									<td class="font-weight-light">
-										{{job.noOfApplicants}}
-									</td>
-								</ng-template>
-								<td class="icons-edit">
-			                         <a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)" ngbTooltip="View"><span class="icon icon-eye"></span></a>
-			                         <a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]" replaceUrl="true" ngbTooltip="Edit"> <span class="icon icon-edit"></span> 
-									</a> 
-									<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]" replaceUrl="true" ngbTooltip="Edit"> <span class="icon icon-edit"></span> 
-									</a>
-									<a *ngIf="job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)" replaceUrl="true" ngbTooltip="More Candidates"><span class="icon icon-add-user"></span>
-									</a>
-			                         <a  [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)" replaceUrl="true"> <span class="icon icon-trash" ngbTooltip="Remove"></span> 
-									</a>
-									
-									
-			                      </td>
-						</tbody>
-					</table>
-				 </div>
-			</div>
-		</div>
-		<div class="row justify-content-center font-weight-light">
-				<jhi-item-count [page]="page" [total]="queryCount"
-					[itemsPerPage]="itemsPerPage"></jhi-item-count>
-			</div>
-			<div class="row justify-content-center font-weight-light">
-				<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
-					(pageChange)="loadPage(page)"></ngb-pagination>
-		</div>
-		<ng-template #noJobs>
-			<div class="mt-5 justify-content-center font-weight-light"><jhi-alert></jhi-alert></div>
-		</ng-template>
-	  </div>
+<div *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="mt-8 mb-5">
+	<div
+		*ngIf="businessPlanEnabled &&  job.corporateEscrowAmount && job.corporateEscrowAmount>0" 
+		class="row d-flex justify-content-end mr-2">
+		<p class="organization">
+			You have <b>&#8377; {{job.corporateEscrowAmount}}</b> in your Escrow
+			account.
 	</div>
-</div>
-<div *jhiHasAnyAuthority="['ROLE_CANDIDATE']" class="mt-6">
- 
-	<div class="col db-right">
-	    <div class="db-content">
-	    		<div *ngIf="jobs">
-		    		 <div class="row m-0 px-4 pt-5 administer-prescription" *ngIf="jobs?.length>0; else noJobs">
-			          <div class="col p-0">
-			             <div class="table-responsive ">
-					              <table class="table table-striped table-light text-center table-hover">
-						                  <thead class="table-header-bg text-white">
-											<tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse"
-												[callback]="transition.bind(this)">
-				
-											<th jhiSortBy="jobTitle" class="justfiy-content-center font-weight-light"><span
-												jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span><span
-												class="icon icon-select-arrows"></span></th>
-											<th jhiSortBy="jobType" class="justfiy-content-center font-weight-light"><span
-												jhiTranslate="gradzcircleApp.job.jobType">Job Type</span><span
-												class="icon icon-select-arrows"></span></th>
-											<th jhiSortBy="employmentType" class="justfiy-content-center font-weight-light"><span
-												jhiTranslate="gradzcircleApp.job.employmentType">Employment
-													Type</span><span class="icon icon-select-arrows"></span></th>
-											<th jhiSortBy="matchScore" class="justfiy-content-center font-weight-light"><span
-												jhiTranslate="gradzcircleApp.job.matchScore">matchScore</span><span
-												class="icon icon-select-arrows"></span></th>
-											<th class="justfiy-content-center font-weight-light">Actions</th>
-										</tr>
-								</thead>
-								<tbody class="font-weight-light">
-									<tr *ngFor="let job of jobs ;trackBy: trackId">
-										<td>{{job.jobTitle}}</td>
-										<td>
-											<div *ngIf="job.jobType">{{job.jobType?.jobType}}</div>
-										</td>
-										<td>
-											<div *ngIf="job.employmentType">
-												{{job.employmentType?.employmentType}}</div>
-										</td>
-										<td>
-											<div>{{job.matchScore}}%</div>
-										</td>
-										<td class="icons-apply">
-				                               <a (click)="setJobViewParamForCandidate(job.id, job.matchScore)" [routerLink]="['/', { outlets: { popup: 'job/view'} }]" class="icon icon-eye" style="color:#1976D2;" placement="right" ngbTooltip="View Job"></a>
-				                                <a href="#" class="icon icon-paper-plane" style="color:#1976D2;" placement="right" ngbTooltip="Apply for Job"></a>
-				                         </td>
-									</tr>
-								</tbody>
-							</table>
+	<div class="d-sm-flex justify-content-between align-items-center mb-4">
+		<h3 class="text-dark mb-0">Dashboard</h3>
+		<a class="btn btn-primary btn-sm d-none d-sm-inline-block"
+			role="button" (click)="setJobRouterParam()"
+						[routerLink]="['/', { outlets: { popup: 'new-job' } }]"> Post Job</a>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-xl-3 mb-4">
+			<div class="card shadow border-left-primary py-2">
+				<div class="card-body">
+					<div class="row align-items-center no-gutters">
+						<div class="col mr-2">
+							<div
+								class="text-uppercase text-primary font-weight-bold text-xs mb-1">
+								<span jhiTranslate="gradzcircleApp.job.totalJobs"></span>
 							</div>
-							<div *ngIf="jobs && jobs.length">
-								<div class="row justify-content-center font-weight-light">
-									<jhi-item-count [page]="page" [total]="queryCount"
-										[itemsPerPage]="itemsPerPage"></jhi-item-count>
-								</div>
-								<div class="row justify-content-center">
-									<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
-										(pageChange)="loadPage(page)"></ngb-pagination>
-								</div>
+							<div class="text-dark font-weight-bold h5 mb-0 ml-2">
+								<span>{{job.totalNumberOfJobs}}</span>
 							</div>
-						
+						</div>
+						<div class="col-auto">
+							<i class="fa fa-briefcase fa-2x text-gray-300"></i>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-xl-3 mb-4">
+			<div class="card shadow border-left-success py-2">
+				<div class="card-body">
+					<div class="row align-items-center no-gutters">
+						<div class="col mr-2">
+							<div
+								class="text-uppercase text-success font-weight-bold text-xs mb-1">
+								<span jhiTranslate="gradzcircleApp.job.savedProfiles"></span>
+							</div>
+							<div class="text-dark font-weight-bold h5 mb-0">
+								<span>{{job.totalLinkedCandidates}}</span>
+							</div>
+						</div>
+						<div class="col-auto">
+							<i class=" fa fa-link fa-2x text-gray-300"></i>
+						</div>
 					</div>
 				</div>
-				
-				<ng-template #noJobs> No Jobs to show at the moment</ng-template>
 			</div>
-	    </div>
-	 </div>
+		</div>
+		<div class="col-md-6 col-xl-3 mb-4">
+			<div class="card shadow border-left-info py-2">
+				<div class="card-body">
+					<div class="row align-items-center no-gutters">
+						<div class="col mr-2">
+							<div
+								class="text-uppercase text-info font-weight-bold text-xs mb-1">
+								<span jhiTranslate="gradzcircleApp.job.newRequests"></span>
+							</div>
+							<div class="text-dark font-weight-bold h5 mb-0 mr-3">
+								<span>{{job.newApplicants}}</span>
+							</div>
+
+						</div>
+						<div class="col-auto">
+							<i class="fa fa-id-card  fa-2x text-gray-300"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-xl-3 mb-4">
+			<div class="card shadow border-left-warning py-2">
+				<div class="card-body">
+					<div class="row align-items-center no-gutters">
+						<div class="col mr-2">
+							<div
+								class="text-uppercase text-warning font-weight-bold text-xs mb-1">
+								<span jhiTranslate="gradzcircleApp.job.postedInLastTwoMonths"></span>
+							</div>
+							<div class="text-dark font-weight-bold h5 mb-0">
+								<span>{{job.jobsLastMonth}}</span>
+							</div>
+						</div>
+						<div class="col-auto">
+							<i class=" fa fa-calendar  fa-2x text-gray-300"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="wrapper">
+		<div class="d-flex flex-column" id="content-wrapper">
+			<div id="content">
+
+				<div class="container-fluid mt-1" style="padding-left:0px; padding-right:0px;">					
+					<div class="card shadow">
+						<div class="card-header py-3">
+							<p class="text-primary m-0 font-weight-bold">Information</p>
+						</div>
+						<div class="card-body">
+
+							<div class="table-responsive table mt-2" id="dataTable"
+								role="grid" aria-describedby="dataTable_info">
+								<table class="table dataTable my-0" id="dataTable">
+									<thead>
+										<tr>
+											<th class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span></th>
+											<th  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></th>
+											<th class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></th>
+											<th class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span></th>
+											<th class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfMatchedApplicants">Applicants</span></th>
+											<th class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfCandidatesApplied">Applicants</span></th>
+											<th  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.shortlistedCandidate">Applicants</span></th>
+											<th  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfApplicantsRemaining">Applicants</span></th>
+											<th class="text-center font-weight-bold">Actions</th>
+
+										</tr>
+									</thead>
+									<tbody *ngIf="jobs?.length>0 else noPostedJobs">
+										<tr *ngFor="let job of jobs ;trackBy: trackId">
+											<td class="font-weight-light text-center">{{job.jobTitle}}</td>
+											<td class="font-weight-light text-center">
+												<div *ngIf="job.jobType">{{job.jobType?.jobType}}</div>
+											</td>
+											<td class="font-weight-light text-center">
+												<div *ngIf="job.employmentType">
+													{{job.employmentType?.employmentType}}</div>
+											</td>
+											<td *ngIf="job?.jobStatus===1;else draft"
+												class="font-weight-light text-center">Active</td>
+											<ng-template #draft>
+											<td class="font-weight-light text-center">Draft</td>
+											</ng-template>
+											<td
+												*ngIf="job.noOfMatchedCandidates>0; else noMatchedCandidates"
+												class="font-weight-light text-center"><a
+												[routerLink]="['../matchedCandidateList']"
+												(click)="setJobAndCorporateRouteParam(job.id,corporateId)">
+													{{job.noOfMatchedCandidates}}</a></td>
+											<ng-template #noMatchedCandidates>
+											<td class="font-weight-light text-center"><a class="disabled">
+													{{job.noOfMatchedCandidates}}</a></td>
+											</ng-template>
+											<td
+												*ngIf="job.noOfCandidatesApplied>0; else noCandidateApplied"
+												class="font-weight-light text-center"><a
+												(click)="setParamsToGetListForAppliedCandidate(job.id)"
+												[routerLink]="['../appliedCandidateList']">{{job.noOfCandidatesApplied}}</a></td>
+											<ng-template #noCandidateApplied>
+											<td class="font-weight-light text-center"><a class="disabled">{{job.noOfCandidatesApplied}}</a></td>
+											</ng-template>
+											<td
+												*ngIf="job.noOfShortListedCandidate>0;else noShortListedCandidates"
+												class="font-weight-light text-center"><a
+												(click)="setParamsToGetListForShortlistedCandidate(job.id,corporateId)"
+												[routerLink]="['../shortListedCandidateList']">
+													{{job.noOfShortListedCandidate}}</a></td>
+											<ng-template #noShortListedCandidates>
+											<td class="font-weight-light text-center"><a class="disabled">
+													{{job.noOfShortListedCandidate}}</a></td>
+											</ng-template>
+											<td
+												*ngIf="job.numberOfCandidatesRemaining && numberOfCandidatesRemaining>=0; else showTotalNoOfCandidates"
+												class="font-weight-light text-center">
+												{{job.numberOfCandidatesRemaining}}</td>
+											<ng-template #showTotalNoOfCandidates>
+											<td class="font-weight-light text-center">{{job.noOfApplicants}}</td>
+											</ng-template>
+											<td class="font-weight-light text-center">
+												<a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
+													ngbTooltip="View More"><i class="fa fa-eye text-gray-500"></i></a> 
+												<a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]"
+													replaceUrl="true" ngbTooltip="Edit"> <i class="fa fa-pencil-square-o text-gray-500"></i>
+												</a> 
+												<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]"
+													replaceUrl="true" ngbTooltip="Edit"> <i class="fa fa-pencil-square-o text-gray-500"></i>
+												</a>
+												<a *ngIf="job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)"
+													replaceUrl="true" ngbTooltip="More Candidates">
+													<i class="fa fa-user-plus text-gray-500"></i> 
+												</a> 
+												<a [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
+													replaceUrl="true"ngbTooltip="Remove"> <i class="fa fa-trash text-gray-500" ></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								   	<ng-template #noPostedJobs>
+		                        		<tbody>
+		                        			<tr><td colspan="6" class="text-center font-weight-bold">No Data Available</td></tr>
+		                        		</tbody>
+                     				  </ng-template>
+									<tfoot>
+										<tr>
+											<td class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobTitle">Job Title</span></td>
+											<td  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></td>
+											<td class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></td>
+											<td class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.jobStatus">Job Status</span></td>
+											<td class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfMatchedApplicants">Applicants</span></td>
+											<td class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfCandidatesApplied">Applicants</span></td>
+											<td  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.shortlistedCandidate">Applicants</span></td>
+											<td  class="text-center font-weight-bold"><span
+												jhiTranslate="gradzcircleApp.job.noOfApplicantsRemaining">Applicants</span></td>
+											<td class="text-center font-weight-bold">Actions</td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+							   <div *ngIf="jobs && jobs.length">
+			               		<div class="row">
+									<div class="col d-flex justify-content-start  font-weight-light text-muted">
+										<jhi-item-count [page]="page" [total]="queryCount"
+											[itemsPerPage]="itemsPerPage"></jhi-item-count>
+									</div>
+									<div class="col font-weight-light d-flex justify-content-end ">
+										<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+											(pageChange)="loadPage(page)"></ngb-pagination>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
@@ -474,8 +460,8 @@
 				[itemsPerPage]="itemsPerPage"></jhi-item-count>
 		</div>
 		<div class="row justify-content-center">
-			<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage"
-				(pageChange)="loadPage(page)"></ngb-pagination>
+			<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+				[pageSize]="itemsPerPage" (pageChange)="loadPage(page)"></ngb-pagination>
 		</div>
 	</div>
 </div>

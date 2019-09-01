@@ -27,6 +27,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private Double matchScore;
 	private  Boolean shortListed; 
 	private Boolean canBuy;
+	private String aboutMe;
 	
 
 	/**
@@ -206,6 +207,22 @@ public class CandidateProfileListDTO implements Serializable {
 	 */
 	public void setCanBuy(Boolean canBuy) {
 		this.canBuy = canBuy;
+	}
+	
+	
+
+	/**
+	 * @return the aboutMe
+	 */
+	public String getAboutMe() {
+		return aboutMe;
+	}
+
+	/**
+	 * @param aboutMe the aboutMe to set
+	 */
+	public void setAboutMe(String aboutMe) {
+		this.aboutMe = aboutMe;
 	}
 
 	/* (non-Javadoc)

@@ -8,7 +8,7 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
-	No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
+	<!--  No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
 	{{job.originalJobCost}} ;Job Cost : {{job.jobCost}} Escrow Amount used
 	: {{job.escrowAmountUsed}} ;Escrow added: {{job.escrowAmountAdded}};
 	Amount Paid : {{job.amountPaid}} Admin charge : {{job.adminCharge}} ;
@@ -18,7 +18,7 @@
 	{{job.upfrontDiscountRate}}; Payment Type : {{job.paymentType}} No Of
 	candidates Bought : {{job.noOfApplicantsBought}}; Corp escrow balance :
 	{{job.corporate.escrowAmount}} filtercost is {{filterCost}}
-    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}
+    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}-->
 	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
 		<div *ngIf="businessPlanEnabled">
 				<div *ngIf="job?.jobCost>0  && !preview && !job.everActive"
@@ -96,7 +96,7 @@
 						</div>
 					</div>
 				</div>
-				jobDiff chnaged{{jobDifferenceChanged}}
+			<!--  	jobDiff chnaged{{jobDifferenceChanged}}-->
 				<div *ngIf="!preview && job.everActive && job.paymentType == 'AS_YOU_GO'"
 					class="d-flex justify-content-end">
 					<div class="growl growl-static">
@@ -1345,7 +1345,8 @@
 		</div>
 	</form>
 </div>
-  <br>
+ <!--   <br>
 Value: {{ editForm.value | json }}
 <br>
 {{(editForm.form.get('employmentType')?.valid)}}---{{ (editForm.form.get('jobType')?.valid)}}
+-->

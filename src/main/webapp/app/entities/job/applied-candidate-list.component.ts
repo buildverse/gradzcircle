@@ -8,13 +8,15 @@ import {DataStorageService} from '../../shared';
 import {HttpResponse} from '@angular/common/http';
 import {CandidateList} from './candidate-list.model';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
+import { UserService } from '../../shared/user/user.service';
 import {JobConstants} from './job.constants';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
   selector: 'jhi-applied-candidate-list',
-  templateUrl: './applied-candidate-list.component.html'
+  templateUrl: './applied-candidate-list.component.html',
+  styleUrls: ['job.css']
 })
 export class AppliedCandidateListComponent implements OnInit, OnDestroy {
   candidateList: CandidateList[];
@@ -45,7 +47,8 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks,
     private router: Router,
     private dataStorageService: DataStorageService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private userService: UserService
 
 
   ) {
@@ -181,5 +184,23 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     this.queryCount = this.totalItems;
     // this.page = pagingParams.page;
     this.candidateList = data;
+    this.setImageUrl();
+  }
+  
+   private setImageUrl() {
+    this.candidateList.forEach((candidate) => {
+      if (candidate.login.imageUrl !== undefined) {
+          this.userService.getImageData(candidate.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true;
+              }
+            }
+          });
+        }
+    });
   }
 }

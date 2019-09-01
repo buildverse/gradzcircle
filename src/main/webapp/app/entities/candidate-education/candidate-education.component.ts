@@ -161,8 +161,12 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventManager.destroy(this.educationEventSubscriber);
+    if(this.educationEventSubscriber) {
+      this.eventManager.destroy(this.educationEventSubscriber);
+    }
+    if(this.projectEventSubscriber) {
     this.eventManager.destroy(this.projectEventSubscriber);
+    }
   }
 
   trackId(index: number, item: CandidateEducation) {

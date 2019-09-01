@@ -1,122 +1,135 @@
-<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
-<div class="profile-header profile-mybackground">
-	<div class="container">
-		<div class="container-inner">
-			<div class="hovereffect">
-				<img class="rounded-circle media-object"
-					[src]="noImage ? defaultImage : imageUrl ">
-				<div class="overlay">
-           			<a class="info" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Update</a>
-				</div>
-				<h3 class="profile-header-user">{{corporate.name}}</h3>
-				<h4 class="profile-header-user">{{corporate.industry?.industryName}}</h4>
-				<p class="profile-header-bio">{{corporate.tagline}}</p>
-			</div>
-		</div>
-	</div>
-</div>
-<div *ngIf="corporate.overview || corporate.benefits || corporate.culture|| corporate.establishedSince || corporate.industry?.industryName; else hasNoDataStored" class="container mt-5">
-	<div class="col-lg-12 text-right">
-			<button type="submit" (click)="setRouterData()"
-				[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
-				replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
-				<span class="icon icon-edit"
-					jhiTranslate="entity.action.edit">Edit</span>
-	
-			</button>
-	</div>
-	<div class="col-lg-12 text-center">
-		<h4 class="shortlist-title">About Us</h4>
-	</div>
+<section *jhiHasAnyAuthority="['ROLE_CORPORATE']" class="clean-block clean-post dark">
+    <div class="container">
+        <div class="block-content pt-5">
+            <!--  <div class="post-image corp-profile-img" >            		
+            </div>-->
+            <div *ngIf="corporate.overview || corporate.establishedSince || corporate.industry?.industryName; else hasNoDataStored" class="post-body ">
+                <h1 class="text-center">{{corporate.name}}</h1>
+                <h5>{{corporate.industry?.industryName}}</h5>
+                <p class="small">{{corporate.tagline}}</p>
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <figure class="figure">
+                        		<img class="rounded img-fluid figure-img" [src]="noImage ? defaultImage : imageUrl "
+                        			 alt="A generic square placeholder image with rounded corners in a figure." />
+                            <div class="text-center">
+                            		<button class="btn btn-primary btn-block" type="button" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Logo</button>
+							</div>
+                        </figure>
+                    </div>
+                   	<div class="col pl-5 pr-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.overview">About you</p>
+                        <p class="font-weight-light" [innerHtml]="corporate.overview"> 
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.benefits"></p>
+                        <p class="font-weight-light" [innerHtml]="corporate.benefits"> </p>
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.culture">About you</p>
+                        <p class="font-weight-light " [innerHtml]="corporate.culture"> 
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5 "  jhiTranslate="gradzcircleApp.corporate.establishedSince">About you</p>
+                        <p class="font-weight-light " >{{corporate.establishedSince | date:'mediumDate'}}</p>
+                    </div>
+                    <div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.email">About you</p>
+                        <p class="font-weight-light ">{{corporate.login.email}}</p>
+                    </div>
+                </div>
+                 <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5 " jhiTranslate="gradzcircleApp.corporate.website">About you</p>
+                        <p class="font-weight-light">{{corporate.website}}</p>
+                    </div>
+                    <div class="col  pl-5">
+                        <p class="font-weight-bold h5 " jhiTranslate="gradzcircleApp.corporate.address">About you</p>
+                        <p class="font-weight-light">{{corporate.city}},&nbsp;{{corporate.country[0]?.countryNiceName}}</p>
+                    </div>
+                </div>
+                <div class="row pb-5 pr-2">
+                		<div class="col-lg-12 text-center">
+						<button type="submit" (click)="setRouterData()"
+								[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
+								replaceUrl="true" class="btn btn-sm btn-primary"
+								jhiTranslate="gradzcircleApp.corporate.home.editDetails">Update Details
+						</button>
+					</div>
+                </div>
+            </div>
+            <ng-template #hasNoDataStored class="post-body">
+            		 <h1 class="text-center font-weight-bold">Company Name</h1>
+                <h5 class="text-center font-weight-light"> Industry Type</h5>
+                <p class="text-center font-weight-light">Your Tag Line</p>
+                <div class="row">
+                    <div class="col-md-3 pl-5  text-center">
+                        <figure class="figure">
+                        		<img class="rounded img-fluid figure-img" [src]="noImage ? defaultImage : imageUrl "
+                        			 alt="A generic square placeholder image with rounded corners in a figure." />
+                            <div class="text-center">
+                            		<button class="btn btn-primary btn-block" type="button" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Logo</button>
+							</div>
+                        </figure>
+                    </div>
+                    <div class="col pl-5 pr-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.overview">About you</p>
+                        <p class="font-weight-light"> Please tell our talent about you !!
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.benefits"></p>
+                        <p class="font-weight-light "> Optional - Please tell our talent - benefits you offer !!</p>
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.culture">About you</p>
+                        <p class="font-weight-light "> Optional - Your culture says a lot about you!! Let our talent know about it...
+                    </div>
+                </div>
+                <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5 "  jhiTranslate="gradzcircleApp.corporate.establishedSince">About you</p>
+                        <p class="font-weight-light " >You have been around  for how long ?</p>
+                    </div>
+                    <div class="col  pl-5">
+                        <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.email">About you</p>
+                        <p class="font-weight-light ">{{corporate.login.email}}</p>
+                    </div>
+                </div>
+                 <div class="row">
+                		<div class="col  pl-5">
+                        <p class="font-weight-bold h5 " jhiTranslate="gradzcircleApp.corporate.website">About you</p>
+                        <p class="font-weight-light">Your Website !!</p>
+                    </div>
+                    <div class="col  pl-5">
+                        <p class="font-weight-bold h5 " jhiTranslate="gradzcircleApp.corporate.address">About you</p>
+                        <p class="font-weight-light">Where are you located !!</p>
+                    </div>
+                </div>
+                <div class="row pb-5 pr-2">
+                		<div class="col-lg-12 text-center">
+						<button type="submit" (click)="setRouterData()"
+								[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
+								replaceUrl="true" class="btn btn-sm btn-primary"
+								jhiTranslate="gradzcircleApp.corporate.home.addDetails">Update Details
+						</button>
+					</div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</section>
 
-	<div class="col-lg-12 text-left">
-		<h5 class="shortlist-title">
-			<b><span jhiTranslate="gradzcircleApp.corporate.overview"></span></b>
-		</h5>
-		<p [innerHtml]="corporate.overview"></p>
-	</div>
-	<div class="col-lg-12 text-left">
-		<h5 class="shortlist-title">
-			<b><span jhiTranslate="gradzcircleApp.corporate.benefits"></span></b>
-		</h5>
-		<p [innerHtml]="corporate.benefits"></p>
-	</div>
-	<div class="col-lg-12 text-left">
-		<h5 class="shortlist-title">
-			<b><span jhiTranslate="gradzcircleApp.corporate.culture"></span></b>
-		</h5>
-		<p [innerHtml]="corporate.culture"></p>
-	</div>
-   <!--   <div class="col-lg-12 text-left mt-5 py-2">
-		<h4 class="shortlist-title">
-			<span
-				jhiTranslate="gradzcircleApp.corporate.corporateDetails"></span>
-		</h4>
-	</div>-->
-	<div class="col-lg-12 text-left">
-		<h5 class="shortlist-title">
-			<b><span
-				jhiTranslate="gradzcircleApp.corporate.establishedSince"></span></b>
-		</h5>
-		<p>{{corporate.establishedSince | date:'mediumDate'}}</p>
-		
-	</div>
-	<div class="col-lg-12 text-left">
-		<h5 class="shortlist-title">
-			<b><span
-				jhiTranslate="gradzcircleApp.corporate.companyType"></span></b>
-		</h5>
-		<p>{{corporate.industry?.industryName}}</p>
-		
-	</div>
-	<!--  <div class="col-lg-12 text-left">
-                                       <h5 class="shortlist-title"><b>Company size</b></h5>
-                                       <p>500-600 Employees</p><br>
-                                    </div>
-                                   <div class="col-lg-12 text-left">
-                                       <h5 class="shortlist-title"><b>Specialties</b></h5>
-                                       <p>Hiring Strategies, Recruitment, Sales Professionals, and Technology</p><br>
-                                    </div>-->
 
-	<div class="clearfix"></div>
-	<div class="row col-lg-12 mt-5">
-		<div class="col-md-4 col-lg-4 text-center pt-4">
-			<div class="icon-decorate">
-				<span class="icon icon-mail"></span>
-			</div>
-			<p class="icon-detail pt-4">{{corporate.login.email}}</p>
-		</div>
-		<div class="col-md-4 col-lg-4 text-center pt-4">
-			<div class="icon-decorate">
-				<span class="icon icon-location-pin"></span>
-			</div>
-			<div *ngIf="corporate.city && corporate.country">
-				<p class="icon-detail pt-4">{{corporate.city}},
-					{{corporate.country[0]?.countryNiceName}}</p>
-			</div>
-		</div>
-		<div class="col-md-4 col-lg-4 text-center pt-4">
-			<div class="icon-decorate">
-				<span class="icon icon-globe"></span>
-			</div>
-			<p class="icon-detail pt-4">{{corporate.website}}</p>
-		</div>
-	</div>
-</div>
-<ng-template #hasNoDataStored>
-		<div class="container mt-5">
-			<div class="col-lg-12 text-right">
-				<button type="submit" (click)="setRouterData()"
-					[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
-					replaceUrl="true" class="btn btn-sm btn-pill btn-primary">
-					<span class="icon icon-edit"
-						jhiTranslate="gradzcircleApp.corporate.home.addDetails">Add Details</span>
-		
-				</button>
-			</div>
-		</div>
-</ng-template>
-</div>
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="mt-5">
 	<h2>

@@ -9,6 +9,7 @@ import {CorporateService} from './corporate.service';
 import {Principal, UserService} from '../../shared';
 import {USER_ID, USER_DATA,USER_TYPE, CORPORATE_ID} from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { Router } from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
@@ -30,7 +31,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
   currentCorporate: string;
   imageUrl: any;
   noImage: boolean;
-  defaultImage = require('../../../content/images/no-image.png');
+  defaultImage = require('../../../content/images/placeholder.png');
 
 
 
@@ -42,7 +43,8 @@ export class CorporateComponent implements OnInit, OnDestroy {
     private principal: Principal,
     private userService: UserService,
      private localStorageService: DataStorageService,
-     private spinnerService: NgxSpinnerService
+     private spinnerService: NgxSpinnerService,
+     private router: Router
   ) {
     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
       this.activatedRoute.snapshot.params['search'] : '';
@@ -162,6 +164,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
 
   private onError(error) {
     this.jhiAlertService.error(error.message, null, null);
+    this.router.navigate(['/error']);
   }
 
   reloadCorporateImage() {

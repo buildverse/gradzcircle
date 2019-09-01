@@ -13,7 +13,8 @@
                 "createLabel": "Create a new Corporate",
                 "createOrEditLabel": "Create or edit a Corporate",
                 "search": "Search for Corporate",
-                "addDetails": "Add Details"
+                "addDetails": "Add Details",
+                "editDetails": "Edit"
             },
             "created": "A new Corporate is created with identifier {{ param }}",
             "updated": "A Corporate is updated with identifier {{ param }}",

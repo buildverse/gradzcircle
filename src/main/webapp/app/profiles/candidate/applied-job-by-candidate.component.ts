@@ -13,7 +13,7 @@ import {HttpResponse} from '@angular/common/http';
 @Component({
   selector: 'jhi-applied-job-list',
   templateUrl: './applied-job-by-candidate.component.html',
-  styleUrls:['candidate.css']
+  styleUrls: ['candidate.css']
 })
 export class AppliedJobsComponent implements OnInit, OnDestroy {
   jobs: Job[] = null;

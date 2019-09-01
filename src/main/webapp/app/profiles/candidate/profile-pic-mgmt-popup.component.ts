@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DataStorageService} from '../../shared';
 import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
-import {CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, USER_ID, USER_TYPE} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileUploader, FileLikeObject} from 'ng2-file-upload';
@@ -31,6 +31,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
   allowedMimeType = ['image/png', 'image/jpg', 'image/jpeg'];
   candidateId: number;
   imageDataAvailable: boolean;
+  corporateUser: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -39,7 +40,9 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     private eventManager: JhiEventManager,
     private principal: Principal,
     private userService: UserService,
+    private dataService: DataStorageService
   ) {
+    this.corporateUser = false;
   }
 
   ngOnInit() {
@@ -47,7 +50,9 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     if (this.principal.getImageUrl()) {
       this.imageDataAvailable = true;
     }
-
+    if(this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
+      this.corporateUser = true;
+    }
     const token = this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
     this.uploader = new FileUploader({
       url: SERVER_API_URL + 'api/upload/' + this.candidateId,

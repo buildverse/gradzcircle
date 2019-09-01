@@ -1,17 +1,17 @@
-<div class="my-5 py-5">
-    <div class="row">
-        <div class="col-md-4">
-            <span class="hipster img-fluid rounded"></span>
-        </div>
-        <div class="col-md-8">
-            <h1 jhiTranslate="error.title">Error Page!</h1>
-
-            <div [hidden]="!errorMessage">
-                <div class="alert alert-danger">{{errorMessage}}
-                </div>
-            </div>
-            <div [hidden]="!error403" class="alert alert-danger" jhiTranslate="error.http.403">You are not authorized to access this page.
-            </div>
-        </div>
-    </div>
+<div id="wrapper">
+	<div class="d-flex flex-column" id="content-wrapper">
+		<div id="content">
+			<div class="container-fluid">
+				<div class="text-center mt-5">
+					<div class="error mx-auto">
+						<p class="m-0" jhiTranslate="error.title">Error</p>
+					</div>
+					<p class="text-dark mb-5 lead ">Something bad happened. Let us fix it. </p>
+					<p [hidden]="!errorMessage" class="text-dark mb-5 lead ">{{errorMessage}}</p>
+					<p [hidden]="!error403" class="text-black-50 mb-0"
+						jhiTranslate="error.http.403"></p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
