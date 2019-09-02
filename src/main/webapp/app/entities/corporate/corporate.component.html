@@ -22,13 +22,13 @@
                         <p class="font-weight-light" [innerHtml]="corporate.overview"> 
                     </div>
                 </div>
-                <div class="row">
+                <div  *ngIf="corporate.benefits" class="row">
                 		<div class="col  pl-5">
                         <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.benefits"></p>
                         <p class="font-weight-light" [innerHtml]="corporate.benefits"> </p>
                     </div>
                 </div>
-                <div class="row">
+                <div *ngIf="corporate.culture" class="row">
                 		<div class="col  pl-5">
                         <p class="font-weight-bold h5" jhiTranslate="gradzcircleApp.corporate.culture">About you</p>
                         <p class="font-weight-light " [innerHtml]="corporate.culture"> 
