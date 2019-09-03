@@ -3,7 +3,7 @@
         "title": "Error !!",
         "http": {
             "400": "Bad request.",
-            "403": "You are not authorized to access this page.",
+            "403": "Please <b>Login</b> or <b>Register</b> to view more",
             "405": "The HTTP verb you used is not supported for this URL.",
             "500": "Internal server error."
         },

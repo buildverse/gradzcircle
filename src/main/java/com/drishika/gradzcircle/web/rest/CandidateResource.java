@@ -8,6 +8,10 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +29,11 @@ import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.service.CandidateService;
 import com.drishika.gradzcircle.service.dto.CandidateDTO;
 import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
+import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
+import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
 
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -161,6 +168,25 @@ public class CandidateResource {
 		return candidateService.getAllCandidates();
 	}
 
+	
+
+	
+	/**
+	 * GET /candidatesPreview : get all the candidates.
+	 *
+	 * @return the ResponseEntity with status 200 (OK) and the list of candidates in
+	 *         body
+	 */
+	@GetMapping("/candidatesPreview")
+	@Timed
+	public ResponseEntity<List<CandidateProfileListDTO>> getAllCandidatesForPreview(Pageable pageable) {
+		log.debug("REST request to get  Candidates for Preview");
+		final Page<CandidateProfileListDTO> page = candidateService.getAllCandidatesForPreview(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/candidatesPreview");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		
+	}
+	
 	/**
 	 * GET /candidates/:id : get the "id" candidate.
 	 *

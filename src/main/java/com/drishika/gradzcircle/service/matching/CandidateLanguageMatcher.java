@@ -21,6 +21,7 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.service.MailService;
 import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
 /**
@@ -37,13 +38,15 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 	private final MatchUtils matchUtils;
 	private final CandidateRepository candidateRepository;
 	private final CandidateEducationRepository candidateEducationRepository;
+	private final MailService mailService;
 
 	public CandidateLanguageMatcher(JobRepository jobRepository, MatchUtils matchUtils,
-			CandidateRepository candidateRepository, CandidateEducationRepository candidateEducationRepository) {
+			CandidateRepository candidateRepository, CandidateEducationRepository candidateEducationRepository,MailService mailService) {
 		this.jobRepository = jobRepository;
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
 		this.candidateEducationRepository = candidateEducationRepository;
+		this.mailService = mailService;
 	}
 
 	@Transactional
@@ -70,6 +73,7 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 		}
 		log.debug("Languages before save are {}", candidate.getCandidateLanguageProficiencies());
 		candidateRepository.save(candidate);
+		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
 
 	}
 

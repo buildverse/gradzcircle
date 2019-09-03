@@ -8,6 +8,23 @@ import { CandidateComponent } from './candidate.component';
 import { CandidateDetailComponent } from './candidate-detail.component';
 import { CandidatePopupComponent } from './candidate-dialog.component';
 import { CandidateDeletePopupComponent } from './candidate-delete-dialog.component';
+import { CandidatePreviewComponent } from './candidate-preview.component';
+
+@Injectable()
+export class CandidatePagingParams implements Resolve<any> {
+
+  constructor(private paginationUtil: JhiPaginationUtil) {}
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
+    const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
+    return {
+      page: this.paginationUtil.parsePage(page),
+      predicate: this.paginationUtil.parsePredicate(sort),
+      ascending: this.paginationUtil.parseAscending(sort)
+    };
+  }
+}
 
 export const candidateRoute: Routes = [
     {
@@ -17,6 +34,9 @@ export const candidateRoute: Routes = [
             authorities: ['ROLE_USER'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
+         resolve: {
+      'pagingParams': CandidatePagingParams
+    },
         canActivate: [UserRouteAccessService]
     }, {
         path: 'candidate/:id',
@@ -25,6 +45,17 @@ export const candidateRoute: Routes = [
             authorities: ['ROLE_USER'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
+        canActivate: [UserRouteAccessService]
+    },
+   {
+        path: 'candidatePreview',
+        component: CandidatePreviewComponent,
+        data: {
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+         resolve: {
+      'pagingParams': CandidatePagingParams
+    },
         canActivate: [UserRouteAccessService]
     }
 ];

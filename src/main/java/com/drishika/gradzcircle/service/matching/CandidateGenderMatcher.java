@@ -20,6 +20,7 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.service.MailService;
 import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 
 /**
@@ -35,13 +36,15 @@ public class CandidateGenderMatcher implements Matcher<Candidate> {
 	private final MatchUtils matchUtils;
 	private final CandidateRepository candidateRepository;
 	private final CandidateEducationRepository candidateEducationRepository;
-
+	private final MailService mailService;
+	
 	public CandidateGenderMatcher(JobRepository jobRepository, MatchUtils matchUtils,
-			CandidateRepository candidateRepository, CandidateEducationRepository candidateEducationRepository) {
+			CandidateRepository candidateRepository, CandidateEducationRepository candidateEducationRepository, MailService mailService) {
 		this.jobRepository = jobRepository;
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
 		this.candidateEducationRepository = candidateEducationRepository;
+		this.mailService = mailService;
 	}
 
 	/*
@@ -73,7 +76,8 @@ public class CandidateGenderMatcher implements Matcher<Candidate> {
 			log.debug("Abort Matching as no Education saved");
 		}
 		candidateRepository.save(candidate);
-
+		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
+   
 	}
 
 	private CandidateJob beginMatching(Job job, Candidate candidate) {

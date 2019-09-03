@@ -1,0 +1,48 @@
+<div class="mt-5">
+	<main class="page projects-page">
+	<section class="portfolio-block projects-cards">
+		<div class="container">
+			<div class="heading">
+				<h1><strong>Our Talent</strong></h1>
+			</div>
+			<div class="row">
+				<div *ngIf="candidateList?.length>0;else noData" class="col-md-12">
+					<div class="row">
+					    <div *ngFor="let candidate of candidateList" class="col-md-6 col-lg-4">
+					        <div class="card border-0">
+					        		<img class="card-img-top scale-on-hover shadow" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl" />
+					            <div class="card-body">
+									<p class="text-muted card-text mb-0">{{candidate.qualificationWithHighestCourse}}</p>
+									<p class="text-muted card-text mb-0">{{candidate.percent}}%</p>
+									<button class="btn btn-primary btn-sm btn-block mt-1"
+										(click)="setViewPublicProfileRouteParams(candidate.id,jobId,corporateId)"
+										[routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
+										<span class="icon icon-add-user"></span> View
+									</button>
+					            </div>
+					        </div>
+					    </div>
+					   
+					</div>
+					<div *ngIf="candidateList" class="row">
+						<div class="col d-flex justify-content-start  font-weight-light text-muted">
+							<jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+						</div>
+						<div class="col font-weight-light d-flex justify-content-end ">
+							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" (pageChange)="loadPage(page)"></ngb-pagination>
+						</div>
+					</div>
+				</div>
+				<ng-template #noData>
+					<div class="row">
+						No Data Available
+					</div>
+				</ng-template>
+			</div>
+			
+			
+		</div>
+	</section>
+</main>
+	
+</div>

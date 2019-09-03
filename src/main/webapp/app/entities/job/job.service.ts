@@ -232,7 +232,7 @@ export class JobService {
     const jsonResponse: CandidateList[] = res.body;
     const body: CandidateList[] = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      body.push(this.convertItemFromServer(jsonResponse[i]));
+      body.push(jsonResponse[i]);
     }
     return res.clone({body});
   }

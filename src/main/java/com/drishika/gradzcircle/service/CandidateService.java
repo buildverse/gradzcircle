@@ -2,10 +2,7 @@ package com.drishika.gradzcircle.service;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -13,6 +10,8 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +52,8 @@ import com.drishika.gradzcircle.repository.search.CandidateProjectSearchReposito
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.dto.AddressDTO;
 import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
+import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
+import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
 import com.drishika.gradzcircle.service.dto.GenderDTO;
@@ -230,6 +231,11 @@ public class CandidateService {
 	public List<Candidate> getAllCandidates() {
 		logger.debug("REST request to get all Candidates");
 		return candidateRepository.findAllWithEagerRelationships();
+	}
+	
+	public Page<CandidateProfileListDTO> getAllCandidatesForPreview(Pageable pageable) {
+		logger.debug("REST request to get all Candidates for Preview");
+		return candidateRepository.findCandidatesForPreview(pageable).map(candidate -> dtoConverter.convertToCandidateProfileListingDTO(candidate));
 	}
 
 	public Candidate getCandidate(Long id) {

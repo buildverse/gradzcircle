@@ -57,10 +57,17 @@ spring:
                     enabled: true
                  
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: prakash.abhinav1978@gmail.com
+        password: Aveer1709@
+        protocol: smtp
+        tls: true
+        from: team@gradzcircle.com
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     messages:
         cache-seconds: 1
     thymeleaf:

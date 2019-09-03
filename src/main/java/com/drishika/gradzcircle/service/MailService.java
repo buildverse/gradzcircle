@@ -118,8 +118,8 @@ public class MailService {
     }
     
     
-    public void sendNewMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates) {
-    		log.info("Sending new matched candidate email to '{}'", user.getEmail());
+    public void sendMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates) {
+    		log.info("Sending new matched candidate email to corporate '{}'", user.getEmail());
     		 Locale locale = Locale.forLanguageTag(user.getLangKey());
     	        Context context = new Context(locale);
     	        context.setVariable(USER, user);
@@ -131,4 +131,17 @@ public class MailService {
     	        sendEmail(user.getEmail(), subject, content, false, true);
     		
     }
+    
+    public void sendMatchedJobEmailToCandidate(User user, Long numberOfJobs) {
+		log.info("Sending new matched Jobs email to candidate '{}'", user.getEmail());
+		 Locale locale = Locale.forLanguageTag(user.getLangKey());
+	        Context context = new Context(locale);
+	        context.setVariable(USER, user);
+	        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+	        context.setVariable("numberOfCandidates", numberOfJobs);
+	        String content = templateEngine.process("newMatchedCandidateForJobEmail", context);
+	        String subject = messageSource.getMessage("email.new.matched.candidate.title", null, locale);
+	        sendEmail(user.getEmail(), subject, content, false, true);
+		
+}
 }

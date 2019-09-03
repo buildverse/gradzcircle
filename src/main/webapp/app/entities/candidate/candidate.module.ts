@@ -14,6 +14,8 @@ import {
     CandidateDeleteDialogComponent,
     candidateRoute,
     candidatePopupRoute,
+    CandidatePagingParams,
+    CandidatePreviewComponent
 } from './';
 
 const ENTITY_STATES = [
@@ -34,6 +36,7 @@ const ENTITY_STATES = [
         CandidateDeleteDialogComponent,
         CandidatePopupComponent,
         CandidateDeletePopupComponent,
+        CandidatePreviewComponent
     ],
     entryComponents: [
         CandidateComponent,
@@ -41,10 +44,12 @@ const ENTITY_STATES = [
         CandidatePopupComponent,
         CandidateDeleteDialogComponent,
         CandidateDeletePopupComponent,
+        CandidatePreviewComponent
     ],
     providers: [
         CandidateService,
         CandidatePopupService,
+        CandidatePagingParams
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

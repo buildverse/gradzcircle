@@ -11,6 +11,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {SERVER_API_URL} from '../../app.constants';
 import {Country} from '../../entities/country/country.model';
 import {Nationality} from '../../entities/nationality/nationality.model';
+import { CandidateList } from '../job/candidate-list.model';
 
 export type EntityResponseType = HttpResponse<Candidate>;
 export type EntityResponseTypeCandidatePublicProfile = HttpResponse<CandidatePublicProfile>;
@@ -23,6 +24,7 @@ export class CandidateService {
   private resourceUrlGetCandidateById = SERVER_API_URL + 'api/candidateById';
   private resourceUrlGetCandidateDetails = SERVER_API_URL + 'api/candidateDetails';
   private deleteImageUrl = 'api/remove';
+  private resourceUrlGuest ='api/candidatesPreview';
   private resourceCandidateToCorporateLink = 'api/candidate-corporate-link'
   //  private resourcePublicProfileUrl ='api/candidates/public-profile';
   //  private resourcePublicProfileUrlElastic ='api/candidates/public-profile-es'
@@ -79,6 +81,12 @@ export class CandidateService {
     return this.http.get<Candidate[]>(this.resourceUrl, {params: options, observe: 'response'})
       .map((res: HttpResponse<Candidate[]>) => this.convertArrayResponse(res));
   }
+  
+   queryForGuest(req?: any): Observable<HttpResponse<CandidateList[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<CandidateList[]>(this.resourceUrlGuest, {params: options, observe: 'response'})
+      .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
+  }
 
   delete(id: number): Observable<HttpResponse<any>> {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, {observe: 'response'});
@@ -104,6 +112,16 @@ export class CandidateService {
     return res.clone({body});
   }
 
+   private convertCandidateListArrayResponse(res: HttpResponse<CandidateList[]>): HttpResponse<CandidateList[]> {
+    const jsonResponse: CandidateList[] = res.body;
+    const body: CandidateList[] = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      body.push(jsonResponse[i]);
+    }
+    return res.clone({body});
+  }
+
+  
   private convertArrayResponse(res: HttpResponse<Candidate[]>): HttpResponse<Candidate[]> {
     const jsonResponse: Candidate[] = res.body;
     const body: Candidate[] = [];
@@ -123,7 +141,6 @@ export class CandidateService {
      this.convertMetaDataForDisplay(copy);
     return copy;
   }
-
 
   private convertMetaDataForDisplay(candidate: Candidate) {
     if (candidate.addresses && candidate.addresses.length > 0) {

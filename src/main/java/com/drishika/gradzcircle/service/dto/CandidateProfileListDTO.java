@@ -28,6 +28,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private  Boolean shortListed; 
 	private Boolean canBuy;
 	private String aboutMe;
+	private Double percent;
 	
 
 	/**
@@ -223,6 +224,22 @@ public class CandidateProfileListDTO implements Serializable {
 	 */
 	public void setAboutMe(String aboutMe) {
 		this.aboutMe = aboutMe;
+	}
+	
+	
+
+	/**
+	 * @return the percent
+	 */
+	public Double getPercent() {
+		return percent;
+	}
+
+	/**
+	 * @param percent the percent to set
+	 */
+	public void setPercent(Double percent) {
+		this.percent = percent;
 	}
 
 	/* (non-Javadoc)

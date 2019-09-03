@@ -7,3 +7,4 @@ export * from './candidate-delete-dialog.component';
 export * from './candidate-detail.component';
 export * from './candidate.component';
 export * from './candidate.route';
+export * from './candidate-preview.component';

@@ -6,16 +6,17 @@ import {JhiEventManager, JhiAlertService, JhiParseLinks} from 'ng-jhipster';
 
 import {Candidate} from './candidate.model';
 import {CandidateService} from './candidate.service';
-import {Principal, ITEMS_PER_PAGE} from '../../shared';
+import {Principal, ITEMS_PER_PAGE, UserService} from '../../shared';
+import { CandidateList } from '../job/candidate-list.model';
 import {Router} from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-candidate',
-  templateUrl: './candidate.component.html'
+  templateUrl: './candidate-preview.component.html'
 })
-export class CandidateComponent implements OnInit, OnDestroy {
-  candidates: Candidate[];
+export class CandidatePreviewComponent implements OnInit, OnDestroy {
+  candidateList: CandidateList[];
   currentAccount: any;
   eventSubscriber: Subscription;
   currentSearch: string;
@@ -28,6 +29,7 @@ export class CandidateComponent implements OnInit, OnDestroy {
   previousPage: any;
   reverse: any;
   routeData: any;
+  defaultImage = require('../../../content/images/no-image.png');
 
 
   constructor(
@@ -38,7 +40,8 @@ export class CandidateComponent implements OnInit, OnDestroy {
     private principal: Principal,
     private parseLinks: JhiParseLinks,
     private spinnerService: NgxSpinnerService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -52,34 +55,20 @@ export class CandidateComponent implements OnInit, OnDestroy {
   }
 
   loadAll() {
-    if (this.currentSearch) {
-      this.candidateService.search({
-        query: this.currentSearch,
-        page: this.page - 1,
-        size: this.itemsPerPage,
-        sort: this.sort()
-      }).subscribe(
-        (res: HttpResponse<Candidate[]>) => this.candidates = res.body,
-        (res: HttpErrorResponse) => this.onError(res.message)
-        );
-      return;
-    }
-    this.candidateService.query({
+    this.spinnerService.show();
+    this.candidateService.queryForGuest({
       page: this.page - 1,
       size: this.itemsPerPage,
       sort: this.sort()
     }).subscribe(
-      (res: HttpResponse<Candidate[]>) => {
-        this.candidates = res.body;
-        this.currentSearch = '';
-      },
+      (res: HttpResponse<CandidateList[]>) => this.onSuccess(res.body, res.headers),
       (res: HttpErrorResponse) => this.onError(res.message)
       );
   }
 
   reset() {
     this.page = 0;
-    this.candidates = [];
+    this.candidateList = [];
     this.loadAll();
 
   }
@@ -92,7 +81,7 @@ export class CandidateComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/candidate'], {
+    this.router.navigate(['/candidatePreview'], {
       queryParams:
       {
         page: this.page,
@@ -145,6 +134,34 @@ export class CandidateComponent implements OnInit, OnDestroy {
   }
 
   private onError(error) {
+    this.router.navigate(['/error']);
     this.jhiAlertService.error(error.message, null, null);
   }
+  
+   private onSuccess(data, headers) {
+    this.links = this.parseLinks.parse(headers.get('link'));
+    this.totalItems = headers.get('X-Total-Count');
+    this.queryCount = this.totalItems;
+    this.candidateList = data;
+    this.setImageUrl();
+    this.spinnerService.hide();
+  }
+  
+   private setImageUrl() {
+    this.candidateList.forEach((candidate) => {
+      if (candidate.login.imageUrl !== undefined) {
+          this.userService.getImageData(candidate.login.id).subscribe((response) => {
+            if (response !== undefined) {
+              const responseJson = response.body;
+              if (responseJson) {
+                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+              } else {
+                //this.noImage = true; 
+              }
+            }
+          });
+        }
+    });
+  }
+  
 }

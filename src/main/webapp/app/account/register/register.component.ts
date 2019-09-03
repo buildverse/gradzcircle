@@ -6,6 +6,7 @@ import {FormGroup, FormBuilder, Validators, AbstractControl} from '@angular/form
 import {Register} from './register.service';
 import 'rxjs/add/operator/debounceTime';
 import {EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE} from '../../shared';
+import { Router } from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 function passwordMatcher(c: AbstractControl): {[key: string]: boolean} | null {
@@ -51,7 +52,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private languageService: JhiLanguageService,
     private registerService: Register,
     private formBuilder: FormBuilder,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private router: Router
 
   ) {
   }
@@ -115,6 +117,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     } else if (response.status === 400 && response.error.type === EMAIL_ALREADY_USED_TYPE) {
       this.errorEmailExists = 'ERROR';
     } else {
+      this.router.navigate(['/error']);
       this.error = 'ERROR';
     }
   }

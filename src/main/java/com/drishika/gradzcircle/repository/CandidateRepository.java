@@ -34,6 +34,8 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 	@Query("select cps.score from CandidateProfileScore cps, ProfileCategory pc,Candidate ca where pc.id = cps.profileCategory.id and ca.id = cps.candidate.id and pc.id=1  and ca.id=?1")
 	Double hasEducationScore(Long candidateId);
 
+	@Query("Select c from Candidate c, CandidateEducation cE where c.id = cE.candidate.id and cE.highestQualification=true and cE.percentage is not null order by cE.percentage DESC, cE.educationToDate DESC")
+	Page<Candidate> findCandidatesForPreview(Pageable pageable);
 	/*
 	 * @Query("select c from Candidate c left outer join fetch c.appliedJobs where job.id=:id "
 	 * ) Page<Candidate> findAppliedCandidatesByJob (Long jobId,Pageable pageable);

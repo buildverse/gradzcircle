@@ -99,6 +99,7 @@ public class DTOConverters {
 					.filter(education -> education.isHighestQualification()).findFirst().get();
 			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification()
 					+ " in " + highestCandidateEducation.getCourse().getCourse());
+			dto.setPercent(highestCandidateEducation.getPercentage()==null?highestCandidateEducation.getGrade()*10:highestCandidateEducation.getPercentage());
 		}
 	}
 

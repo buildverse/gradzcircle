@@ -3,12 +3,13 @@
 		<div id="content">
 			<div class="container-fluid">
 				<div class="text-center mt-5">
-					<div class="error mx-auto">
+					<div *ngIf="!error403" class="error mx-auto">
 						<p class="m-0" jhiTranslate="error.title">Error</p>
+						
 					</div>
-					<p class="text-dark mb-5 lead ">Something bad happened. Let us fix it. </p>
-					<p [hidden]="!errorMessage" class="text-dark mb-5 lead ">{{errorMessage}}</p>
-					<p [hidden]="!error403" class="text-black-50 mb-0"
+					<p *ngIf="!error403" class="text-dark mb-5 lead ">Something bad happened. Let us fix it. </p>
+					<p [hidden]="!errorMessage" class="text-dark mb-5 lead h3 ">{{errorMessage}}</p>
+					<p [hidden]="!error403" class="text-black-50 mb-0 h3"
 						jhiTranslate="error.http.403"></p>
 				</div>
 			</div>
