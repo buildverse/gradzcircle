@@ -48,10 +48,17 @@ spring:
                 http:
                     enabled: true
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: prakash.abhinav1978@gmail.com
+        password: Aveer1709@
+        protocol: smtp
+        tls: true
+        from: team@gradzcircle.com
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     thymeleaf:
         cache: true
 
@@ -106,7 +113,7 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: gradzcircle@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        base-url: http://gradzcircleuat.herokuapp.com # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:

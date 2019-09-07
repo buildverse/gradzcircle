@@ -3,10 +3,10 @@
         <div class="block-content pt-5">
             <!--  <div class="post-image corp-profile-img" >            		
             </div>-->
-            <div *ngIf="corporate.overview || corporate.establishedSince || corporate.industry?.industryName; else hasNoDataStored" class="post-body ">
-                <h1 class="text-center">{{corporate.name}}</h1>
-                <h5>{{corporate.industry?.industryName}}</h5>
-                <p class="small">{{corporate.tagline}}</p>
+            <div *ngIf="corporate && (corporate.overview || corporate.establishedSince || corporate.industry?.industryName); else hasNoDataStored" class="post-body ">
+                <h1 class="text-center font-weight-bold">{{corporate.name}}</h1>
+                <h5 class="text-center font-weight-light">{{corporate.industry?.industryName}}</h5>
+                <p class="text-center font-weight-light">{{corporate.tagLine}}</p>
                 <div class="row">
                     <div class="col-md-3 text-center">
                         <figure class="figure">
@@ -55,10 +55,10 @@
                     </div>
                 </div>
                 <div class="row pb-5 pr-2">
-                		<div class="col-lg-12 text-center">
+                		<div class="col-md-12 text-center">
 						<button type="submit" (click)="setRouterData()"
 								[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
-								replaceUrl="true" class="btn btn-sm btn-primary"
+								replaceUrl="true" class="btn btn-primary btn-block"
 								jhiTranslate="gradzcircleApp.corporate.home.editDetails">Update Details
 						</button>
 					</div>
@@ -116,10 +116,10 @@
                     </div>
                 </div>
                 <div class="row pb-5 pr-2">
-                		<div class="col-lg-12 text-center">
+                		<div class="col-md-5 offset-md-4 text-center">
 						<button type="submit" (click)="setRouterData()"
 								[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
-								replaceUrl="true" class="btn btn-sm btn-primary"
+								replaceUrl="true" class="btn btn-primary btn"
 								jhiTranslate="gradzcircleApp.corporate.home.addDetails">Update Details
 						</button>
 					</div>

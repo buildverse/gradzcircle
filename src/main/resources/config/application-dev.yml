@@ -57,10 +57,10 @@ spring:
                     enabled: true
                  
     mail:
-        host: smtp.gmail.com
-        port: 587
-        username: prakash.abhinav1978@gmail.com
-        password: Aveer1709@
+        host: hello
+        port: 
+        username: 
+        password: 
         protocol: smtp
         tls: true
         from: team@gradzcircle.com

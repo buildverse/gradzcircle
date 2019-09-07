@@ -261,23 +261,30 @@
 			<div class="col-md-2"
 				[class.has-danger]="phoneCode.invalid && phoneCode.touched">
 				<input type="text" class="form-control" name="phoneCode"
-					id="field_corporatePhoneCode" required #phoneCode="ngModel"
+					id="field_corporatePhoneCode" required #phoneCode="ngModel" maxLength="4"
 					pattern="[+.0-9]+" [(ngModel)]="corporate.phoneCode" /> <span
 					*ngIf="phoneCode.invalid && phoneCode.touched" class="text-danger">
 					<small>Please enter STD code</small>
 				</span> <span *ngIf="phoneCode.hasError('pattern')" class="text-danger">
 					<small>Please enter valid STD code</small>
 				</span>
+				<span *ngIf="phoneCode.hasError('maxLength')" class="text-danger">
+					<small>STD code not valid</small>
+				</span>
 			</div>
 			<div class="col-md-2"
 				[class.has-danger]="phoneNumber.invalid && phoneNumber.touched">
-				<input type="text" class="form-control" name="phone"
+				<input type="text" class="form-control" name="phone" maxLength="10"
 					id="field_corporatePhone" required #phoneNumber="ngModel"
 					pattern="[0-9]+" [(ngModel)]="corporate.phone" /> <span
 					*ngIf="phoneNumber.invalid && phoneNumber.touched"
 					class="text-danger"> <small>Please enter phone
 						number</small>
-				</span> <span *ngIf="phoneNumber.hasError('pattern')" class="text-danger">
+				</span> 
+				<span *ngIf="phoneNumber.hasError('pattern')" class="text-danger">
+					<small>Please enter valid number</small>
+				</span>
+				<span *ngIf="phoneNumber.hasError('maxLength')" class="text-danger">
 					<small>Please enter valid number</small>
 				</span>
 			</div>

@@ -8,7 +8,6 @@ import { CorporateComponent } from './corporate.component';
 import { CorporateDetailComponent } from './corporate-detail.component';
 import { CorporatePopupComponent } from './corporate-dialog.component';
 import { CorporateDeletePopupComponent } from './corporate-delete-dialog.component';
-import {SideMenuComponent} from '../../account/side-menu/side-menu.component';
 
 @Injectable()
 export class LinkedCandidatesResolvePagingParams implements Resolve<any> {
@@ -32,24 +31,10 @@ export const corporateRoute: Routes = [
       component: CorporateComponent,
       data: {
         authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
-        pageTitle: 'gradzcircleApp.corporate.home.title'
-      }, resolve: {
-       // corporate: CorporateResolverService
+        pageTitle: 'gradzcircleApp.corporate.detail.title'
       },
-      canActivate: [UserRouteAccessService],
-      children: [
-        {
-          path: '',
-          component: SideMenuComponent,
-          data: {
-            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
-            pageTitle: 'gradzcircleApp.candidate.home.title'
-          },
-          canActivate: [UserRouteAccessService],
-          outlet: 'corp-sidemenu'
-        }
-      ]
-    }, 
+      canActivate: [UserRouteAccessService]
+    },
     {
         path: 'corporateDetails',
         component: CorporateDetailComponent,
@@ -67,7 +52,7 @@ export const corporateRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER','ROLE_CORPORATE'],
-            pageTitle: 'gradzcircleApp.corporate.home.title'
+            pageTitle: 'gradzcircleApp.corporate.linkedCandidates'
         },
         canActivate: [UserRouteAccessService]
     }

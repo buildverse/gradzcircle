@@ -53,7 +53,8 @@
             "companyType":"Compamy Type",
             "companySize": "Company Size",
             "companyName": "Company Name",
-            "firstLogin": "Please <b>post your First Job</b> !!"
+            "firstLogin": "Please <b>post your First Job</b> !!",
+            "linkedCandidates": "Linked Candidates"
         }
     }
 }
