@@ -244,6 +244,9 @@ public class UserService {
 			Candidate candidate = candidateService.getCandidateByLoginId(user.getId());
 			Corporate corporate = corporateService.getCorporateByLoginId(user.getId());
 			if (candidate != null) {
+				if(candidate.getProfileScores()!=null) {
+					candidate.getProfileScores().clear();
+				}
 				candidateService.deleteCandidate(candidate.getId());
 			} else if (corporate != null) {
 				corporateService.deleteCorporate(corporate.getId());
