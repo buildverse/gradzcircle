@@ -328,9 +328,9 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
 
   }
 
-  setJobViewParamForCandidate(jobId, matchScore) {
+  setJobViewParamForCandidate(jobId) {
     this.dataStorageService.setdata(JOB_ID, jobId);
-    this.dataStorageService.setdata(MATCH_SCORE, matchScore);
+   
   }
 
   loadActiveJobsByEmploymentType(employmentType: string) {

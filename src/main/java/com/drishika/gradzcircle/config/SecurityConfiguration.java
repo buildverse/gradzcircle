@@ -117,6 +117,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/activeJobsByOneEmploymentTypeAndTwoJobType/{employmentType}/{jobType1}/{jobType2}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
             .antMatchers("/api/activeJobsByOneEmploymentTypeAndThreeJobType/{employmentType}/{jobType1}/{jobType2}/{jobType3}/{candidateId}/{matchScoreFrom}/{matchScoreTo}").permitAll()
             .antMatchers("/api/candidatesPreview").permitAll()
+            .antMatchers("/api/viewJobForCandidate/{jobId}/{candidateID}").permitAll()
             .antMatchers("/api/jobs/{id}").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/websocket/tracker").hasAuthority(AuthoritiesConstants.ADMIN)

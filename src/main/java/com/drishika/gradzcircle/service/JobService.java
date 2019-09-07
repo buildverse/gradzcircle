@@ -1053,6 +1053,11 @@ public class JobService {
 		return converter.convertJobViewForCandidate(job, candidateId);		
 	}
 	
+	public CandidateJobDTO getJobForGuest(Long jobId) {
+		Job job = jobRepository.findOne(jobId);
+		return converter.convertJobViewForCandidate(job,-1L);		
+	}
+	
 	private Double extractJobFilterCost(JobFilter jobFilter,Job job) throws Exception{
 		Double filterCost = 0d; 
 		Map<String,Double> filterMap = getFiltersMap();

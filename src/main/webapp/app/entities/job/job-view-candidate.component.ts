@@ -97,8 +97,10 @@ export class JobViewPopupForCandidateComponent implements OnInit, OnDestroy {
         if (!id) {
           id = this.dataService.getData(JOB_ID);
         }
-        const candidateID = this.dataService.getData(CANDIDATE_ID);
-       
+        let candidateID = this.dataService.getData(CANDIDATE_ID);
+       if(!candidateID) {
+         candidateID = -1;
+       }
         this.jobPopupService
           .openForCandidateView(JobViewForCandidateComponent as Component, id, candidateID);
       }

@@ -675,7 +675,11 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<CandidateJobDTO> getJobForCandidate(@PathVariable Long jobId,@PathVariable Long candidateId) {
 		log.info("REST request to get Job {} for Candidate View : {}", jobId,candidateId);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobService.getJobForCandidateView(jobId,candidateId)));
+		if(candidateId <=0) {
+			return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobService.getJobForGuest(jobId)));
+		} else {
+			return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobService.getJobForCandidateView(jobId,candidateId)));
+		}
 	}
 	
 	/**
