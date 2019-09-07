@@ -316,7 +316,7 @@
 		
 	
 </div>
-<div  class="mt-4 mb-5">
+<div *ngIf="!currentAccount" class="mt-4 mb-5">
 		<div *ngIf="(job.hasCandidateApplied)" class="row mx-4 d-flex justify-content-end">
 			<span class="badge badge-pill badge-success">Already Applied !!</span>
 		</div>
