@@ -100,15 +100,14 @@
 					for="field_corporateOverview">About Us</label>
 			</div>
 			<div class="col-md-10">
-				<ck-editor class="form-control " 
-						 name="overview"
+				<ck-editor class="form-control " #overview="ngModel"
+						 name="overview" required
 						id="field_corporateOverview" [config]="editorConfig"
 						[(ngModel)]="corporate.overview">
 				</ck-editor>
-				<!--  <textarea [froalaEditor]='options' class="form-control"
-					name="overview" id="field_corporateOverview" rows="10"
-					[(ngModel)]="corporate.overview">
-                        </textarea>-->
+				<span *ngIf="overview.touched && overview.invalid" class="text-danger">
+					Please tell us about yourself
+				</span>
 			</div>
 		</div>
 
