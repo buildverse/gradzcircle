@@ -409,9 +409,10 @@ public class JobService {
 		Page<Job> jobPage = null;
 		final List<JobStatistics> jobStatisticsEmploymentTypeForEmploymentTypeSelected;
 		final List<JobStatistics> jobStatisticsJobTypeForEmploymentTypeSelected;
+		Candidate candidate = candidateRepository.findOne(candidateId);
 		//EmploymentType employmentType = employmentTypeRepository.findByEmploymentType(employmentTypeName);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);
-		if (candidateId > 0) {
+		if (candidateId > 0 && (candidate.getEducations()!=null && !candidate.getEducations().isEmpty())) {
 			if(matchScoreFrom >-1 && matchScoreTo >-1) {
 				jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedFilterByEmploymentTypeForCandidateWithMatchScore(candidateId,
 					employmentType.getId(), matchScoreFrom, matchScoreTo, pageable);
@@ -452,7 +453,8 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findByJobType(jobTypeName);
 		JobType jobType = getJobType(jobTypeName);
-		if(candidateId <0)
+		Candidate candidate = candidateRepository.findOne(candidateId);
+		if(candidateId <0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndJobType(active, jobType, pageable);
 		else {
 			if(matchScoreFrom>-1 && matchScoreTo >-1)
@@ -487,7 +489,8 @@ public class JobService {
 		JobType jobType2 = jobTypeRepository.findByJobType(jobTypeName2);*/
 		JobType jobType1 = getJobType(jobTypeName1);
 		JobType jobType2 = getJobType(jobTypeName2);
-		if(candidateId<0)
+		Candidate candidate = candidateRepository.getOne(candidateId);
+		if(candidateId<0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndTwoJobTypes(active, jobType1.getId(), jobType2.getId(), pageable);
 		else {
 			if(matchScoreFrom >-1 && matchScoreTo > -1)
@@ -541,7 +544,8 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findRemainingJobType(jobTypeName1, jobTypeName2, jobTypeName3);
 		JobType jobType = filterJobType(jobTypeName1, jobTypeName2, jobTypeName3);
-		if(candidateId<0)
+		Candidate candidate = candidateRepository.findOne(candidateId);
+		if(candidateId<0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndJobTypeNot(active, jobType, pageable);
 		else {
 			if(matchScoreFrom >-1 && matchScoreTo>-1)
@@ -619,10 +623,10 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findByJobType(jobTypeName);
 		JobType jobType = getJobType(jobTypeName);
-		
+		Candidate candidate = candidateRepository.findOne(candidateId);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);//employmentTypeRepository.findByEmploymentType(employmentTypeName);
 		log.debug("Job Type and Employment Type are {} {}",jobType,employmentType);
-		if(candidateId > 0) {
+		if(candidateId > 0 && (candidate.getEducations()!=null && !candidate.getEducations().isEmpty())) {
 			if(matchScoreFrom > -1 && matchScoreTo > -1)
 				jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedFilteredByEmploymentTypeAndJobTypeForCandidateWithMatchScore(candidateId,
 						employmentType.getId(), jobType.getId(), matchScoreFrom, matchScoreTo, pageable);
@@ -662,7 +666,8 @@ public class JobService {
 		JobType jobType1 = getJobType(jobTypeName1);
 		JobType jobType2 = getJobType(jobTypeName2);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);
-		if(candidateId<0)
+		Candidate candidate = candidateRepository.getOne(candidateId);
+		if(candidateId<0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndOneEmploymentTypeAndTwoJobTypes(active, employmentType.getId(),
 				jobType1.getId(), jobType2.getId(), pageable);
 		else {
@@ -701,7 +706,9 @@ public class JobService {
 		JobType jobType = filterJobType(jobTypeName1, jobTypeName2, jobTypeName3);
 		//EmploymentType employmentType = employmentTypeRepository.findByEmploymentType(employmentTypeName);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);
-		if(candidateId <0 )
+		Candidate candidate = candidateRepository.getOne(candidateId);
+		
+		if(candidateId <0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndEmploymentTypeAndJobTypeNot(active, employmentType, jobType,
 					pageable);
 		else {

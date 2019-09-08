@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {DataStorageService, Principal} from '../../shared';
+import {DataStorageService, Principal, UserService} from '../../shared';
 import {JOB_ID, CANDIDATE_ID} from '../../shared/constants/storage.constants';
 import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -16,6 +16,8 @@ import {HttpResponse} from '@angular/common/http';
   templateUrl: './job-view.component.html'
 })
 export class JobViewForCandidateComponent implements OnInit {
+  noImage: boolean;
+  imageUrl: string;
 
   job: Job;
   currentAccount: any;
@@ -30,6 +32,7 @@ export class JobViewForCandidateComponent implements OnInit {
     private principal: Principal,
     private jhiAlertService: JhiAlertService,
     private jobListEmitterService: JobListEmitterService,
+    private userService: UserService
   ) {
   }
 
@@ -37,6 +40,7 @@ export class JobViewForCandidateComponent implements OnInit {
     this.principal.identity().then((account) => {
       this.currentAccount = account;
     });
+    this.loadCorporateImage();
   }
 
   clear() {
@@ -68,6 +72,19 @@ export class JobViewForCandidateComponent implements OnInit {
     this.activeModal.dismiss();
     this.jhiAlertService.error(error.message, null, null);
   }
+  
+  loadCorporateImage() {
+        if (this.job.corporateUrl) {
+          this.userService.getImageData(this.job.corporateLoginId).subscribe((response) => {
+            const responseJson = response.body;
+            this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
+          });
+          this.noImage = false;
+        } else {
+          this.noImage = true;
+        }
+      }
+  
 }
 
 
