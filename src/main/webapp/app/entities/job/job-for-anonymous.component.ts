@@ -566,9 +566,9 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
     this.candidateId = this.candidate.id;
    // console.log      ('CandidateId is '+this.candidateId);
   ///  console.log('hasEdcu is '+this.hasEducation);
-    if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
+    if (this.candidate.profileScore <= 20 && !this.candidate.hasEducation) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
-    } else if (!this.candidate.hasEducationScore) {
+    } else if (!this.candidate.hasEducation) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.educationAlert', timeout: 5000}, []);
     }
     this.loadActiveJobsByUserFilter();

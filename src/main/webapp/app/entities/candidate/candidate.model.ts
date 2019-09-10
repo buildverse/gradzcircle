@@ -60,7 +60,7 @@ export class Candidate implements BaseEntity {
     this.availableForHiring = false;
     this.openToRelocate = false;
     this.matchEligible = false;
-    this.hasEducationScore = false;
+   // this.hasEducationScore = false;
     this.hasEducation = false;
     this.hasCertification = false;
     this.hasEmployment = false;

@@ -138,9 +138,9 @@ public class MailService {
 	        Context context = new Context(locale);
 	        context.setVariable(USER, user);
 	        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
-	        context.setVariable("numberOfCandidates", numberOfJobs);
-	        String content = templateEngine.process("newMatchedCandidateForJobEmail", context);
-	        String subject = messageSource.getMessage("email.new.matched.candidate.title", null, locale);
+	        context.setVariable("numberOfJobs", numberOfJobs);
+	        String content = templateEngine.process("newMatchedJobsForCandidate", context);
+	        String subject = messageSource.getMessage("email.new.matched.jobs.title", null, locale);
 	        sendEmail(user.getEmail(), subject, content, false, true);
 		
 }

@@ -234,6 +234,7 @@ export class CandidateEducationDialogComponent implements OnInit {
 
 
   clear() {
+    this.jhiAlertService.clear();
     this.activeModal.dismiss('cancel');
   }
   /* searchQualification = (text$: Observable<string>) =>

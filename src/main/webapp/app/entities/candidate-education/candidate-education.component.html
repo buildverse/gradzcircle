@@ -64,6 +64,7 @@
 							</div>
 							<div class="col-12 col-md-3 offset-md-1 meta">
 								<div class="tags">
+									<span class="meta-heading">Project Type - {{candidateProject.projectType =='SELF_INTEREST'?'Self Interest':candidateProject.projectType =='ACADEMIC'?'Academic':''}}</span>
 									<span class="meta-heading">Start Date</span><span>{{candidateProject.projectStartDate}}</span>
 									<span class="meta-heading">End Date</span> <span
 										*ngIf="!candidateProject.projectEndDate;else showEndDate">Still

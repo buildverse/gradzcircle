@@ -65,5 +65,12 @@
         </createTable>
         
     </changeSet>
+    <changeSet id="20171015094632-2" author="abhinav">
+    		<modifyDataType catalogName="gradzcircle"
+            columnName="contribution_in_project"
+            newDataType="varchar(10000)"
+            schemaName="public"
+            tableName="candidate_project"/>
+    </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

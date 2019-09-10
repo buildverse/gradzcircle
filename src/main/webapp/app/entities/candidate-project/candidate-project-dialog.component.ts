@@ -7,13 +7,14 @@ import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {CandidateProject} from './candidate-project.model';
 import {CandidateProjectPopupService} from './candidate-project-popup.service';
 import {CandidateProjectService} from './candidate-project.service';
-import {CandidateEducation, CandidateEducationService} from '../candidate-education';
-import {CandidateEmployment, CandidateEmploymentService} from '../candidate-employment';
+import {CandidateEducation} from '../candidate-education';
+import {CandidateEmployment} from '../candidate-employment';
 import {CandidateEducationProjectPopupService} from './candidate-education-project-popup.service';
 import {CandidateEmploymentProjectPopupService} from './candidate-employment-project-popup.service';
 import {JhiDateUtils} from 'ng-jhipster';
 import { CANDIDATE_EDUCATION_ID, CANDIDATE_PROJECT_ID, CANDIDATE_EMPLOYMENT_ID, IS_EMPLOYMENT_PROJECT } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -39,8 +40,7 @@ export class CandidateProjectDialogComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private jhiAlertService: JhiAlertService,
     private candidateProjectService: CandidateProjectService,
-    private candidateEducationService: CandidateEducationService,
-    private candidateEmploymentService: CandidateEmploymentService,
+    private router: Router,
     private eventManager: JhiEventManager,
     private dateUtils: JhiDateUtils
   ) {
@@ -122,6 +122,7 @@ export class CandidateProjectDialogComponent implements OnInit {
 
   private onError(error: any) {
     this.jhiAlertService.error(error.message, null, null);
+    this.router.navigate(['/error']);
   }
 
   trackCandidateEducationById(index: number, item: CandidateEducation) {
