@@ -48,7 +48,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
     ) { }
 
     ngOnInit() {
-        this.route.data.subscribe((data: { candidate: any }) => this.candidate = data.candidate.body);
+        this.route.parent.data.subscribe((data: { candidate: any }) => this.candidate = data.candidate.body);
        // console.log('Candidates ' + JSON.stringify(this.candidate));
         this.contactSettingForm = this.formBuilder.group({
             address: this.buildAddressGroup()

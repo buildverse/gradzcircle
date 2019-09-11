@@ -61,11 +61,11 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     this.reloadUserImage();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
-    this.profileSubscriber = this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
+   /* this.profileSubscriber = this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
       if (profileScore) {
         this.profileScore = profileScore;
       }
-    });
+    });*/
   }
 
   /* setMode() {
@@ -129,7 +129,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy() {
     this.eventManager.destroy(this.eventSubscriberCandidate);
     this.eventManager.destroy(this.eventSubscriberCandidateImage);
-    this.eventManager.destroy(this.profileSubscriber);
+   // this.eventManager.destroy(this.profileSubscriber);
     this.eventManager.destroy(this.routerSub);
     // console.log('Destroing parent profile');
   }

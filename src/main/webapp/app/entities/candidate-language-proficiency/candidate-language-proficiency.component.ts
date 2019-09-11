@@ -120,7 +120,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         //  console.log('CANDIDATE ID IS '+JSON.stringify(this.candidateId));
         if (this.candidateId) {
             this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
-            this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
+          //  this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
         } else {
             this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadAll());
         }

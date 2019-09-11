@@ -6,6 +6,7 @@ import { DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import { USER_ID} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,12 +29,16 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
     private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
     private dataService: DataStorageService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
   }
 
   ngOnInit() {
-    this.reloadCandidate();
+    this.routerSub = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
+    if (!this.candidate) {
+      this.reloadCandidate();
+    }
   }
 
   reloadCandidate() {

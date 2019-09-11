@@ -6,6 +6,7 @@ import {DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {USER_ID, USER_DATA} from '../../shared/constants/storage.constants';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-candidate-primary-settings-view',
@@ -26,12 +27,16 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
     private eventManager: JhiEventManager,
     private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
-    private dataService: DataStorageService
+    private dataService: DataStorageService,
+    private route : ActivatedRoute
   ) {
   }
 
   ngOnInit() {
-    this.reloadCandidate();
+    this.routerSub = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
+    if(!this.candidate) {
+      this.reloadCandidate();
+    }
   }
 
   reloadCandidate() {

@@ -80,7 +80,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
   }
   /*To be removed once undertsand Elastic */
   loadEducationForCandidate() {
-   // console.log('Called parent method');
     this.spinnerService.show();
     this.candidateEducationService.findEducationByCandidateId(this.candidateId).subscribe(
       (res: HttpResponse<CandidateEducation[]>) => {
@@ -89,9 +88,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
           this.router.navigate(['./candidate-profile']);
         }
         this.setPrimaryEducationOnLoad();
-     /*   if (this.candidateEducations && this.candidateEducations.length > 0) {
-          this.candidateProfileScoreService.changeScore(this.candidateEducations[0].candidate.profileScore);
-        } */
         this.spinnerService.hide();
       },
       (res: HttpErrorResponse) => this.onError(res.message)
@@ -174,7 +170,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInCandidateEducations() {
-   // console.log('Candidate Id is '+this.candidateId);
     if (this.candidateId) {
       this.educationEventSubscriber = this.eventManager.subscribe('candidateEducationListModification', (response) => this.loadEducationForCandidate());
       this.projectEventSubscriber = this.eventManager.subscribe('candidateProjectListModification', (response) => this.loadEducationForCandidate());

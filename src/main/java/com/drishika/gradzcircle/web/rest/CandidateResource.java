@@ -266,7 +266,7 @@ public class CandidateResource {
 	@GetMapping("/candidateDetails/{id}")
 	@Timed
 	public ResponseEntity<CandidateDetailDTO> getCandidateDetails(@PathVariable Long id) {
-		log.debug("REST request to get Candidate Details for profile page ");
+		log.info("REST request to get Candidate Details for profile page ");
 		
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.getCandidateDetails(id)));
 		

@@ -79,7 +79,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
     ) { }
 
     ngOnInit() {
-        this.route.data.subscribe((data: { candidate: any }) => this.candidate = data.candidate.body);
+        this.subscription = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
         this.route.data.subscribe((data: { jobCategory: any }) => this.jobCategories = data.jobCategory);
         this.route.data.subscribe((data: { gender: any }) => this.genders = data.gender);
         // console.log('Candidates ' + JSON.stringify(this.candidate));

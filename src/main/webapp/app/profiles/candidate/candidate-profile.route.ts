@@ -45,6 +45,7 @@ export const candidateProfileRoutes: Routes = [
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
+        runGuardsAndResolvers: 'always',
         resolve: {
             candidate: CandidateResolverService
         },
@@ -57,9 +58,9 @@ export const candidateProfileRoutes: Routes = [
                     pageTitle: 'gradzcircleApp.candidate.home.title'
                 },
                 canActivate: [UserRouteAccessService],
-                resolve: {
+               /* resolve: {
                     candidate: CandidateResolverService
-                },
+                },*/
                 outlet: 'primarySetting'
             },
             {
@@ -71,7 +72,7 @@ export const candidateProfileRoutes: Routes = [
                 },
                 canActivate: [UserRouteAccessService],
                 resolve: {
-                    candidate: CandidateResolverService,
+                    //candidate: CandidateResolverService,
                     jobCategory: CandidateCareerInterestResolverService,
                     gender: CandidateGenderResolverService,
                 },
@@ -96,7 +97,7 @@ export const candidateProfileRoutes: Routes = [
                 },
                 canActivate: [UserRouteAccessService],
                 resolve: {
-                    candidate: CandidateResolverService
+                    //candidate: CandidateResolverService
                 },
                 outlet: 'contactSetting'
             },

@@ -14,7 +14,7 @@
 		<div class="col">
 			<div class="form-group">
 				<label for="country"><strong>Country</strong></label>
-				<div>{{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0].countryNiceName:''):''}}</div>
+				<div>{{candidate.addresses?(candidate.addresses[0]?.country?candidate.addresses[0]?.country[0]?.countryNiceName:''):''}}</div>
 			</div>
 		</div>
 	</div>
