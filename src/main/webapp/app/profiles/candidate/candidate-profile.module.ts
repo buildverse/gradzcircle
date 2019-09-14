@@ -4,7 +4,7 @@ import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {GradzcircleSharedModule} from '../../shared';
 import {candidateProfileRoutes, candidateProfilePopupRoute, JobResolvePagingParams} from './candidate-profile.route';
 import {CandidateProfileComponent} from './candidate-profile-settings.component';
-import {CandidateProfileScoreService} from './candidate-profile-score.service';
+import {CandidateProfileSettingService} from './candidate-profile-setting.service';
 import {CandidateResolverService} from './candidate-profile-account-resolver.service';
 import {CandidateCareerInterestResolverService} from './candidate-profile-career-interest-resolver.service';
 import {ProfileHelperService} from '../profile-helper.service';
@@ -74,7 +74,7 @@ const ENTITY_STATES = [
     JobResolvePagingParams,
     DataStorageService,
     NgbProgressbarConfig,
-    CandidateProfileScoreService,
+    CandidateProfileSettingService,
     ProfileMgmtPopupService
 
   ],

@@ -8,7 +8,6 @@ import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
 import { DataStorageService, Principal } from '../../shared';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
 @Component({
     selector: 'jhi-candidate-non-academic-work',
@@ -31,7 +30,6 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
         private dataService: DataStorageService,
-        private candidateProfileScoreService: CandidateProfileScoreService,
         private spinnerService: NgxSpinnerService,
         private router: Router
     ) {

@@ -1,3 +1,4 @@
+
  <div *ngIf="candidate">
     <div class="form-row">
         <div class="col">
@@ -26,7 +27,7 @@
         <div class="col">
             <div class="form-group">
                 <strong><label for="email" jhiTranslate="userManagement.email">Email Address</label></strong>
-                <div>{{candidate.login.email}}</div>
+                <div>{{candidate.login?.email}}</div>
             </div>
         </div>
     </div>

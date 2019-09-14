@@ -4,14 +4,13 @@ import { CandidateService } from '../../entities/candidate/candidate.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import { Observable } from 'rxjs/Observable';
-import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
-import { JobCategoryService } from '../../entities//job-category/job-category.service';
-import { NationalityService } from '../../entities/nationality/nationality.service';
 import { CountryService } from '../../entities/country/country.service';
 import { Subscription } from 'rxjs';
 import { Country } from '../../entities/country';
+import { CandidateProfileSettingService } from './candidate-profile-setting.service';
+
 
 /**
  * @TODO:
@@ -37,19 +36,20 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
     errorMessage: String;
     subscription: Subscription;
     countries: Country[];
-
+    profileSubscriber: Subscription;
     constructor(
         private formBuilder: FormBuilder,
         private candidateService: CandidateService,
         private route: ActivatedRoute,
         private router: Router,
         private eventManager: JhiEventManager,
-        private countryService: CountryService
+        private countryService: CountryService,
+        private candidateSettingService: CandidateProfileSettingService
     ) { }
 
     ngOnInit() {
-        this.route.parent.data.subscribe((data: { candidate: any }) => this.candidate = data.candidate.body);
-       // console.log('Candidates ' + JSON.stringify(this.candidate));
+       this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
+          subscribe((candidate) => this.candidate = candidate);
         this.contactSettingForm = this.formBuilder.group({
             address: this.buildAddressGroup()
         });
@@ -147,14 +147,17 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
 
     onSaveComplete(): void {
         this.contactSettingForm.reset();
-        this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+        this.eventManager.broadcast({ name: 'candidatePrimarySettingModification', content: 'OK' });
+        this.candidateSettingService.changeSetting('contactSetting');
         this.router.navigate(['/', 'candidate-profile']);
     }
 
     ngOnDestroy() {
-        if (this.subscription) {
-            this.eventManager.destroy(this.subscription);
-
-        }
+      if (this.subscription) {
+        this.eventManager.destroy(this.subscription);
+      }
+      if (this.profileSubscriber) {
+        this.eventManager.destroy(this.profileSubscriber);
+      }
     }
 }

@@ -6,7 +6,6 @@ import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {CandidateEducation} from './candidate-education.model';
 import {CandidateEducationService} from './candidate-education.service';
 import {DataStorageService, Principal} from '../../shared';
-import {CandidateProfileScoreService} from '../../profiles/candidate/candidate-profile-score.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {CANDIDATE_ID, CANDIDATE_EDUCATION_ID, IS_EMPLOYMENT_PROJECT, CANDIDATE_PROJECT_ID, USER_ID} from '../../shared/constants/storage.constants';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -38,7 +37,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     private principal: Principal,
     private router: Router,
     private dataService: DataStorageService,
-    private candidateProfileScoreService: CandidateProfileScoreService,
     private spinnerService: NgxSpinnerService
   ) {
     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?

@@ -10,6 +10,7 @@ export class CandidateResolverService implements Resolve<any> {
     constructor( private router: Router, private candidateService: CandidateService,  private dataService: DataStorageService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+     // console.log('In resolver');
              return this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).toPromise()
                     .catch((error: any) => {
                       //  console.log(`${error}`);

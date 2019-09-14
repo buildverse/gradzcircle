@@ -215,14 +215,10 @@ public class CandidateResource {
 	 */
 	@GetMapping("/candidateByLogin/{id}")
 	@Timed
-	public ResponseEntity<CandidateDTO> getCandidateByLoginId(@PathVariable Long id) {
-		Boolean hasEducationScore = false;
+	public ResponseEntity<CandidateDetailDTO> getCandidateByLoginId(@PathVariable Long id) {
 		log.debug("REST request to get Candidate by Login id for : {}", id);
 		Candidate candidate = candidateService.getCandidateByLoginId(id);
-		Double score = candidateService.getEducationScore(candidate.getId());
-		if( score !=null && score  > 0)
-			hasEducationScore = true;
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(convertCandidateToCandidateDTO(candidate,hasEducationScore)));
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.setCandidateDetails(candidate)));
 	}
 	
 	/**

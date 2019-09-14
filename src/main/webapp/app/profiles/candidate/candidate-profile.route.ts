@@ -45,10 +45,10 @@ export const candidateProfileRoutes: Routes = [
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
-        runGuardsAndResolvers: 'always',
-        resolve: {
+       // runGuardsAndResolvers: 'always',
+       /* resolve: {
             candidate: CandidateResolverService
-        },
+        },*/
         children: [
             {
                 path: '',

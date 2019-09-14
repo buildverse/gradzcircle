@@ -14,6 +14,7 @@ import { JhiEventManager } from 'ng-jhipster';
 import { JobCategoryService } from '../../entities//job-category/job-category.service';
 import { NationalityService } from '../../entities/nationality/nationality.service';
 import { CountryService } from '../../entities/country/country.service';
+import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import { Subscription } from 'rxjs';
 
 /**
@@ -45,7 +46,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
     charsLeft: number;
     maxAboutMeLength: number;
     subscription: Subscription;
-
+    profileSubscriber: Subscription;
     mySettings: IMultiSelectSettings = {
         enableSearch: true,
         checkedStyle: 'fontawesome',
@@ -75,11 +76,13 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
         private eventManager: JhiEventManager,
         private jobCategoryService: JobCategoryService,
         private nationalityService: NationalityService,
-        private countryService: CountryService
+        private countryService: CountryService,
+        private candidateSettingService: CandidateProfileSettingService
     ) { }
 
     ngOnInit() {
-        this.subscription = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
+        this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
+          subscribe((candidate) => this.candidate = candidate);
         this.route.data.subscribe((data: { jobCategory: any }) => this.jobCategories = data.jobCategory);
         this.route.data.subscribe((data: { gender: any }) => this.genders = data.gender);
         // console.log('Candidates ' + JSON.stringify(this.candidate));
@@ -197,7 +200,8 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
 
     onSaveComplete(): void {
         this.primarySettingForm.reset();
-        this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+        this.eventManager.broadcast({ name: 'candidatePrimarySettingModification', content: 'OK' });
+        this.candidateSettingService.changeSetting('primarySetting');
         this.router.navigate(['/', 'candidate-profile']);
     }
 
@@ -210,9 +214,11 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
     }
 
     ngOnDestroy() {
-        if (this.subscription) {
-            this.eventManager.destroy(this.subscription);
-
-        }
+      if (this.subscription) {
+        this.eventManager.destroy(this.subscription);
+      }
+      if (this.profileSubscriber) {
+        this.eventManager.destroy(this.profileSubscriber);
+      }
     }
 }

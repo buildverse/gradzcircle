@@ -7,7 +7,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
 import { Principal, DataStorageService } from '../../shared';
-import { CandidateProfileScoreService } from '../../profiles/candidate/candidate-profile-score.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CANDIDATE_ID, CANDIDATE_LANGUAGE_ID } from '../../shared/constants/storage.constants';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';

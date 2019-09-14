@@ -243,10 +243,6 @@ public class CandidateService {
 		Candidate candidate = candidateRepository.findOneWithEagerRelationships(id);
 		if (candidate != null) {
 			Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-			/*
-			 * addresses.forEach(candidateAddress -> { candidateAddress.setCandidate(null);
-			 * });
-			 */
 			candidate.setAddresses(addresses);
 			logger.debug("Retruning candidate {}", candidate);
 		}
@@ -256,6 +252,10 @@ public class CandidateService {
 	public CandidateDetailDTO getCandidateDetails(Long id ) {
 		logger.debug("REST request to get Candidate Profile : {}", id);
 		Candidate candidate = candidateRepository.findOne(id);
+		return setCandidateDetails(candidate);
+	}
+	
+	public CandidateDetailDTO setCandidateDetails(Candidate candidate) {
 		logger.debug("Candidate is {}",candidate);
 		logger.debug("Candidate educ details are {}",candidate.getEducations());
 		logger.debug("Candidate emp details are {}",candidate.getEmployments());
@@ -269,7 +269,6 @@ public class CandidateService {
 		Boolean hasEmployment = candidate.getEmployments()!=null && !candidate.getEmployments().isEmpty()?true:false;
 		updateCountryAndNationalityDataForDisplay(candidate);
 		CandidateDetailDTO candidateDetailsDTO = convertToCandidateDetailDTO(candidate);
-		
 		candidateDetailsDTO.setHasCertification(hasCertification);
 		candidateDetailsDTO.setHasEducation(hasEducation);
 		candidateDetailsDTO.setHasNonAcademic(hasNonAcademics);
@@ -281,10 +280,11 @@ public class CandidateService {
 	public Candidate getCandidateByLoginId(Long id) {
 		logger.debug("REST request to get Candidate : {}", id);
 		Candidate candidate = candidateRepository.findByLoginId(id);
-		//Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-		//if (candidate != null)
-		//	candidate.setAddresses(addresses);
-		logger.debug("Retruning candidate {}", candidate);
+		if (candidate != null) {
+			Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
+			candidate.setAddresses(addresses);
+			logger.debug("Retruning candidate {}", candidate);
+		}
 		return candidate;
 	}
 	

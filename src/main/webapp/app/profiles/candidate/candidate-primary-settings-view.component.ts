@@ -2,12 +2,13 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Candidate} from '../../entities/candidate/candidate.model';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {Subscription} from 'rxjs/Rx';
-import { DataStorageService} from '../../shared';
+import {DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import { USER_ID} from '../../shared/constants/storage.constants';
+import {USER_ID} from '../../shared/constants/storage.constants';
+import {CandidateProfileSettingService} from './candidate-profile-setting.service';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'jhi-candidate-primary-settings-view',
@@ -23,6 +24,9 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
   eventSubscriberCandidateImage: Subscription;
   currentSearch: string;
   routerSub: Subscription;
+  profileSubscriber: Subscription;
+  candidateSettingServiceSubscriber: Subscription;
+  
 
   constructor(
     private eventManager: JhiEventManager,
@@ -30,22 +34,26 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
     private candidateService: CandidateService,
     private dataService: DataStorageService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private candidateSettingService: CandidateProfileSettingService
   ) {
   }
 
   ngOnInit() {
-    this.routerSub = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
-    if (!this.candidate) {
-      this.reloadCandidate();
-    }
+     this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
+      subscribe((candidate) => this.candidate = candidate);
+    this.profileSubscriber = this.candidateSettingService.getSetting().subscribe((settingsChanged) => {
+      if (settingsChanged === 'primarySetting') {
+        this.reloadCandidate();
+      }
+    });
   }
 
   reloadCandidate() {
-   // console.log('Reloading candidate??');
     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
+        this.candidateSettingService.setCandidateFromChildToParent(this.candidate);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
@@ -56,13 +64,19 @@ export class CandidateProfilePrimaryViewComponent implements OnInit, OnDestroy {
     this.router.navigate(['/error']);
   }
 
-  registerChangeInCandidateData() {
-    this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
-  }
+  /*registerChangeInCandidateData() {
+    this.eventSubscriberCandidate = this.eventManager.subscribe('candidatePrimarySettingModification', (response) => this.reloadCandidate());
+  }*/
 
   ngOnDestroy() {
-      if (this.eventSubscriberCandidate) {
-        this.eventManager.destroy(this.eventSubscriberCandidate);
-      }
+    if (this.eventSubscriberCandidate) {
+      this.eventManager.destroy(this.eventSubscriberCandidate);
+    }
+    if (this.profileSubscriber) {
+      this.eventManager.destroy(this.profileSubscriber);
+    }
+    if (this.candidateSettingServiceSubscriber) {
+      this.eventManager.destroy(this.candidateSettingServiceSubscriber);
+    }
   }
 }

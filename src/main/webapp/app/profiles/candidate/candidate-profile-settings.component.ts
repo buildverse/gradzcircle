@@ -6,8 +6,8 @@ import {Subscription} from 'rxjs/Rx';
 import {Principal, UserService, DataStorageService} from '../../shared';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import {CandidateProfileScoreService} from './candidate-profile-score.service';
 import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
+import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -31,9 +31,9 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   defaultImage = require('../../../content/images/no-image.png');
 //  activeTab: string;
   profileScore: number;
-  profileSubscriber: Subscription;
-  routerSub: Subscription;
+ // routerSub: Subscription;
   viewMode: boolean;
+  candidateProfileSubscriber: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,10 +43,10 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     private progressBarConfig: NgbProgressbarConfig,
     private principal: Principal,
     private userService: UserService,
-    private candidateProfileScoreService: CandidateProfileScoreService,
     private cd: ChangeDetectorRef,
     private dataService: DataStorageService,
-    private router: Router
+    private router: Router,
+    private candidateProfileService : CandidateProfileSettingService
   ) {
     // this.activeTab = 'details';
     this.noImage = false;
@@ -56,22 +56,22 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit() {
-    this.routerSub = this.route.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
+    this.candidateProfileSubscriber = this.candidateProfileService.getCandidateFromChildToParent().
+      subscribe((candidate) => {
+       this.candidate = candidate;
+      //  console.log('------What do I get from child'+ JSON.stringify(this.candidate));
+        if (!this.candidate) {
+       //    console.log('---------- RELOAD-------');
+           this.loadCandidate();
+        } 
+        this.candidateProfileService.setCandidateFromParentToChild(this.candidate);
+      });
+    
     this.eventManager.broadcast({name: 'updateNavbarImage', content: 'OK'});
     this.reloadUserImage();
     this.registerChangeInCandidateData();
     this.registerChangeInCandidateImage();
-   /* this.profileSubscriber = this.candidateProfileScoreService.currentMessage.subscribe((profileScore) => {
-      if (profileScore) {
-        this.profileScore = profileScore;
-      }
-    });*/
   }
-
-  /* setMode() {
-      this.viewMode = !this.viewMode;
-      console.log('View mode is '+ this.viewMode);
-  }*/
 
   setAlerts() {
     if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
@@ -86,14 +86,12 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  reloadCandidate() {
-   // console.log('Reloading candidate??');
+  loadCandidate() {
     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
-       // console.log('Candidate is '+JSON.stringify(this.candidate));
+        this.candidateProfileService.setCandidateFromParentToChild(this.candidate);
         this.setAlerts();
-        this.candidateProfileScoreService.changeScore(this.candidate.profileScore);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
@@ -119,7 +117,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     this.router.navigate(['/error']);
   }
   registerChangeInCandidateData() {
-    this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
+    this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.loadCandidate());
   }
 
   registerChangeInCandidateImage() {
@@ -127,11 +125,12 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnDestroy() {
-    this.eventManager.destroy(this.eventSubscriberCandidate);
-    this.eventManager.destroy(this.eventSubscriberCandidateImage);
-   // this.eventManager.destroy(this.profileSubscriber);
-    this.eventManager.destroy(this.routerSub);
-    // console.log('Destroing parent profile');
+    if (this.eventSubscriberCandidate) {
+      this.eventManager.destroy(this.eventSubscriberCandidate);
+    }
+    if (this.eventSubscriberCandidateImage) {
+      this.eventManager.destroy(this.eventSubscriberCandidateImage);
+    }
   }
 
   reloadUserImage() {

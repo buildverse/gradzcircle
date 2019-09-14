@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs/Rx';
 import {DataStorageService} from '../../shared';
 import {CandidateService} from '../../entities/candidate/candidate.service';
 import {USER_ID, USER_DATA} from '../../shared/constants/storage.constants';
+import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
@@ -22,21 +23,29 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
   eventSubscriberCandidateImage: Subscription;
   currentSearch: string;
   routerSub: Subscription;
-
+  profileSubscriber: Subscription;
+  candidateSettingServiceSubscriber: Subscription;
+  
   constructor(
     private eventManager: JhiEventManager,
     private jhiAlertService: JhiAlertService,
     private candidateService: CandidateService,
     private dataService: DataStorageService,
-    private route : ActivatedRoute
+    private route : ActivatedRoute,
+    private candidateSettingService: CandidateProfileSettingService
   ) {
   }
 
   ngOnInit() {
-    this.routerSub = this.route.parent.data.subscribe((data: {candidate: any}) => this.candidate = data.candidate.body);
-    if(!this.candidate) {
-      this.reloadCandidate();
-    }
+
+    this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
+      subscribe((candidate) => this.candidate = candidate);
+    this.candidateSettingServiceSubscriber = this.candidateSettingService.getSetting()
+        .subscribe((settingsChanged) => {
+          if (settingsChanged === 'contactSetting') {
+            this.reloadCandidate();
+          }
+        });
   }
 
   reloadCandidate() {
@@ -44,6 +53,7 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.candidate = res.body;
+        this.candidateSettingService.setCandidateFromChildToParent(this.candidate);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
@@ -54,7 +64,7 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInCandidateData() {
-    this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
+   // this.eventSubscriberCandidate = this.eventManager.subscribe('candidateListModification', (response) => this.reloadCandidate());
   }
 
     ngOnDestroy() {
@@ -64,5 +74,11 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
         if (this.routerSub) {
             this.eventManager.destroy(this.routerSub);
         }
+      if (this.profileSubscriber) {
+        this.eventManager.destroy(this.profileSubscriber);
+      }
+      if (this.candidateSettingServiceSubscriber) {
+        this.eventManager.destroy(this.candidateSettingServiceSubscriber);
+      }
     }
 }
