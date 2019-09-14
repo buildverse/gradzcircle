@@ -1,3 +1,4 @@
+import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
@@ -7,7 +8,7 @@ import {CandidateEducation} from './candidate-education.model';
 import {CandidateEducationService} from './candidate-education.service';
 import {DataStorageService, Principal} from '../../shared';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import {CANDIDATE_ID, CANDIDATE_EDUCATION_ID, IS_EMPLOYMENT_PROJECT, CANDIDATE_PROJECT_ID, USER_ID} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, CANDIDATE_EDUCATION_ID, IS_EMPLOYMENT_PROJECT, CANDIDATE_PROJECT_ID, USER_ID, HAS_EDUCATION} from '../../shared/constants/storage.constants';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
@@ -37,7 +38,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     private principal: Principal,
     private router: Router,
     private dataService: DataStorageService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private candidateProfileSetting : CandidateProfileSettingService
   ) {
     this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
       this.activatedRoute.snapshot.params['search'] : '';
@@ -83,7 +85,12 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
       (res: HttpResponse<CandidateEducation[]>) => {
         this.candidateEducations = res.body;
         if (this.candidateEducations && this.candidateEducations.length <= 0) {
+          this.dataService.setdata(HAS_EDUCATION, 'false');
+         // console.log('===================no educaiton');
           this.router.navigate(['./candidate-profile']);
+        } else {
+       //   console.log('>>>>>>>>>>>>>>>>>>>>Have educaiton');
+          this.dataService.setdata(HAS_EDUCATION, 'true');
         }
         this.setPrimaryEducationOnLoad();
         this.spinnerService.hide();

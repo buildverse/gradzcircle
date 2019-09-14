@@ -111,13 +111,14 @@ public class ProfileScoreCalculator {
 		log.debug("Setting score for category {}",categoryName);
 		CandidateProfileScore score =  candidate.getProfileScores().stream().filter(category->category.getProfileCategory().getCategoryName().equals(categoryName)).findFirst().orElse(null);
 		if(!remove) {
-			if(score == null || (score != null && score.getScore() == 0d)) {
+			log.debug("SCORE IS -----------{}",score.getScore());
+			if(score == null || (score != null &&  new Double(0).equals(score.getScore()))) {
 				log.debug("Adding score {} for categrory {}",profileCategoryWeightMap.get(categoryName).doubleValue(), categoryName);
 				profileScore.setScore(profileCategoryWeightMap.get(categoryName).doubleValue());
 				totalScore += profileCategoryWeightMap.get(categoryName);
 			}
 		} else {
-			if(score.getScore() > 0 ) {
+			if(score!=null && score.getScore() > 0 ) {
 			profileScore.setScore(0d);
 			totalScore -= profileCategoryWeightMap.get(categoryName);
 			}

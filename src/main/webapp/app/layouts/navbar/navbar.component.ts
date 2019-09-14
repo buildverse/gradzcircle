@@ -11,9 +11,10 @@ import { AppConfig } from '../../entities/app-config/app-config.model';
 import { AppConfigService } from '../../entities/app-config/app-config.service';
 import { CorporateService} from '../../entities/corporate';
 import {Candidate, CandidateService} from '../../entities/candidate';
+import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE, CANDIDATE_CERTIFICATION_ID, 
-  CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID, BUSINESS_PLAN_ENABLED, FROM_LINKED_CANDIDATE} from '../../shared/constants/storage.constants';
+  CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID, BUSINESS_PLAN_ENABLED, FROM_LINKED_CANDIDATE, HAS_EDUCATION} from '../../shared/constants/storage.constants';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { OnDestroy } from '@angular/core';
@@ -59,6 +60,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private corporateService: CorporateService,
     private localStorageService: DataStorageService,
     private appConfigService: AppConfigService,
+    private candidateProfileSettingService: CandidateProfileSettingService
 
   ) {
     this.version = VERSION ? 'v' + VERSION : '';
@@ -133,6 +135,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
                 this.localStorageService.setdata(CANDIDATE_ID, response.body.id);
                  this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
               this.candidateId = this.localStorageService.getData(USER_ID);
+             this.localStorageService.setdata(HAS_EDUCATION, JSON.stringify(response.body.hasEducation));
+   
               this.eventManager.broadcast({
                 name: 'userDataLoadedSuccess',
                 content: 'User Data Load Success'

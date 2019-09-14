@@ -1,3 +1,4 @@
+import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
@@ -8,7 +9,7 @@ import {ITEMS_PER_PAGE, DataStorageService, Principal} from '../../shared';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {JobConstants} from './job.constants';
 import {HttpResponse} from '@angular/common/http';
-import {JOB_ID, MATCH_SCORE, USER_TYPE, USER_DATA} from '../../shared/constants/storage.constants';
+import {JOB_ID, MATCH_SCORE, USER_TYPE, USER_DATA, HAS_EDUCATION} from '../../shared/constants/storage.constants';
 import {Candidate} from '../candidate/candidate.model';
 import {Corporate} from '../corporate/corporate.model';
 import { JobListEmitterService } from './job-list-change.service';
@@ -81,7 +82,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
     private principal: Principal,
     private dataStorageService: DataStorageService,
     private spinnerService: NgxSpinnerService,
-    private jobListEmitterService: JobListEmitterService 
+    private jobListEmitterService: JobListEmitterService
 
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -512,7 +513,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
         }
       });
     });   
-     
+
     this.principal.identity(false).then((account) => {
       if (account) {
         this.loadCandidateInfo();
@@ -520,36 +521,6 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
         this.loadActiveJobsByUserFilter();
       }
     });
-
-   /* this.principal.identity().then((account) => {
-      if (account) {
-        this.currentAccount = account;
-        if (account.authorities.indexOf(AuthoritiesConstants.CORPORATE) > -1) {
-          this.spinnerService.show();
-          this.corporateService.findCorporateByLoginId(account.id).subscribe((response) => {
-            this.corporateId = response.body.id;
-            this.corporate = response.body;
-            this.loadActiveJobs();
-          });
-        } else if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
-          this.loadCandidateInfo(account);
-        
-        } else {
-          this.loadActiveJobsByUserFilter();
-        }
-        this.registerChangeInJobs();
-      } else {
-        this.loadActiveJobsByUserFilter();
-      }
-
-    });*/
-    
-   /* this.loginEventSubscriber = this.loginEmitterService.currentMessage.subscribe((loginEvent) => {
-      if (loginEvent && this.candidateId < 0) {
-       // this.loadCandidateInfo();
-      }
-    });
-    */
     this.jobChangeSubscription = this.jobListEmitterService.currentMessage.subscribe((jobChangeEvent) => {
       if(jobChangeEvent) {
         this.loadActiveJobsByUserFilter();
@@ -560,40 +531,22 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
 
 
   loadCandidateInfo() {
- // console.log('Calling reload candidate ' + this.dataStorageService.getData(USER_DATA));
+    this.jhiAlertService.clear();
     this.candidate = JSON.parse(this.dataStorageService.getData(USER_DATA));
-    this.hasEducation = this.candidate.hasEducation ;
+   // this.hasEducation = this.candidate.hasEducation;
+    this.hasEducation = this.dataStorageService.getData(HAS_EDUCATION) === 'true' ? true : false;
     this.candidateId = this.candidate.id;
-   // console.log      ('CandidateId is '+this.candidateId);
-  ///  console.log('hasEdcu is '+this.hasEducation);
-    if (this.candidate.profileScore <= 20 && !this.candidate.hasEducation) {
+    if (this.candidate.profileScore <= 20 && !this.hasEducation) {
       this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
-    } else if (!this.candidate.hasEducation) {
-      this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.educationAlert', timeout: 5000}, []);
     }
+    if (!this.hasEducation) {
+      this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.educationAlert', timeout: 5000}, []);
+    } 
     this.loadActiveJobsByUserFilter();
     this.spinnerService.hide();
-    /*this.principal.identity().then((account) => {
-      this.currentAccount = account;
-      if (this.currentAccount) {
-        this.spinnerService.show();
-        this.candidateService.getCandidateByLoginId(this.currentAccount.id).subscribe((response) => {
-          this.candidateId = response.body.id;
-        //  console.log('Candidate id is '+this.candidateId);
-          this.candidate = response.body;
-          if (this.candidate.profileScore <= 20 && !this.candidate.hasEducationScore) {
-            this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.profileAlert', timeout: 5000}, []);
-          } else if (!this.candidate.hasEducationScore) {
-            this.jhiAlertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.educationAlert', timeout: 5000}, []);
-          }
-          this.loadActiveJobsByUserFilter();
-          this.spinnerService.hide();
-        });
-      }
-    });*/
   }
 
-  ngOnDestroy() {
+  ngOnDestroy() { 
     if (this.eventSubscriberCandidate) {
     //  console.log('Closing event subsciber');
       this.eventManager.destroy(this.eventSubscriberCandidate);
