@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -25,7 +26,6 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -49,29 +49,35 @@ import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Course;
 import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.domain.Filter;
+import com.drishika.gradzcircle.domain.Gender;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.domain.JobType;
+import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.domain.enumeration.PaymentType;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.CourseRepository;
 import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.FilterRepository;
+import com.drishika.gradzcircle.repository.GenderRepository;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.JobFilterRepository;
 import com.drishika.gradzcircle.repository.JobHistoryRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.JobTypeRepository;
+import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
@@ -98,6 +104,7 @@ public class JobResourceIntTest {
 	private static final Integer DEFAULT_NO_OF_APPLICANTS = 1;
 	private static final Integer UPDATED_NO_OF_APPLICANTS = 2;
 
+	private static final String JOB_FILTER = "{\"basic\":true,\"premium\":true,\"courses\":[{\"value\":\"Computer Science & Engg.\",\"display\":\"Computer Science & Engg.\"},{\"value\":\"Information Science/Technology\",\"display\":\"Information Science/Technology\"},{\"value\":\"Electrical Engineering\",\"display\":\"Electrical Engineering\"},{\"value\":\"Electrical & Electronics Engg.\",\"display\":\"Electrical & Electronics Engg.\"}],\"qualifications\":[{\"value\":\"B.E/B.Tech\",\"display\":\"B.E/B.Tech\"}],\"scoreType\":\"percent\",\"percentage\":80,\"addOn\":true,\"graduationDateType\":\"between\",\"graduationFromDate\":{\"year\":2019,\"month\":1,\"day\":1},\"graduationToDate\":{\"year\":2020,\"month\":9,\"day\":1},\"languages\":[{\"value\":\"English\",\"display\":\"English\"},{\"value\":\"Tamil\",\"display\":\"Tamil\"}],\"gender\":{\"id\":1,\"gender\":\"Male\"}}";
 	private static final String DEFAULT_FILTER = "{\"basic\":true,\"premium\":true,\"scoreType\":\"percent\",\"percentage\":78,\"addOn\":true,\"gender\":{\"id\":1,\"gender\":\"Male\"}}";
 	private static final String UPDATED_FILTER = "{\"basic\":true,\"premium\":true,\"scoreType\":\"percent\",\"percentage\":78,\"addOn\":true,\"gender\":{\"id\":1,\"gender\":\"Female\"}}";
 	private static final String BASIC_FILTER = "{\"basic\":true}";
@@ -172,6 +179,12 @@ public class JobResourceIntTest {
 	private static final Long DEFAULT_UPDATED_BY = 1L;
 	private static final Long UPDATED_UPDATED_BY = 2L;
 	
+	private final static String MASTER = "MASTERS";
+	private final static String ENGLISH = "English";
+	private final static String TAMIL = "Tamil";
+	private final static String COMPUTER_SCIENCE = "Computer";
+	private final static Double PERCENTAGE = 78d;
+	
 	private static final String PERMANENT = ApplicationConstants.EMPLOYMENT_TYPE_PERMANENT;
 	private static final String FULL_TIME = ApplicationConstants.JOB_TYPE_FULL_TIME;
 	private static final String PART_TIME = ApplicationConstants.JOB_TYPE_PART_TIME;
@@ -227,6 +240,12 @@ public class JobResourceIntTest {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private LanguageRepository languageRepository;
+
+	@Autowired
+	private GenderRepository genderRepository;
 
 	@Autowired
 	private JobService jobService;;
@@ -257,7 +276,7 @@ public class JobResourceIntTest {
 
 	private Corporate corporate;
 
-	private Candidate candidateA, candidateB, candidateC, candidateD;
+	private Candidate candidateA, candidateB, candidateC, candidateD, candidateE;
 	
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 	universityFilter, qualificationFilter;
@@ -267,6 +286,10 @@ public class JobResourceIntTest {
 			candidateJob14, candidateJob15, candidateJob16, candidateJob17, candidateJob18, candidateJob19,
 			candidateJob20, candidateJob21, candidateJob22;
 	
+	private CandidateEducation candidateEEducaiton1,candidateEEducaiton2; 
+	
+	private final static String MALE = "Male";
+	
 	private JobType jobType,fullTime,partTime,internship,summerJob;
 	
 	private EmploymentType employmentType,contract, permanent;
@@ -274,35 +297,35 @@ public class JobResourceIntTest {
 	private Job job0,job1,job2,job3,job4,job5,job6,job7,job8,job9,job10,job11,job12,job13,job14,job15,job16,job17,job18,job19,job20,job21,job22;
 	
 	public static Filter createGradDateFilter(EntityManager em) {
-		return new Filter().filterName("gradDate").filterCost(5d);
+		return new Filter().filterName("gradDate").filterCost(5d).matchWeight(0L);
 	}
 
 	public static Filter createScoreFilter(EntityManager em) {
-		return new Filter().filterName("score").filterCost(10d);
+		return new Filter().filterName("score").filterCost(10d).matchWeight(8l);
 	}
 
 	public static Filter createCourseFilter(EntityManager em) {
-		return new Filter().filterName("course").filterCost(10d);
+		return new Filter().filterName("course").filterCost(10d).matchWeight(10l);
 	}
 
 	public static Filter createQualificationFilter(EntityManager em) {
-		return new Filter().filterName("qualification").filterCost(10d);
+		return new Filter().filterName("qualification").filterCost(10d).matchWeight(9l);
 	}
 
 	public static Filter createUniversityFilter(EntityManager em) {
-		return new Filter().filterName("universities").filterCost(0d);
+		return new Filter().filterName("universities").filterCost(0d).matchWeight(7l);
 	}
 
 	public static Filter createCollegeFilter(EntityManager em) {
-		return new Filter().filterName("colleges").filterCost(0d);
+		return new Filter().filterName("colleges").filterCost(0d).matchWeight(6l);
 	}
 
 	public static Filter createLanguagefilter(EntityManager em) {
-		return new Filter().filterName("languages").filterCost(5d);
+		return new Filter().filterName("languages").filterCost(5d).matchWeight(5l);
 	}
 
 	public static Filter createGenderFilter(EntityManager em) {
-		return new Filter().filterName("gender").filterCost(5d);
+		return new Filter().filterName("gender").filterCost(5d).matchWeight(4l);
 	}
 
 	@Before
@@ -332,6 +355,11 @@ public class JobResourceIntTest {
 	public static Candidate createCandidateD(EntityManager em) {
 		Candidate candidateD = new Candidate().firstName("Abhinav");
 		return candidateD;
+	}
+	
+	public static Candidate createCandidateE(EntityManager em) {
+		Candidate candidateE = new Candidate().firstName("Ruchika");
+		return candidateE;
 	}
 	
 	
@@ -425,6 +453,22 @@ public class JobResourceIntTest {
 		return jobFilters;
 	}
 
+	
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static Set<JobFilter> createAdditionalJobFilter(EntityManager em) {
+		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
+		JobFilter jobFilter = new JobFilter().filterDescription(JOB_FILTER);
+		jobFilters.add(jobFilter);
+		return jobFilters;
+	}
+
+	
+	
 	/**
 	 * Create an entity for this test.
 	 *
@@ -752,6 +796,88 @@ public class JobResourceIntTest {
 	}
 
 
+	public static Gender createMaleGender(EntityManager em) {
+		return new Gender().gender(MALE);
+	}
+	
+	public static Language createEnglishLang(EntityManager em) {
+		return new Language().language(ENGLISH);
+	}
+	
+	public static Language createTamilLang(EntityManager em) {
+		return new Language().language(TAMIL);
+	}
+	
+	
+	private CandidateLanguageProficiency candidateLanguageProficiencyEnglish,candidateLanguageProficiencyTamil;
+	
+	public static CandidateLanguageProficiency createLanguageProfEnglish(EntityManager em) {
+		return new CandidateLanguageProficiency()
+				.proficiency(ENGLISH);
+		
+	}
+	public static CandidateLanguageProficiency createLanguageProfTamil(EntityManager em) {
+		return new CandidateLanguageProficiency()
+				.proficiency(TAMIL);
+		
+	}
+	private Gender maleGender;
+	private Qualification  qualMaster,qualBach;
+	private Language  english,tamil;
+	private final static String MASTERS = "MASTERS";
+	private final static String COMPUTER = "COMPUTER";
+	private final static String IT = "Information Science/Technology";
+	private final static String ELECTRICAL = "Electrical Engineering";
+	private final static String ELECTRICALnELECTRONIC = "Electrical & Electronics Engg.";
+	private final static String COMPUTERSCIENCEnEngg = "Computer Science & Engg.";
+
+	private final static String BACH = "B.E/B.Tech";
+	private final static String Psychology = "Psychology";
+
+	private Course courseCOMPUTER,coursePsychology,courseComputerScNEngg,courseElectricalNElectronics,courseElectrical,courseIT;
+	
+	
+	public static Course createComputerCourse(EntityManager em) {
+		return new Course().course(COMPUTER);
+	}
+	
+	public static Course createElectricalCourse(EntityManager em) {
+		return new Course().course(ELECTRICAL);
+	}
+	public static Course createElectricalNElectronicCourse(EntityManager em) {
+		return new Course().course(ELECTRICALnELECTRONIC);
+	}
+	
+	public static Course createITCourse(EntityManager em) {
+		return new Course().course(IT);
+	}
+	
+	public static Course createComputerSCNENGGCourse(EntityManager em) {
+		return new Course().course(COMPUTERSCIENCEnEngg);
+	}
+	
+	public static Course createPsychologyCourse(EntityManager em) {
+		return new Course().course(Psychology);
+	}
+	
+	public static Qualification createMasterQualification(EntityManager em) {
+		return new Qualification().qualification(MASTERS).weightage(3L);
+	}
+	
+	public static Qualification createBachQualification(EntityManager em) {
+		return new Qualification().qualification(BACH).weightage(2L);
+	}
+	
+	public static CandidateEducation createCandidateEEducaiton1(EntityManager em) {
+		return new CandidateEducation();
+	}
+	
+	public static CandidateEducation createCandidateEEducaiton2(EntityManager em) {
+		return new CandidateEducation();
+	}
+	
+	
+	
 	@Before
 	public void initTest() {
 		// jobSearchRepository.deleteAll();
@@ -783,7 +909,10 @@ public class JobResourceIntTest {
 		candidateB = createCandidateB(em);
 		candidateC = createCandidateC(em);
 		candidateD = createCandidateD(em);
+		candidateE = createCandidateE(em);
 		corporate = createCorporate(em);
+		candidateEEducaiton1 = createCandidateEEducaiton1(em);
+		candidateEEducaiton2 = createCandidateEEducaiton2(em);
 		employmentType = createEmploymentType(em);
 		jobType = createJobType(em);
 		permanent = createEmploymentTypePermanent(em);
@@ -820,6 +949,31 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(jobType);
 		jobTypeCacheManager.removeFromCache(ApplicationConstants.JOB_TYPE);
 		employmentTypeCacheManager.removeFromCache(ApplicationConstants.EMPLOYMENT_TYPE);
+		qualMaster = createMasterQualification(em);
+		qualBach = createBachQualification(em);
+		courseCOMPUTER = createComputerCourse(em);
+		courseComputerScNEngg = createComputerSCNENGGCourse(em);
+		courseElectrical = createElectricalCourse(em);
+		courseIT = createITCourse(em);
+		courseElectricalNElectronics = createElectricalNElectronicCourse(em);
+		coursePsychology = createPsychologyCourse(em);
+		maleGender = createMaleGender(em);
+		english = createEnglishLang(em);
+		tamil = createTamilLang(em);
+		maleGender = createMaleGender(em);
+		courseRepository.saveAndFlush(courseCOMPUTER);
+		courseRepository.saveAndFlush(coursePsychology);
+		courseRepository.saveAndFlush(courseComputerScNEngg);
+		courseRepository.saveAndFlush(courseElectrical);
+		courseRepository.saveAndFlush(courseIT);
+		courseRepository.saveAndFlush(courseElectricalNElectronics);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBach);
+		genderRepository.saveAndFlush(maleGender);
+		languageRepository.saveAndFlush(english);
+		languageRepository.saveAndFlush(tamil);
+		candidateLanguageProficiencyTamil = createLanguageProfTamil(em);
+		candidateLanguageProficiencyEnglish = createLanguageProfEnglish(em);
 		
 	}
 
@@ -4203,7 +4357,7 @@ public class JobResourceIntTest {
 		course.course("Arts");
 		Qualification qual2 = new Qualification();
 		qual.qualification("Bach");
-		ce1.qualification(qual).course(course).highestQualification(true);
+		ce1.qualification(qual).course(course).highestQualification(true).percentage(40d);
 		ce2.qualification(qual2).course(course2).highestQualification(false);
 		candidateRepository.saveAndFlush(c1);
 		candidateRepository.saveAndFlush(c2);
@@ -4562,6 +4716,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		employmentTypeRepository.delete(employmentType.getId());
 		jobTypeRepository.delete(jobType.getId());
@@ -4891,6 +5046,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -5139,6 +5295,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -5386,6 +5543,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -5635,6 +5793,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -5882,6 +6041,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -6133,6 +6293,7 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
+		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -6658,5 +6819,41 @@ public class JobResourceIntTest {
 		.andExpect(jsonPath("$.matchScore").value(20d))
 		.andExpect(jsonPath("$.hasCandidateApplied").value(false));
 		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateEducationIsMasterInComputerScienceWith78PercentAndEnglighWithTamilCompletingInFutureAndJobRequiresComputerScienceOrComputerEnggOrITOrElectricalWith80PercentBachelorAndEnglishWithTamilThenScoreShouldBe92() throws Exception {
+		candidateE.setMatchEligible(true);
+		candidateE.gender(maleGender);
+		candidateEEducaiton1.qualification(qualMaster).course(courseComputerScNEngg).percentage(78d).educationToDate(null).isPursuingEducation(true).highestQualification(true);
+		candidateEEducaiton2.qualification(qualBach).course(coursePsychology).percentage(75d).educationToDate(LocalDate.of(2015, 7, 20)).isPursuingEducation(false);
+		candidateLanguageProficiencyEnglish.language(english);
+		candidateLanguageProficiencyTamil.language(tamil);
+		candidateE.addEducation(candidateEEducaiton1).addEducation(candidateEEducaiton2)
+				.addCandidateLanguageProficiency(candidateLanguageProficiencyEnglish)
+				.addCandidateLanguageProficiency(candidateLanguageProficiencyTamil);
+		candidateRepository.saveAndFlush(candidateE);
+		corporateRepository.saveAndFlush(corporate.escrowAmount(20d));
+		jobRepository.saveAndFlush(job1.corporate(corporate).everActive(DEFAULT_EVER_ACTIVE).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED)
+				.employmentType(employmentType).jobType(jobType));
+		Job initializedJob = jobRepository.findOne(job1.getId());
+		Job toBeUpdated = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
+				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE)
+				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).noOfApplicants(20).
+				corporate(initializedJob.getCorporate()).employmentType(employmentType).jobType(jobType);
+		toBeUpdated.setId(initializedJob.getId());
+		toBeUpdated.setJobFilters(createAdditionalJobFilter(em));
+		restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(toBeUpdated))).andExpect(status().isOk());
+		
+		 List<Job> jobList = jobRepository.findAll();
+		assertThat(jobList).hasSize(1);
+		Job matchedJob = jobList.get(0);
+		assertThat(matchedJob.getCandidateJobs()).hasSize(1);
+		assertThat(matchedJob.getCandidateJobs())
+				.extracting("candidate.firstName", "matchScore", "educationMatchScore", "languageMatchScore",
+						"genderMatchScore", "totalEligibleScore", "reviewed")
+				.contains(tuple("Ruchika", 92.0, 24.0, 5.0, 4.0, 36.0, false));
 	}
 }

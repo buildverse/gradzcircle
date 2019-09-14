@@ -105,7 +105,7 @@ public class MatchUtils {
 
 	@PostConstruct
 	public Map<String, Long> init() {
-		//if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
+	//	if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
 		populateJobFilterWeightMap();
 		return jobFilterWeightMap;
 
@@ -184,43 +184,6 @@ public class MatchUtils {
 			totalScore += languageScore;
 		if (educationScore != null)
 			totalScore += educationScore;
-		/*
-		 * educationScore = matchCourse(jobfilterObject.getCourses(), education,
-		 * matchScoreGained, jobFilterWeightMap); educationScore +=
-		 * matchQualification(jobfilterObject.getQualifications(), education,
-		 * matchScoreGained, jobFilterWeightMap); educationScore +=
-		 * matchColleges(jobfilterObject.getColleges(), education, matchScoreGained,
-		 * jobFilterWeightMap); educationScore +=
-		 * matchUniversity(jobfilterObject.getUniversities(), education,
-		 * matchScoreGained, jobFilterWeightMap); if (jobfilterObject.getPercentage() ==
-		 * null) { if (education.getGrade() == null) educationScore +=
-		 * matchGpaScore(jobfilterObject.getGpa(), education.getPercentage(),
-		 * matchScoreGained, jobFilterWeightMap); else educationScore +=
-		 * matchGpaScore(jobfilterObject.getGpa(), education.getGrade() * 10,
-		 * matchScoreGained, jobFilterWeightMap); } else { if (education.getGrade() ==
-		 * null) educationScore += matchPercentageScore(jobfilterObject.getPercentage(),
-		 * education.getPercentage(), matchScoreGained, jobFilterWeightMap); else
-		 * educationScore += matchPercentageScore(jobfilterObject.getPercentage(),
-		 * education.getGrade() * 10, matchScoreGained, jobFilterWeightMap); }
-		 * 
-		 * if (jobfilterObject.getGender() != null && matchGender) genderScore =
-		 * matchGender(jobfilterObject.getGender(), education.getCandidate(),
-		 * matchScoreGained, jobFilterWeightMap); if (jobfilterObject.getLanguages() !=
-		 * null && jobfilterObject.getLanguages().size() > 0 && matchLanguages)
-		 * languageScore = matchLanguage(jobfilterObject.getLanguages(),
-		 * education.getCandidate(), matchScoreGained, jobFilterWeightMap);
-		 */
-		// Candidate candidate = education.getCandidate();
-		// log.debug("CandidateJob from Education is ,
-		// {}",candidate.getCandidateJobs());
-		// CandidateJob candidateJobMatched = new CandidateJob(candidate, job);
-		/*
-		 * CandidateJob candidateJob =
-		 * candidate.getCandidateJobs().stream().filter(candidateJobMatched::equals).
-		 * findAny().orElse(null); if(candidateJob != null) {
-		 * 
-		 * }
-		 */
 		candidateJobMatched.setMatchScore(calculateMatchScore(totalScore, matchEligibleScore));
 		log.info("seting the language score as {}", languageScore);
 		candidateJobMatched.setLanguageMatchScore(languageScore);
@@ -234,6 +197,7 @@ public class MatchUtils {
 	private Double matchCandidateEducationToJob(JobFilterObject jobfilterObject, CandidateEducation education) {
 		Double educationScore = 0.0;
 		log.debug("Filter weight Mpa before matching starts is {}",jobFilterWeightMap);
+		
 		educationScore = matchCourse(jobfilterObject.getCourses(), education);
 		educationScore += matchQualification(jobfilterObject.getQualifications(), education);
 		educationScore += matchColleges(jobfilterObject.getColleges(), education);
@@ -261,52 +225,6 @@ public class MatchUtils {
 
 	}
 
-	/*
-	 * public CandidateJob matchCandidateLanguageAndJob(MutableDouble
-	 * matchScoreGained, MutableDouble matchScoreEligible,JobFilterObject
-	 * jobfilterObject, CandidateLanguageProficiency
-	 * candidateLanguageProficiency,Job job) { matchScoreEligible.setValue(0);
-	 * matchScoreGained.setValue(0); CandidateJob candidateJobMatched = new
-	 * CandidateJob(candidateLanguageProficiency.getCandidate(), job);
-	 * log.debug("Creating Match set for Candidate {} and Job {}"
-	 * ,candidateLanguageProficiency.getCandidate(),job); Candidate candidate =
-	 * candidateRepository.findOne(candidateLanguageProficiency.getCandidate().getId
-	 * ()); CandidateJob candidateJob = null;
-	 * if(candidate.getCandidateJobs().stream().filter(candidateJobMatched::equals).
-	 * findFirst().isPresent()) { candidateJob =
-	 * candidate.getCandidateJobs().stream().filter(candidateJobMatched::equals).
-	 * findFirst().get();
-	 * log.debug("Found existing candidateJob object {}",candidateJob); } else
-	 * candidateJob = candidateJobMatched; if(jobfilterObject.getLanguages()!=null
-	 * && jobfilterObject.getLanguages().size()>0) { Double languageScore =
-	 * matchLanguage(jobfilterObject.getLanguages(), candidateLanguageProficiency,
-	 * matchScoreGained, jobFilterWeightMap, matchScoreEligible);
-	 * candidateJob.setLanguageMatchScore(languageScore); } else {
-	 * candidateJob.setLanguageMatchScore(0d); }
-	 * candidateJob.setMatchScore(candidateJob.getEducationMatchScore()+(
-	 * candidateJob.getGenderMatchScore()!=null?candidateJob.getGenderMatchScore():0
-	 * .0) +(candidateJob.getLanguageMatchScore()!=null?candidateJob.
-	 * getLanguageMatchScore():0.0)); return candidateJob;
-	 * 
-	 * }
-	 */
-	/*
-	 * public CandidateJob matchCandidateGenderAndJob(MutableDouble
-	 * matchScoreGained, MutableDouble matchScoreEligible,JobFilterObject
-	 * jobfilterObject, Candidate candidate,Job job) {
-	 * matchScoreEligible.setValue(0); matchScoreGained.setValue(0); CandidateJob
-	 * candidateJobMatched = new CandidateJob(education.getCandidate(), job);
-	 * log.debug("Creating Match set for Candidate {} and Job {}",education.
-	 * getCandidate(),job); CandidateJob candidateJob =
-	 * education.getCandidate().getCandidateJobs().stream().filter(cJob->cJob.equals
-	 * (candidateJobMatched)).findFirst().get();
-	 * log.debug("Found existing candidateJob object {}",candidateJob);
-	 * if(jobfilterObject.getGender()!=null ) { Double genderScore =
-	 * matchGender(jobfilterObject.getGender(), education, matchScoreGained,
-	 * jobFilterWeightMap, matchScoreEligible);
-	 * candidateJob.setGenderMatchScore(genderScore); } else {
-	 * candidateJob.setGenderMatchScore(0d); } return candidateJob; }
-	 */
 	private Double calculateMatchScore(Double matchScoreGained, Double matchScoreEligible) {
 		log.debug("Score gained to total is {},{}", matchScoreGained, matchScoreEligible);
 		return (double) Math.round(matchScoreGained / matchScoreEligible * 100);
@@ -325,6 +243,7 @@ public class MatchUtils {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.COURSE));
 						courseScore = new Double(jobFilterWeightMap.get(Constants.COURSE));
 						log.info("Matching on Course");
+						
 					}
 				}
 			return courseScore;
@@ -360,6 +279,7 @@ public class MatchUtils {
 					}
 				}
 			log.info("final qualificaiton Score  {}", qualificationScore);
+			
 			return qualificationScore;
 		}
 	}
@@ -425,7 +345,6 @@ public class MatchUtils {
 				}
 				log.info("condititonla Matching on grade");
 			}
-
 			return gpaScore;
 		}
 	}
@@ -490,8 +409,9 @@ public class MatchUtils {
 			// candidateLanguageProficiencyRepository
 			// .findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 			Set<CandidateLanguageProficiency> proficiencies = candidate.getCandidateLanguageProficiencies();
-			log.debug("proficienceis are {}", proficiencies);
+			log.debug("proficienceis are {} ", proficiencies);
 			for (Language filterLanguage : jobFilterLanguages) {
+				log.debug("Looking for  {}", filterLanguage.getValue());
 				Language language = languageRepository.findByLanguage((filterLanguage.getValue()));
 				log.debug("Language from repo are {}", language);
 				for (CandidateLanguageProficiency proficiency : proficiencies) {

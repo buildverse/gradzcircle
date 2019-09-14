@@ -578,17 +578,12 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	public void createAdditionalCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSetShouldNotUpdateLanguageScoreAndLanguageProfileScore()
 			throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav");
-
-		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
-				.candidate(candidate);
-
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
-		
-		
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profMarathi = new CandidateLanguageProficiency().language(marathiLanguage);
 		candidate.addCandidateLanguageProficiency(profMarathi).addCandidateLanguageProficiency(profHindi);
-		candidateRepository.saveAndFlush(candidate);
+		candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
 		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
 		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,edu);
 		CandidateProfileScore candidateProfileScore3 = new CandidateProfileScore(candidate,lang);
@@ -611,11 +606,11 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		candidateJob2.setGenderMatchScore(4.0);
 		candidateJob2.setEducationMatchScore(30.0);
 		candidateJob2.setTotalEligibleScore(45.0);
-		candidateJob3.setLanguageMatchScore(2.0);
+		candidateJob3.setLanguageMatchScore(0.0);
 		candidateJob3.setGenderMatchScore(4.0);
 		candidateJob3.setEducationMatchScore(30.0);
 		candidateJob3.setTotalEligibleScore(45.0);
-		candidateJob4.setLanguageMatchScore(2.0);
+		candidateJob4.setLanguageMatchScore(0.0);
 		candidateJob4.setGenderMatchScore(4.0);
 		candidateJob4.setEducationMatchScore(30.0);
 		candidateJob4.setTotalEligibleScore(45.0);

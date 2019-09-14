@@ -111,7 +111,6 @@ public class ProfileScoreCalculator {
 		log.debug("Setting score for category {}",categoryName);
 		CandidateProfileScore score =  candidate.getProfileScores().stream().filter(category->category.getProfileCategory().getCategoryName().equals(categoryName)).findFirst().orElse(null);
 		if(!remove) {
-			log.debug("SCORE IS -----------{}",score.getScore());
 			if(score == null || (score != null &&  new Double(0).equals(score.getScore()))) {
 				log.debug("Adding score {} for categrory {}",profileCategoryWeightMap.get(categoryName).doubleValue(), categoryName);
 				profileScore.setScore(profileCategoryWeightMap.get(categoryName).doubleValue());

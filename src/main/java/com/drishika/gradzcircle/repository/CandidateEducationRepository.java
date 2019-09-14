@@ -32,20 +32,23 @@ public interface CandidateEducationRepository extends JpaRepository<CandidateEdu
 
 	List<CandidateEducation> findByOrderByEducationToDateDesc();
 
+	@Query("select cE from CandidateEducation cE where cE.candidate.matchEligible=true and cE.highestQualification=true and cE.educationToDate >= ?1")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-	Stream<CandidateEducation> findByEducationToDateAfterAndHighestQualification(LocalDate date,
-			Boolean highestEducation);
+	Stream<CandidateEducation> findByEducationToDateAfterAndHighestQualification(LocalDate date);
 
+	@Query("select cE from CandidateEducation cE  where cE.candidate.matchEligible=true and cE.highestQualification=true and cE.educationToDate <= ?1")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-	Stream<CandidateEducation> findByEducationToDateBeforeAndHighestQualification(LocalDate date,
-			Boolean highestEducation);
+	Stream<CandidateEducation> findByEducationToDateBeforeAndHighestQualification(LocalDate date);
 
+	@Query("select cE from CandidateEducation cE  where cE.candidate.matchEligible=true and cE.highestQualification=true and cE.educationToDate >= ?1 and cE.educationToDate <= ?2")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
-	Stream<CandidateEducation> findByEducationToDateBetweenAndHighestQualification(LocalDate fromDate, LocalDate toDate,
-			Boolean highestEducation);
+	Stream<CandidateEducation> findByEducationToDateBetweenAndHighestQualification(LocalDate fromDate, LocalDate toDate);
 
-	@Query("select cE from CandidateEducation cE inner join cE.candidate c where c.matchEligible=true and cE.highestQualification=true")
+	@Query("select cE from CandidateEducation cE  where cE.candidate.matchEligible=true and cE.highestQualification=true")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
 	Stream<CandidateEducation> findAllHighestCandidateEducationForMatchEligilbeCandidates();
-
+	
+	@Query("select cE from CandidateEducation cE where cE.candidate.matchEligible=true and cE.highestQualification=true and (cE.educationToDate <= ?1 or cE.educationToDate is null)")
+	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	Stream<CandidateEducation> findByEducationToDateFutureAndHighestQualification(LocalDate date);
 }

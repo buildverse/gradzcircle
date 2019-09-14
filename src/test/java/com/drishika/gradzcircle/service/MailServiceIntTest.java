@@ -197,7 +197,7 @@ public class MailServiceIntTest {
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         user.setLangKey("en");
-        mailService.sendNewMatchedCandidateEmailToCorporate(user, "My First Job", 20l);
+        mailService.sendMatchedCandidateEmailToCorporate(user, "My First Job", 20l);
         verify(javaMailSender).send((MimeMessage) messageCaptor.capture());
         MimeMessage message = (MimeMessage) messageCaptor.getValue();
         assertThat(message.getSubject()).isEqualTo("New Candidate Matches From Gradzcircle");

@@ -517,15 +517,21 @@ public class CandidateEducationService {
 	}
 
 	public Stream<CandidateEducation> getCandidateEducationBeforeSuppliedDate(LocalDate date) {
-		return candidateEducationRepository.findByEducationToDateBeforeAndHighestQualification(date, true);
+		return candidateEducationRepository.findByEducationToDateBeforeAndHighestQualification(date);
 	}
 
 	public Stream<CandidateEducation> getCandidateEducationAfterSuppliedDate(LocalDate date) {
-		return candidateEducationRepository.findByEducationToDateAfterAndHighestQualification(date, true);
+		return candidateEducationRepository.findByEducationToDateAfterAndHighestQualification(date);
 	}
 
 	public Stream<CandidateEducation> getCandidateEducationBetweenSuppliedDates(LocalDate fromDate, LocalDate toDate) {
-		return candidateEducationRepository.findByEducationToDateBetweenAndHighestQualification(fromDate, toDate, true);
+		LocalDate today = LocalDate.now();
+		if(toDate.isAfter(today)) {
+			log.debug("To date is in future, getting candidates with that complted education beyond {} ",fromDate);
+			return candidateEducationRepository.findByEducationToDateFutureAndHighestQualification(fromDate);
+		} else {
+			return candidateEducationRepository.findByEducationToDateBetweenAndHighestQualification(fromDate, toDate);
+		}
 	}
 
 	public Stream<CandidateEducation> getEducationForMatchEligibleCandidate() {
