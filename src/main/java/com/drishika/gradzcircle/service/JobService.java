@@ -207,6 +207,10 @@ public class JobService {
 		return job;
 	}
 
+	public void beginMatchingAllJobsAndCandidates() {
+		 // TODO implement util methods for matching via admin panel
+	}
+	
 	private void setJob(Job job, Job prevJob) throws BeanCopyException {
 		job.setCreateDate(prevJob.getCreateDate());
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).withNano(0);

@@ -201,6 +201,10 @@ public class CandidateService {
 		candidate.setEducations(prevCandidate.getEducations());
 		candidate.setCandidateJobs(prevCandidate.getCandidateJobs());
 		candidate.setMatchEligible(prevCandidate.getMatchEligible());
+		candidate.setCandidateLanguageProficiencies(prevCandidate.getCandidateLanguageProficiencies());
+		candidate.setCertifications(prevCandidate.getCertifications());
+		candidate.setNonAcademics(prevCandidate.getNonAcademics());
+		candidate.setEmployments(prevCandidate.getEmployments());
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE,false);
 		Candidate result = candidateRepository.save(candidate);
 		result.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(result));

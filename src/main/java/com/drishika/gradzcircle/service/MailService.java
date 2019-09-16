@@ -133,7 +133,7 @@ public class MailService {
     }
     
     public void sendMatchedJobEmailToCandidate(User user, Long numberOfJobs) {
-		log.info("Sending new matched Jobs email to candidate '{}'", user.getEmail());
+		log.info("Sending new matched Jobs {} email to candidate '{}'", numberOfJobs, user.getEmail());
 		 Locale locale = Locale.forLanguageTag(user.getLangKey());
 	        Context context = new Context(locale);
 	        context.setVariable(USER, user);

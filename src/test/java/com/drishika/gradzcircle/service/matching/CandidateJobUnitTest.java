@@ -33,7 +33,7 @@ public class CandidateJobUnitTest {
 		MockitoAnnotations.initMocks(this);
 		candidate = new Candidate();
 		job = new Job();
-		candidateJobId = new CandidateJob.CandidateJobId();
+		//candidateJobId = new CandidateJob.CandidateJobId();
 		candidateJob = new CandidateJob();
 	}
 

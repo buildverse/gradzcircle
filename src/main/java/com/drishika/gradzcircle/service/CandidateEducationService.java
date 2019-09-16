@@ -397,11 +397,17 @@ public class CandidateEducationService {
 
 	public void deleteCandidateEducation(Long id) {
 		CandidateEducation education = candidateEducationRepository.findOne(id);
-		Candidate candidate = education.getCandidate();
-		log.debug("Canddtae from educaiton is {} ", candidate.getEducations());
+		//Candidate candidate = education.getCandidate();
+		/*log.debug("Canddtae educaiton is {} ", candidate.getEducations());
 		candidate.getEducations().remove(education);
+		//candidate.getEducations().removeIf(edu-> (education.getId().equals(id)));
+		log.debug("Educaiton set post removing education is {}", candidate.getEducations());*/
+		List<CandidateEducation> candidateEducations= setHighestEducation(education, true);
+		Candidate candidate = education.getCandidate();
+		candidate.getEducations().clear();
+		//candidate.getEducations().addAll((setHighestEducation(education, true)));
+		candidate.getEducations().addAll(candidateEducations);
 		log.debug("Educaiton set post removing education is {}", candidate.getEducations());
-		candidate.getEducations().addAll((setHighestEducation(education, true)));
 		if(candidate.getEducations().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, true);
 		matcher.match(candidate);

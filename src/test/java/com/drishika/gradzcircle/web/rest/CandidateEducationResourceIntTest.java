@@ -1073,7 +1073,10 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(languageFilter);
 		// Thread.sleep(10000);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
-		candidateRepository.saveAndFlush(candidateA);
+		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(79d)
+				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
+				.educationToDate(LocalDate.of(2017, 02, 24));
+		candidateRepository.saveAndFlush(candidateA.addEducation(education));
 		CandidateProfileScore profileScore1 = new CandidateProfileScore(candidateA,basic);
 		CandidateProfileScore profileScore2 = new CandidateProfileScore(candidateA,personal);
 		CandidateProfileScore profileScore3 = new CandidateProfileScore(candidateA,edu);
@@ -1096,15 +1099,11 @@ public class CandidateEducationResourceIntTest {
 		candidateJobs.add(candidateJob2);
 		candidateJobs.add(candidateJob1);
 		candidateA.getCandidateJobs().addAll(candidateJobs);
-	//	jobB.addCandidateJob(candidateJob1);
-	//	jobG.addCandidateJob(candidateJob2);
-	//jobRepository.saveAndFlush(jobB);
-	//	jobRepository.saveAndFlush(jobG);
-		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(79d)
-				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
-				.educationToDate(LocalDate.of(2017, 02, 24)).candidate(candidateA);
-		candidateRepository.saveAndFlush(candidateA.addEducation(education));
-		
+		jobB.addCandidateJob(candidateJob1);
+		jobG.addCandidateJob(candidateJob2);
+		assertThat(candidateA.getCandidateJobs()).hasSize(2);
+		assertThat(jobG.getCandidateJobs()).hasSize(1);
+		assertThat(jobB.getCandidateJobs()).hasSize(1);
 		restCandidateEducationMockMvc
 				.perform(delete("/api/candidate-educations/{id}", candidateA.getEducations().iterator().next().getId())
 						.accept(TestUtil.APPLICATION_JSON_UTF8))
@@ -1112,10 +1111,7 @@ public class CandidateEducationResourceIntTest {
 
 		List<Candidate> testCandidates = candidateRepository.findAll();
 		assertThat(testCandidates).hasSize(1);
-		Job testJobB = jobRepository.findOne(jobB.getId());
-		Job testJobG = jobRepository.findOne(jobG.getId());
-		assertThat(testJobB.getCandidateJobs()).hasSize(0);
-		assertThat(testJobG.getCandidateJobs()).hasSize(0);
+		
 		List<CandidateEducation> testCandidateEducationsAgain = candidateEducationRepository.findAll();
 		assertThat(testCandidateEducationsAgain).hasSize(0);
 		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(0);
@@ -1123,6 +1119,10 @@ public class CandidateEducationResourceIntTest {
 		assertThat(testCandidates.get(0).getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
 		assertThat(testCandidates.get(0).getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
 		assertThat(testCandidates.get(0).getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(0D);
+		Job testJobB = jobRepository.findOne(jobB.getId());
+		Job testJobG = jobRepository.findOne(jobG.getId());
+		assertThat(testJobB.getCandidateJobs()).hasSize(0);
+		assertThat(testJobG.getCandidateJobs()).hasSize(0);
 
 	}
 

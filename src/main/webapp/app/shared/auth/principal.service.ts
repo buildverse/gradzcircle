@@ -12,7 +12,7 @@ export class Principal {
 
     constructor(
         private account: AccountService,
-        private trackerService: JhiTrackerService
+       // private trackerService: JhiTrackerService
     ) {}
 
     authenticate(identity) {
@@ -69,7 +69,7 @@ export class Principal {
             if (account) {
                 this.userIdentity = account;
                 this.authenticated = true;
-                this.trackerService.connect();
+             //   this.trackerService.connect();
             } else {
                 this.userIdentity = null;
                 this.authenticated = false;
@@ -77,9 +77,9 @@ export class Principal {
             this.authenticationState.next(this.userIdentity);
             return this.userIdentity;
         }).catch((err) => {
-            if (this.trackerService.stompClient && this.trackerService.stompClient.connected) {
+            /*if (this.trackerService.stompClient && this.trackerService.stompClient.connected) {
                 this.trackerService.disconnect();
-            }
+            }*/
             this.userIdentity = null;
             this.authenticated = false;
             this.authenticationState.next(this.userIdentity);

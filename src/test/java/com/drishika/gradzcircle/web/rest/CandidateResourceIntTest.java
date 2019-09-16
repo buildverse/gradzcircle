@@ -19,7 +19,6 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationRegistryBasedSynchronizationStrategy;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,8 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.CandidateCertification;
 import com.drishika.gradzcircle.domain.CandidateEducation;
+import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
+import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
@@ -48,6 +51,7 @@ import com.drishika.gradzcircle.domain.Filter;
 import com.drishika.gradzcircle.domain.Gender;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
+import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.CandidateRepository;
@@ -55,13 +59,12 @@ import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.GenderRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
+import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.CandidateService;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 /**
  * Test class for the CandidateResource REST controller.
@@ -126,6 +129,9 @@ public class CandidateResourceIntTest {
 	private CandidateSearchRepository candidateSearchRepository;
 	
 	@Autowired
+	private LanguageRepository languageRepository;
+	
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -166,6 +172,8 @@ public class CandidateResourceIntTest {
 	private ProfileCategory basic, personal, edu, exp, lang, cert, nonAcad;
 
 	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH;
+	
+	private Language english, hindi;
 
 	private static final String JOB_A = "JOB_A";
 	private static final String JOB_B = "JOB_B";
@@ -198,6 +206,14 @@ public class CandidateResourceIntTest {
 		user.setEmail("johndoe@localhost");
 		return user;
 		
+	}
+	
+	public static Language createEnglish(EntityManager em) {
+		return new Language().language("English");
+	}
+	
+	public static Language createHindi(EntityManager em) {
+		return new Language().language("Hindi");
 	}
 	
 	public static Job createJobA(EntityManager em) {
@@ -405,6 +421,8 @@ public class CandidateResourceIntTest {
 		profileCategoryRepository.saveAndFlush(edu);
 		profileCategoryRepository.saveAndFlush(nonAcad);
 		profileCategoryRepository.saveAndFlush(lang);
+		languageRepository.saveAndFlush(createEnglish(em));
+		languageRepository.saveAndFlush(createHindi(em));
 	}
 
 	@Test
@@ -513,6 +531,159 @@ public class CandidateResourceIntTest {
 				.contains(tuple(JOB_C, 73.0, 30.0, null, 2.0, 44.0, "Abhinav"))
 				.contains(tuple(JOB_G, 73.0, 30.0, null, 2.0, 44.0, "Abhinav"))
 				.contains(tuple(JOB_F, 73.0, 30.0, null, 2.0, 44.0, "Abhinav"));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguagesSavedwithGenderSetChnagingGenderMustNotImpactLanguages() throws Exception {
+		candidate.gender(femaleGender);
+		
+		CandidateLanguageProficiency englishProf = new CandidateLanguageProficiency().language(english);
+		CandidateLanguageProficiency hindiProf = new CandidateLanguageProficiency().language(hindi);
+		candidate.addCandidateLanguageProficiency(hindiProf).addCandidateLanguageProficiency(englishProf);
+		candidateRepository.saveAndFlush(candidate);
+		
+		
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getCandidateLanguageProficiencies()).hasSize(2);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasEducationSavedwithGenderSetChnagingGenderMustNotImpactEducation() throws Exception {
+		candidate.gender(femaleGender);
+		CandidateEducation education1 = new CandidateEducation().highestQualification(true);
+		CandidateEducation education2 = new CandidateEducation().highestQualification(false);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		candidateRepository.saveAndFlush(candidate);
+		candidate.addEducation(education2).addEducation(education1);
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getEducations()).hasSize(2);
+		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(5);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasNoEducationSavedwithGenderSetChnagingGenderMustNotImpactEducationAnNoCadidateJobs() throws Exception {
+		candidate.gender(femaleGender);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		candidateRepository.saveAndFlush(candidate);
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getEducations()).hasSize(0);
+		assertThat(testCandidates.get(0).getCandidateJobs()).hasSize(0);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasEmploymentsSavedwithGenderSetChnagingGenderMustNotImpactEmployments() throws Exception {
+		candidate.gender(femaleGender);
+		
+		CandidateEmployment employment1 = new CandidateEmployment();
+		CandidateEmployment employment2 = new CandidateEmployment();
+		candidate.addEmployment(employment2).addEmployment(employment1);
+		candidateRepository.saveAndFlush(candidate);
+		
+		
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getEmployments()).hasSize(2);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasNonAcademicvedwithGenderSetChnagingGenderMustNotImpactNonAcademic() throws Exception {
+		candidate.gender(femaleGender);
+		
+		CandidateNonAcademicWork nonAcademic1 = new CandidateNonAcademicWork();
+		CandidateNonAcademicWork nonAcademic2 = new CandidateNonAcademicWork();
+		candidate.addNonAcademic(nonAcademic2).addNonAcademic(nonAcademic1);
+		candidateRepository.saveAndFlush(candidate);
+		
+		
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getNonAcademics()).hasSize(2);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasCertificationSavedwithGenderSetChnagingGenderMustNotImpactCertifications() throws Exception {
+		candidate.gender(femaleGender);
+		
+		CandidateCertification cert1 = new CandidateCertification();
+		CandidateCertification cert2 = new CandidateCertification();
+		candidate.addCertification(cert2).addCertification(cert1);
+		candidateRepository.saveAndFlush(candidate);
+		
+		
+		Candidate updatedCandidate = new Candidate();
+		updatedCandidate.setId(candidate.getId());
+		updatedCandidate.setFirstName(candidate.getFirstName());
+		updatedCandidate.setGender(maleGender);
+		// update the Candidate
+		restCandidateMockMvc.perform(put("/api/candidates").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidate))).andExpect(status().isOk());
+		
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getCertifications()).hasSize(2);
+		assertThat(testCandidates.get(0).getGender().getGender()).isEqualTo("MALE");
+		
 	}
 
 	@Test

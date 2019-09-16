@@ -11,7 +11,7 @@ export class LoginService {
     constructor(
         private languageService: JhiLanguageService,
         private principal: Principal,
-        private trackerService: JhiTrackerService,
+       // private trackerService: JhiTrackerService,
         private authServerProvider: AuthServerProvider
     ) {}
 
@@ -26,7 +26,7 @@ export class LoginService {
                     if (account !== null) {
                         this.languageService.changeLanguage(account.langKey);
                     }
-                    this.trackerService.sendActivity();
+                   // this.trackerService.sendActivity();
                     resolve(data);
                 });
                 return cb();

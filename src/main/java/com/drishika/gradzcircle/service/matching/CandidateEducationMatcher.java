@@ -3,7 +3,10 @@
  */
 package com.drishika.gradzcircle.service.matching;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,13 +64,14 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 	public void match(Candidate candidate) {
 		Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 		Set<CandidateJob> candidateJobs = new HashSet<>();
+		//List<Job> jobs = new ArrayList<>();
 		matchUtils.populateJobFilterWeightMap();
 		if (candidate.getEducations() != null)
 			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
 					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
-		log.debug("Got CandidateJobs post Match as {} and is empty {}", candidateJobs, candidateJobs.isEmpty());
+		log.info("Got CandidateJobs post Match as {} and is empty {}", candidateJobs, candidateJobs.isEmpty());
 		if (candidateJobs.isEmpty()) {
-			candidate.getCandidateJobs().clear();
+			//candidate.getCandidateJobs().clear();
 		} else {
 			candidateJobs.forEach(candidateJob -> {
 				if (candidate.getCandidateJobs().contains(candidateJob)) {
@@ -80,8 +84,9 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				}
 			});
 		}
-		log.debug("Status of education and Matched Set in candidate before save {},{}", candidate.getEducations(),candidate.getCandidateJobs());
+		log.info("Status of education and Matched Set in candidate before save {},{}", candidate.getEducations(),candidate.getCandidateJobs());
 		candidateRepository.save(candidate);
+		
 		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
 	}
 
@@ -126,7 +131,17 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 			}
 
 		} else {
+			List<Job> jobs = new ArrayList<>();
+			candidate.getCandidateJobs().stream().forEach(cJ->{
+				if(cJ.equals(incomingCandidateJob)) {
+					Job jb = cJ.getJob();
+					jb.getCandidateJobs().remove(incomingCandidateJob);
+					jobs.add(jb);
+				}
+			});
+			jobRepository.save(jobs);
 			candidate.getCandidateJobs().remove(incomingCandidateJob);
+			
 		}
 		return candidateJob;
 	}
