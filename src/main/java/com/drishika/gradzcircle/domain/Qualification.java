@@ -43,6 +43,9 @@ public class Qualification implements Serializable {
 
 	@Column(name = "weightage")
 	private Long weightage;
+	
+	@Column(name = "category")
+    private String category;
 
 	@OneToMany(mappedBy = "qualification")
 	@JsonIgnore
@@ -159,6 +162,19 @@ public class Qualification implements Serializable {
 	public void setWeightage(Long weightage) {
 		this.weightage = weightage;
 	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public Qualification category(String category) {
+		this.category = category;
+		return this;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -180,15 +196,15 @@ public class Qualification implements Serializable {
 		return Objects.hashCode(getId());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Qualification [id=" + id + ", qualification=" + qualification + ", value=" + value + ", display="
-				+ display + ", weightage=" + weightage + "]";
-	}
+	 @Override
+	    public String toString() {
+	        return "Qualification{" +
+	            "id=" + getId() +
+	            ", qualification='" + getQualification() + "'" +
+	            ", weightage=" + getWeightage() +
+	            ", category='" + getCategory() + "'" +
+	            "}";
+	    }
+
 
 }

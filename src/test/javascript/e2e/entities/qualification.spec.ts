@@ -37,6 +37,8 @@ describe('Qualification e2e test', () => {
         expect(qualificationDialogPage.getQualificationInput()).toMatch('qualification');
         qualificationDialogPage.setWeightageInput('5');
         expect(qualificationDialogPage.getWeightageInput()).toMatch('5');
+        qualificationDialogPage.setCategoryInput('category');
+        expect(qualificationDialogPage.getCategoryInput()).toMatch('category');
         qualificationDialogPage.save();
         expect(qualificationDialogPage.getSaveButton().isPresent()).toBeFalsy();
     });
@@ -65,6 +67,7 @@ export class QualificationDialogPage {
     closeButton = element(by.css('button.close'));
     qualificationInput = element(by.css('input#field_qualification'));
     weightageInput = element(by.css('input#field_weightage'));
+    categoryInput = element(by.css('input#field_category'));
 
     getModalTitle() {
         return this.modalTitle.getAttribute('jhiTranslate');
@@ -84,6 +87,14 @@ export class QualificationDialogPage {
 
     getWeightageInput = function() {
         return this.weightageInput.getAttribute('value');
+    };
+
+    setCategoryInput = function(category) {
+        this.categoryInput.sendKeys(category);
+    };
+
+    getCategoryInput = function() {
+        return this.categoryInput.getAttribute('value');
     };
 
     save() {

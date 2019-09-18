@@ -16,11 +16,16 @@
         {
             "fieldName": "weightage",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "category",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20171015094637",
     "entityTableName": "qualification",
     "dto": "no",
     "pagination": "no",
-    "service": "no"
+    "service": "no",
+    "jpaMetamodelFiltering": false
 }

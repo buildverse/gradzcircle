@@ -45,7 +45,7 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
  *
  */
 @Component
-@DependsOn("liquibase")
+//@DependsOn("liquibase")
 public class MatchUtils {
 
 	private final Logger log = LoggerFactory.getLogger(MatchUtils.class);
@@ -103,7 +103,7 @@ public class MatchUtils {
 		return jobFilter;
 	}
 
-	@PostConstruct
+	//@PostConstruct
 	public Map<String, Long> init() {
 	//	if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
 		populateJobFilterWeightMap();
@@ -153,6 +153,8 @@ public class MatchUtils {
 					.filter(education -> education.isHighestQualification()).findAny().orElse(null);
 			if (candidateEducation != null)
 				educationScore = matchCandidateEducationToJob(jobfilterObject, candidateEducation);
+			if(educationScore == null)
+				return null;
 		} else {
 			if (candidateJob != null) {
 				educationScore = candidateJob.getEducationMatchScore();
@@ -199,7 +201,11 @@ public class MatchUtils {
 		log.debug("Filter weight Mpa before matching starts is {}",jobFilterWeightMap);
 		
 		educationScore = matchCourse(jobfilterObject.getCourses(), education);
+		if(educationScore==0)
+			return null;
 		educationScore += matchQualification(jobfilterObject.getQualifications(), education);
+		if(educationScore==0)
+			return null;
 		educationScore += matchColleges(jobfilterObject.getColleges(), education);
 		educationScore += matchUniversity(jobfilterObject.getUniversities(), education);
 		if (jobfilterObject.getPercentage() == null) {
@@ -238,6 +244,7 @@ public class MatchUtils {
 			if (jobFilterCourses.size() > 0)
 				// matchScoreEligible.add(jobFilterWeightMap.get(Constants.COURSE));
 				for (Course filterCourse : jobFilterCourses) {
+					log.debug("The filter course is {}",filterCourse.getValue());
 					Course course = courseRepository.findByCourse(filterCourse.getValue());
 					if (course != null && course.equals(education.getCourse())) {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.COURSE));
@@ -262,7 +269,7 @@ public class MatchUtils {
 							.findByQualification(filterQualification.getValue());
 					log.debug("Job Qulaiifcation is {} ",jobFilterQualification);
 					log.debug("Qulaification from filter is {}", qualification);
-					if (qualification != null) {
+					if (qualification != null && qualification.getCategory().equalsIgnoreCase(education.getQualification().getCategory())) {
 						if (qualification.equals(education.getQualification())) {
 							qualificationScore = jobFilterWeightMap.get(Constants.QUALIFICATION);
 							log.info("Perfect matching on Quaification");

@@ -37,4 +37,11 @@
         		<column name="weightage" type="bigint"/>
     		</addColumn>
     </changeSet>
+    <changeSet id="20171015094637-3" author="abhinav">
+     	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="qualification">
+        		<column name="category" type="varchar(255)"/>
+    		</addColumn>
+    </changeSet>
 </databaseChangeLog>

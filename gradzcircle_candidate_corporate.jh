@@ -183,7 +183,8 @@ entity EmploymentType {
 
 entity Qualification {
     qualification String,
-    weightage Integer
+    weightage Integer,
+    category String
 }
 
 entity Gender {

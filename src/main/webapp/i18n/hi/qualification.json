@@ -1,3 +1,4 @@
+
 {
     "gradzcircleApp": {
         "qualification" : {
@@ -18,6 +19,7 @@
             },
             "qualification": "Qualification",
             "weightage": "Weightage",
+            "category": "Category",
             "candidateEducation": "Candidate Education"
         }
     }
