@@ -199,13 +199,17 @@ public class MatchUtils {
 	private Double matchCandidateEducationToJob(JobFilterObject jobfilterObject, CandidateEducation education) {
 		Double educationScore = 0.0;
 		log.debug("Filter weight Mpa before matching starts is {}",jobFilterWeightMap);
-		
+		log.debug("JobFilterObject is {}",jobfilterObject);
 		educationScore = matchCourse(jobfilterObject.getCourses(), education);
-		if(educationScore==0)
+		log.debug("EducationScore after curse matching is {}",educationScore);
+		if(educationScore==0.0)
 			return null;
-		educationScore += matchQualification(jobfilterObject.getQualifications(), education);
-		if(educationScore==0)
+		Double qualificationScore = matchQualification(jobfilterObject.getQualifications(), education);
+		if(qualificationScore == 0.0)
 			return null;
+		else		
+			educationScore += qualificationScore;
+		
 		educationScore += matchColleges(jobfilterObject.getColleges(), education);
 		educationScore += matchUniversity(jobfilterObject.getUniversities(), education);
 		if (jobfilterObject.getPercentage() == null) {
@@ -245,7 +249,10 @@ public class MatchUtils {
 				// matchScoreEligible.add(jobFilterWeightMap.get(Constants.COURSE));
 				for (Course filterCourse : jobFilterCourses) {
 					log.debug("The filter course is {}",filterCourse.getValue());
+					log.debug("The education course is {}",education.getCourse().getId());
+					log.debug("Course Repo has {}",courseRepository.findAll());
 					Course course = courseRepository.findByCourse(filterCourse.getValue());
+					log.debug("The filter course  is {}",course);
 					if (course != null && course.equals(education.getCourse())) {
 						// matchScoreGained.add(jobFilterWeightMap.get(Constants.COURSE));
 						courseScore = new Double(jobFilterWeightMap.get(Constants.COURSE));
@@ -258,6 +265,7 @@ public class MatchUtils {
 	}
 
 	private Double matchQualification(List<Qualification> jobFilterQualification, CandidateEducation education) {
+		log.debug("Entering mathcing qulaification with {}",jobFilterQualification);
 		double previousScoreMatchedValue = 0;
 		double qualificationScore = 0;
 		if (jobFilterQualification == null || jobFilterQualification.size() == 0)

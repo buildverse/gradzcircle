@@ -461,7 +461,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void updateCandidateGenderMaleJobRequiresFemaleWithEducationWithMatchedData() throws Exception {
 
 		Set<CandidateJob> candidateJobs = new HashSet<>();
@@ -687,7 +687,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void updateCandidateGenderFemaleFromMaleJobRequiresFemaleWithEducationWithMatchedData() throws Exception {
 
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
@@ -757,7 +757,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void updateCandidateGenderWithEducationWithoutAnyMatchedData() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -789,7 +789,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void applyFirstJob() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -814,7 +814,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void applySubsequentJobs() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -847,7 +847,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void shortListCandidateForJobByCorporate() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -886,7 +886,7 @@ public class CandidateResourceIntTest {
 	}
 	
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void shortListCandidateForJobByCorporateWithAlreadyShortlistCandidateShouldIncrementAccordingly() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -927,7 +927,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void shortListCandidateForJobByCorporateWithAlreadyShortListedAvailableWithDifferentJobs() throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
@@ -970,7 +970,7 @@ public class CandidateResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void shortListCandidateForJobByCorporateWithAlreadyShortListedAvailableWithSameJobDifferentCanddiates()
 			throws Exception {
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(maleGender);
@@ -1181,7 +1181,7 @@ public class CandidateResourceIntTest {
 				.andExpect(jsonPath("$.firstName").value(DEFAULT_FIRST_NAME.toString()))
 				.andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME.toString()))
 				.andExpect(jsonPath("$.aboutMe").value(DEFAULT_ABOUT_ME.toString()))
-				.andExpect(jsonPath("$.hasEducationScore").value(Boolean.FALSE))
+				.andExpect(jsonPath("$.hasEducation").value(Boolean.FALSE))
 				.andExpect(jsonPath("$.login.id").value(user.getId()));
 				
 	}

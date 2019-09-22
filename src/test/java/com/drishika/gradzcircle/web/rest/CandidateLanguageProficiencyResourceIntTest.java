@@ -348,14 +348,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		profileCategoryRepository.saveAndFlush(nonAcad);
 		profileCategoryRepository.saveAndFlush(lang);
 		
-		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		genderRepository.saveAndFlush(femaleGender);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);
-		languageRepository.saveAndFlush(hindiLanguage);
-		languageRepository.saveAndFlush(englishLanguage);
-		languageRepository.saveAndFlush(marathiLanguage);
+		
 		filterRepository.saveAndFlush(qualificationFilter);
 		filterRepository.saveAndFlush(courseFilter);
 		filterRepository.saveAndFlush(gradDateFilter);
@@ -370,6 +363,14 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional
 	public void createFirstCandidateLanguageProficiencyAndNoEducationSavedShouldAddToLanguageProfile() throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
@@ -406,7 +407,14 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional
 	public void testCreateLanguageCreatAnotherOneDeleteOneUpdateRemainingDeleteAllScoreFrom10to5() throws Exception {
-		
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
@@ -527,6 +535,14 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional
 	public void createFirstCandidateLanguageProficiencyWithZeroScoreForLangProfileAndNoEducationSavedShouldAddToLanguageProfile() throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		int databaseSizeBeforeCreate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
@@ -577,6 +593,15 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Transactional
 	public void createAdditionalCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSetShouldNotUpdateLanguageScoreAndLanguageProfileScore()
 			throws Exception {
+		
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
@@ -650,9 +675,18 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void deleteCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet()
 			throws Exception {
+		
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
 				.candidate(candidate);
@@ -719,9 +753,17 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void deleteTheOnlyCandidateLanguageProficiencyForCandidateWithHighestEducationAndHaveCandidateJobDataSet()
 			throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
 				.candidate(candidate);
@@ -909,6 +951,14 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	@Test
 	@Transactional
 	public void updateNonExistingCandidateLanguageProficiency() throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		int databaseSizeBeforeUpdate = candidateLanguageProficiencyRepository.findAll().size();
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidateRepository.saveAndFlush(candidate);
@@ -931,8 +981,16 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void deleteTheOnlyCandidateLanguageProficiencyShouldRemoveLanguageProfileScore() throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		// Initialize the database
 		//languageRepository.saveAndFlush(hindiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
@@ -981,11 +1039,19 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 	
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void deleteTheOneOfManyCandidateLanguageProficiencyShouldNotChangeLanguageProfileScore() throws Exception {
 		// Initialize the database
 	//	languageRepository.saveAndFlush(hindiLanguage);
 	//	languageRepository.saveAndFlush(englishLanguage);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateLanguageProficiency profHindi = new CandidateLanguageProficiency().language(hindiLanguage);
 		CandidateLanguageProficiency profEng = new CandidateLanguageProficiency().language(englishLanguage);
@@ -1068,8 +1134,16 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void createMatchSetWithLanguageAndGenderAndEducationThenDeleteLanguage() throws Exception {
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
 				.candidate(candidate);
@@ -1132,9 +1206,16 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void createGenderAndEducationThenLanguage() throws Exception {
-
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav").gender(femaleGender);
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);
@@ -1178,9 +1259,16 @@ public class CandidateLanguageProficiencyResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	public void createEducationThenLanguage() throws Exception {
-
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		genderRepository.saveAndFlush(femaleGender);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		languageRepository.saveAndFlush(hindiLanguage);
+		languageRepository.saveAndFlush(englishLanguage);
+		languageRepository.saveAndFlush(marathiLanguage);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		CandidateEducation education = new CandidateEducation().educationFromDate(LocalDate.of(2010, 02, 25))
 				.educationToDate(LocalDate.of(2017, 02, 24)).highestQualification(true);

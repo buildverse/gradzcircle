@@ -1,7 +1,8 @@
 package com.drishika.gradzcircle.service.matching;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,23 +76,31 @@ public class JobMatcher implements Matcher<Job> {
 		matchUtils.populateJobFilterWeightMap();
 		Long numberOfNewCandidates=0L;
 		JobFilterObject jobfilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
-		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject)
-				.parallel();
+		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject);
 		Set<CandidateJob> candidateJobs = new HashSet<>();
+		List<Candidate> candidates = new ArrayList<Candidate>();
+		Long initialMatches = new Long(job.getCandidateJobs().size());
 		candidateJobs = candidateEducationStream
 				.map(candidateEducation -> beginMatchingOnEducation(job, jobfilterObject, candidateEducation))
 				.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
-		Iterator<CandidateJob> iterator = candidateJobs.iterator();
-		while(iterator.hasNext()) {
-			CandidateJob matchedCandidateJob = iterator.next();
-			if (job.getCandidateJobs().contains(matchedCandidateJob)) {
-				job.getCandidateJobs().remove(matchedCandidateJob);
-				job.getCandidateJobs().add(matchedCandidateJob);
+		Long newMatches = new Long(candidateJobs.size());
+		numberOfNewCandidates = Math.abs(initialMatches-newMatches);
+		job.getCandidateJobs().clear();
+		job.getCandidateJobs().addAll(candidateJobs);
+		job.getCandidateJobs().forEach(cJ->{
+			log.debug("Candidate Jobs are {}",cJ);
+			Candidate candidate = cJ.getCandidate();
+			if(candidate.getCandidateJobs().contains(cJ) ) {
+				candidate.getCandidateJobs().remove(cJ);
+				candidate.getCandidateJobs().add(cJ);
+				log.debug("Replacing Candidate Job in Job Object{}",candidate);
+				
 			} else {
-				job.getCandidateJobs().add(matchedCandidateJob);
-				numberOfNewCandidates++;
+				candidate.getCandidateJobs().add(cJ);
 			}
-		}
+			candidates.add(candidate);
+		});
+		candidateRepository.save(candidates);
 		jobRepository.save(job);
 		log.info("Job Matching completed in {} ms and number of new candidates matched are {}", (System.currentTimeMillis() - startTime),numberOfNewCandidates);
 		mailService.sendMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates);
@@ -143,9 +152,9 @@ public class JobMatcher implements Matcher<Job> {
 		CandidateJob candidateJob = null;
 		if (jobfilterObject == null || candidateEducation == null)
 			return candidateJob;
-		log.debug("Candidate Id from educaiton is {}",candidateEducation.getCandidate().getId());
+		log.debug("Candidate Id from educaiton is {}",candidateEducation.getCandidate());
 		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
-		log.debug("Candidate from reprositry while begin matching on education {} and {}", candidate);
+		log.debug("Candidate from reprositry while begin matching on education {} and {}", candidateEducation,candidate);
 		candidate.addEducation(candidateEducation);
 		candidateJob = matchUtils.matchCandidateAndJob(jobfilterObject, candidate, job, true, true, true);
 		return candidateJob;

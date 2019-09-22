@@ -70,28 +70,31 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
 					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 		log.info("Got CandidateJobs post Match as {} and is empty {}", candidateJobs, candidateJobs.isEmpty());
-		if (candidateJobs.isEmpty()) {
-			//candidate.getCandidateJobs().clear();
-		} else {
-			candidateJobs.forEach(candidateJob -> {
-				if (candidate.getCandidateJobs().contains(candidateJob)) {
-					candidate.getCandidateJobs().remove(candidateJob);
-					candidate.getCandidateJobs().add(candidateJob);
-					log.debug("Replacing Candidate Job {}",candidate.getCandidateJobs());
-				} else {
-					candidate.getCandidateJobs().add(candidateJob);
-					log.debug("After Adding CandidateJobs {}",candidate.getCandidateJobs());
-				}
-			});
-		}
+		List<Job> jobs = new ArrayList<Job>();
+		candidate.getCandidateJobs().clear();
+		candidate.getCandidateJobs().addAll(candidateJobs);
+		candidate.getCandidateJobs().forEach(cJ-> {
+			log.debug("Candidate Jobs are {}",cJ);
+			Job job = cJ.getJob();
+			if(job.getCandidateJobs().contains(cJ) ) {
+				job.getCandidateJobs().remove(cJ);
+				job.getCandidateJobs().add(cJ);
+				log.debug("Replacing Candidate Job in Job Object{}",job);
+				
+			} else {
+				job.getCandidateJobs().add(cJ);
+			}
+			jobs.add(job);
+		});
 		log.info("Status of education and Matched Set in candidate before save {},{}", candidate.getEducations(),candidate.getCandidateJobs());
+		jobRepository.save(jobs);
 		candidateRepository.save(candidate);
 		
 		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
 	}
 
 	private CandidateJob beginMatching(Job job, Candidate candidate) {
-		log.debug("Matching on {}", job.getId());
+		log.debug("Matching on {}, {}", job.getId(),job.getJobTitle());
 
 		CandidateJob incomingCandidateJob = new CandidateJob(candidate, job);
 		JobFilterObject jobFilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
