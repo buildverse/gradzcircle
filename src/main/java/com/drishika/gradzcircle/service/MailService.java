@@ -117,7 +117,7 @@ public class MailService {
         sendEmail(user.getEmail(), subject, content, false, true);
     }
     
-    
+    @Async
     public void sendMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates) {
     		log.info("Sending new matched candidate email to corporate '{}'", user.getEmail());
     		 Locale locale = Locale.forLanguageTag(user.getLangKey());
@@ -132,6 +132,7 @@ public class MailService {
     		
     }
     
+    @Async
     public void sendMatchedJobEmailToCandidate(User user, Long numberOfJobs) {
 		log.info("Sending new matched Jobs {} email to candidate '{}'", numberOfJobs, user.getEmail());
 		 Locale locale = Locale.forLanguageTag(user.getLangKey());

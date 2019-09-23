@@ -543,4 +543,11 @@ public class CandidateEducationService {
 	public Stream<CandidateEducation> getEducationForMatchEligibleCandidate() {
 		return candidateEducationRepository.findAllHighestCandidateEducationForMatchEligilbeCandidates();
 	}
+	
+	public Boolean doesCandidateHaveEducation(Long candidateId) {
+		if(candidateEducationRepository.findByCandidateId(candidateId).isEmpty())
+			return false;
+		else
+			return true;
+	}
 }

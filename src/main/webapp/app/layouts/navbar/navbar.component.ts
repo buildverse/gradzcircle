@@ -135,7 +135,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
                 this.localStorageService.setdata(CANDIDATE_ID, response.body.id);
                  this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
               this.candidateId = this.localStorageService.getData(USER_ID);
-             this.localStorageService.setdata(HAS_EDUCATION, JSON.stringify(response.body.hasEducation));
+            // this.localStorageService.setdata(HAS_EDUCATION, JSON.stringify(response.body.hasEducation));
    
               this.eventManager.broadcast({
                 name: 'userDataLoadedSuccess',

@@ -71,12 +71,14 @@ export class Job implements BaseEntity {
     public filterCost?: number,
     public corporateEscrowAmount?: number,
     public corporateUrl?: string,
-    public corporateLoginId?: any
+    public corporateLoginId?: any,
+    public candidateHasEducation?: boolean
   ) {
     this.hasBeenEdited = false;
     this.everActive = false;
     this.canEdit = false;
     this.hasCandidateApplied = false;
     this.payAsYouGo = false;
+    this.candidateHasEducation = false;
   }
 }

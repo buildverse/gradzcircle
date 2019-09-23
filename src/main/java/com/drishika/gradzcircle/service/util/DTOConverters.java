@@ -215,9 +215,13 @@ public class DTOConverters {
 		return jobListingData;
 	}
 
-	public CandidateJobDTO convertJobViewForCandidate(Job job, Long candidateId) {
+	public CandidateJobDTO convertJobViewForCandidate(Job job, Long candidateId,Boolean hasEducation) {
 		CandidateJobDTO jobData = new CandidateJobDTO();
 		setCandidateJobDTOCoreFields(job, jobData);
+		if(hasEducation)
+			jobData.setCandidateHasEducation(hasEducation);
+		else
+			jobData.setCandidateHasEducation(false);
 		if (job.getAppliedCandidates().stream().filter(appliedCandidate -> appliedCandidate.getId().equals(candidateId))
 				.findAny().isPresent()) {
 			jobData.setHasCandidateApplied(true);

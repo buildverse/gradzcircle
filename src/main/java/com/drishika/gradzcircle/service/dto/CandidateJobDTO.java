@@ -60,6 +60,8 @@ public class CandidateJobDTO implements Serializable {
 	
 	private Long corporateLoginId;
 	
+	private Boolean candidateHasEducation;
+	
 
 	/**
 	 * @return the id
@@ -360,6 +362,20 @@ public class CandidateJobDTO implements Serializable {
 	 */
 	public void setCorporateLoginId(Long corporateLoginId) {
 		this.corporateLoginId = corporateLoginId;
+	}
+
+	/**
+	 * @return the candidateHasEducation
+	 */
+	public Boolean getCandidateHasEducation() {
+		return candidateHasEducation;
+	}
+
+	/**
+	 * @param candidateHasEducation the candidateHasEducation to set
+	 */
+	public void setCandidateHasEducation(Boolean candidateHasEducation) {
+		this.candidateHasEducation = candidateHasEducation;
 	}
 
 	

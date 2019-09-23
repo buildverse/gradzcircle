@@ -93,6 +93,8 @@ public class JobService {
 
 	private final CorporateService corporateService;
 	
+	private final CandidateEducationService candidateEducationService;
+	
 	private final CandidateAppliedJobsRepository candidateAppliedJobsRepository;
 
 	private final DTOConverters converter;
@@ -125,7 +127,7 @@ public class JobService {
 			CorporateService corporateService, GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
 			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,GradzcircleCacheManager <String,Long> jobCountCacheManager,
 			GradzcircleCacheManager<String, Map<String,JobType>> jobTypeCacheManager, GradzcircleCacheManager<String, Map<String,EmploymentType>> employmentTypeCacheManager, GradzcircleCacheManager<String, Map<String,Double>> filtersCacheManager,
-			FilterRepository filterRepository, CorporateCandidateRepository corporateCandidateRepository
+			FilterRepository filterRepository, CorporateCandidateRepository corporateCandidateRepository, CandidateEducationService candidateEducationService
 			) {
 		this.jobRepository = jobRepository;
 		this.jobSearchRepository = jobSearchRepository;
@@ -148,6 +150,7 @@ public class JobService {
 		this.filtersCacheManager = filtersCacheManager;
 		this.filterRepository = filterRepository;
 		this.corporateCandidateRepository = corporateCandidateRepository;
+		this.candidateEducationService = candidateEducationService;
 	}
 
 	public Job createJob(Job job) throws BeanCopyException {
@@ -1061,12 +1064,13 @@ public class JobService {
 	
 	public CandidateJobDTO getJobForCandidateView(Long jobId,Long candidateId) {
 		Job job = jobRepository.findOne(jobId);
-		return converter.convertJobViewForCandidate(job, candidateId);		
+		Boolean hasEducation = candidateEducationService.doesCandidateHaveEducation(candidateId);
+		return converter.convertJobViewForCandidate(job, candidateId,hasEducation);		
 	}
 	
 	public CandidateJobDTO getJobForGuest(Long jobId) {
 		Job job = jobRepository.findOne(jobId);
-		return converter.convertJobViewForCandidate(job,-1L);		
+		return converter.convertJobViewForCandidate(job,-1L,false);		
 	}
 	
 	private Double extractJobFilterCost(JobFilter jobFilter,Job job) throws Exception{
