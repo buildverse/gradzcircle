@@ -69,7 +69,8 @@
 				<div class="input-group">
 					<input id="field_certificationDate" #certificationDate="ngModel"
 						required type="text" class="form-control border-primary"
-						name="certificationDate" ngbDatepicker jhiNotFutureDate
+						name="certificationDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}" jhiNotFutureDate
 						#certificationDateDp="ngbDatepicker"
 						[(ngModel)]="candidateCertification.certificationDate" /> 
 						<span class=" input-group-append" >
@@ -109,7 +110,8 @@
 				for="field_certificationDate">Certification Date</label>
 			<div class="input-group">
 				<input id="field_certificationDate" type="text" class="form-control"
-					name="certificationDate" ngbDatepicker
+					name="certificationDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 					#certificationDateDp="ngbDatepicker"
 					[(ngModel)]="candidateCertification.certificationDate" /> <span
 					class="input-group-btn">

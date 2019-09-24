@@ -68,7 +68,8 @@
 				<div class="input-group">
 					<input id="field_establishedSince" type="text" class="form-control"
 						required establishedSinceDp name="establishedSince" #establishedDate="ngModel"
-						ngbDatepicker #establishedSinceDp="ngbDatepicker"
+						ngbDatepicker [minDate]="{year: 1947, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}" #establishedSinceDp="ngbDatepicker"
 						[(ngModel)]="corporate.establishedSince" /> <span
 						class="input-group-append ">
 						<button class="btn btn-outline-secondary" (click)="establishedSinceDp.toggle()" type="button">

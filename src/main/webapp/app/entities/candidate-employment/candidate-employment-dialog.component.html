@@ -125,7 +125,8 @@
 				<div class="input-group">
 					<input id="field_employmentStartDate" #fromDate="ngModel" required
 						type="text" class="form-control border-primary"
-						name="employmentStartDate" ngbDatepicker 
+						name="employmentStartDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 						#employmentStartDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -150,7 +151,8 @@
 				<div class="input-group">
 					<input id="field_employmentEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
-						[disabled]="endDateControl" name="employmentEndDate" ngbDatepicker
+						[disabled]="endDateControl" name="employmentEndDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 						#employmentEndDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentEndDate"
 						(ngModelChange)="validateDates()" />

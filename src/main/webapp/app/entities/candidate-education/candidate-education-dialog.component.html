@@ -282,7 +282,8 @@
 					<div class="input-group">
 						<input id="field_educationFromDate" #fromDate="ngModel" required 
 						    class="form-control border-primary"  placeholder="yyyy-mm-dd"
-							name="educationFromDate" ngbDatepicker 
+							name="educationFromDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 							#educationFromDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationFromDate"
 							(ngModelChange)="validateDates()" /> 
@@ -306,7 +307,8 @@
 					<div class="input-group">
 						<input id="field_educationToDate" #toDate="ngModel" required jhiNotFutureDate 
 						    class="form-control border-primary" placeholder="yyyy-mm-dd"
-							[disabled]="endDateControl" name="educationToDate" ngbDatepicker
+							[disabled]="endDateControl" name="educationToDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 							#educationToDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationToDate"
 							(ngModelChange)="validateDates()" />

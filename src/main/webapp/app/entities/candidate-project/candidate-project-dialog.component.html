@@ -130,7 +130,8 @@
 				<div class="input-group">
 					<input id="field_projectStartDate" #fromDate="ngModel" required
 						type="text" class="form-control border-primary"
-						name="projectStartDate" ngbDatepicker
+						name="projectStartDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 						#projectStartDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -157,7 +158,8 @@
 					<input id="field_projectEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
 						[disabled]="endDateControl" name="field_projectEndDate"
-						ngbDatepicker #projectEndDateDp="ngbDatepicker"
+						ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}" #projectEndDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectEndDate"
 						(ngModelChange)="validateDates()" />
 					<span class="input-group-append" > 

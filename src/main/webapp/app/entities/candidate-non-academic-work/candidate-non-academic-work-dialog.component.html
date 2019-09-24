@@ -106,7 +106,8 @@
 				<div class="input-group">
 					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
 						required type="text" class="form-control border-primary "
-						name="nonAcademicFromDate" ngbDatepicker
+						name="nonAcademicFromDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 						#nonAcademicFromDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -131,7 +132,8 @@
 				<div class="input-group">
 					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
-						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker
+						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
+							[maxDate]="{year: 2048, month: 12, day: 31}"
 						#nonAcademicToDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
 						(ngModelChange)="validateDates()" />
