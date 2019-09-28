@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {NgForm} from "@angular/forms";
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModalRef, NgbDatepickerConfig} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {CandidateEducation} from './candidate-education.model';
@@ -77,13 +77,22 @@ export class CandidateEducationDialogComponent implements OnInit {
     private principal: Principal,
     private dateUtils: JhiDateUtils,
     private dataService: DataStorageService,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private config: NgbDatepickerConfig
     
 
   ) {
     this.currentDate = new Date();
   }
 
+  configureDatePicker() {
+    this.config.minDate = {year: 1980, month: 1, day: 1};
+    this.config.maxDate = {year: 2099, month: 12, day: 31};
+
+    // days that don't belong to current month are not visible
+    this.config.outsideDays = 'hidden';
+  }
+  
   requestCollegeData = (text: string): Observable<HttpResponse<any>> => {
     return this.collegeService.searchRemote({
       query: text
@@ -186,6 +195,7 @@ export class CandidateEducationDialogComponent implements OnInit {
   
   ngOnInit() {
     // this.showCollegeTextArea = false;
+    this.configureDatePicker();
     this.validPercentScore = true;
     this.setAlert();
     //  this.showQualificationTextArea = false;

@@ -126,12 +126,11 @@
 					for="field_projectStartDate">Project Start Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="fromDate.invalid && fromDate.touched" (mouseleave)="projectStartDateDp.close()">
+				[class.has-danger]="fromDate.invalid && fromDate.touched" >
 				<div class="input-group">
 					<input id="field_projectStartDate" #fromDate="ngModel" required
 						type="text" class="form-control border-primary"
-						name="projectStartDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+						name="projectStartDate" ngbDatepicker 
 						#projectStartDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -153,13 +152,12 @@
 					for="field_projectStartDate">Project Start Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="toDate.invalid && toDate.touched" (mouseleave)="projectEndDateDp.close()">
+				[class.has-danger]="toDate.invalid && toDate.touched" >
 				<div class="input-group">
 					<input id="field_projectEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
 						[disabled]="endDateControl" name="field_projectEndDate"
-						ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}" #projectEndDateDp="ngbDatepicker"
+						ngbDatepicker  #projectEndDateDp="ngbDatepicker"
 						[(ngModel)]="candidateProject.projectEndDate"
 						(ngModelChange)="validateDates()" />
 					<span class="input-group-append" > 

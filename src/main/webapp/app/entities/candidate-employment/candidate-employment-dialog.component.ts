@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModalRef, NgbDatepickerConfig} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {CandidateEmployment} from './candidate-employment.model';
@@ -49,7 +49,8 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     private jobTypeService: JobTypeService,
     private eventManager: JhiEventManager,
     private dateUtils: JhiDateUtils,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private config: NgbDatepickerConfig
   ) {
   }
 
@@ -64,6 +65,14 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     }
   }
 
+   configureDatePicker() {
+    this.config.minDate = {year: 1980, month: 1, day: 1};
+    this.config.maxDate = {year: 2099, month: 12, day: 31};
+
+    // days that don't belong to current month are not visible
+    this.config.outsideDays = 'hidden';
+  }
+  
   validateDates() {
     this.endDateLesser = false;
     if (this.candidateEmployment.employmentStartDate && this.candidateEmployment.employmentEndDate) {
@@ -81,6 +90,7 @@ export class CandidateEmploymentDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.configureDatePicker();
     this.editorConfig = {
       'toolbarGroups': [
         {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},

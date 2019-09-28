@@ -71,6 +71,7 @@ public class JobMatcher implements Matcher<Job> {
 	}
 
 	@Override
+	//I REMOVED PARALLEL STREAM TO ENABLE TESTS
 	public void match(Job job) {
 		long startTime = System.currentTimeMillis();
 		matchUtils.populateJobFilterWeightMap();

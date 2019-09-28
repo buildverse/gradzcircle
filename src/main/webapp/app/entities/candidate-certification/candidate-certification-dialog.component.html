@@ -64,13 +64,12 @@
 					jhiTranslate="gradzcircleApp.candidateCertification.certificationDate"
 					for="field_certificationDate">Certification Date</label>
 			</div>
-			<div class="col-md-4" (mouseleave)="certificationDateDp.close()"
+			<div class="col-md-4" 
 				[class.has-danger]="certificationDate.invalid && certificationDate.touched">
 				<div class="input-group">
 					<input id="field_certificationDate" #certificationDate="ngModel"
 						required type="text" class="form-control border-primary"
-						name="certificationDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}" jhiNotFutureDate
+						name="certificationDate" ngbDatepicker jhiNotFutureDate
 						#certificationDateDp="ngbDatepicker"
 						[(ngModel)]="candidateCertification.certificationDate" /> 
 						<span class=" input-group-append" >
@@ -110,8 +109,7 @@
 				for="field_certificationDate">Certification Date</label>
 			<div class="input-group">
 				<input id="field_certificationDate" type="text" class="form-control"
-					name="certificationDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+					name="certificationDate" ngbDatepicker 
 					#certificationDateDp="ngbDatepicker"
 					[(ngModel)]="candidateCertification.certificationDate" /> <span
 					class="input-group-btn">

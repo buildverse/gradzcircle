@@ -39,6 +39,7 @@ import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.CandidateJobRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CollegeRepository;
@@ -50,6 +51,7 @@ import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
 import com.drishika.gradzcircle.repository.UniversityRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.JobSearchRepository;
 import com.drishika.gradzcircle.service.CandidateEducationService;
 import com.drishika.gradzcircle.service.CandidateLanguageService;
@@ -109,6 +111,9 @@ public class JobMatcherIntTest {
 	private JobService jobService;
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 
 	private final static String BACHELORS = "BACHELORS";
@@ -173,6 +178,8 @@ public class JobMatcherIntTest {
 	private Corporate corporate;
 	private static Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 			universityFilter, qualificationFilter;
+	
+	private User userA,userB,userC,userD,userE,userF,userG,userH,user;
 
 	@Before
 	public void setup() {
@@ -239,7 +246,15 @@ public class JobMatcherIntTest {
 		jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
-
+		userA = createUserA();
+		userB = createUserB();
+		userC = createUserC();
+		userD = createUserD();
+		userE = createUserE();
+		userF = createUserF();
+		userG = createUserG();
+		userH = createUserH();
+		user = createUser();
 		jobF = createJobF(em);
 		jobG = createJobG(em);
 		jobZ = createJobZ(em);
@@ -252,7 +267,17 @@ public class JobMatcherIntTest {
 		candidateG = createCandidateGProfile(em);
 		candidateH = createCandidateHProfile(em);
 		// jobH = createJobH(em);
+		
 		corporate = new Corporate();
+		userRepository.saveAndFlush(user);
+		userRepository.saveAndFlush(userA);
+		userRepository.saveAndFlush(userB);
+		userRepository.saveAndFlush(userC);
+		userRepository.saveAndFlush(userD);
+		userRepository.saveAndFlush(userE);
+		userRepository.saveAndFlush(userF);
+		userRepository.saveAndFlush(userG);
+		userRepository.saveAndFlush(userH);
 		candidateRepository.saveAndFlush(candidateA.gender(male));
 		candidateRepository.saveAndFlush(candidateB.gender(female));
 		candidateRepository.saveAndFlush(candidateC.gender(male));
@@ -446,6 +471,83 @@ public class JobMatcherIntTest {
 		return new Language().language("Punjabi");
 	}
 
+	public static User createUser() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhi");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoe@localhost");
+		return user;	
+	}
+	
+	public static User createUserA() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("userA");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeA@localhost");
+		return user;	
+	}
+	public static User createUserB() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiB");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeB@localhost");
+		return user;	
+	}
+	public static User createUserC() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiC");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeC@localhost");
+		return user;	
+	}
+	public static User createUserD() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiD");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeD@localhost");
+		return user;	
+	}
+	public static User createUserE() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiE");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeE@localhost");
+		return user;	
+	}
+	public static User createUserF() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiF");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeF@localhost");
+		return user;	
+	}
+	public static User createUserG() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiG");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeG@localhost");
+		return user;	
+	}
+	
+	public static User createUserH() {
+		User user = new User();
+		user.setActivated(true);
+		user.setLogin("abhiH");
+		user.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user.setEmail("johndoeH@localhost");
+		return user;	
+	}
+	
+
+	
 	public static Candidate createCandidateAProfile(EntityManager em) {
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<CandidateLanguageProficiency>();
 		Set<CandidateEducation> candidateEducations = new HashSet<CandidateEducation>();
@@ -480,7 +582,6 @@ public class JobMatcherIntTest {
 		candidateEducations.add(education4);
 		candidateA.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
 		candidateA.setEducations(candidateEducations);
-
 		return candidateA;
 	}
 
@@ -669,7 +770,14 @@ public class JobMatcherIntTest {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		jobA.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobA);
-
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 		CandidateJob candidateJob1 = new CandidateJob(candidateA, jobA);
 		candidateJob1.setMatchScore(47.0);
 		candidateJob1.setEducationMatchScore(40.0);
@@ -725,7 +833,14 @@ public class JobMatcherIntTest {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		int candidateDatabaseSizeBeforeCreate = candidateRepository.findAll().size();
 		jobZ.setCorporate(corporateRepository.save(corporate));
-	
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 		jobRepository.saveAndFlush(jobZ);
 
 		int courseList = courseRepository.findAll().size();
@@ -775,7 +890,14 @@ public class JobMatcherIntTest {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
 		jobB.setCorporate(corporateRepository.save(corporate));
 		jobRepository.saveAndFlush(jobB);
-	
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
@@ -813,10 +935,16 @@ public class JobMatcherIntTest {
 	public void testMatchingOnCreatingJobCWithMultipleCollegeCoursePercentageQualificationWithinCandidatesWithinGraduationDateRangeAndGender()
 			throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
-		jobB.setCorporate(corporateRepository.save(corporate));
-		jobRepository.saveAndFlush(jobC);
-
-
+		jobB.setCorporate(corporateRepository.save(corporate.login(user)));
+		jobRepository.saveAndFlush(jobC.corporate(corporate));
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		jobMatcher.match(jobC);
@@ -843,9 +971,16 @@ public class JobMatcherIntTest {
 	@Transactional
 	public void testFilterLessThanGraduationDate() throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
-		jobB.setCorporate(corporateRepository.save(corporate));
-		jobRepository.saveAndFlush(jobF);
-	
+		jobB.setCorporate(corporateRepository.save(corporate.login(user)));
+		jobRepository.saveAndFlush(jobF.corporate(corporateRepository.save(corporate.login(user))));
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
@@ -872,10 +1007,18 @@ public class JobMatcherIntTest {
 	@Transactional
 	public void testFilterWithinGraduationDateRange() throws Exception {
 		int jobDatabaseSizeBeforeCreate = jobService.getAllJobs().size();
-		jobB.setCorporate(corporateRepository.save(corporate));
-		jobRepository.saveAndFlush(jobG);
+		corporateRepository.save(corporate.login(user));
+		jobB.setCorporate(corporate);
+		jobRepository.saveAndFlush(jobG.corporate(corporate));
 		List<Candidate> candidateList = candidateRepository.findAll();
-
+		candidateA.login(userA);
+		candidateB.login(userB);
+		candidateC.login(userC);
+		candidateD.login(userD);
+		candidateE.login(userE);
+		candidateF.login(userF);
+		candidateG.login(userG);
+		candidateH.login(userH);
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		assertThat(candidateList).hasSize(8 );

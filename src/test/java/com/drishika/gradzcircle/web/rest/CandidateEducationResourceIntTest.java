@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,11 +32,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
@@ -56,7 +57,9 @@ import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
+import com.drishika.gradzcircle.repository.CandidateJobRepository;
 import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
+import com.drishika.gradzcircle.repository.CandidateProfileScoreRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CollegeRepository;
 import com.drishika.gradzcircle.repository.CourseRepository;
@@ -79,6 +82,7 @@ import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GradzcircleApp.class)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) 
 public class CandidateEducationResourceIntTest {
 
 	private static final Double DEFAULT_GRADE = 1.1D;
@@ -127,6 +131,7 @@ public class CandidateEducationResourceIntTest {
 	private static final Integer UPDATED_EDUCATION_DURATION = 2;
 
 	private static final String CANDIDATE_A = "Candidate A";
+	private static final String CANDIDATE_B = "Candidate B";
 	private static final String JOB_A = "JOB_A";
 	private static final String JOB_B = "JOB_B";
 	private static final String JOB_C = "JOB_C";
@@ -136,15 +141,18 @@ public class CandidateEducationResourceIntTest {
 	private static final String JOB_G = "JOB_G";
 	private static final String JOB_H = "JOB_H";
 	private static final String JOB_I = "JOB_I";
+	private static final String JOB_J = "JOB_J";
 	private final static String ISC = "ISC";
 	private final static String ICSE = "ICSE";
 	private final static String DIPLOMA = "Diploma";
 	private final static String MASTERS = "MASTERS";
 	private final static String PG_DIPLOMA = "PG. Diploma";
+	private final static String MBA = "MBA";
+	private final static String MGMT = "MGMT";
 	private final static String BACHELOR = "BACHELORS";
 	private final static String StTHOMAS = "St. THOMAS";
 	private static final String DOON = "Doon";
-	private final static String BUSINESS_ADM = "Bus. Adm.";
+	private final static String BUSINESS_ADM ="HR";
 	private final static String IIM = "IIM";
 	private final static String MEDICAL = "MEDICAL";
 	private final static String HINDI = "Hindi";
@@ -163,10 +171,11 @@ public class CandidateEducationResourceIntTest {
 	private final static String AA = "AA";
 	private final static String BTECH ="BTECH";
 	private final static String MTECH = "MTECH";
+	private final static String UK = "UK";
 
 	private University uniIIM, uniDoon;
 	private Course courseBUSINESS_ADM, courseICSE, courseISC, courseMedical,coursePHARMA,courseENGG;
-	private Qualification qualPG_DIPLOMA, qualISC, qualICSE, qualDIPLOMA, qualBachelor, qualMaster, qualBE,qualBA,qualME,qualMA,qualAA;
+	private Qualification qualPG_DIPLOMA, qualISC, qualICSE, qualDIPLOMA, qualBachelor, qualMaster, qualBE,qualBA,qualME,qualMA,qualAA,qualPG_MBA,qualUK;;
 	private Language hindiLanguage, englishLanguage, marathiLanguage;
 	private Gender maleGender, femaleGender;
 
@@ -213,13 +222,20 @@ public class CandidateEducationResourceIntTest {
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 			universityFilter, qualificationFilter;
 
-	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH,jobI;
+	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH,jobI,jobJ;
 
 	@Autowired
 	private CandidateEducationService candidateEducationService;
 
 	@Autowired
 	private CandidateLanguageProficiencyRepository candidateLanguageRepository;
+	
+	@Autowired
+	private CandidateProfileScoreRepository candidateProfileScoreRepository;
+	
+	@Autowired
+	private CandidateJobRepository candidateJobRepository;
+	
 
 	@Autowired
 	private CollegeRepository collegeRepository;
@@ -389,13 +405,17 @@ public class CandidateEducationResourceIntTest {
 
 	@Before
 	public void initTest() {
-		candidateEducationRepository.deleteAll();
+		/*candidateJobRepository.deleteAll();
+		candidateProfileScoreRepository.deleteAll();
+		candidateRepository.deleteAll();
 		profileCategoryRepository.deleteAll();
-		/*
-		 * universityRepository.deleteAll(); qualificationRepository.deleteAll();
-		 * courseRepository.deleteAll(); jobRepository.deleteAll();
-		 * filterRepository.deleteAll(); genderRepository.deleteAll();
-		 */
+		em.clear();
+		em.close();
+		System.out.println("==========candidate Profile b4========="+candidateProfileScoreRepository.findAll());
+
+		System.out.println("==========candidate=========="+candidateRepository.findAll());
+		System.out.println("==========candidate==JOB========"+candidateJobRepository.findAll());
+		System.out.println("==========Profile Category after========="+profileCategoryRepository.findAll());*/
 		university = createUniversity(em);
 		college = createCollege(em);
 		college.setUniversity(university);
@@ -411,6 +431,7 @@ public class CandidateEducationResourceIntTest {
 		qualICSE = createICSEaQualification(em);
 		qualISC = createISCQualification(em);
 		qualPG_DIPLOMA = createPGDiplomaQualification(em);
+		qualPG_MBA = createMBAQualification(em);
 		qualDIPLOMA = createDiplomaQualification(em);
 		qualBachelor = createBacehlorQualification(em);
 		qualMaster = createMasterQualification(em);
@@ -419,6 +440,7 @@ public class CandidateEducationResourceIntTest {
 		qualMA = createMAQualification(em);
 		qualBE = createBEQualification(em);
 		qualME = createMEQualification(em);
+		qualUK = createUnknownQualification(em);
 		courseICSE = createICSECourse(em);
 		courseISC = createISCCourse(em);
 		courseBUSINESS_ADM = createBusAdmCourse(em);
@@ -454,14 +476,19 @@ public class CandidateEducationResourceIntTest {
 		jobG = createJobG(em);
 		jobH = createJobH(em);
 		jobI = createJobI(em);
-		profileCategoryRepository.saveAndFlush(basic);
-		profileCategoryRepository.saveAndFlush(personal);
-		profileCategoryRepository.saveAndFlush(cert);
-		profileCategoryRepository.saveAndFlush(exp);
-		profileCategoryRepository.saveAndFlush(edu);
-		profileCategoryRepository.saveAndFlush(nonAcad);
-		profileCategoryRepository.saveAndFlush(lang);
+		jobJ = createJobJ(em);
+		
 
+	}
+	
+	@After
+	public void destory() {
+	/*	System.out.println("==========candidate Profile b4========="+candidateProfileScoreRepository.findAll());
+
+		System.out.println("==========candidate=========="+candidateRepository.findAll());
+		System.out.println("==========candidate==JOB========"+candidateJobRepository.findAll());
+		System.out.println("==========Profile Category after========="+profileCategoryRepository.findAll());
+		*/
 	}
 
 	public static Job createJobA(EntityManager em) {
@@ -547,9 +574,25 @@ public class CandidateEducationResourceIntTest {
 		jobI.setJobFilters(jobFilters);
 		return jobI;
 	}
+	
+	public static Job createJobJ(EntityManager em) {
+		Job jobJ = new Job().jobTitle(JOB_J).jobStatus(1);
+		;
+		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
+		JobFilter jobFilter = new JobFilter();
+		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"HR\",\"display\": \"HR\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"MBA\",\"display\": \"MBA\"},{\"value\":\"PG. Diploma\",\"display\": \"PG. Diploma\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\",\"addOn\":true,\"graduationDateType\": \"between\",\"graduationFromDate\": {\"year\":2017,\"month\": 3,\"day\": 11},\"graduationToDate\": {\"year\":2020,\"month\": 3,\"day\": 11},\"gender\":{\"id\":2,\"gender\":\"FEMALE\"}}";
+		jobFilter.filterDescription(filterDescription).job(jobJ);
+		jobFilters.add(jobFilter);
+		jobJ.setJobFilters(jobFilters);
+		return jobJ;
+	}
 
 	public static Qualification createPGDiplomaQualification(EntityManager em) {
 		return new Qualification().qualification(PG_DIPLOMA).weightage(4L).category(DEFAULT_QUAL_CATEGORY);
+	}
+	
+	public static Qualification createMBAQualification(EntityManager em) {
+		return new Qualification().qualification(MBA).weightage(4L).category(MGMT);
 	}
 
 	public static Qualification createISCQualification(EntityManager em) {
@@ -590,6 +633,10 @@ public class CandidateEducationResourceIntTest {
 	
 	public static Qualification createMAQualification(EntityManager em) {
 		return new Qualification().qualification(MA).weightage(3L).category(ARTS);
+	}
+	
+	public static Qualification createUnknownQualification(EntityManager em) {
+		return new Qualification().qualification(UK).weightage(3L).category(UK);
 	}
 	
 	public static ProfileCategory createBasicProfile(EntityManager em) {
@@ -635,6 +682,7 @@ public class CandidateEducationResourceIntTest {
 
 	@Test
 	@Transactional
+	@DirtiesContext
 	public void createCandidateAEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(uniIIM);
@@ -662,7 +710,14 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(coursePHARMA).percentage(79d).highestQualification(true)
@@ -690,6 +745,7 @@ public class CandidateEducationResourceIntTest {
 
 	@Test
 	@Transactional
+	@DirtiesContext
 	public void createAddtionalCandidateAEducationWhenOneAlreadySavedAndHasLanaguageAndGenderScore_TheMatchAndEducationScoreShudUpdateWithLanguageAndGenderScoreCarriedOver()
 			throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
@@ -721,7 +777,14 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC).highestQualification(true)
@@ -773,7 +836,7 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void updateAnyFieldApartFromToDateUpdatingCandidateAEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(uniIIM);
@@ -801,7 +864,14 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateJob candidateJob1 = new CandidateJob(candidateA, jobB);
@@ -857,7 +927,7 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void updateCandidateAEducationSuchThatMatchScoreGoesToLeast() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(uniIIM);
@@ -887,7 +957,14 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
@@ -938,7 +1015,7 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional
 	@Ignore
 	public void updateToDateToforceChangeInHighestEducationPostCreaingAddtionalCandidateAEducationWithLanguageAndGender()
 			throws Exception {
@@ -973,7 +1050,14 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(languageFilter);
 		genderRepository.saveAndFlush(maleGender);
 		genderRepository.saveAndFlush(femaleGender);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
 
 		candidateRepository.saveAndFlush(candidateA);
@@ -1020,7 +1104,7 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void deleteHighestEducationPostCreatingAddtionalCandidateAEducationShouldMatchWithNextHighestEducationAndEducationProfileScoreShouldContainEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(uniIIM);
@@ -1050,7 +1134,13 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidateA,edu);
@@ -1121,7 +1211,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void deleteTheOnlyEducationRecordWithAlreadySavedLanguageAndGenderShouldNotcontainEducationProfileScoreButMustContainOtherProfileScore() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -1147,7 +1237,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		// Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		// 
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(79d)
 				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
@@ -1203,14 +1300,21 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void createCandidateEducationOneThenAddAnotherThenUpdateOneRemoveEducationThenAddAgainThenRemoveAllTheScoreShouldMoveFrom20To70AndBackTo20() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
-
+		
 		university = universityRepository.saveAndFlush(university);
 		college = collegeRepository.saveAndFlush(college);
 		qualification = qualificationRepository.saveAndFlush(qualification);
 		course = courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
@@ -1220,6 +1324,8 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		candidate.addCandidateProfileScore(candidateProfileScore1).addCandidateProfileScore(candidateProfileScore2);
 		candidate.setProfileScore(20D);
 		candidateRepository.saveAndFlush(candidate);
+		candidateProfileScore1.setCandidate(candidate);
+		candidateProfileScore2.setCandidate(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -1236,7 +1342,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
 
 		candidateEducation.college(college).course(course).qualification(qualification).candidate(candidate);
-
+		System.out.println("Profile cats are "+profileCategoryRepository.findAll());
 		// Create the CandidateEducation
 		restCandidateEducationMockMvc
 				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -1341,7 +1447,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	@Ignore
 	public void updateCandidateAEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
@@ -1369,6 +1475,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.save(candidateA);
 		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(79d)
@@ -1396,7 +1509,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducation() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 
@@ -1404,6 +1517,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		college = collegeRepository.saveAndFlush(college);
 		qualification = qualificationRepository.saveAndFlush(qualification);
 		course = courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateProfileScore candidateProfileScore = new CandidateProfileScore(candidate,basic);
@@ -1487,7 +1607,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducationWithAlreadyEducationCreatedProfileScoreShouldNotChange() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 
@@ -1495,6 +1615,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		college = collegeRepository.saveAndFlush(college);
 		qualification = qualificationRepository.saveAndFlush(qualification);
 		course = courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
@@ -1580,7 +1707,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducationWithAlreadyEducationCreatedWithScoreZeroProfileScoreShouldChange() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 
@@ -1588,6 +1715,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		college = collegeRepository.saveAndFlush(college);
 		qualification = qualificationRepository.saveAndFlush(qualification);
 		course = courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
@@ -1674,7 +1808,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducationWithPreviouslySavedEducationMarkingCurrentAsHighestBasedOnEducationToDate()
 			throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
@@ -1689,7 +1823,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -1763,7 +1903,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void haveMultipleSavedEducationsWithAnHighetsByNonNullEducaitonToDateShouldAllowANullEducationDateAsHighest()
 	//TODO
 			throws Exception {
@@ -1779,7 +1919,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -1853,7 +1999,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void haveMultipleSavedEducationsWithAnHighetsByNonNullEducaitonToDateShouldAllowANonNullEducationDateAsHighest()
 	//TODO
 			throws Exception {
@@ -1869,7 +2015,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -1944,7 +2096,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void haveMultipleSavedEducationsWithAnHighetsByNullEducaitonToDateShouldNotAllowANonNullEducationDateAsHighest()
 	//TODO
 			throws Exception {
@@ -1960,7 +2112,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2036,7 +2194,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void haveMultipleSavedEducationsWithAnHighetsByNullEducaitonToDateShouldAllowANullEducationDateAsHighest()
 	//TODO
 			throws Exception {
@@ -2052,7 +2210,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2128,7 +2292,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationWhenCreatingFirstEducation()
 			throws Exception {
 		
@@ -2143,7 +2307,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2208,7 +2378,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationByUserPreferenceWhenCreatingFirstEducation()
 			throws Exception {
 		
@@ -2223,7 +2393,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2288,7 +2464,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationByToDateHigherThanPreviousToDateWhenCreatingSecondEducation()
 			throws Exception {
 		
@@ -2303,7 +2479,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2376,7 +2558,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldKeepHighestEducationByToDateNullWhenCreatingSecondEducationWithFiniteDate()
 			throws Exception {
 		
@@ -2391,7 +2573,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(null)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2465,7 +2653,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationByToDateWithFiniteDateWithUserOverrideWhenCreatingSecondEducationWithFirstEducationSavedWithNullEducationToDate()
 			throws Exception {
 		
@@ -2480,7 +2668,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(null)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2553,7 +2747,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationByToDateWithFiniteDateWithUserOverrideWhenCreatingSecondEducationWithFirstEducationSavedWithHigherDateEducationToDate()
 			throws Exception {
 		
@@ -2568,7 +2762,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(UPDATED_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2643,7 +2843,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationByToDateNullWhenCreatingSecondEducation()
 			throws Exception {
 		
@@ -2658,7 +2858,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2676,6 +2882,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		newEducation.setId(null);
 		newEducation.setEducationToDate(null);
 		newEducation.setHighestQualification(null);
+		System.out.println("======================="+profileCategoryRepository.findAll());
 		// Create the CandidateEducation
 		restCandidateEducationMockMvc.perform(post("/api/candidate-educations")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(newEducation)))
@@ -2732,7 +2939,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationOnLatestWhenMultipleToDatesAsNullWhenCreatingSecondEducation()
 			throws Exception {
 		
@@ -2747,6 +2954,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(null)
@@ -2818,7 +3032,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldSetHighestEducationOnLatestWhenSameToDatesWhenCreatingEducation()
 			throws Exception {
 		
@@ -2833,7 +3047,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation1 = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(UPDATED_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -2920,7 +3140,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void shouldOverrideUserPreferenceOnUpdateWhenMulitpleEducationsWithNullToDatesAreAlreadySaved()
 			throws Exception {
 		
@@ -2935,7 +3155,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation1 = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(null)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -3018,7 +3244,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducationWithPreviouslySavedEducationMarkingCurrentAsHighestBasedOnIsPursuing()
 			throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
@@ -3033,7 +3259,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).isPursuingEducation(UPDATED_IS_PURSUING_EDUCATION)
 				.gradeScale(DEFAULT_GRADE_SCALE).highestQualification(UPDATED_HIGHEST_QUALIFICATION)
@@ -3110,13 +3342,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherQualificationOnlyWithExistingQualification() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 
@@ -3193,13 +3432,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherQualificationOnlyWithNonExistingQualification() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3275,13 +3521,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherQualificationOnlyWithNonExistingThreeCharacterQualification() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3357,15 +3610,26 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherQualificationOnlyWithNonExistingThreeCharacterWithDotsQualification() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		System.out.println("====================="+profileCategoryRepository.findAll());
+		System.out.println("====================="+courseRepository.findAll());
+		System.out.println("====================="+qualificationRepository.findAll());
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
+		System.out.println("====================="+profileCategoryRepository.findAll());
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -3440,13 +3704,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherCourseOnlyWithExistingCourse() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate();
 		candidateRepository.saveAndFlush(candidate);
 
@@ -3522,13 +3793,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherCourseOnlyWithNonExistingCourse() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3603,7 +3881,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	@Ignore
 	// IGNORING AS IF WE HAVE A COLLEGE IT WOULD ALWAYS HAVE A UNIVERSITY ASSOCIATED
 	// AS UNIVERSITY IS PARENT
@@ -3614,7 +3892,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
-
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
 				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
 				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
@@ -3685,13 +3969,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherCollegeOnlyWithExistingUniversityAndNotExistingCollege() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3766,13 +4057,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherCollegeOnlyWithNotExistingUniversityAndNotExistingCollege() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3847,7 +4145,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createEducationWithOtherCollegeOnlyWithExistingUniversityAndExistingCollege() throws Exception {
 
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
@@ -3855,6 +4153,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
@@ -3929,7 +4234,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createCandidateEducationWithExistingId() throws Exception {
 		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
 
@@ -4130,13 +4435,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void updateCandidateEducation() throws Exception {
 		// Initialize the database
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate();
 		candidateRepository.saveAndFlush(candidate);
 		candidateEducationRepository.saveAndFlush(candidateEducation.candidate(candidate));
@@ -4189,13 +4501,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void updateCandidateEducationWithUserOverride() throws Exception {
 		// Initialize the database
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate();
 		candidateRepository.saveAndFlush(candidate);
 		candidateEducationRepository
@@ -4245,13 +4564,20 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void updateNonExistingCandidateEducation() throws Exception {
 		int databaseSizeBeforeUpdate = candidateEducationRepository.findAll().size();
 		universityRepository.saveAndFlush(university);
 		collegeRepository.saveAndFlush(college);
 		qualificationRepository.saveAndFlush(qualification);
 		courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidate = new Candidate();
 		candidateRepository.saveAndFlush(candidate);
 		candidateEducation.candidate(candidate);
@@ -4281,6 +4607,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		courseRepository.saveAndFlush(course);
 		candidateEducationRepository.saveAndFlush(candidateEducation);
 		candidateEducationSearchRepository.save(candidateEducation);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		int databaseSizeBeforeDelete = candidateEducationRepository.findAll().size();
 
 		// Get the candidateEducation
@@ -4348,7 +4681,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createOnlyLanguageThenNewEducationAndNoPreviousMatchSet() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4379,7 +4712,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -4413,7 +4753,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createOnlyGenderThenNewEducationAndNoPreviousMatchSet() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4441,7 +4781,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
 
 		candidateRepository.saveAndFlush(candidateA);
@@ -4470,7 +4817,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createGenderAndLanguagesThenNewEducationAndNoPreviousMatchSet() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4501,7 +4848,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -4535,7 +4889,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void createMatchSetWithGenderAndEducationOnlyThenUpdateEducation() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4565,7 +4919,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
 
 		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
@@ -4617,7 +4978,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithGenderAndEducationOnlyThenUpdateEducationWithCurrentlyStudying() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4648,7 +5009,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualISC)
 					.course(courseISC).highestQualification(true)
@@ -4708,7 +5076,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndEducationOnlyThenUpdateEducation() throws Exception {
 
 		universityRepository.saveAndFlush(uniIIM);
@@ -4742,7 +5110,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -4800,7 +5175,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndGenderAndEducationThenUpdateEducation() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4832,7 +5207,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -4890,7 +5272,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndGenderAndEducationThenDeleteEducation() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -4922,7 +5304,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateProfileScore candidateProfileScore = new CandidateProfileScore(candidateA,edu);
@@ -4980,7 +5369,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndGenderAndMultipleEducationThenDeleteHighestEducation() throws Exception {
 		universityRepository.deleteAll();
 		qualificationRepository.deleteAll();
@@ -5019,7 +5408,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -5091,7 +5487,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndGenderAndMultipleEducationThenDeleteNonHighestEducation()
 			throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
@@ -5125,7 +5521,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -5182,7 +5585,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void createMatchSetWithLanguageAndGenderAndEducationThenUpdateEducationDateToPickUpNewJobFittingCriteria()
 			throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
@@ -5215,7 +5618,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateLanguageProficiency languageProficiency1 = new CandidateLanguageProficiency().language(englishLanguage)
 				.candidate(candidateA);
@@ -5276,7 +5686,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void deleteEducationWithSameEndDateAndOneHighest() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5302,7 +5712,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		// Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		// 
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateProfileScore profileScore1 = new CandidateProfileScore(candidateA,basic);
@@ -5338,7 +5755,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void deleteEducationWithmultipleTillDateWhichMeansNullEndDateAndOneHighest() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5364,7 +5781,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		// Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		// 
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateProfileScore profileScore1 = new CandidateProfileScore(candidateA,basic);
@@ -5400,7 +5824,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	@Transactional @DirtiesContext
 	public void deleteEducationWithOneTillDateAndOtherDatesInFuture() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5426,7 +5850,14 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
-		// Thread.sleep(10000);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		// 
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateProfileScore profileScore1 = new CandidateProfileScore(candidateA,basic);
@@ -5462,7 +5893,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndCandidateCourseAndQualificationDoNotMachThereShouldBeNoMatchCreated() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5496,6 +5927,15 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		
+		System.out.println("==========Profile Category in test r========="+profileCategoryRepository.findAll());
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC).highestQualification(true)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
@@ -5537,7 +5977,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndCandidateCourseMatchesButQualificationDoNotMachThereShouldBeNoMatchCreated() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5551,6 +5991,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		qualificationRepository.saveAndFlush(qualBE);
 		qualificationRepository.saveAndFlush(qualMA);
 		qualificationRepository.saveAndFlush(qualME);
+		qualificationRepository.saveAndFlush(qualUK);
 		courseRepository.saveAndFlush(courseBUSINESS_ADM);
 		courseRepository.saveAndFlush(courseICSE);
 		courseRepository.saveAndFlush(courseISC);
@@ -5571,8 +6012,15 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
-		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(coursePHARMA).highestQualification(true)
+		CandidateEducation education1 = new CandidateEducation().qualification(qualUK).course(coursePHARMA).highestQualification(true)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
 				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
 				.candidate(candidateA);
@@ -5600,7 +6048,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations).hasSize(1);
 		assertThat(testCandidateEducations)
 				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
-				.contains(tuple(true, ISC, CANDIDATE_A));
+				.contains(tuple(true, UK, CANDIDATE_A));
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(0);
 		/*assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
@@ -5611,7 +6059,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndCandidateCourseDoesNotMatchButQualificationtMatchThereShouldBeNoMatchCreated() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5645,6 +6093,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualBA).course(courseISC).highestQualification(true)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
@@ -5685,7 +6140,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndPrevoisMatchSetAndCandidateCourseDoesNotMatchButQualificationtMatchThenMatchShoudlRemove() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5719,6 +6174,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualBA).course(courseISC).highestQualification(true)
@@ -5807,7 +6269,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndPrevoisMatchSetAndCandidateCourseMatchButQualificationtDoesNotMatchThenMatchShoudlRemove() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5821,6 +6283,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		qualificationRepository.saveAndFlush(qualBE);
 		qualificationRepository.saveAndFlush(qualMA);
 		qualificationRepository.saveAndFlush(qualME);
+		qualificationRepository.saveAndFlush(qualUK);
 		courseRepository.saveAndFlush(courseBUSINESS_ADM);
 		courseRepository.saveAndFlush(courseICSE);
 		courseRepository.saveAndFlush(courseISC);
@@ -5841,9 +6304,16 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
-		CandidateEducation education1 = new CandidateEducation().qualification(qualICSE).course(coursePHARMA).highestQualification(true)
+		CandidateEducation education1 = new CandidateEducation().qualification(qualUK).course(coursePHARMA).highestQualification(true)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
 				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
 				.candidate(candidateA);
@@ -5923,13 +6393,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations).hasSize(1);
 		assertThat(testCandidateEducations)
 				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
-				.contains(tuple(true, ICSE, CANDIDATE_A));
+				.contains(tuple(true, UK, CANDIDATE_A));
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(0);
 		
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndCandidateCourseMatchAndQualificationtMatchByStreamThenCreateMatch() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -5964,6 +6434,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualMA).course(courseENGG)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
@@ -6003,7 +6480,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndMatchSetAndCandidateCourseMatchAndQualificationtMatchAndDifferentPercentageByStreamThenUpdateMatchSet() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -6038,6 +6515,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualMA).course(courseENGG)
 				.percentage(9d).college(uniDoon.getColleges().iterator().next())
@@ -6128,7 +6612,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 	}
 	
 	@Test
-	@Transactional
+	@Transactional @DirtiesContext
 	public void whenHaveMultipleJobsAndMatchSetAndCandidateCourseMatchAndQualificationtMatchByStreamAndPerfectQualificationMatchThenUpdateMatchSet() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
@@ -6164,6 +6648,13 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateEducation education1 = new CandidateEducation().qualification(qualAA).course(courseENGG)
 				.percentage(9d).college(uniDoon.getColleges().iterator().next())
@@ -6251,5 +6742,269 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_I, 41.0, 18.0, null, null, 44.0, CANDIDATE_A));
+	}
+	
+	@Test
+	@Transactional @DirtiesContext
+	public void whenHaveAJobForMBAOrPGDiplomaForHumarResourceAndCandidateOneIsPGDiplomaAndAnotherMBAInHumanResourceMustCreateMatchForBoth() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		qualificationRepository.saveAndFlush(qualBA);
+		qualificationRepository.saveAndFlush(qualBE);
+		qualificationRepository.saveAndFlush(qualMA);
+		qualificationRepository.saveAndFlush(qualME);
+		qualificationRepository.saveAndFlush(qualAA);
+		qualificationRepository.saveAndFlush(qualPG_MBA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseMedical);
+		courseRepository.saveAndFlush(courseENGG);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		jobRepository.saveAndFlush(jobH);
+		jobRepository.saveAndFlush(jobI);
+		jobRepository.saveAndFlush(jobJ);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		System.out.println("Course is "+courseRepository.findAll());
+		System.out.println("Qual is "+qualificationRepository.findAll());
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		Candidate candidateB = new Candidate().firstName(CANDIDATE_B);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualPG_DIPLOMA).course(courseBUSINESS_ADM)
+				.percentage(9d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 03, 24))
+				.candidate(candidateA);
+		CandidateEducation education2 = new CandidateEducation().qualification(qualPG_MBA).course(courseBUSINESS_ADM)
+				.percentage(9d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 03, 24))
+				.candidate(candidateB);
+		candidateRepository.saveAndFlush(candidateA);
+		candidateRepository.saveAndFlush(candidateB);
+		restCandidateEducationMockMvc.perform(post("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education1)))
+				.andExpect(status().isCreated());
+		restCandidateEducationMockMvc.perform(post("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isCreated());
+		Job testJobA = jobRepository.getOne(jobA.getId());
+		Job testJobB = jobRepository.getOne(jobB.getId());
+		Job testJobE = jobRepository.getOne(jobC.getId());
+		Job testJobF = jobRepository.getOne(jobF.getId());
+		Job testJobG = jobRepository.getOne(jobG.getId());
+		Job testJobH = jobRepository.getOne(jobH.getId());
+		Job testJobI = jobRepository.getOne(jobI.getId());
+		Job testJobJ = jobRepository.getOne(jobJ.getId());
+		assertThat(testJobA.getCandidateJobs()).hasSize(0);
+		assertThat(testJobB.getCandidateJobs()).hasSize(0);
+		assertThat(testJobE.getCandidateJobs()).hasSize(0);
+		assertThat(testJobF.getCandidateJobs()).hasSize(0);
+		assertThat(testJobG.getCandidateJobs()).hasSize(0);
+		assertThat(testJobH.getCandidateJobs()).hasSize(0);
+		assertThat(testJobI.getCandidateJobs()).hasSize(0);
+		assertThat(testJobJ.getCandidateJobs()).hasSize(2);
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(2);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(2);
+		/*assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, AA, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
+				.contains(tuple(JOB_I, 41.0, 18.0, null, null, 44.0, CANDIDATE_A));*/
+	}
+	
+	@Test
+	@Transactional @DirtiesContext
+	public void whenCandidateHasBasicProfileSetWithOverAllProfileScoreOf20AndEducationExpereinceLanguageScoreIsNullAndCertificationScore0AddingEducationMustUpdateEducationScoreTo50AndOverallScoreTo70() throws Exception {
+		int databaseSizeBeforeCreate = candidateEducationRepository.findAll().size();
+		
+		university = universityRepository.saveAndFlush(university);
+		college = collegeRepository.saveAndFlush(college);
+		qualification = qualificationRepository.saveAndFlush(qualification);
+		course = courseRepository.saveAndFlush(course);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		candidate = candidateRepository.saveAndFlush(candidate);
+		CandidateProfileScore candidateProfileScore1 = new CandidateProfileScore(candidate,basic);
+		CandidateProfileScore candidateProfileScore2 = new CandidateProfileScore(candidate,personal);
+		CandidateProfileScore candidateProfileScore3 = new CandidateProfileScore(candidate,edu);
+		CandidateProfileScore candidateProfileScore4 = new CandidateProfileScore(candidate,exp);
+		CandidateProfileScore candidateProfileScore5 = new CandidateProfileScore(candidate,lang);
+		CandidateProfileScore candidateProfileScore6 = new CandidateProfileScore(candidate,cert);
+		candidateProfileScore1.setScore(5d);
+		candidateProfileScore2.setScore(15d);
+		candidateProfileScore3.setScore(null);
+		candidateProfileScore4.setScore(null);
+		candidateProfileScore5.setScore(null);
+		candidateProfileScore6.setScore(0d);
+		candidate.addCandidateProfileScore(candidateProfileScore1)
+				 .addCandidateProfileScore(candidateProfileScore2)
+				 .addCandidateProfileScore(candidateProfileScore3)
+				 .addCandidateProfileScore(candidateProfileScore4)
+				 .addCandidateProfileScore(candidateProfileScore5)
+				 .addCandidateProfileScore(candidateProfileScore6);
+		candidate.setProfileScore(20D);
+		candidateRepository.saveAndFlush(candidate);
+		candidateProfileScore1.setCandidate(candidate);
+		candidateProfileScore2.setCandidate(candidate);
+		candidateProfileScore3.setCandidate(candidate);
+		candidateProfileScore4.setCandidate(candidate);
+		candidateProfileScore5.setCandidate(candidate);
+		candidateProfileScore6.setCandidate(candidate);
+		CandidateEducation candidateEducation = new CandidateEducation().grade(DEFAULT_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+
+		University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
+				.university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+
+		candidateEducation.college(college).course(course).qualification(qualification).candidate(candidate);
+		System.out.println("Profile cats are "+profileCategoryRepository.findAll());
+		// Create the CandidateEducation
+		restCandidateEducationMockMvc
+				.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+						.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+				.andExpect(status().isCreated());
+		List<CandidateEducation> candidateEducationList = candidateEducationRepository.findAll();
+		CandidateEducation testCandidateEducation = candidateEducationList.get(candidateEducationList.size() - 1);
+		Candidate testCandidate = testCandidateEducation.getCandidate();
+		assertThat(candidateEducationList.size()).isEqualTo(1);
+		
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EXPERIENCE_PROFILE)).findFirst().get().getScore()).isNull();
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_LANGUAGE_PROFILE)).findFirst().get().getScore()).isNull();
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_CERTIFICATION_PROFILE)).findFirst().get().getScore()).isEqualTo(0D);
+		
+
+		/*CandidateEducation candidateEducation2 = new CandidateEducation().grade(UPDATED_GRADE)
+				.educationFromDate(DEFAULT_EDUCATION_FROM_DATE).educationToDate(DEFAULT_EDUCATION_TO_DATE)
+				.isPursuingEducation(DEFAULT_IS_PURSUING_EDUCATION).gradeScale(DEFAULT_GRADE_SCALE)
+				.highestQualification(DEFAULT_HIGHEST_QUALIFICATION).roundOfGrade(DEFAULT_ROUND_OF_GRADE)
+				.gradeDecimal(DEFAULT_GRADE_DECIMAL).capturedCourse(DEFAULT_CAPTURED_COURSE)
+				.capturedQualification(DEFAULT_CAPTURED_QUALIFICATION).capturedCollege(DEFAULT_CAPTURED_COLLEGE)
+				.capturedUniversity(DEFAULT_CAPTURED_UNIVERSITY).percentage(DEFAULT_PERCENTAGE)
+				.scoreType(DEFAULT_SCORE_TYPE).educationDuration(DEFAULT_EDUCATION_DURATION);
+		
+		candidateEducation2.college(college).course(course).qualification(qualification).candidate(candidate);
+		
+		restCandidateEducationMockMvc
+		.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEducation2)))
+		.andExpect(status().isCreated());
+
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		CandidateEducation updatedCandidateEducation = candidateEducationRepository.findOne(testCandidateEducation.getId());
+		updatedCandidateEducation.grade(UPDATED_GRADE).educationFromDate(UPDATED_EDUCATION_FROM_DATE)
+				.educationToDate(UPDATED_EDUCATION_TO_DATE).isPursuingEducation(UPDATED_IS_PURSUING_EDUCATION)
+				.gradeScale(UPDATED_GRADE_SCALE).highestQualification(UPDATED_HIGHEST_QUALIFICATION)
+				.roundOfGrade(UPDATED_ROUND_OF_GRADE).gradeDecimal(UPDATED_GRADE_DECIMAL)
+				.capturedCourse(UPDATED_CAPTURED_COURSE).capturedQualification(UPDATED_CAPTURED_QUALIFICATION)
+				.capturedCollege(UPDATED_CAPTURED_COLLEGE).capturedUniversity(UPDATED_CAPTURED_UNIVERSITY)
+				.percentage(UPDATED_PERCENTAGE).scoreType(UPDATED_SCORE_TYPE)
+				.educationDuration(UPDATED_EDUCATION_DURATION).candidate(candidate);
+		
+		restCandidateEducationMockMvc
+		.perform(put("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(updatedCandidateEducation)))
+		.andExpect(status().isOk());
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testCandidateEducation.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(1);
+		CandidateEducation testEducation2 = candidateEducationList.get(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		
+		restCandidateEducationMockMvc
+		.perform(post("/api/candidate-educations").contentType(TestUtil.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(candidateEducation)))
+		.andExpect(status().isCreated());
+		
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		testCandidateEducation = candidateEducationList.get(0);
+		testEducation2 = candidateEducationList.get(1);
+		assertThat(candidateEducationList.size()).isEqualTo(2);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(70D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
+		
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testCandidateEducation.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}", testEducation2.getId())
+				.accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+		
+		candidateEducationList = candidateEducationRepository.findAll();
+		assertThat(candidateEducationList.size()).isEqualTo(0);
+		assertThat(testCandidate.getProfileScore()).isEqualTo(20D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_BASIC_PROFILE)).findFirst().get().getScore()).isEqualTo(5D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_PERSONAL_DETAIL_PROFILE)).findFirst().get().getScore()).isEqualTo(15D);
+		assertThat(testCandidate.getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(0D);
+		*/
+		
 	}
 }

@@ -277,6 +277,7 @@ public class MatchUtils {
 							.findByQualification(filterQualification.getValue());
 					log.debug("Job Qulaiifcation is {} ",jobFilterQualification);
 					log.debug("Qulaification from filter is {}", qualification);
+					log.debug("Qulaification from education is {}", education.getQualification());
 					if (qualification != null && qualification.getCategory().equalsIgnoreCase(education.getQualification().getCategory())) {
 						if (qualification.equals(education.getQualification())) {
 							qualificationScore = jobFilterWeightMap.get(Constants.QUALIFICATION);

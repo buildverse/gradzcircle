@@ -61,13 +61,14 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 	 * com.drishika.gradzcircle.service.matching.Matcher#match(java.lang.Object)
 	 */
 	@Override
+	//REMOVED PARALLELE STREAM TO ENABLE TESTS
 	public void match(Candidate candidate) {
 		Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		//List<Job> jobs = new ArrayList<>();
 		matchUtils.populateJobFilterWeightMap();
 		if (candidate.getEducations() != null)
-			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
+			candidateJobs = activeJobs.map(job -> beginMatching(job, candidate))
 					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 		log.info("Got CandidateJobs post Match as {} and is empty {}", candidateJobs, candidateJobs.isEmpty());
 		List<Job> jobs = new ArrayList<Job>();

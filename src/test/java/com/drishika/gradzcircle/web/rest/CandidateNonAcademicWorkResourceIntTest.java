@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
+import com.drishika.gradzcircle.repository.CandidateProfileScoreRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
@@ -101,6 +103,9 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	private CandidateRepository candidateRepository;
 	
 	@Autowired
+	private CandidateProfileScoreRepository candidateProfileScoreRepository;
+	
+	@Autowired
 	private DTOConverters converter;
 
 	@Autowired
@@ -113,6 +118,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	private MockMvc restCandidateNonAcademicWorkMockMvc;
 
 	private CandidateNonAcademicWork candidateNonAcademicWork;
+	
 
 	@Before
 	public void setup() {
@@ -178,8 +184,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 
 	@Before
 	public void initTest() {
-		candidateNonAcademicWorkSearchRepository.deleteAll();
-		candidateRepository.deleteAll();
+		
 		candidateNonAcademicWork = createEntity(em);
 		candidate = createCandidateEntity(em);
 		basic = createBasicProfile(em);
@@ -198,14 +203,18 @@ public class CandidateNonAcademicWorkResourceIntTest {
 		profileCategoryRepository.saveAndFlush(lang);
 		
 	}
+	
 
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void createFirstCandidateNonAcademicShouldCreateCertProfileScore() throws Exception {
 		int databaseSizeBeforeCreate = candidateNonAcademicWorkRepository.findAll().size();
 
 		candidateRepository.saveAndFlush(candidate);
 		candidateNonAcademicWork.setCandidate(candidate);
+	//	System.out.println("Proliles are ------------->>>>>> "+profileCategoryRepository.findAll());
+	///	System.out.println("Proliles are ------------->>>>>> "+candidate.getProfileScores());
 		// Create the CandidateNonAcademicWork
 		restCandidateNonAcademicWorkMockMvc
 				.perform(post("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -241,6 +250,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void createFirstCandidateCertificationShouldCreateNonAcadProfileScoreAndMaintainAlreadyExistingScore() throws Exception {
 		int databaseSizeBeforeCreate = candidateNonAcademicWorkRepository.findAll().size();
 
@@ -291,6 +301,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void testAddingNonAcadThenUpdatingThenAdingANotherThenDeletingAllThenAddingBackScoreFrom55to60to55() throws Exception {
 		int databaseSizeBeforeCreate = candidateNonAcademicWorkRepository.findAll().size();
 
@@ -302,8 +313,10 @@ public class CandidateNonAcademicWorkResourceIntTest {
 		candidate.addCandidateProfileScore(candidateProfileScore1);
 		candidate.addCandidateProfileScore(candidateProfileScore2);
 		candidate.setProfileScore(55D);
-		candidateRepository.saveAndFlush(candidate);
+		//candidateRepository.saveAndFlush(candidate);
 		candidateNonAcademicWork.setCandidate(candidate);
+		//System.out.println("Proliles are ------------->>>>>> "+profileCategoryRepository.findAll());
+	//	System.out.println("Proliles are ------------->>>>>> "+candidate.getProfileScores());
 		// Create the CandidateNonAcademicWork
 		restCandidateNonAcademicWorkMockMvc
 				.perform(post("/api/candidate-non-academic-works").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -402,6 +415,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void createSecondCandidateNonAcadShouldCreateNonAcadProfileScoreAndMaintainAlreadyExistingScore() throws Exception {
 		
 
@@ -458,6 +472,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void createFirstCandidateNonAcadWithExistingProfileScoreAsZeroShouldUpdateNonAcadProfileScoreAndMaintainAlreadyExistingScore() throws Exception {
 		candidateRepository.saveAndFlush(candidate);
 		int databaseSizeBeforeCreate = candidateNonAcademicWorkRepository.findAll().size();
@@ -706,6 +721,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 		// Create the CandidateNonAcademicWork
 		candidateRepository.saveAndFlush(candidate);
 		candidateNonAcademicWork.setCandidate(candidate);
+		//System.out.println("Proliles are ------------->>>>>> "+profileCategoryRepository.findAll());
 		// If the entity doesn't have an ID, it will be created instead of just being
 		// updated
 		restCandidateNonAcademicWorkMockMvc
@@ -720,6 +736,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void deleteTheOnlyCandidateNonAcadShouldRemoveCertificationProfileScore() throws Exception {
 		// Initialize the database
 		candidateRepository.saveAndFlush(candidate);
@@ -761,6 +778,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 
 	@Test
 	@Transactional
+	//@DirtiesContext
 	public void deleteOneOutOfTwoCandidateNonAcadShouldRemoveCertificationProfileScore() throws Exception {
 		// Initialize the database
 		candidateRepository.saveAndFlush(candidate);

@@ -277,13 +277,12 @@
 						jhiTranslate="gradzcircleApp.candidateEducation.educationFromDate"
 						for="field_educationFromDate">Education From Date</label>
 				</div>
-				<div class="col-lg-4" (mouseleave)="educationFromDateDp.close()"
+				<div class="col-lg-4" 
 					[class.has-danger]="fromDate.invalid && fromDate.touched">
 					<div class="input-group">
 						<input id="field_educationFromDate" #fromDate="ngModel" required 
 						    class="form-control border-primary"  placeholder="yyyy-mm-dd"
-							name="educationFromDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+							name="educationFromDate" ngbDatepicker 
 							#educationFromDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationFromDate"
 							(ngModelChange)="validateDates()" /> 
@@ -303,12 +302,11 @@
 						jhiTranslate="gradzcircleApp.candidateEducation.educationToDate"
 						for="field_educationToDate">Education To Date</label>
 				</div>
-				<div class="col-lg-4" (mouseleave)="educationToDateDp.close()" [class.has-danger]="toDate.invalid && toDate.touched">
+				<div class="col-lg-4"  [class.has-danger]="toDate.invalid && toDate.touched">
 					<div class="input-group">
 						<input id="field_educationToDate" #toDate="ngModel" required jhiNotFutureDate 
 						    class="form-control border-primary" placeholder="yyyy-mm-dd"
-							[disabled]="endDateControl" name="educationToDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+							[disabled]="endDateControl" name="educationToDate" ngbDatepicker 
 							#educationToDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationToDate"
 							(ngModelChange)="validateDates()" />
@@ -570,7 +568,7 @@
 			<span class="fa fa-ban"></span>&nbsp;<span
 				jhiTranslate="entity.action.cancel">Cancel</span>
 		</button>-->
-		<button type="submit" [disabled]="editForm.form.invalid || isSaving || endDateLesser"
+		<button type="button" [disabled]="editForm.form.invalid || isSaving || endDateLesser"
 			class="btn btn-block  btn-primary">
 			<span
 				jhiTranslate="entity.action.save">Save</span>

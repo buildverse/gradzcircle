@@ -44,4 +44,11 @@
         		<column name="category" type="varchar(255)"/>
     		</addColumn>
     </changeSet>
+     <changeSet id="20171015094637-4" author="abhinav">
+     	 <addUniqueConstraint catalogName="cat"
+            columnNames="qualification"
+            constraintName="qual_unique"
+            schemaName="public"
+            tableName="qualification"/>
+    </changeSet>
 </databaseChangeLog>

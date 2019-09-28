@@ -120,13 +120,12 @@
 					jhiTranslate="gradzcircleApp.candidateEmployment.employmentStartDate"
 					for="field_employmentStartDate">Employment Start Date</label>
 			</div>
-			<div class="col-md-3" (mouseleave)="employmentStartDateDp.close()"
+			<div class="col-md-3" 
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_employmentStartDate" #fromDate="ngModel" required
 						type="text" class="form-control border-primary"
-						name="employmentStartDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+						name="employmentStartDate" ngbDatepicker 
 						#employmentStartDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -146,13 +145,12 @@
 					jhiTranslate="gradzcircleApp.candidateEmployment.employmentEndDate"
 					for="field_employmentEndDate">Employment End Date</label>
 			</div>
-			<div class="col-md-3" (mouseleave)="employmentEndDateDp.close()"
+			<div class="col-md-3" 
 				[class.has-danger]="toDate.invalid && toDate.touched">
 				<div class="input-group">
 					<input id="field_employmentEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
-						[disabled]="endDateControl" name="employmentEndDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+						[disabled]="endDateControl" name="employmentEndDate" ngbDatepicker 
 						#employmentEndDateDp="ngbDatepicker" placeholder="yyyy-mm-dd"
 						[(ngModel)]="candidateEmployment.employmentEndDate"
 						(ngModelChange)="validateDates()" />

@@ -101,13 +101,12 @@
 					jhiTranslate="gradzcircleApp.candidateNonAcademicWork.nonAcademicWorkStartDate"
 					for="field_nonAcademicWorkFromDate">From Date</label>
 			</div>
-			<div class="col-md-4" (mouseleave)="nonAcademicFromDateDp.close()"
+			<div class="col-md-4" 
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
 						required type="text" class="form-control border-primary "
-						name="nonAcademicFromDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+						name="nonAcademicFromDate" ngbDatepicker 
 						#nonAcademicFromDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
 						(ngModelChange)="validateDates()" /> 
@@ -128,12 +127,11 @@
 					for="field_nonAcademicWorkEndDate">Education To Date</label>
 			</div>
 			<div class="col-md-4"
-				[class.has-danger]="toDate.invalid && toDate.touched" (mouseleave)="nonAcademicToDateDp.close()">
+				[class.has-danger]="toDate.invalid && toDate.touched" >
 				<div class="input-group">
 					<input id="field_nonAcademicWorkEndDate" #toDate="ngModel" required jhiNotFutureDate
 						type="text" class="form-control border-primary"
-						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker [minDate]="{year: 2001, month: 1, day: 1}"
-							[maxDate]="{year: 2048, month: 12, day: 31}"
+						[disabled]="endDateControl" name="nonAcademicToDate" ngbDatepicker 
 						#nonAcademicToDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkEndDate"
 						(ngModelChange)="validateDates()" />

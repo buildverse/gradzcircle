@@ -30,4 +30,11 @@
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+     <changeSet id="20171015094639-2" author="abhinav">
+     	 <addUniqueConstraint catalogName="cat"
+            columnNames="course"
+            constraintName="course_unique"
+            schemaName="public"
+            tableName="course"/>
+    </changeSet>
 </databaseChangeLog>

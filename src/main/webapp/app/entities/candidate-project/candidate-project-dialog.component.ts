@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbDatepickerConfig} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
 import {CandidateProject} from './candidate-project.model';
 import {CandidateProjectPopupService} from './candidate-project-popup.service';
@@ -42,8 +42,17 @@ export class CandidateProjectDialogComponent implements OnInit {
     private candidateProjectService: CandidateProjectService,
     private router: Router,
     private eventManager: JhiEventManager,
-    private dateUtils: JhiDateUtils
+    private dateUtils: JhiDateUtils,
+    private config: NgbDatepickerConfig 
   ) {
+  }
+  
+   configureDatePicker() {
+    this.config.minDate = {year: 1980, month: 1, day: 1};
+    this.config.maxDate = {year: 2099, month: 12, day: 31};
+
+    // days that don't belong to current month are not visible
+    this.config.outsideDays = 'hidden';
   }
 
   manageEndDateControl() {
@@ -73,6 +82,7 @@ export class CandidateProjectDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.configureDatePicker();
     this.editorConfig = {
       'toolbarGroups': [
         {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},

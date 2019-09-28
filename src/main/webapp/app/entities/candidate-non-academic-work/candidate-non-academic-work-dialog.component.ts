@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Observable} from 'rxjs/Rx';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbDatepickerConfig} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService, JhiDateUtils} from 'ng-jhipster'
 import {CandidateNonAcademicWorkPopupServiceNew} from './candidate-non-academic-work-popup-new.service'
 import {CandidateNonAcademicWork} from './candidate-non-academic-work.model';
@@ -39,12 +39,22 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     private candidateService: CandidateService,
     private eventManager: JhiEventManager,
     private dateUtils: JhiDateUtils,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private config: NgbDatepickerConfig 
 
   ) {
   }
+  
+   configureDatePicker() {
+    this.config.minDate = {year: 1980, month: 1, day: 1};
+    this.config.maxDate = {year: 2099, month: 12, day: 31};
+
+    // days that don't belong to current month are not visible
+    this.config.outsideDays = 'hidden';
+  }
 
   ngOnInit() {
+    this.configureDatePicker();
     this.editorConfig = {
       'toolbarGroups': [
         {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},

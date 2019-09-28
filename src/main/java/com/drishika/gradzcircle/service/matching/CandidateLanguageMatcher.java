@@ -50,6 +50,7 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 	}
 
 	@Transactional
+	//I REMOVED PARALLEL STREAM TO ENABLE TESTS
 	public void match(Candidate candidate) {
 		CandidateEducation candidateEducation = candidateEducationRepository
 				.findByCandidateAndHighestQualification(candidate, true);
@@ -57,7 +58,7 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 			Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 			Set<CandidateJob> candidateJobs = new HashSet<>();
 			matchUtils.populateJobFilterWeightMap();
-			candidateJobs = activeJobs.parallel().map(job -> beginMatching(job, candidate))
+			candidateJobs = activeJobs.map(job -> beginMatching(job, candidate))
 					.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 			candidateJobs.forEach(candidateJob -> {
 				if (candidate.getCandidateJobs().contains(candidateJob)) {

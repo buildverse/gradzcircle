@@ -46,4 +46,11 @@
 	</changeSet>
 	<!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets 
 		here, do not remove -->
+	 <changeSet id="20171015094645-3" author="abhinav">
+     	 <addUniqueConstraint catalogName="cat"
+            columnNames="college_name"
+            constraintName="coll_unique"
+            schemaName="public"
+            tableName="college"/>
+    </changeSet>	
 </databaseChangeLog>

@@ -4,17 +4,17 @@
 package com.drishika.gradzcircle.service.util;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,14 +47,26 @@ public class ProfileScoreCalculator {
 	}
 	
 	//@PsotConstruct needs to be commented while running tests
+	
 	@PostConstruct
 	public Map<String, Long> init() {
+		log.debug("In Post costruct");
 		populateProfileCategoryWeightMap();
 		return profileCategoryWeightMap;
 
 	}
+	
+	@Profile("default")
+	public Map<String, Long> initForTest() {
+		log.debug("Reloading profile Map");
+		profileCategoryWeightMap.clear();
+		populateProfileCategoryWeightMap();
+		return profileCategoryWeightMap;
 
-	public void populateProfileCategoryWeightMap() {
+	}
+	
+	
+	private void populateProfileCategoryWeightMap() {
 		List<ProfileCategory> profileCategories = profileCategoryRepository.findAll();
 		log.info("Categories list is {}",profileCategories);
 		Long totalCategoryWeight = 0L;
@@ -78,13 +90,14 @@ public class ProfileScoreCalculator {
 	}
 	
 	public void updateProfileScore(Candidate candidate,String categoryName, Boolean remove) {
-		//Comment If while running local tests
-		if(profileCategoryWeightMap.isEmpty())
-			init();
+		log.debug("In update ProfileScore {}",profileCategoryWeightMap);
+		//if(profileCategoryWeightMap != null && profileCategoryWeightMap.isEmpty() || profileCategoryWeightMap.get(Constants.CANDIDATE_PROFILE_TOTAL_WEIGHT)==0)
+			initForTest();
 		Double totalScore = candidate.getProfileScore()!=null?candidate.getProfileScore():0D;
 		CandidateProfileScore profileScore =null;
+		profileScore = setInitialProfileScore(candidate, categoryName);
 		if (Constants.CANDIDATE_BASIC_PROFILE.equalsIgnoreCase(categoryName)) {
-			profileScore = setInitialProfileScore(candidate, categoryName);
+			
 			if(!remove) {
 				profileScore.setScore(profileCategoryWeightMap.get(Constants.CANDIDATE_BASIC_PROFILE).doubleValue());
 				totalScore += profileCategoryWeightMap.get(Constants.CANDIDATE_BASIC_PROFILE);
@@ -94,7 +107,7 @@ public class ProfileScoreCalculator {
 			}
 			setCandidateProfileOnCandidate(candidate, profileScore,totalScore);
 		} else {
-			profileScore = setInitialProfileScore(candidate, categoryName);
+			//profileScore = setInitialProfileScore(candidate, categoryName);
 			totalScore = setTotalScoreForProfile(remove, candidate, categoryName, profileScore, totalScore);
 			setCandidateProfileOnCandidate(candidate, profileScore,totalScore);
 		}
@@ -106,12 +119,13 @@ public class ProfileScoreCalculator {
 		candidate.getProfileScores().add(profileScore);
 		log.debug("Setting candidate sscore now {}",candidate.getProfileScore());
 	}
-	
+	//if(prevProfileScore != null &&  (new Double(0).equals(prevProfileScore.getScore()) || prevProfileScore.getScore()==null)) {
 	private Double setTotalScoreForProfile(Boolean remove, Candidate candidate, String categoryName,CandidateProfileScore profileScore, Double totalScore ) {
 		log.debug("Setting score for category {}",categoryName);
-		CandidateProfileScore score =  candidate.getProfileScores().stream().filter(category->category.getProfileCategory().getCategoryName().equals(categoryName)).findFirst().orElse(null);
+		CandidateProfileScore score =  candidate.getProfileScores().stream().filter(category->category.getProfileCategory().getCategoryName().equals(categoryName)).findFirst().orElse(new CandidateProfileScore());
+		log.debug("Profile Score is {}",score);
 		if(!remove) {
-			if(score == null || (score != null &&  new Double(0).equals(score.getScore()))) {
+			if(score != null &&  (new Double(0).equals(score.getScore()) || score.getScore()==null)) {
 				log.debug("Adding score {} for categrory {}",profileCategoryWeightMap.get(categoryName).doubleValue(), categoryName);
 				profileScore.setScore(profileCategoryWeightMap.get(categoryName).doubleValue());
 				totalScore += profileCategoryWeightMap.get(categoryName);

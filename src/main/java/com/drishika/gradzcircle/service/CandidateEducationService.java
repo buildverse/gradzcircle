@@ -70,7 +70,6 @@ public class CandidateEducationService {
 	private final ProfileScoreCalculator profileScoreCalculator;
 	private final DTOConverters converter;
 
-	// @Qualifier("CandidateEducationMatcher")
 	private final Matcher<Candidate> matcher;
 
 	public CandidateEducationService(CandidateEducationRepository candidateEducationRepository,
