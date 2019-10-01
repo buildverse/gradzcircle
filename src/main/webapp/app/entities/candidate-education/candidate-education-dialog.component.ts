@@ -358,7 +358,6 @@ export class CandidateEducationDialogComponent implements OnInit {
     //console.log('on suucess');
     this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
      this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
-    this.dataService.setdata(HAS_EDUCATION,'true');
     this.reloadCandidate();
     this.isSaving = false;
     this.spinnerService.hide();
@@ -367,9 +366,10 @@ export class CandidateEducationDialogComponent implements OnInit {
 
    reloadCandidate() {
    // console.log('Reloading candidate??');
-    this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
-      (res: HttpResponse<Candidate>) => {
-        this.dataService.setdata(USER_DATA, JSON.stringify(res.body)); 
+     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
+       (res: HttpResponse<Candidate>) => {
+         this.dataService.setdata(USER_DATA, JSON.stringify(res.body));
+         this.dataService.setdata(HAS_EDUCATION, res.body.hasEducation);
   },
       (res: HttpErrorResponse) => this.onError(res.message)
     );

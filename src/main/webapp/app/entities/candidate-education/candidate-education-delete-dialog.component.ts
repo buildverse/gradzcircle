@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DataStorageService} from '../../shared';
-import {CANDIDATE_EDUCATION_ID, USER_ID, USER_DATA} from '../../shared/constants/storage.constants';
+import {CANDIDATE_EDUCATION_ID, USER_ID, USER_DATA, HAS_EDUCATION} from '../../shared/constants/storage.constants';
 import {Candidate} from '../candidate';
 import {CandidateService} from '../candidate/candidate.service';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -55,6 +55,7 @@ export class CandidateEducationDeleteDialogComponent {
     this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
       (res: HttpResponse<Candidate>) => {
         this.dataService.setdata(USER_DATA, JSON.stringify(res.body));
+        this.dataService.setdata(HAS_EDUCATION, res.body.hasEducation);
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );

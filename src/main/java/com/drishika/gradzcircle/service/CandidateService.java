@@ -354,6 +354,8 @@ public class CandidateService {
 		logger.debug("The job id is {}",jobId);
 		Corporate corporate = corporateRepository.findOne(corporateId);
 		Job job = jobRepository.findOne(jobId);
+		if(job.getNoOfApplicantLeft() == null)
+			return true;
 		if(corporate.getJobs().contains(job) && job.getNoOfApplicantLeft()!=null && job.getNoOfApplicantLeft()==0)
 			return false;
 		else
@@ -363,7 +365,7 @@ public class CandidateService {
 	
 	private Boolean isShortListed(Candidate candidate, Long corporateId) {
 		Corporate corporate = corporateRepository.findOne(corporateId);
-		logger.debug("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates().size());
+		logger.info("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates().size());
 		List<CorporateCandidate> linkedCandidates = corporate.getShortlistedCandidates().stream().filter(candidateCorporateLink -> candidateCorporateLink.getCandidate().equals(candidate)).collect(Collectors.toList());
 		if (linkedCandidates != null && !linkedCandidates.isEmpty())
 			return true;

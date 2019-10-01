@@ -131,7 +131,7 @@ public class ProfileScoreCalculator {
 				totalScore += profileCategoryWeightMap.get(categoryName);
 			}
 		} else {
-			if(score!=null && score.getScore() > 0 ) {
+			if(score!=null && score.getScore()!=null && score.getScore() > 0 ) {
 			profileScore.setScore(0d);
 			totalScore -= profileCategoryWeightMap.get(categoryName);
 			}
