@@ -59,7 +59,7 @@ p {
 }
 
 .portfolio-block.cv {
-  padding-top: 70px;
+  padding-top: 30px;
 }
 
 @media (min-width:768px) {
@@ -170,7 +170,7 @@ p {
 
 
 .portfolio-block.cv .group:not(:first-child) {
-  margin-top: 90px;
+  margin-top: 30px;
 }
 
 .portfolio-block.cv .education.group .organization {

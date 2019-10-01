@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -167,7 +169,11 @@ public class DTOConverters {
 		// -> !candidateJob.getReviewed()).collect(Collectors.toSet()).size());
 		jobListingData.setNoOfMatchedCandidates(
 				job.getCandidateJobs().size() - numberOfCandidatesShortListedByJob.intValue());
-		jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
+		//Show applied only if matched
+		//Set<Candidate> appliedAndMatchedCandidates = job.getCandidateJobs().parallelStream().filter(candidateJob->candidateJob.getCandidate().equals(o))
+		jobListingData.setNoOfCandidatesApplied(job.getCandidateJobs().parallelStream().filter(candidateJob-> 
+			job.getAppliedCandidates().contains(candidateJob.getCandidate())).collect(Collectors.toSet()).size());
+		//jobListingData.setNoOfCandidatesApplied(job.getAppliedCandidates().size());
 		jobListingData.setNoOfShortListedCandidate(numberOfCandidatesShortListedByJob);
 		jobListingData.setId(job.getId());
 		jobListingData.setCanEdit(job.getCanEdit());

@@ -133,7 +133,8 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     this.isSaving = false;
     this.canCorporateViewDetails = !this.canCorporateViewDetails;
    // this.activeModal.dismiss(result);
-    this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.job.candidateLinkedAlert', timeout: 5000 }, []);
+    this.alertService.clear();
+    this.alertService.addAlert({type: 'success', msg: 'gradzcircleApp.job.candidateLinkedAlert', timeout: 5000 }, []);
   }
 
   private onSaveError() {

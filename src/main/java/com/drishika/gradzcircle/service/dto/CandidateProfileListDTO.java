@@ -249,7 +249,9 @@ public class CandidateProfileListDTO implements Serializable {
 	public String toString() {
 		return "CandidateProfileListDTO [firstName=" + firstName + ", lastName=" + lastName + ", tagLine=" + tagLine
 				+ ", qualificationWithHighestCourse=" + qualificationWithHighestCourse + ", login=" + login + ", id="
-				+ id + ", reviewed=" + reviewed + ", jobId=" + jobId + ", corporateId=" + corporateId + "]";
+				+ id + ", reviewed=" + reviewed + ", jobId=" + jobId + ", corporateId=" + corporateId + ", matchScore="
+				+ matchScore + ", shortListed=" + shortListed + ", canBuy=" + canBuy + ", aboutMe=" + aboutMe
+				+ ", percent=" + percent + "]";
 	}
 
 	

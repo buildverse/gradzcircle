@@ -339,10 +339,16 @@ public class CandidateService {
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
 		CandidateJob candidateJob = null;
+		//Set to show candidate public profile when checking non linked candidates
 		if(jobId >0 && corporateId >0) {
 			candidateJob = setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(candidate, jobId);
 			isShortListed = isShortListed(candidate,corporateId);
 			canShortListMore = canShortListCandidate(corporateId,jobId);
+		}
+		// TODO - THIS IS A HACK. NEED TO FIX THIS SHIT. DONE TO GET CANDIDATE LIST FOR LINKED CANDIDATES
+		if(jobId==0 && corporateId >0) {
+			isShortListed = isShortListed(candidate,corporateId);
+			canShortListMore = true;
 		}
 		
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
