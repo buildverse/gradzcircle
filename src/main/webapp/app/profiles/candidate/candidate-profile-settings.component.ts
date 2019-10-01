@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Rx';
 import {Principal, UserService, DataStorageService} from '../../shared';
 import {NgbProgressbarConfig} from '@ng-bootstrap/ng-bootstrap';
 import {CandidateService} from '../../entities/candidate/candidate.service';
-import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID} from '../../shared/constants/storage.constants';
+import {JOB_ID, CORPORATE_ID, CANDIDATE_ID, USER_ID, LOGIN_ID} from '../../shared/constants/storage.constants';
 import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -105,7 +105,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   setPublicProfilePicmgmtRouteParams() {
-    this.dataService.setdata(USER_ID, this.candidate.login.id);
+    this.dataService.setdata(LOGIN_ID, this.candidate.login.id);
   }
 
  setRouterAddProfileCategoryParams() {

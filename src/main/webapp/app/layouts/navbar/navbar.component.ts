@@ -14,7 +14,7 @@ import {Candidate, CandidateService} from '../../entities/candidate';
 import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { USER_ID, USER_TYPE, CORPORATE_ID, CANDIDATE_ID, USER_DATA, JOB_ID, MATCH_SCORE, CANDIDATE_CERTIFICATION_ID, 
-  CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID, BUSINESS_PLAN_ENABLED, FROM_LINKED_CANDIDATE, HAS_EDUCATION, IS_EMPLOYMENT_PROJECT} from '../../shared/constants/storage.constants';
+  CANDIDATE_NON_ACADEMIC_ID, CANDIDATE_EDUCATION_ID, CANDIDATE_EMPLOYMENT_ID, CANDIDATE_LANGUAGE_ID, CANDIDATE_PROJECT_ID, BUSINESS_PLAN_ENABLED, FROM_LINKED_CANDIDATE, HAS_EDUCATION, IS_EMPLOYMENT_PROJECT, LOGIN_ID} from '../../shared/constants/storage.constants';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { OnDestroy } from '@angular/core';
@@ -235,6 +235,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.localStorageService.removeData(MATCH_SCORE);
     this.localStorageService.removeData(HAS_EDUCATION);
     this.localStorageService.removeData(IS_EMPLOYMENT_PROJECT);
+      this.localStorageService.removeData(LOGIN_ID);
     this.router.navigate(['']);
   }
 

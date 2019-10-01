@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DataStorageService} from '../../shared';
 import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
-import {CANDIDATE_ID, USER_ID, USER_TYPE} from '../../shared/constants/storage.constants';
+import {CANDIDATE_ID, USER_ID, USER_TYPE, LOGIN_ID} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileUploader, FileLikeObject} from 'ng2-file-upload';
@@ -163,7 +163,7 @@ export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
           .open(ProfilePicMgmtPopupDialogComponent as Component, params['id']);
       } else {
         this.candidateProfilePicMgmtPopupService
-          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.getData(USER_ID));
+          .open(ProfilePicMgmtPopupDialogComponent as Component, this.dataService.getData(LOGIN_ID));
       }
     });
   }
