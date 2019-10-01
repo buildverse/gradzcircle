@@ -50,16 +50,17 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
   }
 
   ngOnInit() {
-      this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) === 'true' ? true : false;
+    this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) === 'true' ? true : false;
     this.reloadUserImage();
     this.alertService.clear();
+
     if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE ) {
       this.canCorporateViewDetails = this.candidate.isShortListed;
       if (this.candidate.reviewed && !this.candidate.isShortListed) {
         this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert'}, []);
       }
       if (!this.candidate.isShortListed) {
-        this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, [])
+        this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert'}, []);
       }
       if (!this.candidate.canBeShortListed && this.businessPlanEnabled && !this.candidate.isShortListed) {
         this.alertService.addAlert({type: 'danger', msg: 'gradzcircleApp.job.topUpAlert'}, []);
@@ -132,9 +133,11 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     this.eventManager.broadcast({name: 'jobListModification', content: 'OK'});
     this.isSaving = false;
     this.canCorporateViewDetails = !this.canCorporateViewDetails;
-   // this.activeModal.dismiss(result);
-    this.alertService.clear();
-    this.alertService.addAlert({type: 'success', msg: 'gradzcircleApp.job.candidateLinkedAlert', timeout: 5000 }, []);
+    if(this.canCorporateViewDetails) {
+      this.alertService.clear();
+
+    }
+    this.alertService.addAlert({type: 'info', msg: 'gradzcircleApp.job.candidateLinkedAlert', timeout: 10000 }, []);
   }
 
   private onSaveError() {
@@ -149,6 +152,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
       this.eventManager.destroy(this.imageSubscriber); 
 
     }
+
     this.alertService.clear();
   }
 
