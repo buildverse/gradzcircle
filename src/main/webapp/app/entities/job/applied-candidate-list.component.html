@@ -74,11 +74,11 @@
 									<p class="text-muted card-text mb-0">{{candidate.qualificationWithHighestCourse}}</p>
 									<!--  p class="text-muted card-text">{{candidate.aboutMe}}</p>-->
 									 <p *ngIf="candidate.shortListed" class="text-muted card-text mb-0">ShortListed for other 
-					                		<a (click)="setJobListRouteParamsForLinkedCandidates(candidate.id,corporateId)"
+					                		<a (click)="setJobListRouteParamsForLinkedCandidates(candidate.id)"
 											[routerLink]="['/', { outlets: { popup: 'job-list-for-linked-candidate'} }]"><strong>jobs</strong></a>
 									</p>
 									<button class="btn btn-outline-primary btn-sm btn-block mt-1"
-										(click)="setViewPublicProfileRouteParams(candidate.id,jobId,corporateId)"
+										(click)="setPublicProfileRouteParams(candidate.id)"
 										[routerLink]="['/', { outlets: { popup: 'candidate-public-profile'} }]">
 										<span class="icon icon-add-user"></span> View
 									</button>

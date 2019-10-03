@@ -138,12 +138,15 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     this.loadAppliedCandidates();
   }
 
-  setPublicProfileRouteParams(candidateId, jobId, corporateId) {
+  setPublicProfileRouteParams(candidateId, jobId) {
     this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
     this.dataStorageService.setdata(JOB_ID, this.jobId);
-    this.dataStorageService.setdata(CORPORATE_ID, corporateId);
+   // this.dataStorageService.setdata(CORPORATE_ID, corporateId);
   }
 
+  setJobListRouteParamsForLinkedCandidates(candidateId) {
+    this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
+  }
   ngOnDestroy() {
     // this.eventManager.destroy(this.eventSubscriber);
   }
