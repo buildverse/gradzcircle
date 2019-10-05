@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {DataStorageService} from '../../shared';
 import {ProfileMgmtPopupService} from './profile-pic-mgmt-popup.service';
-import {CANDIDATE_ID, USER_ID, USER_TYPE, LOGIN_ID} from '../../shared/constants/storage.constants';
+import {USER_TYPE, LOGIN_ID} from '../../shared/constants/storage.constants';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {FileUploader, FileLikeObject} from 'ng2-file-upload';

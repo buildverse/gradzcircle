@@ -7,7 +7,7 @@ import {AuthoritiesConstants} from '../../shared/authorities.constant';
 import {Corporate} from './corporate.model';
 import {CorporateService} from './corporate.service';
 import {Principal, UserService} from '../../shared';
-import {USER_ID, USER_DATA,USER_TYPE, CORPORATE_ID} from '../../shared/constants/storage.constants';
+import {USER_ID, USER_DATA,USER_TYPE, CORPORATE_ID, LOGIN_ID} from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Router } from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -134,7 +134,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
   }
 
   setProfilePicmgmtRouteParams() {
-    this.localStorageService.setdata(USER_ID, this.corporate.login.id);
+    this.localStorageService.setdata(LOGIN_ID, this.corporate.login.id);
   }
 
   ngOnDestroy() {
