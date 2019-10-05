@@ -53,5 +53,5 @@ gitProperties {
     keys = ['git.branch', 'git.commit.id.abbrev']
 }
 
-test.dependsOn webpack_test
+/*test.dependsOn webpack_test*/
 processResources.dependsOn webpack
