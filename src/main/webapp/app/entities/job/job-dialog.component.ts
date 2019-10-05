@@ -102,6 +102,7 @@ export class JobDialogComponent implements OnInit {
   prevEmploymentTypeCost; prevJobTypeCost; currentEmploymentTypeCost; currentJobTypeCost; prevNoOfApplicants: number;
   noOfApplicantsIncreased; noOfApplicantsDecreased; noOfApplicantsChanged; jobDifferenceChanged; jobCostNegative: boolean;
   liveEscrowAmount; applicantDelta; prevFilterCost; prevNumberOfApplicants; amountPayable; prevTotalAmount: number;
+  isCourseRequired; isQualificationRequired: boolean;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -125,6 +126,10 @@ export class JobDialogComponent implements OnInit {
     private localDataStorageService: DataStorageService
 
   ) {
+    this.isCourseRequired = false;
+    this.isQualificationRequired  = false;
+    this.premium = false;
+    this.addOn = false;
   }
 
   ngOnInit() {
@@ -151,6 +156,8 @@ export class JobDialogComponent implements OnInit {
     this.amountPaid = 0;
     this.scoreAdded = false;
     this.genderAdded = false;
+    this.isCourseRequired = false;
+    this.isQualificationRequired  = false;
     this.filterMap = new Map<string, number>();
     this.jobTypeCost = [];
     this.employmentTypeCost = [];
@@ -477,6 +484,13 @@ export class JobDialogComponent implements OnInit {
   
 
   addQualificationCost() {
+    if (this.courses && this.courses.length > 0) {
+      this.isCourseRequired = false;
+      
+    } else {
+      this.isCourseRequired = true;
+    }
+    this.isQualificationRequired = false;
     if (this.qualifications && this.qualifications.length <= 1) {
       this.qualificationCost += this.filterMap.get(this.QUALIFICATION);
       this.filterCost += this.filterMap.get(this.QUALIFICATION);
@@ -486,6 +500,13 @@ export class JobDialogComponent implements OnInit {
   }
   removeQualificationCost() {
     if (this.qualifications && this.qualifications.length === 0) {
+      
+      if ((this.courses && this.courses.length === 0) || this.courses === undefined ) { 
+        this.isQualificationRequired = false;
+        this.isCourseRequired = false;
+      }
+      this.courses && this.courses.length > 0 ? 
+        this.isQualificationRequired = true : this.isQualificationRequired = false;
       this.qualificationCost -= this.filterMap.get(this.QUALIFICATION);
       this.filterCost -= this.filterMap.get(this.QUALIFICATION);
     }
@@ -494,7 +515,13 @@ export class JobDialogComponent implements OnInit {
 
 
   addCourseCost() {
-
+    if(this.qualifications && this.qualifications.length > 0 ) {
+      this.isQualificationRequired = false;
+      
+    } else {
+      this.isQualificationRequired = true;
+    }
+    this.isCourseRequired = false;
     if (this.courses && this.courses.length <= 1) {
       this.coursesCost += this.filterMap.get(this.COURSE);
       this.filterCost += this.filterMap.get(this.COURSE);
@@ -505,6 +532,12 @@ export class JobDialogComponent implements OnInit {
 
   removeCourseCost() {
     if (this.courses && this.courses.length === 0) {
+      if((this.qualifications && this.qualifications.length === 0) || this.qualifications === undefined ) {
+        this.isQualificationRequired = false;
+        this.isCourseRequired = false;
+      }
+     this.qualifications && this.qualifications.length > 0 ?
+        this.isCourseRequired = true : this.isCourseRequired = false;
       this.coursesCost -= this.filterMap.get(this.COURSE);
       this.filterCost -= this.filterMap.get(this.COURSE);
     }

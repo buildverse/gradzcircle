@@ -437,6 +437,10 @@
 		</div>
 		<div *ngIf="premium">
 			<hr>
+			<small class="offset-md-2 form-text  profile-text-info">
+					<span class="icon icon-info" style="color: #448AFF"></span> <small
+					style="color: #448AFF"> Matching works on combination of Course and Qualification </small>
+			</small>
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
 					<label class="form-control-label font-weight-bold "
@@ -446,12 +450,16 @@
 				<div class="col-md-10">
 					<tag-input name="courses" [(ngModel)]="courses" theme='bootstrap'
 						[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
-						[onTextChangeDebounce]="500"
+						[onTextChangeDebounce]="500" [required]="isCourseRequired"
 						[secondaryPlaceholder]="'Enter Courses Filters'"
 						(onAdd)="addCourseCost($event)"
 						(onRemove)="removeCourseCost($event)"> <tag-input-dropdown
 						[autocompleteObservable]='requestCourseData'></tag-input-dropdown>
 					</tag-input>
+					<small *ngIf="isCourseRequired" class="offset-md-2 form-text  profile-text-info">
+						<small class="text-danger">Please Enter Course</small>
+					</small>
+					
 				</div>
 			</div>
 			<div class="form-group row mx-4 my-4">
@@ -465,10 +473,13 @@
 						theme='bootstrap' [onlyFromAutocomplete]="true"
 						[placeholder]="'Qualification +'" [onTextChangeDebounce]="500"
 						[secondaryPlaceholder]="'Enter Qualification'"
-						(onAdd)="addQualificationCost($event)"
+						(onAdd)="addQualificationCost($event)" [required]="isQualificationRequired"
 						(onRemove)="removeQualificationCost($event)"> <tag-input-dropdown
 						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
 					</tag-input>
+					<small *ngIf="isQualificationRequired" class="offset-md-2 form-text  profile-text-info">
+						<small class="text-danger">Please Enter Qualification</small>
+					</small>
 				</div>
 				<small class="offset-md-2 form-text  profile-text-info">
 					<span class="icon icon-info" style="color: #448AFF"></span> <small
@@ -710,13 +721,20 @@
 			</div>
 			<div class=" p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-primary"
-					[disabled]=" !((editForm.form.get('employmentType')?.valid) && (editForm.form.get('jobType')?.valid)
-								&& (!numberOfCandidateError)  
-								&& ((editForm.form.get('scoreType')?.value==='gpa')?(editForm.form.get('roundOfGrade')?.valid) :true )
-								&& ((editForm.form.get('scoreType')?.value==='percent')?(editForm.form.get('percentage')?.valid) :true )
-								&& ((editForm.form.get('date')?.value==='less')?(editForm.form.get('gradDate')?.valid) :true )
-								&& ((editForm.form.get('date')?.value==='between')?(editForm.form.get('graduationFromDate')?.valid && editForm.form.get('graduationToDate')?.valid) :true )
-								&& ((editForm.form.get('date')?.value==='greater')?(editForm.form.get('gradDate')?.valid) :true ))
+					[disabled]=" 
+								editForm.form.get('employmentType')?.invalid || editForm.form.get('jobType')?.invalid
+								|| (numberOfCandidateError)  
+								|| (
+									premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
+									|| editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
+									|| (editForm.form.get('qualification')?.invalid || editForm.form.get('courses')?.invalid) 
+									)
+								|| (
+									addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
+									&& editForm.form.get('graduationToDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false 
+								)
 								|| isSaving "
 					nextStep>Next</button>
 			</div>
@@ -1345,8 +1363,39 @@
 		</div>
 	</form>
 </div>
- <!--   <br>
+ <!--    <br>
 Value: {{ editForm.value | json }}
 <br>
-{{(editForm.form.get('employmentType')?.valid)}}---{{ (editForm.form.get('jobType')?.valid)}}
--->
+employment -- {{(editForm.form.get('employmentType')?.invalid)}}--Job type -{{ (editForm.form.get('jobType')?.invalid)}}
+<br>
+Qual is ---- {{(editForm.form.get('qualification')?.invalid)}}- course--{{ (editForm.form.get('courses')?.invalid)}}
+<br>
+Premium is {{premium}} ->>> Add On is  {{addOn}}
+<br>
+Num of candidate error is {{numberOfCandidateError}}
+<br>
+isSaving is {{isSaving}}
+<br>
+DISABLED IS {{editForm.form.get('employmentType')?.invalid && editForm.form.get('jobType')?.invalid
+								&& (numberOfCandidateError)  
+								|| (
+									premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
+									&& editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
+									&& editForm.form.get('qualification')?.invalid && editForm.form.get('courses')?.invalid 
+									)
+								|| (
+									addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
+									&& editForm.form.get('graduationToDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false 
+								)
+								|| isSaving}}
+<br>
+Premium block is {{premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
+									&& editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
+									&& editForm.form.get('qualification')?.invalid && editForm.form.get('courses')?.invalid }}
+<br>									
+Add on block is {{addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
+									&& editForm.form.get('graduationToDate')?.invalid :false 
+									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false }}-->
