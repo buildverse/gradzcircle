@@ -107,9 +107,10 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				.filter(education -> education.isHighestQualification()).findAny().orElse(null);
 
 		if (candidateEducation != null && isCandidateEligibleByGraduationDate(candidateEducation, jobFilterObject)) {
-			if (candidate.getCandidateJobs().stream().filter(incomingCandidateJob::equals).findAny().isPresent()) {
-				CandidateJob cJob = candidate.getCandidateJobs().stream().filter(incomingCandidateJob::equals).findAny()
-						.get();
+			CandidateJob cJob = candidate.getCandidateJobs().stream().filter(incomingCandidateJob::equals).findAny().orElse(null);
+			if (cJob != null) {
+				/*CandidateJob cJob = candidate.getCandidateJobs().stream().filter(incomingCandidateJob::equals).findAny()
+						.get();*/
 				if (candidate.getCandidateLanguageProficiencies().size() > 0 && cJob.getLanguageMatchScore() == null
 						&& candidate.getGender() != null && cJob.getGenderMatchScore() == null)
 					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true);

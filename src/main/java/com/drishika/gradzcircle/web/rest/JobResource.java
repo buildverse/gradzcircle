@@ -176,7 +176,7 @@ public class JobResource {
 		try {
 			updatedJob = jobService.addCandidatesToJob(job);
 			// BeanUtils.copyProperties(updatedJob, result);
-			log.info("Updated job is {},{}", updatedJob);
+			log.info("Updated job is {}", updatedJob);
 		} catch (BeanCopyException e) {
 		
 			updatedJob = job;

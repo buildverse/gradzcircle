@@ -464,7 +464,7 @@ public class ElasticsearchIndexService {
 	
 	}
 	
-	@Transactional(readOnly=true)
+	
 	@SuppressWarnings("unchecked")
 	public <T, ID extends Serializable> void removeIndex (String entityName) {
 		log.info("Removing index {} from server ",entityName);
@@ -472,7 +472,7 @@ public class ElasticsearchIndexService {
 		log.info("index {} from server has been removed, status {}",entityName,removed);
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
 			ElasticsearchRepository<T, ID> elasticsearchRepository) {
@@ -495,7 +495,7 @@ public class ElasticsearchIndexService {
 		log.info("Elasticsearch: Indexed all rows for " + entityClass.getSimpleName());
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForCollege(CollegeRepository collegeRepository) {
 		List<College> colleges = collegeRepository.findAll();
@@ -506,7 +506,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForUniversity(UniversityRepository universityRepository) {
 		List<University> universities = universityRepository.findAll();
@@ -518,7 +518,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForQualification(QualificationRepository qualificationRepository) {
 		List<Qualification> qualifications = qualificationRepository.findAll();
@@ -530,7 +530,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForLanguage(LanguageRepository languageRepository) {
 		List<Language> languages = languageRepository.findAll();
@@ -541,7 +541,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForCourse(CourseRepository courseRepository) {
 		List<Course> courses = courseRepository.findAll();
@@ -552,7 +552,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForGender(GenderRepository genderRepository) {
 		List<Gender> genders = genderRepository.findAll();
@@ -563,7 +563,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 	
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForCountry(CountryRepository countryRepository) {
 		List<Country> countries = countryRepository.findAll();
@@ -574,7 +574,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 	
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForIndustry(IndustryRepository industryRepository) {
 		List<Industry> industries = industryRepository.findAll();
@@ -585,7 +585,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 	
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForJobCategory(JobCategoryRepository jobCategoryRepository) {
 		List<JobCategory> jobCategories = jobCategoryRepository.findAll();
@@ -596,7 +596,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 	
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForMaritalStatus(MaritalStatusRepository maritalStatusRepository) {
 		List<MaritalStatus> statuses = maritalStatusRepository.findAll();
@@ -607,7 +607,7 @@ public class ElasticsearchIndexService {
 		});
 	}
 	
-	@Transactional(readOnly = true)
+	
 	@SuppressWarnings("unchecked")
 	private void reindexForNationality(NationalityRepository nationalityRepository) {
 		List<Nationality> nationalities = nationalityRepository.findAll();

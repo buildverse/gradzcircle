@@ -97,8 +97,8 @@ public class CandidateCertificationResource {
 		candidate = candidateRepository.save(candidate);
 		log.debug("Candidate Certification post save are {}",candidate.getCertifications());
 		//CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
-		CandidateCertification result = candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().isPresent()?
-				candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().get():candidateCertification;
+		CandidateCertification result = candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().orElse(candidateCertification);
+		
 		
 		//candidateCertificationSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/candidate-certifications/" + result.getId()))

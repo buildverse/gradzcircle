@@ -388,10 +388,10 @@ public class CandidateService {
 		CandidateJob candidateJobToReturn = null;
 		CandidateJob prevCandidateJob = null;
 		prevCandidateJob = candidate.getCandidateJobs().stream().filter(candidateJob -> candidateJob.equals(cJ)).findFirst().orElse(null);
-		candidateJobToReturn = new CandidateJob(prevCandidateJob);
-		candidateJobToReturn.setReviewed(prevCandidateJob.getReviewed());
 		logger.debug("The candidateJob is {}",prevCandidateJob);
 		if (prevCandidateJob != null) {
+			candidateJobToReturn = new CandidateJob(prevCandidateJob);
+			candidateJobToReturn.setReviewed(prevCandidateJob.getReviewed());
 			prevCandidateJob.setReviewed(true);
 			candidateRepository.save(candidate);
 		} 

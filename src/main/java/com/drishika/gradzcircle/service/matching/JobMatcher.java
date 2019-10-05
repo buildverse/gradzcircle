@@ -81,7 +81,8 @@ public class JobMatcher implements Matcher<Job> {
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		List<Candidate> candidates = new ArrayList<Candidate>();
 		Long initialMatches = new Long(job.getCandidateJobs().size());
-		candidateJobs = candidateEducationStream
+		if(candidateEducationStream!=null)
+			candidateJobs = candidateEducationStream
 				.map(candidateEducation -> beginMatchingOnEducation(job, jobfilterObject, candidateEducation))
 				.filter(candidateJob -> candidateJob != null).collect(Collectors.toSet());
 		Long newMatches = new Long(candidateJobs.size());
@@ -122,7 +123,7 @@ public class JobMatcher implements Matcher<Job> {
 		Stream<CandidateEducation> candidateEducationStream = null;
 		if (jobFilter.getGraduationDateType() == null) {
 			candidateEducationStream = candidateEducationService.getEducationForMatchEligibleCandidate();
-			log.info("CandidateEducation for eMatch eligible Canidates {}");
+			log.info("CandidateEducation for Match eligible Canidates");
 		} else if (jobFilter.getGraduationDateType()
 				.equalsIgnoreCase(ApplicationConstants.GRADUATION_DATE_TYPE_BETWEEN)) {
 			candidateEducationStream = candidateEducationService.getCandidateEducationBetweenSuppliedDates(

@@ -97,8 +97,7 @@ public class CandidateNonAcademicWorkResource {
 		candidate = candidateRepository.save(candidate);
 		//CandidateNonAcademicWork result = candidateNonAcademicWorkRepository.save(candidateNonAcademicWork);
 		
-		CandidateNonAcademicWork result = candidate.getNonAcademics().stream().filter(nonAcad->nonAcad.getNonAcademicInitiativeTitle().equals(candidateNonAcademicWork.getNonAcademicInitiativeTitle())).findFirst().isPresent()?
-				candidate.getNonAcademics().stream().filter(nonAcad->nonAcad.getNonAcademicInitiativeTitle().equals(candidateNonAcademicWork.getNonAcademicInitiativeTitle())).findFirst().get():candidateNonAcademicWork;		
+		CandidateNonAcademicWork result = candidate.getNonAcademics().stream().filter(nonAcad->nonAcad.getNonAcademicInitiativeTitle().equals(candidateNonAcademicWork.getNonAcademicInitiativeTitle())).findFirst().orElse(candidateNonAcademicWork);
 		// candidateNonAcademicWorkSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/candidate-non-academic-works/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);

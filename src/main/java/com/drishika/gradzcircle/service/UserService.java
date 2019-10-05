@@ -113,7 +113,7 @@ public class UserService {
 			String phoneNumber) {
 		User newUser = new User();
 		// Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
-		Authority authority = authorityRepository.findOne(incomingAuthorities.stream().findFirst().get());
+		Authority authority = authorityRepository.findOne(incomingAuthorities.stream().findFirst().orElse(null));
 		Set<Authority> authorities = new HashSet<>();
 		String encryptedPassword = passwordEncoder.encode(password);
 		newUser.setLogin(login);
@@ -128,13 +128,17 @@ public class UserService {
 		newUser.setActivated(false);
 		// new user gets registration key
 		newUser.setActivationKey(RandomUtil.generateActivationKey());
-		authorities.add(authority);
+		if(authority != null)
+			authorities.add(authority);
 		newUser.setAuthorities(authorities);
 		userRepository.save(newUser);
 		userSearchRepository.save(newUser);
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(newUser.getLogin());
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(newUser.getEmail());
-		userExtensionCreator(corporateName, phoneNumber, country, authority.getName(), newUser);
+        if(authority!=null)
+        		userExtensionCreator(corporateName, phoneNumber, country, authority.getName(), newUser);
+        else 
+        		userExtensionCreator(corporateName, phoneNumber, country, AuthoritiesConstants.USER, newUser);
 		log.debug("Created Information for User: {}", newUser);
 		return newUser;
 	}

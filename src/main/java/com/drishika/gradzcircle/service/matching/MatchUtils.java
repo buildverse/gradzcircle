@@ -94,9 +94,13 @@ public class MatchUtils {
 
 	public JobFilterObject retrieveJobFilterObjectFromJob(Job job) {
 		JobFilterObject jobFilter = null;
+		String filterDescription = null;
 		Set<JobFilter> jobFilters = job.getJobFilters();
 		if (jobFilters != null && jobFilters.size() != 0) {
-			String filterDescription = jobFilters.stream().findFirst().get().getFilterDescription();
+			JobFilter filter = jobFilters.stream().findFirst().orElse(null);
+			if(filter != null) {
+				filterDescription = filter.getFilterDescription();
+			}			
 			jobFilter = jobFilterParser.getFilterObjectFromJson(filterDescription);
 		}
 		log.info("Parsed Filter Object is {}", jobFilter);

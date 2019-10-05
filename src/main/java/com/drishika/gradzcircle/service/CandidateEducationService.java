@@ -302,9 +302,9 @@ public class CandidateEducationService {
 		Long weightage  = 0l;
 		if(qualificationName == null)
 			weightage  = 0l;
-		if(qualificationName.indexOf("Bach")>-1) 
+		if(qualificationName!=null && qualificationName.indexOf("Bach")>-1) 
 			weightage  = 3l;
-		else if( qualificationName.indexOf("Mast")>-1  || qualificationName.indexOf("Post")>-1)
+		else if( qualificationName!=null && (qualificationName.indexOf("Mast")>-1  || qualificationName.indexOf("Post")>-1))
 			weightage  = 4l;
 		else
 			weightage  = -1l;

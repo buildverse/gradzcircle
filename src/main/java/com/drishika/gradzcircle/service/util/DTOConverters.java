@@ -95,10 +95,9 @@ public class DTOConverters {
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setAboutMe(candidate.getAboutMe());
-		if (candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst()
-				.isPresent()) {
-			highestCandidateEducation = candidate.getEducations().stream()
-					.filter(education -> education.isHighestQualification()).findFirst().get();
+		highestCandidateEducation = candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst().orElse(null);
+		if (highestCandidateEducation!=null) {
+
 			dto.setQualificationWithHighestCourse(highestCandidateEducation.getQualification().getQualification()
 					+ " in " + highestCandidateEducation.getCourse().getCourse());
 			dto.setPercent(highestCandidateEducation.getPercentage()==null?highestCandidateEducation.getGrade()*10:highestCandidateEducation.getPercentage());
@@ -307,13 +306,11 @@ public class DTOConverters {
 		if (!job.getAppliedCandidates().stream().filter(candidate -> candidateId.equals(candidate.getId())).findFirst()
 				.isPresent())
 			jobListingData.setHasCandidateApplied(false);
-		logger.debug("---------------{}", job.getCandidateJobs().stream()
-				.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent());
-		if (candidateId != null)
-			if (job.getCandidateJobs().stream()
-					.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().isPresent())
-				jobListingData.setMatchScore(job.getCandidateJobs().stream()
-						.filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().get()
+		CandidateJob cJob =null;
+		if (candidateId != null) 
+				cJob = job.getCandidateJobs().stream().filter(candidateJob -> candidateId.equals(candidateJob.getCandidateId())).findFirst().orElse(null);
+			if (cJob !=null)
+				jobListingData.setMatchScore(cJob
 						.getMatchScore());
 		if (job.getJobDescription().length() > 500)
 			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
@@ -546,58 +543,60 @@ public class DTOConverters {
 	public List<CandidateEducationDTO> convertCandidateEducations(List<CandidateEducation> candidateEducations,
 			Boolean withCandidateProfileScore, Candidate candidate) {
 		List<CandidateEducationDTO> educationDTOs = new ArrayList<>();
-		if (candidateEducations != null && candidateEducations.isEmpty()) {
-			CandidateEducationDTO educationDTO = new CandidateEducationDTO();
-			if (withCandidateProfileScore) {
-				CandidateDTO candidateDTO = new CandidateDTO();
-				candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
-				educationDTO.setCandidate(candidateDTO);
-			}
-			educationDTOs.add(educationDTO);
-		} else {
-			candidateEducations.forEach(education -> {
+		if(candidateEducations != null) {
+			if (candidateEducations.isEmpty()) {
 				CandidateEducationDTO educationDTO = new CandidateEducationDTO();
-				CollegeDTO collegeDTO = new CollegeDTO();
-				educationDTO.setId(education.getId());
-				educationDTO.setEducationFromDate(education.getEducationFromDate());
-				educationDTO.setEducationToDate(education.getEducationToDate());
-				collegeDTO.setCollegeName(education.getCollege().getCollegeName());
-				collegeDTO.getUniversity()
-						.setUniversityName((education.getCollege().getUniversity().getUniversityName()));
-				// educationDTO.setCollegeName(education.getCollege().getCollegeName());
-				// educationDTO.setUniversityName(education.getCollege().getUniversity().getUniversityName());
-				educationDTO.setCollege(collegeDTO);
-				String scoreType = education.getScoreType();
-				if (scoreType != null && scoreType.equals(Constants.GPA))
-					educationDTO.setGrade(education.getGrade());
-				else
-					educationDTO.setPercentage(education.getPercentage());
-				educationDTO.setScoreType(education.getScoreType());
-				educationDTO.setIsPursuingEducation(education.isIsPursuingEducation());
-				educationDTO.setHighestQualification(education.getHighestQualification());
-				QualificationDTO qualificationDTO = new QualificationDTO();
-				qualificationDTO.setQualification(education.getQualification().getQualification());
-				educationDTO.setQualification(qualificationDTO);
-				CourseDTO courseDTO = new CourseDTO();
-				courseDTO.setCourse((education.getCourse().getCourse()));
-				educationDTO.setCourse(courseDTO);
-				Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,
-						Comparator.nullsLast(Comparator.naturalOrder()));
-				List<CandidateProject> projects = new ArrayList<CandidateProject>(education.getProjects());
-				projects.sort(comparator.reversed());
-				projects.forEach(project -> {
-					CandidateProjectDTO projectDTO = setCandidateProjects(project);
-					educationDTO.getProjects().add(projectDTO);
-				});
-				educationDTOs.add(educationDTO);
 				if (withCandidateProfileScore) {
 					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(education.getCandidate().getProfileScore() != null
-							? education.getCandidate().getProfileScore()
-							: 0d);
+					candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
 					educationDTO.setCandidate(candidateDTO);
 				}
-			});
+				educationDTOs.add(educationDTO);
+			} else {
+				candidateEducations.forEach(education -> {
+					CandidateEducationDTO educationDTO = new CandidateEducationDTO();
+					CollegeDTO collegeDTO = new CollegeDTO();
+					educationDTO.setId(education.getId());
+					educationDTO.setEducationFromDate(education.getEducationFromDate());
+					educationDTO.setEducationToDate(education.getEducationToDate());
+					collegeDTO.setCollegeName(education.getCollege().getCollegeName());
+					collegeDTO.getUniversity()
+							.setUniversityName((education.getCollege().getUniversity().getUniversityName()));
+					// educationDTO.setCollegeName(education.getCollege().getCollegeName());
+					// educationDTO.setUniversityName(education.getCollege().getUniversity().getUniversityName());
+					educationDTO.setCollege(collegeDTO);
+					String scoreType = education.getScoreType();
+					if (scoreType != null && scoreType.equals(Constants.GPA))
+						educationDTO.setGrade(education.getGrade());
+					else
+						educationDTO.setPercentage(education.getPercentage());
+					educationDTO.setScoreType(education.getScoreType());
+					educationDTO.setIsPursuingEducation(education.isIsPursuingEducation());
+					educationDTO.setHighestQualification(education.getHighestQualification());
+					QualificationDTO qualificationDTO = new QualificationDTO();
+					qualificationDTO.setQualification(education.getQualification().getQualification());
+					educationDTO.setQualification(qualificationDTO);
+					CourseDTO courseDTO = new CourseDTO();
+					courseDTO.setCourse((education.getCourse().getCourse()));
+					educationDTO.setCourse(courseDTO);
+					Comparator<CandidateProject> comparator = Comparator.comparing(CandidateProject::getProjectEndDate,
+							Comparator.nullsLast(Comparator.naturalOrder()));
+					List<CandidateProject> projects = new ArrayList<CandidateProject>(education.getProjects());
+					projects.sort(comparator.reversed());
+					projects.forEach(project -> {
+						CandidateProjectDTO projectDTO = setCandidateProjects(project);
+						educationDTO.getProjects().add(projectDTO);
+					});
+					educationDTOs.add(educationDTO);
+					if (withCandidateProfileScore) {
+						CandidateDTO candidateDTO = new CandidateDTO();
+						candidateDTO.setProfileScore(education.getCandidate().getProfileScore() != null
+								? education.getCandidate().getProfileScore()
+								: 0d);
+						educationDTO.setCandidate(candidateDTO);
+					}
+				});
+			}
 		}
 		return educationDTOs;
 	}

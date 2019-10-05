@@ -76,9 +76,10 @@ public class CandidateLanguageService {
 		log.debug("I have these pre in candidate {}", candidate.getCandidateLanguageProficiencies());
 	//	candidate.addCandidateLanguageProficiency(result);
 		matcher.match(candidate);
-		 if(candidate.getCandidateLanguageProficiencies().stream().filter(langProf->langProf.getLanguage().getLanguage().equals(candidateLanguageProficiency.getLanguage().getLanguage())).findFirst().isPresent())
-			 return candidate.getCandidateLanguageProficiencies().stream().filter(langProf->langProf.getLanguage().equals(candidateLanguageProficiency.getLanguage())).findFirst().get();
-		 else return candidateLanguageProficiency;
+		return candidate.getCandidateLanguageProficiencies().stream().
+	 	 filter(langProf->langProf.getLanguage().getLanguage()
+	 			.equals(candidateLanguageProficiency.getLanguage().getLanguage())).findFirst().orElse(candidateLanguageProficiency);
+		 
 	}
 
 	public CandidateLanguageProficiency updateCandidateLanguageProficiency(

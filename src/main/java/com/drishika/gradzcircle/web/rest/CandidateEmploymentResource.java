@@ -102,8 +102,7 @@ public class CandidateEmploymentResource {
 		}
 		candidate = candidateRepository.save(candidate.addEmployment(candidateEmployment));
 		log.debug("Candidate Employment is {}",candidate.getEmployments());
-		CandidateEmployment result = candidate.getEmployments().stream().filter(emp->emp.getId()!=null).filter(emp->emp.getJobTitle().equals(candidateEmployment.getJobTitle())).findFirst().isPresent()?
-				candidate.getEmployments().stream().filter(emp->emp.getJobTitle().equals(candidateEmployment.getJobTitle())).findFirst().get():candidateEmployment;
+		CandidateEmployment result = candidate.getEmployments().stream().filter(emp->emp.getId()!=null).filter(emp->emp.getJobTitle().equals(candidateEmployment.getJobTitle())).findFirst().orElse(candidateEmployment);
 		
 		//candidateEmploymentSearchRepository.save(result);
 		return ResponseEntity.created(new URI("/api/candidate-employments/" + result.getId()))

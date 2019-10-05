@@ -1145,7 +1145,7 @@ public class JobService {
 		job.setEscrowAmountUsed(escrowAmountUsed);
 		log.info("Updating job");
 		job = jobRepository.save(job);
-		log.info("Job updated {} ,{}", job);
+		log.info("Job updated {} ", job);
 		if (job.getCorporate() != null && job.getCorporate().getEscrowAmount() != null) {
 			corporateFromPrevJob.setEscrowAmount(corporateEscrowAmount);
 			log.debug("Setting escrow as {}",corporateEscrowAmount);
