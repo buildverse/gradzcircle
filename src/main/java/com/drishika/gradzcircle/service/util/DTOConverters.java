@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -29,6 +28,7 @@ import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProject;
+import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.service.dto.AddressDTO;
@@ -42,6 +42,7 @@ import com.drishika.gradzcircle.service.dto.CandidateLanguageProficiencyDTO;
 import com.drishika.gradzcircle.service.dto.CandidateNonAcademicWorkDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProjectDTO;
+import com.drishika.gradzcircle.service.dto.CandidateSkillsDTO;
 import com.drishika.gradzcircle.service.dto.CollegeDTO;
 import com.drishika.gradzcircle.service.dto.CorporateJobDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
@@ -50,6 +51,7 @@ import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.QualificationDTO;
+import com.drishika.gradzcircle.service.dto.SkillsDTO;
 
 /**
  * @author abhinav
@@ -336,7 +338,7 @@ public class DTOConverters {
 			jobListingData.setJobDescription(job.getJobDescription());
 	}
 
-	private String convertToCamelCase(String string) {
+	public String convertToCamelCase(String string) {
 		if (string == null)
 			return "";
 		String[] splitString = string.split("\\s+");
@@ -420,6 +422,31 @@ public class DTOConverters {
 		});
 
 		return languageProficiencyDTOs;
+	}
+	
+	public List<CandidateSkillsDTO> convertToCandidateSkillsDTO(List<CandidateSkills> skills) {
+		logger.debug("Candidate SKills are {}",skills);
+		List<CandidateSkillsDTO> dto = new ArrayList<>();
+		
+		skills.forEach(skill->{
+			CandidateSkillsDTO candidateSkillDTO = new CandidateSkillsDTO();
+			candidateSkillDTO.setId(skill.getId());
+			candidateSkillDTO.setSkillName(skill.getSkills().getSkill());;
+			dto.add(candidateSkillDTO);
+		});
+		return dto;
+	}
+	
+	public CandidateSkillsDTO convertToCandidateSkillDTO(CandidateSkills skills) {
+		logger.debug("Candidate SKills are {}", skills);
+		
+		CandidateSkillsDTO candidateSkillDTO = null;
+		if(skills!=null) {
+			candidateSkillDTO = new CandidateSkillsDTO();
+			candidateSkillDTO.setId(skills.getId());
+			candidateSkillDTO.setSkillName(skills.getSkills().getSkill());
+		}
+		return candidateSkillDTO;
 	}
 
 	/**

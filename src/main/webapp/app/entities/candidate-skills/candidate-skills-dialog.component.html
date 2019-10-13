@@ -1,0 +1,107 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header modal-header-decorate">
+        <h6 class="modal-title" id="myCandidateSkillsLabel" jhiTranslate="gradzcircleApp.candidateSkills.home.createOrEditLabel">Create or edit a Candidate Skills</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!candidateSkills.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="candidateSkills.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateSkills.skill" for="field_skill">Skill</label>
+            <input type="text" class="form-control" name="skill" id="field_skill"
+                [(ngModel)]="candidateSkills.skill" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateSkills.candidate" for="field_candidate">Candidate</label>
+            <select class="form-control" id="field_candidate" name="candidate" [(ngModel)]="candidateSkills.candidate" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="candidateOption.id === candidateSkills.candidate?.id ? candidateSkills.candidate : candidateOption" *ngFor="let candidateOption of candidates; trackBy: trackCandidateById">{{candidateOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="gradzcircleApp.candidateSkills.skills" for="field_skills">Skills</label>
+            <select class="form-control" id="field_skills" name="skills" [(ngModel)]="candidateSkills.skills" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="skillsOption.id === candidateSkills.skills?.id ? candidateSkills.skills : skillsOption" *ngFor="let skillsOption of skills; trackBy: trackSkillsById">{{skillsOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div *jhiHasAnyAuthority="['ROLE_CANDIDATE']">
+    		<div class="form-group row mx-4 my-4">
+    			<div class="col-lg-2">
+				<label
+					jhiTranslate="gradzcircleApp.candidateSkills.skills"
+					for="field_skill"
+					class="form-control-label font-weight-bold ">Skills</label>
+			</div>
+			<div class="col-lg-10"
+				[class.has-danger]="skill.invalid && skill.touched">
+				<tag-input name="skills" 
+					[(ngModel)]="candidateSkills.skills" theme='bootstrap' 
+					#skill="ngModel" required [onlyFromAutocomplete]="true"
+					[placeholder]="'Skill+'" [onTextChangeDebounce]="500"
+					id="field_skill" 
+					[secondaryPlaceholder]="'Enter your skills'"
+					(onAdd)="isSkillOther()" (onRemove)="isOtherPresent()"> 
+					<tag-input-dropdown 
+						[autocompleteObservable]='requestSkillData'>
+					</tag-input-dropdown>
+
+				</tag-input>
+				<span *ngIf="!showSkillsTextArea" class="text-primary">
+					<small>Type Other , in case you don't find your skill</small>
+				</span>
+			</div>
+
+			<div *ngIf="showSkillsTextArea" class="mt-3 col-lg-2">
+				<label class="form-control-label font-weight-bold "
+					jhiTranslate="gradzcircleApp.candidateSkills.capturedSkill"
+					for="field_capturedSkill">Add Skills</label>
+			</div>
+			<div *ngIf="showSkillsTextArea" class="mt-3 col-lg-10"
+				[class.has-danger]="capturedSkill.invalid && capturedSkill.touched">
+				<input type="text" class="form-control "
+					name="capturedSkill" id="field_capturedSkill"
+					#capturedSkill="ngModel" required pattern="^[a-zA-Z,]*$"
+					[(ngModel)]="candidateSkills.capturedSkills" />
+				<small *ngIf="capturedSkill?.errors?.pattern;else noError" class="text-danger">
+				
+						Please add skills seperated by commas.
+				</small>
+				<ng-template #noError>
+					<small  class="form-text text-muted form-text-primary">
+						Please add skills seperated by commas.
+				</small>
+				</ng-template>
+			</div>
+    			
+    		</div>
+    		<div class="mb-5 mr-5 ml-5">
+		<!--<button type="button" class="btn btn-sm btn-pill btn-secondary"
+			data-dismiss="modal" (click)="clear()">
+			<span class="fa fa-ban"></span>&nbsp;<span
+				jhiTranslate="entity.action.cancel">Cancel</span>
+		</button>-->
+			<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+				class="btn btn-block btn-primary">
+				<span
+					jhiTranslate="entity.action.save">Save</span>
+			</button>
+		</div>
+    </div>
+   <!--   <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>-->
+</form>

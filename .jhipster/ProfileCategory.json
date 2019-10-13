@@ -1,14 +1,6 @@
 {
     "fluentMethods": true,
-    "relationships": [
-        {
-            "relationshipType": "many-to-many",
-            "relationshipName": "candidate",
-            "otherEntityName": "candidate",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "profileCategory"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldName": "categoryName",

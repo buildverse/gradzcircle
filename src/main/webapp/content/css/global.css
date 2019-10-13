@@ -399,6 +399,10 @@ transition-delay:.2s;
 	background-image:url('../images/certification.jpg');
 }
 
+.skill-img {
+	background-image:url('../images/skill.jpg');
+}
+
 .nonAcademic-img {
 	background-image:url('../images/non-academic.jpg');
 }

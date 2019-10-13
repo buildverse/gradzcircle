@@ -1,27 +1,45 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.domain.Skills;
-
-import com.drishika.gradzcircle.repository.SkillsRepository;
-import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.domain.Skills;
+import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
+import com.drishika.gradzcircle.entitybuilders.SkillsEntityBuilder;
+import com.drishika.gradzcircle.repository.SkillsRepository;
+import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Skills.
@@ -37,10 +55,13 @@ public class SkillsResource {
     private final SkillsRepository skillsRepository;
 
     private final SkillsSearchRepository skillsSearchRepository;
+    
+    private final ElasticsearchTemplate elasticsearchTemplate;
 
-    public SkillsResource(SkillsRepository skillsRepository, SkillsSearchRepository skillsSearchRepository) {
+    public SkillsResource(SkillsRepository skillsRepository, SkillsSearchRepository skillsSearchRepository,ElasticsearchTemplate elasticsearchTemplate) {
         this.skillsRepository = skillsRepository;
         this.skillsSearchRepository = skillsSearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     /**
@@ -58,7 +79,9 @@ public class SkillsResource {
             throw new BadRequestAlertException("A new skills cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Skills result = skillsRepository.save(skills);
-        skillsSearchRepository.save(result);
+        elasticsearchTemplate.index(new SkillsEntityBuilder(result.getId()).name(result.getSkill())
+				.suggest(new String[] { result.getSkill() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
         return ResponseEntity.created(new URI("/api/skills/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,7 +104,9 @@ public class SkillsResource {
             return createSkills(skills);
         }
         Skills result = skillsRepository.save(skills);
-        skillsSearchRepository.save(result);
+        elasticsearchTemplate.index(new SkillsEntityBuilder(result.getId()).name(result.getSkill())
+				.suggest(new String[] { result.getSkill() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, skills.getId().toString()))
             .body(result);
@@ -110,6 +135,21 @@ public class SkillsResource {
     public ResponseEntity<Skills> getSkills(@PathVariable Long id) {
         log.debug("REST request to get Skills : {}", id);
         Skills skills = skillsRepository.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skills));
+    }
+    
+    
+    /**
+     * GET  /skills/:name : get the "name" skills.
+     *
+     * @param id the id of the skills to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the skills, or with status 404 (Not Found)
+     */
+    @GetMapping("/skillsByName/{name}")
+    @Timed
+    public ResponseEntity<Skills> getSkills(@PathVariable String name) {
+        log.debug("REST request to get Skills : {}", name);
+        Skills skills = skillsRepository.findBySkill(name);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skills));
     }
 
@@ -144,4 +184,29 @@ public class SkillsResource {
             .collect(Collectors.toList());
     }
 
+    
+    @GetMapping("/_search/skillBySuggest")
+	@Timed
+	public String searchSkillBySuggest(@RequestParam String query) {
+		log.debug("REST request to search skill for query {}", query);
+		String suggest = null;
+		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+				.completionSuggestion("skill-suggest").text(query).field("suggest");
+		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
+				com.drishika.gradzcircle.domain.elastic.Skills.class);
+		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("skill-suggest");
+		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
+		List<GenericElasticSuggest> skills = new ArrayList<GenericElasticSuggest>();
+		ObjectMapper objectMapper = new ObjectMapper();
+		options.forEach(option -> {
+			skills.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
+			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
+		});
+		try {
+			suggest = objectMapper.writeValueAsString(skills);
+		} catch (JsonProcessingException e) {
+			log.error("Error parsing object to JSON {},{}", e.getMessage(), e);
+		}
+		return suggest;
+	}
 }

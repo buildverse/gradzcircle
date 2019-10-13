@@ -9,6 +9,7 @@ import { CandidateEducationComponent } from '../../entities/candidate-education/
 import { CandidateEmploymentComponent } from '../../entities/candidate-employment/candidate-employment.component';
 import { CandidateCertificationComponent } from '../../entities/candidate-certification/candidate-certification.component';
 import { CandidateNonAcademicWorkComponent } from '../../entities/candidate-non-academic-work/candidate-non-academic-work.component';
+import { CandidateSkillsComponent } from '../../entities/candidate-skills/candidate-skills.component';
 import { CandidatePublicProfilePopupComponent } from './candidate-public-profile-popup.component';
 import { AppliedJobsComponent } from './applied-job-by-candidate.component';
 import { CandidatePrimarySettingsEditComponent } from './candidate-primary-settings-edit.component';
@@ -142,6 +143,16 @@ export const candidateProfileRoutes: Routes = [
     {
         path: 'languages',
         component: CandidateLanguageProficiencyComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'skill',
+        component: CandidateSkillsComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'

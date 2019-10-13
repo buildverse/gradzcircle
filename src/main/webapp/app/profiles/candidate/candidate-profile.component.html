@@ -40,6 +40,17 @@
 	                           	<hr />
 	                           	<div class="row ">
 	                        			<div class="col-md-10 ">
+	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateSkills.detail.title"></h4>
+	                            		</div>
+	                            		<div *ngIf="candidate?.hasSkills; else addSkills" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../skill']"> Add</span></div>
+	                            		<ng-template #addSkills>
+	                            			<div class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.add" 
+											[routerLink]="['/', { outlets: { popup: 'new-candidate-skill' } }]">Add</span></div>
+	                            		</ng-template>
+	                           	</div>
+	                           	<hr />
+	                           	<div class="row ">
+	                        			<div class="col-md-10 ">
 	                            			<h4 class="small font-weight-bold mb-0 pt-1" jhiTranslate="gradzcircleApp.candidateCertification.detail.title"></h4>
 	                            		</div>
 	                            		<div *ngIf="candidate?.hasCertification; else addCertification" class="col-md-2"><span class="pb-0 pt-0 float-right  btn btn-outline-primary btn-sm" jhiTranslate="entity.action.view" [routerLink]="['../certification']"> Add</span></div>

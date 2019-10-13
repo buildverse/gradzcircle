@@ -71,6 +71,7 @@ public class CandidateDetailDTO implements Serializable {
 	
 	private Boolean hasLanguages;
 
+	private Boolean hasSkills;
 	/**
 	 * @return the id
 	 */
@@ -448,6 +449,20 @@ public class CandidateDetailDTO implements Serializable {
 	 */
 	public void setHasLanguages(Boolean hasLanguages) {
 		this.hasLanguages = hasLanguages;
+	}
+
+	/**
+	 * @return the hasSkills
+	 */
+	public Boolean getHasSkills() {
+		return hasSkills;
+	}
+
+	/**
+	 * @param hasSkills the hasSkills to set
+	 */
+	public void setHasSkills(Boolean hasSkills) {
+		this.hasSkills = hasSkills;
 	}
 	
 	

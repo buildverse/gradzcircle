@@ -39,7 +39,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot.params['search'] : '';
     }
 
-    /*To be removed once undertsand Elastic */
+    
     loadCertificationsForCandidate() {
         this.spinnerService.show();
         this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(

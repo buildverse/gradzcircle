@@ -168,6 +168,10 @@ entity CandidateLanguageProficiency {
    proficiency String
 }
 
+entity CandidateSkills {
+   skill String
+}
+
 entity VisaType {
     visa String
 }
@@ -338,6 +342,8 @@ relationship OneToMany {
     Candidate {employment} to CandidateEmployment,
     Candidate {candidateLanguageProficiency} to CandidateLanguageProficiency,
     Language {candidateLanguageProficiency} to CandidateLanguageProficiency,
+    Candidate {candidateSkill} to CandidateSkills,
+    Skills {candidateSkill} to CandidateSkills,
     University {college} to College,
     Country {university} to University,
     VisaType {candidate} to Candidate,

@@ -44,7 +44,6 @@ export class CandidateLanguageProficiencyService {
   }
 
   findByCandidateId(id: number): Observable<HttpResponse<CandidateLanguageProficiency[]>> {
-    //console.log('CAALNG FOR CANDIDATE ONLY');
     return this.http.get<CandidateLanguageProficiency[]>(`${this.resourceUrlByCandidate}/${id}`, {observe: 'response'})
       .map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res));
   }

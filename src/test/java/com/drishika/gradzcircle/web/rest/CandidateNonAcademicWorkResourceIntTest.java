@@ -40,7 +40,6 @@ import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
-import com.drishika.gradzcircle.repository.CandidateProfileScoreRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
@@ -102,8 +101,6 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	@Autowired
 	private CandidateRepository candidateRepository;
 	
-	@Autowired
-	private CandidateProfileScoreRepository candidateProfileScoreRepository;
 	
 	@Autowired
 	private DTOConverters converter;

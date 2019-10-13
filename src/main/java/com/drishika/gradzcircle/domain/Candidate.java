@@ -21,19 +21,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import com.drishika.gradzcircle.web.rest.CandidateCertificationResource;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -138,6 +131,10 @@ public class Candidate implements Serializable {
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
+	
+    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<CandidateSkills> candidateSkills = new HashSet<>();
 
 	@ManyToOne
 	private Nationality nationality;
@@ -742,6 +739,33 @@ public class Candidate implements Serializable {
 		this.profileScores = profileScores;
 	}
 
+    public Set<CandidateSkills> getCandidateSkills() {
+        return candidateSkills;
+    }
+
+    public Candidate candidateSkills(Set<CandidateSkills> candidateSkills) {
+        this.candidateSkills = candidateSkills;
+        return this;
+    }
+
+
+    public Candidate addCandidateSkill(CandidateSkills candidateSkills) {
+        this.candidateSkills.add(candidateSkills);
+        candidateSkills.setCandidate(this);
+        return this;
+    }
+
+    public Candidate removeCandidateSkill(CandidateSkills candidateSkills) {
+        this.candidateSkills.remove(candidateSkills);
+        candidateSkills.setCandidate(null);
+        return this;
+    }
+
+    public void setCandidateSkills(Set<CandidateSkills> candidateSkills) {
+        this.candidateSkills = candidateSkills;
+    }
+
+    
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

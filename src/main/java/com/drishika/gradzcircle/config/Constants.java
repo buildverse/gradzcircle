@@ -46,6 +46,7 @@ public final class Constants {
 	public static final String ENTITY_COUNTRY = "country";
 	public static final String ENTITY_NATIONALITY = "nationality";
 	public static final String ENTITY_COURSE = "course";
+	public static final String ENTITY_SKILL = "skill";
 
 	/* PROFILE CATEGORIES */
 	
@@ -57,5 +58,6 @@ public final class Constants {
 	public static final String CANDIDATE_NON_ACADEMIC_PROFILE= "nonAcademic";
 	public static final String CANDIDATE_PROFILE_TOTAL_WEIGHT = "totalWeight";
 	public static final String CANDIDATE_BASIC_PROFILE = "basicDetails";
+	public static final String CANDIDATE_SKILL_PROFILE = "skill";
 	
 }

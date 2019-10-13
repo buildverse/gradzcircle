@@ -8,6 +8,7 @@ import {CandidateNonAcademicWork} from '../candidate-non-academic-work/candidate
 import {CandidateCertification} from '../candidate-certification/candidate-certification.model';
 import {CandidateEmployment} from '../candidate-employment/candidate-employment.model';
 import {CandidateLanguageProficiency} from '../candidate-language-proficiency/candidate-language-proficiency.model'
+import { CandidateSkills } from '../candidate-skills';
 import {JobCategory} from '../job-category/job-category.model';
 import {VisaType} from '../visa-type/visa-type.model';
 import {Job} from '../job/job.model';
@@ -46,6 +47,7 @@ export class Candidate implements BaseEntity {
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
     public jobCategories?: JobCategory[],
+    public candidateSkills?: CandidateSkills[],
     public visaType?: VisaType,
     public jobs?: Job[],
     public profileCategories?: BaseEntity[],
@@ -55,6 +57,7 @@ export class Candidate implements BaseEntity {
     public hasEmployment?: boolean,
     public hasNonAcademic?: boolean,
     public hasLanguages?: boolean,
+    public hasSkills?: boolean
   ) {
     this.differentlyAbled = false;
     this.availableForHiring = false;
@@ -66,5 +69,6 @@ export class Candidate implements BaseEntity {
     this.hasEmployment = false;
     this.hasNonAcademic = false;
     this.hasLanguages = false;
+    this.hasSkills = false;
   }
 }
