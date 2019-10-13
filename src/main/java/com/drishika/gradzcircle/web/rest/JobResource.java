@@ -139,7 +139,7 @@ public class JobResource {
 		try {
 			result = jobService.updateJob(job);
 			// BeanUtils.copyProperties(updatedJob, result);
-			log.info("Updated job is {},{}", updatedJob, updatedJob.getJobFilters());
+			log.info("Updated job is {},{}", result, result.getJobFilters());
 		} catch (BeanCopyException e) {
 		
 			result = job;

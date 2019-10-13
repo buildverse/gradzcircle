@@ -13,6 +13,7 @@ export class SkillsService {
 
     private resourceUrl =  SERVER_API_URL + 'api/skills';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/skills';
+     private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/skillBySuggest';
 
     constructor(private http: HttpClient) { }
 
@@ -26,6 +27,11 @@ export class SkillsService {
         const copy = this.convert(skills);
         return this.http.put<Skills>(this.resourceUrl, copy, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
+    }
+
+    searchRemote(req?: any): Observable<HttpResponse<any>> {
+      const options = createRequestOption(req);
+      return this.http.get(this.resourceSearchSuggestUrl, {params: options, observe: 'response'});
     }
 
     find(id: number): Observable<EntityResponseType> {

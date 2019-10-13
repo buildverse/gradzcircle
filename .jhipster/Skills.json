@@ -1,6 +1,13 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateSkill",
+            "otherEntityName": "candidateSkills",
+            "otherEntityRelationshipName": "skills"
+        }
+    ],
     "fields": [
         {
             "fieldName": "skill",
@@ -11,5 +18,6 @@
     "entityTableName": "skills",
     "dto": "no",
     "pagination": "no",
-    "service": "no"
+    "service": "no",
+    "jpaMetamodelFiltering": false
 }

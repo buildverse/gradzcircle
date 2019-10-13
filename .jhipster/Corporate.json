@@ -26,6 +26,14 @@
             "relationshipName": "job",
             "otherEntityName": "job",
             "otherEntityRelationshipName": "corporate"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "corporate",
+            "relationshipName": "candidate",
+            "otherEntityName": "candidate",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [

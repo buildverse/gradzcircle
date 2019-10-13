@@ -17,7 +17,8 @@
             "detail": {
                 "title": "Skills"
             },
-            "skill": "Skill"
+            "skill": "Skill",
+            "candidateSkill": "Candidate Skill"
         }
     }
 }

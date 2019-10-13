@@ -1,0 +1,38 @@
+
+<div *ngIf="candidateSkills">
+    <h2><span jhiTranslate="gradzcircleApp.candidateSkills.detail.title">Candidate Skills</span> {{candidateSkills.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="gradzcircleApp.candidateSkills.skill">Skill</span></dt>
+        <dd>
+            <span>{{candidateSkills.skill}}</span>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateSkills.candidate">Candidate</span></dt>
+        <dd>
+            <div *ngIf="candidateSkills.candidate">
+                <a [routerLink]="['/candidate', candidateSkills.candidate?.id]">{{candidateSkills.candidate?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="gradzcircleApp.candidateSkills.skills">Skills</span></dt>
+        <dd>
+            <div *ngIf="candidateSkills.skills">
+                <a [routerLink]="['/skills', candidateSkills.skills?.id]">{{candidateSkills.skills?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'candidate-skills/'+ candidateSkills.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

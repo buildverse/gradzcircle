@@ -78,7 +78,7 @@
 							</button>
 						</span>
 				</div>
-				<div *ngIf="certificationDate.invalid && certificationDate.touched && certificationDate.errors?.required""
+				<div *ngIf="certificationDate.invalid && certificationDate.touched && certificationDate.errors?.required"
 					class="text-danger">
 					<small>Please enter certification date</small>
                 </div>
@@ -86,6 +86,7 @@
 						<small>End date cannot be in future.</small>
 				</div>
 			</div>
+		</div>
 		</div>
 	
 	<div *jhiHasAnyAuthority="['ROLE_ADMIN']" class="modal-body">

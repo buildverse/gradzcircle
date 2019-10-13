@@ -266,11 +266,13 @@ public class CandidateService {
 		logger.debug("Candidate cert details are {}",candidate.getCertifications());
 		logger.debug("Candidate non acad details are {}",candidate.getNonAcademics());
 		logger.debug("Candidate lang details are {}",candidate.getCandidateLanguageProficiencies());
+		logger.debug("Candidate skills are {}",candidate.getCandidateSkills());
 		Boolean hasEducation = candidate.getEducations()!=null && !candidate.getEducations().isEmpty()? true:false;
 		Boolean hasCertification = candidate.getCertifications()!=null && !candidate.getCertifications().isEmpty()? true:false;
 		Boolean hasNonAcademics = candidate.getNonAcademics()!=null && !candidate.getNonAcademics().isEmpty()? true:false;
 		Boolean hasLanguages = candidate.getCandidateLanguageProficiencies()!=null && !candidate.getCandidateLanguageProficiencies().isEmpty()? true:false;
 		Boolean hasEmployment = candidate.getEmployments()!=null && !candidate.getEmployments().isEmpty()?true:false;
+		Boolean hasSkills = candidate.getCandidateSkills()!=null && !candidate.getCandidateSkills().isEmpty()?true:false;
 		updateCountryAndNationalityDataForDisplay(candidate);
 		CandidateDetailDTO candidateDetailsDTO = convertToCandidateDetailDTO(candidate);
 		candidateDetailsDTO.setHasCertification(hasCertification);
@@ -278,6 +280,7 @@ public class CandidateService {
 		candidateDetailsDTO.setHasNonAcademic(hasNonAcademics);
 		candidateDetailsDTO.setHasEmployment(hasEmployment);
 		candidateDetailsDTO.setHasLanguages(hasLanguages);
+		candidateDetailsDTO.setHasSkills(hasSkills);
 		return candidateDetailsDTO;
 	}
 

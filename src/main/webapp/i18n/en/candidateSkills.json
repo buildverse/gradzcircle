@@ -1,0 +1,26 @@
+
+{
+    "gradzcircleApp": {
+        "candidateSkills" : {
+            "home": {
+                "title": "Candidate Skills",
+                "createLabel": "Create a new Candidate Skills",
+                "createOrEditLabel": "Add Skills",
+                "search": "Search for Candidate Skills"
+            },
+            "created": "A new Candidate Skills is created with identifier {{ param }}",
+            "updated": "A Candidate Skills is updated with identifier {{ param }}",
+            "deleted": "A Candidate Skills is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to remove  {{ skill }} ?"
+            },
+            "detail": {
+                "title": "Skills"
+            },
+            "skill": "Skill",
+            "candidate": "Candidate",
+            "skills": "Skills",
+            "capturedSkill":"Add Skills"
+        }
+    }
+}

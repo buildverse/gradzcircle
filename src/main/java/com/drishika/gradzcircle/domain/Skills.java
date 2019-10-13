@@ -1,13 +1,24 @@
 package com.drishika.gradzcircle.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 
 /**
  * A Skills.
@@ -15,7 +26,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "skills")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "skills")
 public class Skills implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,6 +37,11 @@ public class Skills implements Serializable {
 
     @Column(name = "skill")
     private String skill;
+    
+    @OneToMany(mappedBy = "skills")
+  //  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnore
+    private Set<CandidateSkills> candidateSkills = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -49,9 +64,36 @@ public class Skills implements Serializable {
     public void setSkill(String skill) {
         this.skill = skill;
     }
+
+    public Set<CandidateSkills> getCandidateSkills() {
+        return candidateSkills;
+    }
+
+    public Skills candidateSkills(Set<CandidateSkills> candidateSkills) {
+        this.candidateSkills = candidateSkills;
+        return this;
+    }
+
+    public Skills addCandidateSkill(CandidateSkills candidateSkills) {
+        this.candidateSkills.add(candidateSkills);
+        candidateSkills.setSkills(this);
+        return this;
+    }
+
+    public Skills removeCandidateSkill(CandidateSkills candidateSkills) {
+        this.candidateSkills.remove(candidateSkills);
+        candidateSkills.setSkills(null);
+        return this;
+    }
+
+    public void setCandidateSkills(Set<CandidateSkills> candidateSkills) {
+        this.candidateSkills = candidateSkills;
+    }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -71,11 +113,11 @@ public class Skills implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Skills{" +
-            "id=" + getId() +
-            ", skill='" + getSkill() + "'" +
-            "}";
-    }
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Skills [id=" + id + ", skill=" + skill;
+	}
 }

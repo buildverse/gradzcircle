@@ -46,6 +46,12 @@
             "otherEntityRelationshipName": "candidate"
         },
         {
+            "relationshipType": "one-to-many",
+            "relationshipName": "candidateSkill",
+            "otherEntityName": "candidateSkills",
+            "otherEntityRelationshipName": "candidate"
+        },
+        {
             "relationshipType": "many-to-one",
             "relationshipName": "nationality",
             "otherEntityName": "nationality",
@@ -78,6 +84,13 @@
             "otherEntityName": "job",
             "otherEntityField": "id",
             "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "corporate",
+            "otherEntityName": "corporate",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "candidate"
         },
         {
             "relationshipName": "visaType",
@@ -142,10 +155,6 @@
         {
             "fieldName": "matchEligible",
             "fieldType": "Boolean"
-        },
-        {
-            "fieldName": "profileScore",
-            "fieldType": "Double"
         }
     ],
     "changelogDate": "20171015094626",

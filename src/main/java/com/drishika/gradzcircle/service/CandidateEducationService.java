@@ -236,6 +236,7 @@ public class CandidateEducationService {
 			if (qualification == null) {
 				Qualification newQualification = new Qualification();
 				newQualification.setQualification(convertToTitleCase(candidateEducation.getCapturedQualification()));
+				newQualification.setCategory(Constants.OTHER);
 				newQualification.setWeightage(setQualificationWeightage(newQualification.getQualification()));
 				updateQualificationIndex(qualififcationRepository.save(newQualification));
 				log.info("Saved new Qualifcation {} with weight {}", newQualification.getQualification(),newQualification.getWeightage());

@@ -1,8 +1,10 @@
 package com.drishika.gradzcircle.web.rest;
 
 import com.drishika.gradzcircle.GradzcircleApp;
-
+import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.Skills;
+import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.SkillsEntityBuilder;
 import com.drishika.gradzcircle.repository.SkillsRepository;
 import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -56,6 +59,10 @@ public class SkillsResourceIntTest {
 
     @Autowired
     private ExceptionTranslator exceptionTranslator;
+    
+    @Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
+
 
     @Autowired
     private EntityManager em;
@@ -67,7 +74,7 @@ public class SkillsResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SkillsResource skillsResource = new SkillsResource(skillsRepository, skillsSearchRepository);
+        final SkillsResource skillsResource = new SkillsResource(skillsRepository, skillsSearchRepository,elasticsearchTemplate);
         this.restSkillsMockMvc = MockMvcBuilders.standaloneSetup(skillsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -87,6 +94,32 @@ public class SkillsResourceIntTest {
         return skills;
     }
 
+    /**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static SkillsEntityBuilder createEntityBuilder(Skills skills) {
+		SkillsEntityBuilder entityBuilder = new SkillsEntityBuilder(skills.getId());
+		entityBuilder.name(skills.getSkill());
+		return entityBuilder;
+	}
+	
+	
+	/**
+	 * Create an entity for this test.
+	 *
+	 * This is a static method, as tests for other entities might also need it, if
+	 * they test an entity which requires the current entity.
+	 */
+	public static com.drishika.gradzcircle.domain.elastic.Skills createElasticInstance(
+			Skills skills) {
+		com.drishika.gradzcircle.domain.elastic.Skills elasticSkills = new com.drishika.gradzcircle.domain.elastic.Skills();
+		elasticSkills.skill(skills.getSkill());
+		return elasticSkills;
+	}
+	
     @Before
     public void initTest() {
         skillsSearchRepository.deleteAll();
@@ -112,7 +145,8 @@ public class SkillsResourceIntTest {
 
         // Validate the Skills in Elasticsearch
         Skills skillsEs = skillsSearchRepository.findOne(testSkills.getId());
-        assertThat(skillsEs).isEqualToIgnoringGivenFields(testSkills);
+        assertThat(skillsEs.getId()).isEqualTo(testSkills.getId());
+        assertThat(skillsEs.getSkill()).isEqualTo(testSkills.getSkill());
     }
 
     @Test
@@ -161,6 +195,20 @@ public class SkillsResourceIntTest {
             .andExpect(jsonPath("$.id").value(skills.getId().intValue()))
             .andExpect(jsonPath("$.skill").value(DEFAULT_SKILL.toString()));
     }
+    
+    @Test
+    @Transactional
+    public void getSkillsByName() throws Exception {
+        // Initialize the database
+        skillsRepository.saveAndFlush(skills);
+
+        // Get the skills
+        restSkillsMockMvc.perform(get("/api/skillsByName/{name}", skills.getSkill()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(skills.getId().intValue()))
+            .andExpect(jsonPath("$.skill").value(DEFAULT_SKILL.toString()));
+    }
 
     @Test
     @Transactional
@@ -175,7 +223,9 @@ public class SkillsResourceIntTest {
     public void updateSkills() throws Exception {
         // Initialize the database
         skillsRepository.saveAndFlush(skills);
-        skillsSearchRepository.save(skills);
+        elasticsearchTemplate.index(createEntityBuilder(skills)
+				.suggest(new String[] { createElasticInstance(skills).getSkill() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
         int databaseSizeBeforeUpdate = skillsRepository.findAll().size();
 
         // Update the skills
@@ -197,8 +247,10 @@ public class SkillsResourceIntTest {
         assertThat(testSkills.getSkill()).isEqualTo(UPDATED_SKILL);
 
         // Validate the Skills in Elasticsearch
+
         Skills skillsEs = skillsSearchRepository.findOne(testSkills.getId());
-        assertThat(skillsEs).isEqualToIgnoringGivenFields(testSkills);
+        assertThat(skillsEs.getId()).isEqualTo(testSkills.getId());
+        assertThat(skillsEs.getSkill()).isEqualTo(testSkills.getSkill());
     }
 
     @Test
@@ -224,7 +276,9 @@ public class SkillsResourceIntTest {
     public void deleteSkills() throws Exception {
         // Initialize the database
         skillsRepository.saveAndFlush(skills);
-        skillsSearchRepository.save(skills);
+        elasticsearchTemplate.index(createEntityBuilder(skills)
+				.suggest(new String[] { createElasticInstance(skills).getSkill() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
         int databaseSizeBeforeDelete = skillsRepository.findAll().size();
 
         // Get the skills
@@ -246,7 +300,9 @@ public class SkillsResourceIntTest {
     public void searchSkills() throws Exception {
         // Initialize the database
         skillsRepository.saveAndFlush(skills);
-        skillsSearchRepository.save(skills);
+        elasticsearchTemplate.index(createEntityBuilder(skills)
+				.suggest(new String[] { createElasticInstance(skills).getSkill() }).buildIndex());
+		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 
         // Search the skills
         restSkillsMockMvc.perform(get("/api/_search/skills?query=id:" + skills.getId()))

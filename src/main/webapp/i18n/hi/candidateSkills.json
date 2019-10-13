@@ -1,0 +1,25 @@
+
+{
+    "gradzcircleApp": {
+        "candidateSkills" : {
+            "home": {
+                "title": "CandidateSkills",
+                "createLabel": "नया Candidate Skills बनाएँ",
+                "createOrEditLabel": "Candidate Skills बनाएँ या संपादित करें",
+                "search": "Candidate Skills खोजें"
+            },
+            "created": "एक नया Candidate Skills [identifier: {{ param }}] तैयार है",
+            "updated": "एक Candidate Skills [identifier: {{ param }}] का अद्यतन हुआ है",
+            "deleted": "Candidate Skills [identifier: {{ param }}] हटा दिया है",
+            "delete": {
+                "question": "Candidate Skills [id: {{ id }}] हटाने की पुष्टि करें"
+            },
+            "detail": {
+                "title": "Candidate Skills"
+            },
+            "skill": "Skill",
+            "candidate": "Candidate",
+            "skills": "Skills"
+        }
+    }
+}

@@ -59,7 +59,6 @@ import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateJobRepository;
 import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
-import com.drishika.gradzcircle.repository.CandidateProfileScoreRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CollegeRepository;
 import com.drishika.gradzcircle.repository.CourseRepository;
@@ -229,9 +228,7 @@ public class CandidateEducationResourceIntTest {
 
 	@Autowired
 	private CandidateLanguageProficiencyRepository candidateLanguageRepository;
-	
-	@Autowired
-	private CandidateProfileScoreRepository candidateProfileScoreRepository;
+
 	
 	@Autowired
 	private CandidateJobRepository candidateJobRepository;

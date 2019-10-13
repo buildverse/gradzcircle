@@ -48,6 +48,7 @@
 				"appConfig": "App Config",
 				"states": "States",
 				"profileCategory": "Profile Category",
+"candidateSkills": "Candidate Skills",
 				"jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
 			},
 			"account": {

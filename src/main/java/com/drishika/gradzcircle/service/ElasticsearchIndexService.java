@@ -14,7 +14,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.config.Constants;
@@ -31,6 +30,7 @@ import com.drishika.gradzcircle.domain.MaritalStatus;
 import com.drishika.gradzcircle.domain.Nationality;
 import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.domain.Skills;
 import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
@@ -41,6 +41,7 @@ import com.drishika.gradzcircle.entitybuilders.JobCategoryEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.LanguageEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.NationalityEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
+import com.drishika.gradzcircle.entitybuilders.SkillsEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.UniversityEntityBuilder;
 import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.AuditRepository;
@@ -429,6 +430,7 @@ public class ElasticsearchIndexService {
 		reindexForIndustry(industryRepository);
 		reindexForJobCategory(jobCategoryRepository);
 		reindexForMaritalStatus(maritalStatusRepository);
+		reindexForSkills(skillsRepository);
 		log.info("Elasticsearch: Successfully performed reindexing");
 	}
 	
@@ -458,6 +460,8 @@ public class ElasticsearchIndexService {
 			reindexForQualification(qualificationRepository);
 		else if (Constants.ENTITY_UNIVERSITY.equalsIgnoreCase(entityName))
 			reindexForUniversity(universityRepository);
+		else if (Constants.ENTITY_SKILL.equalsIgnoreCase(entityName))
+			reindexForSkills(skillsRepository);
 		else
 			throw new EntityNotFoundException(entityName+" not found");
 		
@@ -615,6 +619,16 @@ public class ElasticsearchIndexService {
 			elasticsearchTemplate.index(new NationalityEntityBuilder(nationality.getId()).name(nationality.getNationality())
 					.suggest(new String[] { nationality.getNationality() }).buildIndex());
 			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void reindexForSkills(SkillsRepository skillsRepository) {
+		List<Skills> skills = skillsRepository.findAll();
+		skills.forEach(skill -> {
+			elasticsearchTemplate.index(new SkillsEntityBuilder(skill.getId()).name(skill.getSkill())
+					.suggest(new String[] { skill.getSkill() }).buildIndex());
+			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 		});
 	}
 }

@@ -465,6 +465,13 @@ public class JobResourceIntTest {
 		jobFilters.add(jobFilter);
 		return jobFilters;
 	}
+	
+	public static Set<JobFilter> createMoreJobFilter(EntityManager em) {
+		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
+		JobFilter jobFilter = new JobFilter().filterDescription("{\"basic\":true,\"premium\":true,\"courses\":[{\"value\":\"Computer Science\",\"display\":\"Computer Science\"},{\"value\":\"Computer Science & Engg.\",\"display\":\"Computer Science & Engg.\"},{\"value\":\"Accountancy\",\"display\":\"Accountancy\"},{\"value\":\"Architecture\",\"display\":\"Architecture\"},{\"value\":\"Banking & Finance\",\"display\":\"Banking & Finance\"},{\"value\":\"Bio-Informatics/ Bio - Chemistry Engg.\",\"display\":\"Bio-Informatics/ Bio - Chemistry Engg.\"},{\"value\":\"Bio-Medical\",\"display\":\"Bio-Medical\"},{\"value\":\"Bio-Medical/Biio-Technology Engg.\",\"display\":\"Bio-Medical/Biio-Technology Engg.\"},{\"value\":\"Electrical & Electronics Engg.\",\"display\":\"Electrical & Electronics Engg.\"},{\"value\":\"Electrical Engg.\",\"display\":\"Electrical Engg.\"},{\"value\":\"Healthcare/Hospital Management\",\"display\":\"Healthcare/Hospital Management\"},{\"value\":\"Law\",\"display\":\"Law\"},{\"value\":\"Manufacturing Engg.\",\"display\":\"Manufacturing Engg.\"},{\"value\":\"Management\",\"display\":\"Management\"},{\"value\":\"Network Engg.\",\"display\":\"Network Engg.\"},{\"value\":\"Orthopaedics\",\"display\":\"Orthopaedics\"},{\"value\":\"Pharmacuetical technology\",\"display\":\"Pharmacuetical technology\"},{\"value\":\"Pharmacy\",\"display\":\"Pharmacy\"},{\"value\":\"Nursing\",\"display\":\"Nursing\"},{\"value\":\"No Education/Schooling\",\"display\":\"No Education/Schooling\"},{\"value\":\"Microbiology\",\"display\":\"Microbiology\"},{\"value\":\"Social Work\",\"display\":\"Social Work\"},{\"value\":\"Software Engineering\",\"display\":\"Software Engineering\"},{\"value\":\"Telecom\",\"display\":\"Telecom\"},{\"value\":\"Veterniary\",\"display\":\"Veterniary\"},{\"value\":\"Wireless Technologies\",\"display\":\"Wireless Technologies\"},{\"value\":\"Zoology\",\"display\":\"Zoology\"},{\"value\":\"Zoology/ Applied Zoology\",\"display\":\"Zoology/ Applied Zoology\"}],\"qualifications\":[{\"value\":\"B.A.\",\"display\":\"B.A.\"},{\"value\":\"B.Arch\",\"display\":\"B.Arch\"},{\"value\":\"B.Com\",\"display\":\"B.Com\"},{\"value\":\"B.Design\",\"display\":\"B.Design\"},{\"value\":\"B.E/B.Tech\",\"display\":\"B.E/B.Tech\"},{\"value\":\"C.A\",\"display\":\"C.A\"},{\"value\":\"CS\",\"display\":\"CS\"},{\"value\":\"Diploma\",\"display\":\"Diploma\"},{\"value\":\"ICWA\",\"display\":\"ICWA\"},{\"value\":\"LLB\",\"display\":\"LLB\"},{\"value\":\"LLM\",\"display\":\"LLM\"},{\"value\":\"M.Arch\",\"display\":\"M.Arch\"},{\"value\":\"M.E/ M.Tech\",\"display\":\"M.E/ M.Tech\"},{\"value\":\"M.Ed\",\"display\":\"M.Ed\"},{\"value\":\"M.F.Sc\",\"display\":\"M.F.Sc\"},{\"value\":\"No Formal Qualification\",\"display\":\"No Formal Qualification\"},{\"value\":\"Other\",\"display\":\"Other\"},{\"value\":\"P.G.Diploma\",\"display\":\"P.G.Diploma\"},{\"value\":\"B.Sc\",\"display\":\"B.Sc\"},{\"value\":\"M.Sc\",\"display\":\"M.Sc\"},{\"value\":\"MSW\",\"display\":\"MSW\"},{\"value\":\"MS\",\"display\":\"MS\"}]}");
+		jobFilters.add(jobFilter);
+		return jobFilters;
+	}
 
 	
 	
@@ -6865,4 +6872,5 @@ public class JobResourceIntTest {
 						"genderMatchScore", "totalEligibleScore", "reviewed")
 				.contains(tuple("Ruchika", 92.0, 24.0, 5.0, 4.0, 36.0, false));
 	}
+
 }

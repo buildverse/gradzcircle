@@ -31,7 +31,6 @@
             "availableForHiring": "Available For Hiring",
             "openToRelocate": "Open To Relocate",
             "matchEligible": "Match Eligible",
-            "profileScore": "Profile Score",
             "login": "Login",
             "address": "Address",
             "education": "Education",
@@ -39,12 +38,12 @@
             "certification": "Certification",
             "employment": "Employment",
             "candidateLanguageProficiency": "Candidate Language Proficiency",
+            "candidateSkill": "Candidate Skill",
             "nationality": "Nationality",
             "gender": "Gender",
             "maritalStatus": "Marital Status",
             "jobCategory": "Job Category",
             "job": "Job",
-            "profileCategory": "Profile Category",
             "corporate": "Corporate",
             "visaType": "Visa Type"
         }
