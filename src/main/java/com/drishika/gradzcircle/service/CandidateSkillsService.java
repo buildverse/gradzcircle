@@ -66,6 +66,7 @@ public class CandidateSkillsService {
 		log.debug("Service request to save CandidateSkills : {}", candidateSkillObject.getCapturedSkills());
 		
 		Candidate candidate = candidateRepository.findOne(candidateSkillObject.getCandidate().getId());
+		
 		if(candidate.getCandidateSkills().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, false);
 		}
@@ -120,7 +121,10 @@ public class CandidateSkillsService {
 	 }
 	
 	private void injestSkillsInformation(CandidateSkills candidateSkillObject) {
-		List<CandidateSkills> candidateSkills = new ArrayList<>();
+		List<CandidateSkills> candidateSkills=  new ArrayList<>();
+		Set<CandidateSkills> previousSkills = candidateSkillObject.getCandidate().getCandidateSkills();
+		if(previousSkills!=null && !previousSkills.isEmpty())
+			candidateSkills.addAll(previousSkills);
 		if(candidateSkillObject.getSkillsList() != null) {
 			log.debug("candidate Skill Object is {}",candidateSkillObject);
 			Skills otherSkill = candidateSkillObject.getSkillsList().stream()
