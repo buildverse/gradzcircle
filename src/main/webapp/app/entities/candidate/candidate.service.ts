@@ -25,10 +25,8 @@ export class CandidateService {
   private resourceUrlGetCandidateDetails = SERVER_API_URL + 'api/candidateDetails';
   private deleteImageUrl = 'api/remove';
   private resourceUrlGuest ='api/candidatesPreview';
-  private resourceCandidateToCorporateLink = 'api/candidate-corporate-link'
-  //  private resourcePublicProfileUrl ='api/candidates/public-profile';
-  //  private resourcePublicProfileUrlElastic ='api/candidates/public-profile-es'
-  private resourceCandidatePublicProfile = 'api/candidates/candidatePublicProfile'
+  private resourceCandidateToCorporateLink = 'api/candidate-corporate-link';
+  private resourceCandidatePublicProfile = 'api/candidates/candidatePublicProfile';
 
 
   constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}

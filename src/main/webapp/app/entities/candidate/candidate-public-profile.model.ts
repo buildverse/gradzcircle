@@ -6,6 +6,8 @@ import {CandidateNonAcademicWork} from '../candidate-non-academic-work/candidate
 import {CandidateCertification} from '../candidate-certification/candidate-certification.model';
 import {CandidateEmployment} from '../candidate-employment/candidate-employment.model';
 import {CandidateLanguageProficiency} from '../candidate-language-proficiency/candidate-language-proficiency.model';
+import { CandidateSkills } from '../candidate-skills/candidate-skills.model';
+
 
 
 export class CandidatePublicProfile implements BaseEntity {
@@ -21,6 +23,7 @@ export class CandidatePublicProfile implements BaseEntity {
     public certifications?: CandidateCertification[],
     public employments?: CandidateEmployment[],
     public candidateLanguageProficiencies?: CandidateLanguageProficiency[],
+    public candidateSkills?: CandidateSkills[],
     public matchScore?: number,
     public canBeShortListed?: boolean
   ) { this.isShortListed = false; this.reviewed = false;  this.canBeShortListed = false;}

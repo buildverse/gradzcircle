@@ -308,50 +308,6 @@ public class CandidateResource {
 
 	}
 
-	/**
-	 * SEARCH /_search/candidates?query=:query : API to get consolidate candidate
-	 * Profile f
-	 *
-	 * @param query
-	 *            the query of the candidate search
-	 * @return the result of the search
-	 */
-	@GetMapping("/candidates/public-profile")
-	@Timed
-	@Deprecated
-	public ResponseEntity<Candidate> retrieveCandidatePublicProfile(@RequestParam String query) {
-		log.debug("REST request to get Candidate public profile for query {}", query);
-		Candidate candidate = candidateService.retrieveCandidatePublicProfile(query);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidate));
-
-	}
-
-	/*
-	 * private void trimCandidateCertifications(Set<CandidateCertification>
-	 * certifications) { certifications.forEach(certification -> {
-	 * certification.setCandidate(null); }); }
-	 * 
-	 * private void trimCandidateNonAcademics(Set<CandidateNonAcademicWork>
-	 * nonAcademicWorks) { nonAcademicWorks.forEach(nonAcademicWork -> {
-	 * nonAcademicWork.setCandidate(null); }); }
-	 * 
-	 * private void
-	 * trimCandidateLanguageProficienies(Set<CandidateLanguageProficiency>
-	 * languageProficiencies) { languageProficiencies.forEach(languageProficiency ->
-	 * { languageProficiency.setCandidate(null); }); }
-	 * 
-	 * private void trimCandidateEmploymentData(Set<CandidateEmployment>
-	 * candidateEmployments) { candidateEmployments.forEach(candidateEmployment -> {
-	 * candidateEmployment.setCandidate(null); if (candidateEmployment.getProjects()
-	 * != null) { candidateEmployment.getProjects().forEach(candidateProject -> {
-	 * candidateProject.setEmployment(null); }); } }); }
-	 * 
-	 * private void trimCandidateEducationData(Set<CandidateEducation>
-	 * candidateEducations) { candidateEducations.forEach(candidateEducation -> {
-	 * candidateEducation.setCandidate(null); if (candidateEducation.getProjects()
-	 * != null) { candidateEducation.getProjects().forEach(candidateProject -> {
-	 * candidateProject.setEducation(null); }); } }); }
-	 */
 	private void trimCandidateAddressData(Set<Address> addresses) {
 
 		if (addresses != null) {

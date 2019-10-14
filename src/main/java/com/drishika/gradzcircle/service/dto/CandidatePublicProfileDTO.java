@@ -36,6 +36,8 @@ public class CandidatePublicProfileDTO implements Serializable {
 	List<CandidateNonAcademicWorkDTO> nonAcademics = new ArrayList<>();
 
 	List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<>();
+	
+	List<CandidateSkillsDTO> candidateSkills = new ArrayList<>();
 
 	Set<AddressDTO> addresses = new HashSet<>();
 	
@@ -197,8 +199,18 @@ public class CandidatePublicProfileDTO implements Serializable {
 		this.canBeShortListed = canBeShortListed;
 	}
 
-	
-	
-	
+	/**
+	 * @return the candidateSkills
+	 */
+	public List<CandidateSkillsDTO> getCandidateSkills() {
+		return candidateSkills;
+	}
+
+	/**
+	 * @param candidateSkills the candidateSkills to set
+	 */
+	public void setCandidateSkills(List<CandidateSkillsDTO> candidateSkills) {
+		this.candidateSkills = candidateSkills;
+	}
 
 }

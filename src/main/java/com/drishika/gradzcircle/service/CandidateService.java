@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.service;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProject;
+import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Country;
@@ -52,7 +54,6 @@ import com.drishika.gradzcircle.repository.search.CandidateProjectSearchReposito
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
 import com.drishika.gradzcircle.service.dto.AddressDTO;
 import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
-import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
 import com.drishika.gradzcircle.service.dto.CountryDTO;
@@ -318,6 +319,7 @@ public class CandidateService {
 		logger.debug("REST request to get Candidate public profile for candidate {} {} {}", candidateId, jobId, corporateId);
 		Boolean isShortListed = false;
 		Boolean canShortListMore = false;
+		List<CandidateSkills> candidateSkills = new ArrayList<>();
 		Candidate candidate = candidateRepository.findOne(candidateId);
 		if (candidate == null)
 			return new CandidatePublicProfileDTO();
@@ -341,6 +343,7 @@ public class CandidateService {
 		List<CandidateNonAcademicWork> candidateNonAcademicWorks = candidateNonAcademicRepository.findNonAcademicWorkByCandidateId(candidate.getId());
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 						.findCandidateLanguageProficienciesByCandidateId(candidate.getId());
+		candidateSkills.addAll(candidate.getCandidateSkills());
 		CandidateJob candidateJob = null;
 		//Set to show candidate public profile when checking non linked candidates
 		if(jobId >0 && corporateId >0) {
@@ -355,7 +358,7 @@ public class CandidateService {
 		}
 		
 		return convertToCandidatePublicProfileDTO(candidate, addresses, candidateEducations, candidateEmployments,
-				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies, isShortListed, candidateJob,canShortListMore);
+				candidateCertifications, candidateNonAcademicWorks, candidateLanguageProficiencies,candidateSkills, isShortListed, candidateJob,canShortListMore);
 	}
 
 	
@@ -405,7 +408,7 @@ public class CandidateService {
 			List<CandidateEducation> candidateEducations, List<CandidateEmployment> candidateEmployments,
 			List<CandidateCertification> candidateCertifications,
 			List<CandidateNonAcademicWork> candidateNonAcademicWorks,
-			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, Boolean isShortListed, CandidateJob candidateJob, Boolean canBeShortListed) {
+			Set<CandidateLanguageProficiency> candidateLanguageProficiencies, List<CandidateSkills> candidateSkills, Boolean isShortListed, CandidateJob candidateJob, Boolean canBeShortListed) {
 		CandidatePublicProfileDTO dto = new CandidatePublicProfileDTO();
 		//dto.setShortListed(isShortListed);
 		//dto.setShortListedForAnotherJob(isShortListedForAnotherJob);
@@ -423,6 +426,7 @@ public class CandidateService {
 		dto.setCertifications(dtoConverter.convertCandidateCertifications(candidateCertifications, false,candidate));
 		dto.setCandidateLanguageProficiencies(dtoConverter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, false,candidate));
 		dto.setNonAcademics(dtoConverter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, false,candidate));
+		dto.setCandidateSkills(dtoConverter.convertToCandidateSkillsDTO(candidateSkills,false));
 		return dto;
 	}
 
@@ -506,8 +510,7 @@ public class CandidateService {
 		job.setNoOfApplicantLeft(new Long(job.getNoOfApplicants()-(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought():0)));
 		return candidateRepository.save(candidateFromRepo);
 	}
-
-	/* Fix this to go to DB not ES */
+/*
 	@Deprecated
 	public Candidate retrieveCandidatePublicProfile(String query) {
 		logger.debug("REST request to get Candidate public profile for query {}", query);
@@ -571,7 +574,7 @@ public class CandidateService {
 		return candidate;
 
 	}
-
+*/
 	public void updateCountryAndNationalityDataForDisplay(Candidate candidate) {
 		if (candidate == null)
 			return;
@@ -584,67 +587,6 @@ public class CandidateService {
 				if(address.getCountry()!=null) {
 				address.getCountry().setValue(address.getCountry().getCountryNiceName());
 				address.getCountry().setDisplay(address.getCountry().getCountryNiceName());
-				}
-			});
-		}
-
-	}
-
-	@Deprecated
-	private void trimCandidateCertifications(Set<CandidateCertification> certifications) {
-		certifications.forEach(certification -> {
-			certification.setCandidate(null);
-		});
-	}
-
-	@Deprecated
-	private void trimCandidateNonAcademics(Set<CandidateNonAcademicWork> nonAcademicWorks) {
-		nonAcademicWorks.forEach(nonAcademicWork -> {
-			nonAcademicWork.setCandidate(null);
-		});
-	}
-
-	@Deprecated
-	private void trimCandidateLanguageProficienies(Set<CandidateLanguageProficiency> languageProficiencies) {
-		languageProficiencies.forEach(languageProficiency -> {
-			languageProficiency.setCandidate(null);
-		});
-	}
-
-	@Deprecated
-	private void trimCandidateEmploymentData(Set<CandidateEmployment> candidateEmployments) {
-		candidateEmployments.forEach(candidateEmployment -> {
-			candidateEmployment.setCandidate(null);
-			if (candidateEmployment.getProjects() != null) {
-				candidateEmployment.getProjects().forEach(candidateProject -> {
-					candidateProject.setEmployment(null);
-				});
-			}
-		});
-	}
-
-	@Deprecated
-	private void trimCandidateEducationData(Set<CandidateEducation> candidateEducations) {
-		candidateEducations.forEach(candidateEducation -> {
-			candidateEducation.setCandidate(null);
-			if (candidateEducation.getProjects() != null) {
-				candidateEducation.getProjects().forEach(candidateProject -> {
-					candidateProject.setEducation(null);
-				});
-			}
-		});
-	}
-
-	@Deprecated
-	private void trimCandidateAddressData(Set<Address> addresses) {
-
-		if (addresses != null) {
-			addresses.forEach(address -> {
-				if (address.getCountry() != null) {
-					address.getCountry().setCorporates(null);
-					address.getCountry().setVisas(null);
-					address.getCountry().setNationality(null);
-					address.getCountry().setAddresses(null);
 				}
 			});
 		}

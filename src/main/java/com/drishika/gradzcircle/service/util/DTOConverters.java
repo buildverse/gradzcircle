@@ -424,27 +424,42 @@ public class DTOConverters {
 		return languageProficiencyDTOs;
 	}
 	
-	public List<CandidateSkillsDTO> convertToCandidateSkillsDTO(List<CandidateSkills> skills) {
+	public List<CandidateSkillsDTO> convertToCandidateSkillsDTO(List<CandidateSkills> skills,Boolean withCandidateProfileScore) {
 		logger.debug("Candidate SKills are {}",skills);
 		List<CandidateSkillsDTO> dto = new ArrayList<>();
 		
 		skills.forEach(skill->{
 			CandidateSkillsDTO candidateSkillDTO = new CandidateSkillsDTO();
 			candidateSkillDTO.setId(skill.getId());
-			candidateSkillDTO.setSkillName(skill.getSkills().getSkill());;
+			candidateSkillDTO.setSkillName(skill.getSkills().getSkill());
+			if (withCandidateProfileScore) {
+				CandidateDTO candidateDTO = new CandidateDTO();
+				candidateDTO.setProfileScore(skill.getCandidate().getProfileScore() != null
+						? skill.getCandidate().getProfileScore()
+						: 0d);
+				candidateSkillDTO.setCandidate(candidateDTO);
+
+			}
 			dto.add(candidateSkillDTO);
 		});
 		return dto;
 	}
 	
-	public CandidateSkillsDTO convertToCandidateSkillDTO(CandidateSkills skills) {
+	public CandidateSkillsDTO convertToCandidateSkillDTO(CandidateSkills skills, Boolean withCandidateProfileScore) {
 		logger.debug("Candidate SKills are {}", skills);
-		
 		CandidateSkillsDTO candidateSkillDTO = null;
 		if(skills!=null) {
 			candidateSkillDTO = new CandidateSkillsDTO();
 			candidateSkillDTO.setId(skills.getId());
 			candidateSkillDTO.setSkillName(skills.getSkills().getSkill());
+			if (withCandidateProfileScore) {
+				CandidateDTO candidateDTO = new CandidateDTO();
+				candidateDTO.setProfileScore(skills.getCandidate().getProfileScore() != null
+						? skills.getCandidate().getProfileScore()
+						: 0d);
+				candidateSkillDTO.setCandidate(candidateDTO);
+
+			}
 		}
 		return candidateSkillDTO;
 	}

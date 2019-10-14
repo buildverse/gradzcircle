@@ -92,7 +92,7 @@ public class CandidateSkillsService {
 	public CandidateSkillsDTO getCandidateSkill(Long id) {
 		log.debug("Service request to get CandidateSkills : {}", id);
 		CandidateSkills candidateSkills = candidateSkillsRepository.findOne(id);
-		return converter.convertToCandidateSkillDTO(candidateSkills);
+		return converter.convertToCandidateSkillDTO(candidateSkills,false);
 	}
 
 	public void deleteCandidateSkills(Long id) {
@@ -117,7 +117,7 @@ public class CandidateSkillsService {
 	
 	 public List<CandidateSkillsDTO> getSkillsForCandidate(Long id) {
  		List<CandidateSkills> skills = candidateSkillsRepository.findSkillsForCandidate(id);
- 		return converter.convertToCandidateSkillsDTO(skills);
+ 		return converter.convertToCandidateSkillsDTO(skills,false);
 	 }
 	
 	private void injestSkillsInformation(CandidateSkills candidateSkillObject) {

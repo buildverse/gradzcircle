@@ -80,13 +80,13 @@ p {
 }
 
 .portfolio-block .heading {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
 .portfolio-block.cv h2 {
   font-weight: 700;
-  margin-bottom: 70px;
+  margin-bottom: 0px;
 }
 
 .portfolio-block .heading h2 {
@@ -300,6 +300,11 @@ table {
 }
 
 
+.comma-list::after{
+  display: inline;
+  list-style: none;
+  padding: 0px;
+}
 
 
 
