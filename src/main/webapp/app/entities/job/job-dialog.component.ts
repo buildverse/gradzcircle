@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { DataStorageService} from '../../shared';
+import {DataStorageService} from '../../shared';
 import {Observable} from 'rxjs/Rx';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
@@ -15,8 +15,8 @@ import {Corporate, CorporateService} from '../corporate';
 import {Candidate, CandidateService} from '../candidate';
 import {Principal} from '../../shared/auth/principal.service';
 import {AuthoritiesConstants} from '../../shared/authorities.constant';
-import { USER_ID, CORPORATE_ID, JOB_ID, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
-import { QualificationService} from '../qualification';
+import {USER_ID, CORPORATE_ID, JOB_ID, BUSINESS_PLAN_ENABLED} from '../../shared/constants/storage.constants';
+import {QualificationService} from '../qualification';
 import {Course, CourseService} from '../course';
 import {College, CollegeService} from '../college';
 import {Gender, GenderService} from '../gender';
@@ -29,8 +29,9 @@ import {JobFilter} from '../job-filter/index';
 import * as equal from 'fast-deep-equal';
 import {AppConfig} from '../app-config/app-config.model';
 import {AppConfigService} from '../app-config/app-config.service';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { NgxSpinnerService } from 'ngx-spinner';
+import {SkillsService} from '../skills/skills.service';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 function deepcopy<T>(o: T): T {
@@ -54,6 +55,7 @@ export class JobDialogComponent implements OnInit {
   prevQualifications: any;
   addedQualifications: any;
   qualifications: any;
+  skills: any;
   removedQualifications: any;
   addedCourses: Course[];
   removedCourses: Course[];
@@ -76,14 +78,14 @@ export class JobDialogComponent implements OnInit {
   gradDate; gradToDate; gradFromDate: Date;
   gpaValues: number[];
   gpaDecimalValues: number[];
-  percentage; qualificationCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost; escrowAmount; amendmentCharge: number;
+  percentage; qualificationCost; skillCost; coursesCost; scoreCost; genderCost; languageCost; gradDateCost; jobCost; discountedJobCost; escrowAmount; amendmentCharge: number;
   gpa; amountPaid: number;
   roundOfGrade; gradeDecimal: number;
   filters: Filter[];
   enableGpa; enablePercent; validPercentScore; enableDecimal; useEscrow: boolean;
   multipleDateControl; singleDateControl; endDateLesser: boolean;
   filterMap: Map<string, number>;
-  QUALIFICATION; LANGUAGE; SCORE; GRADUATION_DATE; COLLEGE; UNIVERSITY; COURSE; GENDER; DISCOUNT; AMEND: string;
+  QUALIFICATION; LANGUAGE; SCORE; GRADUATION_DATE; COLLEGE; UNIVERSITY; COURSE; GENDER; DISCOUNT; AMEND; SKILL: string;
   jobTypeCost: number[];
   employmentTypeCost: number[];
   scoreAdded; genderAdded; preview; addingFilter; filter; jobInitiate: boolean;
@@ -119,7 +121,7 @@ export class JobDialogComponent implements OnInit {
     private filterService: FilterService,
     private genderService: GenderService,
     private dateUtils: JhiDateUtils,
-    private appConfigService: AppConfigService,
+    private skillService: SkillsService,
     private router: Router,
     private principal: Principal,
     private spinnerService: NgxSpinnerService,
@@ -127,9 +129,11 @@ export class JobDialogComponent implements OnInit {
 
   ) {
     this.isCourseRequired = false;
-    this.isQualificationRequired  = false;
+    this.isQualificationRequired = false;
     this.premium = false;
     this.addOn = false;
+    this.numberOfCandidateError = false;
+    this.validPercentScore = true;
   }
 
   ngOnInit() {
@@ -146,6 +150,7 @@ export class JobDialogComponent implements OnInit {
     this.jobTypeChanged = false;
     this.qualificationCost = 0;
     this.coursesCost = 0;
+    this.skillCost = 0;
     this.addingFilter = false;
     this.filter = false;
     this.jobInitiate = false;
@@ -157,27 +162,27 @@ export class JobDialogComponent implements OnInit {
     this.scoreAdded = false;
     this.genderAdded = false;
     this.isCourseRequired = false;
-    this.isQualificationRequired  = false;
+    this.isQualificationRequired = false;
     this.filterMap = new Map<string, number>();
     this.jobTypeCost = [];
     this.employmentTypeCost = [];
     this.jobFilter = new JobFilter();
     this.basic = true;
     this.editorConfig = {
-          'toolbarGroups': [
-            {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
-            {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-            {name: 'paragraph', groups: ['list', 'indent', 'align']},
-          ],
-          'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
-        };
+      'toolbarGroups': [
+        {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
+        {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+        {name: 'paragraph', groups: ['list', 'indent', 'align']},
+      ],
+      'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+    };
     this.jobTypeService.query()
-        .subscribe((res: HttpResponse<JobType[]>) => { this.jobtypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: HttpResponse<JobType[]>) => {this.jobtypes = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
     this.employmentTypeService.query()
-      .subscribe((res: HttpResponse<EmploymentType[]>) => { this.employmentTypes = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-    this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true: false;
+      .subscribe((res: HttpResponse<EmploymentType[]>) => {this.employmentTypes = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+    this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true : false;
     this.genderService.query()
-      .subscribe((res: HttpResponse<Gender[]>) => { this.genders = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: HttpResponse<Gender[]>) => {this.genders = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
     this.gpaValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     this.gpaDecimalValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     this.useEscrow = false;
@@ -237,12 +242,12 @@ export class JobDialogComponent implements OnInit {
 
   initializeFormFilterData() {
     this.filterCost = 0;
-   
+
     this.filterMap.get(this.LANGUAGE);
     if (this.job.employmentType) {
       this.employmentTypeCost.push(this.job.employmentType.employmentTypeCost);
       this.filterCost += this.job.employmentType.employmentTypeCost;
-     
+
     }
 
     this.prevEmploymentType = this.job.employmentType;
@@ -256,9 +261,8 @@ export class JobDialogComponent implements OnInit {
     this.prevJobType = this.job.jobType;
     this.prevNoOfApplicants = this.job.noOfApplicants;
     this.filterService.query()
-      .subscribe((res: HttpResponse<Filter[]>) => {   
-         this.filters = res.body; 
-        //console.log('filter data b4 ' + JSON.stringify(this.filters));
+      .subscribe((res: HttpResponse<Filter[]>) => {
+        this.filters = res.body;
         this.filters.forEach((filter) => {
           if (filter.filterName.indexOf('grad') > -1) {
             this.GRADUATION_DATE = filter.filterName;
@@ -280,11 +284,14 @@ export class JobDialogComponent implements OnInit {
             this.DISCOUNT = filter.filterName;
           } else if (filter.filterName.toUpperCase().indexOf('amend'.toUpperCase()) > -1) {
             this.AMEND = filter.filterName;
+          } else if (filter.filterName.toUpperCase().indexOf('skill'.toUpperCase()) > -1) {
+            this.SKILL = filter.filterName;
           }
           this.filterMap.set(filter.filterName, filter.filterCost);
         }
 
         );
+
         if (this.job.jobFilters) {
           this.job.jobFilters.forEach((jobFilter) => {
             //    console.log('filter cost in beginning ' + this.filterCost);
@@ -295,14 +302,19 @@ export class JobDialogComponent implements OnInit {
             this.universities = jobFilter.filterDescription.universities;
             this.premium = jobFilter.filterDescription.premium;
             this.courses = jobFilter.filterDescription.courses;
+            this.skills = jobFilter.filterDescription.skills;
+
+            if (this.skills) {
+              this.filterCost += this.filterMap.get(this.SKILL);
+            }
             if (this.courses) {
               this.filterCost += this.filterMap.get(this.COURSE);
-              
+
             }
             this.qualifications = jobFilter.filterDescription.qualifications;
             if (this.qualifications) {
               this.filterCost += this.filterMap.get(this.QUALIFICATION);
-            
+
             }
 
             this.scoreType = jobFilter.filterDescription.scoreType;
@@ -317,7 +329,7 @@ export class JobDialogComponent implements OnInit {
               }
               this.shouldDisableDecimal();
               this.filterCost += this.filterMap.get(this.SCORE);
-             
+
 
             }
 
@@ -327,7 +339,7 @@ export class JobDialogComponent implements OnInit {
             this.graduationFromDate = jobFilter.filterDescription.graduationFromDate;
             this.graduationToDate = jobFilter.filterDescription.graduationToDate;
             this.showDateControl();
-            
+
             this.languages = jobFilter.filterDescription.languages;
             if (this.languages) {
               this.filterCost += this.filterMap.get(this.LANGUAGE);
@@ -342,12 +354,13 @@ export class JobDialogComponent implements OnInit {
           });
         }
         this.prevFilterCost = this.filterCost;
-      },  (res: HttpErrorResponse) => this.onError(res.message));
+      }, (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   setScoreControl(initialize?) {
     this.enableGpa = false;
     this.enablePercent = false;
+    this.validPercentScore = true;
     if (this.scoreType === 'gpa') {
       this.enableGpa = true;
       this.percentage = undefined;
@@ -379,6 +392,7 @@ export class JobDialogComponent implements OnInit {
     this.enableGpa = false;
     this.enablePercent = false;
     this.scoreType = undefined;
+    this.validPercentScore = true;
     this.updateScoreCost();
   }
 
@@ -472,21 +486,21 @@ export class JobDialogComponent implements OnInit {
         this.removeLanguageCost();
       }
 
-      if(this.gender){
+      if (this.gender) {
         this.gender = undefined;
         this.genderAdded = false;
         this.updateGenderCost();
       }
-      
+
     }
     //console.log('Filter cost add on is ' + this.filterCost);
   }
-  
+
 
   addQualificationCost() {
     if (this.courses && this.courses.length > 0) {
       this.isCourseRequired = false;
-      
+
     } else {
       this.isCourseRequired = true;
     }
@@ -500,12 +514,12 @@ export class JobDialogComponent implements OnInit {
   }
   removeQualificationCost() {
     if (this.qualifications && this.qualifications.length === 0) {
-      
-      if ((this.courses && this.courses.length === 0) || this.courses === undefined ) { 
+
+      if ((this.courses && this.courses.length === 0) || this.courses === undefined) {
         this.isQualificationRequired = false;
         this.isCourseRequired = false;
       }
-      this.courses && this.courses.length > 0 ? 
+      this.courses && this.courses.length > 0 ?
         this.isQualificationRequired = true : this.isQualificationRequired = false;
       this.qualificationCost -= this.filterMap.get(this.QUALIFICATION);
       this.filterCost -= this.filterMap.get(this.QUALIFICATION);
@@ -513,11 +527,27 @@ export class JobDialogComponent implements OnInit {
     this.updateJobCost();
   }
 
+  addSkillCost() {
+    if (this.skills && this.skills.length <= 1) {
+      this.skillCost += this.filterMap.get(this.SKILL);
+      this.filterCost += this.filterMap.get(this.SKILL);
+    }
+    this.updateJobCost();
+
+  }
+  removeSkillCost() {
+    if (this.skills && this.skills.length === 0) {
+      this.skillCost -= this.filterMap.get(this.SKILL);
+      this.filterCost -= this.filterMap.get(this.SKILL);
+    }
+    this.updateJobCost();
+  }
+
 
   addCourseCost() {
-    if(this.qualifications && this.qualifications.length > 0 ) {
+    if (this.qualifications && this.qualifications.length > 0) {
       this.isQualificationRequired = false;
-      
+
     } else {
       this.isQualificationRequired = true;
     }
@@ -532,11 +562,11 @@ export class JobDialogComponent implements OnInit {
 
   removeCourseCost() {
     if (this.courses && this.courses.length === 0) {
-      if((this.qualifications && this.qualifications.length === 0) || this.qualifications === undefined ) {
+      if ((this.qualifications && this.qualifications.length === 0) || this.qualifications === undefined) {
         this.isQualificationRequired = false;
         this.isCourseRequired = false;
       }
-     this.qualifications && this.qualifications.length > 0 ?
+      this.qualifications && this.qualifications.length > 0 ?
         this.isCourseRequired = true : this.isCourseRequired = false;
       this.coursesCost -= this.filterMap.get(this.COURSE);
       this.filterCost -= this.filterMap.get(this.COURSE);
@@ -546,16 +576,16 @@ export class JobDialogComponent implements OnInit {
 
   updateGenderCost() {
     if (this.gender && !this.genderAdded) {
-      console.log('The gender cost added');
+      // console.log('The gender cost added');
       this.genderCost += this.filterMap.get(this.GENDER);
       this.filterCost += this.filterMap.get(this.GENDER);
       this.genderAdded = true;
     } else if (!this.gender) {
-      console.log('The gender cost removed');
+      // console.log('The gender cost removed');
       this.genderCost -= this.filterMap.get(this.GENDER);
       this.filterCost -= this.filterMap.get(this.GENDER);
       this.genderAdded = false;
-    } 
+    }
     this.updateJobCost();
   }
 
@@ -808,7 +838,7 @@ export class JobDialogComponent implements OnInit {
     } else {
       this.job.jobCost = this.job.noOfApplicants * (this.filterCost);
     }
-    //console.log('updated job cost is ' + this.job.jobCost);
+    console.log('updated job cost is ' + this.job.jobCost);
   }
 
   absoluteValue(value) {
@@ -883,12 +913,15 @@ export class JobDialogComponent implements OnInit {
         this.jobFilter.filterDescription.percentage = this.percentage;
       }
       if (this.roundOfGrade) {
-       // console.log('AM I HERE');
-        if(!this.gradeDecimal){
-          this.gradeDecimal =0;
+        // console.log('AM I HERE');
+        if (!this.gradeDecimal) {
+          this.gradeDecimal = 0;
         }
         this.jobFilter.filterDescription.gpa = this.roundOfGrade + '.' + this.gradeDecimal;
-      //  console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
+        //  console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
+      }
+      if (this.skills && this.skills.length > 0) {
+        this.jobFilter.filterDescription.skills = this.skills;
       }
     }
     if (this.addOn) {
@@ -975,8 +1008,7 @@ export class JobDialogComponent implements OnInit {
   prepareJobEconomics() {
     // console.log('job cost incoming prep eco is ' + this.job.jobCost);
     this.amountPayable = this.job.jobCost;
-   // console.log('Amount payable is '+this.amountPayable);
-     
+    // console.log('Amount payable is '+this.amountPayable); 
     if (!this.job.everActive && !this.job.originalJobCost) {
       this.job.originalJobCost = this.job.jobCost;
     }
@@ -997,7 +1029,7 @@ export class JobDialogComponent implements OnInit {
           this.useEscrow = null;
 
           this.amountPayable = null;
-        //  console.log('Job cost diff less than 0 '+this.amountPayable);
+          //  console.log('Job cost diff less than 0 '+this.amountPayable);
         } else if (this.jobCostDifference > 0) {
           this.job.additionalFilterAmount = this.jobCostDifference;
           this.job.jobCost += this.job.additionalFilterAmount;
@@ -1007,7 +1039,7 @@ export class JobDialogComponent implements OnInit {
             this.useEscrow = true;
             this.offsetEscrow();
           }
-        } 
+        }
       } /*else {
         console.log('In Else '+this.amountPayable);
         console.log('Job Cost diff is '+this.jobCostDifference);
@@ -1126,7 +1158,7 @@ export class JobDialogComponent implements OnInit {
   }
   private subscribeToSaveResponse(result: Observable<HttpResponse<Job>>, saveType) {
     result.subscribe((res: HttpResponse<Job>) =>
-            this.onSaveSuccess(res.body,saveType), (res: HttpErrorResponse) => this.onSaveError(res));
+      this.onSaveSuccess(res.body, saveType), (res: HttpErrorResponse) => this.onSaveError(res));
   }
 
   private onSaveSuccess(result: Job, saveType) {
@@ -1205,6 +1237,12 @@ export class JobDialogComponent implements OnInit {
     }).map((data) => data.body);
   }
 
+  requestSkillData = (text: string): Observable<Response> => {
+    return this.skillService.searchRemote({
+      query: text
+    }).map((data) => data.body);
+  }
+
 
 
 
@@ -1241,12 +1279,12 @@ export class JobPopupComponent implements OnInit, OnDestroy {
           .open(JobDialogComponent as Component, params['id']);
       } else {
         let id = this.dataStorageService.getData(JOB_ID);
-        if(id) {
+        if (id) {
           this.jobPopupService
-          .open(JobDialogComponent as Component, id);
+            .open(JobDialogComponent as Component, id);
         } else {
-        this.jobPopupService
-          .open(JobDialogComponent as Component);
+          this.jobPopupService
+            .open(JobDialogComponent as Component);
         }
       }
     });
@@ -1274,14 +1312,14 @@ export class JobPopupComponentNew implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe((params) => {
-      if(params['id']) {
+      if (params['id']) {
         this.jobPopupService
           .open(JobDialogComponent as Component, params['id']);
       } else {
         let id = this.dataStorageService.getData(CORPORATE_ID);
-       /* if(!id) {
-          id = this.dataStorageService.getData(USER_ID);
-        }*/
+        /* if(!id) {
+           id = this.dataStorageService.getData(USER_ID);
+         }*/
         this.jobPopupService
           .open(JobDialogComponent as Component, id);
       }

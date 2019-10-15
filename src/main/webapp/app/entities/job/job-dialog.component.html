@@ -8,7 +8,7 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
-	<!--  No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
+	  No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
 	{{job.originalJobCost}} ;Job Cost : {{job.jobCost}} Escrow Amount used
 	: {{job.escrowAmountUsed}} ;Escrow added: {{job.escrowAmountAdded}};
 	Amount Paid : {{job.amountPaid}} Admin charge : {{job.adminCharge}} ;
@@ -18,7 +18,7 @@
 	{{job.upfrontDiscountRate}}; Payment Type : {{job.paymentType}} No Of
 	candidates Bought : {{job.noOfApplicantsBought}}; Corp escrow balance :
 	{{job.corporate.escrowAmount}} filtercost is {{filterCost}}
-    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}-->
+    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}
 	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
 		<div *ngIf="businessPlanEnabled">
 				<div *ngIf="job?.jobCost>0  && !preview && !job.everActive"
@@ -564,6 +564,23 @@
 				</div>
 
 			</div>
+			<div class="form-group row mx-4 my-4">
+				<div class="col-md-2">
+					<label class="form-control-label font-weight-bold "
+						jhiTranslate="gradzcircleApp.candidateEducation.skill"
+						for="field_skill">Skill</label>
+				</div>
+				<div class="col-md-10">
+					<tag-input name="skill" [(ngModel)]="skills"
+						theme='bootstrap' [onlyFromAutocomplete]="true"
+						[placeholder]="'Skill +'" [onTextChangeDebounce]="500"
+						[secondaryPlaceholder]="'Enter Skills'"
+						(onAdd)="addSkillCost($event)" 
+						(onRemove)="removeSkillCost($event)"> <tag-input-dropdown
+						[autocompleteObservable]='requestSkillData'></tag-input-dropdown>
+					</tag-input>
+				</div>
+			</div>
 		</div>
 		<div *ngIf="addOn">
 			<hr>
@@ -722,19 +739,16 @@
 			<div class=" p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-primary"
 					[disabled]=" 
-								editForm.form.get('employmentType')?.invalid || editForm.form.get('jobType')?.invalid
-								|| (numberOfCandidateError)  
-								|| (
-									premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
-									|| editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
-									|| (editForm.form.get('qualification')?.invalid || editForm.form.get('courses')?.invalid) 
-									)
-								|| (
-									addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
-									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
-									&& editForm.form.get('graduationToDate')?.invalid :false 
-									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false 
-								)
+								!((editForm.form.get('employmentType')?.valid) && (editForm.form.get('jobType')?.valid)
+								&& (!numberOfCandidateError)  
+								&& ((editForm.form.get('scoreType')?.value==='gpa')?(editForm.form.get('roundOfGrade')?.valid) :true )
+								&& ((editForm.form.get('scoreType')?.value==='percent')?(editForm.form.get('percentage')?.valid) :true )
+								&& validPercentScore
+								&& ((editForm.form.get('date')?.value==='less')?(editForm.form.get('gradDate')?.valid) :true )
+								&& ((editForm.form.get('date')?.value==='between')?(editForm.form.get('graduationFromDate')?.valid && editForm.form.get('graduationToDate')?.valid) :true )
+								&& ((editForm.form.get('date')?.value==='greater')?(editForm.form.get('gradDate')?.valid) :true )
+								&& ((editForm.form.get('courses')?.valid) && (editForm.form.get('qualification')?.valid)))
+								
 								|| isSaving "
 					nextStep>Next</button>
 			</div>
@@ -921,7 +935,22 @@
 			<div class="col-md-6 d-flex justify-content-center">
 				{{roundOfGrade}}.{{gradeDecimal?gradeDecimal:0}}</div>
 		</div>
+		
+		<div *ngIf="skills && skills?.length>0" class="row mx-4 mt-4">
+			<div class="col-md-6 font-weight-bold "
+				jhiTranslate="gradzcircleApp.job.skillsSelected"></div>
+			<div class="col-md-6 table-responsive">
+				<table class="table table-striped">
+					<tbody>
+						<tr *ngFor="let skill of skills">
+							<td class="d-flex justify-content-center">{{skill.display}}</td>
+						</tr>
+					</tbody>
+				</table>
 
+			</div>
+		</div>
+		
 		<div class="row mx-4 mt-4" *ngIf="gender">
 			<div class="col-md-6 font-weight-bold "
 				jhiTranslate="gradzcircleApp.job.genderSelected"></div>
@@ -1363,8 +1392,8 @@
 		</div>
 	</form>
 </div>
- <!--    <br>
-Value: {{ editForm.value | json }}
+   <!--   <br>
+Value: {{ editForm.value | json }}-->
 <br>
 employment -- {{(editForm.form.get('employmentType')?.invalid)}}--Job type -{{ (editForm.form.get('jobType')?.invalid)}}
 <br>
@@ -1375,14 +1404,19 @@ Premium is {{premium}} ->>> Add On is  {{addOn}}
 Num of candidate error is {{numberOfCandidateError}}
 <br>
 isSaving is {{isSaving}}
+
+{{editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false }}
+<br> Premium blaok is {{premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
+									&& editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
+									&& editForm.form.get('qualification')?.invalid || editForm.form.get('courses')?.invalid }}
 <br>
 DISABLED IS {{editForm.form.get('employmentType')?.invalid && editForm.form.get('jobType')?.invalid
 								&& (numberOfCandidateError)  
 								|| (
-									premium && editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
-									&& editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
-									&& editForm.form.get('qualification')?.invalid && editForm.form.get('courses')?.invalid 
-									)
+									premium && (editForm.form.get('scoreType')?.value==='gpa'?editForm.form.get('roundOfGrade')?.invalid :false 
+									|| editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid :false 
+									))
+								|| (premium && (editForm.form.get('qualification')?.invalid || editForm.form.get('courses')?.invalid)) 
 								|| (
 									addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
 									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
@@ -1398,4 +1432,8 @@ Premium block is {{premium && editForm.form.get('scoreType')?.value==='gpa'?edit
 Add on block is {{addOn && editForm.form.get('date')?.value==='less'?editForm.form.get('gradDate')?.invalid :false 
 									&& editForm.form.get('date')?.value==='between'?editForm.form.get('graduationFromDate')?.invalid 
 									&& editForm.form.get('graduationToDate')?.invalid :false 
-									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false }}-->
+									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false }}
+									
+<br>
+Percentag -> {{premium &&  editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid:false}}									
+									

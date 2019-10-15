@@ -194,4 +194,11 @@
         		<column name="profile_score" type="double"/>
     		</addColumn>
      </changeSet>
+      <changeSet id="20171015094626-7" author="abhinav">
+      	<addColumn catalogName="gradzcircle"
+            schemaName="public"
+            tableName="candidate_job">
+        		<column name="skill_match_score" type="double"/>
+    		</addColumn>
+      </changeSet>
 </databaseChangeLog>

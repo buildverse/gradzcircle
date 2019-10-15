@@ -8,12 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang.mutable.MutableDouble;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.drishika.gradzcircle.config.Constants;
@@ -21,6 +18,7 @@ import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEducation;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
+import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.College;
 import com.drishika.gradzcircle.domain.Course;
 import com.drishika.gradzcircle.domain.Filter;
@@ -29,6 +27,7 @@ import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.domain.Skills;
 import com.drishika.gradzcircle.domain.University;
 import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
@@ -38,6 +37,7 @@ import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.GenderRepository;
 import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.QualificationRepository;
+import com.drishika.gradzcircle.repository.SkillsRepository;
 import com.drishika.gradzcircle.repository.UniversityRepository;
 
 /**
@@ -67,6 +67,8 @@ public class MatchUtils {
 	private final LanguageRepository languageRepository;
 
 	private final CandidateRepository candidateRepository;
+	
+	private final SkillsRepository skillsRepository;
 
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
 
@@ -79,7 +81,7 @@ public class MatchUtils {
 			CollegeRepository collegeRepository, UniversityRepository universityRepository,
 			GenderRepository genderRepository, LanguageRepository languageRepository,
 			CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
-			CandidateRepository candidateRepository) {
+			CandidateRepository candidateRepository,SkillsRepository skillsRepository) {
 		this.jobFilterParser = jobFilterParser;
 		this.filterRepository = filterRepository;
 		this.collegeRepository = collegeRepository;
@@ -90,6 +92,7 @@ public class MatchUtils {
 		this.universityRepository = universityRepository;
 		this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
 		this.candidateRepository = candidateRepository;
+		this.skillsRepository = skillsRepository;
 	}
 
 	public JobFilterObject retrieveJobFilterObjectFromJob(Job job) {
@@ -135,16 +138,19 @@ public class MatchUtils {
 					jobFilterWeightMap.put(filter.getFilterName(), filter.getMatchWeight());
 				if (filter.getFilterName().equalsIgnoreCase(Constants.LANGUAGE))
 					jobFilterWeightMap.put(filter.getFilterName(), filter.getMatchWeight());
+				if (filter.getFilterName().equalsIgnoreCase(Constants.SKILL))
+					jobFilterWeightMap.put(filter.getFilterName(), filter.getMatchWeight());
 			});
 		
 		log.info("Job filter Weight has been populated {}", jobFilterWeightMap);
 	}
 
 	public CandidateJob matchCandidateAndJob(JobFilterObject jobfilterObject, Candidate candidate, Job job,
-			Boolean matchEducaton, Boolean matchLanguages, Boolean matchGender) {
+			Boolean matchEducaton, Boolean matchLanguages, Boolean matchGender, Boolean matchSkills) {
 		Double genderScore = null;
 		Double languageScore = null;
 		Double educationScore = null;
+		Double skillScore = null;
 		Double totalScore = 0.0;
 		CandidateJob candidateJobMatched = new CandidateJob(candidate, job);
 		CandidateJob candidateJob = candidate.getCandidateJobs().stream().filter(candidateJobMatched::equals).findAny()
@@ -180,6 +186,14 @@ public class MatchUtils {
 				languageScore = candidateJob.getLanguageMatchScore();
 			}
 		}
+		
+		if (matchSkills) {
+			skillScore = matchSkillAndJob(jobfilterObject, candidate);
+		} else {
+			if (candidateJob != null) {
+				skillScore = candidateJob.getSkillMatchScore();
+			}
+		}
 
 		Double matchEligibleScore = getMatchScoreEligible(jobfilterObject);
 		log.info("gender score , languageScore and educaitonScore are {},{},{}", genderScore, languageScore,
@@ -190,12 +204,15 @@ public class MatchUtils {
 			totalScore += languageScore;
 		if (educationScore != null)
 			totalScore += educationScore;
+		if (skillScore != null)
+			totalScore += skillScore;
 		candidateJobMatched.setMatchScore(calculateMatchScore(totalScore, matchEligibleScore));
 		log.info("seting the language score as {}", languageScore);
 		candidateJobMatched.setLanguageMatchScore(languageScore);
 		log.info("seting the gender score as {}", genderScore);
 		candidateJobMatched.setGenderMatchScore(genderScore);
 		candidateJobMatched.setEducationMatchScore(educationScore);
+		candidateJobMatched.setSkillMatchScore(skillScore);
 		candidateJobMatched.setTotalEligibleScore(matchEligibleScore);
 		return candidateJobMatched;
 	}
@@ -236,6 +253,11 @@ public class MatchUtils {
 
 	private Double matchLanguagesAndJob(JobFilterObject jobfilterObject, Candidate candidate) {
 		return matchLanguage(jobfilterObject, candidate);
+
+	}
+	
+	private Double matchSkillAndJob(JobFilterObject jobfilterObject, Candidate candidate) {
+		return matchSkill(jobfilterObject, candidate);
 
 	}
 
@@ -447,6 +469,35 @@ public class MatchUtils {
 			return languageScore;
 		}
 	}
+	
+	private Double matchSkill(JobFilterObject jobfilterObject, Candidate candidate) {
+		List<Skills> jobFilterSkills = jobfilterObject.getSkills();
+		Double skillScore = null;
+		if (jobFilterSkills == null || jobFilterSkills.size() <= 0)
+			return skillScore;
+		else {
+			double numberOfMatchedSkill = 0;
+			Set<CandidateSkills> candidateSkills = candidate.getCandidateSkills();
+			log.debug("candidate skills are {} ", candidateSkills);
+			for (Skills skillFilter : jobFilterSkills) {
+				log.debug("Looking for  {}", skillFilter.getSkill());
+				Skills skill = skillsRepository.findBySkill((skillFilter.getSkill()));
+				log.debug("Skill from repo are {}", skill);
+				for (CandidateSkills candidateSkill : candidateSkills) {
+					if (candidateSkill.getSkills().getSkill().equals(skill.getSkill())) {
+						numberOfMatchedSkill++;
+						log.info("Matching on Skill");
+					}
+				}
+			}
+			double matchRate = numberOfMatchedSkill / jobFilterSkills.size();
+			// matchScoreGained.add(jobFilterWeightMap.get(Constants.LANGUAGE) * matchRate);
+			skillScore = (double) Math.round(jobFilterWeightMap.get(Constants.LANGUAGE) * matchRate);
+			return skillScore;
+		}
+	}
+	
+
 
 	private Double getMatchScoreEligible(JobFilterObject jobfilterObject) {
 		//getJobFilterWeightMap();
@@ -471,6 +522,9 @@ public class MatchUtils {
 		}
 		if (jobfilterObject.getGender() != null) {
 			matchScoreEligible.add(jobFilterWeightMap.get(Constants.GENDER));
+		}
+		if (jobfilterObject.getSkills() != null) {
+			matchScoreEligible.add(jobFilterWeightMap.get(Constants.SKILL));
 		}
 		return matchScoreEligible.toDouble();
 	}

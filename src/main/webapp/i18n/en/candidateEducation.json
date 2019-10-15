@@ -43,6 +43,7 @@
             "course": "Course",
             "college": "College",
             "university": "University",
+            "skill": "Skills",
             "graduationDate":"Graduation Date"
         }
     }

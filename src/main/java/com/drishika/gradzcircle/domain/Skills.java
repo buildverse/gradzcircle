@@ -38,6 +38,14 @@ public class Skills implements Serializable {
     @Column(name = "skill")
     private String skill;
     
+    @Transient
+    @JsonProperty
+    private String value;
+    
+    @Transient
+    @JsonProperty
+    private String display;
+    
     @OneToMany(mappedBy = "skills")
   //  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
@@ -90,9 +98,38 @@ public class Skills implements Serializable {
         this.candidateSkills = candidateSkills;
     }
     
+    /**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @return the display
+	 */
+	public String getDisplay() {
+		return display;
+	}
+
+	/**
+	 * @param display the display to set
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
+
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+	
 	@Override
     public boolean equals(Object o) {
         if (this == o) {

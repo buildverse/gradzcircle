@@ -22,6 +22,7 @@ public final class Constants {
 	public static final String UNIVERSITY = "universities";
 	public static final String LANGUAGE = "languages";
 	public static final String GENDER = "gender";
+	public static final String SKILL = "skill";
 	public static final String QUALIFICATION = "qualification";
 	public static final String GRADUATION_DATE_GREATER = "greater";
 	public static final String GRADUATION_DATE_LESS = "less";

@@ -10,6 +10,7 @@ import com.drishika.gradzcircle.domain.Course;
 import com.drishika.gradzcircle.domain.Gender;
 import com.drishika.gradzcircle.domain.Language;
 import com.drishika.gradzcircle.domain.Qualification;
+import com.drishika.gradzcircle.domain.Skills;
 import com.drishika.gradzcircle.domain.University;
 
 /**
@@ -23,6 +24,7 @@ public class JobFilterObject {
 	private List<University> universities;
 	private List<Qualification> qualifications;
 	private List<Course> courses;
+	private List<Skills> skills;
 	private Gender gender;
 	private GraduationDate graduationDate;
 	private GraduationDate graduationFromDate;
@@ -277,6 +279,24 @@ public class JobFilterObject {
 	public void setPercentage(Double percentage) {
 		this.percentage = percentage;
 	}
+	
+	
+
+	
+
+	/**
+	 * @return the skills
+	 */
+	public List<Skills> getSkills() {
+		return skills;
+	}
+
+	/**
+	 * @param skills the skills to set
+	 */
+	public void setSkills(List<Skills> skills) {
+		this.skills = skills;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -302,7 +322,8 @@ public class JobFilterObject {
 		result = prime * result + ((premium == null) ? 0 : premium.hashCode());
 		result = prime * result + ((qualifications == null) ? 0 : qualifications.hashCode());
 		result = prime * result + ((scoreType == null) ? 0 : scoreType.hashCode());
-		result = prime * result + ((universities == null) ? 0 : universities.hashCode());
+		result = prime * result + ((universities == null) ? 0 : universities.hashCode());	
+		result = prime * result + ((skills == null) ? 0 : skills.hashCode());	
 		return result;
 	}
 
@@ -400,23 +421,25 @@ public class JobFilterObject {
 				return false;
 		} else if (!universities.equals(other.universities))
 			return false;
+		if (skills == null) {
+			if (other.skills != null)
+				return false;
+		} else if (!skills.equals(other.skills))
+			return false;
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "JobFilterObject [languages=" + languages + ", colleges=" + colleges + ", universities=" + universities
-				+ ", qualifications=" + qualifications + ", courses=" + courses + ", gender=" + gender
-
-				+ ", graduationDate=" + graduationDate + ", graduationFromDate=" + graduationFromDate
+				+ ", qualifications=" + qualifications + ", courses=" + courses + ", skills=" + skills + ", gender="
+				+ gender + ", graduationDate=" + graduationDate + ", graduationFromDate=" + graduationFromDate
 				+ ", graduationToDate=" + graduationToDate + ", basic=" + basic + ", premium=" + premium + ", addOn="
 				+ addOn + ", scoreType=" + scoreType + ", graduationDateType=" + graduationDateType + ", gpa=" + gpa
-				+ ", percent=" + percentage + "]";
+				+ ", percentage=" + percentage + "]";
 	}
 
 }

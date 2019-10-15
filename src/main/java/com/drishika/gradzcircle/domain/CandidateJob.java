@@ -61,6 +61,9 @@ public class CandidateJob implements Serializable {
 
 	@Column(name = "reviewed")
 	private Boolean reviewed = false;
+	
+	@Column(name="skill_match_score")
+	private Double skillMatchScore;
 
 	public CandidateJob(Candidate candidate, Job job) {
 		this.id = new CandidateJobId(candidate.getId(), job.getId());
@@ -242,9 +245,23 @@ public class CandidateJob implements Serializable {
 		this.reviewed = reviewed;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	
+	/**
+	 * @return the skillMatchScore
+	 */
+	public Double getSkillMatchScore() {
+		return skillMatchScore;
+	}
+
+	/**
+	 * @param skillMatchScore the skillMatchScore to set
+	 */
+	public void setSkillMatchScore(Double skillMatchScore) {
+		this.skillMatchScore = skillMatchScore;
+	}
+
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -252,7 +269,7 @@ public class CandidateJob implements Serializable {
 		return "CandidateJob [id=" + id + ", candidate=" + candidate + ", job=" + job + ", matchScore=" + matchScore
 				+ ", educationMatchScore=" + educationMatchScore + ", genderMatchScore=" + genderMatchScore
 				+ ", languageMatchScore=" + languageMatchScore + ", totalEligibleScore=" + totalEligibleScore
-				+ ", reviewed=" + reviewed + "]";
+				+ ", reviewed=" + reviewed + ", skillMatchScore=" + skillMatchScore + "]";
 	}
 
 	@Embeddable

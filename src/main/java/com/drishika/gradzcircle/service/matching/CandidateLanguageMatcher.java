@@ -84,7 +84,7 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 		CandidateJob candidateJob = null;
 		CandidateJob matchedCandidateJob = new CandidateJob(candidate, job);
 		if (candidate.getCandidateJobs().contains(matchedCandidateJob))
-			candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, false, true, false);
+			candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, false, true, false,false);
 		return candidateJob;
 	}
 
