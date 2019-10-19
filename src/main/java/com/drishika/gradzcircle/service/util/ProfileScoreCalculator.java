@@ -55,17 +55,7 @@ public class ProfileScoreCalculator {
 		return profileCategoryWeightMap;
 
 	}
-	
-	@Profile("default")
-	public Map<String, Long> initForTest() {
-		log.debug("Reloading profile Map");
-		profileCategoryWeightMap.clear();
-		populateProfileCategoryWeightMap();
-		return profileCategoryWeightMap;
 
-	}
-	
-	
 	private void populateProfileCategoryWeightMap() {
 		List<ProfileCategory> profileCategories = profileCategoryRepository.findAll();
 		log.info("Categories list is {}",profileCategories);
@@ -91,8 +81,9 @@ public class ProfileScoreCalculator {
 	
 	public void updateProfileScore(Candidate candidate,String categoryName, Boolean remove) {
 		log.debug("In update ProfileScore {}",profileCategoryWeightMap);
-		if(profileCategoryWeightMap != null && profileCategoryWeightMap.isEmpty() || profileCategoryWeightMap.get(Constants.CANDIDATE_PROFILE_TOTAL_WEIGHT)==0)
-			initForTest();
+		/* Comment this IF when running test */
+		//if(profileCategoryWeightMap != null && profileCategoryWeightMap.isEmpty() || profileCategoryWeightMap.get(Constants.CANDIDATE_PROFILE_TOTAL_WEIGHT)==0)
+			init();
 		Double totalScore = candidate.getProfileScore()!=null?candidate.getProfileScore():0D;
 		CandidateProfileScore profileScore =null;
 		profileScore = setInitialProfileScore(candidate, categoryName);
