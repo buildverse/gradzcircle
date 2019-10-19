@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import com.drishika.gradzcircle.repository.CandidateSkillsRepository;
 import com.drishika.gradzcircle.repository.SkillsRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSkillsSearchRepository;
 import com.drishika.gradzcircle.service.dto.CandidateSkillsDTO;
+import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 
@@ -49,10 +51,12 @@ public class CandidateSkillsService {
 	private CandidateRepository candidateRepository;
 	private DTOConverters converter ;
 	private final ElasticsearchTemplate elasticsearchTemplate;
+	private final Matcher<Candidate> matcher;
 
 	public CandidateSkillsService(CandidateSkillsRepository candidateSkillsRepository,
 			CandidateSkillsSearchRepository candidateSkillsSearchRepository, ProfileScoreCalculator profileScoreCalculator,
-			SkillsRepository skillsRepository,CandidateRepository candidateRepository, DTOConverters converter,ElasticsearchTemplate elasticsearchTemplate) {
+			SkillsRepository skillsRepository,CandidateRepository candidateRepository, DTOConverters converter,ElasticsearchTemplate elasticsearchTemplate,
+			@Qualifier("CandidateSkillMatcher")Matcher<Candidate> matcher) {
 		this.candidateSkillsRepository = candidateSkillsRepository;
 		this.candidateSkillsSearchRepository = candidateSkillsSearchRepository;
 		this.profileScoreCalculator = profileScoreCalculator;
@@ -60,19 +64,21 @@ public class CandidateSkillsService {
 		this.skillsRepository = skillsRepository;
 		this.converter = converter;
 		this.elasticsearchTemplate = elasticsearchTemplate;
+		this.matcher = matcher;
 	}
 
 	public Set<CandidateSkills> createCandidateSkills(CandidateSkills candidateSkillObject) {
-		log.debug("Service request to save CandidateSkills : {}", candidateSkillObject.getCapturedSkills());
+		log.debug("Service request to save CandidateSkills : {}", candidateSkillObject);
 		
 		Candidate candidate = candidateRepository.findOne(candidateSkillObject.getCandidate().getId());
-		
+		log.debug("Candidate SKills already saved are {}",candidate.getCandidateSkills());
 		if(candidate.getCandidateSkills().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, false);
 		}
-		injestSkillsInformation(candidateSkillObject.candidate(candidate));
+		injestSkillsInformation(candidateSkillObject.candidate(candidate),candidate);
 		candidate = candidateRepository.save(candidate);
 		log.debug("The canddiate Skills post save in service is {}",candidate.getCandidateSkills());
+		matcher.match(candidate);
 		return candidate.getCandidateSkills();
 
 	}
@@ -104,8 +110,7 @@ public class CandidateSkillsService {
 		if(candidate.getCandidateSkills().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, true);
 		candidateRepository.save(candidate);
-		/*candidateSkillsRepository.delete(id);
-		candidateSkillsSearchRepository.delete(id);*/
+		matcher.match(candidate);
 	}
 
 	public List<CandidateSkills> searchCandidateSkills(String query) {
@@ -120,9 +125,9 @@ public class CandidateSkillsService {
  		return converter.convertToCandidateSkillsDTO(skills,false);
 	 }
 	
-	private void injestSkillsInformation(CandidateSkills candidateSkillObject) {
+	private void injestSkillsInformation(CandidateSkills candidateSkillObject, Candidate candidate) {
 		List<CandidateSkills> candidateSkills=  new ArrayList<>();
-		Set<CandidateSkills> previousSkills = candidateSkillObject.getCandidate().getCandidateSkills();
+		Set<CandidateSkills> previousSkills = candidate.getCandidateSkills();
 		if(previousSkills!=null && !previousSkills.isEmpty())
 			candidateSkills.addAll(previousSkills);
 		if(candidateSkillObject.getSkillsList() != null) {
@@ -174,6 +179,7 @@ public class CandidateSkillsService {
 			 }
 			 
 		 });
+		 log.debug("Candidate SKill lits has {}",candidateSkills);
 		 candidateSkillObject.getCandidate().getCandidateSkills().addAll(candidateSkills);
 		 }	
 		

@@ -155,6 +155,7 @@ public class Skills implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Skills [id=" + id + ", skill=" + skill;
+		return "Skills [id=" + id + ", skill=" + skill + ", value=" + value + ", display=" + display
+				+ ", candidateSkills=" + candidateSkills + "]";
 	}
 }

@@ -479,20 +479,22 @@ public class MatchUtils {
 			double numberOfMatchedSkill = 0;
 			Set<CandidateSkills> candidateSkills = candidate.getCandidateSkills();
 			log.debug("candidate skills are {} ", candidateSkills);
+			log.debug("Job Filter skills are {} ", jobFilterSkills);
 			for (Skills skillFilter : jobFilterSkills) {
-				log.debug("Looking for  {}", skillFilter.getSkill());
-				Skills skill = skillsRepository.findBySkill((skillFilter.getSkill()));
-				log.debug("Skill from repo are {}", skill);
+				log.debug("Looking for  {}", skillFilter.getValue());
+				Skills skill = skillsRepository.findBySkill((skillFilter.getValue()));
+				log.debug("Skill from repo are {}", skill.getSkill());
 				for (CandidateSkills candidateSkill : candidateSkills) {
 					if (candidateSkill.getSkills().getSkill().equals(skill.getSkill())) {
 						numberOfMatchedSkill++;
-						log.info("Matching on Skill");
+						log.info("Matching on Skill {}",skill.getSkill());
 					}
 				}
 			}
 			double matchRate = numberOfMatchedSkill / jobFilterSkills.size();
+			log.debug("Match rate is {}",matchRate);
 			// matchScoreGained.add(jobFilterWeightMap.get(Constants.LANGUAGE) * matchRate);
-			skillScore = (double) Math.round(jobFilterWeightMap.get(Constants.LANGUAGE) * matchRate);
+			skillScore = (double) Math.round(jobFilterWeightMap.get(Constants.SKILL) * matchRate);
 			return skillScore;
 		}
 	}

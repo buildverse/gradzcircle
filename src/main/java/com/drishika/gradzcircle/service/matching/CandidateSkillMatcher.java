@@ -32,7 +32,7 @@ import com.drishika.gradzcircle.service.MailService;
 @Transactional
 public class CandidateSkillMatcher implements Matcher<Candidate> {
 	
-	private final Logger log = LoggerFactory.getLogger(CandidateLanguageMatcher.class);
+	private final Logger log = LoggerFactory.getLogger(CandidateSkillMatcher.class);
 
 	private final JobRepository jobRepository;
 	private final MatchUtils matchUtils;
@@ -66,11 +66,10 @@ public class CandidateSkillMatcher implements Matcher<Candidate> {
 					candidate.getCandidateJobs().add(candidateJob);
 				}
 			});
-			// candidateRepository.save(candidate);
 		} else {
 			log.debug("Abort Matching as no Education saved");
 		}
-		log.debug("Languages before save are {}", candidate.getCandidateLanguageProficiencies());
+		log.debug("Skills before save are {}", candidate.getCandidateSkills());
 		candidateRepository.save(candidate);
 		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
 	}

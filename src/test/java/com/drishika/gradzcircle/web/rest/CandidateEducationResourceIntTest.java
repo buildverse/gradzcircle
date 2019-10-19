@@ -292,11 +292,11 @@ public class CandidateEducationResourceIntTest {
 	}
 
 	 public static Skills createMsWordSkill(EntityManager em) {
-	    	return new Skills().skill("MSWORD");
+	    	return new Skills().skill("MSWord");
 	    }
 	    
 	    public static Skills createMsExcelSkill(EntityManager em) {
-	    	return new Skills().skill("MSEXCEL");
+	    	return new Skills().skill("MSExcel");
 	    }
 	    
 	    public static Skills createOtherSkill(EntityManager em) {
@@ -554,7 +554,7 @@ public class CandidateEducationResourceIntTest {
 		;
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
 		JobFilter jobFilter = new JobFilter();
-		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"PHARMA\",\"display\": \"PHARMA\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"BACHELORS\",\"display\": \"BACHELORS\"},{\"value\":\"MASTERS\",\"display\": \"MASTERS\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\",\"addOn\":true,\"graduationDateType\": \"less\",\"graduationDate\": {\"year\":2017,\"month\": 3,\"day\": 11},\"gender\":{\"id\":2,\"gender\":\"FEMALE\"}}";
+		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"PHARMA\",\"display\": \"PHARMA\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"BACHELORS\",\"display\": \"BACHELORS\"},{\"value\":\"MASTERS\",\"display\": \"MASTERS\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\",\"addOn\":true,\"graduationDateType\": \"less\",\"graduationDate\": {\"year\":2017,\"month\": 3,\"day\": 11},\"skills\":[{\"value\":\"MSExcel\",\"display\":\"MSExcel\"},{\"value\":\"MSWord\",\"display\":\"MSWord\"}],\"languages\":[{\"value\":\"English\",\"display\":\"English\"}],\"gender\":{\"id\":2,\"gender\":\"FEMALE\"}}";
 		jobFilter.filterDescription(filterDescription).job(jobF);
 		jobFilters.add(jobFilter);
 		jobF.setJobFilters(jobFilters);
@@ -762,7 +762,7 @@ public class CandidateEducationResourceIntTest {
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_B, 58.0, 26.0, null, null, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 57.0, 25.0, null, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 42.0, 25.0, null, null, 59.0, CANDIDATE_A));
 	}
 
 	@Test
@@ -1205,7 +1205,7 @@ public class CandidateEducationResourceIntTest {
 		candidateA.addEducation(education3).addEducation(education2).addEducation(education1);
 		 candidateEducationRepository.saveAndFlush(education3);
 		//candidateRepository.saveAndFlush(candidateA);
-System.out.println("The candidate Educaitons are {}"+candidateA.getEducations());
+
 		restCandidateEducationMockMvc.perform(delete("/api/candidate-educations/{id}",
 				candidateA.getEducations().stream().filter(education -> education.isHighestQualification() != null)
 				.filter(education -> education.isHighestQualification()).findAny().get().getId())
@@ -4774,7 +4774,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_B, 64.0, 26.0, null, 3.0, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 57.0, 25.0, null, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 51.0, 25.0, null, 5.0, 59.0, CANDIDATE_A));
 
 	}
 
@@ -4838,7 +4838,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_B, 58.0, 26.0, null, null, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 66.0, 25.0, 4.0, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 49.0, 25.0, 4.0, null, 59.0, CANDIDATE_A));
 
 	}
 
@@ -4910,7 +4910,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_B, 64.0, 26.0, null, 3.0, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 66.0, 25.0, 4.0, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 58.0, 25.0, 4.0, 5.0, 59.0, CANDIDATE_A));
 
 	}
 
@@ -4999,7 +4999,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 53.0, 27.0, 4.0, null, 59.0, CANDIDATE_A));
 				
 	}
 
@@ -5096,7 +5096,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_E, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A))
+				.contains(tuple(JOB_F, 53.0, 27.0, 4.0, null, 59.0, CANDIDATE_A))
 				.contains(tuple(JOB_G, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A));
 	}
 
@@ -5197,7 +5197,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				//.contains(tuple(JOB_B, 67.0, 28.0, null, 2.0, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A));
 	}
 
 	@Test
@@ -5294,7 +5294,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 			//	.contains(tuple(JOB_B, 76.0, 28.0, 4.0, 2.0, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 75.0, 27.0, 4.0, 2.0, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 56.0, 27.0, 4.0, 2.0, 59.0, CANDIDATE_A));
 	}
 
 	@Test
@@ -5507,7 +5507,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				.contains(tuple(JOB_B, 71.0, 26.0,4.0, 2.0, 45.0, CANDIDATE_A))
 				//.contains(tuple(JOB_E, 57.0, 25.0, null, null, 44.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 75.0, 27.0, 4.0, 2.0, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 56.0, 27.0, 4.0, 2.0, 59.0, CANDIDATE_A));
 			//	.contains(tuple(JOB_G, 57.0, 25.0, null, null, 44.0, CANDIDATE_A));
 
 	}
@@ -5606,7 +5606,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName")
 				//.contains(tuple(JOB_B, 76.0, 28.0, 4.0, 2.0, 45.0, CANDIDATE_A))
-				.contains(tuple(JOB_F, 75.0, 27.0, 4.0, 2.0, 44.0, CANDIDATE_A));
+				.contains(tuple(JOB_F, 56.0, 27.0, 4.0, 2.0, 59.0, CANDIDATE_A));
 
 	}
 
@@ -7018,10 +7018,10 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		cJ1.setMatchScore(36.0);
 		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
 		cJ2.setEducationMatchScore(15.0);
-		cJ2.setGenderMatchScore(4.0);
+		cJ2.setGenderMatchScore(0.0);
 		cJ2.setLanguageMatchScore(0d);
 		cJ2.setTotalEligibleScore(44.0);
-		cJ2.setSkillMatchScore(null);
+		cJ2.setSkillMatchScore(0d);
 		cJ2.setMatchScore(43.0);
 		candidateA.getCandidateJobs().add(cJ2);
 		candidateA.getCandidateJobs().add(cJ1);
@@ -7049,7 +7049,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, 0.0, 44.0, CANDIDATE_A,null));
+				.contains(tuple(JOB_F, 78.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,10.0));
 	}
 	
 	
@@ -7127,7 +7127,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		cJ2.setGenderMatchScore(0d);
 		cJ2.setLanguageMatchScore(0d);
 		cJ2.setTotalEligibleScore(44.0);
-		cJ2.setSkillMatchScore(null);
+		cJ2.setSkillMatchScore(0d);
 		cJ2.setMatchScore(43.0);
 		candidateA.getCandidateJobs().add(cJ2);
 		candidateA.getCandidateJobs().add(cJ1);
@@ -7155,7 +7155,7 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A,null));
+				.contains(tuple(JOB_F, 78.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,10.0));
 	}
 	
 	
@@ -7244,12 +7244,331 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A,null));
+				.contains(tuple(JOB_F, 78.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,10.0));
 	}
 	
 	@Test
 	@Transactional
-	public void whenCandidateHasSkillsOnlyButNoLnaguageAndGenderWithMacthSetAndAddEducationThenMatchOnSkillAndEducation() throws Exception {
+	public void whenCandidateHasSkillsOnlyButNoLnaguageAndGenderWithMacthSetWithLanguageAndGenderScoreZeroAndAddEducationThenMatchOnSkillAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 63.0, 27.0, 0.0, 0.0, 59.0, CANDIDATE_A,10.0));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasSkillsOnlyButNoLnaguageAndGenderWithMacthSetWithLanguageAndGenderScoreNullAndAddEducationThenMatchOnSkillAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 63.0, 27.0, null, null, 59.0, CANDIDATE_A,10.0));
+	}
+	
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasSkillsOnlyButNoLnaguageAndGenderNoMatchSetoAndAddEducationThenMatchOnSkillAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+	/*	CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 63.0, 27.0, null, null, 59.0, CANDIDATE_A,10.0));
+	}
+	
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasGenderOnlyButNoLnaguageAndSkillNoMatchSetoAndAddEducationThenMatchOnGenderAndEducation() throws Exception {
 		universityRepository.saveAndFlush(uniIIM);
 		universityRepository.saveAndFlush(uniDoon);
 		universityRepository.saveAndFlush(mumbaiUni);
@@ -7291,6 +7610,322 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		skillsRepository.saveAndFlush(msWord);
 		languageRepository.saveAndFlush(englishLanguage);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+	/*	CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 53.0, 27.0, 4.0, null, 59.0, CANDIDATE_A,null));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasGenderOnlyButNoLnaguageAndSkillWithMatchSetAndHaveScoresAsNullInMatchSetAddEducationThenMatchOnGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 53.0, 27.0, 4.0, null, 59.0, CANDIDATE_A,null));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndSkillsButNoGenderAndSkilWithoMatchSetAndZeroScoreOnMacthSetAddEducationThenMatchOnLanguageAndSkillsAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(0.0);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 71.0, 27.0, 0.0, 5.0, 59.0, CANDIDATE_A,10.0));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndSkillsButNoGenderAndSkilWithMatchSetAndNullScoreOnMacthSetAddEducationThenMatchOnLanguageAndSkillsAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		CandidateSkills skills1 = new CandidateSkills();
 		skills1.candidate(candidateA);
 		candidateA.addCandidateSkill(skills1);
@@ -7349,7 +7984,842 @@ System.out.println("The candidate Educaitons are {}"+candidateA.getEducations())
 		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
 				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
 						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
-				.contains(tuple(JOB_F, 70.0, 27.0, 4.0, null, 44.0, CANDIDATE_A,null));
+				.contains(tuple(JOB_F, 71.0, 27.0, null, 5.0, 59.0, CANDIDATE_A,10.0));
 	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndSkillsButNoGenderAndSkilWithNoMatchSetAddEducationThenMatchOnLanguageAndSkillsAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+	/*	CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 71.0, 27.0, null, 5.0, 59.0, CANDIDATE_A,10.0));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndGenderButNoSkillsAndWithMatchSetAndNullScoreOnMacthSetAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,null));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndGenderButNoSkillsAndWithNoMatchSetAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		/*CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,null));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndGenderButNoSkillsAndWithMatchSetAndZeroScoreOnMacthSetAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(0d);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,0.0));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasLanguageAndGenderButNoSkillsNoMatchSetAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		/*CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		CandidateSkills skills2 = new CandidateSkills();
+		skills2.candidate(candidateA);
+		candidateA.addCandidateSkill(skills2);
+		skills2.skills(msWord);*/
+		CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+	/*	CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(0d);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 5.0, 59.0, CANDIDATE_A,null));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasSillsAndGenderButNoLanguageNoMatchSetAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+	/*	CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(0d);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);*/
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, null, 59.0, CANDIDATE_A,5.0));
+	}
+	
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasSillsAndGenderButNoLanguageWithMatchSetAllScoreNullAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(null);
+		cJ2.setLanguageMatchScore(null);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(null);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, null, 59.0, CANDIDATE_A,5.0));
+	}
+	
+	@Test
+	@Transactional
+	public void whenCandidateHasSkillsAndGenderButNoLanguageWithMatchSetAllScoreZeroAddEducationThenMatchOnLanguageAndGenderAndEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		universityRepository.saveAndFlush(mumbaiUni);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(coursePHARMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		courseRepository.saveAndFlush(courseMedical);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		genderRepository.saveAndFlush(femaleGender);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		filterRepository.saveAndFlush(qualificationFilter.matchWeight(9l));
+		filterRepository.saveAndFlush(courseFilter.matchWeight(10l));
+		filterRepository.saveAndFlush(gradDateFilter.matchWeight(0l));
+		filterRepository.saveAndFlush(genderFilter.matchWeight(4l));
+		filterRepository.saveAndFlush(collegeFilter.matchWeight(6l));
+		filterRepository.saveAndFlush(universityFilter.matchWeight(7l));
+		filterRepository.saveAndFlush(scoreFilter.matchWeight(8l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(languageFilter.matchWeight(5l));
+		filterRepository.saveAndFlush(skillFilter);
+		skillsRepository.saveAndFlush(msExcel);
+		skillsRepository.saveAndFlush(msWord);
+		languageRepository.saveAndFlush(englishLanguage);
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A).gender(femaleGender);
+		CandidateSkills skills1 = new CandidateSkills();
+		skills1.candidate(candidateA);
+		candidateA.addCandidateSkill(skills1);
+		skills1.skills(msExcel);
+		
+		/*CandidateLanguageProficiency prof1 = new CandidateLanguageProficiency();
+		prof1.language(englishLanguage);
+		prof1.candidate(candidateA);
+		candidateA.addCandidateLanguageProficiency(prof1);*/
+		CandidateEducation education1 = new CandidateEducation().qualification(qualISC).course(courseISC)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		candidateA.addEducation(education1);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateJob cJ1 = new CandidateJob(candidateA, jobB);
+		cJ1.setEducationMatchScore(16.0);
+		cJ1.setGenderMatchScore(null);
+		cJ1.setLanguageMatchScore(null);
+		cJ1.setTotalEligibleScore(45.0);
+		cJ1.setSkillMatchScore(0d);
+		cJ1.setMatchScore(36.0);
+		CandidateJob cJ2 = new CandidateJob(candidateA, jobF);
+		cJ2.setEducationMatchScore(15.0);
+		cJ2.setGenderMatchScore(0d);
+		cJ2.setLanguageMatchScore(0d);
+		cJ2.setTotalEligibleScore(44.0);
+		cJ2.setSkillMatchScore(0d);
+		cJ2.setMatchScore(43.0);
+		candidateA.getCandidateJobs().add(cJ2);
+		candidateA.getCandidateJobs().add(cJ1);
+		candidateRepository.saveAndFlush(candidateA);
+
+		CandidateEducation education2 = new CandidateEducation().qualification(qualMaster).course(courseMedical)
+				.percentage(89d).college(mumbaiUni.getColleges().iterator().next()).highestQualification(true)
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+		education2.setId(candidateA.getEducations().iterator().next().getId());
+		candidateA.getEducations().clear();
+
+		restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education2)))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducations).hasSize(1);
+		assertThat(testCandidateEducations)
+				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+				.contains(tuple(true, MASTERS, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs())
+				.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+						"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+				.contains(tuple(JOB_F, 61.0, 27.0, 4.0, 0.0, 59.0, CANDIDATE_A,5.0));
+	}
+	
 	
 }

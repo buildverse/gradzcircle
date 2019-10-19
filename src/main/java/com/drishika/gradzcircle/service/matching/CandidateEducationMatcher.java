@@ -105,46 +105,51 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		//Boolean matchEducaton, Boolean matchLanguages, Boolean matchGender, Boolean matchSkills
 		if (candidateEducation != null && isCandidateEligibleByGraduationDate(candidateEducation, jobFilterObject)) {
 			CandidateJob cJob = candidate.getCandidateJobs().stream().filter(incomingCandidateJob::equals).findAny().orElse(null);
+			
 			if (cJob != null) {
 				/* If have Language, gender and skills and Adding/updating education match all - As */
 				if (!candidate.getCandidateLanguageProficiencies().isEmpty() && 
 						(cJob.getLanguageMatchScore() == null || cJob.getLanguageMatchScore()==0)
 						&& candidate.getGender() != null && (cJob.getGenderMatchScore() == null || cJob.getGenderMatchScore() == 0) 
 						&& !candidate.getCandidateSkills().isEmpty() && (cJob.getSkillMatchScore() ==null || cJob.getSkillMatchScore() == 0)) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,true);
 					log.debug("Calling within match set as true, true, true, true");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,true);
 				}
 				/*I have Language saved , No skill and gender saved */
 				else if (!candidate.getCandidateLanguageProficiencies().isEmpty() &&
 							(cJob.getLanguageMatchScore() == null || cJob.getLanguageMatchScore() == 0)
 							&& candidate.getGender() == null && candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true,false,false);
 					log.debug("I have Language with score, skill with score but gender without score - Match Language with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true,false,false);
+					
 				}
 				/*I have Skill saved , No Languages and gender saved */
 				else if (candidate.getCandidateLanguageProficiencies().isEmpty()  
 						&&	candidate.getGender() == null && !candidate.getCandidateSkills().isEmpty() && 
 							(cJob.getSkillMatchScore()==null||cJob.getSkillMatchScore() == 0)) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,true);
 					log.debug("I have Skill saved , No Languages and gender saved - Match skills with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,true);
+					
 				}
 				/*I have Gender saved , No Languages and skill saved */
 				else if (candidate.getCandidateLanguageProficiencies().isEmpty()  
 						&& candidate.getGender() != null && (cJob.getGenderMatchScore() == null || cJob.getGenderMatchScore() == 0) 
 						&& candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,false);
 					log.debug("I have gender saved , No Languages and skill saved - Match gender with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,false);
+					
 				}
 				/* I have language and Skills but no gender*/
 				else if (!candidate.getCandidateLanguageProficiencies().isEmpty() &&
-						cJob.getLanguageMatchScore()==null && candidate.getGender()==null && 
+						(cJob.getLanguageMatchScore()==null || cJob.getLanguageMatchScore() ==0) && candidate.getGender()==null && 
 							(cJob.getSkillMatchScore() == null || cJob.getSkillMatchScore() == 0)
 						&& !candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, false,true);
 					log.debug("I have language and Skills but no gender- Match language and skills with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, false,true);
+					
 					/*I have Language and Gender but no skills*/
 				} else if (!candidate.getCandidateLanguageProficiencies().isEmpty() && 
-							cJob.getLanguageMatchScore() == null && candidate.getGender()!=null && 
+							(cJob.getLanguageMatchScore() == null || cJob.getLanguageMatchScore()==0) && candidate.getGender()!=null && 
 								(cJob.getGenderMatchScore()==null || cJob.getGenderMatchScore() == 0)
 							&& candidate.getCandidateSkills().isEmpty()) {
 					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,false);
@@ -153,62 +158,72 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				} else if (candidate.getCandidateLanguageProficiencies().isEmpty() && candidate.getGender()!=null 
 							&& (cJob.getGenderMatchScore() == null || cJob.getGenderMatchScore() == 0)
 						&& !candidate.getCandidateSkills().isEmpty() && (cJob.getSkillMatchScore()==null || cJob.getSkillMatchScore() == 0 )) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,true);
 					log.debug("I have  Skill and Gender but no Language - Match skill,gender no Language with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,true);
+					
 				}
 				/*If I have only educaiton */
 				else {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,false);
 					log.debug("Calling within match set as true, false, false, false");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,false);
+					
 				}
 			} else {
 				/* If have Language, gender and skills and Adding/updating education match all - As */
 				if (!candidate.getCandidateLanguageProficiencies().isEmpty() 
 						&& candidate.getGender() != null 
 						&& !candidate.getCandidateSkills().isEmpty()) {
+					log.debug("Calling  as true, true, true, true");
 					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,true);
-					log.debug("Calling within match set as true, true, true, true");
+					
 				}
 				/*I have Language saved , No skill and gender saved */
 				else if (!candidate.getCandidateLanguageProficiencies().isEmpty() 
 							&& candidate.getGender() == null && candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true,false,false);
 					log.debug("I have Language with score, skill with score but gender without score - Match Language with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true,false,false);
+					
 				}
 				/*I have Skill saved , No Languages and gender saved */
 				else if (candidate.getCandidateLanguageProficiencies().isEmpty()  
 						&&	candidate.getGender() == null && !candidate.getCandidateSkills().isEmpty() ) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,true);
 					log.debug("I have Skill saved , No Languages and gender saved - Match skills with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,true);
+					
 				}
 				/*I have Gender saved , No Languages and skill saved */
 				else if (candidate.getCandidateLanguageProficiencies().isEmpty()  
 						&& candidate.getGender() != null
 						&& candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,false);
 					log.debug("I have gender saved , No Languages and skill saved - Match gender with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,false);
+					
 				}
 				/* I have language and Skills but no gender*/
 				else if (!candidate.getCandidateLanguageProficiencies().isEmpty() 
 						 && candidate.getGender()==null 
 						&& !candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, false,true);
 					log.debug("I have language and Skills but no gender- Match language and skills with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, false,true);
+					
 					/*I have Language and Gender but no skills*/
 				} else if (!candidate.getCandidateLanguageProficiencies().isEmpty() && 
 							 candidate.getGender()!=null && candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,false);
 					log.debug("I have language and gender but no skills- Match language,gender no skills with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, true, true,false);
+					
 					/*I have Skill and Gender but no Language*/
 				} else if (candidate.getCandidateLanguageProficiencies().isEmpty() && candidate.getGender()!=null 
 						&& !candidate.getCandidateSkills().isEmpty()) {
-					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,true);
 					log.debug("I have  Skill and Gender but no Language - Match skill,gender no Language with Education");
+					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, true,true);
+					
 				}
 				/*If I have only educaiton */
 				else {
+					log.debug("Calling  as true, false, false, false");
 					candidateJob = matchUtils.matchCandidateAndJob(jobFilterObject, candidate, job, true, false, false,false);
-					log.debug("Calling within match set as true, false, false, false");
+					
 				}
 			}
 

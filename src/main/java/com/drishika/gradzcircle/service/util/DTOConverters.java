@@ -51,7 +51,7 @@ import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.QualificationDTO;
-import com.drishika.gradzcircle.service.dto.SkillsDTO;
+
 
 /**
  * @author abhinav

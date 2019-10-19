@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.web.rest;
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,6 +39,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.CandidateEducation;
+import com.drishika.gradzcircle.domain.CandidateJob;
+import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.Filter;
@@ -49,7 +53,9 @@ import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.Skills;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CandidateSkillsRepository;
+import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.GenderRepository;
+import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.SkillsRepository;
@@ -94,6 +100,14 @@ public class CandidateSkillsResourceIntTest {
 	
 	@Autowired 
 	private SkillsRepository skillsRepository;
+	
+	@Autowired
+	private FilterRepository filterRepository;
+	
+
+	@Autowired
+	private JobRepository jobRepository;
+
 
     @Autowired
     private CandidateSkillsSearchRepository candidateSkillsSearchRepository;
@@ -112,10 +126,10 @@ public class CandidateSkillsResourceIntTest {
     
 	private ProfileCategory basic, personal, edu, exp, lang, cert, nonAcad,skills;
 	
-	private Skills msWord,msExcel,otherSkill;
+	private Skills msWord,msExcel,otherSkill,yoyoSkill;
 	
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
-	universityFilter, qualificationFilter, SkillsFiler;
+	universityFilter, qualificationFilter, skillFilter;
 	
 	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH;
 	private Gender maleGender, femaleGender;
@@ -173,12 +187,21 @@ public class CandidateSkillsResourceIntTest {
     	return new Skills().skill("Other");
     }
     
+    public static Skills createYoYoSkill(EntityManager em) {
+    	return new Skills().skill("YoYo");
+    }
+    
+    
 	public static Gender createMaleGender(EntityManager em) {
 		return new Gender().gender(MALE);
 	}
 
 	public static Gender createFemaleGender(EntityManager em) {
 		return new Gender().gender(FEMALE);
+	}
+	
+	public static Filter createSkillfilter(EntityManager em) {
+		return new Filter().filterName("skill").matchWeight(10L);
 	}
 	
     public static ProfileCategory createBasicProfile(EntityManager em) {
@@ -225,6 +248,8 @@ public class CandidateSkillsResourceIntTest {
 		return new Language().language(ENGLISH);
 	}
 	
+	
+	
 	public static Job createJobA(EntityManager em) {
 		Job jobA = new Job().jobTitle(JOB_A).jobStatus(1);
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
@@ -266,7 +291,7 @@ public class CandidateSkillsResourceIntTest {
 		;
 		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
 		JobFilter jobFilter = new JobFilter();
-		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"PHARMA\",\"display\": \"PHARMA\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"BACHELORS\",\"display\": \"BACHELORS\"},{\"value\":\"MASTERS\",\"display\": \"MASTERS\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\",\"addOn\":true,\"graduationDateType\": \"less\",\"graduationDate\": {\"year\":2017,\"month\": 3,\"day\": 11},\"gender\":{\"id\":2,\"gender\":\"FEMALE\"}}";
+		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"PHARMA\",\"display\": \"PHARMA\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"BACHELORS\",\"display\": \"BACHELORS\"},{\"value\":\"MASTERS\",\"display\": \"MASTERS\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\",\"addOn\":true,\"graduationDateType\": \"less\",\"graduationDate\": {\"year\":2017,\"month\": 3,\"day\": 11},\"skills\":[{\"value\":\"MSEXCEL\",\"display\":\"MSEXCEL\"},{\"value\":\"MSWORD\",\"display\":\"MSWORD\"}],\"languages\":[{\"value\":\"English\",\"display\":\"English\"}],\"gender\":{\"id\":2,\"gender\":\"FEMALE\"}}";
 		jobFilter.filterDescription(filterDescription).job(jobF);
 		jobFilters.add(jobFilter);
 		jobF.setJobFilters(jobFilters);
@@ -328,6 +353,7 @@ public class CandidateSkillsResourceIntTest {
         msExcel = createMsExcelSkill(em);
         msWord = createMsWordSkill(em);
         otherSkill = createOtherSkill(em);
+        yoyoSkill = createYoYoSkill(em);
         jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
@@ -350,7 +376,7 @@ public class CandidateSkillsResourceIntTest {
 		scoreFilter = createScoreFilter(em);
 		languageFilter = createLanguagefilter(em);
 		genderFilter = createGenderFilter(em);
-		SkillsFiler = createSkillFilter(em);
+		skillFilter = createSkillFilter(em);
 		hindiLanguage = createHindiLanguae(em);
 		englishLanguage = createEnglishLanguage(em);
 		marathiLanguage = createMarathiLanguage(em);
@@ -373,7 +399,21 @@ public class CandidateSkillsResourceIntTest {
 		languageRepository.saveAndFlush(marathiLanguage);
 		skillsRepository.saveAndFlush(msExcel);
 		skillsRepository.saveAndFlush(msWord);
+		skillsRepository.saveAndFlush(yoyoSkill);
 		skillsRepository.saveAndFlush(otherSkill);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		filterRepository.saveAndFlush(skillFilter);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
 
     }
 
@@ -688,7 +728,7 @@ public class CandidateSkillsResourceIntTest {
     				.findAll();
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(3);
-    		assertThat(testSkills).hasSize(6);
+    		assertThat(testSkills).hasSize(7);
     		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
     		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit");
@@ -729,7 +769,7 @@ public class CandidateSkillsResourceIntTest {
     				.findAll();
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(5);
-    		assertThat(testSkills).hasSize(6);
+    		assertThat(testSkills).hasSize(7);
     		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL","MSWORD");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
     		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL","MSWORD");
@@ -772,7 +812,7 @@ public class CandidateSkillsResourceIntTest {
     				.findAll();
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(4);
-    		assertThat(testSkills).hasSize(6);
+    		assertThat(testSkills).hasSize(7);
     		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
     		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
@@ -823,7 +863,7 @@ public class CandidateSkillsResourceIntTest {
     				.findAll();
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(4);
-    		assertThat(testSkills).hasSize(6);
+    		assertThat(testSkills).hasSize(7);
     		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
     		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
@@ -934,13 +974,68 @@ public class CandidateSkillsResourceIntTest {
     @Test
     @Transactional
     public void whenCandidateHasNoEducationAndAddingSkillMustNotCreateAMatchSet() throws Exception {
+    	Candidate candidate = new Candidate().firstName("Abhinav");
+    	candidateRepository.saveAndFlush(candidate);
     	
+    	candidateSkills.candidate(candidate);
+		List<Skills> candidateSkill = new ArrayList<>();
+        candidateSkill.add(msExcel);
+        candidateSkills.setSkillsList(candidateSkill);
+    	
+    	restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(candidateSkills)))
+	            .andExpect(status().isCreated());
+    	
+    	List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+				.findAll();
+
+		assertThat(candidateSkillList).hasSize(1);
+		CandidateSkills testCandidateSkill = candidateSkillList
+				.get(candidateSkillList.size() - 1);
+		Candidate testCandidate = testCandidateSkill.getCandidate();
+		assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
+		
     }
     
     
     @Test
     @Transactional
     public void whenCandidateEducationAndAddingSkillMustCreateAMatchSetWithMatchScoreZeroIfNoneOfSkillsMatchWithJob() throws Exception {
+    	Candidate candidate = new Candidate().firstName("Abhinav");
+    	CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
+    	candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+    	CandidateJob cJob = new CandidateJob(candidate,jobF);
+    	cJob.setMatchScore(2.0);
+    	cJob.setEducationMatchScore(20.0);
+    	candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+    	candidateSkills.candidate(candidate);
+		List<Skills> candidateSkill = new ArrayList<>();
+        candidateSkill.add(yoyoSkill);
+        candidateSkills.setSkillsList(candidateSkill);
+        
+     	restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(candidateSkills)))
+	            .andExpect(status().isCreated());
+     	
+     	List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+				.findAll();
+		assertThat(candidateSkillList).hasSize(1);
+		CandidateSkills testCandidateSkill = candidateSkillList
+				.get(candidateSkillList.size() - 1);
+		Candidate testCandidate = testCandidateSkill.getCandidate();
+		assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(yoyoSkill.getSkill());
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+		assertThat(testCandidate.getCandidateJobs())
+		.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+				"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+		.contains(tuple(JOB_F, 34.0, 20.0, null, null, 59.0, "Abhinav",0.0));
+		
     	
     }
     
@@ -949,26 +1044,229 @@ public class CandidateSkillsResourceIntTest {
     @Test
     @Transactional
     public void whenCandidateEducationAndAddingSkillMustCreateAMatchSetWithMatchScoreIfSomeOfSkillsMatchWithJob() throws Exception {
-    	
+     	Candidate candidate = new Candidate().firstName("Abhinav");
+	    	CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+					.candidate(candidate);
+	    	candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+	    	CandidateJob cJob = new CandidateJob(candidate,jobF);
+	    	cJob.setMatchScore(2.0);
+	    	cJob.setEducationMatchScore(20.0);
+	    	candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+	    	candidateSkills.candidate(candidate);
+			List<Skills> candidateSkill = new ArrayList<>();
+	        candidateSkill.add(msExcel);
+	        candidateSkills.setSkillsList(candidateSkill);
+	        
+	     	restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(candidateSkills)))
+		            .andExpect(status().isCreated());
+	     	
+	     	List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+					.findAll();
+			assertThat(candidateSkillList).hasSize(1);
+			CandidateSkills testCandidateSkill = candidateSkillList
+					.get(candidateSkillList.size() - 1);
+			Candidate testCandidate = testCandidateSkill.getCandidate();
+			assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+			assertThat(testCandidate).isEqualTo(candidate);
+			assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+			assertThat(testCandidate.getCandidateJobs())
+			.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+					"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+			.contains(tuple(JOB_F, 42.0, 20.0, null, null, 59.0, "Abhinav",5.0));
     }
     
+    @Test
+    @Transactional
+    public void whenCandidateEducationAndAddingSkillMustCreateAMatchSetWithMatchScoreIfSomeOfSkillsMatchWithJobAddAnotherAndMatchSetMustBeUpdated() throws Exception {
+     	Candidate candidate = new Candidate().firstName("Abhinav");
+	    	CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+					.candidate(candidate);
+	    	candidateRepository.saveAndFlush(candidate.addEducation(candidateEducation));
+	    	CandidateJob cJob = new CandidateJob(candidate,jobF);
+	    	cJob.setMatchScore(2.0);
+	    	cJob.setEducationMatchScore(20.0);
+	    	candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+	    	
+	    	candidateSkills.candidate(candidate);
+			List<Skills> candidateSkill = new ArrayList<>();
+	        candidateSkill.add(msExcel);
+	        candidateSkills.setSkillsList(candidateSkill);
+	        
+	     	restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(candidateSkills)))
+		            .andExpect(status().isCreated());
+	     	
+	     	List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+					.findAll();
+			assertThat(candidateSkillList).hasSize(1);
+			CandidateSkills testCandidateSkill = candidateSkillList
+					.get(candidateSkillList.size() - 1);
+			Candidate testCandidate = testCandidateSkill.getCandidate();
+			assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+			assertThat(testCandidate).isEqualTo(candidate);
+			assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+			assertThat(testCandidate.getCandidateJobs())
+			.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+					"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+			.contains(tuple(JOB_F, 42.0, 20.0, null, null, 59.0, "Abhinav",5.0));
+		
+			CandidateSkills additonaCandidateSkill = new CandidateSkills();
+			List<Skills> additionalSkill = new ArrayList<>();
+			additionalSkill.add(msWord);
+			additonaCandidateSkill.setSkillsList(additionalSkill);
+			additonaCandidateSkill.candidate(candidate);
+			restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(additonaCandidateSkill)))
+		            .andExpect(status().isCreated());
 
-    @Test
-    @Transactional
-    public void whenCandidateEducationAndAddingSkillMustCreateAMatchSetWithMatchScoreZeroIfSomeOfSkillsMatchWithJob() throws Exception {
-    	
+			
+			List<CandidateSkills> candidateSkillListNew = candidateSkillsRepository
+					.findAll();
+			assertThat(candidateSkillListNew).hasSize(2);
+			assertThat(candidateSkillListNew).extracting("skills.skill").contains("MSWORD","MSEXCEL");
+			Candidate testCandidateAgain = candidateSkillListNew.get(0).getCandidate();
+			assertThat(testCandidateAgain.getCandidateJobs()).hasSize(1);
+			assertThat(testCandidateAgain.getCandidateJobs())
+			.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+					"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+			.contains(tuple(JOB_F, 51.0, 20.0, null, null, 59.0, "Abhinav",10.0));
     }
     
     
     @Test
-    @Transactional
-    public void whenCandidateEducationAndLanguageAndGenderAddingSkillMustUpdateAMatchSetWithMatchScoreForSkillsMustNotChnageOtherScores() throws Exception {
-    	
-    }
+	@Transactional
+	public void whenCandidateEducationAndLanguageAndGenderAddingSkillMustUpdateAMatchSetWithMatchScoreForSkillsMustNotChnageOtherScores()
+			throws Exception {
+		Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
+		CandidateLanguageProficiency langProf = new CandidateLanguageProficiency();
+		langProf.language(englishLanguage);
+		langProf.candidate(candidate);
+		candidate.gender(femaleGender);
+		candidate.addCandidateLanguageProficiency(langProf);
+		candidate.addEducation(candidateEducation);
+		candidateRepository.saveAndFlush(candidate);
+	 	CandidateJob cJob = new CandidateJob(candidate,jobF);
+	 	cJob.setMatchScore(2.0);
+	 	cJob.setEducationMatchScore(20.0);
+	 	cJob.setLanguageMatchScore(5d);
+	 	cJob.setGenderMatchScore(1d);
+		candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+	 	candidateSkills.candidate(candidate);
+		List<Skills> candidateSkill = new ArrayList<>();
+        candidateSkill.add(msExcel);
+        candidateSkills.setSkillsList(candidateSkill);
+        
+     	restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(candidateSkills)))
+	            .andExpect(status().isCreated());
+     	List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+				.findAll();
+		assertThat(candidateSkillList).hasSize(1);
+		CandidateSkills testCandidateSkill = candidateSkillList
+				.get(candidateSkillList.size() - 1);
+		Candidate testCandidate = testCandidateSkill.getCandidate();
+		assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+		assertThat(testCandidate).isEqualTo(candidate);
+		assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+		assertThat(testCandidate.getCandidateJobs())
+		.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+				"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+		.contains(tuple(JOB_F, 53.0, 20.0, 1.0, 5.0, 59.0, "Abhinav",5.0));
+     	
+     	
+	}
     
     @Test
     @Transactional
     public void whenCandidateEducationAndLanguageAndGenderRemovingAllSkillMustUpdateAMatchSetWithMatchScoreZeroForSkillsMustNotChnageOtherScores() throws Exception {
-    	
+    	Candidate candidate = new Candidate().firstName("Abhinav");
+		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+				.candidate(candidate);
+		CandidateLanguageProficiency langProf = new CandidateLanguageProficiency();
+		langProf.language(englishLanguage);
+		langProf.candidate(candidate);
+		candidate.gender(femaleGender);
+		candidate.addCandidateLanguageProficiency(langProf);
+		candidate.addEducation(candidateEducation);
+		candidateSkills.candidate(candidate);
+        candidateSkills.setSkills(msExcel);
+		candidateRepository.saveAndFlush(candidate.addCandidateSkill(candidateSkills));
+		
+	 	CandidateJob cJob = new CandidateJob(candidate,jobF);
+	 	cJob.setMatchScore(2.0);
+	 	cJob.setEducationMatchScore(20.0);
+	 	cJob.setLanguageMatchScore(5d);
+	 	cJob.setGenderMatchScore(1d);
+	 	cJob.setSkillMatchScore(5d);
+		candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+		  restCandidateSkillsMockMvc.perform(delete("/api/candidate-skills/{id}", candidateSkills.getId())
+		            .accept(TestUtil.APPLICATION_JSON_UTF8))
+		            .andExpect(status().isOk());
+			List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+					.findAll();
+			assertThat(candidateSkillList).hasSize(0);
+			Candidate testCandidate = candidateRepository.findOne(candidate.getId());
+			assertThat(testCandidate).isEqualTo(candidate);
+			assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+			assertThat(testCandidate.getCandidateJobs())
+			.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+					"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+			.contains(tuple(JOB_F, 44.0, 20.0, 1.0, 5.0, 59.0, "Abhinav",0.0));
+    }
+    
+    @Test
+    @Transactional
+    public void whenCandidateEducationAndLanguageAndGenderRemovingOneOutOfManySkillMustUpdateAMatchSetWithMatchScoreForSkillsMustNotChangeOtherScores() throws Exception {
+      	Candidate candidate = new Candidate().firstName("Abhinav");
+    		CandidateEducation candidateEducation = new CandidateEducation().highestQualification(true).grade(9.8)
+    				.candidate(candidate);
+    		CandidateLanguageProficiency langProf = new CandidateLanguageProficiency();
+    		langProf.language(englishLanguage);
+    		langProf.candidate(candidate);
+    		candidate.gender(femaleGender);
+    		candidate.addCandidateLanguageProficiency(langProf);
+    		candidate.addEducation(candidateEducation);
+    		
+    		candidateSkills.candidate(candidate);
+    		
+        candidateSkills.setSkills(msExcel);
+         CandidateSkills skill2 = new CandidateSkills();
+         skill2.candidate(candidate);
+    		
+    		skill2.setSkills(msWord);
+    		
+    		
+    		candidateRepository.saveAndFlush(candidate.addCandidateSkill(candidateSkills).addCandidateSkill(skill2));
+    		
+    	 	CandidateJob cJob = new CandidateJob(candidate,jobF);
+    	 	cJob.setMatchScore(2.0);
+    	 	cJob.setEducationMatchScore(20.0);
+    	 	cJob.setLanguageMatchScore(5d);
+    	 	cJob.setGenderMatchScore(1d);
+    	 	cJob.setSkillMatchScore(10d);
+    		candidateRepository.saveAndFlush(candidate.addCandidateJob(cJob));
+    		  restCandidateSkillsMockMvc.perform(delete("/api/candidate-skills/{id}", candidateSkills.getId())
+    		            .accept(TestUtil.APPLICATION_JSON_UTF8))
+    		            .andExpect(status().isOk());
+    			List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+    					.findAll();
+    			assertThat(candidateSkillList).hasSize(1);
+    			Candidate testCandidate = candidateRepository.findOne(candidate.getId());
+    			CandidateSkills testCandidateSkill = candidateSkillList
+    					.get(candidateSkillList.size() - 1);
+    			assertThat(testCandidateSkill.getSkills().getSkill()).isEqualTo(msWord.getSkill());
+    			assertThat(testCandidate).isEqualTo(candidate);
+    			assertThat(testCandidate.getCandidateJobs()).hasSize(1);
+    			assertThat(testCandidate.getCandidateJobs())
+    			.extracting("job.jobTitle", "matchScore", "educationMatchScore", "genderMatchScore",
+    					"languageMatchScore", "totalEligibleScore", "candidate.firstName","skillMatchScore")
+    			.contains(tuple(JOB_F, 53.0, 20.0, 1.0, 5.0, 59.0, "Abhinav",5.0));
     }
 }
