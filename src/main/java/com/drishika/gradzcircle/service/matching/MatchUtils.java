@@ -163,8 +163,10 @@ public class MatchUtils {
 					.filter(education -> education.isHighestQualification()).findAny().orElse(null);
 			if (candidateEducation != null)
 				educationScore = matchCandidateEducationToJob(jobfilterObject, candidateEducation);
-			if(educationScore == null)
+			if(educationScore == null) {
+				job.getCandidateJobs().remove(candidateJob);
 				return null;
+			}
 		} else {
 			if (candidateJob != null) {
 				educationScore = candidateJob.getEducationMatchScore();

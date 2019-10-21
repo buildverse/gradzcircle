@@ -143,6 +143,7 @@ public class CandidateEducationResourceIntTest {
 	private static final String JOB_H = "JOB_H";
 	private static final String JOB_I = "JOB_I";
 	private static final String JOB_J = "JOB_J";
+	private static final String JOB_K = "JOB_K";
 	private final static String ISC = "ISC";
 	private final static String ICSE = "ICSE";
 	private final static String DIPLOMA = "Diploma";
@@ -228,7 +229,7 @@ public class CandidateEducationResourceIntTest {
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 			universityFilter, qualificationFilter, skillFilter;
 
-	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH,jobI,jobJ;
+	private Job jobA, jobB, jobC, jobD, jobE, jobF, jobG, jobH,jobI,jobJ,jobK;
 
 	@Autowired
 	private CandidateEducationService candidateEducationService;
@@ -498,6 +499,7 @@ public class CandidateEducationResourceIntTest {
 		jobH = createJobH(em);
 		jobI = createJobI(em);
 		jobJ = createJobJ(em);
+		jobK= createJobK(em);
 		msExcel = createMsExcelSkill(em);
 		msWord = createMsWordSkill(em);
 
@@ -607,6 +609,18 @@ public class CandidateEducationResourceIntTest {
 		jobFilters.add(jobFilter);
 		jobJ.setJobFilters(jobFilters);
 		return jobJ;
+	}
+	
+	public static Job createJobK(EntityManager em) {
+		Job jobK = new Job().jobTitle(JOB_K).jobStatus(1);
+		;
+		Set<JobFilter> jobFilters = new HashSet<JobFilter>();
+		JobFilter jobFilter = new JobFilter();
+		String filterDescription = "{\"basic\": true,\"colleges\": [{\"value\": \"A\",\"display\": \"A\"},{\"value\": \"B\",\"display\": \"B\"}],\"universities\": [{\"value\":\"a\",\"display\": \"a\"},{\"value\":\"b\",\"display\": \"b\"}],\"premium\": true,\"courses\": [{\"value\": \"HR\",\"display\": \"HR\"},{\"value\":\"MEDICAL\",\"display\": \"MEDICAL\"},{\"value\":\"ENGG\",\"display\": \"ENGG\"}],\"qualifications\": [{\"value\":\"BTECH\",\"display\": \"BTECH\"}],\"scoreType\":\"gpa\",\"gpa\": \"7.0\"}}";
+		jobFilter.filterDescription(filterDescription).job(jobK);
+		jobFilters.add(jobFilter);
+		jobK.setJobFilters(jobFilters);
+		return jobK;
 	}
 
 	public static Qualification createPGDiplomaQualification(EntityManager em) {
@@ -6315,6 +6329,7 @@ public class CandidateEducationResourceIntTest {
 		courseRepository.saveAndFlush(courseISC);
 		courseRepository.saveAndFlush(coursePHARMA);
 		courseRepository.saveAndFlush(courseMedical);
+		courseRepository.saveAndFlush(courseENGG);
 		jobRepository.saveAndFlush(jobA);
 		jobRepository.saveAndFlush(jobB);
 		jobRepository.saveAndFlush(jobC);
@@ -6322,6 +6337,7 @@ public class CandidateEducationResourceIntTest {
 		jobRepository.saveAndFlush(jobG);
 		jobRepository.saveAndFlush(jobH);
 		jobRepository.saveAndFlush(jobI);
+		jobRepository.saveAndFlush(jobK);
 		filterRepository.saveAndFlush(qualificationFilter);
 		filterRepository.saveAndFlush(courseFilter);
 		filterRepository.saveAndFlush(gradDateFilter);
@@ -6339,62 +6355,10 @@ public class CandidateEducationResourceIntTest {
 		profileCategoryRepository.saveAndFlush(lang);
 		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
 		candidateRepository.saveAndFlush(candidateA);
-		CandidateEducation education1 = new CandidateEducation().qualification(qualUK).course(coursePHARMA).highestQualification(true)
+		CandidateEducation education1 = new CandidateEducation().qualification(qualBE).course(courseENGG).highestQualification(true)
 				.percentage(79d).college(uniDoon.getColleges().iterator().next())
 				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
 				.candidate(candidateA);
-		CandidateJob cJ1 = new CandidateJob(candidateA, jobA);
-		cJ1.setEducationMatchScore(16.0);
-		cJ1.setGenderMatchScore(4.0);
-		cJ1.setLanguageMatchScore(2.0);
-		cJ1.setTotalEligibleScore(45.0);
-		cJ1.setMatchScore(49.0);
-		CandidateJob cJ2 = new CandidateJob(candidateA, jobB);
-		cJ2.setEducationMatchScore(15.0);
-		cJ2.setGenderMatchScore(4.0);
-		cJ2.setLanguageMatchScore(2.0);
-		cJ2.setTotalEligibleScore(44.0);
-		cJ2.setMatchScore(48.0);
-		CandidateJob cJ3 = new CandidateJob(candidateA, jobC);
-		cJ1.setEducationMatchScore(16.0);
-		cJ1.setGenderMatchScore(4.0);
-		cJ1.setLanguageMatchScore(2.0);
-		cJ1.setTotalEligibleScore(45.0);
-		cJ1.setMatchScore(49.0);
-		CandidateJob cJ4 = new CandidateJob(candidateA, jobF);
-		cJ2.setEducationMatchScore(15.0);
-		cJ2.setGenderMatchScore(4.0);
-		cJ2.setLanguageMatchScore(2.0);
-		cJ2.setTotalEligibleScore(44.0);
-		cJ2.setMatchScore(48.0);
-		CandidateJob cJ5 = new CandidateJob(candidateA, jobG);
-		cJ1.setEducationMatchScore(16.0);
-		cJ1.setGenderMatchScore(4.0);
-		cJ1.setLanguageMatchScore(2.0);
-		cJ1.setTotalEligibleScore(45.0);
-		cJ1.setMatchScore(49.0);
-		CandidateJob cJ6 = new CandidateJob(candidateA, jobH);
-		cJ2.setEducationMatchScore(15.0);
-		cJ2.setGenderMatchScore(4.0);
-		cJ2.setLanguageMatchScore(2.0);
-		cJ2.setTotalEligibleScore(44.0);
-		cJ2.setMatchScore(48.0);
-		CandidateJob cJ7 = new CandidateJob(candidateA, jobI);
-		cJ1.setEducationMatchScore(16.0);
-		cJ1.setGenderMatchScore(4.0);
-		cJ1.setLanguageMatchScore(2.0);
-		cJ1.setTotalEligibleScore(45.0);
-		cJ1.setMatchScore(49.0);
-		
-		candidateA.getCandidateJobs().add(cJ1);
-		candidateA.getCandidateJobs().add(cJ2);
-		candidateA.getCandidateJobs().add(cJ3);
-		candidateA.getCandidateJobs().add(cJ4);
-		candidateA.getCandidateJobs().add(cJ5);
-		candidateA.getCandidateJobs().add(cJ6);
-		candidateA.getCandidateJobs().add(cJ7);
-		
-		candidateRepository.saveAndFlush(candidateA);
 		
 		restCandidateEducationMockMvc.perform(post("/api/candidate-educations")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(education1)))
@@ -6406,6 +6370,7 @@ public class CandidateEducationResourceIntTest {
 		Job testJobG = jobRepository.getOne(jobG.getId());
 		Job testJobH = jobRepository.getOne(jobH.getId());
 		Job testJobI = jobRepository.getOne(jobI.getId());
+		Job testJobK = jobRepository.getOne(jobK.getId());
 		assertThat(testJobA.getCandidateJobs()).hasSize(0);
 		assertThat(testJobB.getCandidateJobs()).hasSize(0);
 		assertThat(testJobE.getCandidateJobs()).hasSize(0);
@@ -6413,14 +6378,48 @@ public class CandidateEducationResourceIntTest {
 		assertThat(testJobG.getCandidateJobs()).hasSize(0);
 		assertThat(testJobH.getCandidateJobs()).hasSize(0);
 		assertThat(testJobI.getCandidateJobs()).hasSize(0);
+		assertThat(testJobK.getCandidateJobs()).hasSize(1);
 		List<Candidate> testCandidates = candidateRepository.findAll();
 		assertThat(testCandidates).hasSize(1);
 		List<CandidateEducation> testCandidateEducations = candidateEducationRepository.findAll();
 		assertThat(testCandidateEducations).hasSize(1);
 		assertThat(testCandidateEducations)
 				.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
-				.contains(tuple(true, UK, CANDIDATE_A));
-		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(0);
+				.contains(tuple(true, BTECH, CANDIDATE_A));
+		assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(1);
+		CandidateEducation updateEducation = testCandidateEducations.get(0);
+			updateEducation.qualification(qualBA).course(courseENGG).highestQualification(true)
+				.percentage(79d).college(uniDoon.getColleges().iterator().next())
+				.educationFromDate(LocalDate.of(2010, 02, 25)).educationToDate(LocalDate.of(2017, 02, 24))
+				.candidate(candidateA);
+			restCandidateEducationMockMvc.perform(put("/api/candidate-educations")
+					.contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(updateEducation)))
+			.andExpect(status().isOk());
+			
+			 testJobA = jobRepository.getOne(jobA.getId());
+			 testJobB = jobRepository.getOne(jobB.getId());
+			 testJobE = jobRepository.getOne(jobC.getId());
+			 testJobF = jobRepository.getOne(jobF.getId());
+			 testJobG = jobRepository.getOne(jobG.getId());
+			 testJobH = jobRepository.getOne(jobH.getId());
+			 testJobI = jobRepository.getOne(jobI.getId());
+			 testJobK = jobRepository.getOne(jobK.getId());
+			assertThat(testJobA.getCandidateJobs()).hasSize(0);
+			assertThat(testJobB.getCandidateJobs()).hasSize(0);
+			assertThat(testJobE.getCandidateJobs()).hasSize(0);
+			assertThat(testJobF.getCandidateJobs()).hasSize(0);
+			assertThat(testJobG.getCandidateJobs()).hasSize(0);
+			assertThat(testJobH.getCandidateJobs()).hasSize(0);
+			assertThat(testJobI.getCandidateJobs()).hasSize(0);
+			assertThat(testJobK.getCandidateJobs()).hasSize(0);
+			testCandidates = candidateRepository.findAll();
+			assertThat(testCandidates).hasSize(1);
+			testCandidateEducations = candidateEducationRepository.findAll();
+			assertThat(testCandidateEducations).hasSize(1);
+			assertThat(testCandidateEducations)
+					.extracting("highestQualification", "qualification.Qualification", "candidate.firstName")
+					.contains(tuple(true, BA, CANDIDATE_A));
+			assertThat(testCandidateEducations.get(0).getCandidate().getCandidateJobs()).hasSize(0);
 		
 	}
 	

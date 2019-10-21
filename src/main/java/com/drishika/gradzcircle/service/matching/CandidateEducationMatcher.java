@@ -80,6 +80,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 				log.debug("Replacing Candidate Job in Job Object{}",job);
 				
 			} else {
+				log.debug("Adding Candidate Job to match set");
 				job.getCandidateJobs().add(cJ);
 			}
 			jobs.add(job);
