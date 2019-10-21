@@ -69,7 +69,7 @@
 				[class.has-danger]="capturedSkill.invalid && capturedSkill.touched">
 				<input type="text" class="form-control "
 					name="capturedSkill" id="field_capturedSkill"
-					#capturedSkill="ngModel" required pattern="^[a-zA-Z,]*$"
+					#capturedSkill="ngModel" required pattern="^[a-zA-Z ,]*$"
 					[(ngModel)]="candidateSkills.capturedSkills" />
 				<small *ngIf="capturedSkill?.errors?.pattern;else noError" class="text-danger">
 				
