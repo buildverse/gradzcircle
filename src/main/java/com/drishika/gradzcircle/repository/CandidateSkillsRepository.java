@@ -19,7 +19,7 @@ public interface CandidateSkillsRepository extends JpaRepository<CandidateSkills
 	@Query("Select skill from CandidateSkills skill where skill.candidate.id=?1")
 	public List<CandidateSkills> findSkillsForCandidate(Long id);
 	
-	@Query("Select skill from CandidateSkills skill where skill.candidate.id=?1 and skills.skill=?2")
-	public CandidateSkills findCandidateSkillPresent(Long id, String skillName);
+	@Query("Select sk from CandidateSkills sk where sk.candidate.id=?1 and sk.skills.skill=?2")
+	public CandidateSkills findCandidateSkillPresent(Long id, String skill);
 
 }

@@ -126,7 +126,7 @@ public class CandidateSkillsResourceIntTest {
     
 	private ProfileCategory basic, personal, edu, exp, lang, cert, nonAcad,skills;
 	
-	private Skills msWord,msExcel,otherSkill,yoyoSkill;
+	private Skills msWord,msExcel,otherSkill,yoyoSkill,dataScience1,dataScience2;
 	
 	private Filter gradDateFilter, scoreFilter, courseFilter, genderFilter, languageFilter, collegeFilter,
 	universityFilter, qualificationFilter, skillFilter;
@@ -177,6 +177,10 @@ public class CandidateSkillsResourceIntTest {
     
     public static Skills createMsWordSkill(EntityManager em) {
     	return new Skills().skill("MSWORD");
+    }
+    
+    public static Skills createDataScienceSkill(EntityManager em) {
+    	return new Skills().skill("Datascience");
     }
     
     public static Skills createMsExcelSkill(EntityManager em) {
@@ -354,6 +358,7 @@ public class CandidateSkillsResourceIntTest {
         msWord = createMsWordSkill(em);
         otherSkill = createOtherSkill(em);
         yoyoSkill = createYoYoSkill(em);
+        dataScience1 = createDataScienceSkill(em);
         jobA = createJobA(em);
 		jobB = createJobB(em);
 		jobC = createJobC(em);
@@ -401,6 +406,7 @@ public class CandidateSkillsResourceIntTest {
 		skillsRepository.saveAndFlush(msWord);
 		skillsRepository.saveAndFlush(yoyoSkill);
 		skillsRepository.saveAndFlush(otherSkill);
+		skillsRepository.saveAndFlush(dataScience1);
 		filterRepository.saveAndFlush(qualificationFilter);
 		filterRepository.saveAndFlush(courseFilter);
 		filterRepository.saveAndFlush(gradDateFilter);
@@ -441,6 +447,43 @@ public class CandidateSkillsResourceIntTest {
        // assertThat(candidateSkillsEs).isEqualToIgnoringGivenFields(testCandidateSkills);
     }
 
+    @Test
+    @Transactional
+    public void createCandidateSkillsAndReCreateSameSkillViaOtherRoute() throws Exception {
+        int databaseSizeBeforeCreate = candidateSkillsRepository.findAll().size();
+        List<Skills> candidateSkill = new ArrayList<>();
+        candidateSkill.add(msExcel);
+        candidateSkills.setSkillsList(candidateSkill);
+        // Create the CandidateSkills
+        restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(candidateSkills.candidate(candidate))))
+            .andExpect(status().isCreated());
+
+        // Validate the CandidateSkills in the database
+        List<CandidateSkills> candidateSkillsList = candidateSkillsRepository.findAll();
+        assertThat(candidateSkillsList).hasSize(databaseSizeBeforeCreate + 1);
+        CandidateSkills testCandidateSkills = candidateSkillsList.get(candidateSkillsList.size() - 1);
+        assertThat(testCandidateSkills.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+        
+        List<Skills> cSkills = new ArrayList<>();
+		cSkills.add(otherSkill);
+		CandidateSkills candidateSkills1 = new CandidateSkills();
+		candidateSkills1.candidate(candidate);
+		candidateSkills1.setSkillsList(cSkills);
+        restCandidateSkillsMockMvc.perform(post("/api/candidate-skills")
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(candidateSkills1.capturedSkills("Data Science, DataScience,Datascience"))))
+	            .andExpect(status().isCreated());
+        List<CandidateSkills> candidateSkillsListAgain = candidateSkillsRepository.findAll();
+        assertThat(candidateSkillsListAgain).hasSize(2);
+        CandidateSkills testCandidateSkillsAgain = candidateSkillsListAgain.get(candidateSkillsListAgain.size() - 1);
+      //  assertThat(testCandidateSkillsAgain.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+        assertThat(skillsRepository.findAll()).hasSize(6);
+       
+    }
+
+    
     @Test
     @Transactional
     public void createCandidateSkillsWithExistingId() throws Exception {
@@ -729,9 +772,9 @@ public class CandidateSkillsResourceIntTest {
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(3);
     		assertThat(testSkills).hasSize(7);
-    		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit");
+    		assertThat(testSkills).extracting("skill").contains("YoYo","Honey","Diljit");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
-    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit");
+    		assertThat(candidateSkillList).extracting("skills.skill").contains("YoYo","Honey","Diljit");
     		assertThat(testCandidate).isEqualTo(candidate);
     		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
     		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
@@ -770,10 +813,10 @@ public class CandidateSkillsResourceIntTest {
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(5);
     		assertThat(testSkills).hasSize(7);
-    		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL","MSWORD");
+    		assertThat(testSkills).extracting("skill").contains("YoYo","Honey","Diljit","MSEXCEL","MSWORD");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
-    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL","MSWORD");
-    		assertThat(testCandidate.getCandidateSkills()).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL","MSWORD");
+    		assertThat(candidateSkillList).extracting("skills.skill").contains("YoYo","Honey","Diljit","MSEXCEL","MSWORD");
+    		assertThat(testCandidate.getCandidateSkills()).extracting("skills.skill").contains("YoYo","Honey","Diljit","MSEXCEL","MSWORD");
     		assertThat(testCandidate).isEqualTo(candidate);
     		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
     		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
@@ -813,9 +856,9 @@ public class CandidateSkillsResourceIntTest {
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(4);
     		assertThat(testSkills).hasSize(7);
-    		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
+    		assertThat(testSkills).extracting("skill").contains("YoYo","Honey","Diljit","MSEXCEL");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
-    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
+    		assertThat(candidateSkillList).extracting("skills.skill").contains("YoYo","Honey","Diljit","MSEXCEL");
     		assertThat(testCandidate).isEqualTo(candidate);
     		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
     		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
@@ -864,9 +907,9 @@ public class CandidateSkillsResourceIntTest {
     		List<Skills> testSkills = skillsRepository.findAll();
     		assertThat(candidateSkillList).hasSize(4);
     		assertThat(testSkills).hasSize(7);
-    		assertThat(testSkills).extracting("skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
+    		assertThat(testSkills).extracting("skill").contains("YoYo","Honey","Diljit","MSEXCEL");
     		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
-    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo","Honey","Diljit","MSEXCEL");
+    		assertThat(candidateSkillList).extracting("skills.skill").contains("YoYo","Honey","Diljit","MSEXCEL");
     		assertThat(testCandidate).isEqualTo(candidate);
     		assertThat(testCandidate.getCandidateJobs()).hasSize(0);
     		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);

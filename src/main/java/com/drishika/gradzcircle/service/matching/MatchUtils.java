@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.mutable.MutableDouble;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.drishika.gradzcircle.config.Constants;
@@ -45,7 +48,7 @@ import com.drishika.gradzcircle.repository.UniversityRepository;
  *
  */
 @Component
-//@DependsOn("liquibase")
+@DependsOn("liquibase")
 public class MatchUtils {
 
 	private final Logger log = LoggerFactory.getLogger(MatchUtils.class);
@@ -110,9 +113,9 @@ public class MatchUtils {
 		return jobFilter;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	public Map<String, Long> init() {
-	//	if (jobFilterWeightMap == null && jobFilterWeightMap.size() == 0)
+		
 		populateJobFilterWeightMap();
 		return jobFilterWeightMap;
 
@@ -484,7 +487,7 @@ public class MatchUtils {
 			log.debug("Job Filter skills are {} ", jobFilterSkills);
 			for (Skills skillFilter : jobFilterSkills) {
 				log.debug("Looking for  {}", skillFilter.getValue());
-				Skills skill = skillsRepository.findBySkill((skillFilter.getValue()));
+				Skills skill = skillsRepository.findBySkillIgnoreCase((skillFilter.getValue()));
 				log.debug("Skill from repo are {}", skill.getSkill());
 				for (CandidateSkills candidateSkill : candidateSkills) {
 					if (candidateSkill.getSkills().getSkill().equals(skill.getSkill())) {

@@ -149,7 +149,7 @@ public class SkillsResource {
     @Timed
     public ResponseEntity<Skills> getSkills(@PathVariable String name) {
         log.debug("REST request to get Skills : {}", name);
-        Skills skills = skillsRepository.findBySkill(name);
+        Skills skills = skillsRepository.findBySkillIgnoreCase(name);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skills));
     }
 

@@ -29,5 +29,14 @@
         </createTable>
         
     </changeSet>
+    
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    
+    <changeSet author="abhinav" id="20171015094643-2">
+    		 <addUniqueConstraint catalogName="cat"
+            columnNames="skill"
+            constraintName="skill_unique"
+            schemaName="public"
+            tableName="skills"/>
+</changeSet>
 </databaseChangeLog>

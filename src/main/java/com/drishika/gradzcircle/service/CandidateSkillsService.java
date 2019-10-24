@@ -7,6 +7,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +34,8 @@ import com.drishika.gradzcircle.service.dto.CandidateSkillsDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
+
+import io.jsonwebtoken.lang.Arrays;
 
 /**
  * @author abhinav
@@ -125,9 +128,19 @@ public class CandidateSkillsService {
  		return converter.convertToCandidateSkillsDTO(skills,false);
 	 }
 	
+	 private List<String> convertToCamelCaseAndEliminateDuplicates(String [] skills) {
+		 List<String> skillList = new ArrayList<>();
+		 for( int i =0 ; i < skills.length; i ++) {
+			 skillList.add(skills[i].trim());
+		 }
+		 
+		 return skillList.stream().map(skill->converter.convertToCamelCase(skill)).distinct().collect(Collectors.toList());
+	 }
+	 
 	private void injestSkillsInformation(CandidateSkills candidateSkillObject, Candidate candidate) {
 		List<CandidateSkills> candidateSkills=  new ArrayList<>();
 		Set<CandidateSkills> previousSkills = candidate.getCandidateSkills();
+		Set<String> uniqueSkillSet = new HashSet<>();
 		if(previousSkills!=null && !previousSkills.isEmpty())
 			candidateSkills.addAll(previousSkills);
 		if(candidateSkillObject.getSkillsList() != null) {
@@ -137,21 +150,36 @@ public class CandidateSkillsService {
 											.equals(Constants.OTHER)).findAny().orElse(null);
 			log.debug("Other Skill is {}",otherSkill);
 			if(otherSkill!=null) {
-				String[] skills = candidateSkillObject.getCapturedSkills().split(",");
+				String[] capturedSkills = candidateSkillObject.getCapturedSkills().split(",");
+				List<String> skills = new ArrayList<>();
+				for(int i=0; i < capturedSkills.length; i++) {
+					if(uniqueSkillSet.contains(capturedSkills[i].replaceAll("\\s+", "").toLowerCase()))
+						continue;
+					else {
+						uniqueSkillSet.add(capturedSkills[i].replaceAll("\\s+", "").toLowerCase());
+						skills.add(capturedSkills[i]);
+					}
+				}
+				log.debug("My final list is {}",skills);
+			   // List<String> filteredAndConvertedSkillList = convertToCamelCaseAndEliminateDuplicates(skills);
 				List<Skills> skillToAdd = new ArrayList<>();
-				for(int i = 0; i< skills.length; i++) {
+				for(int i = 0; i< skills.size(); i++) {
 					CandidateSkills cSkill = new CandidateSkills();
 					Skills skill = skillsRepository
-							.findBySkill(skills[i]);
+							.findBySkillIgnoreCase(skills.get(i));
+					log.debug("DO i have {} in repo ",skill);
 					if(skill == null) {
 						Skills newSkill = new Skills();
-						newSkill.setSkill(converter.convertToCamelCase(skills[i].trim()));
+						newSkill.setSkill(converter.convertToCamelCase(skills.get(i).trim()));
 						skillToAdd.add(newSkill);
 						cSkill.skills(newSkill);
 						candidateSkills.add(cSkill);
 					} else {
-						cSkill.skills(skill);
-						candidateSkills.add(cSkill);
+						if(!candidateSkills.stream().anyMatch(cS-> cS.getSkills().getSkill().equalsIgnoreCase(skill.getSkill()))) {
+							cSkill.skills(skill);
+							candidateSkills.add(cSkill);
+						}
+						
 					}
 					
 					cSkill.candidate(candidateSkillObject.getCandidate());
@@ -170,7 +198,7 @@ public class CandidateSkillsService {
 				 if(candidateSkillsRepository.findCandidateSkillPresent(candidateSkillObject.getCandidate().getId(), cSkill.getSkill())==null) {
 					 CandidateSkills candidateSkill = new CandidateSkills();
 					 Skills skill = skillsRepository
-								.findBySkill(cSkill.getSkill());
+								.findBySkillIgnoreCase(cSkill.getSkill());
 					 candidateSkill.skills(skill);
 					 candidateSkill.candidate(candidateSkillObject.getCandidate());
 					 candidateSkills.add(candidateSkill);
@@ -189,6 +217,7 @@ public class CandidateSkillsService {
 	
 	
 	private void updateSkillIndex(Skills skill) {
+		log.debug("Indexing Skill -> {}",skill);
 		com.drishika.gradzcircle.domain.elastic.Skills skillElasticInstance = new com.drishika.gradzcircle.domain.elastic.Skills();
 		try {
 			BeanUtils.copyProperties(skillElasticInstance, skill);

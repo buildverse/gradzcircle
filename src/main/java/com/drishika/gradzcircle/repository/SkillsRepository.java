@@ -13,6 +13,6 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface SkillsRepository extends JpaRepository<Skills, Long> {
 	
-	public Skills findBySkill(String skill);
+	public Skills findBySkillIgnoreCase(String skill);
 
 }
