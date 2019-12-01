@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.constants.ApplicationConstants;
@@ -445,10 +445,11 @@ public class DTOConverters {
 		return dto;
 	}
 	
-	public CandidateSkillsDTO convertToCandidateSkillDTO(CandidateSkills skills, Boolean withCandidateProfileScore) {
-		logger.debug("Candidate SKills are {}", skills);
+	public CandidateSkillsDTO convertToCandidateSkillDTO(Optional<CandidateSkills> skill, Boolean withCandidateProfileScore) {
+		logger.debug("Candidate SKills are {}", skill);
 		CandidateSkillsDTO candidateSkillDTO = null;
-		if(skills!=null) {
+		if(skill.isPresent()) {
+			CandidateSkills skills = skill.get();
 			candidateSkillDTO = new CandidateSkillsDTO();
 			candidateSkillDTO.setId(skills.getId());
 			candidateSkillDTO.setSkillName(skills.getSkills().getSkill());

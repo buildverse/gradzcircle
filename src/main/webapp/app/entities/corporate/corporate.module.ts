@@ -1,9 +1,10 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-import { GradzcircleSharedModule, DataStorageService } from '../../shared';
+import { GradzcircleSharedModule } from '../../shared';
 import { GradzcircleAdminModule } from '../../admin/admin.module';
-import { FileUploadModule } from 'ng2-file-upload'
+import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { FileUploadModule } from 'ng2-file-upload';
 import {
     CorporateService,
     CorporatePopupService,
@@ -20,10 +21,7 @@ import {
     CorporateResolverService
 } from './';
 
-const ENTITY_STATES = [
-    ...corporateRoute,
-    ...corporatePopupRoute,
-];
+const ENTITY_STATES = [...corporateRoute, ...corporatePopupRoute];
 
 @NgModule({
     imports: [
@@ -50,13 +48,7 @@ const ENTITY_STATES = [
         CorporateDeletePopupComponent,
         LinkedCandidatesComponent
     ],
-    providers: [
-        CorporateService,
-        CorporatePopupService,
-        CorporateResolverService,
-        LinkedCandidatesResolvePagingParams,
-        DataStorageService
-    ],
+    providers: [CorporateService, CorporatePopupService, CorporateResolverService, LinkedCandidatesResolvePagingParams, DataStorageService],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleCorporateModule {}

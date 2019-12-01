@@ -1,12 +1,8 @@
 package com.drishika.gradzcircle.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-
 
 import java.util.Optional;
 
@@ -14,8 +10,6 @@ import java.util.Optional;
  * Utility class for Spring Security.
  */
 public final class SecurityUtils {
-	
-	private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
 
     private SecurityUtils() {
     }

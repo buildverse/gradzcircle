@@ -178,4 +178,28 @@
 
         <addUniqueConstraint tableName="jhi_social_user_connection" columnNames="user_id, provider_id, rank"/>
     </changeSet>
+    <changeSet id="00000000000002" author="jhipster">
+        <modifyDataType columnName="email"
+                        newDataType="varchar(254)"
+                        tableName="jhi_user"/>
+    </changeSet>
+    <changeSet id="00000000000003" author="jhipster" >
+        <dropIndex  indexName="idx_user_login"
+                    tableName="jhi_user"/>
+    </changeSet>
+    <changeSet id="00000000000004" author="jhipster" >
+        <dropIndex  indexName="idx_user_email"
+                    tableName="jhi_user"/>
+    </changeSet>
+    <changeSet id="00000000000005" author="jhipster" >
+        <addNotNullConstraint   columnName="password_hash"
+                                columnDataType="varchar(60)"
+                                tableName="jhi_user"/>
+    </changeSet>
+     <changeSet id="00000000000006" author="jhipster" >
+       <dropTable cascadeConstraints="true"
+            catalogName="gradzcircle"
+            schemaName="public"
+            tableName="jhi_social_user_connection"/>
+    </changeSet>
 </databaseChangeLog>

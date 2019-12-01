@@ -11,13 +11,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,7 +112,7 @@ public class UniversityResource {
 	public ResponseEntity<University> updateUniversity(@RequestBody University university) throws URISyntaxException {
 		log.debug("REST request to update University : {}", university);
 		if (university.getId() == null) {
-			return createUniversity(university);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		University result = universityRepository.save(university);
 		// universitySearchRepository.save(result);
@@ -126,6 +127,10 @@ public class UniversityResource {
 			throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
 
 		}
+		/*elasticsearchTemplate.update(new UniversityEntityBuilder(universityElasticInstance.getId())
+				.name(universityElasticInstance.getUniversityName())
+				.suggest(new String[] { universityElasticInstance.getUniversityName() }).updateIndex());*/
+		//universitySearchRepository.deleteById(university.getId());
 		elasticsearchTemplate.index(new UniversityEntityBuilder(universityElasticInstance.getId())
 				.name(universityElasticInstance.getUniversityName())
 				.suggest(new String[] { universityElasticInstance.getUniversityName() }).buildIndex());
@@ -159,8 +164,8 @@ public class UniversityResource {
 	@Timed
 	public ResponseEntity<University> getUniversity(@PathVariable Long id) {
 		log.debug("REST request to get University : {}", id);
-		University university = universityRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(university));
+		Optional<University> university = universityRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(university);
 	}
 
 	/**
@@ -174,8 +179,8 @@ public class UniversityResource {
 	@Timed
 	public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
 		log.debug("REST request to delete University : {}", id);
-		universityRepository.delete(id);
-		universitySearchRepository.delete(id);
+		universityRepository.deleteById(id);
+		universitySearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -190,7 +195,7 @@ public class UniversityResource {
 	@GetMapping("/_search/universities")
 	@Timed
 	public List<University> searchUniversities(@RequestParam String query) {
-		log.debug("REST request to search Universities for query {}", query);
+		log.info("REST request to search Universities for query {}", query);
 		return StreamSupport.stream(universitySearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
 	}
@@ -208,11 +213,12 @@ public class UniversityResource {
 	public String searchUniversityBySuggest(@RequestParam String query) {
 		log.debug("REST request to search University for query {}", query);
 		String suggest = null;
+		
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("university-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.University.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("university-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.University.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> universities = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

@@ -1,11 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.CaptureCollege;
-import com.drishika.gradzcircle.repository.CaptureCollegeRepository;
-import com.drishika.gradzcircle.repository.search.CaptureCollegeSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.CaptureCollege;
+import com.drishika.gradzcircle.repository.CaptureCollegeRepository;
+import com.drishika.gradzcircle.repository.search.CaptureCollegeSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CaptureCollegeResource REST controller.
@@ -46,7 +56,7 @@ public class CaptureCollegeResourceIntTest {
     private CaptureCollegeRepository captureCollegeRepository;
 
     @Autowired
-    private CaptureCollegeSearchRepository captureCollegeSearchRepository;
+    private CaptureCollegeSearchRepository mockCaptureCollegeSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +77,7 @@ public class CaptureCollegeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CaptureCollegeResource captureCollegeResource = new CaptureCollegeResource(captureCollegeRepository, captureCollegeSearchRepository);
+        final CaptureCollegeResource captureCollegeResource = new CaptureCollegeResource(captureCollegeRepository, mockCaptureCollegeSearchRepository);
         this.restCaptureCollegeMockMvc = MockMvcBuilders.standaloneSetup(captureCollegeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +99,7 @@ public class CaptureCollegeResourceIntTest {
 
     @Before
     public void initTest() {
-        captureCollegeSearchRepository.deleteAll();
+       // captureCollegeSearchRepository.deleteAll();
         captureCollege = createEntity(em);
     }
 
@@ -111,8 +121,7 @@ public class CaptureCollegeResourceIntTest {
         assertThat(testCaptureCollege.getCollegeName()).isEqualTo(DEFAULT_COLLEGE_NAME);
 
         // Validate the CaptureCollege in Elasticsearch
-        CaptureCollege captureCollegeEs = captureCollegeSearchRepository.findOne(testCaptureCollege.getId());
-        assertThat(captureCollegeEs).isEqualToIgnoringGivenFields(testCaptureCollege);
+        verify(mockCaptureCollegeSearchRepository,times(1)).save(testCaptureCollege);
     }
 
     @Test
@@ -175,11 +184,11 @@ public class CaptureCollegeResourceIntTest {
     public void updateCaptureCollege() throws Exception {
         // Initialize the database
         captureCollegeRepository.saveAndFlush(captureCollege);
-        captureCollegeSearchRepository.save(captureCollege);
+       
         int databaseSizeBeforeUpdate = captureCollegeRepository.findAll().size();
 
         // Update the captureCollege
-        CaptureCollege updatedCaptureCollege = captureCollegeRepository.findOne(captureCollege.getId());
+        CaptureCollege updatedCaptureCollege = captureCollegeRepository.findById(captureCollege.getId()).get();
         // Disconnect from session so that the updates on updatedCaptureCollege are not directly saved in db
         em.detach(updatedCaptureCollege);
         updatedCaptureCollege
@@ -197,8 +206,7 @@ public class CaptureCollegeResourceIntTest {
         assertThat(testCaptureCollege.getCollegeName()).isEqualTo(UPDATED_COLLEGE_NAME);
 
         // Validate the CaptureCollege in Elasticsearch
-        CaptureCollege captureCollegeEs = captureCollegeSearchRepository.findOne(testCaptureCollege.getId());
-        assertThat(captureCollegeEs).isEqualToIgnoringGivenFields(testCaptureCollege);
+        verify(mockCaptureCollegeSearchRepository,times(1)).save(testCaptureCollege);
     }
 
     @Test
@@ -210,13 +218,12 @@ public class CaptureCollegeResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restCaptureCollegeMockMvc.perform(put("/api/capture-colleges")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureCollege)))
-            .andExpect(status().isCreated());
-
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(captureCollege)))
+                .andExpect(status().isBadRequest());
         // Validate the CaptureCollege in the database
         List<CaptureCollege> captureCollegeList = captureCollegeRepository.findAll();
-        assertThat(captureCollegeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(captureCollegeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -224,7 +231,6 @@ public class CaptureCollegeResourceIntTest {
     public void deleteCaptureCollege() throws Exception {
         // Initialize the database
         captureCollegeRepository.saveAndFlush(captureCollege);
-        captureCollegeSearchRepository.save(captureCollege);
         int databaseSizeBeforeDelete = captureCollegeRepository.findAll().size();
 
         // Get the captureCollege
@@ -233,9 +239,8 @@ public class CaptureCollegeResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean captureCollegeExistsInEs = captureCollegeSearchRepository.exists(captureCollege.getId());
-        assertThat(captureCollegeExistsInEs).isFalse();
-
+        
+        verify(mockCaptureCollegeSearchRepository,times(1)).deleteById(captureCollege.getId());
         // Validate the database is empty
         List<CaptureCollege> captureCollegeList = captureCollegeRepository.findAll();
         assertThat(captureCollegeList).hasSize(databaseSizeBeforeDelete - 1);
@@ -246,7 +251,10 @@ public class CaptureCollegeResourceIntTest {
     public void searchCaptureCollege() throws Exception {
         // Initialize the database
         captureCollegeRepository.saveAndFlush(captureCollege);
-        captureCollegeSearchRepository.save(captureCollege);
+       
+        when(mockCaptureCollegeSearchRepository.search(queryStringQuery("id:" + captureCollege.getId())))
+        .thenReturn((Collections.singletonList(captureCollege) ));
+        
 
         // Search the captureCollege
         restCaptureCollegeMockMvc.perform(get("/api/_search/capture-colleges?query=id:" + captureCollege.getId()))

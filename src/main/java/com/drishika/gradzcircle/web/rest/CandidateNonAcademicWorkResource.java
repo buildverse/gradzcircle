@@ -89,7 +89,11 @@ public class CandidateNonAcademicWorkResource {
 			throw new BadRequestAlertException("A new candidateNonAcademicWork cannot already have an ID", ENTITY_NAME,
 					"idexists");
 		}
-		Candidate candidate = candidateRepository.findOne(candidateNonAcademicWork.getCandidate().getId());
+		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateNonAcademicWork.getCandidate().getId());
+		if(!optionalCandidate.isPresent())
+			throw new BadRequestAlertException("No Candidate Fount to link Non Acad", ENTITY_NAME,
+					"");
+		Candidate candidate = optionalCandidate.get();
 		if (candidate.getNonAcademics().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_NON_ACADEMIC_PROFILE, false);
 		}
@@ -157,8 +161,8 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public ResponseEntity<CandidateNonAcademicWork> getCandidateNonAcademicWork(@PathVariable Long id) {
 		log.debug("REST request to get CandidateNonAcademicWork : {}", id);
-		CandidateNonAcademicWork candidateNonAcademicWork = candidateNonAcademicWorkRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateNonAcademicWork));
+		Optional<CandidateNonAcademicWork> candidateNonAcademicWork = candidateNonAcademicWorkRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(candidateNonAcademicWork);
 	}
 
 	/**
@@ -173,7 +177,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public ResponseEntity<Void> deleteCandidateNonAcademicWork(@PathVariable Long id) {
 		log.debug("REST request to delete CandidateNonAcademicWork : {}", id);
-		CandidateNonAcademicWork candidateNonAcademicWork = candidateNonAcademicWorkRepository.findOne(id);
+		CandidateNonAcademicWork candidateNonAcademicWork = candidateNonAcademicWorkRepository.findById(id).get();
 		Candidate candidate = candidateNonAcademicWork.getCandidate();
 		log.debug("REST request to delete CandidateNonAcademicWork for candidate   : {} , {}", id,candidate.getId());
 		candidate.getNonAcademics().remove(candidateNonAcademicWork);
@@ -203,7 +207,7 @@ public class CandidateNonAcademicWorkResource {
 		//<CandidateNonAcademicWorkDTO> candiateNonAcademicDTO = new ArrayList<>();
 		List<CandidateNonAcademicWork> candidateNonAcademicWorks = candidateNonAcademicWorkRepository
 				.findNonAcademicWorkByCandidateId(id);
-		Candidate candidate = candidateRepository.findOne(id);
+		Candidate candidate = candidateRepository.findById(id).get();
 		log.debug("Canddiate Non Acad work is {}",candidateNonAcademicWorks);
 		return converter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, true,candidate);
 		

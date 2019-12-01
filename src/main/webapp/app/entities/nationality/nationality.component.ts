@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Nationality } from './nationality.model';
 import { NationalityService } from './nationality.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-nationality',
     templateUrl: './nationality.component.html'
 })
 export class NationalityComponent implements OnInit, OnDestroy {
-nationalities: Nationality[];
+    nationalities: Nationality[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ nationalities: Nationality[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.nationalityService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Nationality[]>) => this.nationalities = res.body,
+            this.nationalityService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Nationality[]>) => (this.nationalities = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.nationalityService.query().subscribe(
             (res: HttpResponse<Nationality[]>) => {
                 this.nationalities = res.body;
@@ -62,7 +66,7 @@ nationalities: Nationality[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInNationalities();
@@ -76,7 +80,7 @@ nationalities: Nationality[];
         return item.id;
     }
     registerChangeInNationalities() {
-        this.eventSubscriber = this.eventManager.subscribe('nationalityListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('nationalityListModification', response => this.loadAll());
     }
 
     private onError(error) {

@@ -1,7 +1,9 @@
 package com.drishika.gradzcircle.web.rest;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import static org.mockito.Mockito.*;
 
+import com.drishika.gradzcircle.domain.Address;
 import com.drishika.gradzcircle.domain.CaptureCourse;
 import com.drishika.gradzcircle.repository.CaptureCourseRepository;
 import com.drishika.gradzcircle.repository.search.CaptureCourseSearchRepository;
@@ -22,10 +24,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,7 +51,7 @@ public class CaptureCourseResourceIntTest {
     private CaptureCourseRepository captureCourseRepository;
 
     @Autowired
-    private CaptureCourseSearchRepository captureCourseSearchRepository;
+    private CaptureCourseSearchRepository mockCaptureCourseSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +72,7 @@ public class CaptureCourseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CaptureCourseResource captureCourseResource = new CaptureCourseResource(captureCourseRepository, captureCourseSearchRepository);
+        final CaptureCourseResource captureCourseResource = new CaptureCourseResource(captureCourseRepository, mockCaptureCourseSearchRepository);
         this.restCaptureCourseMockMvc = MockMvcBuilders.standaloneSetup(captureCourseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +94,7 @@ public class CaptureCourseResourceIntTest {
 
     @Before
     public void initTest() {
-        captureCourseSearchRepository.deleteAll();
+        //captureCourseSearchRepository.deleteAll();
         captureCourse = createEntity(em);
     }
 
@@ -111,8 +116,7 @@ public class CaptureCourseResourceIntTest {
         assertThat(testCaptureCourse.getCourseName()).isEqualTo(DEFAULT_COURSE_NAME);
 
         // Validate the CaptureCourse in Elasticsearch
-        CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
-        assertThat(captureCourseEs).isEqualToIgnoringGivenFields(testCaptureCourse);
+        verify(mockCaptureCourseSearchRepository, times(1)).save(testCaptureCourse);
     }
 
     @Test
@@ -175,11 +179,11 @@ public class CaptureCourseResourceIntTest {
     public void updateCaptureCourse() throws Exception {
         // Initialize the database
         captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
+       // captureCourseSearchRepository.save(captureCourse);
         int databaseSizeBeforeUpdate = captureCourseRepository.findAll().size();
 
         // Update the captureCourse
-        CaptureCourse updatedCaptureCourse = captureCourseRepository.findOne(captureCourse.getId());
+        CaptureCourse updatedCaptureCourse = captureCourseRepository.findById(captureCourse.getId()).get();
         // Disconnect from session so that the updates on updatedCaptureCourse are not directly saved in db
         em.detach(updatedCaptureCourse);
         updatedCaptureCourse
@@ -197,8 +201,7 @@ public class CaptureCourseResourceIntTest {
         assertThat(testCaptureCourse.getCourseName()).isEqualTo(UPDATED_COURSE_NAME);
 
         // Validate the CaptureCourse in Elasticsearch
-        CaptureCourse captureCourseEs = captureCourseSearchRepository.findOne(testCaptureCourse.getId());
-        assertThat(captureCourseEs).isEqualToIgnoringGivenFields(testCaptureCourse);
+        verify(mockCaptureCourseSearchRepository, times(1)).save(testCaptureCourse);
     }
 
     @Test
@@ -209,14 +212,16 @@ public class CaptureCourseResourceIntTest {
         // Create the CaptureCourse
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restCaptureCourseMockMvc.perform(put("/api/capture-courses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureCourse)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(captureCourse)))
+                .andExpect(status().isBadRequest());
 
         // Validate the CaptureCourse in the database
         List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
-        assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(captureCourseList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockCaptureCourseSearchRepository, times(0)).save(captureCourse);
     }
 
     @Test
@@ -224,7 +229,7 @@ public class CaptureCourseResourceIntTest {
     public void deleteCaptureCourse() throws Exception {
         // Initialize the database
         captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
+       // captureCourseSearchRepository.save(captureCourse);
         int databaseSizeBeforeDelete = captureCourseRepository.findAll().size();
 
         // Get the captureCourse
@@ -233,9 +238,9 @@ public class CaptureCourseResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean captureCourseExistsInEs = captureCourseSearchRepository.exists(captureCourse.getId());
-        assertThat(captureCourseExistsInEs).isFalse();
-
+       // boolean captureCourseExistsInEs = captureCourseSearchRepository.existsById(captureCourse.getId());
+      //  assertThat(captureCourseExistsInEs).isFalse();
+        verify(mockCaptureCourseSearchRepository, times(1)).deleteById(captureCourse.getId());
         // Validate the database is empty
         List<CaptureCourse> captureCourseList = captureCourseRepository.findAll();
         assertThat(captureCourseList).hasSize(databaseSizeBeforeDelete - 1);
@@ -246,8 +251,9 @@ public class CaptureCourseResourceIntTest {
     public void searchCaptureCourse() throws Exception {
         // Initialize the database
         captureCourseRepository.saveAndFlush(captureCourse);
-        captureCourseSearchRepository.save(captureCourse);
-
+     //   captureCourseSearchRepository.save(captureCourse);
+        when(mockCaptureCourseSearchRepository.search(queryStringQuery("id:" + captureCourse.getId())))
+        .thenReturn(Collections.singletonList(captureCourse));
         // Search the captureCourse
         restCaptureCourseMockMvc.perform(get("/api/_search/capture-courses?query=id:" + captureCourse.getId()))
             .andExpect(status().isOk())

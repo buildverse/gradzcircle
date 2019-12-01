@@ -92,8 +92,8 @@ public class AddressResource {
 	public ResponseEntity<Address> updateAddress(@RequestBody Address address) throws URISyntaxException {
 		log.debug("REST request to update Address : {}", address);
 		if (address.getId() == null) {
-			return createAddress(address);
-		}
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
 		Address result = addressRepository.save(address);
 		addressSearchRepository.save(result);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, address.getId().toString()))
@@ -125,8 +125,8 @@ public class AddressResource {
 	@Timed
 	public ResponseEntity<Address> getAddress(@PathVariable Long id) {
 		log.debug("REST request to get Address : {}", id);
-		Address address = addressRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(address));
+		Optional<Address> address = addressRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(address);
 	}
 
 	/**
@@ -140,8 +140,8 @@ public class AddressResource {
 	@Timed
 	public ResponseEntity<Void> deleteAddress(@PathVariable Long id) {
 		log.debug("REST request to delete Address : {}", id);
-		addressRepository.delete(id);
-		addressSearchRepository.delete(id);
+		addressRepository.deleteById(id);
+		addressSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

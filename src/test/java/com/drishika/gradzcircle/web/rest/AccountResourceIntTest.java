@@ -1,20 +1,22 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.config.Constants;
-import com.drishika.gradzcircle.GradzcircleApp;
-import com.drishika.gradzcircle.domain.Authority;
-import com.drishika.gradzcircle.domain.User;
-import com.drishika.gradzcircle.repository.AuthorityRepository;
-import com.drishika.gradzcircle.repository.UserRepository;
-import com.drishika.gradzcircle.security.AuthoritiesConstants;
-import com.drishika.gradzcircle.service.MailService;
-import com.drishika.gradzcircle.service.dto.UserDTO;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
-import com.drishika.gradzcircle.web.rest.vm.KeyAndPasswordVM;
-import com.drishika.gradzcircle.web.rest.vm.ManagedUserVM;
-import com.drishika.gradzcircle.service.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +32,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.Instant;
-import java.time.LocalDate;
 
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.Authority;
+import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.repository.AuthorityRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
+import com.drishika.gradzcircle.service.MailService;
+import com.drishika.gradzcircle.service.UserService;
+import com.drishika.gradzcircle.service.dto.PasswordChangeDTO;
+import com.drishika.gradzcircle.service.dto.UserDTO;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import com.drishika.gradzcircle.web.rest.vm.KeyAndPasswordVM;
+import com.drishika.gradzcircle.web.rest.vm.ManagedUserVM;
 
 /**
  * Test class for the AccountResource REST controller.
@@ -449,7 +454,7 @@ public class AccountResourceIntTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
-            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).get());
     }
 
     @Test
@@ -642,13 +647,15 @@ public class AccountResourceIntTest {
     @WithMockUser("change-password")
     public void testChangePassword() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.random(60));
+        String currentPassword = RandomStringUtils.random(60);
+        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
         userRepository.saveAndFlush(user);
 
-        restMvc.perform(post("/api/account/change-password").content("new password"))
-            .andExpect(status().isOk());
+        restMvc.perform(post("/api/account/change-password").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "new password"))))
+                    .andExpect(status().isOk());
 
         User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
         assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
@@ -659,13 +666,15 @@ public class AccountResourceIntTest {
     @WithMockUser("change-password-too-small")
     public void testChangePasswordTooSmall() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.random(60));
+        String currentPassword = RandomStringUtils.random(60);
+        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-too-small");
         user.setEmail("change-password-too-small@example.com");
         userRepository.saveAndFlush(user);
 
-        restMvc.perform(post("/api/account/change-password").content("new"))
-            .andExpect(status().isBadRequest());
+        restMvc.perform(post("/api/account/change-password").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "new"))))
+                    .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-small").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
@@ -676,13 +685,16 @@ public class AccountResourceIntTest {
     @WithMockUser("change-password-too-long")
     public void testChangePasswordTooLong() throws Exception {
         User user = new User();
-        user.setPassword(RandomStringUtils.random(60));
+        String currentPassword = RandomStringUtils.random(60);
+        user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-too-long");
         user.setEmail("change-password-too-long@example.com");
         userRepository.saveAndFlush(user);
 
-        restMvc.perform(post("/api/account/change-password").content(RandomStringUtils.random(101)))
-            .andExpect(status().isBadRequest());
+
+        restMvc.perform(post("/api/account/change-password").contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, RandomStringUtils.random(101)))))
+                .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-long").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -117,7 +118,7 @@ public class CandidateEducationService {
 		log.info("Creating education for candidate, course,qualification {},{},{}", candidateEducation.getCandidate(),
 				candidateEducation.getCourse(), candidateEducation.getQualification());
 		setHighestEducation(candidateEducation, false);
-		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
+		Candidate candidate = candidateRepository.findById(candidateEducation.getCandidate().getId()).get();
 		candidateEducation = candidateEducationRepository.save(candidateEducation);
 		candidate = candidate.addEducation(candidateEducation);
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, false);
@@ -194,7 +195,7 @@ public class CandidateEducationService {
 	}
 
 	private void injestCollegeInformation(CandidateEducation candidateEducation) {
-		log.debug("Incoming Education is  {} , and college is {}  ", candidateEducation,
+		log.info("Incoming Education is  {} , and college is {}  ", candidateEducation,
 				candidateEducation.getCollege());
 		if (candidateEducation.getCollege()!=null && candidateEducation.getCollege().getCollegeName().equals(Constants.OTHER)) {
 			College college = collegeRepository.findByCollegeName(candidateEducation.getCapturedCollege());
@@ -338,10 +339,11 @@ public class CandidateEducationService {
 		injestCollegeInformation(candidateEducation);
 		injestCourseInformation(candidateEducation);
 		injestQualificationInformation(candidateEducation);
-		candidateEducationRepository.save(setHighestEducation(candidateEducation, false));
+		candidateEducationRepository.saveAll(setHighestEducation(candidateEducation, false));
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
 		// candidateEducationSearchRepository.save(result);
-		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
+		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateEducation.getCandidate().getId());
+		Candidate candidate = optionalCandidate.get();
 		candidate.addEducation(result);
 		// Replace with future
 		if (result.getHighestQualification())
@@ -357,7 +359,8 @@ public class CandidateEducationService {
 
 	public CandidateEducation getCandidateEducation(Long id) {
 		log.debug("Getting candidate Education for {}", id);
-		CandidateEducation candidateEducation = candidateEducationRepository.findOne(id);
+		Optional<CandidateEducation> optionalCandidateEducation = candidateEducationRepository.findById(id);
+		CandidateEducation candidateEducation = optionalCandidateEducation.get();
 		if (candidateEducation != null) {
 			Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEducation(candidateEducation);
 			candidateEducation.setProjects(candidateProjects);
@@ -374,8 +377,8 @@ public class CandidateEducationService {
 			return new ArrayList<CandidateEducationDTO>();
 		else
 			sortEducationsByHighest(candidateEducations);
-		Candidate candidate = candidateRepository.findOne(id);
-		return converter.convertCandidateEducations(candidateEducations, true,candidate);
+		Optional<Candidate> candidate = candidateRepository.findById(id);
+		return converter.convertCandidateEducations(candidateEducations, true,candidate.get());
 	}
 	
 	private void sortEducationsByHighest(List<CandidateEducation> candidateEducations) {
@@ -396,12 +399,8 @@ public class CandidateEducationService {
 	}
 
 	public void deleteCandidateEducation(Long id) {
-		CandidateEducation education = candidateEducationRepository.findOne(id);
-		//Candidate candidate = education.getCandidate();
-		/*log.debug("Canddtae educaiton is {} ", candidate.getEducations());
-		candidate.getEducations().remove(education);
-		//candidate.getEducations().removeIf(edu-> (education.getId().equals(id)));
-		log.debug("Educaiton set post removing education is {}", candidate.getEducations());*/
+		Optional<CandidateEducation> optionalEducation = candidateEducationRepository.findById(id);
+		CandidateEducation education = optionalEducation.get();
 		List<CandidateEducation> candidateEducations= setHighestEducation(education, true);
 		Candidate candidate = education.getCandidate();
 		candidate.getEducations().clear();

@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { JobHistoryComponent } from './job-history.component';
 import { JobHistoryDetailComponent } from './job-history-detail.component';
 import { JobHistoryPopupComponent } from './job-history-dialog.component';
@@ -15,7 +15,8 @@ export const jobHistoryRoute: Routes = [
             pageTitle: 'gradzcircleApp.jobHistory.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'job-history/:id',
         component: JobHistoryDetailComponent,
         data: {

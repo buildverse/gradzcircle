@@ -11,13 +11,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,7 +113,7 @@ public class CourseResource {
 	public ResponseEntity<Course> updateCourse(@RequestBody Course course) throws URISyntaxException {
 		log.debug("REST request to update Course : {}", course);
 		if (course.getId() == null) {
-			return createCourse(course);
+			throw new BadRequestAlertException("A new profileCategory cannot already have an ID", ENTITY_NAME, "idexists");
 		}
 		Course result = courseRepository.save(course);
 		// courseSearchRepository.save(result);
@@ -158,8 +160,8 @@ public class CourseResource {
 	@Timed
 	public ResponseEntity<Course> getCourse(@PathVariable Long id) {
 		log.debug("REST request to get Course : {}", id);
-		Course course = courseRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(course));
+		Optional<Course> course = courseRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(course);
 	}
 
 	/**
@@ -173,8 +175,8 @@ public class CourseResource {
 	@Timed
 	public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
 		log.debug("REST request to delete Course : {}", id);
-		courseRepository.delete(id);
-		courseSearchRepository.delete(id);
+		courseRepository.deleteById(id);
+		courseSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -207,11 +209,12 @@ public class CourseResource {
 	public String searchCoursesBySuggest(@RequestParam String query) {
 		log.debug("REST request to search Courses for query {}", query);
 		String suggest = null;
-		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("course-suggest")
-				.text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Course.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("course-suggest");
+		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Course.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
+		
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> courses = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

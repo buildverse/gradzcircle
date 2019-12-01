@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { EmploymentType } from './employment-type.model';
 import { EmploymentTypeService } from './employment-type.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-employment-type',
     templateUrl: './employment-type.component.html'
 })
 export class EmploymentTypeComponent implements OnInit, OnDestroy {
-employmentTypes: EmploymentType[];
+    employmentTypes: EmploymentType[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ employmentTypes: EmploymentType[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.employmentTypeService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<EmploymentType[]>) => this.employmentTypes = res.body,
+            this.employmentTypeService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<EmploymentType[]>) => (this.employmentTypes = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.employmentTypeService.query().subscribe(
             (res: HttpResponse<EmploymentType[]>) => {
                 this.employmentTypes = res.body;
@@ -62,7 +66,7 @@ employmentTypes: EmploymentType[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEmploymentTypes();
@@ -76,7 +80,7 @@ employmentTypes: EmploymentType[];
         return item.id;
     }
     registerChangeInEmploymentTypes() {
-        this.eventSubscriber = this.eventManager.subscribe('employmentTypeListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('employmentTypeListModification', response => this.loadAll());
     }
 
     private onError(error) {

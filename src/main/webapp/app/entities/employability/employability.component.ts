@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Employability } from './employability.model';
 import { EmployabilityService } from './employability.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-employability',
     templateUrl: './employability.component.html'
 })
 export class EmployabilityComponent implements OnInit, OnDestroy {
-employabilities: Employability[];
+    employabilities: Employability[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ employabilities: Employability[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.employabilityService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Employability[]>) => this.employabilities = res.body,
+            this.employabilityService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Employability[]>) => (this.employabilities = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.employabilityService.query().subscribe(
             (res: HttpResponse<Employability[]>) => {
                 this.employabilities = res.body;
@@ -62,7 +66,7 @@ employabilities: Employability[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInEmployabilities();
@@ -76,7 +80,7 @@ employabilities: Employability[];
         return item.id;
     }
     registerChangeInEmployabilities() {
-        this.eventSubscriber = this.eventManager.subscribe('employabilityListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('employabilityListModification', response => this.loadAll());
     }
 
     private onError(error) {

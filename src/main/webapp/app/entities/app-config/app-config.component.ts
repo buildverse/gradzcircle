@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { AppConfig } from './app-config.model';
 import { AppConfigService } from './app-config.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-app-config',
     templateUrl: './app-config.component.html'
 })
 export class AppConfigComponent implements OnInit, OnDestroy {
-appConfigs: AppConfig[];
+    appConfigs: AppConfig[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ appConfigs: AppConfig[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.appConfigService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<AppConfig[]>) => this.appConfigs = res.body,
+            this.appConfigService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<AppConfig[]>) => (this.appConfigs = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.appConfigService.query().subscribe(
             (res: HttpResponse<AppConfig[]>) => {
                 this.appConfigs = res.body;
@@ -62,7 +66,7 @@ appConfigs: AppConfig[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInAppConfigs();
@@ -76,7 +80,7 @@ appConfigs: AppConfig[];
         return item.id;
     }
     registerChangeInAppConfigs() {
-        this.eventSubscriber = this.eventManager.subscribe('appConfigListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('appConfigListModification', response => this.loadAll());
     }
 
     private onError(error) {

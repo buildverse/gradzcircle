@@ -1,8 +1,12 @@
 package com.drishika.gradzcircle.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -116,7 +121,7 @@ public class CorporateResourceIntTest {
 	private CandidateRepository candidateRepository;
 
 	@Autowired
-	private CorporateSearchRepository corporateSearchRepository;
+	private CorporateSearchRepository mockCorporateSearchRepository;
 
 	@Autowired
 	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -145,7 +150,7 @@ public class CorporateResourceIntTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final CorporateResource corporateResource = new CorporateResource(corporateRepository,
-				corporateSearchRepository, corporateService);
+				mockCorporateSearchRepository, corporateService);
 		this.restCorporateMockMvc = MockMvcBuilders.standaloneSetup(corporateResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();
@@ -170,7 +175,7 @@ public class CorporateResourceIntTest {
 
 	@Before
 	public void initTest() {
-		corporateSearchRepository.deleteAll();
+		//corporateSearchRepository.deleteAll();
 		corporate = createEntity(em);
 	}
 
@@ -208,8 +213,7 @@ public class CorporateResourceIntTest {
 		assertThat(testCorporate.getEscrowAmount()).isEqualTo(DEFAULT_ESCROW_AMOUNT);
 
 		// Validate the Corporate in Elasticsearch
-	//	Corporate corporateEs = corporateSearchRepository.findOne(testCorporate.getId());
-	//	assertThat(corporateEs).isEqualToComparingFieldByField(testCorporate);
+		//no need as am not saving in elastic
 	}
 
 	@Test
@@ -311,7 +315,7 @@ public class CorporateResourceIntTest {
 		int databaseSizeBeforeUpdate = corporateRepository.findAll().size();
 
 		// Update the corporate
-		Corporate updatedCorporate = corporateRepository.findOne(corporate.getId());
+		Corporate updatedCorporate = corporateRepository.findById(corporate.getId()).get();
 		updatedCorporate.name(UPDATED_NAME).address(UPDATED_ADDRESS).city(UPDATED_CITY)
 				.establishedSince(UPDATED_ESTABLISHED_SINCE).email(UPDATED_EMAIL).overview(UPDATED_OVERVIEW)
 				.benefits(UPDATED_BENEFITS).website(UPDATED_WEBSITE).facebook(UPDATED_FACEBOOK).twitter(UPDATED_TWITTER)
@@ -348,8 +352,7 @@ public class CorporateResourceIntTest {
 		assertThat(testCorporate.getEscrowAmount()).isEqualTo(UPDATED_ESCROW_AMOUNT);
 
 		// Validate the Corporate in Elasticsearch
-	//	Corporate corporateEs = corporateSearchRepository.findOne(testCorporate.getId());
-	//	assertThat(corporateEs).isEqualToComparingFieldByField(testCorporate);
+		//no need as am not saving in elastic
 	}
 
 	@Test
@@ -361,12 +364,14 @@ public class CorporateResourceIntTest {
 
 		// If the entity doesn't have an ID, it will be created instead of just being
 		// updated
-		restCorporateMockMvc.perform(put("/api/corporates").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(corporate))).andExpect(status().isCreated());
-
+	
+		restCorporateMockMvc.perform(put("/api/corporates")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(corporate)))
+		            .andExpect(status().isBadRequest());
 		// Validate the Corporate in the database
 		List<Corporate> corporateList = corporateRepository.findAll();
-		assertThat(corporateList).hasSize(databaseSizeBeforeUpdate + 1);
+		assertThat(corporateList).hasSize(databaseSizeBeforeUpdate);
 	}
 
 	@Test
@@ -374,7 +379,7 @@ public class CorporateResourceIntTest {
 	public void deleteCorporate() throws Exception {
 		// Initialize the database
 		corporateRepository.saveAndFlush(corporate);
-		corporateSearchRepository.save(corporate);
+		//corporateSearchRepository.save(corporate);
 		int databaseSizeBeforeDelete = corporateRepository.findAll().size();
 
 		// Get the corporate
@@ -383,8 +388,7 @@ public class CorporateResourceIntTest {
 				.andExpect(status().isOk());
 
 		// Validate Elasticsearch is empty
-		//boolean corporateExistsInEs = corporateSearchRepository.exists(corporate.getId());
-	//	assertThat(corporateExistsInEs).isFalse();
+		verify(mockCorporateSearchRepository,timeout(1)).deleteById(corporate.getId());
 
 		// Validate the database is empty
 		List<Corporate> corporateList = corporateRepository.findAll();
@@ -396,8 +400,10 @@ public class CorporateResourceIntTest {
 	public void searchCorporate() throws Exception {
 		// Initialize the database
 		corporateRepository.saveAndFlush(corporate);
-		corporateSearchRepository.save(corporate);
-
+		 when(mockCorporateSearchRepository.search(queryStringQuery("id:" + corporate.getId())))
+         .thenReturn(Collections.singletonList(corporate));
+		 
+		 
 		// Search the corporate
 		restCorporateMockMvc.perform(get("/api/_search/corporates?query=id:" + corporate.getId()))
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

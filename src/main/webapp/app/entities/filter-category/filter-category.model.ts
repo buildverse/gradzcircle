@@ -1,11 +1,4 @@
-import { BaseEntity } from './../../shared';
-
-export class FilterCategory implements BaseEntity {
-    constructor(
-        public id?: number,
-        public filterCategory?: string,
-        public filterCost?: number,
-        public filters?: BaseEntity[],
-    ) {
-    }
+import { Filter } from '../filter/filter.model';
+export class FilterCategory {
+    constructor(public id?: number, public filterCategory?: string, public filterCost?: number, public filters?: Filter[]) {}
 }

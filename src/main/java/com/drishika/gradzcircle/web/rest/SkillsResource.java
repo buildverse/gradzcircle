@@ -10,8 +10,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
@@ -101,7 +103,7 @@ public class SkillsResource {
     public ResponseEntity<Skills> updateSkills(@RequestBody Skills skills) throws URISyntaxException {
         log.debug("REST request to update Skills : {}", skills);
         if (skills.getId() == null) {
-            return createSkills(skills);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Skills result = skillsRepository.save(skills);
         elasticsearchTemplate.index(new SkillsEntityBuilder(result.getId()).name(result.getSkill())
@@ -134,8 +136,8 @@ public class SkillsResource {
     @Timed
     public ResponseEntity<Skills> getSkills(@PathVariable Long id) {
         log.debug("REST request to get Skills : {}", id);
-        Skills skills = skillsRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(skills));
+        Optional<Skills> skills = skillsRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(skills);
     }
     
     
@@ -163,8 +165,8 @@ public class SkillsResource {
     @Timed
     public ResponseEntity<Void> deleteSkills(@PathVariable Long id) {
         log.debug("REST request to delete Skills : {}", id);
-        skillsRepository.delete(id);
-        skillsSearchRepository.delete(id);
+        skillsRepository.deleteById(id);
+        skillsSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -191,10 +193,10 @@ public class SkillsResource {
 		log.debug("REST request to search skill for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("skill-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Skills.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("skill-suggest");
+				.completionSuggestion("skill-suggest").text(query).prefix("sugg");
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("skill-suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Skills.class);
+ 		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("skill-suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> skills = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

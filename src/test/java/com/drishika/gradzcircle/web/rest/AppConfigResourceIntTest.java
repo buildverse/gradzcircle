@@ -6,7 +6,11 @@ import com.drishika.gradzcircle.domain.AppConfig;
 import com.drishika.gradzcircle.repository.AppConfigRepository;
 import com.drishika.gradzcircle.repository.search.AppConfigSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
-
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +26,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -49,7 +54,7 @@ public class AppConfigResourceIntTest {
     private AppConfigRepository appConfigRepository;
 
     @Autowired
-    private AppConfigSearchRepository appConfigSearchRepository;
+    private AppConfigSearchRepository mockAppConfigSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -70,7 +75,7 @@ public class AppConfigResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppConfigResource appConfigResource = new AppConfigResource(appConfigRepository, appConfigSearchRepository);
+        final AppConfigResource appConfigResource = new AppConfigResource(appConfigRepository, mockAppConfigSearchRepository);
         this.restAppConfigMockMvc = MockMvcBuilders.standaloneSetup(appConfigResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -93,7 +98,7 @@ public class AppConfigResourceIntTest {
 
     @Before
     public void initTest() {
-        appConfigSearchRepository.deleteAll();
+       // appConfigSearchRepository.deleteAll();
         appConfig = createEntity(em);
     }
 
@@ -116,8 +121,7 @@ public class AppConfigResourceIntTest {
         assertThat(testAppConfig.isConfigValue()).isEqualTo(DEFAULT_CONFIG_VALUE);
 
         // Validate the AppConfig in Elasticsearch
-        AppConfig appConfigEs = appConfigSearchRepository.findOne(testAppConfig.getId());
-        assertThat(appConfigEs).isEqualToIgnoringGivenFields(testAppConfig);
+        verify(mockAppConfigSearchRepository,times(1)).save(testAppConfig);
     }
 
     @Test
@@ -182,11 +186,11 @@ public class AppConfigResourceIntTest {
     public void updateAppConfig() throws Exception {
         // Initialize the database
         appConfigRepository.saveAndFlush(appConfig);
-        appConfigSearchRepository.save(appConfig);
+       // appConfigSearchRepository.save(appConfig);
         int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
 
         // Update the appConfig
-        AppConfig updatedAppConfig = appConfigRepository.findOne(appConfig.getId());
+        AppConfig updatedAppConfig = appConfigRepository.findById(appConfig.getId()).get();
         // Disconnect from session so that the updates on updatedAppConfig are not directly saved in db
         em.detach(updatedAppConfig);
         updatedAppConfig
@@ -206,8 +210,7 @@ public class AppConfigResourceIntTest {
         assertThat(testAppConfig.isConfigValue()).isEqualTo(UPDATED_CONFIG_VALUE);
 
         // Validate the AppConfig in Elasticsearch
-        AppConfig appConfigEs = appConfigSearchRepository.findOne(testAppConfig.getId());
-        assertThat(appConfigEs).isEqualToIgnoringGivenFields(testAppConfig);
+        verify(mockAppConfigSearchRepository,times(1)).save(testAppConfig);
     }
 
     @Test
@@ -219,13 +222,13 @@ public class AppConfigResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restAppConfigMockMvc.perform(put("/api/app-configs")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(appConfig)))
-            .andExpect(status().isCreated());
-
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(appConfig)))
+                .andExpect(status().isBadRequest());
         // Validate the AppConfig in the database
         List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockAppConfigSearchRepository,times(0)).save(appConfig);
     }
 
     @Test
@@ -233,7 +236,7 @@ public class AppConfigResourceIntTest {
     public void deleteAppConfig() throws Exception {
         // Initialize the database
         appConfigRepository.saveAndFlush(appConfig);
-        appConfigSearchRepository.save(appConfig);
+      //  appConfigSearchRepository.save(appConfig);
         int databaseSizeBeforeDelete = appConfigRepository.findAll().size();
 
         // Get the appConfig
@@ -242,8 +245,7 @@ public class AppConfigResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean appConfigExistsInEs = appConfigSearchRepository.exists(appConfig.getId());
-        assertThat(appConfigExistsInEs).isFalse();
+        verify(mockAppConfigSearchRepository,times(1)).deleteById(appConfig.getId());
 
         // Validate the database is empty
         List<AppConfig> appConfigList = appConfigRepository.findAll();
@@ -255,7 +257,9 @@ public class AppConfigResourceIntTest {
     public void searchAppConfig() throws Exception {
         // Initialize the database
         appConfigRepository.saveAndFlush(appConfig);
-        appConfigSearchRepository.save(appConfig);
+        
+        when(mockAppConfigSearchRepository.search(queryStringQuery("id:" + appConfig.getId())))
+        .thenReturn(Collections.singletonList(appConfig));
 
         // Search the appConfig
         restAppConfigMockMvc.perform(get("/api/_search/app-configs?query=id:" + appConfig.getId()))

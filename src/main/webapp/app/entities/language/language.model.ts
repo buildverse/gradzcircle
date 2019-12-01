@@ -1,10 +1,4 @@
-import { BaseEntity } from './../../shared';
-
-export class Language implements BaseEntity {
-    constructor(
-        public id?: number,
-        public language?: string,
-        public candidateLanguageProficiencies?: BaseEntity[],
-    ) {
-    }
+import { CandidateLanguageProficiency } from '../candidate-language-proficiency/candidate-language-proficiency.model';
+export class Language {
+    constructor(public id?: number, public language?: string, public candidateLanguageProficiencies?: CandidateLanguageProficiency[]) {}
 }

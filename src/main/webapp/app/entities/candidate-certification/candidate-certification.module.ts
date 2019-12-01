@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { GradzcircleSharedModule, DataStorageService } from '../../shared';
+import { GradzcircleSharedModule } from '../../shared';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import {
     CandidateCertificationService,
     CandidateCertificationPopupService,
@@ -17,16 +18,10 @@ import {
     CandidateCertificationPopupServiceNew
 } from './';
 
-const ENTITY_STATES = [
-    ...candidateCertificationRoute,
-    ...candidateCertificationPopupRoute,
-];
+const ENTITY_STATES = [...candidateCertificationRoute, ...candidateCertificationPopupRoute];
 
 @NgModule({
-    imports: [
-        GradzcircleSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CandidateCertificationComponent,
         CandidateCertificationDetailComponent,

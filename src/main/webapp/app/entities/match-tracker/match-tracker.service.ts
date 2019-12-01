@@ -1,10 +1,9 @@
+import { AuthServerProvider } from '../../core/auth/auth-jwt.service';
+import { CSRFService } from '../../core/auth/csrf.service';
+import { WindowRef } from '../../core/tracker/window.service';
 import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs/Rx';
-
-import { CSRFService } from '../../shared/auth/csrf.service';
-import { WindowRef } from '../../shared/tracker/window.service';
-import { AuthServerProvider } from '../../shared/auth/auth-jwt.service';
 
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
@@ -32,13 +31,13 @@ export class MatchTrackerService {
 
     connect() {
         if (this.connectedPromise === null) {
-          this.connection = this.createConnection();
+            this.connection = this.createConnection();
         }
         // building absolute path so that websocket doesn't fail when deploying with a context path
         const loc = this.$window.nativeWindow.location;
         let url;
         url = '//' + loc.host + loc.pathname + 'websocket/tracker';
-    //    console.log('the url created is '+JSON.stringify(url));
+        //    console.log('the url created is '+JSON.stringify(url));
         const authToken = this.authServerProvider.getToken();
         if (authToken) {
             url += '?access_token=' + authToken;
@@ -47,14 +46,14 @@ export class MatchTrackerService {
         this.stompClient = Stomp.over(socket);
         const headers = {};
         this.stompClient.connect(headers, () => {
-           // this.connectedPromise('success');
+            // this.connectedPromise('success');
             this.connectedPromise = null;
-          //  this.sendActivity();
+            //  this.sendActivity();
             if (!this.alreadyConnectedOnce) {
-                this.subscription = this.router.events.subscribe((event) => {
-                  if (event instanceof NavigationEnd) {
-                    this.sendActivity();
-                  }
+                this.subscription = this.router.events.subscribe(event => {
+                    if (event instanceof NavigationEnd) {
+                        this.sendActivity();
+                    }
                 });
                 this.alreadyConnectedOnce = true;
             }
@@ -81,7 +80,7 @@ export class MatchTrackerService {
         if (this.stompClient !== null && this.stompClient.connected) {
             this.stompClient.send(
                 '/topic/matchActivity', // destination
-                JSON.stringify({'page': this.router.routerState.snapshot.url}), // body
+                JSON.stringify({ page: this.router.routerState.snapshot.url }), // body
                 {} // header
             );
         }
@@ -89,8 +88,8 @@ export class MatchTrackerService {
 
     subscribe() {
         this.connection.then(() => {
-            this.subscriber = this.stompClient.subscribe('/topic/match', (data) => {
-          //    console.log('DATA BODY IS '+JSON.stringify(data.body));
+            this.subscriber = this.stompClient.subscribe('/topic/match', data => {
+                //    console.log('DATA BODY IS '+JSON.stringify(data.body));
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });
@@ -104,12 +103,12 @@ export class MatchTrackerService {
     }
 
     private createListener(): Observable<any> {
-        return new Observable((observer) => {
+        return new Observable(observer => {
             this.listenerObserver = observer;
         });
     }
 
     private createConnection(): Promise<any> {
-        return new Promise((resolve, reject) => this.connectedPromise = resolve);
+        return new Promise((resolve, reject) => (this.connectedPromise = resolve));
     }
 }

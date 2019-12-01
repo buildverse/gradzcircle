@@ -1,9 +1,7 @@
-
-import { BaseEntity, User } from './../../shared';
-
-export class CandidateDetail implements BaseEntity {
+import { User } from '../../core/user/user.model';
+export class CandidateDetail {
     constructor(
-        public id?: BaseEntity,
+        public id?: any,
         public firstName?: string,
         public lastName?: string,
         public middleName?: string,
@@ -19,5 +17,5 @@ export class CandidateDetail implements BaseEntity {
         public openToRelocate?: boolean,
         public qualificationWithHighestCourse?: string,
         public login?: User
-        ) {}
+    ) {}
 }

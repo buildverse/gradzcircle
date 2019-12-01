@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { IndustryComponent } from './industry.component';
 import { IndustryDetailComponent } from './industry-detail.component';
 import { IndustryPopupComponent } from './industry-dialog.component';
@@ -15,7 +15,8 @@ export const industryRoute: Routes = [
             pageTitle: 'gradzcircleApp.industry.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'industry/:id',
         component: IndustryDetailComponent,
         data: {

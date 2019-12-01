@@ -313,7 +313,7 @@ public class UserResourceIntTest {
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findOne(user.getId());
+        User updatedUser = userRepository.findById(user.getId()).get();
 
         Set<String> authorities = new HashSet<>();
 		authorities.add("ROLE_USER");
@@ -347,7 +347,7 @@ public class UserResourceIntTest {
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findOne(user.getId());
+        User updatedUser = userRepository.findById(user.getId()).get();
 
         Set<String> authorities = new HashSet<>();
 		authorities.add("ROLE_USER");
@@ -394,7 +394,7 @@ public class UserResourceIntTest {
         userSearchRepository.save(anotherUser);
 
         // Update the user
-        User updatedUser = userRepository.findOne(user.getId());
+        User updatedUser = userRepository.findById(user.getId()).get();
 
         Set<String> authorities = new HashSet<>();
 		authorities.add("ROLE_USER");
@@ -437,7 +437,7 @@ public class UserResourceIntTest {
         userSearchRepository.save(anotherUser);
 
         // Update the user
-        User updatedUser = userRepository.findOne(user.getId());
+        User updatedUser = userRepository.findById(user.getId()).get();
 
         Set<String> authorities = new HashSet<>();
 		authorities.add("ROLE_USER");

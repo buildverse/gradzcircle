@@ -18,6 +18,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,8 @@ public class FileServiceS3Impl implements FileServiceS3 {
 			PutObjectResult result = amazonS3Client
 					.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), objectMetadata)
 							.withCannedAcl(CannedAccessControlList.PublicRead));
-			User user = userRepository.findOne(Long.parseLong(key));
+			Optional<User> userOptional = userRepository.findById(Long.parseLong(key));
+			User user = userOptional.get();
 			user.setImageUrl(result.getETag());
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());
@@ -90,7 +92,8 @@ public class FileServiceS3Impl implements FileServiceS3 {
 	public void deleteObject(String bucketName, String key) throws FileRemoveException {
 		try {
 			amazonS3Client.deleteObject(bucketName, key);
-			User user = userRepository.findOne(Long.parseLong(key));
+			Optional<User> userOptional = userRepository.findById(Long.parseLong(key));
+			User user = userOptional.get();
 			user.setImageUrl(null);
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());

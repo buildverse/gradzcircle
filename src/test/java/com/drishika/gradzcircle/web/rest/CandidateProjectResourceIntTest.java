@@ -1,14 +1,23 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.CandidateProject;
-import com.drishika.gradzcircle.repository.CandidateProjectRepository;
-import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
-import com.drishika.gradzcircle.service.util.DTOConverters;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -22,17 +31,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.enumeration.ProjectType;
+import com.drishika.gradzcircle.repository.CandidateProjectRepository;
+import com.drishika.gradzcircle.repository.search.CandidateProjectSearchRepository;
+import com.drishika.gradzcircle.service.util.DTOConverters;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CandidateProjectResource REST controller.
@@ -232,7 +237,7 @@ public class CandidateProjectResourceIntTest {
 		int databaseSizeBeforeUpdate = candidateProjectRepository.findAll().size();
 
 		// Update the candidateProject
-		CandidateProject updatedCandidateProject = candidateProjectRepository.findOne(candidateProject.getId());
+		CandidateProject updatedCandidateProject = candidateProjectRepository.findById(candidateProject.getId()).get();
 		updatedCandidateProject.projectTitle(UPDATED_PROJECT_TITLE).projectStartDate(UPDATED_PROJECT_START_DATE)
 				.projectEndDate(UPDATED_PROJECT_END_DATE).projectDescription(UPDATED_PROJECT_DESCRIPTION)
 				.projectDuration(UPDATED_PROJECT_DURATION)
@@ -295,7 +300,7 @@ public class CandidateProjectResourceIntTest {
 				.andExpect(status().isOk());
 
 		// Validate Elasticsearch is empty
-		boolean candidateProjectExistsInEs = candidateProjectSearchRepository.exists(candidateProject.getId());
+		boolean candidateProjectExistsInEs = candidateProjectSearchRepository.existsById(candidateProject.getId());
 		assertThat(candidateProjectExistsInEs).isFalse();
 
 		// Validate the database is empty
@@ -305,10 +310,11 @@ public class CandidateProjectResourceIntTest {
 
 	@Test
 	@Transactional
+	@Ignore // Not using elastic to store candidate Project
 	public void searchCandidateProject() throws Exception {
 		// Initialize the database
 		candidateProjectRepository.saveAndFlush(candidateProject);
-		candidateProjectSearchRepository.save(candidateProject);
+		//candidateProjectSearchRepository.save(candidateProject);
 
 		// Search the candidateProject
 		restCandidateProjectMockMvc.perform(get("/api/_search/candidate-projects?query=id:" + candidateProject.getId()))

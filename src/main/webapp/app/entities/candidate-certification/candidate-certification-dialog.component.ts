@@ -9,22 +9,21 @@ import { CandidateCertificationPopupService } from './candidate-certification-po
 import { CandidateCertificationService } from './candidate-certification.service';
 import { Candidate, CandidateService } from '../candidate';
 import { CandidateCertificationPopupServiceNew } from './candidate-certification-popup-new.service';
-import { DataStorageService } from '../../shared';
 import { CANDIDATE_ID, CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 
 @Component({
     selector: 'jhi-candidate-certification-dialog',
     templateUrl: './candidate-certification-dialog.component.html'
 })
 export class CandidateCertificationDialogComponent implements OnInit {
-
     candidateCertification: CandidateCertification;
     isSaving: boolean;
     authorities: any[];
     candidates: Candidate[];
     certificationDateDp: any;
     editorConfig: any;
-  
+
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
@@ -32,31 +31,34 @@ export class CandidateCertificationDialogComponent implements OnInit {
         private candidateService: CandidateService,
         private eventManager: JhiEventManager,
         private config: NgbDatepickerConfig
-    ) {
-    }
+    ) {}
 
     configureDatePicker() {
-      this.config.minDate = {year: 1980, month: 1, day: 1};
-      this.config.maxDate = {year: 2099, month: 12, day: 31};
+        this.config.minDate = { year: 1980, month: 1, day: 1 };
+        this.config.maxDate = { year: 2099, month: 12, day: 31 };
 
-      // days that don't belong to current month are not visible
-      this.config.outsideDays = 'hidden';
+        // days that don't belong to current month are not visible
+        this.config.outsideDays = 'hidden';
     }
     ngOnInit() {
-      this.configureDatePicker();
-      this.editorConfig = {
-        'toolbarGroups': [
-          {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker', 'editing']},
-          {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-          {name: 'paragraph', groups: ['list', 'indent', 'align']},
-        ],
-        'removeButtons': 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
-        /* 'stylesSet': {name: 'para', element: 'p', styles: { 'margin': '0px' } }*/
-      };
-      this.isSaving = false;
-      this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-      this.candidateService.query()
-        .subscribe((res: HttpResponse<Candidate[]>) => {this.candidates = res.body;}, (res: HttpErrorResponse) => this.onError(res.message));
+        this.configureDatePicker();
+        this.editorConfig = {
+            toolbarGroups: [
+                { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
+                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                { name: 'paragraph', groups: ['list', 'indent', 'align'] }
+            ],
+            removeButtons: 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
+            /* 'stylesSet': {name: 'para', element: 'p', styles: { 'margin': '0px' } }*/
+        };
+        this.isSaving = false;
+        this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
+        this.candidateService.query().subscribe(
+            (res: HttpResponse<Candidate[]>) => {
+                this.candidates = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -66,22 +68,22 @@ export class CandidateCertificationDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.candidateCertification.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.candidateCertificationService.update(this.candidateCertification));
+            this.subscribeToSaveResponse(this.candidateCertificationService.update(this.candidateCertification));
         } else {
-            this.subscribeToSaveResponse(
-                this.candidateCertificationService.create(this.candidateCertification));
+            this.subscribeToSaveResponse(this.candidateCertificationService.create(this.candidateCertification));
         }
     }
 
-     private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateCertification>>) {
-        result.subscribe((res: HttpResponse<CandidateCertification>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<CandidateCertification>>) {
+        result.subscribe(
+            (res: HttpResponse<CandidateCertification>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: CandidateCertification) {
-        this.eventManager.broadcast({ name: 'candidateCertificationListModification', content: 'OK'});
-       this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'candidateCertificationListModification', content: 'OK' });
+        this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -104,7 +106,6 @@ export class CandidateCertificationDialogComponent implements OnInit {
     template: ''
 })
 export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
     constructor(
@@ -114,19 +115,16 @@ export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.candidateCertificationPopupService
-                    .open(CandidateCertificationDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, params['id']);
             } else {
-              const id = this.dataService.getData(CANDIDATE_CERTIFICATION_ID);
-              if(id) {
-                 this.candidateCertificationPopupService
-                    .open(CandidateCertificationDialogComponent as Component,id);
-              } else {
-                this.candidateCertificationPopupService
-                    .open(CandidateCertificationDialogComponent as Component);
-              }
+                const id = this.dataService.getData(CANDIDATE_CERTIFICATION_ID);
+                if (id) {
+                    this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, id);
+                } else {
+                    this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component);
+                }
             }
         });
     }
@@ -141,7 +139,6 @@ export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
     template: ''
 })
 export class CandidateCertificationPopupComponentNew implements OnInit, OnDestroy {
-
     routeSub: any;
 
     constructor(
@@ -151,15 +148,13 @@ export class CandidateCertificationPopupComponentNew implements OnInit, OnDestro
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-          if(params['id']) {
-                this.candidateCertificationPopupService
-                    .open(CandidateCertificationDialogComponent as Component, params['id']);
-          } else {
-            const id = this.dataService.getData(CANDIDATE_ID);
-             this.candidateCertificationPopupService
-                    .open(CandidateCertificationDialogComponent as Component, id);
-          }
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, params['id']);
+            } else {
+                const id = this.dataService.getData(CANDIDATE_ID);
+                this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, id);
+            }
         });
     }
 

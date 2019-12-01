@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { FilterCategoryComponent } from './filter-category.component';
 import { FilterCategoryDetailComponent } from './filter-category-detail.component';
 import { FilterCategoryPopupComponent } from './filter-category-dialog.component';
@@ -15,7 +15,8 @@ export const filterCategoryRoute: Routes = [
             pageTitle: 'gradzcircleApp.filterCategory.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'filter-category/:id',
         component: FilterCategoryDetailComponent,
         data: {

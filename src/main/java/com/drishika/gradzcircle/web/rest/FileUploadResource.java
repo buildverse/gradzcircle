@@ -1,25 +1,32 @@
 package com.drishika.gradzcircle.web.rest;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.http.ResponseEntity;
-import com.amazonaws.services.s3.model.S3Object;
-import com.codahale.metrics.annotation.Timed;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.hateoas.Link;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.drishika.gradzcircle.service.storage.StorageService;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import java.io.File;
 import java.util.List;
+
 import javax.persistence.Transient;
-import com.drishika.gradzcircle.service.storage.FileServiceS3;
-import com.drishika.gradzcircle.service.storage.StorageFileNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.hateoas.Link;
+import com.codahale.metrics.annotation.Timed;
+import com.drishika.gradzcircle.service.storage.FileServiceS3;
+import com.drishika.gradzcircle.service.storage.StorageFileNotFoundException;
+import com.drishika.gradzcircle.service.storage.StorageService;
+import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api")

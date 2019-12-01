@@ -78,7 +78,7 @@ public class AppConfigResource {
     public ResponseEntity<AppConfig> updateAppConfig(@RequestBody AppConfig appConfig) throws URISyntaxException {
         log.debug("REST request to update AppConfig : {}", appConfig);
         if (appConfig.getId() == null) {
-            return createAppConfig(appConfig);
+        	throw new BadRequestAlertException("A new profileCategory cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AppConfig result = appConfigRepository.save(appConfig);
         appConfigSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class AppConfigResource {
     @Timed
     public ResponseEntity<AppConfig> getAppConfig(@PathVariable Long id) {
         log.debug("REST request to get AppConfig : {}", id);
-        AppConfig appConfig = appConfigRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(appConfig));
+        Optional<AppConfig> appConfig = appConfigRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(appConfig);
     }
 
     /**
@@ -123,8 +123,8 @@ public class AppConfigResource {
     @Timed
     public ResponseEntity<Void> deleteAppConfig(@PathVariable Long id) {
         log.debug("REST request to delete AppConfig : {}", id);
-        appConfigRepository.delete(id);
-        appConfigSearchRepository.delete(id);
+        appConfigRepository.deleteById(id);
+        appConfigSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

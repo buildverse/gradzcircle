@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -5,8 +6,9 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
-import { Principal, DataStorageService } from '../../shared';
+
 import { CANDIDATE_ID, CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -35,11 +37,12 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         private spinnerService: NgxSpinnerService,
         private router: Router
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
-    
     loadCertificationsForCandidate() {
         this.spinnerService.show();
         this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(
@@ -58,14 +61,13 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
             (res: HttpErrorResponse) => this.onError(res.message)
         );
         return;
-
     }
 
     candidateCertificationsOnLoad() {
         this.candidateCertificationForDisplay = [];
         this.primaryCandidateCertification = undefined;
         if (this.candidateCertifications && this.candidateCertifications.length > 0) {
-            this.candidateCertifications.forEach((certification) => {
+            this.candidateCertifications.forEach(certification => {
                 if (!this.primaryCandidateCertification) {
                     this.primaryCandidateCertification = certification;
                 } else {
@@ -79,7 +81,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         this.candidateCertificationForDisplay = [];
         this.primaryCandidateCertification = undefined;
         if (this.candidateCertifications && this.candidateCertifications.length > 0) {
-            this.candidateCertifications.forEach((certification) => {
+            this.candidateCertifications.forEach(certification => {
                 if (certification.id === event) {
                     this.primaryCandidateCertification = certification;
                 } else {
@@ -102,13 +104,15 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
 
     loadAll() {
         if (this.currentSearch) {
-            this.candidateCertificationService.searchForAdmin({
-                query: this.currentSearch,
-            }).subscribe(
-                (res: HttpResponse<CandidateCertification[]>) =>
-                    this.candidateCertifications = res.body,
+            this.candidateCertificationService
+                .searchForAdmin({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<CandidateCertification[]>) => (this.candidateCertifications = res.body),
 
-                (res: HttpErrorResponse) => this.onError(res.message));
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
 
             return;
         }
@@ -134,8 +138,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         this.loadAll();
     }
     ngOnInit() {
-
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
             if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
                 this.candidateId = this.dataservice.getData(CANDIDATE_ID);
@@ -146,7 +149,6 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
             }
             this.registerChangeInCandidateCertifications();
         });
-
     }
 
     ngOnDestroy() {
@@ -159,9 +161,11 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     }
     registerChangeInCandidateCertifications() {
         if (this.candidateId) {
-            this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', (response) => this.loadCertificationsForCandidate());
+            this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', response =>
+                this.loadCertificationsForCandidate()
+            );
         } else {
-            this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', (response) => this.loadAll());
+            this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', response => this.loadAll());
         }
     }
 

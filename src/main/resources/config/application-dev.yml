@@ -3,8 +3,8 @@
 #
 # This configuration overrides the application.yml file.
 #
-# More information on profiles: http://www.jhipster.tech/profiles/
-# More information on configuration properties: http://www.jhipster.tech/common-application-properties/
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 # ===================================================================
@@ -16,8 +16,8 @@
 logging:
     level:
         ROOT: DEBUG
-        com.drishika.gradzcircle: DEBUG
         io.github.jhipster: DEBUG
+        com.drishika.gradzcircle: DEBUG
 
 spring:
     profiles:
@@ -27,7 +27,7 @@ spring:
         restart:
             enabled: true
         livereload:
-            enabled: false # we use gulp + BrowserSync for livereload
+            enabled: false # we use Webpack dev server + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
     datasource:
@@ -38,7 +38,7 @@ spring:
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
-        show-sql: false
+        show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
             hibernate.cache.use_second_level_cache: true
@@ -47,34 +47,23 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
     data:
         elasticsearch:
-            #cluster-name: 3c324b76257b9c008f22f0a038088ec1
-            #cluster-nodes: 3c324b76257b9c008f22f0a038088ec1.us-east-1.aws.found.io:9243 
+            cluster-name: 
+            cluster-nodes: localhost:9300
             properties:
                 path:
                     logs: build/elasticsearch/log
                     data: build/elasticsearch/data
-                http:
-                    enabled: true
-                 
+    liquibase:
+        contexts: dev
     mail:
-        host: hello
-        port: 
-        username: 
-        password: 
-        protocol: smtp
-        tls: true
-        from: team@gradzcircle.com
-        properties.mail.smtp:
-            auth: true
-            starttls.enable: true
-            ssl.trust: smtp.gmail.com
+        host: localhost
+        port: 25
+        username:
+        password:
     messages:
-        cache-seconds: 1
+        cache-duration: PT1S # 1 second, see the ISO 8601 standard
     thymeleaf:
         cache: false
-
-liquibase:
-    contexts: dev
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
@@ -99,7 +88,7 @@ server:
 # ===================================================================
 # JHipster specific properties
 #
-# Full reference is available at: http://www.jhipster.tech/common-application-properties/
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 jhipster:
@@ -128,15 +117,8 @@ jhipster:
         from: gradzcircle@localhost
         base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: gradzcircle
-        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
-            enabled: false
-            endpoint: /prometheusMetrics
+        jmx:
+            enabled: true
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
@@ -147,14 +129,13 @@ jhipster:
             port: 5000
             queue-size: 512
 
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
 # to have type-safe configuration, like in the JHipsterProperties above
 #
 # More documentation is available at:
-# http://www.jhipster.tech/common-application-properties/
+# https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-application:
+# application:

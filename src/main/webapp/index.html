@@ -1,6 +1,5 @@
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
-
 <head>
     <base href="./" />
     <meta charset="utf-8">
@@ -8,7 +7,7 @@
     <title>Gradzcircle</title>
     <meta name="description" content="">
     <meta name="google" value="notranslate">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="manifest" href="manifest.webapp" />
@@ -26,7 +25,7 @@
         <script>
             if ('serviceWorker' in navigator) {
                  navigator.serviceWorker
-                    .register('./sw.js')
+                    .register('./service-worker.js')
                     .then(function() { console.log('Service Worker Registered'); });
             }
         </script>
@@ -40,6 +39,6 @@
         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
         ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>-->
-	<script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>
+    <script src="//cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 
+import static org.mockito.Mockito.*;
 import com.drishika.gradzcircle.domain.VisaType;
 import com.drishika.gradzcircle.repository.VisaTypeRepository;
 import com.drishika.gradzcircle.repository.search.VisaTypeSearchRepository;
@@ -22,10 +23,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,7 +50,7 @@ public class VisaTypeResourceIntTest {
     private VisaTypeRepository visaTypeRepository;
 
     @Autowired
-    private VisaTypeSearchRepository visaTypeSearchRepository;
+    private VisaTypeSearchRepository mockVisaTypeSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +71,7 @@ public class VisaTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final VisaTypeResource visaTypeResource = new VisaTypeResource(visaTypeRepository, visaTypeSearchRepository);
+        final VisaTypeResource visaTypeResource = new VisaTypeResource(visaTypeRepository, mockVisaTypeSearchRepository);
         this.restVisaTypeMockMvc = MockMvcBuilders.standaloneSetup(visaTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +93,7 @@ public class VisaTypeResourceIntTest {
 
     @Before
     public void initTest() {
-        visaTypeSearchRepository.deleteAll();
+        //visaTypeSearchRepository.deleteAll();
         visaType = createEntity(em);
     }
 
@@ -111,8 +115,7 @@ public class VisaTypeResourceIntTest {
         assertThat(testVisaType.getVisa()).isEqualTo(DEFAULT_VISA);
 
         // Validate the VisaType in Elasticsearch
-        VisaType visaTypeEs = visaTypeSearchRepository.findOne(testVisaType.getId());
-        assertThat(visaTypeEs).isEqualToIgnoringGivenFields(testVisaType);
+        verify(mockVisaTypeSearchRepository, times(1)).save(testVisaType);
     }
 
     @Test
@@ -132,6 +135,8 @@ public class VisaTypeResourceIntTest {
         // Validate the VisaType in the database
         List<VisaType> visaTypeList = visaTypeRepository.findAll();
         assertThat(visaTypeList).hasSize(databaseSizeBeforeCreate);
+        
+        verify(mockVisaTypeSearchRepository, times(0)).save(visaType);
     }
 
     @Test
@@ -175,11 +180,11 @@ public class VisaTypeResourceIntTest {
     public void updateVisaType() throws Exception {
         // Initialize the database
         visaTypeRepository.saveAndFlush(visaType);
-        visaTypeSearchRepository.save(visaType);
+     //   visaTypeSearchRepository.save(visaType);
         int databaseSizeBeforeUpdate = visaTypeRepository.findAll().size();
 
         // Update the visaType
-        VisaType updatedVisaType = visaTypeRepository.findOne(visaType.getId());
+        VisaType updatedVisaType = visaTypeRepository.findById(visaType.getId()).get();
         // Disconnect from session so that the updates on updatedVisaType are not directly saved in db
         em.detach(updatedVisaType);
         updatedVisaType
@@ -197,8 +202,7 @@ public class VisaTypeResourceIntTest {
         assertThat(testVisaType.getVisa()).isEqualTo(UPDATED_VISA);
 
         // Validate the VisaType in Elasticsearch
-        VisaType visaTypeEs = visaTypeSearchRepository.findOne(testVisaType.getId());
-        assertThat(visaTypeEs).isEqualToIgnoringGivenFields(testVisaType);
+        verify(mockVisaTypeSearchRepository, times(1)).save(testVisaType);
     }
 
     @Test
@@ -209,14 +213,15 @@ public class VisaTypeResourceIntTest {
         // Create the VisaType
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+       
         restVisaTypeMockMvc.perform(put("/api/visa-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(visaType)))
-            .andExpect(status().isCreated());
-
+        		 .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(visaType)))
+                .andExpect(status().isBadRequest());
         // Validate the VisaType in the database
         List<VisaType> visaTypeList = visaTypeRepository.findAll();
-        assertThat(visaTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(visaTypeList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockVisaTypeSearchRepository, times(0)).save(visaType);
     }
 
     @Test
@@ -224,7 +229,7 @@ public class VisaTypeResourceIntTest {
     public void deleteVisaType() throws Exception {
         // Initialize the database
         visaTypeRepository.saveAndFlush(visaType);
-        visaTypeSearchRepository.save(visaType);
+
         int databaseSizeBeforeDelete = visaTypeRepository.findAll().size();
 
         // Get the visaType
@@ -233,9 +238,8 @@ public class VisaTypeResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean visaTypeExistsInEs = visaTypeSearchRepository.exists(visaType.getId());
-        assertThat(visaTypeExistsInEs).isFalse();
-
+     
+        verify(mockVisaTypeSearchRepository, times(1)).deleteById(visaType.getId());
         // Validate the database is empty
         List<VisaType> visaTypeList = visaTypeRepository.findAll();
         assertThat(visaTypeList).hasSize(databaseSizeBeforeDelete - 1);
@@ -246,8 +250,9 @@ public class VisaTypeResourceIntTest {
     public void searchVisaType() throws Exception {
         // Initialize the database
         visaTypeRepository.saveAndFlush(visaType);
-        visaTypeSearchRepository.save(visaType);
-
+     //   visaTypeSearchRepository.save(visaType);
+        when(mockVisaTypeSearchRepository.search(queryStringQuery("id:" + visaType.getId())))
+        .thenReturn(Collections.singletonList(visaType));
         // Search the visaType
         restVisaTypeMockMvc.perform(get("/api/_search/visa-types?query=id:" + visaType.getId()))
             .andExpect(status().isOk())

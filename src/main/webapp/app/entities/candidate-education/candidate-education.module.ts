@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { GradzcircleSharedModule, DataStorageService } from '../../shared';
-
+import { GradzcircleSharedModule } from '../../shared';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 
 import {
     CandidateEducationService,
@@ -14,25 +14,17 @@ import {
     CandidateEducationDeleteDialogComponent,
     candidateEducationRoute,
     candidateEducationPopupRoute,
-   // CollegeResolverService,
-   // CourseResolverService,
-   // QualificationResolverService,
+    // CollegeResolverService,
+    // CourseResolverService,
+    // QualificationResolverService,
     CandidateEducationPopupComponentNew,
-    CandidateEducationPopupServiceNew,
-
+    CandidateEducationPopupServiceNew
 } from './';
 
-const ENTITY_STATES = [
-    ...candidateEducationRoute,
-    ...candidateEducationPopupRoute,
-];
+const ENTITY_STATES = [...candidateEducationRoute, ...candidateEducationPopupRoute];
 
 @NgModule({
-    imports: [
-        GradzcircleSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-
-    ],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CandidateEducationComponent,
         CandidateEducationDetailComponent,
@@ -55,11 +47,10 @@ const ENTITY_STATES = [
         CandidateEducationPopupService,
         CandidateEducationPopupServiceNew,
         DataStorageService
-       // CollegeResolverService,
-      //  CourseResolverService,
-      //  QualificationResolverService
-
+        // CollegeResolverService,
+        //  CourseResolverService,
+        //  QualificationResolverService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GradzcircleCandidateEducationModule { }
+export class GradzcircleCandidateEducationModule {}

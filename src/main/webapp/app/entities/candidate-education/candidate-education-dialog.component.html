@@ -38,7 +38,7 @@
 				<tag-input name="qualifications" 
 					[(ngModel)]="candidateEducation.qualification" theme='bootstrap' 
 					#qualification="ngModel" required [onlyFromAutocomplete]="true"
-					[placeholder]="'Qualification+'" [onTextChangeDebounce]="500"
+					[placeholder]="'Qualification+'" 
 					id="field_qualification" 
 					[secondaryPlaceholder]="'Enter your qualification'"
 					(onAdd)="isQualificationOther()" [maxItems]='1'> 
@@ -155,7 +155,7 @@
 				<input required pattern="^[0-9]+(\.[0-9]{1,2})?$" #percent="ngModel"
 					type="number" class="form-control" name="percentage"
 					id="field_percentage" [(ngModel)]="candidateEducation.percentage"
-					(ngModelChange)="isPercentValid($event)" />
+					(ngModelChange)="isPercentValid()" />
 				<div *ngIf="percent.invalid && percent.touched" class="text-danger">
 					<small> Please enter valid score, upto 2 decimals</small>
 				</div>

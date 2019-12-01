@@ -78,7 +78,7 @@ public class VisaTypeResource {
     public ResponseEntity<VisaType> updateVisaType(@RequestBody VisaType visaType) throws URISyntaxException {
         log.debug("REST request to update VisaType : {}", visaType);
         if (visaType.getId() == null) {
-            return createVisaType(visaType);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         VisaType result = visaTypeRepository.save(visaType);
         visaTypeSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class VisaTypeResource {
     @Timed
     public ResponseEntity<VisaType> getVisaType(@PathVariable Long id) {
         log.debug("REST request to get VisaType : {}", id);
-        VisaType visaType = visaTypeRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(visaType));
+        Optional<VisaType> visaType = visaTypeRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound((visaType));
     }
 
     /**
@@ -123,8 +123,8 @@ public class VisaTypeResource {
     @Timed
     public ResponseEntity<Void> deleteVisaType(@PathVariable Long id) {
         log.debug("REST request to delete VisaType : {}", id);
-        visaTypeRepository.delete(id);
-        visaTypeSearchRepository.delete(id);
+        visaTypeRepository.deleteById(id);
+        visaTypeSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -1,14 +1,4 @@
 <nav class="navbar navbar-expand-md fixed-top navbar-dark nav-bg app-navbar">
-	<!-- <div class="jh-logo-container float-left">
-        <button class="navbar-toggler d-lg-none float-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
-            <span jhiTranslate="global.title" class="navbar-title">Gradzcircle</span>
-            <span class="logo-img"></span>
-        </a>
-    </div> -->
     <div *ngIf="corporateId; else candidateOrGuest">
 	    	<a class="navbar-brand logo" [routerLink]="['/job']" (click)="collapseNavbar()">
 			<span class="logo-img"></span>

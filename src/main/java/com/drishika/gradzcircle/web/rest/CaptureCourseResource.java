@@ -78,7 +78,7 @@ public class CaptureCourseResource {
     public ResponseEntity<CaptureCourse> updateCaptureCourse(@RequestBody CaptureCourse captureCourse) throws URISyntaxException {
         log.debug("REST request to update CaptureCourse : {}", captureCourse);
         if (captureCourse.getId() == null) {
-            return createCaptureCourse(captureCourse);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CaptureCourse result = captureCourseRepository.save(captureCourse);
         captureCourseSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class CaptureCourseResource {
     @Timed
     public ResponseEntity<CaptureCourse> getCaptureCourse(@PathVariable Long id) {
         log.debug("REST request to get CaptureCourse : {}", id);
-        CaptureCourse captureCourse = captureCourseRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(captureCourse));
+        Optional<CaptureCourse> captureCourse = captureCourseRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(captureCourse);
     }
 
     /**
@@ -123,8 +123,8 @@ public class CaptureCourseResource {
     @Timed
     public ResponseEntity<Void> deleteCaptureCourse(@PathVariable Long id) {
         log.debug("REST request to delete CaptureCourse : {}", id);
-        captureCourseRepository.delete(id);
-        captureCourseSearchRepository.delete(id);
+        captureCourseRepository.deleteById(id);
+        captureCourseSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

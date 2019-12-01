@@ -10,17 +10,13 @@ import com.drishika.gradzcircle.service.UserService;
 import com.drishika.gradzcircle.service.dto.UserDTO;
 import com.drishika.gradzcircle.web.rest.vm.KeyAndPasswordVM;
 import com.drishika.gradzcircle.web.rest.vm.ManagedUserVM;
-import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import com.drishika.gradzcircle.web.rest.errors.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.drishika.gradzcircle.service.dto.PasswordChangeDTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
@@ -49,41 +45,6 @@ public class AccountResource {
 		this.mailService = mailService;
 	}
 
-	/**
-	 * POST /register : register the user.
-	 *
-	 * @param managedUserVM
-	 *            the managed user View Model
-	 * @return the ResponseEntity with status 201 (Created) if the user is
-	 *         registered or 400 (Bad Request) if the login or email is already in
-	 *         use
-	 */
-/*	@PostMapping(path = "/register", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
-	@Timed
-	public ResponseEntity registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-
-		HttpHeaders textPlainHeaders = new HttpHeaders();
-		textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
-		if (!checkPasswordLength(managedUserVM.getPassword())) {
-			return new ResponseEntity<>(CHECK_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
-		}
-		return userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase())
-				.map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-				.orElseGet(() -> userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail())
-						.map(user -> new ResponseEntity<>("email address already in use", textPlainHeaders,
-								HttpStatus.BAD_REQUEST))
-						.orElseGet(() -> {
-							User user = userService.registerUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
-									managedUserVM.getFirstName(), managedUserVM.getLastName(),
-									managedUserVM.getEmail().toLowerCase(), managedUserVM.getImageUrl(),
-									managedUserVM.getLangKey(), managedUserVM.getAuthorities(),
-									managedUserVM.getCompanyName(), managedUserVM.getPhoneNumber(),
-									managedUserVM.getCountryLocation());
-
-							mailService.sendActivationEmail(user);
-							return new ResponseEntity<>(HttpStatus.CREATED);
-						}));
-	}*/
 	
 	/**
      * POST  /register : register the user.
@@ -186,21 +147,7 @@ public class AccountResource {
         userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
             userDTO.getLangKey(), userDTO.getImageUrl());
    }
-	/*public ResponseEntity saveAccount(@Valid @RequestBody UserDTO userDTO) {
-		final String userLogin = SecurityUtils.getCurrentUserLogin();
-		Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-		if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
-			return ResponseEntity.badRequest()
-					.headers(HeaderUtil.createFailureAlert("user-management", "emailexists", "Email already in use"))
-					.body(null);
-		}
-		return userRepository.findOneByLogin(userLogin).map(u -> {
-			userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
-					userDTO.getLangKey(), userDTO.getImageUrl());
-			return new ResponseEntity(HttpStatus.OK);
-		}).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-	}
-*/
+	
 	
 	/**
 	 * POST /account/change-password : changes the current user's password
@@ -212,11 +159,11 @@ public class AccountResource {
 	 */
 	@PostMapping(path = "/account/change-password")
 	@Timed
-	 public void changePassword(@RequestBody String password) {
-        if (!checkPasswordLength(password)) {
+	 public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+        if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
-        userService.changePassword(password);
+        userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
    }
 
 	/**

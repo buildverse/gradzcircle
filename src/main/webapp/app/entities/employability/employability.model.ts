@@ -1,11 +1,8 @@
-import { BaseEntity } from './../../shared';
-
-export class Employability implements BaseEntity {
+export class Employability {
     constructor(
         public id?: number,
         public employableSkillName?: string,
         public employabilityScore?: number,
-        public employabilityPercentile?: number,
-    ) {
-    }
+        public employabilityPercentile?: number
+    ) {}
 }

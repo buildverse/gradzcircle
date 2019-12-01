@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { JobFilterHistoryComponent } from './job-filter-history.component';
 import { JobFilterHistoryDetailComponent } from './job-filter-history-detail.component';
 import { JobFilterHistoryPopupComponent } from './job-filter-history-dialog.component';
@@ -15,7 +15,8 @@ export const jobFilterHistoryRoute: Routes = [
             pageTitle: 'gradzcircleApp.jobFilterHistory.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'job-filter-history/:id',
         component: JobFilterHistoryDetailComponent,
         data: {

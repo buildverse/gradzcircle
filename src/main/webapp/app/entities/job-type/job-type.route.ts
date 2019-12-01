@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { JobTypeComponent } from './job-type.component';
 import { JobTypeDetailComponent } from './job-type-detail.component';
 import { JobTypePopupComponent } from './job-type-dialog.component';
@@ -15,7 +15,8 @@ export const jobTypeRoute: Routes = [
             pageTitle: 'gradzcircleApp.jobType.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'job-type/:id',
         component: JobTypeDetailComponent,
         data: {

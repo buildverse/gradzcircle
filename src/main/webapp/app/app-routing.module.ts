@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { errorRoute, navbarRoute } from './layouts';
-import { DEBUG_INFO_ENABLED } from './app.constants';
+import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 
-const LAYOUT_ROUTES = [
-    navbarRoute,
-   /* {
-        path: 'candidate-profile',
-        loadChildren: './profiles/candidate/candidate-profile.module#CandidateProfileModule'
-     },*/
-    ...errorRoute
-];
+const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(LAYOUT_ROUTES, { useHash: true, onSameUrlNavigation: 'reload' })
+        RouterModule.forRoot(
+            [
+                ...LAYOUT_ROUTES,
+                {
+                    path: 'admin',
+                    loadChildren: './admin/admin.module#GradzcircleAdminModule'
+                }
+            ],
+            { useHash: true, enableTracing: DEBUG_INFO_ENABLED, onSameUrlNavigation: 'reload' }
+        )
     ],
-    exports: [
-        RouterModule
-    ]
+    exports: [RouterModule]
 })
 export class GradzcircleAppRoutingModule {}

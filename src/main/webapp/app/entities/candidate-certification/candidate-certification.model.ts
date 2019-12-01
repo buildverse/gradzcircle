@@ -1,7 +1,6 @@
 import { Candidate } from '../candidate/candidate.model';
-import { BaseEntity } from './../../shared';
 
-export class CandidateCertification implements BaseEntity {
+export class CandidateCertification {
     constructor(
         public id?: number,
         public certificationTitle?: string,
@@ -10,6 +9,6 @@ export class CandidateCertification implements BaseEntity {
         public candidate?: Candidate,
         public collapsed?: boolean
     ) {
-      this.collapsed = true;
+        this.collapsed = true;
     }
 }

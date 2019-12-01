@@ -492,7 +492,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 		
 		
         CandidateLanguageProficiency updatedCandidateLanguageProficiency = candidateLanguageProficiencyRepository
-				.findOne(testCandidateLanguageProficiency.getId());
+				.findById(testCandidateLanguageProficiency.getId()).get();
       //  System.out.println("=========== to update is "+updatedCandidateLanguageProficiency);
 		restCandidateLanguageProficiencyMockMvc
 		.perform(put("/api/candidate-language-proficiencies").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -928,7 +928,7 @@ public class CandidateLanguageProficiencyResourceIntTest {
 
 		// Update the candidateLanguageProficiency
 		CandidateLanguageProficiency updatedCandidateLanguageProficiency = candidateLanguageProficiencyRepository
-				.findOne(candidateLanguageProficiency.getId());
+				.findById(candidateLanguageProficiency.getId()).get();
 		updatedCandidateLanguageProficiency.proficiency(UPDATED_PROFICIENCY);
 
 		restCandidateLanguageProficiencyMockMvc

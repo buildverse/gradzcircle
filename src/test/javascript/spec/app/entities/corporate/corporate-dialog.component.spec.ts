@@ -1,4 +1,5 @@
 /* tslint:disable max-line-length */
+import { UserService } from '../../../../../../main/webapp/app/core/user/user.service';
 import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,10 +12,8 @@ import { CorporateService } from '../../../../../../main/webapp/app/entities/cor
 import { Corporate } from '../../../../../../main/webapp/app/entities/corporate/corporate.model';
 import { CountryService } from '../../../../../../main/webapp/app/entities/country';
 import { IndustryService } from '../../../../../../main/webapp/app/entities/industry';
-import { UserService } from '../../../../../../main/webapp/app/shared';
 
 describe('Component Tests', () => {
-
     describe('Corporate Management Dialog Component', () => {
         let comp: CorporateDialogComponent;
         let fixture: ComponentFixture<CorporateDialogComponent>;
@@ -22,20 +21,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CorporateDialogComponent],
-                providers: [
-                    CountryService,
-                    IndustryService,
-                    UserService,
-                    CorporateService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CorporateDialogComponent],
+                    providers: [CountryService, IndustryService, UserService, CorporateService]
+                })
+                    .overrideTemplate(CorporateDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CorporateDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CorporateDialogComponent);
@@ -46,12 +42,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Corporate(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.corporate = entity;
                         // WHEN
                         comp.save();
@@ -60,18 +58,20 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'corporateListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'corporateListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Corporate();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.corporate = entity;
                         // WHEN
                         comp.save();
@@ -80,12 +80,11 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'corporateListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'corporateListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

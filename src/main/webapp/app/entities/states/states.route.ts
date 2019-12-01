@@ -1,8 +1,8 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
 import { JhiPaginationUtil } from 'ng-jhipster';
 
-import { UserRouteAccessService } from '../../shared';
 import { StatesComponent } from './states.component';
 import { StatesDetailComponent } from './states-detail.component';
 import { StatesPopupComponent } from './states-dialog.component';
@@ -10,7 +10,6 @@ import { StatesDeletePopupComponent } from './states-delete-dialog.component';
 
 @Injectable()
 export class StatesResolvePagingParams implements Resolve<any> {
-
     constructor(private paginationUtil: JhiPaginationUtil) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -20,7 +19,7 @@ export class StatesResolvePagingParams implements Resolve<any> {
             page: this.paginationUtil.parsePage(page),
             predicate: this.paginationUtil.parsePredicate(sort),
             ascending: this.paginationUtil.parseAscending(sort)
-      };
+        };
     }
 }
 
@@ -29,14 +28,15 @@ export const statesRoute: Routes = [
         path: 'states',
         component: StatesComponent,
         resolve: {
-            'pagingParams': StatesResolvePagingParams
+            pagingParams: StatesResolvePagingParams
         },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'gradzcircleApp.states.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'states/:id',
         component: StatesDetailComponent,
         data: {

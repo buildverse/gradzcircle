@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -6,9 +7,9 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.service';
-import { DataStorageService, Principal } from '../../shared';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 @Component({
     selector: 'jhi-candidate-non-academic-work',
     templateUrl: './candidate-non-academic-work.component.html',
@@ -33,15 +34,17 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
         private spinnerService: NgxSpinnerService,
         private router: Router
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
     /*To be removed once undertsand Elastic */
     loadExtraCurricularForCandidate() {
         this.spinnerService.show();
         this.candidateNonAcademicWorkService.findNonAcademicWorkByCandidateId(this.candidateId).subscribe(
             (res: HttpResponse<CandidateNonAcademicWork[]>) => {
-                this.candidateNonAcademicWorks = res.body
+                this.candidateNonAcademicWorks = res.body;
                 if (this.candidateNonAcademicWorks && this.candidateNonAcademicWorks.length <= 0) {
                     this.router.navigate(['./candidate-profile']);
                 }
@@ -61,7 +64,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
         this.candidateNonAcademicForDisplay = [];
         this.primaryCandidateNonAcademic = undefined;
         if (this.candidateNonAcademicWorks && this.candidateNonAcademicWorks.length > 0) {
-            this.candidateNonAcademicWorks.forEach((nonAcademic) => {
+            this.candidateNonAcademicWorks.forEach(nonAcademic => {
                 if (!this.primaryCandidateNonAcademic) {
                     this.primaryCandidateNonAcademic = nonAcademic;
                 } else {
@@ -75,7 +78,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
         this.candidateNonAcademicForDisplay = [];
         this.primaryCandidateNonAcademic = undefined;
         if (this.candidateNonAcademicWorks && this.candidateNonAcademicWorks.length > 0) {
-            this.candidateNonAcademicWorks.forEach((nonAcademic) => {
+            this.candidateNonAcademicWorks.forEach(nonAcademic => {
                 if (nonAcademic.id === event) {
                     this.primaryCandidateNonAcademic = nonAcademic;
                 } else {
@@ -95,12 +98,14 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
 
     loadAll() {
         if (this.currentSearch) {
-            this.candidateNonAcademicWorkService.search({
-                query: this.currentSearch,
-            }).subscribe(
-                (res: HttpResponse<CandidateNonAcademicWork[]>) => this.candidateNonAcademicWorks = res.body,
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
+            this.candidateNonAcademicWorkService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<CandidateNonAcademicWork[]>) => (this.candidateNonAcademicWorks = res.body),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
             return;
         }
         this.candidateNonAcademicWorkService.query().subscribe(
@@ -126,7 +131,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
         this.loadAll();
     }
     ngOnInit() {
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
             if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
                 this.candidateId = this.dataService.getData(CANDIDATE_ID);
@@ -137,7 +142,6 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
             }
             this.registerChangeInCandidateNonAcademicWorks();
         });
-
     }
 
     ngOnDestroy() {
@@ -150,9 +154,11 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
 
     registerChangeInCandidateNonAcademicWorks() {
         if (this.candidateId) {
-            this.eventSubscriber = this.eventManager.subscribe('candidateNonAcademicWorkListModification', (response) => this.loadExtraCurricularForCandidate());
+            this.eventSubscriber = this.eventManager.subscribe('candidateNonAcademicWorkListModification', response =>
+                this.loadExtraCurricularForCandidate()
+            );
         } else {
-            this.eventSubscriber = this.eventManager.subscribe('candidateNonAcademicWorkListModification', (response) => this.loadAll());
+            this.eventSubscriber = this.eventManager.subscribe('candidateNonAcademicWorkListModification', response => this.loadAll());
         }
     }
 

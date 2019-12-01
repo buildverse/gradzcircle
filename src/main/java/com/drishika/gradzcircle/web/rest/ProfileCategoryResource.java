@@ -78,7 +78,7 @@ public class ProfileCategoryResource {
     public ResponseEntity<ProfileCategory> updateProfileCategory(@RequestBody ProfileCategory profileCategory) throws URISyntaxException {
         log.debug("REST request to update ProfileCategory : {}", profileCategory);
         if (profileCategory.getId() == null) {
-            return createProfileCategory(profileCategory);
+        	 	throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         ProfileCategory result = profileCategoryRepository.save(profileCategory);
         profileCategorySearchRepository.save(result);
@@ -109,8 +109,8 @@ public class ProfileCategoryResource {
     @Timed
     public ResponseEntity<ProfileCategory> getProfileCategory(@PathVariable Long id) {
         log.debug("REST request to get ProfileCategory : {}", id);
-        ProfileCategory profileCategory = profileCategoryRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(profileCategory));
+        Optional<ProfileCategory> profileCategory = profileCategoryRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(profileCategory);
     }
 
     /**
@@ -123,8 +123,8 @@ public class ProfileCategoryResource {
     @Timed
     public ResponseEntity<Void> deleteProfileCategory(@PathVariable Long id) {
         log.debug("REST request to delete ProfileCategory : {}", id);
-        profileCategoryRepository.delete(id);
-        profileCategorySearchRepository.delete(id);
+        profileCategoryRepository.deleteById(id);
+        profileCategorySearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -1,7 +1,8 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { GradzcircleSharedModule, DataStorageService } from '../../shared';
+import { GradzcircleSharedModule } from '../../shared';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import {
     CandidateLanguageProficiencyService,
     CandidateLanguageProficiencyPopupService,
@@ -18,16 +19,10 @@ import {
     CandidateLanguageResolverService
 } from './';
 
-const ENTITY_STATES = [
-    ...candidateLanguageProficiencyRoute,
-    ...candidateLanguageProficiencyPopupRoute,
-];
+const ENTITY_STATES = [...candidateLanguageProficiencyRoute, ...candidateLanguageProficiencyPopupRoute];
 
 @NgModule({
-    imports: [
-        GradzcircleSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CandidateLanguageProficiencyComponent,
         CandidateLanguageProficiencyDetailComponent,
@@ -35,7 +30,7 @@ const ENTITY_STATES = [
         CandidateLanguageProficiencyDeleteDialogComponent,
         CandidateLanguageProficiencyPopupComponent,
         CandidateLanguageProficiencyPopupComponentNew,
-        CandidateLanguageProficiencyDeletePopupComponent,
+        CandidateLanguageProficiencyDeletePopupComponent
     ],
     entryComponents: [
         CandidateLanguageProficiencyComponent,
@@ -43,7 +38,7 @@ const ENTITY_STATES = [
         CandidateLanguageProficiencyPopupComponent,
         CandidateLanguageProficiencyPopupComponentNew,
         CandidateLanguageProficiencyDeleteDialogComponent,
-        CandidateLanguageProficiencyDeletePopupComponent,
+        CandidateLanguageProficiencyDeletePopupComponent
     ],
     providers: [
         CandidateLanguageProficiencyService,

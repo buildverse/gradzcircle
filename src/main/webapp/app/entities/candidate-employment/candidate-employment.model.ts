@@ -1,10 +1,10 @@
-import { BaseEntity } from './../../shared';
 import { JobType } from '../job-type/job-type.model';
 import { EmploymentType } from '../employment-type/employment-type.model';
 import { CandidateProject } from '../candidate-project/candidate-project.model';
-import {Candidate } from '../candidate/candidate.model';
+import { Candidate } from '../candidate/candidate.model';
+import { Country } from '../country/country.model';
 
-export class CandidateEmployment implements BaseEntity {
+export class CandidateEmployment {
     constructor(
         public id?: number,
         public location?: number,
@@ -18,11 +18,11 @@ export class CandidateEmployment implements BaseEntity {
         public candidate?: Candidate,
         public projects?: CandidateProject[],
         public employmentType?: EmploymentType,
-        public country?: BaseEntity,
+        public country?: Country,
         public jobType?: JobType,
         public collapsed?: boolean
     ) {
         this.isCurrentEmployment = false;
-      this.collapsed = true;
+        this.collapsed = true;
     }
 }

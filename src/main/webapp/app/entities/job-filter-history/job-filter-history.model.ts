@@ -1,10 +1,4 @@
-import { BaseEntity } from './../../shared';
-
-export class JobFilterHistory implements BaseEntity {
-    constructor(
-        public id?: number,
-        public filterDescription?: string,
-        public jobFilter?: BaseEntity,
-    ) {
-    }
+import { JobFilter } from '../job-filter/job-filter.model';
+export class JobFilterHistory {
+    constructor(public id?: number, public filterDescription?: string, public jobFilter?: JobFilter) {}
 }

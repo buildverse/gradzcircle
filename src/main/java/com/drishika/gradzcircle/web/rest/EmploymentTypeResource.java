@@ -94,7 +94,7 @@ public class EmploymentTypeResource {
     public ResponseEntity<EmploymentType> updateEmploymentType(@RequestBody EmploymentType employmentType) throws URISyntaxException {
         log.debug("REST request to update EmploymentType : {}", employmentType);
         if (employmentType.getId() == null) {
-            return createEmploymentType(employmentType);
+        	 	throw new BadRequestAlertException("A new profileCategory cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EmploymentType result = employmentTypeRepository.save(employmentType);
         employmentTypeSearchRepository.save(result);
@@ -125,8 +125,8 @@ public class EmploymentTypeResource {
     @Timed
     public ResponseEntity<EmploymentType> getEmploymentType(@PathVariable Long id) {
         log.debug("REST request to get EmploymentType : {}", id);
-        EmploymentType employmentType = employmentTypeRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(employmentType));
+        Optional<EmploymentType> employmentType = employmentTypeRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(employmentType);
     }
 
     /**
@@ -139,8 +139,8 @@ public class EmploymentTypeResource {
     @Timed
     public ResponseEntity<Void> deleteEmploymentType(@PathVariable Long id) {
         log.debug("REST request to delete EmploymentType : {}", id);
-        employmentTypeRepository.delete(id);
-        employmentTypeSearchRepository.delete(id);
+        employmentTypeRepository.deleteById(id);
+        employmentTypeSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

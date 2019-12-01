@@ -32,6 +32,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -873,7 +874,7 @@ public class CandidateResourceIntTest {
 		// restCandidateMockMvc.perform(get("/api/candidates/{id}",
 		// candidate.getId())).andExpect(status().isOk())
 		List<Candidate> testCandidates = candidateRepository.findAll();
-		Job testJob = jobRepository.findOne(jobA.getId());
+		Job testJob = jobRepository.findById(jobA.getId()).get();
 		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(29);
 		assertThat(testJob.getNoOfApplicants()).isEqualTo(30);
 		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(1);
@@ -914,7 +915,7 @@ public class CandidateResourceIntTest {
 		// restCandidateMockMvc.perform(get("/api/candidates/{id}",
 		// candidate.getId())).andExpect(status().isOk())
 		List<Candidate> testCandidates = candidateRepository.findAll();
-		Job testJob = jobRepository.findOne(jobA.getId());
+		Job testJob = jobRepository.findById(jobA.getId()).get();
 		assertThat(testJob.getNoOfApplicantLeft()).isEqualTo(25);
 		assertThat(testJob.getNoOfApplicants()).isEqualTo(30);
 		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(5);
@@ -1210,7 +1211,8 @@ public class CandidateResourceIntTest {
 		candidate.addCorporateCandidate(cc3).addCorporateCandidate(cc2).addCorporateCandidate(cc1);
 		//corporateRepository.saveAndFlush(corporate);
 		//candidateRepository.saveAndFlush(candidate);
-		restCandidateMockMvc.perform(get("/api/candidates/candidatePublicProfile/{candidateId}/{jobId}/{corporateId}", candidate.getId(),jobF.getId(),corporate.getId())).andExpect(status().isOk())
+		restCandidateMockMvc.perform(get("/api/candidates/candidatePublicProfile/{candidateId}/{jobId}/{corporateId}", 
+				candidate.getId(),jobF.getId(),corporate.getId())).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.candidateDetails.id").value(candidate.getId().intValue()))
 		.andExpect(jsonPath("$.candidateDetails.firstName").value(DEFAULT_FIRST_NAME.toString()))
@@ -1240,7 +1242,7 @@ public class CandidateResourceIntTest {
 		candidate.setProfileScore(5D);
 		candidateRepository.saveAndFlush(candidate);
 		// Update the candidate
-		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
+		Candidate updatedCandidate = candidateRepository.findById(candidate.getId()).get();
 		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
 				.facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
 				.aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)
@@ -1296,7 +1298,7 @@ public class CandidateResourceIntTest {
 		candidateRepository.saveAndFlush(candidate);
 
 		// Update the candidate
-		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
+		Candidate updatedCandidate = candidateRepository.findById(candidate.getId()).get();
 		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
 				.facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
 				.aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)
@@ -1427,7 +1429,7 @@ public class CandidateResourceIntTest {
 		CandidateProfileScore score = new CandidateProfileScore(candidate,basic);
 		candidate.addCandidateProfileScore(score);
 		candidateRepository.saveAndFlush(candidate);
-		Candidate updatedCandidate = candidateRepository.findOne(candidate.getId());
+		Candidate updatedCandidate = candidateRepository.findById(candidate.getId()).get();
 		updatedCandidate.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME).middleName(UPDATED_MIDDLE_NAME)
 				.facebook(UPDATED_FACEBOOK).linkedIn(UPDATED_LINKED_IN).twitter(UPDATED_TWITTER)
 				.aboutMe(UPDATED_ABOUT_ME).dateOfBirth(UPDATED_DATE_OF_BIRTH).phoneCode(UPDATED_PHONE_CODE)

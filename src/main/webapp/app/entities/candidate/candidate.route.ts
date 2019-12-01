@@ -1,9 +1,7 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { CandidateComponent } from './candidate.component';
 import { CandidateDetailComponent } from './candidate-detail.component';
 import { CandidatePopupComponent } from './candidate-dialog.component';
@@ -12,18 +10,17 @@ import { CandidatePreviewComponent } from './candidate-preview.component';
 
 @Injectable()
 export class CandidatePagingParams implements Resolve<any> {
+    constructor(private paginationUtil: JhiPaginationUtil) {}
 
-  constructor(private paginationUtil: JhiPaginationUtil) {}
-
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-    const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-    return {
-      page: this.paginationUtil.parsePage(page),
-      predicate: this.paginationUtil.parsePredicate(sort),
-      ascending: this.paginationUtil.parseAscending(sort)
-    };
-  }
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
+        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
+        return {
+            page: this.paginationUtil.parsePage(page),
+            predicate: this.paginationUtil.parsePredicate(sort),
+            ascending: this.paginationUtil.parseAscending(sort)
+        };
+    }
 }
 
 export const candidateRoute: Routes = [
@@ -34,11 +31,12 @@ export const candidateRoute: Routes = [
             authorities: ['ROLE_USER'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
-         resolve: {
-      'pagingParams': CandidatePagingParams
-    },
+        resolve: {
+            pagingParams: CandidatePagingParams
+        },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'candidate/:id',
         component: CandidateDetailComponent,
         data: {
@@ -47,15 +45,15 @@ export const candidateRoute: Routes = [
         },
         canActivate: [UserRouteAccessService]
     },
-   {
+    {
         path: 'candidatePreview',
         component: CandidatePreviewComponent,
         data: {
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
-         resolve: {
-      'pagingParams': CandidatePagingParams
-    },
+        resolve: {
+            pagingParams: CandidatePagingParams
+        },
         canActivate: [UserRouteAccessService]
     }
 ];

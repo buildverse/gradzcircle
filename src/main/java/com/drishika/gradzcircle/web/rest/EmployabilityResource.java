@@ -78,7 +78,7 @@ public class EmployabilityResource {
     public ResponseEntity<Employability> updateEmployability(@RequestBody Employability employability) throws URISyntaxException {
         log.debug("REST request to update Employability : {}", employability);
         if (employability.getId() == null) {
-            return createEmployability(employability);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Employability result = employabilityRepository.save(employability);
         employabilitySearchRepository.save(result);
@@ -109,8 +109,8 @@ public class EmployabilityResource {
     @Timed
     public ResponseEntity<Employability> getEmployability(@PathVariable Long id) {
         log.debug("REST request to get Employability : {}", id);
-        Employability employability = employabilityRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(employability));
+        Optional<Employability> employability = employabilityRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(employability);
     }
 
     /**
@@ -123,8 +123,8 @@ public class EmployabilityResource {
     @Timed
     public ResponseEntity<Void> deleteEmployability(@PathVariable Long id) {
         log.debug("REST request to delete Employability : {}", id);
-        employabilityRepository.delete(id);
-        employabilitySearchRepository.delete(id);
+        employabilityRepository.deleteById(id);
+        employabilitySearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

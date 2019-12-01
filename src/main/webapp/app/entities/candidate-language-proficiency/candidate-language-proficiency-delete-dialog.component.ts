@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
 import { ActivatedRoute } from '@angular/router';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import { DataStorageService } from '../../shared';
 import { CANDIDATE_LANGUAGE_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { CandidateLanguageProficiencyPopupService } from './candidate-language-proficiency-popup.service';
 import { CandidateLanguageProficiencyService } from './candidate-language-proficiency.service';
@@ -14,7 +15,6 @@ import { CandidateLanguageProficiencyService } from './candidate-language-profic
     templateUrl: './candidate-language-proficiency-delete-dialog.component.html'
 })
 export class CandidateLanguageProficiencyDeleteDialogComponent {
-
     candidateLanguageProficiency: CandidateLanguageProficiency;
 
     constructor(
@@ -22,24 +22,23 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager,
         private spinnerService: NgxSpinnerService
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-      this.spinnerService.show(); 
-        this.candidateLanguageProficiencyService.delete(id).subscribe((response) => {
-        this.eventManager.broadcast({
-          name: 'candidateLanguageProficiencyListModification',
-          content: 'Deleted an candidateLanguageProficiency'
+        this.spinnerService.show();
+        this.candidateLanguageProficiencyService.delete(id).subscribe(response => {
+            this.eventManager.broadcast({
+                name: 'candidateLanguageProficiencyListModification',
+                content: 'Deleted an candidateLanguageProficiency'
+            });
+            this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+            this.spinnerService.hide();
+            this.activeModal.dismiss(true);
         });
-           this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
-        this.spinnerService.hide();
-        this.activeModal.dismiss(true);
-      });
     }
 }
 
@@ -48,7 +47,6 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
     template: ''
 })
 export class CandidateLanguageProficiencyDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
     constructor(
@@ -58,15 +56,16 @@ export class CandidateLanguageProficiencyDeletePopupComponent implements OnInit,
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-          if(params['id']) {
-            this.candidateLanguageProficiencyPopupService
-                .open(CandidateLanguageProficiencyDeleteDialogComponent as Component, params['id']);
-          } else {
-            const id = this.dataService.getData(CANDIDATE_LANGUAGE_ID); 
-            this.candidateLanguageProficiencyPopupService
-              .open(CandidateLanguageProficiencyDeleteDialogComponent as Component, id);
-          }
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.candidateLanguageProficiencyPopupService.open(
+                    CandidateLanguageProficiencyDeleteDialogComponent as Component,
+                    params['id']
+                );
+            } else {
+                const id = this.dataService.getData(CANDIDATE_LANGUAGE_ID);
+                this.candidateLanguageProficiencyPopupService.open(CandidateLanguageProficiencyDeleteDialogComponent as Component, id);
+            }
         });
     }
 

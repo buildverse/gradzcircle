@@ -811,8 +811,8 @@ public class JobMatcherIntTest {
 		assertThat(candidateList).hasSize( 8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
-		Candidate testCandidateA = candidateRepository.findOne(candidateA.getId());
-		Candidate testCandidateH = candidateRepository.findOne(candidateH.getId());
+		Candidate testCandidateA = candidateRepository.findById(candidateA.getId()).get();
+		Candidate testCandidateH = candidateRepository.findById(candidateH.getId()).get();
 		assertThat(testCandidateA.getCandidateJobs()).hasSize(1);
 		assertThat(testCandidateH.getCandidateJobs()).hasSize(1);
 		assertThat(testCandidateA.getCandidateJobs())
@@ -868,8 +868,8 @@ public class JobMatcherIntTest {
 		assertThat(candidateList).hasSize(8);
 		assertThat(candidateEducationList).hasSize(12);
 		assertThat(candidateLanguageList).hasSize(9);
-		Candidate testCandidateA = candidateRepository.findOne(candidateA.getId());
-		Candidate testCandidateH = candidateRepository.findOne(candidateH.getId());
+		Candidate testCandidateA = candidateRepository.findById(candidateA.getId()).get();
+		Candidate testCandidateH = candidateRepository.findById(candidateH.getId()).get();
 		assertThat(testCandidateA.getCandidateJobs()).hasSize(1);
 		assertThat(testCandidateH.getCandidateJobs()).hasSize(1);
 		assertThat(testCandidateA.getCandidateJobs())
@@ -920,7 +920,7 @@ public class JobMatcherIntTest {
 				"genderMatchScore", "totalEligibleScore").contains(
 				tuple(CANDIDATE_B, 80.0, 31.0, 5.0, null, 45.0));
 		assertThat(candidateList).hasSize(8);
-		Candidate testCandidateB = candidateRepository.findOne(candidateB.getId());
+		Candidate testCandidateB = candidateRepository.findById(candidateB.getId()).get();
 		assertThat(testCandidateB.getCandidateJobs()).hasSize(1);
 		assertThat(testCandidateB.getCandidateJobs())
 		.extracting("job.jobTitle", "matchScore", "educationMatchScore", "languageMatchScore",

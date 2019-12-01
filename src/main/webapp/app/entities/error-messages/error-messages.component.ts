@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { ErrorMessages } from './error-messages.model';
 import { ErrorMessagesService } from './error-messages.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-error-messages',
     templateUrl: './error-messages.component.html'
 })
 export class ErrorMessagesComponent implements OnInit, OnDestroy {
-errorMessages: ErrorMessages[];
+    errorMessages: ErrorMessages[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ errorMessages: ErrorMessages[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.errorMessagesService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<ErrorMessages[]>) => this.errorMessages = res.body,
+            this.errorMessagesService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<ErrorMessages[]>) => (this.errorMessages = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.errorMessagesService.query().subscribe(
             (res: HttpResponse<ErrorMessages[]>) => {
                 this.errorMessages = res.body;
@@ -62,7 +66,7 @@ errorMessages: ErrorMessages[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInErrorMessages();
@@ -76,7 +80,7 @@ errorMessages: ErrorMessages[];
         return item.id;
     }
     registerChangeInErrorMessages() {
-        this.eventSubscriber = this.eventManager.subscribe('errorMessagesListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('errorMessagesListModification', response => this.loadAll());
     }
 
     private onError(error) {

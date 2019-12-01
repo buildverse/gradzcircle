@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,13 +12,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import java.util.List;
-
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,9 +63,9 @@ public class CollegeResourceIntTest {
 	private CollegeRepository collegeRepository;
 
 	@Autowired
-	private CollegeSearchRepository collegeSearchRepository;
+	private CollegeSearchRepository mockCollegeSearchRepository;
 
-	@Autowired
+	@Mock
 	private ElasticsearchTemplate elasticsearchTemplate;
 
 	@Autowired
@@ -87,7 +91,7 @@ public class CollegeResourceIntTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final CollegeResource collegeResource = new CollegeResource(collegeRepository, collegeSearchRepository,
+		final CollegeResource collegeResource = new CollegeResource(collegeRepository, mockCollegeSearchRepository,
 				elasticsearchTemplate);
 		this.restCollegeMockMvc = MockMvcBuilders.standaloneSetup(collegeResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
@@ -137,8 +141,8 @@ public class CollegeResourceIntTest {
 
 	@Before
 	public void initTest() {
-		collegeSearchRepository.deleteAll();
 		college = createEntity(em);
+		elasticCollege = createElasticInstance(college);
 	}
 
 	@Test
@@ -159,11 +163,8 @@ public class CollegeResourceIntTest {
 		assertThat(testCollege.getStatus()).isEqualTo(DEFAULT_STATUS);
 
 		// Validate the College in Elasticsearch
-		com.drishika.gradzcircle.domain.elastic.College collegeEs = collegeSearchRepository
-				.findOne(testCollege.getId());
-		// assertThat(collegeEs).isEqualToComparingFieldByField(testCollege);
-		assertThat(collegeEs.getId()).isEqualTo(testCollege.getId());
-		assertThat(collegeEs.getCollegeName()).isEqualTo(testCollege.getCollegeName());
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.College.class);
 
 	}
 
@@ -234,7 +235,7 @@ public class CollegeResourceIntTest {
 		int databaseSizeBeforeUpdate = collegeRepository.findAll().size();
 
 		// Update the college
-		College updatedCollege = collegeRepository.findOne(college.getId());
+		College updatedCollege = collegeRepository.findById(college.getId()).get();
 		updatedCollege.collegeName(UPDATED_COLLEGE_NAME).domainName(UPDATED_DOMAIN_NAME).status(UPDATED_STATUS);
 
 		restCollegeMockMvc.perform(put("/api/colleges").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -249,11 +250,8 @@ public class CollegeResourceIntTest {
 		assertThat(testCollege.getStatus()).isEqualTo(UPDATED_STATUS);
 
 		// Validate the College in Elasticsearch
-		com.drishika.gradzcircle.domain.elastic.College collegeEs = collegeSearchRepository
-				.findOne(testCollege.getId());
-		// assertThat(collegeEs).isEqualToComparingFieldByField(testCollege);
-		assertThat(collegeEs.getId()).isEqualTo(testCollege.getId());
-		assertThat(collegeEs.getCollegeName()).isEqualTo(testCollege.getCollegeName());
+		verify(elasticsearchTemplate,times(2)).index(any());
+		verify(elasticsearchTemplate,times(2)).refresh(com.drishika.gradzcircle.domain.elastic.College.class);
 	}
 
 	@Test
@@ -265,12 +263,13 @@ public class CollegeResourceIntTest {
 
 		// If the entity doesn't have an ID, it will be created instead of just being
 		// updated
-		restCollegeMockMvc.perform(put("/api/colleges").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(college))).andExpect(status().isCreated());
-
+		restCollegeMockMvc.perform(put("/api/colleges")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(college)))
+		            .andExpect(status().isBadRequest());
 		// Validate the College in the database
 		List<College> collegeList = collegeRepository.findAll();
-		assertThat(collegeList).hasSize(databaseSizeBeforeUpdate + 1);
+		assertThat(collegeList).hasSize(databaseSizeBeforeUpdate);
 	}
 
 	// TODO - fix elastic search template test. I have commented
@@ -290,9 +289,8 @@ public class CollegeResourceIntTest {
 				.andExpect(status().isOk());
 
 		// Validate Elasticsearch is empty
-		boolean collegeExistsInEs = collegeSearchRepository.exists(college.getId());
-		assertThat(collegeExistsInEs).isFalse();
-
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.College.class);
 		// Validate the database is empty
 		List<College> collegeList = collegeRepository.findAll();
 		assertThat(collegeList).hasSize(databaseSizeBeforeDelete - 1);
@@ -308,6 +306,11 @@ public class CollegeResourceIntTest {
 		elasticsearchTemplate.index(createEntityBuilder(college)
 				.suggest(new String[] { createElasticInstance(college).getCollegeName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.College.class);
+		
+		elasticCollege.setId(college.getId());
+		when(mockCollegeSearchRepository.search(queryStringQuery("id:" + college.getId())))
+	        .thenReturn(Collections.singletonList(elasticCollege));
+		
 		// Search the college
 		restCollegeMockMvc.perform(get("/api/_search/colleges?query=id:" + college.getId()))
 				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())

@@ -1,0 +1,22 @@
+/**
+ * 
+ */
+package com.drishika.gradzcircle.repository.search;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+
+/**
+ * @author abhinav
+ *
+ */
+/*
+@Configuration
+public class ElasticsearchTemplateMockConfiguration {
+	
+	@MockBean
+	private ElasticsearchTemplate mockElasticsearchTemplate;
+
+}
+*/

@@ -78,7 +78,7 @@ public class CaptureQualificationResource {
     public ResponseEntity<CaptureQualification> updateCaptureQualification(@RequestBody CaptureQualification captureQualification) throws URISyntaxException {
         log.debug("REST request to update CaptureQualification : {}", captureQualification);
         if (captureQualification.getId() == null) {
-            return createCaptureQualification(captureQualification);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CaptureQualification result = captureQualificationRepository.save(captureQualification);
         captureQualificationSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class CaptureQualificationResource {
     @Timed
     public ResponseEntity<CaptureQualification> getCaptureQualification(@PathVariable Long id) {
         log.debug("REST request to get CaptureQualification : {}", id);
-        CaptureQualification captureQualification = captureQualificationRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(captureQualification));
+        Optional<CaptureQualification> captureQualification = captureQualificationRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(captureQualification);
     }
 
     /**
@@ -123,8 +123,8 @@ public class CaptureQualificationResource {
     @Timed
     public ResponseEntity<Void> deleteCaptureQualification(@PathVariable Long id) {
         log.debug("REST request to delete CaptureQualification : {}", id);
-        captureQualificationRepository.delete(id);
-        captureQualificationSearchRepository.delete(id);
+        captureQualificationRepository.deleteById(id);
+        captureQualificationSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -147,9 +147,9 @@ public class CandidateProjectResource {
 	@Timed
 	public ResponseEntity<CandidateProjectDTO> getCandidateProject(@PathVariable Long id) {
 		log.debug("REST request to get CandidateProject : {}", id);
-		CandidateProject candidateProject = candidateProjectRepository.findOne(id);
+		Optional<CandidateProject> candidateProject = candidateProjectRepository.findById(id);
 		// calculateProjectDuration(candidateProject);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(converter.setCandidateProjects(candidateProject)));
+		return ResponseUtil.wrapOrNotFound(Optional.of(converter.setCandidateProjects(candidateProject.get())));
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class CandidateProjectResource {
 	@Timed
 	public ResponseEntity<Void> deleteCandidateProject(@PathVariable Long id) {
 		log.debug("REST request to delete CandidateProject : {}", id);
-		candidateProjectRepository.delete(id);
-		candidateProjectSearchRepository.delete(id);
+		candidateProjectRepository.deleteById(id);
+		candidateProjectSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

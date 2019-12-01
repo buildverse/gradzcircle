@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Filter } from './filter.model';
 import { FilterService } from './filter.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-filter',
     templateUrl: './filter.component.html'
 })
 export class FilterComponent implements OnInit, OnDestroy {
-filters: Filter[];
+    filters: Filter[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ filters: Filter[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.filterService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Filter[]>) => this.filters = res.body,
+            this.filterService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Filter[]>) => (this.filters = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.filterService.query().subscribe(
             (res: HttpResponse<Filter[]>) => {
                 this.filters = res.body;
@@ -62,7 +66,7 @@ filters: Filter[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInFilters();
@@ -76,7 +80,7 @@ filters: Filter[];
         return item.id;
     }
     registerChangeInFilters() {
-        this.eventSubscriber = this.eventManager.subscribe('filterListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('filterListModification', response => this.loadAll());
     }
 
     private onError(error) {

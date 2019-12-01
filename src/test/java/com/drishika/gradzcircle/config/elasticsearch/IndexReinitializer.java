@@ -1,4 +1,4 @@
-package com.drishika.gradzcircle.config.elasticsearch;
+/*package com.drishika.gradzcircle.config.elasticsearch;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -26,3 +26,4 @@ public class IndexReinitializer {
         logger.debug("Elasticsearch indexes reset in {} ms", t);
     }
 }
+*/

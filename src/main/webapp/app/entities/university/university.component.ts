@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { University } from './university.model';
 import { UniversityService } from './university.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-university',
     templateUrl: './university.component.html'
 })
 export class UniversityComponent implements OnInit, OnDestroy {
-universities: University[];
+    universities: University[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ universities: University[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.universityService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<University[]>) => this.universities = res.body,
+            this.universityService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<University[]>) => (this.universities = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.universityService.query().subscribe(
             (res: HttpResponse<University[]>) => {
                 this.universities = res.body;
@@ -62,7 +66,7 @@ universities: University[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInUniversities();
@@ -76,7 +80,7 @@ universities: University[];
         return item.id;
     }
     registerChangeInUniversities() {
-        this.eventSubscriber = this.eventManager.subscribe('universityListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('universityListModification', response => this.loadAll());
     }
 
     private onError(error) {

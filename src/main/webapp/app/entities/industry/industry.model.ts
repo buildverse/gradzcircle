@@ -1,10 +1,4 @@
-import { BaseEntity } from './../../shared';
-
-export class Industry implements BaseEntity {
-    constructor(
-        public id?: number,
-        public industryName?: string,
-        public corporates?: BaseEntity[],
-    ) {
-    }
+import { Corporate } from '../corporate/corporate.model';
+export class Industry {
+    constructor(public id?: number, public industryName?: string, public corporates?: Corporate[]) {}
 }

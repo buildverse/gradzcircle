@@ -97,7 +97,7 @@ public class JobFilterHistoryResource {
 			@Valid @RequestBody JobFilterHistory jobFilterHistory) throws URISyntaxException {
 		log.debug("REST request to update JobFilterHistory : {}", jobFilterHistory);
 		if (jobFilterHistory.getId() == null) {
-			return createJobFilterHistory(jobFilterHistory);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		JobFilterHistory result = jobFilterHistoryRepository.save(jobFilterHistory);
 		jobFilterHistorySearchRepository.save(result);
@@ -131,8 +131,8 @@ public class JobFilterHistoryResource {
 	@Timed
 	public ResponseEntity<JobFilterHistory> getJobFilterHistory(@PathVariable Long id) {
 		log.debug("REST request to get JobFilterHistory : {}", id);
-		JobFilterHistory jobFilterHistory = jobFilterHistoryRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobFilterHistory));
+		Optional<JobFilterHistory> jobFilterHistory = jobFilterHistoryRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(jobFilterHistory);
 	}
 
 	/**
@@ -146,8 +146,8 @@ public class JobFilterHistoryResource {
 	@Timed
 	public ResponseEntity<Void> deleteJobFilterHistory(@PathVariable Long id) {
 		log.debug("REST request to delete JobFilterHistory : {}", id);
-		jobFilterHistoryRepository.delete(id);
-		jobFilterHistorySearchRepository.delete(id);
+		jobFilterHistoryRepository.deleteById(id);
+		jobFilterHistorySearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

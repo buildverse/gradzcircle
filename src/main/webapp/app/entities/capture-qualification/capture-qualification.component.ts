@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CaptureQualification } from './capture-qualification.model';
 import { CaptureQualificationService } from './capture-qualification.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-capture-qualification',
     templateUrl: './capture-qualification.component.html'
 })
 export class CaptureQualificationComponent implements OnInit, OnDestroy {
-captureQualifications: CaptureQualification[];
+    captureQualifications: CaptureQualification[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ captureQualifications: CaptureQualification[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.captureQualificationService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<CaptureQualification[]>) => this.captureQualifications = res.body,
+            this.captureQualificationService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<CaptureQualification[]>) => (this.captureQualifications = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.captureQualificationService.query().subscribe(
             (res: HttpResponse<CaptureQualification[]>) => {
                 this.captureQualifications = res.body;
@@ -62,7 +66,7 @@ captureQualifications: CaptureQualification[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInCaptureQualifications();
@@ -76,7 +80,7 @@ captureQualifications: CaptureQualification[];
         return item.id;
     }
     registerChangeInCaptureQualifications() {
-        this.eventSubscriber = this.eventManager.subscribe('captureQualificationListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('captureQualificationListModification', response => this.loadAll());
     }
 
     private onError(error) {

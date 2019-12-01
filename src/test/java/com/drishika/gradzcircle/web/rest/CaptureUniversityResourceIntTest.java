@@ -1,11 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.CaptureUniversity;
-import com.drishika.gradzcircle.repository.CaptureUniversityRepository;
-import com.drishika.gradzcircle.repository.search.CaptureUniversitySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.CaptureUniversity;
+import com.drishika.gradzcircle.repository.CaptureUniversityRepository;
+import com.drishika.gradzcircle.repository.search.CaptureUniversitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CaptureUniversityResource REST controller.
@@ -46,7 +56,7 @@ public class CaptureUniversityResourceIntTest {
     private CaptureUniversityRepository captureUniversityRepository;
 
     @Autowired
-    private CaptureUniversitySearchRepository captureUniversitySearchRepository;
+    private CaptureUniversitySearchRepository mockCaptureUniversitySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +77,7 @@ public class CaptureUniversityResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CaptureUniversityResource captureUniversityResource = new CaptureUniversityResource(captureUniversityRepository, captureUniversitySearchRepository);
+        final CaptureUniversityResource captureUniversityResource = new CaptureUniversityResource(captureUniversityRepository, mockCaptureUniversitySearchRepository);
         this.restCaptureUniversityMockMvc = MockMvcBuilders.standaloneSetup(captureUniversityResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +99,7 @@ public class CaptureUniversityResourceIntTest {
 
     @Before
     public void initTest() {
-        captureUniversitySearchRepository.deleteAll();
+       // captureUniversitySearchRepository.deleteAll();
         captureUniversity = createEntity(em);
     }
 
@@ -111,8 +121,8 @@ public class CaptureUniversityResourceIntTest {
         assertThat(testCaptureUniversity.getUniversityName()).isEqualTo(DEFAULT_UNIVERSITY_NAME);
 
         // Validate the CaptureUniversity in Elasticsearch
-        CaptureUniversity captureUniversityEs = captureUniversitySearchRepository.findOne(testCaptureUniversity.getId());
-        assertThat(captureUniversityEs).isEqualToIgnoringGivenFields(testCaptureUniversity);
+        verify(mockCaptureUniversitySearchRepository,times(1)).save(testCaptureUniversity);
+        
     }
 
     @Test
@@ -175,11 +185,11 @@ public class CaptureUniversityResourceIntTest {
     public void updateCaptureUniversity() throws Exception {
         // Initialize the database
         captureUniversityRepository.saveAndFlush(captureUniversity);
-        captureUniversitySearchRepository.save(captureUniversity);
+      //  captureUniversitySearchRepository.save(captureUniversity);
         int databaseSizeBeforeUpdate = captureUniversityRepository.findAll().size();
 
         // Update the captureUniversity
-        CaptureUniversity updatedCaptureUniversity = captureUniversityRepository.findOne(captureUniversity.getId());
+        CaptureUniversity updatedCaptureUniversity = captureUniversityRepository.findById(captureUniversity.getId()).get();
         // Disconnect from session so that the updates on updatedCaptureUniversity are not directly saved in db
         em.detach(updatedCaptureUniversity);
         updatedCaptureUniversity
@@ -197,8 +207,7 @@ public class CaptureUniversityResourceIntTest {
         assertThat(testCaptureUniversity.getUniversityName()).isEqualTo(UPDATED_UNIVERSITY_NAME);
 
         // Validate the CaptureUniversity in Elasticsearch
-        CaptureUniversity captureUniversityEs = captureUniversitySearchRepository.findOne(testCaptureUniversity.getId());
-        assertThat(captureUniversityEs).isEqualToIgnoringGivenFields(testCaptureUniversity);
+        verify(mockCaptureUniversitySearchRepository,times(1)).save(testCaptureUniversity);
     }
 
     @Test
@@ -209,14 +218,16 @@ public class CaptureUniversityResourceIntTest {
         // Create the CaptureUniversity
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restCaptureUniversityMockMvc.perform(put("/api/capture-universities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureUniversity)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(captureUniversity)))
+                .andExpect(status().isBadRequest());
+
 
         // Validate the CaptureUniversity in the database
         List<CaptureUniversity> captureUniversityList = captureUniversityRepository.findAll();
-        assertThat(captureUniversityList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(captureUniversityList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -224,7 +235,7 @@ public class CaptureUniversityResourceIntTest {
     public void deleteCaptureUniversity() throws Exception {
         // Initialize the database
         captureUniversityRepository.saveAndFlush(captureUniversity);
-        captureUniversitySearchRepository.save(captureUniversity);
+
         int databaseSizeBeforeDelete = captureUniversityRepository.findAll().size();
 
         // Get the captureUniversity
@@ -233,8 +244,7 @@ public class CaptureUniversityResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean captureUniversityExistsInEs = captureUniversitySearchRepository.exists(captureUniversity.getId());
-        assertThat(captureUniversityExistsInEs).isFalse();
+        verify(mockCaptureUniversitySearchRepository,times(1)).deleteById(captureUniversity.getId());
 
         // Validate the database is empty
         List<CaptureUniversity> captureUniversityList = captureUniversityRepository.findAll();
@@ -246,8 +256,10 @@ public class CaptureUniversityResourceIntTest {
     public void searchCaptureUniversity() throws Exception {
         // Initialize the database
         captureUniversityRepository.saveAndFlush(captureUniversity);
-        captureUniversitySearchRepository.save(captureUniversity);
-
+ 
+        when(mockCaptureUniversitySearchRepository.search(queryStringQuery("id:" + captureUniversity.getId())))
+        .thenReturn(Collections.singletonList(captureUniversity));
+        
         // Search the captureUniversity
         restCaptureUniversityMockMvc.perform(get("/api/_search/capture-universities?query=id:" + captureUniversity.getId()))
             .andExpect(status().isOk())

@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { CaptureQualificationComponent } from './capture-qualification.component';
 import { CaptureQualificationDetailComponent } from './capture-qualification-detail.component';
 import { CaptureQualificationPopupComponent } from './capture-qualification-dialog.component';
@@ -15,7 +15,8 @@ export const captureQualificationRoute: Routes = [
             pageTitle: 'gradzcircleApp.captureQualification.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'capture-qualification/:id',
         component: CaptureQualificationDetailComponent,
         data: {

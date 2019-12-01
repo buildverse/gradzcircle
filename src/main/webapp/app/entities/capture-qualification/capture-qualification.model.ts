@@ -1,10 +1,4 @@
-import { BaseEntity } from './../../shared';
-
-export class CaptureQualification implements BaseEntity {
-    constructor(
-        public id?: number,
-        public qualificationName?: string,
-        public candidateEducation?: BaseEntity,
-    ) {
-    }
+import { CandidateEducation } from '../candidate-education/candidate-education.model';
+export class CaptureQualification {
+    constructor(public id?: number, public qualificationName?: string, public candidateEducation?: CandidateEducation) {}
 }

@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,7 +11,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +59,7 @@ public class JobTypeResourceIntTest {
     private JobTypeRepository jobTypeRepository;
 
     @Autowired
-    private JobTypeSearchRepository jobTypeSearchRepository;
+    private JobTypeSearchRepository mockJobTypeSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -80,7 +83,7 @@ public class JobTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final JobTypeResource jobTypeResource = new JobTypeResource(jobTypeRepository, jobTypeSearchRepository,cacheManager);
+        final JobTypeResource jobTypeResource = new JobTypeResource(jobTypeRepository, mockJobTypeSearchRepository,cacheManager);
         this.restJobTypeMockMvc = MockMvcBuilders.standaloneSetup(jobTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -103,7 +106,7 @@ public class JobTypeResourceIntTest {
 
     @Before
     public void initTest() {
-        jobTypeSearchRepository.deleteAll();
+       // jobTypeSearchRepository.deleteAll();
         jobType = createEntity(em);
     }
 
@@ -126,8 +129,7 @@ public class JobTypeResourceIntTest {
         assertThat(testJobType.getJobTypeCost()).isEqualTo(DEFAULT_JOB_TYPE_COST);
 
         // Validate the JobType in Elasticsearch
-        JobType jobTypeEs = jobTypeSearchRepository.findOne(testJobType.getId());
-        assertThat(jobTypeEs).isEqualToIgnoringGivenFields(testJobType);
+        verify(mockJobTypeSearchRepository,times(1)).save(testJobType);
     }
 
     @Test
@@ -192,11 +194,11 @@ public class JobTypeResourceIntTest {
     public void updateJobType() throws Exception {
         // Initialize the database
         jobTypeRepository.saveAndFlush(jobType);
-        jobTypeSearchRepository.save(jobType);
+       // jobTypeSearchRepository.save(jobType);
         int databaseSizeBeforeUpdate = jobTypeRepository.findAll().size();
 
         // Update the jobType
-        JobType updatedJobType = jobTypeRepository.findOne(jobType.getId());
+        JobType updatedJobType = jobTypeRepository.findById(jobType.getId()).get();
         // Disconnect from session so that the updates on updatedJobType are not directly saved in db
         em.detach(updatedJobType);
         updatedJobType
@@ -216,8 +218,7 @@ public class JobTypeResourceIntTest {
         assertThat(testJobType.getJobTypeCost()).isEqualTo(UPDATED_JOB_TYPE_COST);
 
         // Validate the JobType in Elasticsearch
-        JobType jobTypeEs = jobTypeSearchRepository.findOne(testJobType.getId());
-        assertThat(jobTypeEs).isEqualToIgnoringGivenFields(testJobType);
+        verify(mockJobTypeSearchRepository,times(1)).save(testJobType);
     }
 
     @Test
@@ -229,13 +230,12 @@ public class JobTypeResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restJobTypeMockMvc.perform(put("/api/job-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(jobType)))
-            .andExpect(status().isCreated());
-
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(jobType)))
+	            .andExpect(status().isBadRequest());
         // Validate the JobType in the database
         List<JobType> jobTypeList = jobTypeRepository.findAll();
-        assertThat(jobTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(jobTypeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -243,7 +243,7 @@ public class JobTypeResourceIntTest {
     public void deleteJobType() throws Exception {
         // Initialize the database
         jobTypeRepository.saveAndFlush(jobType);
-        jobTypeSearchRepository.save(jobType);
+        //jobTypeSearchRepository.save(jobType);
         int databaseSizeBeforeDelete = jobTypeRepository.findAll().size();
 
         // Get the jobType
@@ -252,8 +252,7 @@ public class JobTypeResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean jobTypeExistsInEs = jobTypeSearchRepository.exists(jobType.getId());
-        assertThat(jobTypeExistsInEs).isFalse();
+        verify(mockJobTypeSearchRepository,times(1)).deleteById(jobType.getId());
 
         // Validate the database is empty
         List<JobType> jobTypeList = jobTypeRepository.findAll();
@@ -265,8 +264,9 @@ public class JobTypeResourceIntTest {
     public void searchJobType() throws Exception {
         // Initialize the database
         jobTypeRepository.saveAndFlush(jobType);
-        jobTypeSearchRepository.save(jobType);
-
+       // jobTypeSearchRepository.save(jobType);
+        when(mockJobTypeSearchRepository.search(queryStringQuery("id:" + jobType.getId())))
+        .thenReturn(Collections.singletonList(jobType));
         // Search the jobType
         restJobTypeMockMvc.perform(get("/api/_search/job-types?query=id:" + jobType.getId()))
             .andExpect(status().isOk())

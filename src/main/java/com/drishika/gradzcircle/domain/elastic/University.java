@@ -17,5 +17,6 @@ public class University extends com.drishika.gradzcircle.domain.University {
 	public void setSuggest(Completion suggest) {
 		this.suggest = suggest;
 	}
+	
 
 }

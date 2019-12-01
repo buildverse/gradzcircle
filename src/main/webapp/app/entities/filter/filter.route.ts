@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { FilterComponent } from './filter.component';
 import { FilterDetailComponent } from './filter-detail.component';
 import { FilterPopupComponent } from './filter-dialog.component';
@@ -15,7 +15,8 @@ export const filterRoute: Routes = [
             pageTitle: 'gradzcircleApp.filter.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'filter/:id',
         component: FilterDetailComponent,
         data: {

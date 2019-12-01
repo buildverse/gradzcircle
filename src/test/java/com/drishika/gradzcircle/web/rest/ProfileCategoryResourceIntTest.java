@@ -1,11 +1,23 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import java.util.Collections;
+import java.util.List;
 
-import com.drishika.gradzcircle.domain.ProfileCategory;
-import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
-import com.drishika.gradzcircle.repository.search.ProfileCategorySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.ProfileCategory;
+import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
+import com.drishika.gradzcircle.repository.search.ProfileCategorySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the ProfileCategoryResource REST controller.
@@ -49,7 +58,7 @@ public class ProfileCategoryResourceIntTest {
     private ProfileCategoryRepository profileCategoryRepository;
 
     @Autowired
-    private ProfileCategorySearchRepository profileCategorySearchRepository;
+    private ProfileCategorySearchRepository mockProfileCategorySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -70,7 +79,7 @@ public class ProfileCategoryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ProfileCategoryResource profileCategoryResource = new ProfileCategoryResource(profileCategoryRepository, profileCategorySearchRepository);
+        final ProfileCategoryResource profileCategoryResource = new ProfileCategoryResource(profileCategoryRepository, mockProfileCategorySearchRepository);
         this.restProfileCategoryMockMvc = MockMvcBuilders.standaloneSetup(profileCategoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -93,7 +102,7 @@ public class ProfileCategoryResourceIntTest {
 
     @Before
     public void initTest() {
-        profileCategorySearchRepository.deleteAll();
+      //  profileCategorySearchRepository.deleteAll();
         profileCategory = createEntity(em);
     }
 
@@ -116,8 +125,7 @@ public class ProfileCategoryResourceIntTest {
         assertThat(testProfileCategory.getWeightage()).isEqualTo(DEFAULT_WEIGHTAGE);
 
         // Validate the ProfileCategory in Elasticsearch
-        ProfileCategory profileCategoryEs = profileCategorySearchRepository.findOne(testProfileCategory.getId());
-        assertThat(profileCategoryEs).isEqualToIgnoringGivenFields(testProfileCategory);
+       verify(mockProfileCategorySearchRepository,times(1)).save(testProfileCategory);
     }
 
     @Test
@@ -182,11 +190,11 @@ public class ProfileCategoryResourceIntTest {
     public void updateProfileCategory() throws Exception {
         // Initialize the database
         profileCategoryRepository.saveAndFlush(profileCategory);
-        profileCategorySearchRepository.save(profileCategory);
+      //  profileCategorySearchRepository.save(profileCategory);
         int databaseSizeBeforeUpdate = profileCategoryRepository.findAll().size();
 
         // Update the profileCategory
-        ProfileCategory updatedProfileCategory = profileCategoryRepository.findOne(profileCategory.getId());
+        ProfileCategory updatedProfileCategory = profileCategoryRepository.findById(profileCategory.getId()).get();
         // Disconnect from session so that the updates on updatedProfileCategory are not directly saved in db
         em.detach(updatedProfileCategory);
         updatedProfileCategory
@@ -206,8 +214,7 @@ public class ProfileCategoryResourceIntTest {
         assertThat(testProfileCategory.getWeightage()).isEqualTo(UPDATED_WEIGHTAGE);
 
         // Validate the ProfileCategory in Elasticsearch
-        ProfileCategory profileCategoryEs = profileCategorySearchRepository.findOne(testProfileCategory.getId());
-        assertThat(profileCategoryEs).isEqualToIgnoringGivenFields(testProfileCategory);
+        verify(mockProfileCategorySearchRepository,times(1)).save(testProfileCategory);
     }
 
     @Test
@@ -218,14 +225,17 @@ public class ProfileCategoryResourceIntTest {
         // Create the ProfileCategory
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+
+        
         restProfileCategoryMockMvc.perform(put("/api/profile-categories")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(profileCategory)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(profileCategory)))
+                .andExpect(status().isBadRequest());
 
         // Validate the ProfileCategory in the database
         List<ProfileCategory> profileCategoryList = profileCategoryRepository.findAll();
-        assertThat(profileCategoryList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(profileCategoryList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockProfileCategorySearchRepository,times(0)).deleteById(profileCategory.getId());
     }
 
     @Test
@@ -233,7 +243,7 @@ public class ProfileCategoryResourceIntTest {
     public void deleteProfileCategory() throws Exception {
         // Initialize the database
         profileCategoryRepository.saveAndFlush(profileCategory);
-        profileCategorySearchRepository.save(profileCategory);
+       // profileCategorySearchRepository.save(profileCategory);
         int databaseSizeBeforeDelete = profileCategoryRepository.findAll().size();
 
         // Get the profileCategory
@@ -242,9 +252,8 @@ public class ProfileCategoryResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean profileCategoryExistsInEs = profileCategorySearchRepository.exists(profileCategory.getId());
-        assertThat(profileCategoryExistsInEs).isFalse();
-
+        
+        verify(mockProfileCategorySearchRepository,times(1)).deleteById(profileCategory.getId());
         // Validate the database is empty
         List<ProfileCategory> profileCategoryList = profileCategoryRepository.findAll();
         assertThat(profileCategoryList).hasSize(databaseSizeBeforeDelete - 1);
@@ -255,7 +264,8 @@ public class ProfileCategoryResourceIntTest {
     public void searchProfileCategory() throws Exception {
         // Initialize the database
         profileCategoryRepository.saveAndFlush(profileCategory);
-        profileCategorySearchRepository.save(profileCategory);
+        when(mockProfileCategorySearchRepository.search(queryStringQuery("id:" + profileCategory.getId())))
+        .thenReturn((Collections.singletonList(profileCategory)));
 
         // Search the profileCategory
         restProfileCategoryMockMvc.perform(get("/api/_search/profile-categories?query=id:" + profileCategory.getId()))

@@ -11,13 +11,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,7 +113,7 @@ public class GenderResource {
 	public ResponseEntity<Gender> updateGender(@RequestBody Gender gender) throws URISyntaxException {
 		log.debug("REST request to update Gender : {}", gender);
 		if (gender.getId() == null) {
-			return createGender(gender);
+			 throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Gender result = genderRepository.save(gender);
 		// genderSearchRepository.save(result);
@@ -158,8 +160,8 @@ public class GenderResource {
 	@Timed
 	public ResponseEntity<Gender> getGender(@PathVariable Long id) {
 		log.debug("REST request to get Gender : {}", id);
-		Gender gender = genderRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(gender));
+		Optional<Gender> gender = genderRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(gender);
 	}
 
 	/**
@@ -173,8 +175,8 @@ public class GenderResource {
 	@Timed
 	public ResponseEntity<Void> deleteGender(@PathVariable Long id) {
 		log.debug("REST request to delete Gender : {}", id);
-		genderRepository.delete(id);
-		genderSearchRepository.delete(id);
+		genderRepository.deleteById(id);
+		genderSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -207,11 +209,12 @@ public class GenderResource {
 	public String searchGenderBySuggest(@RequestParam String query) {
 		log.debug("REST request to search Gender for query {}", query);
 		String suggest = null;
-		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("gender-suggest")
-				.text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Gender.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("gender-suggest");
+		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticSearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Gender.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
+		
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> genders = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

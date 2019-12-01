@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Language } from './language.model';
 import { LanguageService } from './language.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-language',
     templateUrl: './language.component.html'
 })
 export class LanguageComponent implements OnInit, OnDestroy {
-languages: Language[];
+    languages: Language[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ languages: Language[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.languageService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Language[]>) => this.languages = res.body,
+            this.languageService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Language[]>) => (this.languages = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.languageService.query().subscribe(
             (res: HttpResponse<Language[]>) => {
                 this.languages = res.body;
@@ -62,7 +66,7 @@ languages: Language[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInLanguages();
@@ -76,7 +80,7 @@ languages: Language[];
         return item.id;
     }
     registerChangeInLanguages() {
-        this.eventSubscriber = this.eventManager.subscribe('languageListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('languageListModification', response => this.loadAll());
     }
 
     private onError(error) {

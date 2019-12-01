@@ -11,13 +11,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,7 +115,7 @@ public class QualificationResource {
 			throws URISyntaxException {
 		log.debug("REST request to update Qualification : {}", qualification);
 		if (qualification.getId() == null) {
-			return createQualification(qualification);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Qualification result = qualificationRepository.save(qualification);
 		// qualificationSearchRepository.save(result);
@@ -162,8 +164,8 @@ public class QualificationResource {
 	@Timed
 	public ResponseEntity<Qualification> getQualification(@PathVariable Long id) {
 		log.debug("REST request to get Qualification : {}", id);
-		Qualification qualification = qualificationRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(qualification));
+		Optional<Qualification> qualification = qualificationRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(qualification);
 	}
 
 	/**
@@ -177,8 +179,8 @@ public class QualificationResource {
 	@Timed
 	public ResponseEntity<Void> deleteQualification(@PathVariable Long id) {
 		log.debug("REST request to delete Qualification : {}", id);
-		qualificationRepository.delete(id);
-		qualificationSearchRepository.delete(id);
+		qualificationRepository.deleteById(id);
+		qualificationSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -212,10 +214,10 @@ public class QualificationResource {
 		log.debug("REST request to search qualifications for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("qualification-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Qualification.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("qualification-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Qualification.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> qualifications = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

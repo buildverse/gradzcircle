@@ -1,8 +1,7 @@
-import { BaseEntity } from './../../shared';
-import {CandidateProject } from '../candidate-project/candidate-project.model';
-import {Candidate } from '../candidate/candidate.model';
- 
-export class CandidateEducation implements BaseEntity {
+import { CandidateProject } from '../candidate-project/candidate-project.model';
+import { Candidate } from '../candidate/candidate.model';
+
+export class CandidateEducation {
     constructor(
         public id?: number,
         public grade?: number,
@@ -25,10 +24,10 @@ export class CandidateEducation implements BaseEntity {
         public qualification?: any,
         public course?: any,
         public college?: any,
-        public collapsed? : boolean
+        public collapsed?: boolean
     ) {
         this.isPursuingEducation = false;
         this.highestQualification = false;
-      this.collapsed = true;
+        this.collapsed = true;
     }
 }

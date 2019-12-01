@@ -10,7 +10,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
@@ -101,7 +103,7 @@ public class JobCategoryResource {
     public ResponseEntity<JobCategory> updateJobCategory(@RequestBody JobCategory jobCategory) throws URISyntaxException {
         log.debug("REST request to update JobCategory : {}", jobCategory);
         if (jobCategory.getId() == null) {
-            return createJobCategory(jobCategory);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         JobCategory result = jobCategoryRepository.save(jobCategory);
         elasticSearchTemplate.index(new JobCategoryEntityBuilder(result.getId()).name(result.getJobCategory())
@@ -134,8 +136,8 @@ public class JobCategoryResource {
     @Timed
     public ResponseEntity<JobCategory> getJobCategory(@PathVariable Long id) {
         log.debug("REST request to get JobCategory : {}", id);
-        JobCategory jobCategory = jobCategoryRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobCategory));
+        Optional<JobCategory> jobCategory = jobCategoryRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(jobCategory);
     }
 
     /**
@@ -148,8 +150,8 @@ public class JobCategoryResource {
     @Timed
     public ResponseEntity<Void> deleteJobCategory(@PathVariable Long id) {
         log.debug("REST request to delete JobCategory : {}", id);
-        jobCategoryRepository.delete(id);
-        jobCategorySearchRepository.delete(id);
+        jobCategoryRepository.deleteById(id);
+        jobCategorySearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -183,10 +185,11 @@ public class JobCategoryResource {
 		log.debug("REST request to search job categories for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("jobcategory-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.JobCategory.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("jobcategory-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticSearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.JobCategory.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
+		
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> jobCategories = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

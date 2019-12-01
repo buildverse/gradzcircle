@@ -1,11 +1,5 @@
-import { BaseEntity } from './../../shared';
-
-export class VisaType implements BaseEntity {
-    constructor(
-        public id?: number,
-        public visa?: string,
-        public candidates?: BaseEntity[],
-        public country?: BaseEntity,
-    ) {
-    }
+import { Candidate } from '../candidate/candidate.model';
+import { Country } from '../country/country.model';
+export class VisaType {
+    constructor(public id?: number, public visa?: string, public candidates?: Candidate[], public country?: Country) {}
 }

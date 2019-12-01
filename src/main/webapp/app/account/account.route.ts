@@ -7,25 +7,22 @@ import {
     passwordResetFinishRoute,
     passwordResetInitRoute,
     registerRoute,
-    socialRegisterRoute,
-    socialAuthRoute,
     settingsRoute
 } from './';
 
 const ACCOUNT_ROUTES = [
-   activateRoute,
-   passwordRoute,
-   passwordResetFinishRoute,
-   passwordResetInitRoute,
-   registerRoute,
-  
+    activateRoute,
+    passwordRoute,
+    passwordResetFinishRoute,
+    passwordResetInitRoute,
+    registerRoute,
     ...corporateAccountManageRoutes,
-    socialAuthRoute,
-    socialRegisterRoute,
     settingsRoute
 ];
 
-export const accountState: Routes = [{
-    path: '',
-    children: ACCOUNT_ROUTES
-}];
+export const accountState: Routes = [
+    {
+        path: '',
+        children: ACCOUNT_ROUTES
+    }
+];

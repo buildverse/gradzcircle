@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { AuditComponent } from './audit.component';
 import { AuditDetailComponent } from './audit-detail.component';
 import { AuditPopupComponent } from './audit-dialog.component';
@@ -15,7 +15,8 @@ export const auditRoute: Routes = [
             pageTitle: 'gradzcircleApp.audit.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'audit/:id',
         component: AuditDetailComponent,
         data: {

@@ -78,7 +78,7 @@ public class ErrorMessagesResource {
     public ResponseEntity<ErrorMessages> updateErrorMessages(@RequestBody ErrorMessages errorMessages) throws URISyntaxException {
         log.debug("REST request to update ErrorMessages : {}", errorMessages);
         if (errorMessages.getId() == null) {
-            return createErrorMessages(errorMessages);
+        		throw new BadRequestAlertException("A new profileCategory cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ErrorMessages result = errorMessagesRepository.save(errorMessages);
         errorMessagesSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class ErrorMessagesResource {
     @Timed
     public ResponseEntity<ErrorMessages> getErrorMessages(@PathVariable Long id) {
         log.debug("REST request to get ErrorMessages : {}", id);
-        ErrorMessages errorMessages = errorMessagesRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(errorMessages));
+        Optional<ErrorMessages> errorMessages = errorMessagesRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(errorMessages);
     }
 
     /**
@@ -123,8 +123,8 @@ public class ErrorMessagesResource {
     @Timed
     public ResponseEntity<Void> deleteErrorMessages(@PathVariable Long id) {
         log.debug("REST request to delete ErrorMessages : {}", id);
-        errorMessagesRepository.delete(id);
-        errorMessagesSearchRepository.delete(id);
+        errorMessagesRepository.deleteById(id);
+        errorMessagesSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

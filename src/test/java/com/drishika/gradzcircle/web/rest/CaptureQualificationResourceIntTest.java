@@ -1,11 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.CaptureQualification;
-import com.drishika.gradzcircle.repository.CaptureQualificationRepository;
-import com.drishika.gradzcircle.repository.search.CaptureQualificationSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.CaptureQualification;
+import com.drishika.gradzcircle.repository.CaptureQualificationRepository;
+import com.drishika.gradzcircle.repository.search.CaptureQualificationSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the CaptureQualificationResource REST controller.
@@ -46,7 +56,7 @@ public class CaptureQualificationResourceIntTest {
     private CaptureQualificationRepository captureQualificationRepository;
 
     @Autowired
-    private CaptureQualificationSearchRepository captureQualificationSearchRepository;
+    private CaptureQualificationSearchRepository mockCaptureQualificationSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +77,7 @@ public class CaptureQualificationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CaptureQualificationResource captureQualificationResource = new CaptureQualificationResource(captureQualificationRepository, captureQualificationSearchRepository);
+        final CaptureQualificationResource captureQualificationResource = new CaptureQualificationResource(captureQualificationRepository, mockCaptureQualificationSearchRepository);
         this.restCaptureQualificationMockMvc = MockMvcBuilders.standaloneSetup(captureQualificationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +99,7 @@ public class CaptureQualificationResourceIntTest {
 
     @Before
     public void initTest() {
-        captureQualificationSearchRepository.deleteAll();
+       // captureQualificationSearchRepository.deleteAll();
         captureQualification = createEntity(em);
     }
 
@@ -111,8 +121,9 @@ public class CaptureQualificationResourceIntTest {
         assertThat(testCaptureQualification.getQualificationName()).isEqualTo(DEFAULT_QUALIFICATION_NAME);
 
         // Validate the CaptureQualification in Elasticsearch
-        CaptureQualification captureQualificationEs = captureQualificationSearchRepository.findOne(testCaptureQualification.getId());
-        assertThat(captureQualificationEs).isEqualToIgnoringGivenFields(testCaptureQualification);
+        
+        verify(mockCaptureQualificationSearchRepository,times(1)).save(testCaptureQualification);
+        
     }
 
     @Test
@@ -175,11 +186,10 @@ public class CaptureQualificationResourceIntTest {
     public void updateCaptureQualification() throws Exception {
         // Initialize the database
         captureQualificationRepository.saveAndFlush(captureQualification);
-        captureQualificationSearchRepository.save(captureQualification);
         int databaseSizeBeforeUpdate = captureQualificationRepository.findAll().size();
 
         // Update the captureQualification
-        CaptureQualification updatedCaptureQualification = captureQualificationRepository.findOne(captureQualification.getId());
+        CaptureQualification updatedCaptureQualification = captureQualificationRepository.findById(captureQualification.getId()).get();
         // Disconnect from session so that the updates on updatedCaptureQualification are not directly saved in db
         em.detach(updatedCaptureQualification);
         updatedCaptureQualification
@@ -197,8 +207,7 @@ public class CaptureQualificationResourceIntTest {
         assertThat(testCaptureQualification.getQualificationName()).isEqualTo(UPDATED_QUALIFICATION_NAME);
 
         // Validate the CaptureQualification in Elasticsearch
-        CaptureQualification captureQualificationEs = captureQualificationSearchRepository.findOne(testCaptureQualification.getId());
-        assertThat(captureQualificationEs).isEqualToIgnoringGivenFields(testCaptureQualification);
+        verify(mockCaptureQualificationSearchRepository,times(1)).save(testCaptureQualification);
     }
 
     @Test
@@ -210,13 +219,13 @@ public class CaptureQualificationResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restCaptureQualificationMockMvc.perform(put("/api/capture-qualifications")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(captureQualification)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(captureQualification)))
+                .andExpect(status().isBadRequest());
 
         // Validate the CaptureQualification in the database
         List<CaptureQualification> captureQualificationList = captureQualificationRepository.findAll();
-        assertThat(captureQualificationList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(captureQualificationList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -224,7 +233,7 @@ public class CaptureQualificationResourceIntTest {
     public void deleteCaptureQualification() throws Exception {
         // Initialize the database
         captureQualificationRepository.saveAndFlush(captureQualification);
-        captureQualificationSearchRepository.save(captureQualification);
+      //  captureQualificationSearchRepository.save(captureQualification);
         int databaseSizeBeforeDelete = captureQualificationRepository.findAll().size();
 
         // Get the captureQualification
@@ -233,9 +242,8 @@ public class CaptureQualificationResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean captureQualificationExistsInEs = captureQualificationSearchRepository.exists(captureQualification.getId());
-        assertThat(captureQualificationExistsInEs).isFalse();
-
+        
+        verify(mockCaptureQualificationSearchRepository,times(1)).deleteById(captureQualification.getId());
         // Validate the database is empty
         List<CaptureQualification> captureQualificationList = captureQualificationRepository.findAll();
         assertThat(captureQualificationList).hasSize(databaseSizeBeforeDelete - 1);
@@ -246,8 +254,10 @@ public class CaptureQualificationResourceIntTest {
     public void searchCaptureQualification() throws Exception {
         // Initialize the database
         captureQualificationRepository.saveAndFlush(captureQualification);
-        captureQualificationSearchRepository.save(captureQualification);
-
+       
+        when(mockCaptureQualificationSearchRepository.search(queryStringQuery("id:" + captureQualification.getId())))
+        .thenReturn((Collections.singletonList(captureQualification)));
+        
         // Search the captureQualification
         restCaptureQualificationMockMvc.perform(get("/api/_search/capture-qualifications?query=id:" + captureQualification.getId()))
             .andExpect(status().isOk())

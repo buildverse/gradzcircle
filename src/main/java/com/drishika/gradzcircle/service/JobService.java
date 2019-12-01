@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -156,7 +157,7 @@ public class JobService {
 	public Job createJob(Job job) throws BeanCopyException {
 		log.info("In create job {}", job);
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-		job.setCorporate(corporateRepository.findOne(job.getCorporate().getId()));
+		job.setCorporate(corporateRepository.findById(job.getCorporate().getId()).get());
 		job.setCreateDate(dateTime);
 		job.setCanEdit(Boolean.TRUE);
 		Job savedJob = jobRepository.save(job);
@@ -300,11 +301,11 @@ public class JobService {
 	}
 
 	public JobFilter getJobFilter(Long id) {
-		return jobFilterRepository.findOne(id);
+		return jobFilterRepository.findById(id).get();
 	}
 
 	public Job getJob(Long id) {
-		return jobRepository.findOne(id);
+		return jobRepository.findById(id).get();
 	}
 
 	public List<Job> getAllActiveJobs() {
@@ -345,7 +346,7 @@ public class JobService {
 	private JobListDTO convertToJobListDTO(CorporateCandidate linkedCandidate) {
 		JobListDTO jobDto = null;
 		Set<CandidateJob> candidateJobs = linkedCandidate.getCandidate().getCandidateJobs();
-		CandidateJob candidateJob = new CandidateJob(linkedCandidate.getCandidate(),jobRepository.findOne(linkedCandidate.getId().getJobId()));
+		CandidateJob candidateJob = new CandidateJob(linkedCandidate.getCandidate(),jobRepository.findById(linkedCandidate.getId().getJobId()).get());
 		CandidateJob filteredCandidateJob = candidateJobs.stream().filter(cJ -> cJ.equals(candidateJob)).findAny().orElse(null);
 		if(filteredCandidateJob != null)
 			jobDto = new JobListDTO(filteredCandidateJob.getJob().getJobTitle(),filteredCandidateJob.getMatchScore());
@@ -372,8 +373,8 @@ public class JobService {
 
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidates(Pageable pageable, Long candidateId, Double matchScoreFrom, Double matchScoreTo) {
 		long startTime = System.currentTimeMillis();
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		Set<CandidateEducation> candidateEducations = candidate.getEducations();
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
+		Set<CandidateEducation> candidateEducations = candidate.get().getEducations();
 		Page<Job> jobPage = null;
 		final Page<CandidateJobDTO> page;
 		if(candidateEducations.isEmpty() ) {
@@ -416,10 +417,10 @@ public class JobService {
 		Page<Job> jobPage = null;
 		final List<JobStatistics> jobStatisticsEmploymentTypeForEmploymentTypeSelected;
 		final List<JobStatistics> jobStatisticsJobTypeForEmploymentTypeSelected;
-		Candidate candidate = candidateRepository.findOne(candidateId);
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
 		//EmploymentType employmentType = employmentTypeRepository.findByEmploymentType(employmentTypeName);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);
-		if (candidateId > 0 && (candidate.getEducations()!=null && !candidate.getEducations().isEmpty())) {
+		if (candidateId > 0 && (candidate.get().getEducations()!=null && !candidate.get().getEducations().isEmpty())) {
 			if(matchScoreFrom >-1 && matchScoreTo >-1) {
 				jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedFilterByEmploymentTypeForCandidateWithMatchScore(candidateId,
 					employmentType.getId(), matchScoreFrom, matchScoreTo, pageable);
@@ -460,8 +461,8 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findByJobType(jobTypeName);
 		JobType jobType = getJobType(jobTypeName);
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		if(candidateId <0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
+		if(candidateId <0 || (candidate.get().getEducations()!=null && candidate.get().getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndJobType(active, jobType, pageable);
 		else {
 			if(matchScoreFrom>-1 && matchScoreTo >-1)
@@ -549,9 +550,11 @@ public class JobService {
 			String jobTypeName3, Long candidateId, Double matchScoreFrom, Double matchScoreTo,Pageable pageable) throws Exception {
 		long startTime = System.currentTimeMillis();
 		Page<Job> jobPage = null;
+		Candidate candidate = null;
 		//JobType jobType = jobTypeRepository.findRemainingJobType(jobTypeName1, jobTypeName2, jobTypeName3);
 		JobType jobType = filterJobType(jobTypeName1, jobTypeName2, jobTypeName3);
-		Candidate candidate = candidateRepository.findOne(candidateId);
+		if(candidateRepository.findById(candidateId).isPresent())
+			candidate = candidateRepository.findById(candidateId).get();
 		if(candidateId<0 || (candidate.getEducations()!=null && candidate.getEducations().isEmpty()))
 			jobPage = jobRepository.findByJobStatusAndJobTypeNot(active, jobType, pageable);
 		else {
@@ -630,10 +633,10 @@ public class JobService {
 		Page<Job> jobPage = null;
 		//JobType jobType = jobTypeRepository.findByJobType(jobTypeName);
 		JobType jobType = getJobType(jobTypeName);
-		Candidate candidate = candidateRepository.findOne(candidateId);
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
 		EmploymentType employmentType = getEmploymentType(employmentTypeName);//employmentTypeRepository.findByEmploymentType(employmentTypeName);
 		log.debug("Job Type and Employment Type are {} {}",jobType,employmentType);
-		if(candidateId > 0 && (candidate.getEducations()!=null && !candidate.getEducations().isEmpty())) {
+		if(candidateId > 0 && (candidate.get().getEducations()!=null && !candidate.get().getEducations().isEmpty())) {
 			if(matchScoreFrom > -1 && matchScoreTo > -1)
 				jobPage = jobRepository.findByJobStatusAndMatchAndNotAppliedFilteredByEmploymentTypeAndJobTypeForCandidateWithMatchScore(candidateId,
 						employmentType.getId(), jobType.getId(), matchScoreFrom, matchScoreTo, pageable);
@@ -913,8 +916,8 @@ public class JobService {
 	
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidatesByEmploymentType(Pageable pageable, Long candidateId, Long employmentTypeId) {
 		long startTime = System.currentTimeMillis();
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		Set<CandidateEducation> candidateEducations = candidate.getEducations();
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
+		Set<CandidateEducation> candidateEducations = candidate.get().getEducations();
 		Page<Job> jobPage = null;
 		final Page<CandidateJobDTO> page;
 		if(candidateEducations.isEmpty()) {
@@ -934,8 +937,8 @@ public class JobService {
 	
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidatesByJobType(Pageable pageable, Long candidateId,Long jobTypeId) {
 		long startTime = System.currentTimeMillis();
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		Set<CandidateEducation> candidateEducations = candidate.getEducations();
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
+		Set<CandidateEducation> candidateEducations = candidate.get().getEducations();
 		Page<Job> jobPage = null;
 		final Page<CandidateJobDTO> page;
 		if(candidateEducations.isEmpty()) {
@@ -955,8 +958,8 @@ public class JobService {
 	
 	public Page<CandidateJobDTO> getNewActiveJobsListForCandidatesByEmploymentTypeAndJobType(Pageable pageable, Long candidateId,Long employmentTypeId,Long jobTypeId) {
 		long startTime = System.currentTimeMillis();
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		Set<CandidateEducation> candidateEducations = candidate.getEducations();
+		Optional<Candidate> candidate = candidateRepository.findById(candidateId);
+		Set<CandidateEducation> candidateEducations = candidate.get().getEducations();
 		Page<Job> jobPage = null;
 		final Page<CandidateJobDTO> page;
 		if(candidateEducations.isEmpty()) {
@@ -989,7 +992,7 @@ public class JobService {
 			candidatePage = jobRepository.findByAppliedCandidates(jobId,fromScore,toScore, pageable);
 		final Page<CandidateProfileListDTO> page = candidatePage
 				.map(candidateAppliedJob -> converter.convertToCandidateProfileListingDTO(candidateAppliedJob,
-						candidateRepository.findOne(candidateAppliedJob.getId().getCandidateId()),jobRepository.findOne(jobId)));
+						candidateRepository.findById(candidateAppliedJob.getId().getCandidateId()).get(),jobRepository.findById(jobId).get()));
 		return page;
 	}
 
@@ -1011,8 +1014,9 @@ public class JobService {
 	}*/
 	
 	public Job applyJobForCandidate(Long jobId, Long loginId) {
-		Job job = jobRepository.findOne(jobId);
+		Optional<Job> jobOptional = jobRepository.findById(jobId);
 		Candidate candidate = candidateRepository.findByLoginId(loginId);
+		Job job = jobOptional.get();
 		job.addAppliedCandidate(candidate);
 		return jobRepository.save(job);
 	}
@@ -1048,7 +1052,8 @@ public class JobService {
 
 	public JobEconomicsDTO getJobForAddingCandidates(Long id) {
 		Double  filterCost =0d ;
-		Job job = jobRepository.findOne(id);
+		Optional<Job> jobOptional = jobRepository.findById(id);
+		Job job = jobOptional.get();
 		Iterator<JobFilter> iterator = job.getJobFilters().iterator();
 		while(iterator.hasNext()) {
 			try {
@@ -1063,14 +1068,14 @@ public class JobService {
 	}
 	
 	public CandidateJobDTO getJobForCandidateView(Long jobId,Long candidateId) {
-		Job job = jobRepository.findOne(jobId);
+		Optional<Job> job = jobRepository.findById(jobId);
 		Boolean hasEducation = candidateEducationService.doesCandidateHaveEducation(candidateId);
-		return converter.convertJobViewForCandidate(job, candidateId,hasEducation);		
+		return converter.convertJobViewForCandidate(job.get(), candidateId,hasEducation);		
 	}
 	
 	public CandidateJobDTO getJobForGuest(Long jobId) {
-		Job job = jobRepository.findOne(jobId);
-		return converter.convertJobViewForCandidate(job,-1L,false);		
+		Optional<Job> job = jobRepository.findById(jobId);
+		return converter.convertJobViewForCandidate(job.get(),-1L,false);		
 	}
 	
 	private Double extractJobFilterCost(JobFilter jobFilter,Job job) throws Exception{

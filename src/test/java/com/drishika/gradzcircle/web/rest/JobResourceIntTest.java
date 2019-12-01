@@ -1,11 +1,12 @@
-
 package com.drishika.gradzcircle.web.rest;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,8 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -220,7 +224,7 @@ public class JobResourceIntTest {
 	private CandidateRepository candidateRepository;
 
 	@Autowired
-	private JobSearchRepository jobSearchRepository;
+	private JobSearchRepository mockJobSearchRepository;
 
 	@Autowired
 	private CourseRepository courseRepository;
@@ -330,7 +334,7 @@ public class JobResourceIntTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final JobResource jobResource = new JobResource(jobRepository, jobSearchRepository, jobService);
+		final JobResource jobResource = new JobResource(jobRepository, mockJobSearchRepository, jobService);
 
 		this.restJobMockMvc = MockMvcBuilders.standaloneSetup(jobResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
@@ -996,7 +1000,7 @@ public class JobResourceIntTest {
 		jobRepository.saveAndFlush(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job toBeUpdated = new Job();
 		JobsUtil.populateHistories(toBeUpdated, initializedJob);
 		toBeUpdated.setAdditionalFilterAmount(UPDATED_ADDITIONAL_FILTER_AMOUNT);
@@ -1062,7 +1066,7 @@ public class JobResourceIntTest {
 
 		// Validate the Job in Elasticsearch
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(jobEs.getJobTitle()).isEqualTo(testJob.getJobTitle());
 		 * assertThat(jobEs.getJobDescription()).isEqualTo(testJob.getJobDescription());
 		 * assertThat(jobEs.getNoOfApplicants()).isEqualTo(testJob.getNoOfApplicants());
@@ -1300,7 +1304,7 @@ public class JobResourceIntTest {
 
 	@Test
 	@Transactional
-	public void deleteJob() throws Exception {
+	public void deleteByIdJob() throws Exception {
 		// Initialize the database
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
@@ -1323,10 +1327,11 @@ public class JobResourceIntTest {
 	@Transactional
 	public void searchJob() throws Exception {
 		// Initialize the database
-		corporateRepository.saveAndFlush(corporate);
+		//corporateRepository.saveAndFlush(corporate);
 		jobRepository.saveAndFlush(job);
-		jobSearchRepository.save(job);
-
+		//jobSearchRepository.save(job);
+		  when(mockJobSearchRepository.search(queryStringQuery("id:" + job.getId()), PageRequest.of(0, 20)))
+	        .thenReturn(new PageImpl<>(Collections.singletonList(job), PageRequest.of(0, 1), 1));
 		// Search the job
 		restJobMockMvc.perform(get("/api/_search/jobs?query=id:" + job.getId())).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -1399,7 +1404,7 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		// Job prevJob = new Job ();
 		// BeanUtils.copyProperties(prevJob, initializedJob);
 
@@ -1453,7 +1458,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -1521,8 +1526,8 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
-		JobHistory initialzedJobHistory = jobHistoryRepository.findOne(jobHistory.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
+		JobHistory initialzedJobHistory = jobHistoryRepository.getOne(jobHistory.getId());
 		JobHistory prevJobHistory = new JobHistory();
 		BeanUtils.copyProperties(prevJobHistory, initialzedJobHistory);
 		Job prevJob = new Job();
@@ -1577,7 +1582,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -1651,7 +1656,7 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
 		// to be updated
@@ -1695,7 +1700,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -1787,7 +1792,7 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
 		// to be updated
@@ -1834,7 +1839,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -1934,10 +1939,10 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
-		JobFilter filter = jobFilterRepository.findOne(jobFilter.getId());
+		JobFilter filter = jobFilterRepository.getOne(jobFilter.getId());
 		JobFilter prevJobFilter = new JobFilter();
 		BeanUtils.copyProperties(prevJobFilter, filter);
 		// to be updated
@@ -1986,7 +1991,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2096,10 +2101,10 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 		int jobFiltersSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
-		JobFilter filter = jobFilterRepository.findOne(jobFilter.getId());
+		JobFilter filter = jobFilterRepository.getOne(jobFilter.getId());
 		JobFilter prevJobFilter = new JobFilter();
 		BeanUtils.copyProperties(prevJobFilter, filter);
 		// to be updated
@@ -2117,7 +2122,7 @@ public class JobResourceIntTest {
 		// Execute Update
 		ResultActions sction = restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(toBeUpdated))).andExpect(status().isOk());
-		System.out.println("++++++++++++++++++" + sction.andReturn().getResponse().getContentAsString());
+		//System.out.println("++++++++++++++++++" + sction.andReturn().getResponse().getContentAsString());
 		List<Job> jobList = jobRepository.findAll();
 		List<JobHistory> jobHistoryList = jobHistoryRepository.findAll();
 		List<JobFilter> jobFilterList = jobFilterRepository.findAll();
@@ -2148,7 +2153,7 @@ public class JobResourceIntTest {
 		assertThat(testJob.getJobFilters()).hasSize(1);
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2234,7 +2239,7 @@ public class JobResourceIntTest {
 		job.setJobFilters(jobFilters);
 		jobRepository.saveAndFlush(job);
 		// jobSearchRepository.save(job);
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job toBeUpdated = new Job();
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
@@ -2263,7 +2268,7 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		// Job prevJob = new Job ();
 		// JobsUtil.populateHistories(prevJob, initializedJob);
 
@@ -2299,7 +2304,7 @@ public class JobResourceIntTest {
 
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2342,7 +2347,7 @@ public class JobResourceIntTest {
 		// jobSearchRepository.save(job);
 		int jobDatabaseSizeBeforeUpdate = jobRepository.findAll().size();
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job toBeUpdated = new Job();
 		BeanUtils.copyProperties(toBeUpdated, initializedJob);
 		Job prevJob = new Job();
@@ -2374,7 +2379,7 @@ public class JobResourceIntTest {
 
 		// validate in ES
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2421,7 +2426,7 @@ public class JobResourceIntTest {
 		int jobFilterSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		Set<JobFilter> jobFilters = createJobFilter(em);
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 
 		Job toBeUpdated = new Job();
 		toBeUpdated.jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
@@ -2458,7 +2463,7 @@ public class JobResourceIntTest {
 
 		JobFilter testJobFilter = jobFilterList.get(jobFilterList.size() - 1);
 		assertThat(testJobFilter.getFilterDescription()).isEqualTo(DEFAULT_FILTER);
-		System.out.println("Test job filter id is " + testJobFilter);
+//		System.out.println("Test job filter id is " + testJobFilter);
 		JobHistory testJobHistory = jobHistoryRepository.findTopByOrderByIdDesc();
 		assertThat(testJobHistory.getJobTitle()).isEqualTo(initializedJob.getJobTitle());
 		assertThat(testJobHistory.getJobDescription()).isEqualTo(initializedJob.getJobDescription());
@@ -2474,7 +2479,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2486,7 +2491,7 @@ public class JobResourceIntTest {
 		 * assertThat(testJob.getCreatedBy()).isEqualTo(jobEs.getCreatedBy());
 		 * assertThat(testJob.getUpdatedBy()).isEqualTo(jobEs.getUpdatedBy());
 		 * JobHistory jobHistoryEs =
-		 * jobHistorySearchRepository.findOne(testJobHistory.getId());
+		 * jobHistorySearchRepository.getOne(testJobHistory.getId());
 		 * assertThat(testJobHistory.getJobTitle()).isEqualTo(jobHistoryEs.getJobTitle()
 		 * ); assertThat(testJobHistory.getJobDescription()).isEqualTo(jobHistoryEs.
 		 * getJobDescription());
@@ -2525,10 +2530,10 @@ public class JobResourceIntTest {
 		int jobFilterSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 		Set<JobFilter> jobFilters = createNewJobFilter(em);
-		jobFilterRepository.save(jobFilters);
+		jobFilterRepository.saveAll(jobFilters);
 		jobFilterRepository.flush();
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		// Job prevJob = new Job ();
 		// BeanUtils.copyProperties(prevJob, initializedJob);
 
@@ -2584,7 +2589,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2597,7 +2602,7 @@ public class JobResourceIntTest {
 		 * assertThat(testJob.getUpdatedBy()).isEqualTo(jobEs.getUpdatedBy());
 		 * 
 		 * JobHistory jobHistoryEs =
-		 * jobHistorySearchRepository.findOne(testJobHistory.getId());
+		 * jobHistorySearchRepository.getOne(testJobHistory.getId());
 		 * assertThat(testJobHistory.getJobTitle()).isEqualTo(jobHistoryEs.getJobTitle()
 		 * ); assertThat(testJobHistory.getJobDescription()).isEqualTo(jobHistoryEs.
 		 * getJobDescription());
@@ -2636,10 +2641,10 @@ public class JobResourceIntTest {
 		int jobFilterSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 		Set<JobFilter> jobFilters = createNewJobFilter(em);
-		jobFilterRepository.save(jobFilters);
+		jobFilterRepository.saveAll(jobFilters);
 		jobFilterRepository.flush();
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 
 		Job toBeUpdated = new Job();
 
@@ -2694,7 +2699,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2707,7 +2712,7 @@ public class JobResourceIntTest {
 		 * assertThat(testJob.getUpdatedBy()).isEqualTo(jobEs.getUpdatedBy());
 		 * 
 		 * JobHistory jobHistoryEs =
-		 * jobHistorySearchRepository.findOne(testJobHistory.getId());
+		 * jobHistorySearchRepository.getOne(testJobHistory.getId());
 		 * assertThat(testJobHistory.getJobTitle()).isEqualTo(jobHistoryEs.getJobTitle()
 		 * ); assertThat(testJobHistory.getJobDescription()).isEqualTo(jobHistoryEs.
 		 * getJobDescription());
@@ -2744,7 +2749,7 @@ public class JobResourceIntTest {
 		int jobHistoryDatabaseSizeBeforeUpdate = jobHistoryRepository.findAll().size();
 
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
 
@@ -2784,7 +2789,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2797,7 +2802,7 @@ public class JobResourceIntTest {
 		 * assertThat(testJob.getUpdatedBy()).isEqualTo(jobEs.getUpdatedBy());
 		 * 
 		 * JobHistory jobHistoryEs =
-		 * jobHistorySearchRepository.findOne(testJobHistory.getId());
+		 * jobHistorySearchRepository.getOne(testJobHistory.getId());
 		 * assertThat(testJobHistory.getJobTitle()).isEqualTo(jobHistoryEs.getJobTitle()
 		 * ); assertThat(testJobHistory.getJobDescription()).isEqualTo(jobHistoryEs.
 		 * getJobDescription());
@@ -2838,7 +2843,7 @@ public class JobResourceIntTest {
 		int jobFilterSizeBeforeUpdate = jobFilterRepository.findAll().size();
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
 
@@ -2885,7 +2890,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -2947,7 +2952,7 @@ public class JobResourceIntTest {
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
@@ -3000,7 +3005,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -3111,7 +3116,7 @@ public class JobResourceIntTest {
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 
 		//Job prevJob = new Job();
 		//BeanUtils.copyProperties(prevJob, initializedJob);
@@ -3134,7 +3139,6 @@ public class JobResourceIntTest {
 		List<JobHistory> jobHistoryList = jobHistoryRepository.findAll();
 		List<JobFilter> jobFilterList = jobFilterRepository.findAll();
 		List<JobFilterHistory> jobFilterHistoryList = jobFilterHistoryRepository.findAll();
-
 		assertThat(jobList).hasSize(jobDatabaseSizeBeforeUpdate);
 		assertThat(jobHistoryList).hasSize(jobHistoryDatabaseSizeBeforeUpdate + 1);
 		assertThat(jobHistoryList).hasSize(4);
@@ -3157,16 +3161,12 @@ public class JobResourceIntTest {
 		assertThat(testJob.getNoOfApplicants()).isEqualTo(10);
 		assertThat(testJob.getNoOfApplicantsBought()).isEqualTo(15);
 		assertThat(testJob.getCandidateJobs()).hasSize(6);
-
 		JobFilter testJobFilter = jobFilterList.get(jobFilterList.size() - 1);
 		assertThat(testJobFilter.getFilterDescription()).isEqualTo(DEFAULT_FILTER);
 		assertThat(testJobFilter.getId()).isEqualTo(initializedJobFilter.getId());
-
 	
-
 		List<JobHistory> testJobHistories = jobHistoryRepository.findByJobOrderByIdDesc(testJob);
 		assertThat(testJobHistories.size()).isEqualTo(4);
-
 		assertThat(testJobHistories.get(0).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
 		assertThat(testJobHistories.get(0).getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
 		assertThat(testJobHistories.get(0).getJobStatus()).isEqualTo(ACTIVE_JOB_STATUS);
@@ -3177,7 +3177,6 @@ public class JobResourceIntTest {
 		assertThat(testJobHistories.get(0).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		assertThat(testJobHistories.get(0).getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
 		assertThat(testJobHistories.get(0).getJob()).isEqualTo(testJob);
-
 		assertThat(testJobHistories.get(1).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
 		assertThat(testJobHistories.get(1).getJobDescription()).isEqualTo(UPDATED_JOB_DESCRIPTION);
 		assertThat(testJobHistories.get(1).getJobStatus()).isEqualTo(ACTIVE_JOB_STATUS);
@@ -3188,7 +3187,6 @@ public class JobResourceIntTest {
 		assertThat(testJobHistories.get(1).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		assertThat(testJobHistories.get(1).getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
 		assertThat(testJobHistories.get(1).getJob()).isEqualTo(testJob);
-
 		assertThat(testJobHistories.get(2).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
 		assertThat(testJobHistories.get(2).getJobDescription()).isEqualTo(UPDATED_JOB_DESCRIPTION);
 		assertThat(testJobHistories.get(2).getJobStatus()).isEqualTo(DRAFT_JOB_STATUS);
@@ -3199,7 +3197,6 @@ public class JobResourceIntTest {
 		assertThat(testJobHistories.get(2).getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
 		assertThat(testJobHistories.get(2).getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
 		assertThat(testJobHistories.get(2).getJob()).isEqualTo(testJob);
-
 		assertThat(testJobHistories.get(3).getJobTitle()).isEqualTo(DEFAULT_JOB_TITLE);
 		assertThat(testJobHistories.get(3).getJobDescription()).isEqualTo(DEFAULT_JOB_DESCRIPTION);
 		assertThat(testJobHistories.get(3).getJobStatus()).isEqualTo(DRAFT_JOB_STATUS);
@@ -3237,7 +3234,7 @@ public class JobResourceIntTest {
 		int jobFilterHistorySizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 
 		// Update the job
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
@@ -3287,7 +3284,7 @@ public class JobResourceIntTest {
 		// Validate ES not saving Filter to ES
 
 		/*
-		 * Job jobEs = jobSearchRepository.findOne(testJob.getId());
+		 * Job jobEs = jobSearchRepository.getOne(testJob.getId());
 		 * assertThat(testJob.getJobTitle()).isEqualTo(jobEs.getJobTitle());
 		 * assertThat(testJob.getJobDescription()).isEqualTo(jobEs.getJobDescription());
 		 * assertThat(testJob.getSalary()).isEqualTo(jobEs.getSalary());
@@ -4648,8 +4645,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota").login(user));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -4731,8 +4728,8 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(internship);
 		candidateA.addEducation(candidateEEducaiton1);
 		candidateRepository.saveAndFlush(candidateA);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
 		job2.employmentType(contract).jobType(partTime).corporate(corporate);
@@ -4900,8 +4897,8 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		candidateRepository.saveAndFlush(candidateA);
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
@@ -4982,8 +4979,8 @@ public class JobResourceIntTest {
 		jobTypeRepository.saveAndFlush(summerJob);
 		jobTypeRepository.saveAndFlush(internship);
 		candidateRepository.saveAndFlush(candidateA);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		job0.employmentType(contract).jobType(partTime).corporate(corporate);
 		job1.employmentType(contract).jobType(fullTime).corporate(corporate);
 		job2.employmentType(contract).jobType(partTime).corporate(corporate);
@@ -5053,8 +5050,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5224,8 +5221,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5302,8 +5299,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5474,8 +5471,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5550,8 +5547,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5722,8 +5719,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5800,8 +5797,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -5971,8 +5968,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -6048,8 +6045,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -6219,8 +6216,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -6300,8 +6297,8 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.city("delhi").name("chota"));
 		employmentTypeRepository.saveAndFlush(permanent);
 		employmentTypeRepository.saveAndFlush(contract);
-		employmentTypeRepository.delete(employmentType.getId());
-		jobTypeRepository.delete(jobType.getId());
+		employmentTypeRepository.deleteById(employmentType.getId());
+		jobTypeRepository.deleteById(jobType.getId());
 		jobTypeRepository.saveAndFlush(fullTime);
 		jobTypeRepository.saveAndFlush(partTime);
 		jobTypeRepository.saveAndFlush(summerJob);
@@ -6629,7 +6626,7 @@ public class JobResourceIntTest {
 		job.employmentType(employmentType).jobType(jobType);
 		//save all - one filter history, 2 job histriies,4 candidatejob objects
 
-		Job initializedJob = jobRepository.findOne(job.getId());
+		Job initializedJob = jobRepository.getOne(job.getId());
 		Job prevJob = new Job();
 		BeanUtils.copyProperties(prevJob, initializedJob);
 		Job toBeUpdated = new Job();
@@ -6851,14 +6848,14 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corporate.escrowAmount(20d));
 		jobRepository.saveAndFlush(job1.corporate(corporate).everActive(DEFAULT_EVER_ACTIVE).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED)
 				.employmentType(employmentType).jobType(jobType));
-		Job initializedJob = jobRepository.findOne(job1.getId());
+		Job initializedJob = jobRepository.getOne(job1.getId());
 		Job toBeUpdated = new Job().jobTitle(UPDATED_JOB_TITLE).jobDescription(UPDATED_JOB_DESCRIPTION).salary(UPDATED_SALARY)
 				.jobStatus(ACTIVE_JOB_STATUS).hasBeenEdited(DEFAULT_HAS_BEEN_EDITED).everActive(DEFAULT_EVER_ACTIVE)
 				.canEdit(DEFAULT_CAN_EDIT).createdBy(DEFAULT_CREATED_BY).updatedBy(UPDATED_UPDATED_BY).noOfApplicants(20).
 				corporate(initializedJob.getCorporate()).employmentType(employmentType).jobType(jobType);
 		toBeUpdated.setId(initializedJob.getId());
 		toBeUpdated.setJobFilters(createAdditionalJobFilter(em));
-		System.out.println("============="+candidateRepository.findOne(candidateEEducaiton1.getCandidate().getId()));
+		System.out.println("============="+candidateRepository.getOne(candidateEEducaiton1.getCandidate().getId()));
 		candidateRepository.flush();
 		restJobMockMvc.perform(put("/api/jobs").contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(toBeUpdated))).andExpect(status().isOk());

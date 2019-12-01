@@ -99,7 +99,7 @@ public class IndustryResource {
 	public ResponseEntity<Industry> updateIndustry(@RequestBody Industry industry) throws URISyntaxException {
 		log.debug("REST request to update Industry : {}", industry);
 		if (industry.getId() == null) {
-			return createIndustry(industry);
+			 throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Industry result = industryRepository.save(industry);
 		elasticsearchTemplate.index(new IndustryEntityBuilder(result.getId()).name(result.getIndustryName())
@@ -134,8 +134,8 @@ public class IndustryResource {
 	@Timed
 	public ResponseEntity<Industry> getIndustry(@PathVariable Long id) {
 		log.debug("REST request to get Industry : {}", id);
-		Industry industry = industryRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(industry));
+		Optional<Industry> industry = industryRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(industry);
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class IndustryResource {
 	@Timed
 	public ResponseEntity<Void> deleteIndustry(@PathVariable Long id) {
 		log.debug("REST request to delete Industry : {}", id);
-		industryRepository.delete(id);
-		industrySearchRepository.delete(id);
+		industryRepository.deleteById(id);
+		industrySearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

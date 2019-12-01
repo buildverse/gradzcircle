@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { QualificationComponent } from './qualification.component';
 import { QualificationDetailComponent } from './qualification-detail.component';
 import { QualificationPopupComponent } from './qualification-dialog.component';
@@ -15,7 +15,8 @@ export const qualificationRoute: Routes = [
             pageTitle: 'gradzcircleApp.qualification.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'qualification/:id',
         component: QualificationDetailComponent,
         data: {

@@ -1,15 +1,15 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
-
 import { CandidateProjectComponent } from './candidate-project.component';
 import { CandidateProjectDetailComponent } from './candidate-project-detail.component';
-import { CandidateProjectPopupComponent,CandidateEducationProjectPopupComponent,CandidateEmploymentProjectPopupComponent } from './candidate-project-dialog.component';
+import {
+    CandidateProjectPopupComponent,
+    CandidateEducationProjectPopupComponent,
+    CandidateEmploymentProjectPopupComponent
+} from './candidate-project-dialog.component';
 import { CandidateProjectDeletePopupComponent } from './candidate-project-delete-dialog.component';
-
-import { Principal } from '../../shared';
 
 export const candidateProjectRoute: Routes = [
     {
@@ -20,7 +20,8 @@ export const candidateProjectRoute: Routes = [
             pageTitle: 'gradzcircleApp.candidateProject.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'candidate-project/:id',
         component: CandidateProjectDetailComponent,
         data: {

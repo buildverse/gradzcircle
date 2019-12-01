@@ -11,13 +11,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -36,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.domain.College;
-import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.elastic.GenericElasticSuggest;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
 import com.drishika.gradzcircle.repository.CollegeRepository;
@@ -120,12 +120,12 @@ public class CollegeResource {
 	public ResponseEntity<College> updateCollege(@RequestBody College college) throws URISyntaxException {
 		log.debug("REST request to update College : {}", college);
 		if (college.getId() == null) {
-			return createCollege(college);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		College result = collegeRepository.save(college);
 		com.drishika.gradzcircle.domain.elastic.College collegeElasticInstance = new com.drishika.gradzcircle.domain.elastic.College();
 		try {
-			BeanUtils.copyProperties(collegeElasticInstance, result);
+			BeanUtils.copyProperties(collegeElasticInstance, college);
 		} catch (IllegalAccessException e) {
 			log.error("Error copying bean for college elastic instance", e);
 			throw new URISyntaxException(e.getMessage(), e.getLocalizedMessage());
@@ -169,8 +169,8 @@ public class CollegeResource {
 	@Timed
 	public ResponseEntity<College> getCollege(@PathVariable Long id) {
 		log.debug("REST request to get College : {}", id);
-		College college = collegeRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(college));
+		Optional<College> college = collegeRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(college);
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class CollegeResource {
 	@Timed
 	public ResponseEntity<Void> deleteCollege(@PathVariable Long id) {
 		log.debug("REST request to delete College : {}", id);
-		collegeRepository.delete(id);
-		collegeSearchRepository.delete(id);
+		collegeRepository.deleteById(id);
+		collegeSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -203,10 +203,10 @@ public class CollegeResource {
 		log.debug("REST request to search Colleges for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("college-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.College.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("college-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.College.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		log.info("Suggestion is {}",completionSuggestion.getEntries());
 		List<CompletionSuggestion.Entry.Option> options = null;
 		if(completionSuggestion.getEntries() != null)

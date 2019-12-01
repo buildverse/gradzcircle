@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { AddressComponent } from './address.component';
 import { AddressDetailComponent } from './address-detail.component';
 import { AddressPopupComponent } from './address-dialog.component';
@@ -15,7 +15,8 @@ export const addressRoute: Routes = [
             pageTitle: 'gradzcircleApp.address.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'address/:id',
         component: AddressDetailComponent,
         data: {

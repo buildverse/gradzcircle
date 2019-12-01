@@ -1,6 +1,5 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { LanguageComponent } from './language.component';
 import { LanguageDetailComponent } from './language-detail.component';
 import { LanguagePopupComponent } from './language-dialog.component';
@@ -15,7 +14,8 @@ export const languageRoute: Routes = [
             pageTitle: 'gradzcircleApp.language.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'language/:id',
         component: LanguageDetailComponent,
         data: {

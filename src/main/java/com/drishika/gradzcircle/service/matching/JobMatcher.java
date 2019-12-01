@@ -102,7 +102,7 @@ public class JobMatcher implements Matcher<Job> {
 			}
 			candidates.add(candidate);
 		});
-		candidateRepository.save(candidates);
+		candidateRepository.saveAll(candidates);
 		jobRepository.save(job);
 		log.info("Job Matching completed in {} ms and number of new candidates matched are {}", (System.currentTimeMillis() - startTime),numberOfNewCandidates);
 		mailService.sendMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates);
@@ -155,7 +155,7 @@ public class JobMatcher implements Matcher<Job> {
 		if (jobfilterObject == null || candidateEducation == null)
 			return candidateJob;
 		log.debug("Candidate Id from educaiton is {}",candidateEducation.getCandidate());
-		Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
+		Candidate candidate = candidateRepository.findById(candidateEducation.getCandidate().getId()).get();
 		log.debug("Candidate from reprositry while begin matching on education {} and {}", candidateEducation,candidate);
 		candidate.addEducation(candidateEducation);
 		candidateJob = matchUtils.matchCandidateAndJob(jobfilterObject, candidate, job, true, true, true,true);

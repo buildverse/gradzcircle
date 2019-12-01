@@ -6,7 +6,10 @@ import com.drishika.gradzcircle.domain.Filter;
 import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.search.FilterSearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +25,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,7 +61,7 @@ public class FilterResourceIntTest {
     private FilterRepository filterRepository;
 
     @Autowired
-    private FilterSearchRepository filterSearchRepository;
+    private FilterSearchRepository mockFilterSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -76,7 +82,7 @@ public class FilterResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final FilterResource filterResource = new FilterResource(filterRepository, filterSearchRepository);
+        final FilterResource filterResource = new FilterResource(filterRepository, mockFilterSearchRepository);
         this.restFilterMockMvc = MockMvcBuilders.standaloneSetup(filterResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -101,7 +107,7 @@ public class FilterResourceIntTest {
 
     @Before
     public void initTest() {
-        filterSearchRepository.deleteAll();
+       //filterSearchRepository.deleteAll();
         filter = createEntity(em);
     }
 
@@ -126,8 +132,7 @@ public class FilterResourceIntTest {
         assertThat(testFilter.getMatchWeight()).isEqualTo(DEFAULT_MATCH_WEIGHT);
 
         // Validate the Filter in Elasticsearch
-        Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
-        assertThat(filterEs).isEqualToIgnoringGivenFields(testFilter);
+        verify(mockFilterSearchRepository,times(1)).save(testFilter);
     }
 
     @Test
@@ -196,11 +201,10 @@ public class FilterResourceIntTest {
     public void updateFilter() throws Exception {
         // Initialize the database
         filterRepository.saveAndFlush(filter);
-        filterSearchRepository.save(filter);
         int databaseSizeBeforeUpdate = filterRepository.findAll().size();
 
         // Update the filter
-        Filter updatedFilter = filterRepository.findOne(filter.getId());
+        Filter updatedFilter = filterRepository.findById(filter.getId()).get();
         // Disconnect from session so that the updates on updatedFilter are not directly saved in db
         em.detach(updatedFilter);
         updatedFilter
@@ -224,8 +228,7 @@ public class FilterResourceIntTest {
         assertThat(testFilter.getMatchWeight()).isEqualTo(UPDATED_MATCH_WEIGHT);
 
         // Validate the Filter in Elasticsearch
-        Filter filterEs = filterSearchRepository.findOne(testFilter.getId());
-        assertThat(filterEs).isEqualToIgnoringGivenFields(testFilter);
+        verify(mockFilterSearchRepository,times(1)).save(testFilter);
     }
 
     @Test
@@ -237,13 +240,14 @@ public class FilterResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restFilterMockMvc.perform(put("/api/filters")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(filter)))
-            .andExpect(status().isCreated());
-
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filter)))
+                .andExpect(status().isBadRequest());
+        
         // Validate the Filter in the database
         List<Filter> filterList = filterRepository.findAll();
-        assertThat(filterList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(filterList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockFilterSearchRepository,times(0)).save(filter);
     }
 
     @Test
@@ -251,7 +255,7 @@ public class FilterResourceIntTest {
     public void deleteFilter() throws Exception {
         // Initialize the database
         filterRepository.saveAndFlush(filter);
-        filterSearchRepository.save(filter);
+       // filterSearchRepository.save(filter);
         int databaseSizeBeforeDelete = filterRepository.findAll().size();
 
         // Get the filter
@@ -260,8 +264,7 @@ public class FilterResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean filterExistsInEs = filterSearchRepository.exists(filter.getId());
-        assertThat(filterExistsInEs).isFalse();
+       verify(mockFilterSearchRepository,times(1)).deleteById(filter.getId());
 
         // Validate the database is empty
         List<Filter> filterList = filterRepository.findAll();
@@ -273,8 +276,8 @@ public class FilterResourceIntTest {
     public void searchFilter() throws Exception {
         // Initialize the database
         filterRepository.saveAndFlush(filter);
-        filterSearchRepository.save(filter);
-
+        when(mockFilterSearchRepository.search(queryStringQuery("id:" + filter.getId())))
+        .thenReturn(Collections.singletonList(filter));
         // Search the filter
         restFilterMockMvc.perform(get("/api/_search/filters?query=id:" + filter.getId()))
             .andExpect(status().isOk())

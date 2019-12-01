@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { SkillsComponent } from './skills.component';
 import { SkillsDetailComponent } from './skills-detail.component';
 import { SkillsPopupComponent } from './skills-dialog.component';
@@ -15,7 +15,8 @@ export const skillsRoute: Routes = [
             pageTitle: 'gradzcircleApp.skills.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'skills/:id',
         component: SkillsDetailComponent,
         data: {

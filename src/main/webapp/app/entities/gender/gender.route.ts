@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { GenderComponent } from './gender.component';
 import { GenderDetailComponent } from './gender-detail.component';
 import { GenderPopupComponent } from './gender-dialog.component';
@@ -15,7 +15,8 @@ export const genderRoute: Routes = [
             pageTitle: 'gradzcircleApp.gender.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'gender/:id',
         component: GenderDetailComponent,
         data: {

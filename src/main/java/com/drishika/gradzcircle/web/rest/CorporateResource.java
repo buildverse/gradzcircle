@@ -110,7 +110,7 @@ public class CorporateResource {
 			throws URISyntaxException {
 		log.debug("REST request to update Corporate : {}", corporate);
 		if (corporate.getId() == null) {
-			return createCorporate(corporate);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Corporate result = corporateService.updateCorporate(corporate);
 		//corporateSearchRepository.save(result);
@@ -145,9 +145,9 @@ public class CorporateResource {
 	@Timed
 	public ResponseEntity<Corporate> getCorporate(@PathVariable Long id) {
 		log.debug("REST request to get Corporate : {}", id);
-		Corporate corporate = corporateRepository.findOne(id);
-		updateCountryDataForDisplay(corporate);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(corporate));
+		Optional<Corporate> corporate = corporateRepository.findById(id);
+		updateCountryDataForDisplay(corporate.get());
+		return ResponseUtil.wrapOrNotFound((corporate));
 	}
 
 	/**
@@ -214,8 +214,8 @@ public class CorporateResource {
 	@Timed
 	public ResponseEntity<Void> deleteCorporate(@PathVariable Long id) {
 		log.debug("REST request to delete Corporate : {}", id);
-		corporateRepository.delete(id);
-		corporateSearchRepository.delete(id);
+		corporateRepository.deleteById(id);
+		corporateSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

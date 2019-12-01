@@ -1,6 +1,11 @@
 package com.drishika.gradzcircle.web.rest;
 
 import com.drishika.gradzcircle.GradzcircleApp;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.drishika.gradzcircle.domain.ErrorMessages;
 import com.drishika.gradzcircle.repository.ErrorMessagesRepository;
@@ -22,6 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
@@ -52,7 +59,7 @@ public class ErrorMessagesResourceIntTest {
     private ErrorMessagesRepository errorMessagesRepository;
 
     @Autowired
-    private ErrorMessagesSearchRepository errorMessagesSearchRepository;
+    private ErrorMessagesSearchRepository mockErrorMessagesSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -73,7 +80,7 @@ public class ErrorMessagesResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ErrorMessagesResource errorMessagesResource = new ErrorMessagesResource(errorMessagesRepository, errorMessagesSearchRepository);
+        final ErrorMessagesResource errorMessagesResource = new ErrorMessagesResource(errorMessagesRepository, mockErrorMessagesSearchRepository);
         this.restErrorMessagesMockMvc = MockMvcBuilders.standaloneSetup(errorMessagesResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -97,7 +104,7 @@ public class ErrorMessagesResourceIntTest {
 
     @Before
     public void initTest() {
-        errorMessagesSearchRepository.deleteAll();
+       // errorMessagesSearchRepository.deleteAll();
         errorMessages = createEntity(em);
     }
 
@@ -121,8 +128,7 @@ public class ErrorMessagesResourceIntTest {
         assertThat(testErrorMessages.getErrorMessage()).isEqualTo(DEFAULT_ERROR_MESSAGE);
 
         // Validate the ErrorMessages in Elasticsearch
-        ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
-        assertThat(errorMessagesEs).isEqualToIgnoringGivenFields(testErrorMessages);
+       verify(mockErrorMessagesSearchRepository,times(1)).save(testErrorMessages);
     }
 
     @Test
@@ -189,11 +195,10 @@ public class ErrorMessagesResourceIntTest {
     public void updateErrorMessages() throws Exception {
         // Initialize the database
         errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
         int databaseSizeBeforeUpdate = errorMessagesRepository.findAll().size();
 
         // Update the errorMessages
-        ErrorMessages updatedErrorMessages = errorMessagesRepository.findOne(errorMessages.getId());
+        ErrorMessages updatedErrorMessages = errorMessagesRepository.findById(errorMessages.getId()).get();
         // Disconnect from session so that the updates on updatedErrorMessages are not directly saved in db
         em.detach(updatedErrorMessages);
         updatedErrorMessages
@@ -215,8 +220,7 @@ public class ErrorMessagesResourceIntTest {
         assertThat(testErrorMessages.getErrorMessage()).isEqualTo(UPDATED_ERROR_MESSAGE);
 
         // Validate the ErrorMessages in Elasticsearch
-        ErrorMessages errorMessagesEs = errorMessagesSearchRepository.findOne(testErrorMessages.getId());
-        assertThat(errorMessagesEs).isEqualToIgnoringGivenFields(testErrorMessages);
+        verify(mockErrorMessagesSearchRepository,times(1)).save(testErrorMessages);
     }
 
     @Test
@@ -228,13 +232,13 @@ public class ErrorMessagesResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restErrorMessagesMockMvc.perform(put("/api/error-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(errorMessages)))
-            .andExpect(status().isCreated());
-
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(errorMessages)))
+                .andExpect(status().isBadRequest());
         // Validate the ErrorMessages in the database
         List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
-        assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(errorMessagesList).hasSize(databaseSizeBeforeUpdate);
+        verify(mockErrorMessagesSearchRepository,times(0)).save(errorMessages);
     }
 
     @Test
@@ -242,7 +246,6 @@ public class ErrorMessagesResourceIntTest {
     public void deleteErrorMessages() throws Exception {
         // Initialize the database
         errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
         int databaseSizeBeforeDelete = errorMessagesRepository.findAll().size();
 
         // Get the errorMessages
@@ -251,8 +254,7 @@ public class ErrorMessagesResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean errorMessagesExistsInEs = errorMessagesSearchRepository.exists(errorMessages.getId());
-        assertThat(errorMessagesExistsInEs).isFalse();
+        verify(mockErrorMessagesSearchRepository,times(1)).deleteById(errorMessages.getId());
 
         // Validate the database is empty
         List<ErrorMessages> errorMessagesList = errorMessagesRepository.findAll();
@@ -264,7 +266,8 @@ public class ErrorMessagesResourceIntTest {
     public void searchErrorMessages() throws Exception {
         // Initialize the database
         errorMessagesRepository.saveAndFlush(errorMessages);
-        errorMessagesSearchRepository.save(errorMessages);
+        when(mockErrorMessagesSearchRepository.search(queryStringQuery("id:" + errorMessages.getId())))
+        .thenReturn(Collections.singletonList(errorMessages));
 
         // Search the errorMessages
         restErrorMessagesMockMvc.perform(get("/api/_search/error-messages?query=id:" + errorMessages.getId()))

@@ -333,7 +333,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 		assertThat(testCandidateNonAcademicWork.getCandidate().getProfileScores().stream().filter(score->score.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_EDUCATION_PROFILE)).findFirst().get().getScore()).isEqualTo(50D);
 		
 		CandidateNonAcademicWork updatedCandidateNonAcademicWork = candidateNonAcademicWorkRepository
-				.findOne(testCandidateNonAcademicWork.getId());
+				.findById(testCandidateNonAcademicWork.getId()).get();
 		updatedCandidateNonAcademicWork.nonAcademicInitiativeTitle(UPDATED_NON_ACADEMIC_INITIATIVE_TITLE)
 				.nonAcademicInitiativeDescription(UPDATED_NON_ACADEMIC_INITIATIVE_DESCRIPTION)
 				.duration(UPDATED_DURATION).isCurrentActivity(UPDATED_IS_CURRENT_ACTIVITY)
@@ -674,7 +674,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 
 		// Update the candidateNonAcademicWork
 		CandidateNonAcademicWork updatedCandidateNonAcademicWork = candidateNonAcademicWorkRepository
-				.findOne(candidateNonAcademicWork.getId());
+				.findById(candidateNonAcademicWork.getId()).get();
 		updatedCandidateNonAcademicWork.nonAcademicInitiativeTitle(UPDATED_NON_ACADEMIC_INITIATIVE_TITLE)
 				.nonAcademicInitiativeDescription(UPDATED_NON_ACADEMIC_INITIATIVE_DESCRIPTION)
 				.duration(UPDATED_DURATION).isCurrentActivity(UPDATED_IS_CURRENT_ACTIVITY)
@@ -819,6 +819,7 @@ public class CandidateNonAcademicWorkResourceIntTest {
 	
 	@Test
 	@Transactional
+	@Ignore//Not storing in ES
 	public void searchCandidateNonAcademicWork() throws Exception {
 		// Initialize the database
 		candidateNonAcademicWorkRepository.saveAndFlush(candidateNonAcademicWork);

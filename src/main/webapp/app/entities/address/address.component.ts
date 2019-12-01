@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Address } from './address.model';
 import { AddressService } from './address.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-address',
     templateUrl: './address.component.html'
 })
 export class AddressComponent implements OnInit, OnDestroy {
-addresses: Address[];
+    addresses: Address[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ addresses: Address[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.addressService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Address[]>) => this.addresses = res.body,
+            this.addressService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Address[]>) => (this.addresses = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.addressService.query().subscribe(
             (res: HttpResponse<Address[]>) => {
                 this.addresses = res.body;
@@ -62,7 +66,7 @@ addresses: Address[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInAddresses();
@@ -76,7 +80,7 @@ addresses: Address[];
         return item.id;
     }
     registerChangeInAddresses() {
-        this.eventSubscriber = this.eventManager.subscribe('addressListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('addressListModification', response => this.loadAll());
     }
 
     private onError(error) {

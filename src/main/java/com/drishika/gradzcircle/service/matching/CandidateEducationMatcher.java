@@ -86,7 +86,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 			jobs.add(job);
 		});
 		log.info("Status of education and Matched Set in candidate before save {},{}", candidate.getEducations(),candidate.getCandidateJobs());
-		jobRepository.save(jobs);
+		jobRepository.saveAll(jobs);
 		candidateRepository.save(candidate);
 		
 		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
@@ -237,7 +237,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 					jobs.add(jb);
 				}
 			});
-			jobRepository.save(jobs);
+			jobRepository.saveAll(jobs);
 			candidate.getCandidateJobs().remove(incomingCandidateJob);
 			
 		}

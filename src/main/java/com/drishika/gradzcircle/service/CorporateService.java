@@ -1,5 +1,7 @@
 package com.drishika.gradzcircle.service;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -58,8 +60,8 @@ public class CorporateService {
 	}
 	
 	public Corporate updateCorporate(Corporate corporate) {
-		Corporate corporateFromRepo = corporateRepository.findOne(corporate.getId());
-		corporate.setShortlistedCandidates(corporateFromRepo.getShortlistedCandidates());
+		Optional<Corporate> corporateFromRepo = corporateRepository.findById(corporate.getId());
+		corporate.setShortlistedCandidates(corporateFromRepo.get().getShortlistedCandidates());
 		injestCountryDetails(corporate);
 		corporate.setCity(convertToCamelCase(corporate.getCity()));
 		//corporate.setCity(convertToCamelCase(corporate.getCity()));
@@ -98,7 +100,7 @@ public class CorporateService {
 	 * @param id
 	 */
 	public void deleteCorporate(Long id) {
-		corporateRepository.delete(id);
+		corporateRepository.deleteById(id);
 	//	corporateSearchRepository.delete(id);
 
 	}

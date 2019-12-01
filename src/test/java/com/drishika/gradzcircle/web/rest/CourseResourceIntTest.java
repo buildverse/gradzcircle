@@ -1,6 +1,8 @@
 package com.drishika.gradzcircle.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,6 +20,7 @@ import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +56,7 @@ public class CourseResourceIntTest {
 	private CourseRepository courseRepository;
 
 	@Autowired
-	private CourseSearchRepository courseSearchRepository;
+	private CourseSearchRepository mockCourseSearchRepository;
 
 	@Autowired
 	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -63,7 +67,7 @@ public class CourseResourceIntTest {
 	@Autowired
 	private ExceptionTranslator exceptionTranslator;
 
-	@Autowired
+	@Mock
 	private ElasticsearchTemplate elasticsearchTemplate;
 
 	@Autowired
@@ -78,7 +82,7 @@ public class CourseResourceIntTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final CourseResource courseResource = new CourseResource(courseRepository, courseSearchRepository,
+		final CourseResource courseResource = new CourseResource(courseRepository, mockCourseSearchRepository,
 				elasticsearchTemplate);
 		this.restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
@@ -123,8 +127,8 @@ public class CourseResourceIntTest {
 
 	@Before
 	public void initTest() {
-		courseSearchRepository.deleteAll();
 		course = createEntity(em);
+		elasticCourse = createElasticInstance(course);
 	}
 
 	@Test
@@ -143,9 +147,8 @@ public class CourseResourceIntTest {
 		assertThat(testCourse.getCourse()).isEqualTo(DEFAULT_COURSE);
 
 		// Validate the Course in Elasticsearch
-		com.drishika.gradzcircle.domain.elastic.Course courseEs = courseSearchRepository.findOne(testCourse.getId());
-		assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
-		assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 	}
 
 	@Test
@@ -209,7 +212,7 @@ public class CourseResourceIntTest {
 		int databaseSizeBeforeUpdate = courseRepository.findAll().size();
 
 		// Update the course
-		Course updatedCourse = courseRepository.findOne(course.getId());
+		Course updatedCourse = courseRepository.findById(course.getId()).get();
 		updatedCourse.course(UPDATED_COURSE);
 
 		restCourseMockMvc.perform(put("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -222,9 +225,8 @@ public class CourseResourceIntTest {
 		assertThat(testCourse.getCourse()).isEqualTo(UPDATED_COURSE);
 
 		// Validate the Course in Elasticsearch
-		Course courseEs = courseSearchRepository.findOne(testCourse.getId());
-		assertThat(courseEs.getId()).isEqualTo(testCourse.getId());
-		assertThat(courseEs.getCourse()).isEqualTo(testCourse.getCourse());
+		verify(elasticsearchTemplate,times(2)).index(any());
+		verify(elasticsearchTemplate,times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 	}
 
 	@Test
@@ -236,12 +238,16 @@ public class CourseResourceIntTest {
 
 		// If the entity doesn't have an ID, it will be created instead of just being
 		// updated
-		restCourseMockMvc.perform(put("/api/courses").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(course))).andExpect(status().isCreated());
+		restCourseMockMvc.perform(put("/api/courses")
+	            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+	            .content(TestUtil.convertObjectToJsonBytes(course)))
+	            .andExpect(status().isBadRequest());
 
 		// Validate the Course in the database
 		List<Course> courseList = courseRepository.findAll();
-		assertThat(courseList).hasSize(databaseSizeBeforeUpdate + 1);
+		assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
+		verify(elasticsearchTemplate,times(0)).index(any());
+		verify(elasticsearchTemplate,times(0)).refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 	}
 
 	@Test
@@ -259,8 +265,8 @@ public class CourseResourceIntTest {
 				.andExpect(status().isOk());
 
 		// Validate Elasticsearch is empty
-		boolean courseExistsInEs = courseSearchRepository.exists(course.getId());
-		assertThat(courseExistsInEs).isFalse();
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
 
 		// Validate the database is empty
 		List<Course> courseList = courseRepository.findAll();
@@ -275,6 +281,10 @@ public class CourseResourceIntTest {
 		elasticsearchTemplate.index(createEntityBuilder(course)
 				.suggest(new String[] { createElasticInstance(course).getCourse() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Course.class);
+
+		elasticCourse.setId(course.getId());
+		when(mockCourseSearchRepository.search(queryStringQuery("id:" + course.getId())))
+	        .thenReturn(Collections.singletonList(elasticCourse));
 
 		// Search the course
 		restCourseMockMvc.perform(get("/api/_search/courses?query=id:" + course.getId())).andExpect(status().isOk())

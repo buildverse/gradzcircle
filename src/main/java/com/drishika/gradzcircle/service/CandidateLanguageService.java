@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.service;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,7 +65,7 @@ public class CandidateLanguageService {
 	public CandidateLanguageProficiency createCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
 		injestLanguageInformation(candidateLanguageProficiency);
-		Candidate candidate = candidateRepository.findOne(candidateLanguageProficiency.getCandidate().getId());
+		Candidate candidate = candidateRepository.findById(candidateLanguageProficiency.getCandidate().getId()).get();
 		if(candidate.getCandidateLanguageProficiencies().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, false);
 		}
@@ -85,7 +86,7 @@ public class CandidateLanguageService {
 	public CandidateLanguageProficiency updateCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
 		injestLanguageInformation(candidateLanguageProficiency);
-		CandidateLanguageProficiency fromRepo = candidateLanguageProficiencyRepository.findOne(candidateLanguageProficiency.getId());
+		CandidateLanguageProficiency fromRepo = candidateLanguageProficiencyRepository.findById(candidateLanguageProficiency.getId()).get();
 		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency.candidate(fromRepo.getCandidate()));
 		
 		// Candidate candidate =
@@ -105,9 +106,9 @@ public class CandidateLanguageService {
 
 	public CandidateLanguageProficiencyDTO getCandidateLanguageProficiency(Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
-		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(id);
+		Optional<CandidateLanguageProficiency> candidateLanguageProficiency = candidateLanguageProficiencyRepository.findById(id);
 		if(candidateLanguageProficiency != null)
-			return converter.convertCandidateLanguageProficiency(candidateLanguageProficiency);
+			return converter.convertCandidateLanguageProficiency(candidateLanguageProficiency.get());
 		else 
 			return null;
 	}
@@ -134,9 +135,9 @@ public class CandidateLanguageService {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 				.findCandidateLanguageProficienciesByCandidateId(id);
-		Candidate candidate = candidateRepository.findOne(id);
+		Optional<Candidate> candidate = candidateRepository.findById(id);
 		//candidateLanguageProficiencies.forEach(proficiency->candidateLanguageProficienciesDTO.add(convertCandidateLanguageProficienciesToDTO(proficiency)));
-		return converter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, true, candidate);
+		return converter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, true, candidate.get());
 		
 	}
 
@@ -146,9 +147,9 @@ public class CandidateLanguageService {
 
 	public void deleteCandidateLanguageProficiency(Long id) {
 		log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
-		CandidateLanguageProficiency candidateLanguageProficiency = candidateLanguageProficiencyRepository.findOne(id);
-		Candidate candidate = candidateLanguageProficiency.getCandidate();
-		candidate.removeCandidateLanguageProficiency(candidateLanguageProficiency);
+		Optional<CandidateLanguageProficiency> candidateLanguageProficiency = candidateLanguageProficiencyRepository.findById(id);
+		Candidate candidate = candidateLanguageProficiency.get().getCandidate();
+		candidate.removeCandidateLanguageProficiency(candidateLanguageProficiency.get());
 		if(candidate.getCandidateLanguageProficiencies().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, true);
 		matcher.match(candidate);

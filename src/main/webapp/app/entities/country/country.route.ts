@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { CountryComponent } from './country.component';
 import { CountryDetailComponent } from './country-detail.component';
 import { CountryPopupComponent } from './country-dialog.component';
@@ -15,7 +15,8 @@ export const countryRoute: Routes = [
             pageTitle: 'gradzcircleApp.country.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'country/:id',
         component: CountryDetailComponent,
         data: {

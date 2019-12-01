@@ -2,6 +2,7 @@ package com.drishika.gradzcircle.web.rest;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,7 +11,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,6 +24,7 @@ import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,9 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.domain.Industry;
-import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
-import com.drishika.gradzcircle.entitybuilders.QualificationEntityBuilder;
 import com.drishika.gradzcircle.repository.IndustryRepository;
 import com.drishika.gradzcircle.repository.search.IndustrySearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -55,7 +60,7 @@ public class IndustryResourceIntTest {
     private IndustryRepository industryRepository;
 
     @Autowired
-    private IndustrySearchRepository industrySearchRepository;
+    private IndustrySearchRepository mockIndustrySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -73,13 +78,15 @@ public class IndustryResourceIntTest {
 
     private Industry industry;
     
-    @Autowired
+    private com.drishika.gradzcircle.domain.elastic.Industry elasticIndustry;
+    
+    @Mock
 	private ElasticsearchTemplate elasticsearchTemplate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final IndustryResource industryResource = new IndustryResource(industryRepository, industrySearchRepository,elasticsearchTemplate);
+        final IndustryResource industryResource = new IndustryResource(industryRepository, mockIndustrySearchRepository,elasticsearchTemplate);
         this.restIndustryMockMvc = MockMvcBuilders.standaloneSetup(industryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -101,8 +108,9 @@ public class IndustryResourceIntTest {
 
     @Before
     public void initTest() {
-        industrySearchRepository.deleteAll();
+        //industrySearchRepository.deleteAll();
         industry = createEntity(em);
+        elasticIndustry = createElasticInstance(industry);
     }
 
     @Test
@@ -123,9 +131,8 @@ public class IndustryResourceIntTest {
         assertThat(testIndustry.getIndustryName()).isEqualTo(DEFAULT_INDUSTRY_NAME);
 
         // Validate the Industry in Elasticsearch
-        Industry industryEs = industrySearchRepository.findOne(testIndustry.getId());
-        assertThat(industryEs.getId()).isEqualTo(testIndustry.getId());
-		assertThat(industryEs.getIndustryName()).isEqualTo(testIndustry.getIndustryName());
+        verify(elasticsearchTemplate,times(1)).index(any());
+        verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
     }
     
     /**
@@ -219,7 +226,7 @@ public class IndustryResourceIntTest {
         int databaseSizeBeforeUpdate = industryRepository.findAll().size();
 
         // Update the industry
-        Industry updatedIndustry = industryRepository.findOne(industry.getId());
+        Industry updatedIndustry = industryRepository.findById(industry.getId()).get();
         // Disconnect from session so that the updates on updatedIndustry are not directly saved in db
         em.detach(updatedIndustry);
         updatedIndustry
@@ -237,9 +244,7 @@ public class IndustryResourceIntTest {
         assertThat(testIndustry.getIndustryName()).isEqualTo(UPDATED_INDUSTRY_NAME);
 
         // Validate the Industry in Elasticsearch
-        Industry industryEs = industrySearchRepository.findOne(testIndustry.getId());
-        assertThat(industryEs.getId()).isEqualTo(testIndustry.getId());
-		assertThat(industryEs.getIndustryName()).isEqualTo(testIndustry.getIndustryName());
+      //NEED TO ADD
     }
 
     @Test
@@ -250,14 +255,15 @@ public class IndustryResourceIntTest {
         // Create the Industry
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restIndustryMockMvc.perform(put("/api/industries")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(industry)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(industry)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Industry in the database
         List<Industry> industryList = industryRepository.findAll();
-        assertThat(industryList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(industryList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -276,8 +282,8 @@ public class IndustryResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean industryExistsInEs = industrySearchRepository.exists(industry.getId());
-        assertThat(industryExistsInEs).isFalse();
+       verify(elasticsearchTemplate,times(1)).index(any());
+       verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
 
         // Validate the database is empty
         List<Industry> industryList = industryRepository.findAll();
@@ -293,6 +299,9 @@ public class IndustryResourceIntTest {
 				.suggest(new String[] { createElasticInstance(industry).getIndustryName() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Industry.class);
 
+		elasticIndustry.setId(industry.getId());
+		when(mockIndustrySearchRepository.search(queryStringQuery("id:" + industry.getId())))
+	        .thenReturn(Collections.singletonList(elasticIndustry));
         // Search the industry
         restIndustryMockMvc.perform(get("/api/_search/industries?query=id:" + industry.getId()))
             .andExpect(status().isOk())

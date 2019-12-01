@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,15 +7,14 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { States } from './states.model';
 import { StatesService } from './states.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
+import { ITEMS_PER_PAGE } from '../../shared';
 
 @Component({
     selector: 'jhi-states',
     templateUrl: './states.component.html'
 })
 export class StatesComponent implements OnInit, OnDestroy {
-
-currentAccount: any;
+    currentAccount: any;
     states: States[];
     error: any;
     success: any;
@@ -40,35 +40,43 @@ currentAccount: any;
         private eventManager: JhiEventManager
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe((data) => {
+        this.routeData = this.activatedRoute.data.subscribe(data => {
             this.page = data.pagingParams.page;
             this.previousPage = data.pagingParams.page;
             this.reverse = data.pagingParams.ascending;
             this.predicate = data.pagingParams.predicate;
         });
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.statesService.search({
-                page: this.page - 1,
-                query: this.currentSearch,
-                size: this.itemsPerPage,
-                sort: this.sort()}).subscribe(
+            this.statesService
+                .search({
+                    page: this.page - 1,
+                    query: this.currentSearch,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                })
+                .subscribe(
                     (res: HttpResponse<States[]>) => this.onSuccess(res.body, res.headers),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
         }
-        this.statesService.query({
-            page: this.page - 1,
-            size: this.itemsPerPage,
-            sort: this.sort()}).subscribe(
+        this.statesService
+            .query({
+                page: this.page - 1,
+                size: this.itemsPerPage,
+                sort: this.sort()
+            })
+            .subscribe(
                 (res: HttpResponse<States[]>) => this.onSuccess(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
-        );
+            );
     }
     loadPage(page: number) {
         if (page !== this.previousPage) {
@@ -77,8 +85,8 @@ currentAccount: any;
         }
     }
     transition() {
-        this.router.navigate(['/states'], {queryParams:
-            {
+        this.router.navigate(['/states'], {
+            queryParams: {
                 page: this.page,
                 size: this.itemsPerPage,
                 search: this.currentSearch,
@@ -91,10 +99,13 @@ currentAccount: any;
     clear() {
         this.page = 0;
         this.currentSearch = '';
-        this.router.navigate(['/states', {
-            page: this.page,
-            sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-        }]);
+        this.router.navigate([
+            '/states',
+            {
+                page: this.page,
+                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+            }
+        ]);
         this.loadAll();
     }
     search(query) {
@@ -103,16 +114,19 @@ currentAccount: any;
         }
         this.page = 0;
         this.currentSearch = query;
-        this.router.navigate(['/states', {
-            search: this.currentSearch,
-            page: this.page,
-            sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-        }]);
+        this.router.navigate([
+            '/states',
+            {
+                search: this.currentSearch,
+                page: this.page,
+                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+            }
+        ]);
         this.loadAll();
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInStates();
@@ -126,7 +140,7 @@ currentAccount: any;
         return item.id;
     }
     registerChangeInStates() {
-        this.eventSubscriber = this.eventManager.subscribe('statesListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('statesListModification', response => this.loadAll());
     }
 
     sort() {

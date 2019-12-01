@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Industry } from './industry.model';
 import { IndustryService } from './industry.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-industry',
     templateUrl: './industry.component.html'
 })
 export class IndustryComponent implements OnInit, OnDestroy {
-industries: Industry[];
+    industries: Industry[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ industries: Industry[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.industryService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Industry[]>) => this.industries = res.body,
+            this.industryService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<Industry[]>) => (this.industries = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.industryService.query().subscribe(
             (res: HttpResponse<Industry[]>) => {
                 this.industries = res.body;
@@ -62,7 +66,7 @@ industries: Industry[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInIndustries();
@@ -76,7 +80,7 @@ industries: Industry[];
         return item.id;
     }
     registerChangeInIndustries() {
-        this.eventSubscriber = this.eventManager.subscribe('industryListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('industryListModification', response => this.loadAll());
     }
 
     private onError(error) {

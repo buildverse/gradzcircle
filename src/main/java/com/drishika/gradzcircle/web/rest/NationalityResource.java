@@ -10,7 +10,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
@@ -111,7 +112,7 @@ public class NationalityResource {
 			throws URISyntaxException {
 		log.debug("REST request to update Nationality : {}", nationality);
 		if (nationality.getId() == null) {
-			return createNationality(nationality);
+			 throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Nationality result = nationalityRepository.save(nationality);
 		elasticSearchTemplate.index(new NationalityEntityBuilder(result.getId()).name(result.getNationality())
@@ -146,8 +147,8 @@ public class NationalityResource {
 	@Timed
 	public ResponseEntity<Nationality> getNationality(@PathVariable Long id) {
 		log.debug("REST request to get Nationality : {}", id);
-		Nationality nationality = nationalityRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(nationality));
+		Optional<Nationality> nationality = nationalityRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(nationality);
 	}
 
 	/**
@@ -161,8 +162,8 @@ public class NationalityResource {
 	@Timed
 	public ResponseEntity<Void> deleteNationality(@PathVariable Long id) {
 		log.debug("REST request to delete Nationality : {}", id);
-		nationalityRepository.delete(id);
-		nationalitySearchRepository.delete(id);
+		nationalityRepository.deleteById(id);
+		nationalitySearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -196,10 +197,10 @@ public class NationalityResource {
 			log.debug("REST request to search Nationality for query {}", query);
 			String suggest = null;
 			CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-					.completionSuggestion("nationality-suggest").text(query).field("suggest");
-			SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
-					com.drishika.gradzcircle.domain.elastic.Nationality.class);
-			CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("nationality-suggest");
+					.completionSuggestion("suggest").text(query).prefix(query);
+			SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+			SearchResponse searchResponse = elasticSearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Nationality.class);
+			CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 			List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 			List<GenericElasticSuggest> nationalities = new ArrayList<GenericElasticSuggest>();
 			ObjectMapper objectMapper = new ObjectMapper();

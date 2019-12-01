@@ -11,13 +11,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import java.util.List;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import static org.mockito.Mockito.*;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,9 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
-import com.drishika.gradzcircle.domain.Industry;
 import com.drishika.gradzcircle.domain.Nationality;
-import com.drishika.gradzcircle.entitybuilders.IndustryEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.NationalityEntityBuilder;
 import com.drishika.gradzcircle.repository.NationalityRepository;
 import com.drishika.gradzcircle.repository.search.NationalitySearchRepository;
@@ -55,7 +57,7 @@ public class NationalityResourceIntTest {
     private NationalityRepository nationalityRepository;
 
     @Autowired
-    private NationalitySearchRepository nationalitySearchRepository;
+    private NationalitySearchRepository mockNationalitySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -73,13 +75,15 @@ public class NationalityResourceIntTest {
 
     private Nationality nationality;
     
-    @Autowired
+    private com.drishika.gradzcircle.domain.elastic.Nationality elasticNationality;
+    
+    @Mock
     private ElasticsearchTemplate elasticsearchTemplate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NationalityResource nationalityResource = new NationalityResource(nationalityRepository, nationalitySearchRepository, elasticsearchTemplate);
+        final NationalityResource nationalityResource = new NationalityResource(nationalityRepository, mockNationalitySearchRepository, elasticsearchTemplate);
         this.restNationalityMockMvc = MockMvcBuilders.standaloneSetup(nationalityResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -126,8 +130,8 @@ public class NationalityResourceIntTest {
 
     @Before
     public void initTest() {
-        nationalitySearchRepository.deleteAll();
         nationality = createEntity(em);
+        elasticNationality = createElasticInstance(nationality);
     }
 
     @Test
@@ -148,9 +152,10 @@ public class NationalityResourceIntTest {
         assertThat(testNationality.getNationality()).isEqualTo(DEFAULT_NATIONALITY);
 
         // Validate the Nationality in Elasticsearch
-        Nationality nationalityEs = nationalitySearchRepository.findOne(testNationality.getId());
-        assertThat(nationalityEs.getId()).isEqualTo(testNationality.getId());
-		assertThat(nationalityEs.getNationality()).isEqualTo(testNationality.getNationality());
+        
+        verify(elasticsearchTemplate,times(1)).index(any());
+        verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
+        
     }
 
     @Test
@@ -219,7 +224,7 @@ public class NationalityResourceIntTest {
         int databaseSizeBeforeUpdate = nationalityRepository.findAll().size();
 
         // Update the nationality
-        Nationality updatedNationality = nationalityRepository.findOne(nationality.getId());
+        Nationality updatedNationality = nationalityRepository.findById(nationality.getId()).get();
         // Disconnect from session so that the updates on updatedNationality are not directly saved in db
         em.detach(updatedNationality);
         updatedNationality
@@ -237,9 +242,7 @@ public class NationalityResourceIntTest {
         assertThat(testNationality.getNationality()).isEqualTo(UPDATED_NATIONALITY);
 
         // Validate the Nationality in Elasticsearch
-        Nationality nationalityEs = nationalitySearchRepository.findOne(testNationality.getId());
-        assertThat(nationalityEs.getId()).isEqualTo(testNationality.getId());
-		assertThat(nationalityEs.getNationality()).isEqualTo(testNationality.getNationality());
+         //FOLLOW WHAT IS REQUIRED FOR ELASTIC TEMPLATE UPDATE QUERY
     }
 
     @Test
@@ -251,13 +254,13 @@ public class NationalityResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restNationalityMockMvc.perform(put("/api/nationalities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nationality)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(nationality)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Nationality in the database
         List<Nationality> nationalityList = nationalityRepository.findAll();
-        assertThat(nationalityList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(nationalityList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -276,9 +279,8 @@ public class NationalityResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean nationalityExistsInEs = nationalitySearchRepository.exists(nationality.getId());
-        assertThat(nationalityExistsInEs).isFalse();
-
+       verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
+       verify(elasticsearchTemplate,times(1)).index(any());
         // Validate the database is empty
         List<Nationality> nationalityList = nationalityRepository.findAll();
         assertThat(nationalityList).hasSize(databaseSizeBeforeDelete - 1);
@@ -293,6 +295,9 @@ public class NationalityResourceIntTest {
 				.suggest(new String[] { createElasticInstance(nationality).getNationality()}).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Nationality.class);
 
+		elasticNationality.setId(nationality.getId());
+		when(mockNationalitySearchRepository.search(queryStringQuery("id:" + nationality.getId())))
+	        .thenReturn(Collections.singletonList(elasticNationality));
 
         // Search the nationality
         restNationalityMockMvc.perform(get("/api/_search/nationalities?query=id:" + nationality.getId()))

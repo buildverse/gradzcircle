@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {NgxSpinnerService} from 'ngx-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import {DataStorageService} from '../../shared';
 import { CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
+import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentPopupService } from './candidate-employment-popup.service';
 import { CandidateEmploymentService } from './candidate-employment.service';
@@ -14,7 +14,6 @@ import { CandidateEmploymentService } from './candidate-employment.service';
     templateUrl: './candidate-employment-delete-dialog.component.html'
 })
 export class CandidateEmploymentDeleteDialogComponent {
-
     candidateEmployment: CandidateEmployment;
 
     constructor(
@@ -22,25 +21,23 @@ export class CandidateEmploymentDeleteDialogComponent {
         public activeModal: NgbActiveModal,
         private spinnerService: NgxSpinnerService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-      this.spinnerService.show();
-      this.candidateEmploymentService.delete(id).subscribe((response) => {
-        this.eventManager.broadcast({
-          name: 'candidateEmploymentListModification',
-          content: 'Deleted an candidateEmployment'
+        this.spinnerService.show();
+        this.candidateEmploymentService.delete(id).subscribe(response => {
+            this.eventManager.broadcast({
+                name: 'candidateEmploymentListModification',
+                content: 'Deleted an candidateEmployment'
+            });
+            this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+            this.spinnerService.hide();
+            this.activeModal.dismiss(true);
         });
-         this.eventManager.broadcast({name: 'candidateListModification', content: 'OK'});
-         this.spinnerService.hide();
-        this.activeModal.dismiss(true);
-      });
-
     }
 }
 
@@ -49,26 +46,22 @@ export class CandidateEmploymentDeleteDialogComponent {
     template: ''
 })
 export class CandidateEmploymentDeletePopupComponent implements OnInit, OnDestroy {
-
-
     routeSub: any;
 
     constructor(
         private route: ActivatedRoute,
         private candidateEmploymentPopupService: CandidateEmploymentPopupService,
-        private dataService : DataStorageService
+        private dataService: DataStorageService
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-          if(params['id']) {
-            this.candidateEmploymentPopupService
-                .open(CandidateEmploymentDeleteDialogComponent as Component, params['id']);
-          } else {
-            const id = this.dataService.getData(CANDIDATE_EMPLOYMENT_ID);
-            this.candidateEmploymentPopupService
-                .open(CandidateEmploymentDeleteDialogComponent as Component, id);
-          }
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.candidateEmploymentPopupService.open(CandidateEmploymentDeleteDialogComponent as Component, params['id']);
+            } else {
+                const id = this.dataService.getData(CANDIDATE_EMPLOYMENT_ID);
+                this.candidateEmploymentPopupService.open(CandidateEmploymentDeleteDialogComponent as Component, id);
+            }
         });
     }
 

@@ -93,7 +93,7 @@ public class MaritalStatusResource {
     public ResponseEntity<MaritalStatus> updateMaritalStatus(@RequestBody MaritalStatus maritalStatus) throws URISyntaxException {
         log.debug("REST request to update MaritalStatus : {}", maritalStatus);
         if (maritalStatus.getId() == null) {
-            return createMaritalStatus(maritalStatus);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         MaritalStatus result = maritalStatusRepository.save(maritalStatus);
         elasticSearchTemplate.index(new MaritalStatusEntityBuilder(result.getId()).name(result.getStatus())
@@ -126,8 +126,8 @@ public class MaritalStatusResource {
     @Timed
     public ResponseEntity<MaritalStatus> getMaritalStatus(@PathVariable Long id) {
         log.debug("REST request to get MaritalStatus : {}", id);
-        MaritalStatus maritalStatus = maritalStatusRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(maritalStatus));
+        Optional<MaritalStatus> maritalStatus = maritalStatusRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(maritalStatus);
     }
 
     /**
@@ -140,8 +140,8 @@ public class MaritalStatusResource {
     @Timed
     public ResponseEntity<Void> deleteMaritalStatus(@PathVariable Long id) {
         log.debug("REST request to delete MaritalStatus : {}", id);
-        maritalStatusRepository.delete(id);
-        maritalStatusSearchRepository.delete(id);
+        maritalStatusRepository.deleteById(id);
+        maritalStatusSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -6,7 +6,9 @@ import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.repository.JobFilterHistoryRepository;
 import com.drishika.gradzcircle.repository.search.JobFilterHistorySearchRepository;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +24,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Collections;
 import java.util.List;
 
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,7 +51,7 @@ public class JobFilterHistoryResourceIntTest {
     private JobFilterHistoryRepository jobFilterHistoryRepository;
 
     @Autowired
-    private JobFilterHistorySearchRepository jobFilterHistorySearchRepository;
+    private JobFilterHistorySearchRepository mockJobFilterHistorySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +72,7 @@ public class JobFilterHistoryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final JobFilterHistoryResource jobFilterHistoryResource = new JobFilterHistoryResource(jobFilterHistoryRepository, jobFilterHistorySearchRepository);
+        final JobFilterHistoryResource jobFilterHistoryResource = new JobFilterHistoryResource(jobFilterHistoryRepository, mockJobFilterHistorySearchRepository);
         this.restJobFilterHistoryMockMvc = MockMvcBuilders.standaloneSetup(jobFilterHistoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +94,7 @@ public class JobFilterHistoryResourceIntTest {
 
     @Before
     public void initTest() {
-        jobFilterHistorySearchRepository.deleteAll();
+        //jobFilterHistorySearchRepository.deleteAll();
         jobFilterHistory = createEntity(em);
     }
 
@@ -110,9 +115,7 @@ public class JobFilterHistoryResourceIntTest {
         JobFilterHistory testJobFilterHistory = jobFilterHistoryList.get(jobFilterHistoryList.size() - 1);
         assertThat(testJobFilterHistory.getFilterDescription()).isEqualTo(DEFAULT_FILTER_DESCRIPTION);
 
-        // Validate the JobFilterHistory in Elasticsearch
-        JobFilterHistory jobFilterHistoryEs = jobFilterHistorySearchRepository.findOne(testJobFilterHistory.getId());
-        assertThat(jobFilterHistoryEs).isEqualToIgnoringGivenFields(testJobFilterHistory);
+       verify(mockJobFilterHistorySearchRepository,times(1)).save(testJobFilterHistory);
     }
 
     @Test
@@ -175,11 +178,11 @@ public class JobFilterHistoryResourceIntTest {
     public void updateJobFilterHistory() throws Exception {
         // Initialize the database
         jobFilterHistoryRepository.saveAndFlush(jobFilterHistory);
-        jobFilterHistorySearchRepository.save(jobFilterHistory);
+       // jobFilterHistorySearchRepository.save(jobFilterHistory);
         int databaseSizeBeforeUpdate = jobFilterHistoryRepository.findAll().size();
 
         // Update the jobFilterHistory
-        JobFilterHistory updatedJobFilterHistory = jobFilterHistoryRepository.findOne(jobFilterHistory.getId());
+        JobFilterHistory updatedJobFilterHistory = jobFilterHistoryRepository.findById(jobFilterHistory.getId()).get();
         // Disconnect from session so that the updates on updatedJobFilterHistory are not directly saved in db
         em.detach(updatedJobFilterHistory);
         updatedJobFilterHistory
@@ -197,8 +200,7 @@ public class JobFilterHistoryResourceIntTest {
         assertThat(testJobFilterHistory.getFilterDescription()).isEqualTo(UPDATED_FILTER_DESCRIPTION);
 
         // Validate the JobFilterHistory in Elasticsearch
-        JobFilterHistory jobFilterHistoryEs = jobFilterHistorySearchRepository.findOne(testJobFilterHistory.getId());
-        assertThat(jobFilterHistoryEs).isEqualToIgnoringGivenFields(testJobFilterHistory);
+        verify(mockJobFilterHistorySearchRepository,times(1)).save(testJobFilterHistory);
     }
 
     @Test
@@ -209,14 +211,15 @@ public class JobFilterHistoryResourceIntTest {
         // Create the JobFilterHistory
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restJobFilterHistoryMockMvc.perform(put("/api/job-filter-histories")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(jobFilterHistory)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(jobFilterHistory)))
+                .andExpect(status().isBadRequest());
 
         // Validate the JobFilterHistory in the database
         List<JobFilterHistory> jobFilterHistoryList = jobFilterHistoryRepository.findAll();
-        assertThat(jobFilterHistoryList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(jobFilterHistoryList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -224,7 +227,7 @@ public class JobFilterHistoryResourceIntTest {
     public void deleteJobFilterHistory() throws Exception {
         // Initialize the database
         jobFilterHistoryRepository.saveAndFlush(jobFilterHistory);
-        jobFilterHistorySearchRepository.save(jobFilterHistory);
+        //jobFilterHistorySearchRepository.save(jobFilterHistory);
         int databaseSizeBeforeDelete = jobFilterHistoryRepository.findAll().size();
 
         // Get the jobFilterHistory
@@ -233,8 +236,7 @@ public class JobFilterHistoryResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean jobFilterHistoryExistsInEs = jobFilterHistorySearchRepository.exists(jobFilterHistory.getId());
-        assertThat(jobFilterHistoryExistsInEs).isFalse();
+        verify(mockJobFilterHistorySearchRepository,times(1)).deleteById(jobFilterHistory.getId());
 
         // Validate the database is empty
         List<JobFilterHistory> jobFilterHistoryList = jobFilterHistoryRepository.findAll();
@@ -246,7 +248,8 @@ public class JobFilterHistoryResourceIntTest {
     public void searchJobFilterHistory() throws Exception {
         // Initialize the database
         jobFilterHistoryRepository.saveAndFlush(jobFilterHistory);
-        jobFilterHistorySearchRepository.save(jobFilterHistory);
+        when(mockJobFilterHistorySearchRepository.search(queryStringQuery("id:" + jobFilterHistory.getId())))
+        .thenReturn(Collections.singletonList(jobFilterHistory));
 
         // Search the jobFilterHistory
         restJobFilterHistoryMockMvc.perform(get("/api/_search/job-filter-histories?query=id:" + jobFilterHistory.getId()))

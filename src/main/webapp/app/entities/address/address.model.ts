@@ -1,7 +1,6 @@
-import { BaseEntity } from './../../shared';
 import { Country } from '../../entities/country';
 import { Candidate } from '../../entities/candidate';
-export class Address implements BaseEntity {
+export class Address {
     constructor(
         public id?: number,
         public addressLineOne?: string,
@@ -10,7 +9,6 @@ export class Address implements BaseEntity {
         public state?: string,
         public zip?: string,
         public candidate?: Candidate,
-        public country?: any,
-    ) {
-    }
+        public country?: any
+    ) {}
 }

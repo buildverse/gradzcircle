@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CaptureCollege } from './capture-college.model';
 import { CaptureCollegeService } from './capture-college.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-capture-college',
     templateUrl: './capture-college.component.html'
 })
 export class CaptureCollegeComponent implements OnInit, OnDestroy {
-captureColleges: CaptureCollege[];
+    captureColleges: CaptureCollege[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ captureColleges: CaptureCollege[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.captureCollegeService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<CaptureCollege[]>) => this.captureColleges = res.body,
+            this.captureCollegeService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<CaptureCollege[]>) => (this.captureColleges = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.captureCollegeService.query().subscribe(
             (res: HttpResponse<CaptureCollege[]>) => {
                 this.captureColleges = res.body;
@@ -62,7 +66,7 @@ captureColleges: CaptureCollege[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInCaptureColleges();
@@ -76,7 +80,7 @@ captureColleges: CaptureCollege[];
         return item.id;
     }
     registerChangeInCaptureColleges() {
-        this.eventSubscriber = this.eventManager.subscribe('captureCollegeListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('captureCollegeListModification', response => this.loadAll());
     }
 
     private onError(error) {

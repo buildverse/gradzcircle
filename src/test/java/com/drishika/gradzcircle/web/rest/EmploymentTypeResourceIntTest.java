@@ -3,6 +3,9 @@ package com.drishika.gradzcircle.web.rest;
 import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,7 +13,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +60,7 @@ public class EmploymentTypeResourceIntTest {
     private EmploymentTypeRepository employmentTypeRepository;
 
     @Autowired
-    private EmploymentTypeSearchRepository employmentTypeSearchRepository;
+    private EmploymentTypeSearchRepository mockEmploymentTypeSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -80,7 +84,7 @@ public class EmploymentTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository, employmentTypeSearchRepository,cacheManager);
+        final EmploymentTypeResource employmentTypeResource = new EmploymentTypeResource(employmentTypeRepository, mockEmploymentTypeSearchRepository,cacheManager);
         this.restEmploymentTypeMockMvc = MockMvcBuilders.standaloneSetup(employmentTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -103,7 +107,7 @@ public class EmploymentTypeResourceIntTest {
 
     @Before
     public void initTest() {
-        employmentTypeSearchRepository.deleteAll();
+      //  employmentTypeSearchRepository.deleteAll();
         employmentType = createEntity(em);
     }
 
@@ -126,8 +130,9 @@ public class EmploymentTypeResourceIntTest {
         assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(DEFAULT_EMPLOYMENT_TYPE_COST);
 
         // Validate the EmploymentType in Elasticsearch
-        EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
-        assertThat(employmentTypeEs).isEqualToIgnoringGivenFields(testEmploymentType);
+        
+        verify(mockEmploymentTypeSearchRepository,times(1)).save(testEmploymentType);
+       
     }
 
     @Test
@@ -192,11 +197,11 @@ public class EmploymentTypeResourceIntTest {
     public void updateEmploymentType() throws Exception {
         // Initialize the database
         employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
+      //  employmentTypeSearchRepository.save(employmentType);
         int databaseSizeBeforeUpdate = employmentTypeRepository.findAll().size();
 
         // Update the employmentType
-        EmploymentType updatedEmploymentType = employmentTypeRepository.findOne(employmentType.getId());
+        EmploymentType updatedEmploymentType = employmentTypeRepository.findById(employmentType.getId()).get();
         // Disconnect from session so that the updates on updatedEmploymentType are not directly saved in db
         em.detach(updatedEmploymentType);
         updatedEmploymentType
@@ -216,8 +221,7 @@ public class EmploymentTypeResourceIntTest {
         assertThat(testEmploymentType.getEmploymentTypeCost()).isEqualTo(UPDATED_EMPLOYMENT_TYPE_COST);
 
         // Validate the EmploymentType in Elasticsearch
-        EmploymentType employmentTypeEs = employmentTypeSearchRepository.findOne(testEmploymentType.getId());
-        assertThat(employmentTypeEs).isEqualToIgnoringGivenFields(testEmploymentType);
+        verify(mockEmploymentTypeSearchRepository,times(1)).save(testEmploymentType);
     }
 
     @Test
@@ -228,14 +232,15 @@ public class EmploymentTypeResourceIntTest {
         // Create the EmploymentType
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restEmploymentTypeMockMvc.perform(put("/api/employment-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(employmentType)))
-            .andExpect(status().isCreated());
+       		 .contentType(TestUtil.APPLICATION_JSON_UTF8)
+               .content(TestUtil.convertObjectToJsonBytes(employmentType)))
+               .andExpect(status().isBadRequest());
 
         // Validate the EmploymentType in the database
         List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
-        assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(employmentTypeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -243,7 +248,7 @@ public class EmploymentTypeResourceIntTest {
     public void deleteEmploymentType() throws Exception {
         // Initialize the database
         employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
+       // employmentTypeSearchRepository.save(employmentType);
         int databaseSizeBeforeDelete = employmentTypeRepository.findAll().size();
 
         // Get the employmentType
@@ -252,8 +257,7 @@ public class EmploymentTypeResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean employmentTypeExistsInEs = employmentTypeSearchRepository.exists(employmentType.getId());
-        assertThat(employmentTypeExistsInEs).isFalse();
+       verify(mockEmploymentTypeSearchRepository,times(1)).deleteById(employmentType.getId());
 
         // Validate the database is empty
         List<EmploymentType> employmentTypeList = employmentTypeRepository.findAll();
@@ -265,8 +269,9 @@ public class EmploymentTypeResourceIntTest {
     public void searchEmploymentType() throws Exception {
         // Initialize the database
         employmentTypeRepository.saveAndFlush(employmentType);
-        employmentTypeSearchRepository.save(employmentType);
-
+  //      employmentTypeSearchRepository.save(employmentType);
+        when(mockEmploymentTypeSearchRepository.search(queryStringQuery("id:" + employmentType.getId())))
+        .thenReturn(Collections.singletonList(employmentType));
         // Search the employmentType
         restEmploymentTypeMockMvc.perform(get("/api/_search/employment-types?query=id:" + employmentType.getId()))
             .andExpect(status().isOk())

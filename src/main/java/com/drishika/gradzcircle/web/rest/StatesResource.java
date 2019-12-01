@@ -83,7 +83,7 @@ public class StatesResource {
     public ResponseEntity<States> updateStates(@RequestBody States states) throws URISyntaxException {
         log.debug("REST request to update States : {}", states);
         if (states.getId() == null) {
-            return createStates(states);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         States result = statesRepository.save(states);
         statesSearchRepository.save(result);
@@ -117,8 +117,8 @@ public class StatesResource {
     @Timed
     public ResponseEntity<States> getStates(@PathVariable Long id) {
         log.debug("REST request to get States : {}", id);
-        States states = statesRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(states));
+        Optional<States> states = statesRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(states);
     }
 
     /**
@@ -131,8 +131,8 @@ public class StatesResource {
     @Timed
     public ResponseEntity<Void> deleteStates(@PathVariable Long id) {
         log.debug("REST request to delete States : {}", id);
-        statesRepository.delete(id);
-        statesSearchRepository.delete(id);
+        statesRepository.deleteById(id);
+        statesSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

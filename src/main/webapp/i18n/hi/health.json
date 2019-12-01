@@ -21,6 +21,7 @@
             "status": "स्थिति"
         },
         "status": {
+            "UNKNOWN": "UNKNOWN",
             "UP": "ऊपर",
             "DOWN": "नीचे"
         }

@@ -38,6 +38,7 @@
       						}"/>
       				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('email').errors && (corporateRegisterForm.get('email').dirty || corporateRegisterForm.get('email').touched)">
 			        		<p *ngIf="corporateRegisterForm.get('email').errors.pattern">Please enter a valid email address</p>
+			        		<p *ngIf="corporateRegisterForm.get('email').errors.required">Please enter email address</p>
 			     	</div>
                 	</div>
                 	<div class="form-group">
@@ -70,6 +71,7 @@
       							}"/>
 	      				<div class="invalid-feedback" *ngIf="corporateRegisterForm.get('passwordGroup.password').errors && (corporateRegisterForm.get('passwordGroup.password').dirty || corporateRegisterForm.get('passwordGroup.password').touched)">
 				        		<p *ngIf="corporateRegisterForm.get('passwordGroup.password').errors.minlength">Passwords should be at least 8 characters</p>
+				        		<p *ngIf="corporateRegisterForm.get('passwordGroup.password').errors.required">Please enter a password</p>
 				     	</div>
 	                	</div>
 	                	<div class="form-group">

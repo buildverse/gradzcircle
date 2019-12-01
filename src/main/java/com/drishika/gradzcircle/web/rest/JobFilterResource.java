@@ -130,8 +130,8 @@ public class JobFilterResource {
 	@Timed
 	public ResponseEntity<JobFilter> getJobFilter(@PathVariable Long id) {
 		log.debug("REST request to get JobFilter : {}", id);
-		JobFilter jobFilter = jobFilterRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobFilter));
+		Optional<JobFilter> jobFilter = jobFilterRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(jobFilter);
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class JobFilterResource {
 	@Timed
 	public ResponseEntity<Void> deleteJobFilter(@PathVariable Long id) {
 		log.debug("REST request to delete JobFilter : {}", id);
-		jobFilterRepository.delete(id);
-		jobFilterSearchRepository.delete(id);
+		jobFilterRepository.deleteById(id);
+		jobFilterSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

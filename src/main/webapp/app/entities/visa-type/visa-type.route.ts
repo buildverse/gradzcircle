@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { VisaTypeComponent } from './visa-type.component';
 import { VisaTypeDetailComponent } from './visa-type-detail.component';
 import { VisaTypePopupComponent } from './visa-type-dialog.component';
@@ -15,7 +15,8 @@ export const visaTypeRoute: Routes = [
             pageTitle: 'gradzcircleApp.visaType.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'visa-type/:id',
         component: VisaTypeDetailComponent,
         data: {

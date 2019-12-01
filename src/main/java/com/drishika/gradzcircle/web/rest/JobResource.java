@@ -658,8 +658,8 @@ public class JobResource {
 	public ResponseEntity<Job> getJob(@PathVariable Long id) {
 		log.info("REST request to get Job : {}", id);
 		Set<JobFilter> jobFilters = null;
-		Job job = jobRepository.findOne(id);
-
+		Optional<Job> optionalJob = jobRepository.findById(id);
+		Job job = optionalJob.get();
 		if (job != null) {
 			JobFilter jobFilter = jobService.getJobFilter(job);
 			if (jobFilter != null) {
@@ -674,7 +674,7 @@ public class JobResource {
 			// log.debug("exiting for {} with filters {}", id, job.getJobFilters());
 		}
 
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(job));
+		return ResponseUtil.wrapOrNotFound(Optional.of(job));
 	}
 	
 	/**
@@ -723,8 +723,8 @@ public class JobResource {
 	@Timed
 	public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
 		log.info("REST request to delete Job : {}", id);
-		jobRepository.delete(id);
-		jobSearchRepository.delete(id);
+		jobRepository.deleteById(id);
+		jobSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 

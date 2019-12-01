@@ -132,8 +132,8 @@
 				</div>
 			</div>
 		</div>
-		<wizard navBarLocation="top" navBarLayout="large-empty-symbols">
-		<wizard-step stepTitle="Job Details" navigationSymbol="&#xf015;"
+		<aw-wizard navBarLocation="top" navBarLayout="large-empty-symbols">
+		<aw-wizard-step stepTitle="Job Details" navigationSymbol="&#xf015;"
 			navigationSymbolFontFamily="FontAwesome"
 			(stepEnter)="enterJobInitiate()" (stepExit)="exitJobInitiate()">
 		<hr>
@@ -223,7 +223,7 @@
 		</div>
 
 
-		</wizard-step> <wizard-step stepTitle="Filters" optionalStep
+		</aw-wizard-step> <aw-wizard-step stepTitle="Filters" optionalStep
 			navigationSymbol="&#xf0b0;" navigationSymbolFontFamily="FontAwesome"
 			(stepEnter)="enterFilters()" (stepExit)="exitFilters()">
 		<hr>
@@ -452,8 +452,8 @@
 						[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
 						[onTextChangeDebounce]="500" [required]="isCourseRequired"
 						[secondaryPlaceholder]="'Enter Courses Filters'"
-						(onAdd)="addCourseCost($event)"
-						(onRemove)="removeCourseCost($event)"> <tag-input-dropdown
+						(onAdd)="addCourseCost()"
+						(onRemove)="removeCourseCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestCourseData'></tag-input-dropdown>
 					</tag-input>
 					<small *ngIf="isCourseRequired" class="offset-md-2 form-text  profile-text-info">
@@ -473,8 +473,8 @@
 						theme='bootstrap' [onlyFromAutocomplete]="true"
 						[placeholder]="'Qualification +'" [onTextChangeDebounce]="500"
 						[secondaryPlaceholder]="'Enter Qualification'"
-						(onAdd)="addQualificationCost($event)" [required]="isQualificationRequired"
-						(onRemove)="removeQualificationCost($event)"> <tag-input-dropdown
+						(onAdd)="addQualificationCost()" [required]="isQualificationRequired"
+						(onRemove)="removeQualificationCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
 					</tag-input>
 					<small *ngIf="isQualificationRequired" class="offset-md-2 form-text  profile-text-info">
@@ -513,7 +513,7 @@
 					<input required pattern="^[0-9]+(\.[0-9]{1,2})?$"
 						#percent="ngModel" type="number" class="form-control"
 						name="percentage" id="field_percentage" [(ngModel)]="percentage"
-						(ngModelChange)="isPercentValid($event)"
+						(ngModelChange)="isPercentValid()"
 						(blur)="updateScoreCost()" />
 					<div *ngIf="percent.invalid && percent.touched" class="text-danger">
 						<small> Please enter valid score, upto 2 decimals</small>
@@ -575,8 +575,8 @@
 						theme='bootstrap' [onlyFromAutocomplete]="true"
 						[placeholder]="'Skill +'" [onTextChangeDebounce]="500"
 						[secondaryPlaceholder]="'Enter Skills'"
-						(onAdd)="addSkillCost($event)" 
-						(onRemove)="removeSkillCost($event)"> <tag-input-dropdown
+						(onAdd)="addSkillCost()" 
+						(onRemove)="removeSkillCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestSkillData'></tag-input-dropdown>
 					</tag-input>
 				</div>
@@ -721,8 +721,8 @@
 						theme='bootstrap' [onlyFromAutocomplete]="true"
 						[placeholder]="'Language+'" [onTextChangeDebounce]="500"
 						[secondaryPlaceholder]="'Enter Languages'"
-						(onAdd)="addLanguageCost($event)"
-						(onRemove)="removeLanguageCost($event)"> <tag-input-dropdown
+						(onAdd)="addLanguageCost()"
+						(onRemove)="removeLanguageCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestLanguageData'></tag-input-dropdown>
 					</tag-input>
 				</div>
@@ -753,7 +753,7 @@
 					nextStep>Next</button>
 			</div>
 		</div>
-		</wizard-step> <wizard-step stepTitle="Preview" navigationSymbol="&#xf06e;"
+		</aw-wizard-step> <aw-wizard-step stepTitle="Preview" navigationSymbol="&#xf06e;"
 			navigationSymbolFontFamily="FontAwesome" (stepEnter)="enterPreview()"
 			(stepExit)="exitPreview()">
 		<div class="row mx-2 my-4">
@@ -1244,14 +1244,14 @@
 				(click)="save(ACTIVE)">Submit</button>
 			</ng-template>
 		</div>
-		</wizard-step> </wizard>
+		</aw-wizard-step> </aw-wizard>
 
 	</div>
 </form>
 <!--  {{job.jobFilters | json}}-->
 
 <div *jhiHasAnyAuthority="['ROLE_ADMIN']">
-	<form name="editForm" role="form" novalidate (ngSubmit)="save()"
+	<form name="editForm" role="form" novalidate (ngSubmit)="save(ACTIVE)"
 		#editForm="ngForm">
 
 		<div class="modal-header">
@@ -1363,7 +1363,7 @@
 					<option [ngValue]="null"></option>
 					<option
 						[ngValue]="employmentTypeOption.id === job.employmentType?.id ? job.employmentType : employmentTypeOption"
-						*ngFor="let employmentTypeOption of employmenttypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.id}}</option>
+						*ngFor="let employmentTypeOption of employmentTypes; trackBy: trackEmploymentTypeById">{{employmentTypeOption.id}}</option>
 				</select>
 			</div>
 			<div class="form-group">

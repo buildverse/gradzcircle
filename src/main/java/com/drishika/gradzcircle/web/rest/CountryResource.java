@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
@@ -102,7 +102,7 @@ public class CountryResource {
 	public ResponseEntity<Country> updateCountry(@RequestBody Country country) throws URISyntaxException {
 		log.debug("REST request to update Country : {}", country);
 		if (country.getId() == null) {
-			return createCountry(country);
+			throw new BadRequestAlertException("A new profileCategory cannot already have an ID", ENTITY_NAME, "idexists");
 		}
 		Country result = countryService.updateCountry(country);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, country.getId().toString()))
@@ -148,8 +148,8 @@ public class CountryResource {
 	@Timed
 	public ResponseEntity<Country> getCountry(@PathVariable Long id) {
 		log.debug("REST request to get Country : {}", id);
-		Country country = countryRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(country));
+		Optional<Country> country = countryRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(country);
 	}
 
 	/**

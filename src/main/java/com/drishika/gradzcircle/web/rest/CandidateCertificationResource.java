@@ -89,7 +89,10 @@ public class CandidateCertificationResource {
 		if (candidateCertification.getId() != null) {
             throw new BadRequestAlertException("A new candidateCertification cannot already have an ID", ENTITY_NAME, "idexists");
         }
-		Candidate candidate = candidateRepository.findOne(candidateCertification.getCandidate().getId());
+		Optional<Candidate> opstionCandidate = candidateRepository.findById(candidateCertification.getCandidate().getId());
+		if(!opstionCandidate.isPresent())
+			throw new BadRequestAlertException("No Candidate present to link Certification", ENTITY_NAME,"");
+		Candidate candidate = opstionCandidate.get();
 		if(candidate.getCertifications().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, false);
 		}
@@ -159,8 +162,8 @@ public class CandidateCertificationResource {
 	@Timed
 	public ResponseEntity<CandidateCertification> getCandidateCertification(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertification : {}", id);
-		CandidateCertification candidateCertification = candidateCertificationRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateCertification));
+		Optional<CandidateCertification> candidateCertification = candidateCertificationRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(candidateCertification);
 	}
 
 	/**
@@ -178,8 +181,8 @@ public class CandidateCertificationResource {
 		List<CandidateCertificationDTO> certificationDTOs ;
 		List<CandidateCertification> candidateCertifications = candidateCertificationRepository
 				.findCertificationsByCandidateId(id);
-		Candidate candidate = candidateRepository.findOne(id);
-		certificationDTOs = converter.convertCandidateCertifications(candidateCertifications, true,candidate);
+		Optional<Candidate> candidate = candidateRepository.findById(id);
+		certificationDTOs = converter.convertCandidateCertifications(candidateCertifications, true,candidate.get());
 		return certificationDTOs;
 	}
 
@@ -195,11 +198,11 @@ public class CandidateCertificationResource {
 	@Timed
 	public ResponseEntity<Void> deleteCandidateCertification(@PathVariable Long id) {
 		log.debug("REST request to delete CandidateCertification  : {}", id);
-		CandidateCertification candidateCertification = candidateCertificationRepository.findOne(id);
-		Candidate candidate = candidateCertification.getCandidate();
+		Optional<CandidateCertification> candidateCertification = candidateCertificationRepository.findById(id);
+		Candidate candidate = candidateCertification.get().getCandidate();
 		log.debug("REST request to delete CandidateCertification for candidate   : {} , {}", id,candidate.getId());
 		log.debug("CANDIDATE CERTIFICATIONS ARE BEFORE REMOVE FROM LIST {}",candidate.getCertifications());
-		candidate = candidate.removeCertification(candidateCertification);
+		candidate = candidate.removeCertification(candidateCertification.get());
 		log.debug("Candidate post emoval of certs is {} {}",candidate,candidate.getCertifications());
 		if(candidate.getCertifications().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, true);

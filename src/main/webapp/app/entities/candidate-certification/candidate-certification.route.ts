@@ -1,5 +1,5 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
-import { UserRouteAccessService } from '../../shared';
 import { CandidateCertificationComponent } from './candidate-certification.component';
 import { CandidateCertificationDetailComponent } from './candidate-certification-detail.component';
 import { CandidateCertificationPopupComponent, CandidateCertificationPopupComponentNew } from './candidate-certification-dialog.component';
@@ -14,7 +14,8 @@ export const candidateCertificationRoute: Routes = [
             pageTitle: 'gradzcircleApp.candidateCertification.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'candidate-certification/:id',
         component: CandidateCertificationDetailComponent,
         data: {

@@ -1,12 +1,9 @@
-import { BaseEntity } from './../../shared';
-
-export class Filter implements BaseEntity {
+export class Filter {
     constructor(
         public id?: number,
         public filterName?: string,
         public filterCost?: number,
         public comments?: string,
-        public matchWeight?: number,
-    ) {
-    }
+        public matchWeight?: number
+    ) {}
 }

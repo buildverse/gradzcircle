@@ -1,7 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
 import { LinkedCandidatesComponent } from './corporate-linked-candidates.component';
 import { CorporateComponent } from './corporate.component';
@@ -11,7 +10,6 @@ import { CorporateDeletePopupComponent } from './corporate-delete-dialog.compone
 
 @Injectable()
 export class LinkedCandidatesResolvePagingParams implements Resolve<any> {
-
     constructor(private paginationUtil: JhiPaginationUtil) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -21,37 +19,37 @@ export class LinkedCandidatesResolvePagingParams implements Resolve<any> {
             page: this.paginationUtil.parsePage(page),
             predicate: this.paginationUtil.parsePredicate(sort),
             ascending: this.paginationUtil.parseAscending(sort)
-      };
+        };
     }
 }
 
 export const corporateRoute: Routes = [
     {
-      path: 'corporate',
-      component: CorporateComponent,
-      data: {
-        authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
-        pageTitle: 'gradzcircleApp.corporate.detail.title'
-      },
-      canActivate: [UserRouteAccessService]
+        path: 'corporate',
+        component: CorporateComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.corporate.detail.title'
+        },
+        canActivate: [UserRouteAccessService]
     },
     {
         path: 'corporateDetails',
         component: CorporateDetailComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.home.title'
         },
         canActivate: [UserRouteAccessService]
     },
-  {
+    {
         path: 'linkedCandidatesForCorporate',
         component: LinkedCandidatesComponent,
         resolve: {
-            'pagingParams': LinkedCandidatesResolvePagingParams
+            pagingParams: LinkedCandidatesResolvePagingParams
         },
         data: {
-            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.linkedCandidates'
         },
         canActivate: [UserRouteAccessService]
@@ -73,7 +71,7 @@ export const corporatePopupRoute: Routes = [
         path: 'corporate/edit',
         component: CorporatePopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.home.title'
         },
         canActivate: [UserRouteAccessService],
@@ -83,7 +81,7 @@ export const corporatePopupRoute: Routes = [
         path: 'corporate/:id/delete',
         component: CorporateDeletePopupComponent,
         data: {
-            authorities: ['ROLE_USER','ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.home.title'
         },
         canActivate: [UserRouteAccessService],

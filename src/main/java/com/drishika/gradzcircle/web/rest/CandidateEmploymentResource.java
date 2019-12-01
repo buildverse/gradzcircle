@@ -96,7 +96,10 @@ public class CandidateEmploymentResource {
 		if (candidateEmployment.getId() != null) {
             throw new BadRequestAlertException("A new candidateEmployment cannot already have an ID", ENTITY_NAME, "idexists");
         }
-		Candidate candidate = candidateRepository.findOne(candidateEmployment.getCandidate().getId());
+		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateEmployment.getCandidate().getId());
+		if(!optionalCandidate.isPresent())
+			throw new BadRequestAlertException("A No candidate available to link employment", ENTITY_NAME, "");
+		Candidate candidate = optionalCandidate.get();
 		if(candidate.getEmployments().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EXPERIENCE_PROFILE, false);
 		}
@@ -160,9 +163,9 @@ public class CandidateEmploymentResource {
 	public List<CandidateEmploymentDTO> getEmploymentsForCandidate(@PathVariable Long id) {
 		log.debug("REST request to get employemnt for Candidate: {}", id);
 		List<CandidateEmploymentDTO> candidateEmploymentDTOs;
-		Candidate candidate = candidateRepository.findOne(id);
+		Optional<Candidate> candidate = candidateRepository.findById(id);
 		List<CandidateEmployment> candidateEmployments = candidateEmploymentRepository.findByCandidateId(id);
-		candidateEmploymentDTOs =  converter.convertCandidateEmployments(candidateEmployments, true,candidate);
+		candidateEmploymentDTOs =  converter.convertCandidateEmployments(candidateEmployments, true,candidate.get());
 		return candidateEmploymentDTOs;
 	}
 
@@ -178,8 +181,8 @@ public class CandidateEmploymentResource {
 	@Timed
 	public ResponseEntity<CandidateEmployment> getCandidateEmployment(@PathVariable Long id) {
 		log.debug("REST request to get CandidateEmployment : {}", id);
-		CandidateEmployment candidateEmployment = candidateEmploymentRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateEmployment));
+		Optional<CandidateEmployment> candidateEmployment = candidateEmploymentRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(candidateEmployment);
 	}
 
 	/**
@@ -192,10 +195,10 @@ public class CandidateEmploymentResource {
 	@DeleteMapping("/candidate-employments/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteCandidateEmployment(@PathVariable Long id) {
-		CandidateEmployment candidateEmployment = candidateEmploymentRepository.findOne(id);
-		Candidate candidate = candidateEmployment.getCandidate();
+		Optional<CandidateEmployment> candidateEmployment = candidateEmploymentRepository.findById(id);
+		Candidate candidate = candidateEmployment.get().getCandidate();
 		log.debug("REST request to delete CandidateEmployment for candidate   : {} , {}", id,candidate.getId());
-		candidate.removeEmployment(candidateEmployment);
+		candidate.removeEmployment(candidateEmployment.get());
 		
 		if(candidate.getEmployments().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EXPERIENCE_PROFILE, true);

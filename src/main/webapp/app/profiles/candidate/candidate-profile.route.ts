@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
-import { UserRouteAccessService } from '../../shared';
 import { JhiPaginationUtil } from 'ng-jhipster';
 import { CandidateProfileComponent } from './candidate-profile-settings.component';
 import { CandidateResolverService } from './candidate-profile-account-resolver.service';
@@ -16,15 +16,14 @@ import { CandidatePrimarySettingsEditComponent } from './candidate-primary-setti
 import { ShortListedJobsForCandidateComponent } from './shortlisted-for-job.component';
 import { ProfilePicMgmtPopupComponent } from './profile-pic-mgmt-popup.component';
 import { CandidateProfilePrimaryViewComponent } from './candidate-primary-settings-view.component';
-import { CandidateProfileContactViewComponent} from './candidate-profile-contact-setting-view.component';
+import { CandidateProfileContactViewComponent } from './candidate-profile-contact-setting-view.component';
 import { CandidateCareerInterestResolverService } from './candidate-profile-career-interest-resolver.service';
 import { CandidateGenderResolverService } from './candidate-profile-gender-resolver.service';
-import {CandidateContactSettingsEditComponent} from './candidate-profile-contact-settings-edit.component';
+import { CandidateContactSettingsEditComponent } from './candidate-profile-contact-settings-edit.component';
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
-
-    constructor(private paginationUtil: JhiPaginationUtil) { }
+    constructor(private paginationUtil: JhiPaginationUtil) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
@@ -46,8 +45,8 @@ export const candidateProfileRoutes: Routes = [
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
-       // runGuardsAndResolvers: 'always',
-       /* resolve: {
+        // runGuardsAndResolvers: 'always',
+        /* resolve: {
             candidate: CandidateResolverService
         },*/
         children: [
@@ -59,7 +58,7 @@ export const candidateProfileRoutes: Routes = [
                     pageTitle: 'gradzcircleApp.candidate.home.title'
                 },
                 canActivate: [UserRouteAccessService],
-               /* resolve: {
+                /* resolve: {
                     candidate: CandidateResolverService
                 },*/
                 outlet: 'primarySetting'
@@ -75,11 +74,11 @@ export const candidateProfileRoutes: Routes = [
                 resolve: {
                     //candidate: CandidateResolverService,
                     jobCategory: CandidateCareerInterestResolverService,
-                    gender: CandidateGenderResolverService,
+                    gender: CandidateGenderResolverService
                 },
                 outlet: 'primarySetting'
             },
-             {
+            {
                 path: '',
                 component: CandidateProfileContactViewComponent,
                 data: {
@@ -101,7 +100,7 @@ export const candidateProfileRoutes: Routes = [
                     //candidate: CandidateResolverService
                 },
                 outlet: 'contactSetting'
-            },
+            }
         ]
     },
     {
@@ -169,8 +168,8 @@ export const candidateProfileRoutes: Routes = [
         },
         canActivate: [UserRouteAccessService],
         resolve: {
-            'pagingParams': JobResolvePagingParams
-        },
+            pagingParams: JobResolvePagingParams
+        }
     },
     {
         path: 'shortListedForJob',
@@ -181,8 +180,8 @@ export const candidateProfileRoutes: Routes = [
         },
         canActivate: [UserRouteAccessService],
         resolve: {
-            'pagingParams': JobResolvePagingParams
-        },
+            pagingParams: JobResolvePagingParams
+        }
     }
 ];
 
@@ -207,4 +206,4 @@ export const candidateProfilePopupRoute: Routes = [
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     }
-]
+];

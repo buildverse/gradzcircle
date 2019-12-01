@@ -4,6 +4,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -188,8 +189,9 @@ public class CandidateService {
 	public Candidate updateCandidate(Candidate candidate) {
 		logger.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
 		Boolean enableMatch = false;
-		Candidate prevCandidate = candidateRepository.findOne(candidate.getId());
-		injestNationalityDetails(candidate);
+		Optional<Candidate> prevCandidateOptional = candidateRepository.findById(candidate.getId());
+		Candidate prevCandidate = prevCandidateOptional.get();
+ 		injestNationalityDetails(candidate);
 		injestCountryDetails(candidate);
 		if (candidate.getGender() != null) {
 			if (!candidate.getGender().equals(prevCandidate.getGender())) {
@@ -256,8 +258,8 @@ public class CandidateService {
 	
 	public CandidateDetailDTO getCandidateDetails(Long id ) {
 		logger.debug("REST request to get Candidate Profile : {}", id);
-		Candidate candidate = candidateRepository.findOne(id);
-		return setCandidateDetails(candidate);
+		Optional<Candidate> candidate = candidateRepository.findById(id);
+		return setCandidateDetails(candidate.get());
 	}
 	
 	public CandidateDetailDTO setCandidateDetails(Candidate candidate) {
@@ -305,7 +307,7 @@ public class CandidateService {
 
 	public void deleteCandidate(Long id) {
 		logger.debug("REST request to delete Candidate : {}", id);
-		candidateRepository.delete(id);
+		candidateRepository.deleteById(id);
 		// candidateSearchRepository.delete(id);
 	}
 
@@ -320,9 +322,10 @@ public class CandidateService {
 		Boolean isShortListed = false;
 		Boolean canShortListMore = false;
 		List<CandidateSkills> candidateSkills = new ArrayList<>();
-		Candidate candidate = candidateRepository.findOne(candidateId);
-		if (candidate == null)
+		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateId);
+		if (!candidateOptional.isPresent())
 			return new CandidatePublicProfileDTO();
+		Candidate candidate = candidateOptional.get();
 		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
 		List<CandidateEducation> candidateEducations = candidateEducationRepository.findByCandidateId(candidate.getId());
 		List<CandidateEmployment> candidateEmployments = candidateEmploymentRepository.findByCandidateId(candidate.getId());
@@ -364,11 +367,12 @@ public class CandidateService {
 	
 	private Boolean canShortListCandidate(Long corporateId, Long jobId) {
 		logger.debug("The job id is {}",jobId);
-		Corporate corporate = corporateRepository.findOne(corporateId);
-		Job job = jobRepository.findOne(jobId);
+		Optional<Corporate> corporate = corporateRepository.findById(corporateId);
+		Optional<Job> jobOptional = jobRepository.findById(jobId);
+		Job job = jobOptional.get();
 		if(job.getNoOfApplicantLeft() == null)
 			return true;
-		if(corporate.getJobs().contains(job) && job.getNoOfApplicantLeft()!=null && job.getNoOfApplicantLeft()==0)
+		if(corporate.get().getJobs().contains(job) && job.getNoOfApplicantLeft()!=null && job.getNoOfApplicantLeft()==0)
 			return false;
 		else
 			return true;
@@ -376,7 +380,8 @@ public class CandidateService {
 	}
 	
 	private Boolean isShortListed(Candidate candidate, Long corporateId) {
-		Corporate corporate = corporateRepository.findOne(corporateId);
+		Optional<Corporate> corporateOptional = corporateRepository.findById(corporateId);
+		Corporate corporate = corporateOptional.get();
 		logger.info("SHORTLISTED LIST IS {}",corporate.getShortlistedCandidates().size());
 		List<CorporateCandidate> linkedCandidates = corporate.getShortlistedCandidates().stream().filter(candidateCorporateLink -> candidateCorporateLink.getCandidate().equals(candidate)).collect(Collectors.toList());
 		if (linkedCandidates != null && !linkedCandidates.isEmpty())
@@ -389,7 +394,8 @@ public class CandidateService {
 	
 	private CandidateJob setCandidateReviewedForJobAndGetMatchScoreAndReviwedStatus(Candidate candidate, Long JobId) {
 		logger.debug("Entering setReview and get match score  {}, {}",candidate.getId(), JobId);
-		Job job = jobRepository.findOne(JobId);
+		Optional<Job> jobOptional = jobRepository.findById(JobId);
+		Job job = jobOptional.get();
 		CandidateJob cJ = new CandidateJob(candidate, job);
 		CandidateJob candidateJobToReturn = null;
 		CandidateJob prevCandidateJob = null;
@@ -501,9 +507,12 @@ public class CandidateService {
 	}
 
 	public Candidate shortListCandidateForJob(Long candidateId, Long jobId, Long corporateId) {
-		Candidate candidateFromRepo = candidateRepository.findOne(candidateId);
-		Corporate corporateFromRepo = corporateRepository.findOne(corporateId);
-		Job job = jobRepository.findOne(jobId);
+		Optional<Candidate> candidateFromRepoOptional = candidateRepository.findById(candidateId);
+		Optional<Corporate> corporateFromRepoOptional = corporateRepository.findById(corporateId);
+		Optional<Job> jobOptional = jobRepository.findById(jobId);
+		Candidate candidateFromRepo = candidateFromRepoOptional.get();
+		Corporate corporateFromRepo = corporateFromRepoOptional.get();
+		Job job = jobOptional.get();
 		CorporateCandidate corporateCandidateLink = new CorporateCandidate(corporateFromRepo, candidateFromRepo, jobId);
 		candidateFromRepo.addCorporateCandidate(corporateCandidateLink);
 		job.setNoOfApplicantsBought(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought()+1:0+1);

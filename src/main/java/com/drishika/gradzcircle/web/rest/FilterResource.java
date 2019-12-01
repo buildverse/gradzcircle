@@ -78,7 +78,7 @@ public class FilterResource {
     public ResponseEntity<Filter> updateFilter(@RequestBody Filter filter) throws URISyntaxException {
         log.debug("REST request to update Filter : {}", filter);
         if (filter.getId() == null) {
-            return createFilter(filter);
+        	throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Filter result = filterRepository.save(filter);
         filterSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class FilterResource {
     @Timed
     public ResponseEntity<Filter> getFilter(@PathVariable Long id) {
         log.debug("REST request to get Filter : {}", id);
-        Filter filter = filterRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(filter));
+        Optional<Filter> filter = filterRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(filter);
     }
 
     /**
@@ -123,8 +123,8 @@ public class FilterResource {
     @Timed
     public ResponseEntity<Void> deleteFilter(@PathVariable Long id) {
         log.debug("REST request to delete Filter : {}", id);
-        filterRepository.delete(id);
-        filterSearchRepository.delete(id);
+        filterRepository.deleteById(id);
+        filterSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

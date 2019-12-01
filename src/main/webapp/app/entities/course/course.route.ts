@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { CourseComponent } from './course.component';
 import { CourseDetailComponent } from './course-detail.component';
 import { CoursePopupComponent } from './course-dialog.component';
@@ -15,7 +15,8 @@ export const courseRoute: Routes = [
             pageTitle: 'gradzcircleApp.course.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'course/:id',
         component: CourseDetailComponent,
         data: {

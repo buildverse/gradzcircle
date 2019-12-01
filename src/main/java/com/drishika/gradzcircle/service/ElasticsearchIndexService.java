@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.elasticsearch.indices.IndexAlreadyExistsException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -481,19 +481,17 @@ public class ElasticsearchIndexService {
 	private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
 			ElasticsearchRepository<T, ID> elasticsearchRepository) {
 		elasticsearchTemplate.deleteIndex(entityClass);
-		try {
-			elasticsearchTemplate.createIndex(entityClass);
-		} catch (IndexAlreadyExistsException e) {
-			// Do nothing. Index was already concurrently recreated by some other service.
-		}
+		
+		elasticsearchTemplate.createIndex(entityClass);
+		
 		elasticsearchTemplate.putMapping(entityClass);
 		if (jpaRepository.count() > 0) {
 			try {
 				Method m = jpaRepository.getClass().getMethod("findAllWithEagerRelationships");
 				log.debug("The class name is {}", entityClass.getName());
-				elasticsearchRepository.save((List<T>) m.invoke(jpaRepository));
+				elasticsearchRepository.saveAll((List<T>) m.invoke(jpaRepository));
 			} catch (Exception e) {
-				elasticsearchRepository.save(jpaRepository.findAll());
+				elasticsearchRepository.saveAll(jpaRepository.findAll());
 			}
 		}
 		log.info("Elasticsearch: Indexed all rows for " + entityClass.getSimpleName());

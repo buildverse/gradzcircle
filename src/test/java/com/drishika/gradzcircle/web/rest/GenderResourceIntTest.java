@@ -1,6 +1,7 @@
 package com.drishika.gradzcircle.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,7 +10,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,6 +23,7 @@ import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,9 +59,9 @@ public class GenderResourceIntTest {
 	private GenderRepository genderRepository;
 
 	@Autowired
-	private GenderSearchRepository genderSearchRepository;
+	private GenderSearchRepository mockGenderSearchRepository;
 
-	@Autowired
+	@Mock
 	private ElasticsearchTemplate elasticsearchTemplate;
 
 	@Autowired
@@ -78,7 +85,7 @@ public class GenderResourceIntTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final GenderResource genderResource = new GenderResource(genderRepository, genderSearchRepository,
+		final GenderResource genderResource = new GenderResource(genderRepository, mockGenderSearchRepository,
 				elasticsearchTemplate);
 		this.restGenderMockMvc = MockMvcBuilders.standaloneSetup(genderResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
@@ -123,8 +130,8 @@ public class GenderResourceIntTest {
 
 	@Before
 	public void initTest() {
-		genderSearchRepository.deleteAll();
 		gender = createEntity(em);
+		elasticGender = createElasticInstance(gender);
 	}
 
 	@Test
@@ -142,10 +149,9 @@ public class GenderResourceIntTest {
 		Gender testGender = genderList.get(genderList.size() - 1);
 		assertThat(testGender.getGender()).isEqualTo(DEFAULT_GENDER);
 
-		// Validate the Gender in Elasticsearch
-		Gender genderEs = genderSearchRepository.findOne(testGender.getId());
-		assertThat(genderEs.getId()).isEqualTo(testGender.getId());
-		assertThat(genderEs.getGender()).isEqualTo(testGender.getGender());
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
+		
 	}
 
 	@Test
@@ -210,7 +216,7 @@ public class GenderResourceIntTest {
 		int databaseSizeBeforeUpdate = genderRepository.findAll().size();
 
 		// Update the gender
-		Gender updatedGender = genderRepository.findOne(gender.getId());
+		Gender updatedGender = genderRepository.findById(gender.getId()).get();
 		updatedGender.gender(UPDATED_GENDER);
 
 		restGenderMockMvc.perform(put("/api/genders").contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -223,9 +229,7 @@ public class GenderResourceIntTest {
 		assertThat(testGender.getGender()).isEqualTo(UPDATED_GENDER);
 
 		// Validate the Gender in Elasticsearch
-		Gender genderEs = genderSearchRepository.findOne(testGender.getId());
-		assertThat(genderEs.getId()).isEqualTo(testGender.getId());
-		assertThat(genderEs.getGender()).isEqualTo(testGender.getGender());
+		//NEED TO ADD
 	}
 
 	@Test
@@ -237,12 +241,18 @@ public class GenderResourceIntTest {
 
 		// If the entity doesn't have an ID, it will be created instead of just being
 		// updated
-		restGenderMockMvc.perform(put("/api/genders").contentType(TestUtil.APPLICATION_JSON_UTF8)
-				.content(TestUtil.convertObjectToJsonBytes(gender))).andExpect(status().isCreated());
+		
+		restGenderMockMvc.perform(put("/api/genders")
+		            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+		            .content(TestUtil.convertObjectToJsonBytes(gender)))
+		            .andExpect(status().isBadRequest());
 
 		// Validate the Gender in the database
 		List<Gender> genderList = genderRepository.findAll();
-		assertThat(genderList).hasSize(databaseSizeBeforeUpdate + 1);
+		assertThat(genderList).hasSize(databaseSizeBeforeUpdate);
+		
+		verify(elasticsearchTemplate, times(0)).index(any());
+		verify(elasticsearchTemplate, times(0)).refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
 	}
 
 	@Test
@@ -259,9 +269,9 @@ public class GenderResourceIntTest {
 		restGenderMockMvc.perform(delete("/api/genders/{id}", gender.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk());
 
-		// Validate Elasticsearch is empty
-		boolean genderExistsInEs = genderSearchRepository.exists(gender.getId());
-		assertThat(genderExistsInEs).isFalse();
+		verify(elasticsearchTemplate,times(1)).index(any());
+		verify(elasticsearchTemplate,times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
+		
 
 		// Validate the database is empty
 		List<Gender> genderList = genderRepository.findAll();
@@ -277,6 +287,9 @@ public class GenderResourceIntTest {
 				.suggest(new String[] { createElasticInstance(gender).getGender() }).buildIndex());
 		elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.Gender.class);
 
+		elasticGender.setId(gender.getId());
+		when(mockGenderSearchRepository.search(queryStringQuery("id:" + gender.getId())))
+	        .thenReturn(Collections.singletonList(elasticGender));
 		// Search the gender
 		restGenderMockMvc.perform(get("/api/_search/genders?query=id:" + gender.getId())).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))

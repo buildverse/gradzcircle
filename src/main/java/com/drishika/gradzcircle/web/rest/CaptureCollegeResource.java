@@ -78,7 +78,7 @@ public class CaptureCollegeResource {
     public ResponseEntity<CaptureCollege> updateCaptureCollege(@RequestBody CaptureCollege captureCollege) throws URISyntaxException {
         log.debug("REST request to update CaptureCollege : {}", captureCollege);
         if (captureCollege.getId() == null) {
-            return createCaptureCollege(captureCollege);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CaptureCollege result = captureCollegeRepository.save(captureCollege);
         captureCollegeSearchRepository.save(result);
@@ -109,8 +109,8 @@ public class CaptureCollegeResource {
     @Timed
     public ResponseEntity<CaptureCollege> getCaptureCollege(@PathVariable Long id) {
         log.debug("REST request to get CaptureCollege : {}", id);
-        CaptureCollege captureCollege = captureCollegeRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(captureCollege));
+        Optional<CaptureCollege> captureCollege = captureCollegeRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(captureCollege);
     }
 
     /**
@@ -123,8 +123,8 @@ public class CaptureCollegeResource {
     @Timed
     public ResponseEntity<Void> deleteCaptureCollege(@PathVariable Long id) {
         log.debug("REST request to delete CaptureCollege : {}", id);
-        captureCollegeRepository.delete(id);
-        captureCollegeSearchRepository.delete(id);
+        captureCollegeRepository.deleteById(id);
+        captureCollegeSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

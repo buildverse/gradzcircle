@@ -1,11 +1,12 @@
-import { BaseEntity } from './../../shared';
-
+import { EmploymentType } from '../employment-type/employment-type.model';
+import { JobType } from '../job-type/job-type.model';
+import { Job } from '../job/job.model';
 export const enum PaymentType {
     'UPFRONT',
     'AS_YOU_GO'
 }
 
-export class JobHistory implements BaseEntity {
+export class JobHistory {
     constructor(
         public id?: number,
         public jobTitle?: string,
@@ -35,9 +36,9 @@ export class JobHistory implements BaseEntity {
         public createdBy?: number,
         public updatedBy?: number,
         public noOfApplicantLeft?: number,
-        public jobType?: BaseEntity,
-        public employmentType?: BaseEntity,
-        public job?: BaseEntity,
+        public jobType?: JobType,
+        public employmentType?: EmploymentType,
+        public job?: Job
     ) {
         this.hasBeenEdited = false;
         this.everActive = false;

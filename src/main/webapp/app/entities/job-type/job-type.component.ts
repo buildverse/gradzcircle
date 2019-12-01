@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { JobType } from './job-type.model';
 import { JobTypeService } from './job-type.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-job-type',
     templateUrl: './job-type.component.html'
 })
 export class JobTypeComponent implements OnInit, OnDestroy {
-jobTypes: JobType[];
+    jobTypes: JobType[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ jobTypes: JobType[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.jobTypeService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<JobType[]>) => this.jobTypes = res.body,
+            this.jobTypeService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<JobType[]>) => (this.jobTypes = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.jobTypeService.query().subscribe(
             (res: HttpResponse<JobType[]>) => {
                 this.jobTypes = res.body;
@@ -62,7 +66,7 @@ jobTypes: JobType[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInJobTypes();
@@ -76,7 +80,7 @@ jobTypes: JobType[];
         return item.id;
     }
     registerChangeInJobTypes() {
-        this.eventSubscriber = this.eventManager.subscribe('jobTypeListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('jobTypeListModification', response => this.loadAll());
     }
 
     private onError(error) {

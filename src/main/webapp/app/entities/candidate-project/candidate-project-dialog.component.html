@@ -295,7 +295,7 @@
 				<option [ngValue]="null"></option>
 				<option
 					[ngValue]="candidateEducationOption.id === candidateProject.education?.id ? candidateProject.education : candidateEducationOption"
-					*ngFor="let candidateEducationOption of candidateeducations; trackBy: trackCandidateEducationById">{{candidateEducationOption.id}}</option>
+					*ngFor="let candidateEducationOption of candidateEducations; trackBy: trackCandidateEducationById">{{candidateEducationOption.id}}</option>
 			</select>
 		</div>
 		<div class="form-group">
@@ -307,7 +307,7 @@
 				<option [ngValue]="null"></option>
 				<option
 					[ngValue]="candidateEmploymentOption.id === candidateProject.employment?.id ? candidateProject.employment : candidateEmploymentOption"
-					*ngFor="let candidateEmploymentOption of candidateemployments; trackBy: trackCandidateEmploymentById">{{candidateEmploymentOption.id}}</option>
+					*ngFor="let candidateEmploymentOption of candidateEmployments; trackBy: trackCandidateEmploymentById">{{candidateEmploymentOption.id}}</option>
 			</select>
 		</div>
 	</div>

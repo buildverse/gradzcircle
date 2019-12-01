@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { JobFilterComponent } from './job-filter.component';
 import { JobFilterDetailComponent } from './job-filter-detail.component';
 import { JobFilterPopupComponent } from './job-filter-dialog.component';
@@ -15,7 +15,8 @@ export const jobFilterRoute: Routes = [
             pageTitle: 'gradzcircleApp.jobFilter.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'job-filter/:id',
         component: JobFilterDetailComponent,
         data: {

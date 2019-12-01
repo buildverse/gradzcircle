@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { FilterCategory } from './filter-category.model';
 import { FilterCategoryService } from './filter-category.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-filter-category',
     templateUrl: './filter-category.component.html'
 })
 export class FilterCategoryComponent implements OnInit, OnDestroy {
-filterCategories: FilterCategory[];
+    filterCategories: FilterCategory[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ filterCategories: FilterCategory[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.filterCategoryService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<FilterCategory[]>) => this.filterCategories = res.body,
+            this.filterCategoryService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<FilterCategory[]>) => (this.filterCategories = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.filterCategoryService.query().subscribe(
             (res: HttpResponse<FilterCategory[]>) => {
                 this.filterCategories = res.body;
@@ -62,7 +66,7 @@ filterCategories: FilterCategory[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInFilterCategories();
@@ -76,7 +80,7 @@ filterCategories: FilterCategory[];
         return item.id;
     }
     registerChangeInFilterCategories() {
-        this.eventSubscriber = this.eventManager.subscribe('filterCategoryListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('filterCategoryListModification', response => this.loadAll());
     }
 
     private onError(error) {

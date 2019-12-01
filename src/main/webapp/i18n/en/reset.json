@@ -1,12 +1,12 @@
 {
     "reset": {
         "request": {
-            "title": "You are resetting your password...",
+            "title": "Reset your password",
             "form": {
                 "button": "Reset password"
             },
             "messages": {
-                "info": "Enter your <strong>registered</strong> email address ",
+                "info": "Enter the email address you used to register",
                 "success": "Check your emails for details on how to reset your password.",
                 "notfound": "<strong>Email address isn't registered!</strong> Please check and try again"
             }
@@ -14,7 +14,7 @@
         "finish" : {
             "title": "Reset password",
             "form": {
-                "button": "Update Password"
+                "button": "Validate new password"
             },
             "messages": {
                 "info": "Choose a new password",

@@ -1,7 +1,6 @@
 import { Candidate } from '../candidate/candidate.model';
-import { BaseEntity } from './../../shared';
 
-export class CandidateNonAcademicWork implements BaseEntity {
+export class CandidateNonAcademicWork {
     constructor(
         public id?: number,
         public nonAcademicInitiativeTitle?: string,
@@ -15,6 +14,6 @@ export class CandidateNonAcademicWork implements BaseEntity {
         public collapsed?: boolean
     ) {
         this.isCurrentActivity = false;
-      this.collapsed = true;
+        this.collapsed = true;
     }
 }

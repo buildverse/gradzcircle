@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Candidate } from '../../entities/candidate/candidate.model';
 import { CandidateService } from '../../entities/candidate/candidate.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BaseEntity } from '../../shared/model/base-entity';
 import 'rxjs/add/operator/debounceTime';
 import { Observable } from 'rxjs/Observable';
 import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -34,7 +33,6 @@ import { Subscription } from 'rxjs';
     selector: 'jhi-candidate-primary-settings-edit',
     templateUrl: 'candidate-primary-settings-edit.component.html'
 })
-
 export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy {
     primarySettingForm: FormGroup;
     candidate: Candidate;
@@ -55,7 +53,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
         displayAllSelectedText: true,
         selectionLimit: 5,
         containerClasses: 'dropdown-inline text-muted',
-        buttonClasses: 'btn btn-outline-primary',
+        buttonClasses: 'btn btn-outline-primary'
     };
 
     // Text configuration
@@ -78,16 +76,17 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
         private nationalityService: NationalityService,
         private countryService: CountryService,
         private candidateSettingService: CandidateProfileSettingService
-    ) { }
+    ) {}
 
     ngOnInit() {
-        this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
-          subscribe((candidate) => this.candidate = candidate);
-        this.route.data.subscribe((data: { jobCategory: any }) => this.jobCategories = data.jobCategory);
-        this.route.data.subscribe((data: { gender: any }) => this.genders = data.gender);
+        this.profileSubscriber = this.candidateSettingService
+            .getCandidateFromParentToChild()
+            .subscribe(candidate => (this.candidate = candidate));
+        this.route.data.subscribe((data: { jobCategory: any }) => (this.jobCategories = data.jobCategory));
+        this.route.data.subscribe((data: { gender: any }) => (this.genders = data.gender));
         // console.log('Candidates ' + JSON.stringify(this.candidate));
         this.careerInterestOptions = new Array();
-        this.jobCategories.forEach((item) => {
+        this.jobCategories.forEach(item => {
             this.careerInterestOptions.push({ id: item.id, name: item.jobCategory });
         });
         this.maxAboutMeLength = 150;
@@ -98,37 +97,43 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
             email: [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+')]],
             jobCategories: [null, [Validators.required]],
             differentlyAbled: [null],
-            gender: [null, [Validators.required]],
+            gender: [null, [Validators.required]]
         });
         this.onCandidateRetrieved();
-        this.primarySettingForm.get('jobCategories').valueChanges
-            .subscribe((value) => this.reCreateJobCategoryModelFromSelection(String(value)));
+        this.primarySettingForm
+            .get('jobCategories')
+            .valueChanges.subscribe(value => this.reCreateJobCategoryModelFromSelection(String(value)));
         this.characterCount();
-
     }
 
     requestJobCategoryData = (text: string): Observable<Response> => {
-        return this.jobCategoryService.searchRemote({
-            query: text
-        }).map((data) => data.body);
-    }
+        return this.jobCategoryService
+            .searchRemote({
+                query: text
+            })
+            .map(data => data.body);
+    };
 
     requestNationalityData = (text: string): Observable<Response> => {
-        return this.nationalityService.searchRemote({
-            query: text
-        }).map((data) => data.body);
-    }
+        return this.nationalityService
+            .searchRemote({
+                query: text
+            })
+            .map(data => data.body);
+    };
 
     requestCountryData = (text: string): Observable<Response> => {
-        return this.countryService.searchRemote({
-            query: text
-        }).map((data) => data.body);
-    }
+        return this.countryService
+            .searchRemote({
+                query: text
+            })
+            .map(data => data.body);
+    };
 
     reCreateJobCategoryModelFromSelection(value) {
         let jobCategoryReformatted;
         jobCategoryReformatted = new Array();
-        this.jobCategories.forEach((element) => {
+        this.jobCategories.forEach(element => {
             for (let j = 0; j < value.length; j++) {
                 if (value[j] === element.id) {
                     jobCategoryReformatted.push(element);
@@ -166,7 +171,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
         });
     }
 
-    compareSelectControlValues(entity1: BaseEntity, entity2: BaseEntity): boolean {
+    compareSelectControlValues(entity1: any, entity2: any): boolean {
         return entity1 && entity2 ? entity1.id === entity2.id : entity1 === entity2;
     }
 
@@ -181,9 +186,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
                     this.router.navigate(['/error']);
                     return Observable.of(null);
                 }
-
             );
-
         } else {
             if (!this.primarySettingForm.dirty) {
                 this.onSaveComplete();
@@ -214,11 +217,11 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
     }
 
     ngOnDestroy() {
-      if (this.subscription) {
-        this.eventManager.destroy(this.subscription);
-      }
-      if (this.profileSubscriber) {
-        this.eventManager.destroy(this.profileSubscriber);
-      }
+        if (this.subscription) {
+            this.eventManager.destroy(this.subscription);
+        }
+        if (this.profileSubscriber) {
+            this.eventManager.destroy(this.profileSubscriber);
+        }
     }
 }

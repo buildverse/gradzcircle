@@ -1,9 +1,9 @@
-import { BaseEntity, User } from './../../shared';
+import { User } from '../../core/user/user.model';
 import { Country } from '../country';
 import { Job } from '../job';
 import { Industry } from '../industry';
 
-export class Corporate implements BaseEntity {
+export class Corporate {
     constructor(
         public id?: number,
         public name?: string,
@@ -28,7 +28,6 @@ export class Corporate implements BaseEntity {
         public country?: any,
         public industry?: Industry,
         public login?: User,
-        public jobs?: Job[],
-    ) {
-    }
+        public jobs?: Job[]
+    ) {}
 }

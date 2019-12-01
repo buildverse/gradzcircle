@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -73,7 +74,8 @@ public class CandidateSkillsService {
 	public Set<CandidateSkills> createCandidateSkills(CandidateSkills candidateSkillObject) {
 		log.debug("Service request to save CandidateSkills : {}", candidateSkillObject);
 		
-		Candidate candidate = candidateRepository.findOne(candidateSkillObject.getCandidate().getId());
+		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateSkillObject.getCandidate().getId());
+		Candidate candidate = candidateOptional.get();
 		log.debug("Candidate SKills already saved are {}",candidate.getCandidateSkills());
 		if(candidate.getCandidateSkills().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, false);
@@ -100,13 +102,13 @@ public class CandidateSkillsService {
 
 	public CandidateSkillsDTO getCandidateSkill(Long id) {
 		log.debug("Service request to get CandidateSkills : {}", id);
-		CandidateSkills candidateSkills = candidateSkillsRepository.findOne(id);
+		Optional<CandidateSkills> candidateSkills = candidateSkillsRepository.findById(id);
 		return converter.convertToCandidateSkillDTO(candidateSkills,false);
 	}
 
 	public void deleteCandidateSkills(Long id) {
 		log.debug("Service request to delete CandidateSkills : {}", id);
-		CandidateSkills candidateSkill = candidateSkillsRepository.findOne(id);
+		CandidateSkills candidateSkill = candidateSkillsRepository.findById(id).get();
 		Candidate candidate = candidateSkill.getCandidate();
 		candidate.getCandidateSkills().remove(candidateSkill);
 		log.debug("Candidate Skills post remove is {}",candidate.getCandidateSkills());
@@ -185,7 +187,7 @@ public class CandidateSkillsService {
 					cSkill.candidate(candidateSkillObject.getCandidate());
 				}
 				if(skillToAdd.size()>0) {
-					List<Skills> addedSkills = skillsRepository.save(skillToAdd);
+					List<Skills> addedSkills = skillsRepository.saveAll(skillToAdd);
 					addedSkills.forEach(skill ->{
 						updateSkillIndex(skill);
 					});				

@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { MaritalStatusComponent } from './marital-status.component';
 import { MaritalStatusDetailComponent } from './marital-status-detail.component';
 import { MaritalStatusPopupComponent } from './marital-status-dialog.component';
@@ -15,7 +15,8 @@ export const maritalStatusRoute: Routes = [
             pageTitle: 'gradzcircleApp.maritalStatus.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'marital-status/:id',
         component: MaritalStatusDetailComponent,
         data: {

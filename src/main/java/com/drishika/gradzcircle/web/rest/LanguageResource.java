@@ -11,13 +11,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -112,7 +114,7 @@ public class LanguageResource {
 	public ResponseEntity<Language> updateLanguage(@RequestBody Language language) throws URISyntaxException {
 		log.debug("REST request to update Language : {}", language);
 		if (language.getId() == null) {
-			return createLanguage(language);
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Language result = languageRepository.save(language);
 		// languageSearchRepository.save(result);
@@ -159,8 +161,8 @@ public class LanguageResource {
 	@Timed
 	public ResponseEntity<Language> getLanguage(@PathVariable Long id) {
 		log.debug("REST request to get Language : {}", id);
-		Language language = languageRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(language));
+		Optional<Language> language = languageRepository.findById(id);
+		return ResponseUtil.wrapOrNotFound(language);
 	}
 
 	/**
@@ -174,8 +176,8 @@ public class LanguageResource {
 	@Timed
 	public ResponseEntity<Void> deleteLanguage(@PathVariable Long id) {
 		log.debug("REST request to delete Language : {}", id);
-		languageRepository.delete(id);
-		languageSearchRepository.delete(id);
+		languageRepository.deleteById(id);
+		languageSearchRepository.deleteById(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -209,10 +211,10 @@ public class LanguageResource {
 		log.debug("REST request to search languages for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("language-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticsearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Language.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("language-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Language.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> languages = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

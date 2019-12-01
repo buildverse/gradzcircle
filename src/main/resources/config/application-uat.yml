@@ -1,10 +1,10 @@
 # ===================================================================
-# Spring Boot configuration for the "uat" profile.
+# Spring Boot configuration for the "prod" profile.
 #
 # This configuration overrides the application.yml file.
 #
-# More information on profiles: http://www.jhipster.tech/profiles/
-# More information on configuration properties: http://www.jhipster.tech/common-application-properties/
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 # ===================================================================
@@ -12,6 +12,12 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
+
+logging:
+    level:
+        ROOT: INFO
+        com.drishika.gradzcircle: INFO
+        io.github.jhipster: INFO
 
 spring:
     application:
@@ -29,7 +35,6 @@ spring:
         url: jdbc:postgresql://ec2-23-21-201-12.compute-1.amazonaws.com:5432/dbdpcpev4mhtb5
         username: nytfinyqqlfgdz
         password: eb770ad706380c1d0a15c54f55fa82ae622d79f036e777178664d72e0fec2db0
-
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -42,11 +47,10 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name: 46986c59fa7447aeb0c4642ca01365a7
-            cluster-nodes: 46986c59fa7447aeb0c4642ca01365a7.us-east-1.aws.found.io:9243
-            properties:
-                http:
-                    enabled: true
+            cluster-name: b2aa8bc4c757b5f248a4a0d22b758c76
+            cluster-nodes: b2aa8bc4c757b5f248a4a0d22b758c76.us-east-1.aws.found.io:9343
+    liquibase:
+        contexts: uat
     mail:
         host: smtp.gmail.com
         port: 587
@@ -62,9 +66,6 @@ spring:
     thymeleaf:
         cache: true
 
-liquibase:
-    contexts: uat
-
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias gradzcircle -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
@@ -79,8 +80,10 @@ liquibase:
 #    ssl:
 #        key-store: keystore.p12
 #        key-store-password: <your-password>
-#        keyStoreType: PKCS12
-#        keyAlias: gradzcircle
+#        key-store-type: PKCS12
+#        key-alias: gradzcircle
+#        # The ciphers suite enforce the security by deactivating some old and deprecated SSL cipher, this list was tested against SSL Labs (https://www.ssllabs.com/ssltest/)
+#        ciphers: TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 ,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA,TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
 # ===================================================================
 server:
     port: 8080
@@ -88,11 +91,16 @@ server:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
         min-response-size: 1024
+  #  ssl:
+   #     key-store: keystore.p12
+    #    key-store-password: Gradzcircle2019@
+     #   key-store-type: PKCS12
+      #  key-alias: gradzcircle
 
 # ===================================================================
 # JHipster specific properties
 #
-# Full reference is available at: http://www.jhipster.tech/common-application-properties/
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 jhipster:
@@ -113,17 +121,10 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: gradzcircle@localhost
-        base-url: http://gradzcircleuat.herokuapp.com # Modify according to your server's URL
+        base-url: http://my-server-url-to-change # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite:
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: gradzcircle
-        prometheus:
-            enabled: false
-            endpoint: /prometheusMetrics
+        jmx:
+            enabled: true
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
@@ -134,14 +135,14 @@ jhipster:
             port: 5000
             queue-size: 512
 
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
 # to have type-safe configuration, like in the JHipsterProperties above
 #
 # More documentation is available at:
-# http://www.jhipster.tech/common-application-properties/
+# https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 application:
+

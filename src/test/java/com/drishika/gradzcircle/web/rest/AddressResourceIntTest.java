@@ -1,12 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.Address;
-import com.drishika.gradzcircle.repository.AddressRepository;
-import com.drishika.gradzcircle.repository.search.AddressSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
 
+import javax.persistence.EntityManager;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Address;
+import com.drishika.gradzcircle.repository.AddressRepository;
+import com.drishika.gradzcircle.repository.search.AddressSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the AddressResource REST controller.
@@ -58,7 +67,7 @@ public class AddressResourceIntTest {
     private AddressRepository addressRepository;
 
     @Autowired
-    private AddressSearchRepository addressSearchRepository;
+    private AddressSearchRepository mockAddressSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -79,7 +88,7 @@ public class AddressResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AddressResource addressResource = new AddressResource(addressRepository, addressSearchRepository);
+        final AddressResource addressResource = new AddressResource(addressRepository, mockAddressSearchRepository);
         this.restAddressMockMvc = MockMvcBuilders.standaloneSetup(addressResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -105,7 +114,7 @@ public class AddressResourceIntTest {
 
     @Before
     public void initTest() {
-        addressSearchRepository.deleteAll();
+       // addressSearchRepository.deleteAll();
         address = createEntity(em);
     }
 
@@ -131,8 +140,9 @@ public class AddressResourceIntTest {
         assertThat(testAddress.getZip()).isEqualTo(DEFAULT_ZIP);
 
         // Validate the Address in Elasticsearch
-        Address addressEs = addressSearchRepository.findOne(testAddress.getId());
-        assertThat(addressEs).isEqualToIgnoringGivenFields(testAddress);
+       // Address addressEs = addressSearchRepository.findById(testAddress.getId()).get();
+        //assertThat(addressEs).isEqualToIgnoringGivenFields(testAddress);
+        verify(mockAddressSearchRepository, times(1)).save(testAddress);
     }
 
     @Test
@@ -152,6 +162,7 @@ public class AddressResourceIntTest {
         // Validate the Address in the database
         List<Address> addressList = addressRepository.findAll();
         assertThat(addressList).hasSize(databaseSizeBeforeCreate);
+        verify(mockAddressSearchRepository, times(0)).save(address);
     }
 
     @Test
@@ -203,11 +214,11 @@ public class AddressResourceIntTest {
     public void updateAddress() throws Exception {
         // Initialize the database
         addressRepository.saveAndFlush(address);
-        addressSearchRepository.save(address);
+      //  addressSearchRepository.save(address);
         int databaseSizeBeforeUpdate = addressRepository.findAll().size();
 
         // Update the address
-        Address updatedAddress = addressRepository.findOne(address.getId());
+        Address updatedAddress = addressRepository.findById(address.getId()).get();
         // Disconnect from session so that the updates on updatedAddress are not directly saved in db
         em.detach(updatedAddress);
         updatedAddress
@@ -233,8 +244,7 @@ public class AddressResourceIntTest {
         assertThat(testAddress.getZip()).isEqualTo(UPDATED_ZIP);
 
         // Validate the Address in Elasticsearch
-        Address addressEs = addressSearchRepository.findOne(testAddress.getId());
-        assertThat(addressEs).isEqualToIgnoringGivenFields(testAddress);
+        verify(mockAddressSearchRepository, times(1)).save(testAddress);
     }
 
     @Test
@@ -246,13 +256,13 @@ public class AddressResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restAddressMockMvc.perform(put("/api/addresses")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(address)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(address)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Address in the database
         List<Address> addressList = addressRepository.findAll();
-        assertThat(addressList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(addressList).hasSize(databaseSizeBeforeUpdate );
     }
 
     @Test
@@ -260,7 +270,7 @@ public class AddressResourceIntTest {
     public void deleteAddress() throws Exception {
         // Initialize the database
         addressRepository.saveAndFlush(address);
-        addressSearchRepository.save(address);
+       // addressSearchRepository.save(address);
         int databaseSizeBeforeDelete = addressRepository.findAll().size();
 
         // Get the address
@@ -269,9 +279,8 @@ public class AddressResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean addressExistsInEs = addressSearchRepository.exists(address.getId());
-        assertThat(addressExistsInEs).isFalse();
-
+        verify(mockAddressSearchRepository, times(1)).deleteById(address.getId());
+        
         // Validate the database is empty
         List<Address> addressList = addressRepository.findAll();
         assertThat(addressList).hasSize(databaseSizeBeforeDelete - 1);
@@ -282,8 +291,9 @@ public class AddressResourceIntTest {
     public void searchAddress() throws Exception {
         // Initialize the database
         addressRepository.saveAndFlush(address);
-        addressSearchRepository.save(address);
-
+       // addressSearchRepository.save(address);
+        when(mockAddressSearchRepository.search(queryStringQuery("id:" + address.getId())))
+        .thenReturn(Collections.singletonList(address));
         // Search the address
         restAddressMockMvc.perform(get("/api/_search/addresses?query=id:" + address.getId()))
             .andExpect(status().isOk())

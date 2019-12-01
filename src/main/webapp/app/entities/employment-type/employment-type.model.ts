@@ -1,11 +1,9 @@
-import { BaseEntity } from './../../shared';
-
-export class EmploymentType implements BaseEntity {
+import { CandidateEmployment } from '../candidate-employment/candidate-employment.model';
+export class EmploymentType {
     constructor(
         public id?: number,
         public employmentType?: string,
         public employmentTypeCost?: number,
-        public candidateEmployments?: BaseEntity[],
-    ) {
-    }
+        public candidateEmployments?: CandidateEmployment[]
+    ) {}
 }

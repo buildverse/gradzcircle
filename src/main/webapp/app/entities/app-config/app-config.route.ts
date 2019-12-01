@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { AppConfigComponent } from './app-config.component';
 import { AppConfigDetailComponent } from './app-config-detail.component';
 import { AppConfigPopupComponent } from './app-config-dialog.component';
@@ -15,7 +15,8 @@ export const appConfigRoute: Routes = [
             pageTitle: 'gradzcircleApp.appConfig.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'app-config/:id',
         component: AppConfigDetailComponent,
         data: {

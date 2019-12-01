@@ -1,6 +1,5 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { ErrorMessagesComponent } from './error-messages.component';
 import { ErrorMessagesDetailComponent } from './error-messages-detail.component';
 import { ErrorMessagesPopupComponent } from './error-messages-dialog.component';
@@ -15,7 +14,8 @@ export const errorMessagesRoute: Routes = [
             pageTitle: 'gradzcircleApp.errorMessages.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'error-messages/:id',
         component: ErrorMessagesDetailComponent,
         data: {

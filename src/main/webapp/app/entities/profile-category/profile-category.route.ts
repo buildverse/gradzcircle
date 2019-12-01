@@ -1,6 +1,6 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
 import { ProfileCategoryComponent } from './profile-category.component';
 import { ProfileCategoryDetailComponent } from './profile-category-detail.component';
 import { ProfileCategoryPopupComponent } from './profile-category-dialog.component';
@@ -15,7 +15,8 @@ export const profileCategoryRoute: Routes = [
             pageTitle: 'gradzcircleApp.profileCategory.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'profile-category/:id',
         component: ProfileCategoryDetailComponent,
         data: {

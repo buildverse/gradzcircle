@@ -7,47 +7,6 @@
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "एंटिटीज़",
-                "candidate": "Candidate",
-                "candidateCertification": "Candidate Certification",
-                "candidateEducation": "Candidate Education",
-                "candidateEmployment": "Candidate Employment",
-                "candidateNonAcademicWork": "Candidate Non Academic Work",
-                "candidateProject": "Candidate Project",
-                "candidateLanguageProficiency": "Candidate Language Proficiency",
-                "visaType": "Visa Type",
-                "employmentType": "Employment Type",
-                "qualification": "Qualification",
-                "course": "Course",
-                "country": "Country",
-                "industry": "Industry",
-                "skills": "Skills",
-                "jobType": "Job Type",
-                "college": "College",
-                "university": "University",
-                "jobCategory": "Job Category",
-                "language": "Language",
-                "audit": "Audit",
-                "employability": "Employability",
-                "corporate": "Corporate",
-                "errorMessages": "Error Messages",
-                "address": "Address",
-                "maritalStatus": "Marital Status",
-                "gender": "Gender",
-                "nationality": "Nationality",
-                "captureCourse": "Capture Course",
-                "captureUniversity": "Capture University",
-                "captureCollege": "Capture College",
-                "captureQualification": "Capture Qualification",
-                "job": "Job",
-                "filterCategory": "Filter Category",
-                "filter": "Filter",
-                "jobFilter": "Job Filter",
-                "jobHistory": "Job History",
-                "jobFilterHistory": "Job Filter History",
-                "appConfig": "App Config",
-                "states": "States",
-                "profileCategory": "Profile Category",
-                "candidateSkills": "Candidate Skills",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -77,6 +36,8 @@
         "form": {
             "username": "उपयोगकर्ता नाम",
             "username.placeholder": "अपना उपयोगकर्ता नाम",
+            "currentpassword": "Current password",
+            "currentpassword.placeholder": "Current password",
             "newpassword": "नया पासवर्ड",
             "newpassword.placeholder": "नया पासवर्ड",
             "confirmpassword": "नए पासवर्ड की पुष्टि",
@@ -87,9 +48,9 @@
         "messages": {
             "info": {
                 "authenticated": {
-                    "prefix": "आप ",
+                    "prefix": "अगर आप ",
                     "link": "साइन इन",
-                    "suffix": " करने के लिए चाहते हैं, तो आप डिफ़ॉल्ट खातों का प्रयास कर सकते हैं <br/>- व्यवस्थापक (लॉगिन = \"admin\" और पासवर्ड = \"admin\") <br/>- उपयोगकर्ता(लॉगिन \"user\" और पासवर्ड= \"user\")"
+                    "suffix": " करना चाहते हैं, तो आप डिफ़ॉल्ट खातों का प्रयास कर सकते हैं <br/>- व्यवस्थापक (लॉगिन = \"admin\" और पासवर्ड = \"admin\") <br/>- उपयोगकर्ता(लॉगिन \"user\" और पासवर्ड= \"user\")"
                 },
                 "register": {
                     "noaccount": "आपका खाता मौजूद नहीं है?",
@@ -167,7 +128,8 @@
         "Size": "यह {{ fieldName }} न्यूनतम/अधिकतम आकार की आवश्यकताओं को पूरा नहीं करता है!",
         "userexists": "लॉगिन नाम पहले से ही इस्तेमाल किया!",
         "emailexists": "ई-मेल पहले से ही उपयोग में है!",
-        "idexists": "एक नई एंटिटी {{ entityName }} पहले से ही एक ID है नहीं कर सकता"
+        "idexists": "एक नई एंटिटी {{ entityName }} पहले से ही एक ID है नहीं कर सकता",
+        "idnull": "Invalid ID"
     },
     "footer": "यह आपके पाद लेख है"
 }

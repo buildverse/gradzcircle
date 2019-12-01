@@ -1,6 +1,5 @@
+import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
 import { Routes } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
 import { CaptureCourseComponent } from './capture-course.component';
 import { CaptureCourseDetailComponent } from './capture-course-detail.component';
 import { CaptureCoursePopupComponent } from './capture-course-dialog.component';
@@ -15,7 +14,8 @@ export const captureCourseRoute: Routes = [
             pageTitle: 'gradzcircleApp.captureCourse.home.title'
         },
         canActivate: [UserRouteAccessService]
-    }, {
+    },
+    {
         path: 'capture-course/:id',
         component: CaptureCourseDetailComponent,
         data: {

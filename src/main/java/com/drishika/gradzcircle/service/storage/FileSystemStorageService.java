@@ -1,27 +1,29 @@
 package com.drishika.gradzcircle.service.storage;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
-import com.drishika.gradzcircle.config.ApplicationProperties;
-import com.drishika.gradzcircle.domain.User;
-import com.drishika.gradzcircle.repository.UserRepository;
-import com.drishika.gradzcircle.service.UserService;
+import java.io.File;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.File;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.drishika.gradzcircle.config.ApplicationProperties;
+import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.service.UserService;
+
 
 /**
  * @TODO: 1. Check dir crreation security. Currently i can delete data within
@@ -94,7 +96,8 @@ public class FileSystemStorageService implements StorageService {
 			// Files.copy(file.getInputStream(),
 			// this.rootLocation.resolve(file.getOriginalFilename()));
 			// Files.move(this.rootLocation.resolve(file.getOriginalFilename()),this.rootLocation.resolve(userId.toString()));
-			User user = userRepository.findOne(userId);
+			Optional<User> userOptional = userRepository.findById(userId);
+			User user = userOptional.get();
 			user.setImageUrl(userPic.getPath());
 			// userRepository.save(user);
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
@@ -125,8 +128,8 @@ public class FileSystemStorageService implements StorageService {
 	public Resource loadAsResource(String filename) {
 		logger.debug("Filename to serve is {} ", filename);
 		try {
-			User user = userRepository.findOne(Long.parseLong(filename));
-			filename = user.getImageUrl();
+			Optional<User> user = userRepository.findById(Long.parseLong(filename));
+			filename = user.get().getImageUrl();
 			if (filename == null) {
 				throw new StorageFileNotFoundException("Could not read file: " + filename);
 			}
@@ -152,7 +155,8 @@ public class FileSystemStorageService implements StorageService {
 
 	@Override
 	public void delete(Long filename) {
-		User user = userRepository.findOne(filename);
+		Optional<User> userOptional = userRepository.findById(filename);
+		User user = userOptional.get();
 		String filePath = null;
 		if (user != null)
 			filePath = user.getImageUrl() != null ? user.getImageUrl() : null;

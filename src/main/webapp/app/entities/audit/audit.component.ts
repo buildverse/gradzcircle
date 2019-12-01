@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { Audit } from './audit.model';
 import { AuditService } from './audit.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-audit',
     templateUrl: './audit.component.html'
 })
 export class AuditComponent implements OnInit, OnDestroy {
-audits: Audit[];
+    audits: Audit[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,21 @@ audits: Audit[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.auditService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<Audit[]>) => this.audits = res.body,
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
+            this.auditService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe((res: HttpResponse<Audit[]>) => (this.audits = res.body), (res: HttpErrorResponse) => this.onError(res.message));
             return;
-       }
+        }
         this.auditService.query().subscribe(
             (res: HttpResponse<Audit[]>) => {
                 this.audits = res.body;
@@ -62,7 +63,7 @@ audits: Audit[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInAudits();
@@ -76,7 +77,7 @@ audits: Audit[];
         return item.id;
     }
     registerChangeInAudits() {
-        this.eventSubscriber = this.eventManager.subscribe('auditListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('auditListModification', response => this.loadAll());
     }
 
     private onError(error) {

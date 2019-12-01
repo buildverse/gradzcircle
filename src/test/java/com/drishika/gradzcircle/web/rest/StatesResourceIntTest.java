@@ -1,11 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.States;
-import com.drishika.gradzcircle.repository.StatesRepository;
-import com.drishika.gradzcircle.repository.search.StatesSearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +26,8 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,14 +36,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.States;
+import com.drishika.gradzcircle.repository.StatesRepository;
+import com.drishika.gradzcircle.repository.search.StatesSearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the StatesResource REST controller.
@@ -46,7 +58,7 @@ public class StatesResourceIntTest {
     private StatesRepository statesRepository;
 
     @Autowired
-    private StatesSearchRepository statesSearchRepository;
+    private StatesSearchRepository mockStatesSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -67,7 +79,7 @@ public class StatesResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final StatesResource statesResource = new StatesResource(statesRepository, statesSearchRepository);
+        final StatesResource statesResource = new StatesResource(statesRepository, mockStatesSearchRepository);
         this.restStatesMockMvc = MockMvcBuilders.standaloneSetup(statesResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -89,7 +101,7 @@ public class StatesResourceIntTest {
 
     @Before
     public void initTest() {
-        statesSearchRepository.deleteAll();
+       // statesSearchRepository.deleteAll();
         states = createEntity(em);
     }
 
@@ -111,8 +123,7 @@ public class StatesResourceIntTest {
         assertThat(testStates.getName()).isEqualTo(DEFAULT_NAME);
 
         // Validate the States in Elasticsearch
-        States statesEs = statesSearchRepository.findOne(testStates.getId());
-        assertThat(statesEs).isEqualToIgnoringGivenFields(testStates);
+        verify(mockStatesSearchRepository,times(1)).save(testStates);
     }
 
     @Test
@@ -175,11 +186,11 @@ public class StatesResourceIntTest {
     public void updateStates() throws Exception {
         // Initialize the database
         statesRepository.saveAndFlush(states);
-        statesSearchRepository.save(states);
+    //    statesSearchRepository.save(states);
         int databaseSizeBeforeUpdate = statesRepository.findAll().size();
 
         // Update the states
-        States updatedStates = statesRepository.findOne(states.getId());
+        States updatedStates = statesRepository.findById(states.getId()).get();
         // Disconnect from session so that the updates on updatedStates are not directly saved in db
         em.detach(updatedStates);
         updatedStates
@@ -197,8 +208,7 @@ public class StatesResourceIntTest {
         assertThat(testStates.getName()).isEqualTo(UPDATED_NAME);
 
         // Validate the States in Elasticsearch
-        States statesEs = statesSearchRepository.findOne(testStates.getId());
-        assertThat(statesEs).isEqualToIgnoringGivenFields(testStates);
+        verify(mockStatesSearchRepository,times(1)).save(updatedStates);
     }
 
     @Test
@@ -209,14 +219,14 @@ public class StatesResourceIntTest {
         // Create the States
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
+        
         restStatesMockMvc.perform(put("/api/states")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(states)))
-            .andExpect(status().isCreated());
-
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(states)))
+                .andExpect(status().isBadRequest());
         // Validate the States in the database
         List<States> statesList = statesRepository.findAll();
-        assertThat(statesList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(statesList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -224,7 +234,7 @@ public class StatesResourceIntTest {
     public void deleteStates() throws Exception {
         // Initialize the database
         statesRepository.saveAndFlush(states);
-        statesSearchRepository.save(states);
+       // statesSearchRepository.save(states);
         int databaseSizeBeforeDelete = statesRepository.findAll().size();
 
         // Get the states
@@ -232,9 +242,7 @@ public class StatesResourceIntTest {
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean statesExistsInEs = statesSearchRepository.exists(states.getId());
-        assertThat(statesExistsInEs).isFalse();
+       verify(mockStatesSearchRepository,times(1)).deleteById(states.getId());
 
         // Validate the database is empty
         List<States> statesList = statesRepository.findAll();
@@ -246,7 +254,10 @@ public class StatesResourceIntTest {
     public void searchStates() throws Exception {
         // Initialize the database
         statesRepository.saveAndFlush(states);
-        statesSearchRepository.save(states);
+     //  statesSearchRepository.save(states);
+        
+        when(mockStatesSearchRepository.search(queryStringQuery("id:" + states.getId()), PageRequest.of(0, 20)))
+        .thenReturn(new PageImpl<>(Collections.singletonList(states), PageRequest.of(0, 1), 1));
 
         // Search the states
         restStatesMockMvc.perform(get("/api/_search/states?query=id:" + states.getId()))

@@ -1,11 +1,24 @@
 package com.drishika.gradzcircle.web.rest;
 
-import com.drishika.gradzcircle.GradzcircleApp;
+import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.drishika.gradzcircle.domain.Employability;
-import com.drishika.gradzcircle.repository.EmployabilityRepository;
-import com.drishika.gradzcircle.repository.search.EmployabilitySearchRepository;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,15 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.drishika.gradzcircle.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.drishika.gradzcircle.GradzcircleApp;
+import com.drishika.gradzcircle.domain.Employability;
+import com.drishika.gradzcircle.repository.EmployabilityRepository;
+import com.drishika.gradzcircle.repository.search.EmployabilitySearchRepository;
+import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 /**
  * Test class for the EmployabilityResource REST controller.
  *
@@ -52,7 +61,7 @@ public class EmployabilityResourceIntTest {
     private EmployabilityRepository employabilityRepository;
 
     @Autowired
-    private EmployabilitySearchRepository employabilitySearchRepository;
+    private EmployabilitySearchRepository mockEmployabilitySearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -73,7 +82,7 @@ public class EmployabilityResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EmployabilityResource employabilityResource = new EmployabilityResource(employabilityRepository, employabilitySearchRepository);
+        final EmployabilityResource employabilityResource = new EmployabilityResource(employabilityRepository, mockEmployabilitySearchRepository);
         this.restEmployabilityMockMvc = MockMvcBuilders.standaloneSetup(employabilityResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -97,7 +106,7 @@ public class EmployabilityResourceIntTest {
 
     @Before
     public void initTest() {
-        employabilitySearchRepository.deleteAll();
+       //employabilitySearchRepository.deleteAll();
         employability = createEntity(em);
     }
 
@@ -121,8 +130,9 @@ public class EmployabilityResourceIntTest {
         assertThat(testEmployability.getEmployabilityPercentile()).isEqualTo(DEFAULT_EMPLOYABILITY_PERCENTILE);
 
         // Validate the Employability in Elasticsearch
-        Employability employabilityEs = employabilitySearchRepository.findOne(testEmployability.getId());
-        assertThat(employabilityEs).isEqualToIgnoringGivenFields(testEmployability);
+        
+        verify(mockEmployabilitySearchRepository,times(1)).save(testEmployability);
+        
     }
 
     @Test
@@ -189,11 +199,11 @@ public class EmployabilityResourceIntTest {
     public void updateEmployability() throws Exception {
         // Initialize the database
         employabilityRepository.saveAndFlush(employability);
-        employabilitySearchRepository.save(employability);
+   //     employabilitySearchRepository.save(employability);
         int databaseSizeBeforeUpdate = employabilityRepository.findAll().size();
 
         // Update the employability
-        Employability updatedEmployability = employabilityRepository.findOne(employability.getId());
+        Employability updatedEmployability = employabilityRepository.findById(employability.getId()).get();
         // Disconnect from session so that the updates on updatedEmployability are not directly saved in db
         em.detach(updatedEmployability);
         updatedEmployability
@@ -215,8 +225,7 @@ public class EmployabilityResourceIntTest {
         assertThat(testEmployability.getEmployabilityPercentile()).isEqualTo(UPDATED_EMPLOYABILITY_PERCENTILE);
 
         // Validate the Employability in Elasticsearch
-        Employability employabilityEs = employabilitySearchRepository.findOne(testEmployability.getId());
-        assertThat(employabilityEs).isEqualToIgnoringGivenFields(testEmployability);
+        verify(mockEmployabilitySearchRepository,times(1)).save(testEmployability);
     }
 
     @Test
@@ -228,13 +237,13 @@ public class EmployabilityResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restEmployabilityMockMvc.perform(put("/api/employabilities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(employability)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(employability)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Employability in the database
         List<Employability> employabilityList = employabilityRepository.findAll();
-        assertThat(employabilityList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(employabilityList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -242,7 +251,7 @@ public class EmployabilityResourceIntTest {
     public void deleteEmployability() throws Exception {
         // Initialize the database
         employabilityRepository.saveAndFlush(employability);
-        employabilitySearchRepository.save(employability);
+      //  employabilitySearchRepository.save(employability);
         int databaseSizeBeforeDelete = employabilityRepository.findAll().size();
 
         // Get the employability
@@ -251,8 +260,7 @@ public class EmployabilityResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean employabilityExistsInEs = employabilitySearchRepository.exists(employability.getId());
-        assertThat(employabilityExistsInEs).isFalse();
+        verify(mockEmployabilitySearchRepository,times(1)).deleteById(employability.getId());
 
         // Validate the database is empty
         List<Employability> employabilityList = employabilityRepository.findAll();
@@ -264,7 +272,8 @@ public class EmployabilityResourceIntTest {
     public void searchEmployability() throws Exception {
         // Initialize the database
         employabilityRepository.saveAndFlush(employability);
-        employabilitySearchRepository.save(employability);
+        when(mockEmployabilitySearchRepository.search(queryStringQuery("id:" + employability.getId())))
+        .thenReturn(Collections.singletonList(employability));
 
         // Search the employability
         restEmployabilityMockMvc.perform(get("/api/_search/employabilities?query=id:" + employability.getId()))

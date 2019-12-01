@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { CaptureCourse } from './capture-course.model';
 import { CaptureCourseService } from './capture-course.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-capture-course',
     templateUrl: './capture-course.component.html'
 })
 export class CaptureCourseComponent implements OnInit, OnDestroy {
-captureCourses: CaptureCourse[];
+    captureCourses: CaptureCourse[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ captureCourses: CaptureCourse[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.captureCourseService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<CaptureCourse[]>) => this.captureCourses = res.body,
+            this.captureCourseService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<CaptureCourse[]>) => (this.captureCourses = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.captureCourseService.query().subscribe(
             (res: HttpResponse<CaptureCourse[]>) => {
                 this.captureCourses = res.body;
@@ -62,7 +66,7 @@ captureCourses: CaptureCourse[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInCaptureCourses();
@@ -76,7 +80,7 @@ captureCourses: CaptureCourse[];
         return item.id;
     }
     registerChangeInCaptureCourses() {
-        this.eventSubscriber = this.eventManager.subscribe('captureCourseListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('captureCourseListModification', response => this.loadAll());
     }
 
     private onError(error) {

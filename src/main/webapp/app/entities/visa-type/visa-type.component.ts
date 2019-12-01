@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,14 +7,13 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
 import { VisaType } from './visa-type.model';
 import { VisaTypeService } from './visa-type.service';
-import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-visa-type',
     templateUrl: './visa-type.component.html'
 })
 export class VisaTypeComponent implements OnInit, OnDestroy {
-visaTypes: VisaType[];
+    visaTypes: VisaType[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -25,20 +25,24 @@ visaTypes: VisaType[];
         private activatedRoute: ActivatedRoute,
         private principal: Principal
     ) {
-        this.currentSearch = this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search'] ?
-            this.activatedRoute.snapshot.params['search'] : '';
+        this.currentSearch =
+            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
+                ? this.activatedRoute.snapshot.params['search']
+                : '';
     }
 
     loadAll() {
         if (this.currentSearch) {
-            this.visaTypeService.search({
-                query: this.currentSearch,
-                }).subscribe(
-                    (res: HttpResponse<VisaType[]>) => this.visaTypes = res.body,
+            this.visaTypeService
+                .search({
+                    query: this.currentSearch
+                })
+                .subscribe(
+                    (res: HttpResponse<VisaType[]>) => (this.visaTypes = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
-       }
+        }
         this.visaTypeService.query().subscribe(
             (res: HttpResponse<VisaType[]>) => {
                 this.visaTypes = res.body;
@@ -62,7 +66,7 @@ visaTypes: VisaType[];
     }
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then((account) => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInVisaTypes();
@@ -76,7 +80,7 @@ visaTypes: VisaType[];
         return item.id;
     }
     registerChangeInVisaTypes() {
-        this.eventSubscriber = this.eventManager.subscribe('visaTypeListModification', (response) => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('visaTypeListModification', response => this.loadAll());
     }
 
     private onError(error) {

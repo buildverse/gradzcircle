@@ -93,7 +93,7 @@ public class JobTypeResource {
     public ResponseEntity<JobType> updateJobType(@RequestBody JobType jobType) throws URISyntaxException {
         log.debug("REST request to update JobType : {}", jobType);
         if (jobType.getId() == null) {
-            return createJobType(jobType);
+        		throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         JobType result = jobTypeRepository.save(jobType);
         jobTypeSearchRepository.save(result);
@@ -124,8 +124,8 @@ public class JobTypeResource {
     @Timed
     public ResponseEntity<JobType> getJobType(@PathVariable Long id) {
         log.debug("REST request to get JobType : {}", id);
-        JobType jobType = jobTypeRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(jobType));
+        Optional<JobType> jobType = jobTypeRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(jobType);
     }
 
     /**
@@ -138,8 +138,8 @@ public class JobTypeResource {
     @Timed
     public ResponseEntity<Void> deleteJobType(@PathVariable Long id) {
         log.debug("REST request to delete JobType : {}", id);
-        jobTypeRepository.delete(id);
-        jobTypeSearchRepository.delete(id);
+        jobTypeRepository.deleteById(id);
+        jobTypeSearchRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

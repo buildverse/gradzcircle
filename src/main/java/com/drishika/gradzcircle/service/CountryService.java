@@ -12,7 +12,8 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
@@ -88,8 +89,8 @@ public class CountryService {
 	}
 	
 	public void deleteCountry(Long id) {
-		countryRepository.delete(id);
-		countrySearchRepository.delete(id);
+		countryRepository.deleteById(id);
+		countrySearchRepository.deleteById(id);
 	}
 	
 	public List<Country> searchCountries(String query) {
@@ -99,11 +100,12 @@ public class CountryService {
 	
 	public String searchCountryBySuggest(String query) {
 		String suggest = null;
+		
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("country-suggest").text(query).field("suggest");
-		SuggestResponse suggestResponse = elasticSearchTemplate.suggest(completionSuggestionBuilder,
-				com.drishika.gradzcircle.domain.elastic.Country.class);
-		CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("country-suggest");
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
+		SearchResponse searchResponse = elasticSearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Country.class);
+		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> countries = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();
