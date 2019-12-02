@@ -193,10 +193,10 @@ public class SkillsResource {
 		log.debug("REST request to search skill for query {}", query);
 		String suggest = null;
 		CompletionSuggestionBuilder completionSuggestionBuilder = SuggestBuilders
-				.completionSuggestion("skill-suggest").text(query).prefix("sugg");
-		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("skill-suggest", completionSuggestionBuilder);
+				.completionSuggestion("suggest").text(query).prefix(query);
+		SuggestBuilder suggestion = new SuggestBuilder().addSuggestion("suggest", completionSuggestionBuilder);
 		SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestion, com.drishika.gradzcircle.domain.elastic.Skills.class);
- 		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("skill-suggest");
+ 		CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest");
 		List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
 		List<GenericElasticSuggest> skills = new ArrayList<GenericElasticSuggest>();
 		ObjectMapper objectMapper = new ObjectMapper();

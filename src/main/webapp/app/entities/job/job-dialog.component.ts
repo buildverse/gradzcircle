@@ -14,6 +14,7 @@ import { EmploymentType, EmploymentTypeService } from '../employment-type';
 import { Corporate, CorporateService } from '../corporate';
 import { Candidate, CandidateService } from '../candidate';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { USER_ID, CORPORATE_ID, JOB_ID, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { QualificationService } from '../qualification';
@@ -23,7 +24,6 @@ import { Gender, GenderService } from '../gender';
 import { University, UniversityService } from '../university/index';
 import { Language, LanguageService } from '../language';
 import { Filter, FilterService } from '../filter';
-import { JhiDateUtils } from 'ng-jhipster';
 import { JobFilterService } from '../job-filter/job-filter.service';
 import { JobFilter } from '../job-filter/index';
 import * as equal from 'fast-deep-equal';
@@ -189,16 +189,15 @@ export class JobDialogComponent implements OnInit {
         private languageService: LanguageService,
         private filterService: FilterService,
         private genderService: GenderService,
-        private dateUtils: JhiDateUtils,
         private skillService: SkillsService,
         private router: Router,
         private principal: Principal,
         private spinnerService: NgxSpinnerService,
         private localDataStorageService: DataStorageService
     ) {
-        this.isCourseRequired = false;
-        this.isQualificationRequired = false;
-        this.premium = false;
+        this.isCourseRequired = true;
+        this.isQualificationRequired = true;
+        //this.premium = false;
         this.addOn = false;
         this.numberOfCandidateError = false;
         this.validPercentScore = true;
@@ -236,6 +235,7 @@ export class JobDialogComponent implements OnInit {
         this.employmentTypeCost = [];
         this.jobFilter = new JobFilter();
         this.basic = true;
+        this.premium = true;
         this.editorConfig = {
             toolbarGroups: [
                 { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
@@ -256,7 +256,7 @@ export class JobDialogComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
-        this.businessPlanEnabled = this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true : false;
+        this.businessPlanEnabled = JSON.parse(this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.genderService.query().subscribe(
             (res: HttpResponse<Gender[]>) => {
                 this.genders = res.body;
@@ -577,11 +577,13 @@ export class JobDialogComponent implements OnInit {
     }
     removeQualificationCost() {
         if (this.qualifications && this.qualifications.length === 0) {
+            this.isQualificationRequired = true;
             if ((this.courses && this.courses.length === 0) || this.courses === undefined) {
-                this.isQualificationRequired = false;
-                this.isCourseRequired = false;
+                this.isCourseRequired = true;
             }
-            this.courses && this.courses.length > 0 ? (this.isQualificationRequired = true) : (this.isQualificationRequired = false);
+            if (this.courses && this.courses.length > 0) {
+                this.isQualificationRequired = true;
+            }
             this.qualificationCost -= this.filterMap.get(this.QUALIFICATION);
             this.filterCost -= this.filterMap.get(this.QUALIFICATION);
         }
@@ -619,11 +621,13 @@ export class JobDialogComponent implements OnInit {
 
     removeCourseCost() {
         if (this.courses && this.courses.length === 0) {
+            this.isCourseRequired = true;
             if ((this.qualifications && this.qualifications.length === 0) || this.qualifications === undefined) {
-                this.isQualificationRequired = false;
-                this.isCourseRequired = false;
+                this.isQualificationRequired = true;
             }
-            this.qualifications && this.qualifications.length > 0 ? (this.isCourseRequired = true) : (this.isCourseRequired = false);
+            if (this.qualifications && this.qualifications.length > 0) {
+                this.isCourseRequired = true;
+            }
             this.coursesCost -= this.filterMap.get(this.COURSE);
             this.filterCost -= this.filterMap.get(this.COURSE);
         }
@@ -647,7 +651,7 @@ export class JobDialogComponent implements OnInit {
 
     updateGraduationDateCost() {
         if (this.graduationDate) {
-            this.gradDate = new Date(this.graduationDate.year + '-' + this.graduationDate.month + '-' + this.graduationDate.day);
+            this.gradDate = new Date(this.graduationDate.format(DATE_FORMAT));
         }
         if (this.graduationDate && !this.graduationDateAdded) {
             this.gradDateCost += this.filterMap.get(this.GRADUATION_DATE);
@@ -666,8 +670,8 @@ export class JobDialogComponent implements OnInit {
         this.graduationDateAdded = false;
         this.endDateLesser = false;
         if (this.graduationToDate && this.graduationFromDate) {
-            const fromDate = new Date(this.dateUtils.convertLocalDateToServer(this.graduationFromDate));
-            const toDate = new Date(this.dateUtils.convertLocalDateToServer(this.graduationToDate));
+            const fromDate = new Date(this.graduationFromDate.format(DATE_FORMAT));
+            const toDate = new Date(this.graduationToDate.format(DATE_FORMAT));
 
             if (fromDate > toDate) {
                 this.endDateLesser = true;
@@ -680,12 +684,10 @@ export class JobDialogComponent implements OnInit {
 
     updateGraduationMultiDateCosts() {
         if (this.graduationFromDate) {
-            this.gradFromDate = new Date(
-                this.graduationFromDate.year + '-' + this.graduationFromDate.month + '-' + this.graduationFromDate.day
-            );
+            this.gradFromDate = new Date(this.graduationFromDate.format(DATE_FORMAT));
         }
         if (this.graduationToDate) {
-            this.gradToDate = new Date(this.graduationToDate.year + '-' + this.graduationToDate.month + '-' + this.graduationToDate.day);
+            this.gradToDate = new Date(this.graduationToDate.format(DATE_FORMAT));
         }
         if (!this.endDateLesser) {
             if (this.graduationFromDate && this.graduationToDate && !(this.graduationToDateAdded && this.graduationFromDateAdded)) {
@@ -884,7 +886,7 @@ export class JobDialogComponent implements OnInit {
         } else {
             this.job.jobCost = this.job.noOfApplicants * this.filterCost;
         }
-        console.log('updated job cost is ' + this.job.jobCost);
+        // console.log('updated job cost is ' + this.job.jobCost);
     }
 
     absoluteValue(value) {

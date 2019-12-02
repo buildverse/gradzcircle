@@ -15,7 +15,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     loadChildren: './admin/admin.module#GradzcircleAdminModule'
                 }
             ],
-            { useHash: true, enableTracing: DEBUG_INFO_ENABLED, onSameUrlNavigation: 'reload' }
+            { useHash: true, enableTracing: DEBUG_INFO_ENABLED }
         )
     ],
     exports: [RouterModule]

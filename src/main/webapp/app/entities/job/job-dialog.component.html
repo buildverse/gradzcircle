@@ -132,9 +132,9 @@
 				</div>
 			</div>
 		</div>
-		<aw-wizard navBarLocation="top" navBarLayout="large-empty-symbols">
-		<aw-wizard-step stepTitle="Job Details" navigationSymbol="&#xf015;"
-			navigationSymbolFontFamily="FontAwesome"
+		<aw-wizard #wizard [navBarLocation]="'top'" [navBarLayout]="'large-empty-symbols'">
+		<aw-wizard-step [stepTitle]="'Job Details'" [navigationSymbol]="'&#xf015;'"
+			[navigationSymbolFontFamily]="'FontAwesome'"
 			(stepEnter)="enterJobInitiate()" (stepExit)="exitJobInitiate()">
 		<hr>
 		<div class="modal-body">
@@ -218,32 +218,16 @@
 		<div
 			class="modal-footer modal-footer-decorate d-flex justify-content-end">
 			<button type="button" class="btn btn-sm btn-pill  btn-primary"
-				nextStep (click)="save(DRAFT)"
+				awNextStep (click)="save(DRAFT)"
 				[disabled]=" !((editForm.form.get('jobTitle')?.valid) && (editForm.form.get('jobDescription')?.valid)) || isSaving">Next</button>
 		</div>
 
 
-		</aw-wizard-step> <aw-wizard-step stepTitle="Filters" optionalStep
+		</aw-wizard-step> 
+		<aw-wizard-step stepTitle="Filters" optionalStep
 			navigationSymbol="&#xf0b0;" navigationSymbolFontFamily="FontAwesome"
 			(stepEnter)="enterFilters()" (stepExit)="exitFilters()">
 		<hr>
-		<div class="modal-body my-0">
-			<div class="form-inline d-flex justify-content-around font-weight-light">
-				<label for="filter_category_basic"> <input type="checkbox"
-					class="form-check-input " name="basic"
-					id="filter_category_basic" [(ngModel)]="basic" disabled>
-					Basic
-				</label> <label for="filter_category_premium"> <input
-					type="checkbox" class="form-check-input " name="premium"
-					id="filter_category_premium" [(ngModel)]="premium"
-					(ngModelChange)="togglePremiumFilter()"> Premium
-				</label> <label for="filter_category_addOn"> <input type="checkbox"
-					class="form-check-input " name="addOn"
-					id="filter_category_addOn" [(ngModel)]="addOn"
-					(ngModelChange)="toggleAddOnFilter()"> Add On
-				</label>
-			</div>
-		</div>
 		<div *ngIf="basic">
 			<div class="form-group row mx-4 my-4">
 				<div class="col-md-2">
@@ -394,46 +378,7 @@
 					</div> 
 				</ng-template>
 			</div>
-
-			<div class="form-group row mx-4 my-4">
-				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold "
-						jhiTranslate="gradzcircleApp.candidateEducation.college"
-						for="field_college">College</label>
-				</div>
-				<div class="col-md-10">
-					<tag-input name="colleges" [(ngModel)]="colleges" theme='bootstrap'
-						[onlyFromAutocomplete]="true" [placeholder]="'College+'"
-						[onTextChangeDebounce]="500"
-						[secondaryPlaceholder]="'Enter college name'"> <tag-input-dropdown
-						[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
-					</tag-input>
-				</div>
-				<small class="offset-md-2 form-text  profile-text-info">
-					<span class="icon icon-info" style="color: #448AFF"></span> <small
-					style="color: #448AFF"> </small>
-				</small>
-			</div>
-			<div class="form-group row mx-4 my-4">
-				<div class="col-md-2">
-					<label class="form-control-label font-weight-bold "
-						jhiTranslate="gradzcircleApp.candidateEducation.university"
-						for="field_university">University</label>
-				</div>
-				<div class="col-md-10">
-					<tag-input name="universities" [(ngModel)]="universities"
-						theme='bootstrap' [onlyFromAutocomplete]="true"
-						[placeholder]="'University+'" [onTextChangeDebounce]="500"
-						[secondaryPlaceholder]="'Enter University name'"> <tag-input-dropdown
-						[autocompleteObservable]='requestUniversityData'></tag-input-dropdown>
-					</tag-input>
-				</div>
-				<small class="offset-md-2 form-text  profile-text-info">
-					<span class="icon icon-info" style="color: #448AFF"></span> <small
-					style="color: #448AFF"> Do we need to filter by uni ? </small>
-				</small>
-			</div>
-
+			
 		</div>
 		<div *ngIf="premium">
 			<hr>
@@ -450,13 +395,13 @@
 				<div class="col-md-10">
 					<tag-input name="courses" [(ngModel)]="courses" theme='bootstrap'
 						[onlyFromAutocomplete]="true" [placeholder]="'Course+'"
-						[onTextChangeDebounce]="500" [required]="isCourseRequired"
+						[onTextChangeDebounce]="500" required
 						[secondaryPlaceholder]="'Enter Courses Filters'"
-						(onAdd)="addCourseCost()"
+						(onAdd)="addCourseCost()" #course="ngModel"
 						(onRemove)="removeCourseCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestCourseData'></tag-input-dropdown>
 					</tag-input>
-					<small *ngIf="isCourseRequired" class="offset-md-2 form-text  profile-text-info">
+					<small *ngIf="course.touched && course.invalid || isCourseRequired "  class="offset-md-2 form-text  profile-text-info">
 						<small class="text-danger">Please Enter Course</small>
 					</small>
 					
@@ -472,12 +417,12 @@
 					<tag-input name="qualification" [(ngModel)]="qualifications"
 						theme='bootstrap' [onlyFromAutocomplete]="true"
 						[placeholder]="'Qualification +'" [onTextChangeDebounce]="500"
-						[secondaryPlaceholder]="'Enter Qualification'"
-						(onAdd)="addQualificationCost()" [required]="isQualificationRequired"
+						[secondaryPlaceholder]="'Enter Qualification'" #quali="ngModel"
+						(onAdd)="addQualificationCost()" required
 						(onRemove)="removeQualificationCost()"> <tag-input-dropdown
 						[autocompleteObservable]='requestQualificationData'></tag-input-dropdown>
 					</tag-input>
-					<small *ngIf="isQualificationRequired" class="offset-md-2 form-text  profile-text-info">
+					<small *ngIf="quali.touched && quali.invalid || isQualificationRequired" class="offset-md-2 form-text  profile-text-info">
 						<small class="text-danger">Please Enter Qualification</small>
 					</small>
 				</div>
@@ -582,6 +527,64 @@
 				</div>
 			</div>
 		</div>
+		<div *ngIf="basic">
+			
+			<div class="form-group row mx-4 my-4">
+				<div class="col-md-2">
+					<label class="form-control-label font-weight-bold "
+						jhiTranslate="gradzcircleApp.candidateEducation.college"
+						for="field_college">College</label>
+				</div>
+				<div class="col-md-10">
+					<tag-input name="colleges" [(ngModel)]="colleges" theme='bootstrap'
+						[onlyFromAutocomplete]="true" [placeholder]="'College+'"
+						[onTextChangeDebounce]="500"
+						[secondaryPlaceholder]="'Enter college name'"> <tag-input-dropdown
+						[autocompleteObservable]='requestCollegeData'></tag-input-dropdown>
+					</tag-input>
+				</div>
+				<small class="offset-md-2 form-text  profile-text-info">
+					<span class="icon icon-info" style="color: #448AFF"></span> <small
+					style="color: #448AFF"> </small>
+				</small>
+			</div>
+			<div class="form-group row mx-4 my-4">
+				<div class="col-md-2">
+					<label class="form-control-label font-weight-bold "
+						jhiTranslate="gradzcircleApp.candidateEducation.university"
+						for="field_university">University</label>
+				</div>
+				<div class="col-md-10">
+					<tag-input name="universities" [(ngModel)]="universities"
+						theme='bootstrap' [onlyFromAutocomplete]="true"
+						[placeholder]="'University+'" [onTextChangeDebounce]="500"
+						[secondaryPlaceholder]="'Enter University name'"> <tag-input-dropdown
+						[autocompleteObservable]='requestUniversityData'></tag-input-dropdown>
+					</tag-input>
+				</div>
+				<small class="offset-md-2 form-text  profile-text-info">
+					<span class="icon icon-info" style="color: #448AFF"></span> <small
+					style="color: #448AFF"> Do we need to filter by uni ? </small>
+				</small>
+			</div>
+		</div>
+		<div class="modal-body my-0">
+			<div class="form-inline d-flex justify-content-around font-weight-light">
+				<!--<label for="filter_category_basic"> <input type="checkbox"
+					class="form-check-input " name="basic"
+					id="filter_category_basic" [(ngModel)]="basic" disabled>
+					Basic
+				</label> <label for="filter_category_premium"> <input
+					type="checkbox" class="form-check-input " name="premium"
+					id="filter_category_premium" [(ngModel)]="premium" disabled
+					 > Premium
+				</label>--> <label for="filter_category_addOn"> <input type="checkbox"
+					class="form-check-input " name="addOn"
+					id="filter_category_addOn" [(ngModel)]="addOn"
+					(ngModelChange)="toggleAddOnFilter()"> Add On
+				</label>
+			</div>
+		</div>
 		<div *ngIf="addOn">
 			<hr>
 			<div class="form-group row mx-4 my-4">
@@ -617,8 +620,8 @@
 								(ngModelChange)="updateGraduationDateCost()" /> <span
 								class="input-group-append ">
 								
-								<button class="btn btn-outline-secondary" (click)="graduationDateDp.toggle()" type="button">
-									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								<button class="btn btn-outline-primary" (click)="graduationDateDp.toggle()" type="button">
+									<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 								</button>
 
 							</span>
@@ -642,8 +645,8 @@
 								[(ngModel)]="graduationFromDate"
 								(ngModelChange)="validateDatesAndUpdateCost()" /> <span
 								class="input-group-append "> 
-								<button class="btn btn-outline-secondary" (click)="graduationFromDateDp.toggle()" type="button">
-									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								<button class="btn btn-outline-primary" (click)="graduationFromDateDp.toggle()" type="button">
+									<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 								</button>
 							</span>
 						</div>
@@ -667,8 +670,8 @@
 								(ngModelChange)="validateDatesAndUpdateCost()" />
 							<span
 								class="input-group-append "> 
-								<button class="btn btn-outline-secondary" (click)="graduationToDateDp.toggle()" type="button">
-									<i class="fa fa-calendar" style="color:#1276ae"></i>
+								<button class="btn btn-outline-primary" (click)="graduationToDateDp.toggle()" type="button">
+									<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 								</button>
 							</span>
 						</div>
@@ -734,26 +737,26 @@
 			class="modal-footer modal-footer-decorate d-flex justify-content-end">
 			<div class="mr-auto p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-warning"
-					previousStep>Back</button>
+					awPreviousStep>Back</button>
 			</div>
 			<div class=" p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-primary"
-					[disabled]=" 
-								!((editForm.form.get('employmentType')?.valid) && (editForm.form.get('jobType')?.valid)
+					[disabled]=" !((editForm.form.get('employmentType')?.valid) && (editForm.form.get('jobType')?.valid)
 								&& (!numberOfCandidateError)  
 								&& ((editForm.form.get('scoreType')?.value==='gpa')?(editForm.form.get('roundOfGrade')?.valid) :true )
 								&& ((editForm.form.get('scoreType')?.value==='percent')?(editForm.form.get('percentage')?.valid) :true )
 								&& validPercentScore
+								&& ((enablePercent && validPercentScore) || (enableGpa && roundOfGrade))
 								&& ((editForm.form.get('date')?.value==='less')?(editForm.form.get('gradDate')?.valid) :true )
 								&& ((editForm.form.get('date')?.value==='between')?(editForm.form.get('graduationFromDate')?.valid && editForm.form.get('graduationToDate')?.valid) :true )
 								&& ((editForm.form.get('date')?.value==='greater')?(editForm.form.get('gradDate')?.valid) :true )
 								&& ((editForm.form.get('courses')?.valid) && (editForm.form.get('qualification')?.valid)))
-								
-								|| isSaving "
-					nextStep>Next</button>
+								|| isSaving"
+					awNextStep>Next</button>
 			</div>
 		</div>
-		</aw-wizard-step> <aw-wizard-step stepTitle="Preview" navigationSymbol="&#xf06e;"
+		</aw-wizard-step> 
+		<aw-wizard-step stepTitle="Preview" navigationSymbol="&#xf06e;"
 			navigationSymbolFontFamily="FontAwesome" (stepEnter)="enterPreview()"
 			(stepExit)="exitPreview()">
 		<div class="row mx-2 my-4">
@@ -1220,7 +1223,7 @@
 			class="modal-footer modal-footer-decorate d-flex justify-content-end">
 			<div class="mr-auto p-2 ">
 				<button type="button" class="btn btn-sm btn-pill btn-warning"
-					previousStep (click)="exitPreview()">Back</button>
+					awPreviousStep (click)="exitPreview()">Back</button>
 			</div>
 			<div *ngIf="businessPlanEnabled ;else bizPlanDisabled">
 				<div class="p-2"

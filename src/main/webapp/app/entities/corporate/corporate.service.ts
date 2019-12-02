@@ -19,7 +19,7 @@ export class CorporateService {
     private findByLoginIdresourceUrl = SERVER_API_URL + 'api/corporateByLoginId';
     private resourceLinkedCandidatesForCorporateUrl = SERVER_API_URL + 'api/linkedCandidatesForCorporate';
 
-    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
+    constructor(private http: HttpClient) {}
 
     create(corporate: Corporate): Observable<EntityResponseType> {
         const copy = this.convert(corporate);

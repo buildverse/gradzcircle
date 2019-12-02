@@ -184,19 +184,20 @@
 											</ng-template>
 											<td class="font-weight-light text-center">
 												<a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
-													ngbTooltip="View More"><i class="fa fa-eye text-gray-500"></i></a> 
+													ngbTooltip="View More"><fa-icon [icon]="'eye'" class="text-gray-500"></fa-icon>
+												</a> 
 												<a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]"
-													replaceUrl="true" ngbTooltip="Edit"> <i class="fa fa-pencil-square-o text-gray-500"></i>
+													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500" [icon]="'pencil-alt'"></fa-icon>
 												</a> 
 												<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]"
-													replaceUrl="true" ngbTooltip="Edit"> <i class="fa fa-pencil-square-o text-gray-500"></i>
+													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500" [icon]="'pencil-alt'"></fa-icon>
 												</a>
 												<a *ngIf="job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)"
 													replaceUrl="true" ngbTooltip="More Candidates">
-													<i class="fa fa-user-plus text-gray-500"></i> 
+													<fa-icon class="text-gray-500" [icon]="'user-plus'"></fa-icon> 
 												</a> 
 												<a [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
-													replaceUrl="true"ngbTooltip="Remove"> <i class="fa fa-trash text-gray-500" ></i>
+													replaceUrl="true"ngbTooltip="Remove"> <fa-icon class="text-gray-500" [icon]="'trash-alt'"></fa-icon>
 												</a>
 											</td>
 										</tr>
@@ -433,19 +434,19 @@
 						<div class="btn-group flex-btn-group-container">
 							<button type="submit" [routerLink]="['../job', job.id ]"
 								class="btn btn-info btn-sm">
-								<span class="fa fa-eye"></span> <span class="d-none d-md-inline"
+								<fa-icon [icon]="'eye'"></fa-icon><span class="d-none d-md-inline"
 									jhiTranslate="entity.action.view">View</span>
 							</button>
 							<button type="submit"
 								[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
 								replaceUrl="true" class="btn btn-primary btn-sm">
-								<span class="fa fa-pencil"></span> <span
+								<fa-icon  [icon]="'pencil-alt'"></fa-icon> <span
 									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
 							</button>
 							<button type="submit"
 								[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
 								replaceUrl="true" class="btn btn-danger btn-sm">
-								<span class="fa fa-remove"></span> <span
+								<fa-icon  [icon]="'trash-alt'"></fa-icon> <span
 									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
 							</button>
 						</div>
