@@ -32,6 +32,7 @@ import { AppConfigService } from '../app-config/app-config.service';
 import { SkillsService } from '../skills/skills.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as moment from 'moment';
 
 function deepcopy<T>(o: T): T {
     return JSON.parse(JSON.stringify(o));
@@ -82,7 +83,7 @@ export class JobDialogComponent implements OnInit {
     graduationFromDate: any;
     gradDate;
     gradToDate;
-    gradFromDate: Date;
+    gradFromDate: any;
     gpaValues: number[];
     gpaDecimalValues: number[];
     percentage;
@@ -174,6 +175,8 @@ export class JobDialogComponent implements OnInit {
     prevTotalAmount: number;
     isCourseRequired;
     isQualificationRequired: boolean;
+    dateControl: boolean;
+    prevDateControl: boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -236,6 +239,7 @@ export class JobDialogComponent implements OnInit {
         this.jobFilter = new JobFilter();
         this.basic = true;
         this.premium = true;
+        this.dateControl = false;
         this.editorConfig = {
             toolbarGroups: [
                 { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
@@ -651,12 +655,14 @@ export class JobDialogComponent implements OnInit {
 
     updateGraduationDateCost() {
         if (this.graduationDate) {
-            this.gradDate = new Date(this.graduationDate.format(DATE_FORMAT));
+            this.gradDate = moment(this.graduationDate).toDate();
+            this.graduationDate = moment(this.graduationDate);
         }
-        if (this.graduationDate && !this.graduationDateAdded) {
+        if (this.graduationDate && !this.graduationDateAdded && !this.dateControl && !this.prevDateControl) {
             this.gradDateCost += this.filterMap.get(this.GRADUATION_DATE);
             this.filterCost += this.filterMap.get(this.GRADUATION_DATE);
             this.graduationDateAdded = true;
+            this.dateControl = true;
         } else if (!this.graduationDate && this.graduationDateAdded) {
             this.graduationDateAdded = false;
             this.gradDateCost -= this.filterMap.get(this.GRADUATION_DATE);
@@ -684,13 +690,21 @@ export class JobDialogComponent implements OnInit {
 
     updateGraduationMultiDateCosts() {
         if (this.graduationFromDate) {
-            this.gradFromDate = new Date(this.graduationFromDate.format(DATE_FORMAT));
+            this.gradFromDate = moment(this.graduationFromDate).toDate();
+            this.graduationFromDate = moment(this.graduationFromDate);
         }
         if (this.graduationToDate) {
-            this.gradToDate = new Date(this.graduationToDate.format(DATE_FORMAT));
+            this.gradToDate = moment(this.graduationToDate).toDate();
+            this.graduationToDate = moment(this.graduationToDate);
         }
         if (!this.endDateLesser) {
-            if (this.graduationFromDate && this.graduationToDate && !(this.graduationToDateAdded && this.graduationFromDateAdded)) {
+            if (
+                this.graduationFromDate &&
+                this.graduationToDate &&
+                !(this.graduationToDateAdded && this.graduationFromDateAdded) &&
+                !this.dateControl &&
+                !this.prevDateControl
+            ) {
                 this.gradDateCost += this.filterMap.get(this.GRADUATION_DATE);
                 this.filterCost += this.filterMap.get(this.GRADUATION_DATE);
                 this.graduationFromDateAdded = true;
@@ -814,6 +828,7 @@ export class JobDialogComponent implements OnInit {
         this.gradDate = undefined;
         this.singleDateControl = false;
         this.multipleDateControl = false;
+        this.dateControl = false;
         this.updateGraduationDateCost();
         this.updateGraduationMultiDateCosts();
     }
@@ -851,11 +866,13 @@ export class JobDialogComponent implements OnInit {
             this.graduationToDate = undefined;
             this.gradToDate = undefined;
             this.gradFromDate = undefined;
+            this.prevDateControl = true;
             this.updateGraduationDateCost();
         } else if (this.graduationDateType === 'between') {
             this.multipleDateControl = true;
             this.graduationDate = undefined;
             this.gradDate = undefined;
+            this.prevDateControl = true;
             this.updateGraduationMultiDateCosts();
         }
     }
@@ -977,11 +994,27 @@ export class JobDialogComponent implements OnInit {
             if (this.graduationDateType) {
                 this.jobFilter.filterDescription.graduationDateType = this.graduationDateType;
                 if (this.graduationDateType === 'less' || this.graduationDateType === 'greater') {
-                    this.jobFilter.filterDescription.graduationDate = this.graduationDate;
+                    const date = new Date(this.graduationDate.format(DATE_FORMAT));
+                    this.jobFilter.filterDescription.graduationDate = {
+                        year: date.getFullYear(),
+                        month: date.getMonth(),
+                        day: date.getDate()
+                    };
                 } else if (this.graduationDateType === 'between') {
-                    this.jobFilter.filterDescription.graduationFromDate = this.graduationFromDate;
-                    this.jobFilter.filterDescription.graduationToDate = this.graduationToDate;
+                    const fromDate = new Date(this.graduationFromDate.format(DATE_FORMAT));
+                    const toDate = new Date(this.graduationToDate.format(DATE_FORMAT));
+                    this.jobFilter.filterDescription.graduationFromDate = {
+                        year: fromDate.getFullYear(),
+                        month: fromDate.getMonth(),
+                        day: fromDate.getDate()
+                    };
+                    this.jobFilter.filterDescription.graduationToDate = {
+                        year: toDate.getFullYear(),
+                        month: toDate.getMonth(),
+                        day: toDate.getDate()
+                    };
                 }
+                //  console.log('Filter desc is '+JSON.stringify(this.jobFilter.filterDescription));
             }
             if (this.languages && this.languages.length > 0) {
                 this.jobFilter.filterDescription.languages = this.languages;

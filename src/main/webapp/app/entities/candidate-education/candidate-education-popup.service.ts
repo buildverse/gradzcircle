@@ -8,23 +8,23 @@ import { Course } from '../../entities/course/course.model';
 import { Qualification } from '../../entities/qualification/qualification.model';
 import { Candidate } from '../candidate/candidate.model';
 import { HttpResponse } from '@angular/common/http';
-
+import * as moment from 'moment';
 @Injectable()
 export class CandidateEducationPopupService {
     private ngbModalRef: NgbModalRef;
     private candidate: Candidate;
 
-
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private candidateEducationService: CandidateEducationService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private candidateEducationService: CandidateEducationService) {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any,courses?:Course[],colleges?:College[],qualifications?: Qualification[]): Promise<NgbModalRef> {
+    open(
+        component: Component,
+        id?: number | any,
+        courses?: Course[],
+        colleges?: College[],
+        qualifications?: Qualification[]
+    ): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -32,28 +32,29 @@ export class CandidateEducationPopupService {
             }
 
             if (id) {
-                this.candidateEducationService.find(id)
-                  .subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>)=>{
+                this.candidateEducationService.find(id).subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>) => {
                     const candidateEducation: CandidateEducation = candidateEducationResponse.body;
                     if (candidateEducation.educationFromDate) {
-                        candidateEducation.educationFromDate = {
-                            year: candidateEducation.educationFromDate.getFullYear(),
-                            month: candidateEducation.educationFromDate.getMonth() + 1,
-                            day: candidateEducation.educationFromDate.getDate()
-                        };
+                        const d = new Date(candidateEducation.educationFromDate);
+                        candidateEducation.educationFromDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth(),
+                            day: d.getDate()
+                        });
                     }
                     if (candidateEducation.educationToDate) {
-                        candidateEducation.educationToDate = {
-                            year: candidateEducation.educationToDate.getFullYear(),
-                            month: candidateEducation.educationToDate.getMonth() + 1,
-                            day: candidateEducation.educationToDate.getDate()
-                        };
+                        const d = new Date(candidateEducation.educationToDate);
+                        candidateEducation.educationToDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth(),
+                            day: d.getDate()
+                        });
                     }
                     this.candidate = new Candidate();
                     this.candidate.id = candidateEducation.candidate.id;
                     candidateEducation.candidate = this.candidate;
-                    candidateEducation.projects=null;
-                    this.ngbModalRef = this.candidateEducationModalRef(component, candidateEducation,courses,colleges,qualifications);
+                    candidateEducation.projects = null;
+                    this.ngbModalRef = this.candidateEducationModalRef(component, candidateEducation, courses, colleges, qualifications);
                     resolve(this.ngbModalRef);
                 });
             } else {
@@ -66,20 +67,29 @@ export class CandidateEducationPopupService {
         });
     }
 
-    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation,courses?:Course[],colleges?:College[],qualifications?: Qualification[]): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+    candidateEducationModalRef(
+        component: Component,
+        candidateEducation: CandidateEducation,
+        courses?: Course[],
+        colleges?: College[],
+        qualifications?: Qualification[]
+    ): NgbModalRef {
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateEducation = candidateEducation;
         modalRef.componentInstance.colleges = colleges;
         modalRef.componentInstance.qualifications = qualifications;
         modalRef.componentInstance.courses = courses;
 
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-           this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

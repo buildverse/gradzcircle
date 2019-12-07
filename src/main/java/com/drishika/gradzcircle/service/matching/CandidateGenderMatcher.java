@@ -72,12 +72,13 @@ public class CandidateGenderMatcher implements Matcher<Candidate> {
 					candidate.getCandidateJobs().add(candidateJob);
 				}
 			});
+			candidateRepository.save(candidate);
+			mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
 
 		} else {
 			log.debug("Abort Matching as no Education saved");
 		}
-		candidateRepository.save(candidate);
-		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
+		
    
 	}
 

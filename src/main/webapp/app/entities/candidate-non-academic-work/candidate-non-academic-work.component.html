@@ -14,11 +14,13 @@
                         <h2>{{primaryCandidateNonAcademic.nonAcademicInitiativeTitle}}</h2>
                         <h6>{{primaryCandidateNonAcademic.nonAcademicWorkStartDate | date:'mediumDate'}}&nbsp;<small style="font-size:1rem;">-</small>&nbsp;{{primaryCandidateNonAcademic.nonAcademicWorkEndDate?(primaryCandidateNonAcademic.nonAcademicWorkEndDate|date:'mediumDate'): 'Till Date'}}</h6>
                         <h6>
-                            <span class="fa fa-pencil action-edit" ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/edit'} }]"></span>
-                            <span class="fa fa-remove action-delete" ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
+                            <span  ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/edit'} }]">
+                                <fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
+                            </span>
+                            <span ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
                                 [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/delete'} }]">
-    
+      							<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
                             </span>
                         </h6>
                     </div>

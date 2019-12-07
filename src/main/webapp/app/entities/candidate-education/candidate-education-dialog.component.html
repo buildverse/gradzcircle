@@ -282,20 +282,23 @@
 					<div class="input-group">
 						<input id="field_educationFromDate" #fromDate="ngModel" required 
 						    class="form-control border-primary"  placeholder="yyyy-mm-dd"
-							name="educationFromDate" ngbDatepicker 
+							name="educationFromDate" ngbDatepicker jhiNotFutureDate
 							#educationFromDateDp="ngbDatepicker"
 							[(ngModel)]="candidateEducation.educationFromDate"
 							(ngModelChange)="validateDates()" /> 
 							<span class="input-group-append" > 
 								<button class="btn btn-outline-primary" (click)="educationFromDateDp.toggle()" type="button">
-									<i class="fa fa-calendar" style="color:#1276ae"></i>
+									<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 								</button>
 							</span>
 					</div>
-					<span *ngIf="fromDate.invalid && fromDate.touched"
+					<span *ngIf="fromDate.invalid && fromDate.touched && fromDate.errors?.required"
 						class="text-danger">
 						<small>Please enter Start Date</small>
 					</span>
+					<div *ngIf="fromDate.touched && fromDate.errors?.futureDate" class="text-danger">
+						<small>From date cannot be in future.</small>
+					</div>
 				</div>
 				<div class="col-lg-2">
 					<label class="form-control-label font-weight-bold "
@@ -312,7 +315,7 @@
 							(ngModelChange)="validateDates()" />
 							<span class=" input-group-append" >
 								<button class="btn btn-outline-primary" (click)="educationToDateDp.toggle()" [disabled]="endDateControl" type="button">
-											<i class="fa fa-calendar" style="color:#1276ae"></i>
+										<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 								</button>
 							</span>
 						<!--  <button class="input-group-addon "

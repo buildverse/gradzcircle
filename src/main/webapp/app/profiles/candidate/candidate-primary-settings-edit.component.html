@@ -28,22 +28,21 @@
         <div class="form-row">
             <div class="col">
                 <div class="form-group">
-                    <div >
-					</div>
                     <strong><label for="jobCategory" jhiTranslate="gradzcircleApp.candidate.careerInterests"></label></strong>
                     <ss-multiselect-dropdown [options]="careerInterestOptions"
 									formControlName="jobCategories" [texts]="myTexts"
                                     [settings]="mySettings"> 
                     </ss-multiselect-dropdown>
-                    <!--<span *ngIf="" class="text-info"> Please enter career interests</span>-->
-                    <span class="text-danger" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
-                                primarySettingForm.get('jobCategories').dirty) && 
-                                primarySettingForm.get('jobCategories').errors" > 
-                                Please enter career interests</span>
-                    <span class="text-info" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
-                                primarySettingForm.get('jobCategories').dirty) && 
-                                !primarySettingForm.get('jobCategories').errors" > 
-                                You can select upto 5 interests</span>
+                    <div class="row ml-1">
+	                    <span class="text-danger" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
+	                                primarySettingForm.get('jobCategories').dirty) && 
+	                                primarySettingForm.get('jobCategories').errors" > 
+	                                Please enter career interests</span>
+	                    <span class="text-info" style="font-size:80%;" *ngIf="(primarySettingForm.get('jobCategories').touched || 
+	                                primarySettingForm.get('jobCategories').dirty) && 
+	                                !primarySettingForm.get('jobCategories').errors" > 
+	                                You can select upto 5 interests</span>
+                     </div>
                 </div>
             </div>
             <div class="col">

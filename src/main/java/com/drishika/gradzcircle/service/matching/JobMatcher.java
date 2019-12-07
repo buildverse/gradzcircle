@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.constants.ApplicationConstants;
 import com.drishika.gradzcircle.domain.Candidate;
@@ -40,6 +41,7 @@ import com.drishika.gradzcircle.service.MailService;
  */
 @Service
 @Qualifier("JobMatcher")
+@Transactional
 public class JobMatcher implements Matcher<Job> {
 
 	private final Logger log = LoggerFactory.getLogger(JobMatcher.class);
@@ -104,6 +106,7 @@ public class JobMatcher implements Matcher<Job> {
 		});
 		candidateRepository.saveAll(candidates);
 		jobRepository.save(job);
+		log.debug("Job filters post mathcing is {}",job.getJobFilters());
 		log.info("Job Matching completed in {} ms and number of new candidates matched are {}", (System.currentTimeMillis() - startTime),numberOfNewCandidates);
 		mailService.sendMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates);
 

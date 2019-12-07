@@ -17,11 +17,13 @@
 		            		<h4>{{primaryCandidateEmployment.jobType}}&nbsp;<small style="font-size:1rem;">-</small>&nbsp;{{primaryCandidateEmployment.employmentType}}</h4>
 		            		<h6>{{primaryCandidateEmployment.employmentStartDate | date:'mediumDate'}}&nbsp;<small style="font-size:1rem;">-</small>&nbsp;{{primaryCandidateEmployment.employmentEndDate?(primaryCandidateEmployment.employmentEndDate|date:'mediumDate'): 'Till Date'}}</h6>
 		                <h6>
-		                		<span class="fa fa-pencil action-edit" ngbTooltip="Edit" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
-														[routerLink]="['/', { outlets: { popup: 'candidate-employment/edit'} }]"></span>
-		                		<span class="fa fa-remove action-delete" ngbTooltip="Remove" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
+		                		<span  ngbTooltip="Edit" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
+														[routerLink]="['/', { outlets: { popup: 'candidate-employment/edit'} }]">
+											<fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
+							</span>
+		                		<span  ngbTooltip="Remove" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
 														[routerLink]="['/', { outlets: { popup: 'candidate-employment/delete'} }]">
-															
+											<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>				
 							</span>
 		                </h6>
 		            </div>
@@ -51,12 +53,16 @@
 							<div class="col-12 col-md-6 offset-md-1 info">
 								<h4>
 									Project Name 
-									<span class="fa fa-pencil action-edit" style="font-size: 1rem" ngbTooltip="Edit" 
+									<span style="font-size: 1rem" ngbTooltip="Edit" 
 											[routerLink]="['/', { outlets: { popup: 'candidate-project/edit'} }]"
-																				(click)="setProjectRouteParam(candidateProject.id)"></span>
-									<span class="fa fa-remove action-delete" style="font-size: 1rem" ngbTooltip="Remove" 
+																				(click)="setProjectRouteParam(candidateProject.id)">
+											<fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>			
+									</span>
+									<span style="font-size: 1rem" ngbTooltip="Remove" 
 											[routerLink]="['/', { outlets: { popup: 'candidate-project/delete'} }]"
-																				(click)="setProjectRouteParam(candidateProject.id)"></span>
+																				(click)="setProjectRouteParam(candidateProject.id)">
+										<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>	
+									</span>
 								</h4>
 								<h6>{{candidateProject.projectTitle}}</h6>
 								<h4>Project Description</h4>

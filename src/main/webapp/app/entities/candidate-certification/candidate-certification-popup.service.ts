@@ -5,6 +5,7 @@ import { HttpResponse } from '@angular/common/http';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
 import { Candidate } from '../candidate/candidate.model';
+import * as moment from 'moment';
 
 @Injectable()
 export class CandidateCertificationPopupService {
@@ -14,7 +15,6 @@ export class CandidateCertificationPopupService {
         private modalService: NgbModal,
         private router: Router,
         private candidateCertificationService: CandidateCertificationService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -27,22 +27,24 @@ export class CandidateCertificationPopupService {
             }
 
             if (id) {
-                this.candidateCertificationService.find(id)
-                        .subscribe((candidateCertificationResponse: HttpResponse<CandidateCertification>) => {
+                this.candidateCertificationService
+                    .find(id)
+                    .subscribe((candidateCertificationResponse: HttpResponse<CandidateCertification>) => {
                         const candidateCertification: CandidateCertification = candidateCertificationResponse.body;
-                    if (candidateCertification.certificationDate) {
-                        candidateCertification.certificationDate = {
-                            year: candidateCertification.certificationDate.getFullYear(),
-                            month: candidateCertification.certificationDate.getMonth() + 1,
-                            day: candidateCertification.certificationDate.getDate()
-                        };
-                    }
-                    this.candidate = new Candidate();
-                    this.candidate.id = candidateCertification.candidate.id
-                    candidateCertification.candidate = this.candidate;
-                    this.ngbModalRef = this.candidateCertificationModalRef(component, candidateCertification);
-                    resolve(this.ngbModalRef);
-                });
+                        if (candidateCertification.certificationDate) {
+                            const date = new Date(candidateCertification.certificationDate);
+                            candidateCertification.certificationDate = moment({
+                                year: date.getFullYear(),
+                                month: date.getMonth(),
+                                day: date.getDate()
+                            });
+                        }
+                        this.candidate = new Candidate();
+                        this.candidate.id = candidateCertification.candidate.id;
+                        candidateCertification.candidate = this.candidate;
+                        this.ngbModalRef = this.candidateCertificationModalRef(component, candidateCertification);
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -54,15 +56,18 @@ export class CandidateCertificationPopupService {
     }
 
     candidateCertificationModalRef(component: Component, candidateCertification: CandidateCertification): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateCertification = candidateCertification;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-             this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

@@ -105,20 +105,24 @@
 				[class.has-danger]="fromDate.invalid && fromDate.touched">
 				<div class="input-group">
 					<input id="field_nonAcademicWorkFromDate" #fromDate="ngModel"
-						required type="text" class="form-control border-primary "
+						required jhiNotFutureDate type="text" class="form-control border-primary "
 						name="nonAcademicFromDate" ngbDatepicker 
 						#nonAcademicFromDateDp="ngbDatepicker"
 						[(ngModel)]="candidateNonAcademicWork.nonAcademicWorkStartDate"
 						(ngModelChange)="validateDates()" /> 
 						<span class="input-group-append" > 
 							<button class="btn btn-outline-primary" (click)="nonAcademicFromDateDp.toggle()" type="button">
-								<i class="fa fa-calendar" style="color:#1276ae"></i>
+								<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 							</button>
 						</span>
 				</div>
-				<div *ngIf="fromDate.invalid && fromDate.touched"
+				<div *ngIf="fromDate.invalid && fromDate.touched && fromDate.errors?.required"
 					class="text-danger">
 					<small>Please enter Start Date</small>
+				</div>
+				<div *ngIf="fromDate.invalid && fromDate.touched && fromDate.errors?.futureDate" 
+					class="text-danger">
+					<small>Start date cannot be in future.</small>
 				</div>
 			</div>
 			<div class="col-md-2">
@@ -137,7 +141,7 @@
 						(ngModelChange)="validateDates()" />
 					<span class=" input-group-append" >
 						<button class="btn btn-outline-primary" (click)="nonAcademicToDateDp.toggle()" [disabled]="endDateControl" type="button">
-									<i class="fa fa-calendar" style="color:#1276ae"></i>
+									<fa-icon [icon]="'calendar-alt'" style="color:#0ea0ff"></fa-icon>
 						</button>
 					</span>
 				</div>

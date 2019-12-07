@@ -20,8 +20,7 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CANDIDATE_ID, CANDIDATE_EDUCATION_ID, USER_ID, USER_DATA, HAS_EDUCATION } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { ViewChild } from '@angular/core';
-import { JhiDateUtils } from 'ng-jhipster';
-//import {EducationCollegeService} from './education-college.service';
+import { DATE_FORMAT } from '../../shared/constants/input.constants';
 
 @Component({
     selector: 'jhi-candidate-education-dialog',
@@ -75,7 +74,6 @@ export class CandidateEducationDialogComponent implements OnInit {
         // private educationCollegeService: EducationCollegeService,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
-        private dateUtils: JhiDateUtils,
         private dataService: DataStorageService,
         private spinnerService: NgxSpinnerService,
         private config: NgbDatepickerConfig
@@ -318,7 +316,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     manageEndDateControl() {
         if (this.candidateEducation.isPursuingEducation) {
             this.endDateControl = true;
-            this.candidateEducation.educationToDate = '';
+            this.candidateEducation.educationToDate = null;
             this.endDateLesser = false;
         } else {
             this.endDateControl = false;
@@ -333,8 +331,8 @@ export class CandidateEducationDialogComponent implements OnInit {
         this.endDateLesser = false;
         this.endDateInFuture = false;
         if (this.candidateEducation.educationFromDate && this.candidateEducation.educationToDate) {
-            const startDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateEducation.educationFromDate));
-            const endDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateEducation.educationToDate));
+            const startDate = new Date(this.candidateEducation.educationFromDate.format(DATE_FORMAT));
+            const endDate = new Date(this.candidateEducation.educationToDate.format(DATE_FORMAT));
             if (startDate > endDate) {
                 this.endDateLesser = true;
                 //   this.currentForm.form.setErrors({ 'valid': false });

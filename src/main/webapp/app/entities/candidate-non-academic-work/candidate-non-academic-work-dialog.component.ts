@@ -1,10 +1,11 @@
+import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager, JhiAlertService, JhiDateUtils } from 'ng-jhipster';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { CandidateNonAcademicWorkPopupServiceNew } from './candidate-non-academic-work-popup-new.service';
 import { CandidateNonAcademicWork } from './candidate-non-academic-work.model';
 import { CandidateNonAcademicWorkPopupService } from './candidate-non-academic-work-popup.service';
@@ -36,7 +37,6 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
         private candidateService: CandidateService,
         private eventManager: JhiEventManager,
-        private dateUtils: JhiDateUtils,
         private spinnerService: NgxSpinnerService,
         private config: NgbDatepickerConfig
     ) {}
@@ -73,8 +73,8 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     validateDates() {
         this.endDateLesser = false;
         if (this.candidateNonAcademicWork.nonAcademicWorkStartDate && this.candidateNonAcademicWork.nonAcademicWorkEndDate) {
-            const fromDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateNonAcademicWork.nonAcademicWorkStartDate));
-            const toDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateNonAcademicWork.nonAcademicWorkEndDate));
+            const fromDate = new Date(this.candidateNonAcademicWork.nonAcademicWorkStartDate.format(DATE_FORMAT));
+            const toDate = new Date(this.candidateNonAcademicWork.nonAcademicWorkEndDate.format(DATE_FORMAT));
 
             if (fromDate > toDate) {
                 this.endDateLesser = true;
@@ -87,7 +87,7 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     manageEndDateControl() {
         if (this.candidateNonAcademicWork.isCurrentActivity) {
             this.endDateControl = true;
-            this.candidateNonAcademicWork.nonAcademicWorkEndDate = '';
+            this.candidateNonAcademicWork.nonAcademicWorkEndDate = null;
             this.endDateLesser = false;
         } else {
             this.endDateControl = false;

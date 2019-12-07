@@ -65,18 +65,20 @@ export class JobPopupService {
                 this.jobService.getJobForCandidateView(jobId, candidateId).subscribe((jobResponse: HttpResponse<Job>) => {
                     const job: Job = jobResponse.body;
                     if (job.createDate) {
-                        job.createDate = {
-                            year: job.createDate.getFullYear(),
-                            month: job.createDate.getMonth() + 1,
-                            day: job.createDate.getDate()
-                        };
+                        const d = new Date(job.createDate);
+                        job.createDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth() + 1,
+                            day: d.getDate()
+                        });
                     }
                     if (job.updateDate) {
-                        job.updateDate = {
-                            year: job.updateDate.getFullYear(),
-                            month: job.updateDate.getMonth() + 1,
-                            day: job.updateDate.getDate()
-                        };
+                        const d = new Date(job.updateDate);
+                        job.updateDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth() + 1,
+                            day: d.getDate()
+                        });
                     }
                     this.ngbModalRef = this.jobModalRef(component, job);
                     resolve(this.ngbModalRef);

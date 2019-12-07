@@ -14,9 +14,10 @@
 				<div class="row" *ngIf="candidateSkills">
 					
 						<div class="col-md-4 col-sm-6 col-12 mb-3" *ngFor="let candidateSkill of candidateSkills">
-							{{candidateSkill.skillName}} <span class="fa fa-remove action-delete" ngbTooltip="Remove"
+							{{candidateSkill.skillName}} <span  ngbTooltip="Remove"
 								(click)="setRemoveIdForSkill(candidateSkill.id)"
 								[routerLink]="['/', { outlets: { popup: 'candidate-skills/delete'} }]">
+								<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
 							</span> 
 							
 						</div>

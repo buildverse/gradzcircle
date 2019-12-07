@@ -9,12 +9,7 @@ import { CandidateSkillsService } from './candidate-skills.service';
 export class CandidateSkillsPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private candidateSkillsService: CandidateSkillsService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private candidateSkillsService: CandidateSkillsService) {
         this.ngbModalRef = null;
     }
 
@@ -26,12 +21,11 @@ export class CandidateSkillsPopupService {
             }
 
             if (id) {
-                this.candidateSkillsService.find(id)
-                    .subscribe((candidateSkillsResponse: HttpResponse<CandidateSkills>) => {
-                        const candidateSkills: CandidateSkills = candidateSkillsResponse.body;
-                        this.ngbModalRef = this.candidateSkillsModalRef(component, candidateSkills);
-                        resolve(this.ngbModalRef);
-                    });
+                this.candidateSkillsService.find(id).subscribe((candidateSkillsResponse: HttpResponse<CandidateSkills>) => {
+                    const candidateSkills: CandidateSkills = candidateSkillsResponse.body;
+                    this.ngbModalRef = this.candidateSkillsModalRef(component, candidateSkills);
+                    resolve(this.ngbModalRef);
+                });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -43,16 +37,19 @@ export class CandidateSkillsPopupService {
     }
 
     candidateSkillsModalRef(component: Component, candidateSkills: CandidateSkills): NgbModalRef {
-      console.log('candidate skills aer ========='+JSON.stringify(candidateSkills));
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        // console.log('candidate skills aer ========='+JSON.stringify(candidateSkills));
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateSkills = candidateSkills;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

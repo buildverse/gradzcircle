@@ -14,11 +14,13 @@
                         <h2>{{primaryCandidateCertification.certificationTitle}}</h2>
                         <h6>{{primaryCandidateCertification.certificationDate | date:'mediumDate'}}</h6>
                         <h6>
-                            <span class="fa fa-pencil action-edit" ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/edit'} }]"></span>
-                            <span class="fa fa-remove action-delete" ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
+                            <span  ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
+                                [routerLink]="['/', { outlets: { popup: 'candidate-certification/edit'} }]">
+                                    <fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
+                            </span>
+                            <span  ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateCertification.id)"
                                 [routerLink]="['/', { outlets: { popup: 'candidate-certification/delete'} }]">
-    
+    									<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
                             </span>
                         </h6>
                     </div>

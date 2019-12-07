@@ -1,3 +1,4 @@
+import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -14,7 +15,6 @@ import { Candidate, CandidateService } from '../candidate';
 import { EmploymentType, EmploymentTypeService } from '../employment-type';
 import { Country, CountryService } from '../country';
 import { JobType, JobTypeService } from '../job-type';
-import { JhiDateUtils } from 'ng-jhipster';
 import { CANDIDATE_ID, CANDIDATE_EMPLOYMENT_ID } from '../../shared/constants/storage.constants';
 import { EditorProperties } from '../../shared/editor/editor-properties';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
@@ -48,7 +48,6 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         private countryService: CountryService,
         private jobTypeService: JobTypeService,
         private eventManager: JhiEventManager,
-        private dateUtils: JhiDateUtils,
         private spinnerService: NgxSpinnerService,
         private config: NgbDatepickerConfig
     ) {}
@@ -56,7 +55,7 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     manageEndDateControl() {
         if (this.candidateEmployment.isCurrentEmployment) {
             this.endDateControl = true;
-            this.candidateEmployment.employmentEndDate = '';
+            this.candidateEmployment.employmentEndDate = null;
             this.endDateLesser = false;
         } else {
             this.endDateControl = false;
@@ -74,8 +73,8 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     validateDates() {
         this.endDateLesser = false;
         if (this.candidateEmployment.employmentStartDate && this.candidateEmployment.employmentEndDate) {
-            const fromDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateEmployment.employmentStartDate));
-            const toDate = new Date(this.dateUtils.convertLocalDateToServer(this.candidateEmployment.employmentEndDate));
+            const fromDate = new Date(this.candidateEmployment.employmentStartDate.format(DATE_FORMAT));
+            const toDate = new Date(this.candidateEmployment.employmentEndDate.format(DATE_FORMAT));
 
             if (fromDate > toDate) {
                 this.endDateLesser = true;

@@ -184,20 +184,20 @@
 											</ng-template>
 											<td class="font-weight-light text-center">
 												<a [routerLink]="['/', { outlets: { popup: 'job/view'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
-													ngbTooltip="View More"><fa-icon [icon]="'eye'" class="text-gray-500"></fa-icon>
+													ngbTooltip="View More"><fa-icon [icon]="'eye'" class="text-gray-500 fa-xs"></fa-icon>
 												</a> 
 												<a *ngIf="!job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/',{outlets : {popup:'jobEditMessage'}}]"
-													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500" [icon]="'pencil-alt'"></fa-icon>
+													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500 fa-xs" [icon]="'pencil-alt'"></fa-icon>
 												</a> 
 												<a *ngIf="job.canEdit" (click)="setJobEditOrViewRouteParam(job.id)" [routerLink]="['/', { outlets: { popup: 'job/edit'} }]"
-													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500" [icon]="'pencil-alt'"></fa-icon>
+													replaceUrl="true" ngbTooltip="Edit"> <fa-icon class="text-gray-500 fa-xs" [icon]="'pencil-alt'"></fa-icon>
 												</a>
 												<a *ngIf="job.numberOfCandidatesRemaining==0" [routerLink]="['/', { outlets: { popup: 'addMoreCandidatesToJob'} }]" (click)="setAddCandidateToJobRouteData(job.id)"
 													replaceUrl="true" ngbTooltip="More Candidates">
 													<fa-icon class="text-gray-500" [icon]="'user-plus'"></fa-icon> 
 												</a> 
 												<a [routerLink]="['/', { outlets: { popup: 'job/remove'} }]" (click)="setJobEditOrViewRouteParam(job.id)"
-													replaceUrl="true"ngbTooltip="Remove"> <fa-icon class="text-gray-500" [icon]="'trash-alt'"></fa-icon>
+													replaceUrl="true"ngbTooltip="Remove"> <fa-icon class="text-gray-500 fa-xs" [icon]="'trash-alt'"></fa-icon>
 												</a>
 											</td>
 										</tr>

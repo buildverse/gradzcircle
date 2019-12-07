@@ -4,17 +4,13 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
 import { HttpResponse } from '@angular/common/http';
+import * as moment from 'moment';
 
 @Injectable()
 export class CandidateEmploymentPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private candidateEmploymentService: CandidateEmploymentService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private candidateEmploymentService: CandidateEmploymentService) {
         this.ngbModalRef = null;
     }
 
@@ -26,22 +22,23 @@ export class CandidateEmploymentPopupService {
             }
 
             if (id) {
-                this.candidateEmploymentService.find(id)
-                  .subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) =>  {
-                     const candidateEmployment: CandidateEmployment = candidateEmploymentResponse.body;
+                this.candidateEmploymentService.find(id).subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) => {
+                    const candidateEmployment: CandidateEmployment = candidateEmploymentResponse.body;
                     if (candidateEmployment.employmentStartDate) {
-                        candidateEmployment.employmentStartDate = {
-                            year: candidateEmployment.employmentStartDate.getFullYear(),
-                            month: candidateEmployment.employmentStartDate.getMonth() + 1,
-                            day: candidateEmployment.employmentStartDate.getDate()
-                        };
+                        const d = new Date(candidateEmployment.employmentStartDate);
+                        candidateEmployment.employmentStartDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth(),
+                            day: d.getDate()
+                        });
                     }
                     if (candidateEmployment.employmentEndDate) {
-                        candidateEmployment.employmentEndDate = {
-                            year: candidateEmployment.employmentEndDate.getFullYear(),
-                            month: candidateEmployment.employmentEndDate.getMonth() + 1,
-                            day: candidateEmployment.employmentEndDate.getDate()
-                        };
+                        const d = new Date(candidateEmployment.employmentEndDate);
+                        candidateEmployment.employmentEndDate = moment({
+                            year: d.getFullYear(),
+                            month: d.getMonth(),
+                            day: d.getDate()
+                        });
                     }
                     this.ngbModalRef = this.candidateEmploymentModalRef(component, candidateEmployment);
                     resolve(this.ngbModalRef);
@@ -57,15 +54,18 @@ export class CandidateEmploymentPopupService {
     }
 
     candidateEmploymentModalRef(component: Component, candidateEmployment: CandidateEmployment): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateEmployment = candidateEmployment;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }
