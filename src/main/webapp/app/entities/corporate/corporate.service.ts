@@ -98,7 +98,9 @@ export class CorporateService {
     private convertItemFromServer(corporate: Corporate): Corporate {
         const copy: Corporate = Object.assign({}, corporate);
         //copy.establishedSince = this.dateUtils.convertLocalDateFromServer(corporate.establishedSince);
-        copy.establishedSince = moment(corporate.establishedSince);
+        if (corporate.establishedSince) {
+            copy.establishedSince = moment(corporate.establishedSince);
+        }
         return copy;
     }
 

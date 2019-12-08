@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -32,6 +31,7 @@ import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.Qualification;
 import com.drishika.gradzcircle.domain.Skills;
 import com.drishika.gradzcircle.domain.University;
+import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.entitybuilders.CollegeEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.CountryEntityBuilder;
 import com.drishika.gradzcircle.entitybuilders.CourseEntityBuilder;
@@ -418,7 +418,7 @@ public class ElasticsearchIndexService {
 		// universitySearchRepository);
 		// reindexForClass(VisaType.class, visaTypeRepository,
 		// visaTypeSearchRepository);
-		// reindexForClass(User.class, userRepository, userSearchRepository);
+		reindexForClass(User.class, userRepository, userSearchRepository); 
 		reindexForUniversity(universityRepository);
 		reindexForQualification(qualificationRepository);
 		reindexForCourse(courseRepository);
@@ -462,6 +462,8 @@ public class ElasticsearchIndexService {
 			reindexForUniversity(universityRepository);
 		else if (Constants.ENTITY_SKILL.equalsIgnoreCase(entityName))
 			reindexForSkills(skillsRepository);
+		else if (Constants.ENTITY_USER.equalsIgnoreCase(entityName))
+			reindexForClass(User.class, userRepository, userSearchRepository);
 		else
 			throw new EntityNotFoundException(entityName+" not found");
 		
@@ -519,6 +521,7 @@ public class ElasticsearchIndexService {
 			elasticsearchTemplate.refresh(com.drishika.gradzcircle.domain.elastic.University.class);
 		});
 	}
+	
 
 	
 	@SuppressWarnings("unchecked")

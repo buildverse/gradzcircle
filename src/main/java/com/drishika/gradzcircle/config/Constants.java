@@ -48,6 +48,7 @@ public final class Constants {
 	public static final String ENTITY_NATIONALITY = "nationality";
 	public static final String ENTITY_COURSE = "course";
 	public static final String ENTITY_SKILL = "skill";
+	public static final String ENTITY_USER = "user";
 
 	/* PROFILE CATEGORIES */
 	
