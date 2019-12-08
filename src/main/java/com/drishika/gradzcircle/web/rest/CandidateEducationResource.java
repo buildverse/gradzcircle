@@ -65,6 +65,9 @@ public class CandidateEducationResource {
 	            throw new BadRequestAlertException("A new candidateEducation cannot already have an ID", ENTITY_NAME, "idexists");
 	        }
 		CandidateEducation result = candidateEducationService.createCandidateEducation(candidateEducation);
+		if(result == null) {
+			throw new BadRequestAlertException("A new candidateEducation cannot be created since have no candidate in DB", ENTITY_NAME, "");
+		}
 		updateEducationDependentMetaForDisplay(result);
 		return ResponseEntity.created(new URI("/api/candidate-educations/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
@@ -91,6 +94,9 @@ public class CandidateEducationResource {
 			return createCandidateEducation(candidateEducation);
 		}
 		CandidateEducation result = candidateEducationService.updateCandidateEductaion(candidateEducation);
+		if(result == null) {
+			throw new BadRequestAlertException("A new candidateEducation cannot be updated since have no candidate in DB", ENTITY_NAME, "");
+		}
 		updateEducationDependentMetaForDisplay(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateEducation.getId().toString()))

@@ -61,6 +61,8 @@ public class CandidateSkillsResource {
         }
         Set<CandidateSkills> result = candidateSkillsService.createCandidateSkills(candidateSkills); 
         log.debug("Post create Skill is {}",result);
+        if(result == null)
+        	throw new BadRequestAlertException("A new candidateSkills cannot be created as no candidate available", ENTITY_NAME, "idexists");
         return ResponseEntity.created(new URI("/api/candidate-skills/" ))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME,"CREATED"))
             .body(result);

@@ -591,7 +591,8 @@ public class DTOConverters {
 				CandidateEducationDTO educationDTO = new CandidateEducationDTO();
 				if (withCandidateProfileScore) {
 					CandidateDTO candidateDTO = new CandidateDTO();
-					candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
+					if(candidate != null)
+						candidateDTO.setProfileScore(candidate.getProfileScore() != null ? candidate.getProfileScore() : 0d);
 					educationDTO.setCandidate(candidateDTO);
 				}
 				educationDTOs.add(educationDTO);

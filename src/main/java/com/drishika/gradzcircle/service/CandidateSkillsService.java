@@ -73,9 +73,12 @@ public class CandidateSkillsService {
 
 	public Set<CandidateSkills> createCandidateSkills(CandidateSkills candidateSkillObject) {
 		log.debug("Service request to save CandidateSkills : {}", candidateSkillObject);
-		
+		Candidate candidate = null;
 		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateSkillObject.getCandidate().getId());
-		Candidate candidate = candidateOptional.get();
+		if(candidateOptional.isPresent())
+			candidate = candidateOptional.get();
+		else 
+			return null;
 		log.debug("Candidate SKills already saved are {}",candidate.getCandidateSkills());
 		if(candidate.getCandidateSkills().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, false);
@@ -108,9 +111,11 @@ public class CandidateSkillsService {
 
 	public void deleteCandidateSkills(Long id) {
 		log.debug("Service request to delete CandidateSkills : {}", id);
-		CandidateSkills candidateSkill = candidateSkillsRepository.findById(id).get();
-		Candidate candidate = candidateSkill.getCandidate();
-		candidate.getCandidateSkills().remove(candidateSkill);
+		Optional<CandidateSkills> candidateSkill = candidateSkillsRepository.findById(id);
+		if(!candidateSkill.isPresent())
+			return;
+		Candidate candidate = candidateSkill.get().getCandidate();
+		candidate.getCandidateSkills().remove(candidateSkill.get());
 		log.debug("Candidate Skills post remove is {}",candidate.getCandidateSkills());
 		if(candidate.getCandidateSkills().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, true);

@@ -113,7 +113,8 @@ public class CorporateResource {
 			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
 		Corporate result = corporateService.updateCorporate(corporate);
-		//corporateSearchRepository.save(result);
+		if(result == null)
+			throw new BadRequestAlertException("Cannot update corporate as none exists", ENTITY_NAME, "");
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, corporate.getId().toString())).body(result);
 	}

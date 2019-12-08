@@ -52,7 +52,7 @@ public class ElasticsearchConfiguration {
 	public TransportClient client() {
 		TransportClient client = null;
 		boolean enableSsl = true;
-		try {
+		
 			log.info("Creating Elastic Client ");
 			
 			Settings settings = Settings.builder()
@@ -65,6 +65,7 @@ public class ElasticsearchConfiguration {
 					.put("xpack.security.user", "gradzcircle:rpqi9a786r5")
 					//.put("xpack.security.transport.ssl.verification_mode", "false")
 					.build();
+			try {
 			client = new PreBuiltXPackTransportClient(settings)
 			        .addTransportAddress(new InetSocketTransportAddress(
 			        		InetAddress.getByName("b2aa8bc4c757b5f248a4a0d22b758c76.us-east-1.aws.found.io"), 9343));

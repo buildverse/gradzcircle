@@ -4487,6 +4487,8 @@ public class JobResourceIntTest {
 		user.setLogin("abhinav");
 		user.setLangKey("en");
 		userRepository.saveAndFlush(user);
+		jobRepository.deleteAll();
+		jobRepository.flush();
 		Corporate corp = new Corporate();
 		corp.name("Drishika").login(user);
 		Job job1 = new Job();
@@ -6868,6 +6870,73 @@ public class JobResourceIntTest {
 				.extracting("candidate.firstName", "matchScore", "educationMatchScore", "languageMatchScore",
 						"genderMatchScore", "totalEligibleScore", "reviewed")
 				.contains(tuple("Ruchika", 92.0, 24.0, 5.0, 4.0, 36.0, false));
+	}
+	
+	@Test
+	@Transactional
+	public void testgetShortlistedJobsForCandidate() throws Exception {
+		Candidate c1 = new Candidate().firstName("Abhinav");
+		
+		candidateRepository.saveAndFlush(c1);
+		User user = new User();user.setEmail("abhinav@abhinav.com");user.setPassword("$2a$10$mE.qmcV0mFU5NcKh73TZx.z4ueI/.bDWbj0T1BYyqP481kGGarKLG");user.setLogin("abhinav");
+		user.setLangKey("en");
+		userRepository.saveAndFlush(user);
+		corporateRepository.saveAndFlush(corporate.login(user));
+		
+		
+		
+		job1.corporate(corporate);
+		job2.corporate(corporate);
+		job3.corporate(corporate);
+		job4.corporate(corporate);
+		job5.corporate(corporate);
+		job6.corporate(corporate);		
+		jobRepository.saveAndFlush(job1);
+		jobRepository.saveAndFlush(job2);
+		jobRepository.saveAndFlush(job3);
+		jobRepository.saveAndFlush(job4);
+		jobRepository.saveAndFlush(job5);
+		jobRepository.saveAndFlush(job6);
+		CandidateJob cJ1 = new CandidateJob(c1, job1);
+		CandidateJob cJ2 = new CandidateJob(c1, job2);
+		CandidateJob cJ3 = new CandidateJob(c1, job3);
+		CandidateJob cJ4 = new CandidateJob(c1, job4);
+		CandidateJob cJ5 = new CandidateJob(c1, job5);
+		CandidateJob cJ6 = new CandidateJob(c1, job6);
+		cJ1.setMatchScore(20d);		
+		cJ2.setMatchScore(30d);		
+		cJ3.setMatchScore(40d);		
+		cJ4.setMatchScore(50d);		
+		cJ5.setMatchScore(60d);		
+		cJ6.setMatchScore(70d);		
+		c1.addCandidateJob(cJ1);
+		job1.addCandidateJob(cJ1);
+		
+		c1.addCandidateJob(cJ2);
+		job2.addCandidateJob(cJ2);
+		c1.addCandidateJob(cJ3);
+		job3.addCandidateJob(cJ3);
+		c1.addCandidateJob(cJ4);
+		job4.addCandidateJob(cJ4);
+		c1.addCandidateJob(cJ5);
+		job5.addCandidateJob(cJ5);
+		c1.addCandidateJob(cJ6);
+		job6.addCandidateJob(cJ6);
+		corporate.addJob(job3).addJob(job2).addJob(job1).addJob(job4).addJob(job5).addJob(job6);
+		CorporateCandidate cc1 = new CorporateCandidate(corporate,c1,job1.getId());
+		CorporateCandidate cc2 = new CorporateCandidate(corporate,c1,job2.getId());
+		CorporateCandidate cc3 = new CorporateCandidate(corporate,c1,job3.getId());
+		c1.addCorporateCandidate(cc1);
+		c1.addCorporateCandidate(cc3);
+		c1.addCorporateCandidate(cc2);
+		corporate.addCorporateCandidate(cc3);
+		corporate.addCorporateCandidate(cc2);
+		corporate.addCorporateCandidate(cc1);
+		restJobMockMvc.perform(get("/api/shortListedJobsForCandidate/{candidateId}", c1.getId())).andDo(MockMvcResultHandlers.print())
+		.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(jsonPath("$", hasSize(3)))
+		.andExpect(jsonPath("$[*].jobTitle", Matchers.containsInAnyOrder("AAAAAA","BBBBBB","CCCCCC")))
+		.andExpect(jsonPath("$[*].matchScore", Matchers.containsInAnyOrder(20D,30D,40D)));
 	}
 
 }

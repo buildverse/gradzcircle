@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +38,7 @@ import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.exception.BeanCopyException;
 import com.drishika.gradzcircle.exception.JobEditException;
+import com.drishika.gradzcircle.exception.NoPreviousJobException;
 import com.drishika.gradzcircle.repository.CandidateAppliedJobsRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateCandidateRepository;
@@ -157,6 +157,12 @@ public class JobService {
 	public Job createJob(Job job) throws BeanCopyException {
 		log.info("In create job {}", job);
 		ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+		Corporate corporate = null;
+		Optional<Corporate> corporateOptional = corporateRepository.findById(job.getCorporate().getId());
+		if(corporateOptional.isPresent())
+			corporate = corporateOptional.get();
+		else
+			return null;
 		job.setCorporate(corporateRepository.findById(job.getCorporate().getId()).get());
 		job.setCreateDate(dateTime);
 		job.setCanEdit(Boolean.TRUE);
@@ -169,7 +175,12 @@ public class JobService {
 		log.info("In updating job {} and escrow {}", job,job.getCorporate().getEscrowAmount());
 		if (!job.getCanEdit())
 			throw new JobEditException("Cannot Edit job anymmore");
-		Job prevJob = getJob(job.getId());
+		Optional<Job> prevJobOptional = getJob(job.getId());
+		Job prevJob= null;
+		if(prevJobOptional.isPresent())
+			prevJob = prevJobOptional.get();
+		else 
+			return null;
 		if (!job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()) && prevJob.getEverActive())
 			throw new JobEditException("Cannot Change number of candidates once Jobs is active");
 		log.info("Previous job object is {}",prevJob);
@@ -282,7 +293,10 @@ public class JobService {
 		if (job.getJobFilters() != null && !job.getJobFilters().isEmpty()) {
 			for (JobFilter jobFilter : job.getJobFilters()) {
 				if (jobFilter.getId() != null) {
-					JobFilter prevJobFilter = getJobFilter(jobFilter.getId());
+					Optional<JobFilter> filterOption = getJobFilter(jobFilter.getId());
+					if(!filterOption.isPresent())
+						return;
+					JobFilter prevJobFilter = filterOption.get();
 					JobFilterHistory jobFilterHistory = new JobFilterHistory();
 					JobsUtil.populateHistories(jobFilterHistory, prevJobFilter);
 					jobFilterHistory.jobFilter(prevJobFilter);
@@ -300,12 +314,12 @@ public class JobService {
 		return jobFilterRepository.findByJob(job);
 	}
 
-	public JobFilter getJobFilter(Long id) {
-		return jobFilterRepository.findById(id).get();
+	public Optional<JobFilter> getJobFilter(Long id) {
+		return jobFilterRepository.findById(id);
 	}
 
-	public Job getJob(Long id) {
-		return jobRepository.findById(id).get();
+	public Optional<Job> getJob(Long id) {
+		return jobRepository.findById(id);
 	}
 
 	public List<Job> getAllActiveJobs() {
@@ -320,9 +334,12 @@ public class JobService {
 		jobSearchRepository.save(jobRepository.save(job));
 	}
 
-	public Job deActivateJob(Long id) throws BeanCopyException {
+	public void deActivateJob(Long id) throws BeanCopyException {
 		log.info("Deactivating job {}", id);
-		Job prevJob = getJob(id);
+		Optional<Job> prevJobOptional = getJob(id); 
+		if(!prevJobOptional.isPresent())
+			return;
+		Job prevJob = prevJobOptional.get();
 		JobHistory jobHistory = new JobHistory();
 		JobsUtil.populateHistories(jobHistory, prevJob);
 		prevJob.setJobStatus(ApplicationConstants.JOB_DEACTIVATE);
@@ -332,7 +349,6 @@ public class JobService {
 		Job job = jobRepository.save(prevJob);
 		jobSearchRepository.save(job);
 		log.info("Deactivated job {}", id);
-		return job;
 	}
 	
 	public List<JobListDTO> getShortlistedJobListForCorporateByCandidate(Long corporateId, Long candidateId) {
@@ -346,7 +362,13 @@ public class JobService {
 	private JobListDTO convertToJobListDTO(CorporateCandidate linkedCandidate) {
 		JobListDTO jobDto = null;
 		Set<CandidateJob> candidateJobs = linkedCandidate.getCandidate().getCandidateJobs();
-		CandidateJob candidateJob = new CandidateJob(linkedCandidate.getCandidate(),jobRepository.findById(linkedCandidate.getId().getJobId()).get());
+		Job job = null;
+		Optional<Job> jobOptional = jobRepository.findById(linkedCandidate.getId().getJobId());
+		if(!jobOptional.isPresent())
+			job = new Job();
+		else 
+			job = jobOptional.get();
+		CandidateJob candidateJob = new CandidateJob(linkedCandidate.getCandidate(),job);
 		CandidateJob filteredCandidateJob = candidateJobs.stream().filter(cJ -> cJ.equals(candidateJob)).findAny().orElse(null);
 		if(filteredCandidateJob != null)
 			jobDto = new JobListDTO(filteredCandidateJob.getJob().getJobTitle(),filteredCandidateJob.getMatchScore());
@@ -1115,14 +1137,18 @@ public class JobService {
 		return filterMap;
 	}
 	
-	public Job addCandidatesToJob(Job job) throws BeanCopyException {
-		
+	public Job addCandidatesToJob(Job job) throws BeanCopyException,NoPreviousJobException {
+		Job prevJob = null;
 		Double amountPaid = job.getAmountPaid();
 		Double jobCost = job.getJobCost();
 		Integer noOfApplicants = job.getNoOfApplicants();
 		Double escrowAmountUsed = job.getEscrowAmountUsed();
 		Double corporateEscrowAmount = job.getCorporate().getEscrowAmount();
-		Job prevJob = getJob(job.getId());
+		Optional<Job> prevJobOptional = getJob(job.getId());
+		if(prevJobOptional.isPresent())
+			prevJob = prevJobOptional.get();
+		else
+			throw new NoPreviousJobException("No Previous job");
 		log.debug("The number of applicants lefts are {}",noOfApplicants);
 		log.debug("Incoming escrow is  {}",job.getCorporate().getEscrowAmount());
 		try {

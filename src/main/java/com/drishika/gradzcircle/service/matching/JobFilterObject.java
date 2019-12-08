@@ -322,8 +322,8 @@ public class JobFilterObject {
 		result = prime * result + ((premium == null) ? 0 : premium.hashCode());
 		result = prime * result + ((qualifications == null) ? 0 : qualifications.hashCode());
 		result = prime * result + ((scoreType == null) ? 0 : scoreType.hashCode());
-		result = prime * result + ((universities == null) ? 0 : universities.hashCode());	
-		result = prime * result + ((skills == null) ? 0 : skills.hashCode());	
+		result = prime * result + ((universities == null) ? 0 : universities.hashCode());
+		result = prime * result + ((skills == null) ? 0 : skills.hashCode());
 		return result;
 	}
 
@@ -344,88 +344,105 @@ public class JobFilterObject {
 		if (addOn == null) {
 			if (other.addOn != null)
 				return false;
-		} else if (!addOn.equals(other.addOn))
-			return false;
+		} else 
+			if (!addOn.equals(other.addOn))
+				return false;
 		if (basic == null) {
 			if (other.basic != null)
 				return false;
-		} else if (!basic.equals(other.basic))
-			return false;
+		} else 
+			if (!basic.equals(other.basic))
+				return false;
 		if (colleges == null) {
 			if (other.colleges != null)
 				return false;
-		} else if (!colleges.equals(other.colleges))
-			return false;
+		} else 
+			if (!colleges.equals(other.colleges))
+				return false;
 		if (courses == null) {
 			if (other.courses != null)
 				return false;
-		} else if (!courses.equals(other.courses))
-			return false;
+		} else 
+			if (!courses.equals(other.courses))
+				return false;
 		if (gender == null) {
 			if (other.gender != null)
 				return false;
-		} else if (!gender.equals(other.gender))
-			return false;
+		} else 
+			if (!gender.equals(other.gender))
+				return false;
 		if (gpa == null) {
 			if (other.gpa != null)
 				return false;
-		} else if (!gpa.equals(other.gpa))
-			return false;
+		} else 
+			if (!gpa.equals(other.gpa))
+				return false;
 		if (graduationDate == null) {
 			if (other.graduationDate != null)
 				return false;
-		} else if (!graduationDate.equals(other.graduationDate))
-			return false;
+		} else 
+			if (!graduationDate.equals(other.graduationDate))
+				return false;
 		if (graduationDateType == null) {
 			if (other.graduationDateType != null)
 				return false;
-		} else if (!graduationDateType.equals(other.graduationDateType))
-			return false;
+		} else 
+			if (!graduationDateType.equals(other.graduationDateType))
+				return false;
 		if (graduationFromDate == null) {
 			if (other.graduationFromDate != null)
 				return false;
-		} else if (!graduationFromDate.equals(other.graduationFromDate))
-			return false;
+		} else 
+			if (!graduationFromDate.equals(other.graduationFromDate))
+				return false;
 		if (graduationToDate == null) {
 			if (other.graduationToDate != null)
 				return false;
-		} else if (!graduationToDate.equals(other.graduationToDate))
-			return false;
+		} else 
+			if (!graduationToDate.equals(other.graduationToDate))
+				return false;
 		if (languages == null) {
 			if (other.languages != null)
 				return false;
-		} else if (!languages.equals(other.languages))
-			return false;
+		} else 
+			if (!languages.equals(other.languages))
+				return false;
 		if (percentage == null) {
 			if (other.percentage != null)
 				return false;
-		} else if (!percentage.equals(other.percentage))
-			return false;
+		} else 
+			if (!percentage.equals(other.percentage))
+				return false;
 		if (premium == null) {
 			if (other.premium != null)
 				return false;
-		} else if (!premium.equals(other.premium))
-			return false;
+		} else 
+			if (!premium.equals(other.premium))
+				return false;
 		if (qualifications == null) {
 			if (other.qualifications != null)
 				return false;
-		} else if (!qualifications.equals(other.qualifications))
-			return false;
+		} else 
+			if (!qualifications.equals(other.qualifications))
+				return false;
 		if (scoreType == null) {
 			if (other.scoreType != null)
 				return false;
-		} else if (!scoreType.equals(other.scoreType))
-			return false;
+		} else 
+			if (!scoreType.equals(other.scoreType))
+				return false;
 		if (universities == null) {
 			if (other.universities != null)
 				return false;
-		} else if (!universities.equals(other.universities))
-			return false;
+		} else 
+			if (!universities.equals(other.universities))
+				return false;
 		if (skills == null) {
 			if (other.skills != null)
 				return false;
-		} else if (!skills.equals(other.skills))
-			return false;
+		} else 
+			if (!skills.equals(other.skills))
+				return false;
 		return true;
 	}
 

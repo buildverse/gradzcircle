@@ -98,6 +98,7 @@ public class CountryService {
 				.collect(Collectors.toList());
 	}
 	
+	
 	public String searchCountryBySuggest(String query) {
 		String suggest = null;
 		
@@ -111,7 +112,6 @@ public class CountryService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		options.forEach(option -> {
 			countries.add(new GenericElasticSuggest(option.getText().string(), option.getText().string()));
-			// colleges.add("id:"+option.getText().string()+",name:"+option.getText().string());
 		});
 		try {
 			suggest = objectMapper.writeValueAsString(countries);

@@ -1843,7 +1843,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -1939,7 +1939,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2035,7 +2035,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2132,7 +2132,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2230,7 +2230,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2327,7 +2327,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2413,7 +2413,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2499,7 +2499,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2593,7 +2593,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2688,7 +2688,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2782,7 +2782,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2878,7 +2878,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -2974,7 +2974,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -3067,7 +3067,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);
@@ -3279,7 +3279,7 @@ public class CandidateEducationResourceIntTest {
 		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
 				.university(university);
 		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").value("Master");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
 		Candidate candidate = new Candidate().firstName("Abhinav");
 		candidate = candidateRepository.saveAndFlush(candidate);
 		universityRepository.saveAndFlush(university);

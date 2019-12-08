@@ -69,7 +69,8 @@ public class CandidateLanguageProficiencyResource {
         }
 		CandidateLanguageProficiency result = candidateLanguageService
 				.createCandidateLanguageProficiency(candidateLanguageProficiency);
-
+		if(result == null)
+			throw new BadRequestAlertException("A new candidateLanguageProficiency cannot be created since no candidate available", ENTITY_NAME, "idexists");
 		return ResponseEntity.created(new URI("/api/candidate-language-proficiencies/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -107,6 +108,9 @@ public class CandidateLanguageProficiencyResource {
 			throw new CustomParameterizedException("Something Unexpected happened. Please try again later");
 		}
 		log.debug("Returning the Language data {}",result);
+		if(result == null) {
+			throw new BadRequestAlertException("A new candidateLanguageProficiency cannot be created since no candidate available", ENTITY_NAME, "idexists");
+		}
 		return ResponseEntity.ok().headers(
 				HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateLanguageProficiency.getId().toString()))
 				.body(result);

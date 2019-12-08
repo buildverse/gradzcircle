@@ -25,7 +25,6 @@ import org.springframework.hateoas.Link;
 import com.codahale.metrics.annotation.Timed;
 import com.drishika.gradzcircle.service.storage.FileServiceS3;
 import com.drishika.gradzcircle.service.storage.StorageFileNotFoundException;
-import com.drishika.gradzcircle.service.storage.StorageService;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
 @RestController
@@ -35,17 +34,14 @@ public class FileUploadResource {
 
 	private final Logger log = LoggerFactory.getLogger(FileUploadResource.class);
 
-	private final StorageService storageService;
-
 	private final FileServiceS3 fileServiceS3;
 
 	@Transient
 	private File file;
 
 	@Autowired
-	public FileUploadResource(StorageService storageService, FileServiceS3 fileServiceS3) {
+	public FileUploadResource( FileServiceS3 fileServiceS3) {
 		this.fileServiceS3 = fileServiceS3;
-		this.storageService = storageService;
 	}
 
 	@GetMapping("/fileList/{bucket}")

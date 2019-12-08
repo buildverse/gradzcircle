@@ -6,6 +6,8 @@ import org.springframework.data.elasticsearch.core.completion.Completion;
 
 @Document(indexName = "language")
 public class Language extends com.drishika.gradzcircle.domain.Language {
+	
+	private static final long serialVersionUID = 1L;
 
 	@CompletionField(maxInputLength = 100)
 	private Completion suggest;

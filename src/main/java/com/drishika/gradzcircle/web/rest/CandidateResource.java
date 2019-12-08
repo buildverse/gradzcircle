@@ -32,6 +32,7 @@ import com.drishika.gradzcircle.service.dto.CandidateDetailDTO;
 import com.drishika.gradzcircle.service.dto.CandidateJobDTO;
 import com.drishika.gradzcircle.service.dto.CandidateProfileListDTO;
 import com.drishika.gradzcircle.service.dto.CandidatePublicProfileDTO;
+import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 import com.drishika.gradzcircle.web.rest.util.PaginationUtil;
 
@@ -99,8 +100,10 @@ public class CandidateResource {
 			return createCandidate(candidate);
 		}
 		log.debug("Saving {} with addres {}", candidate, candidate.getAddresses());
-
+		
 		Candidate result = candidateService.updateCandidate(candidate);
+		if(result == null)
+			throw new BadRequestAlertException("Unable to update Candidate as none exists", ENTITY_NAME, "idexists");
 		candidateService.updateCountryAndNationalityDataForDisplay(result);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidate.getId().toString())).body(result);
@@ -151,6 +154,8 @@ public class CandidateResource {
 		log.debug("REST request to shortlist candidate {} for job {} by corporate : {}", candidateId, jobId,
 				corporateId);
 		Candidate result = candidateService.shortListCandidateForJob(candidateId, jobId, corporateId);
+		if(result == null)
+			throw new BadRequestAlertException("No match exists to shortlist",ENTITY_NAME,"");
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
 	}
@@ -238,18 +243,6 @@ public class CandidateResource {
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.convertToCandidateDetailDTO(candidate)));
 	}
 
-	private CandidateDTO convertCandidateToCandidateDTO(Candidate candidate,Boolean hasEducationScore) {
-
-		CandidateDTO candidateDTO = new CandidateDTO();
-		candidateDTO.setId(candidate.getId());
-		candidateDTO.setAboutMe(candidate.getAboutMe());
-		candidateDTO.setFirstName(candidate.getFirstName());
-		candidateDTO.setLastName(candidate.getLastName());
-		candidateDTO.setLogin(candidate.getLogin());
-		candidateDTO.setHasEducationScore(hasEducationScore);
-		candidateDTO.setProfileScore(candidate.getProfileScore());
-		return candidateDTO;
-	}
 
 	/**
 	 * GET /candidateDetails/:id : get the "id" candidate.

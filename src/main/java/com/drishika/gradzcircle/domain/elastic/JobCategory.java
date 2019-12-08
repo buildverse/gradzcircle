@@ -14,6 +14,8 @@ import org.springframework.data.elasticsearch.core.completion.Completion;
 @Document(indexName = "jobcategory")
 public class JobCategory extends com.drishika.gradzcircle.domain.JobCategory {
 	
+	private static final long serialVersionUID = 1L;
+	
 	@CompletionField(maxInputLength = 100)
 	private Completion suggest;
 

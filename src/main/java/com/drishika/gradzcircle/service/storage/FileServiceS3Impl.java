@@ -72,8 +72,7 @@ public class FileServiceS3Impl implements FileServiceS3 {
 			PutObjectResult result = amazonS3Client
 					.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), objectMetadata)
 							.withCannedAcl(CannedAccessControlList.PublicRead));
-			Optional<User> userOptional = userRepository.findById(Long.parseLong(key));
-			User user = userOptional.get();
+			User user = userRepository.getOne(Long.parseLong(key));
 			user.setImageUrl(result.getETag());
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());
@@ -92,8 +91,7 @@ public class FileServiceS3Impl implements FileServiceS3 {
 	public void deleteObject(String bucketName, String key) throws FileRemoveException {
 		try {
 			amazonS3Client.deleteObject(bucketName, key);
-			Optional<User> userOptional = userRepository.findById(Long.parseLong(key));
-			User user = userOptional.get();
+			User user = userRepository.getOne(Long.parseLong(key));
 			user.setImageUrl(null);
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());

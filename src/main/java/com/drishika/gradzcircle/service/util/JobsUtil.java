@@ -46,16 +46,6 @@ public class JobsUtil {
 
 	}
 
-	public static void trimJobFromFilter(Set<JobFilter> jobFilters) {
-
-		if (jobFilters != null) {
-			jobFilters.forEach(jobFilter -> {
-				jobFilter.setJob(null);
-			});
-		}
-
-	}
-
 	public static void populateHistories(Object destination, Object source) throws BeanCopyException {
 		try {
 			BeanUtils.copyProperties(destination, source);

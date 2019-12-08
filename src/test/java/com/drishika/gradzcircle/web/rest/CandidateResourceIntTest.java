@@ -29,16 +29,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
 import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.Address;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateCertification;
 import com.drishika.gradzcircle.domain.CandidateEducation;
@@ -49,19 +48,24 @@ import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
 import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
+import com.drishika.gradzcircle.domain.Country;
 import com.drishika.gradzcircle.domain.Filter;
 import com.drishika.gradzcircle.domain.Gender;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobFilter;
 import com.drishika.gradzcircle.domain.Language;
+import com.drishika.gradzcircle.domain.Nationality;
 import com.drishika.gradzcircle.domain.ProfileCategory;
 import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.repository.AddressRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
+import com.drishika.gradzcircle.repository.CountryRepository;
 import com.drishika.gradzcircle.repository.FilterRepository;
 import com.drishika.gradzcircle.repository.GenderRepository;
 import com.drishika.gradzcircle.repository.JobRepository;
 import com.drishika.gradzcircle.repository.LanguageRepository;
+import com.drishika.gradzcircle.repository.NationalityRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSearchRepository;
@@ -150,6 +154,15 @@ public class CandidateResourceIntTest {
 
 	@Autowired
 	private JobRepository jobRepository;
+	
+	@Autowired
+	private CountryRepository countryRepository;
+	
+	@Autowired
+	NationalityRepository nationalityRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
 
 	@Autowired
 	private FilterRepository filterRepository;
@@ -1113,8 +1126,21 @@ public class CandidateResourceIntTest {
 	@Transactional
 	public void getCandidate() throws Exception {
 		// Initialize the database
+		Address address = new Address();
+		address.addressLineOne("AAAAA");
+		address.addressLineTwo("BBBBB");
+		address.city("AAAAA");
+		Nationality nationality = new Nationality();
+		nationalityRepository.saveAndFlush(nationality);
+		Country country = new Country();
+		country.visas(new HashSet<>());
+		country.nationality(nationality);
+		country.addAddress(address);
+		countryRepository.saveAndFlush(country);
+		candidate.addAddress(address);
 		candidateRepository.saveAndFlush(candidate);
-
+		
+		
 		// Get the candidate
 		restCandidateMockMvc.perform(get("/api/candidates/{id}", candidate.getId())).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -1192,11 +1218,40 @@ public class CandidateResourceIntTest {
 	@Transactional
 	public void getCandidatePublicProfileWhenShortlistedForJobsMustShowIndicatorShorListedOrNot() throws Exception {
 		candidateRepository.saveAndFlush(candidate.login(user));
-/*		jobRepository.saveAndFlush(jobA);
-		jobRepository.saveAndFlush(jobB);
-		jobRepository.saveAndFlush(jobC);
-		jobRepository.saveAndFlush(jobF);
-		jobRepository.saveAndFlush(jobG);*/
+	/*	University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
+		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
+				.university(university);
+		Course course = new Course().course("Computer").value("Computer").display("Computer");
+		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
+		CandidateEducation candidateEducation = new CandidateEducation ();
+		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification)
+				.candidate(candidate);
+		CandidateProject project = new CandidateProject();
+		project.contributionInProject("Hello");
+		project.education(candidateEducation);
+		CandidateEmployment candidateEmployment = new CandidateEmployment();
+		candidateEmployment.employerName("AAAA").candidate(candidate);
+		project.employment(candidateEmployment);
+		Country country = new Country();
+		country.countryName("Hello");
+		Address address = new Address();
+		address.addressLineOne("Hello");
+		address.candidate(candidate);
+		address.country(country);
+		Nationality nationality = new Nationality();
+		nationality.nationality("Hello");
+		candidate.nationality(nationality);
+		Set<CandidateEducation> educations = new HashSet<>();
+		educations.add(candidateEducation);
+		candidate.educations(educations);
+		Set<CandidateEmployment> employments = new HashSet<>();
+		employments.add(candidateEmployment);
+		candidate.employments(employments);
+		CandidateCertification cert = new CandidateCertification();
+		cert.certificationTitle("Hello");
+		Set<CandidateCertification> candidateCertifications = new HashSet<>();
+		candidateCertifications.add(cert);
+		candidate.certifications(candidateCertifications);*/
 		corporate.addJob(jobA).addJob(jobB).addJob(jobC).addJob(jobF).addJob(jobG);
 		CorporateCandidate cc1 = new CorporateCandidate(corporate,candidate,jobA.getId());
 		CorporateCandidate cc2 = new CorporateCandidate(corporate,candidate,jobB.getId());

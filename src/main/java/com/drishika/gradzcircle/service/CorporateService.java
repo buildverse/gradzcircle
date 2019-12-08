@@ -51,21 +51,18 @@ public class CorporateService {
 	public void createCorporate(String corporateName, String phoneNumber, String country, User user) {
 		Corporate corporate = new Corporate();
 		corporate.setName(corporateName);
-		// corporate.setCorporatePhone(phoneNumber);
-		// corporate.setCorporateCountry (country);
 		corporate.setLogin(user);
 		corporateRepository.save(corporate);
-		//corporateSearchRepository.save(corporate);
 		logger.debug("Information for created Corporate {} ", corporate);
 	}
 	
 	public Corporate updateCorporate(Corporate corporate) {
 		Optional<Corporate> corporateFromRepo = corporateRepository.findById(corporate.getId());
+		if(!corporateFromRepo.isPresent())
+			return null;
 		corporate.setShortlistedCandidates(corporateFromRepo.get().getShortlistedCandidates());
 		injestCountryDetails(corporate);
 		corporate.setCity(convertToCamelCase(corporate.getCity()));
-		//corporate.setCity(convertToCamelCase(corporate.getCity()));
-		//Put code to convert name to camel case before save
 		Corporate result = corporateRepository.save(corporate);
 		return result;
 	}

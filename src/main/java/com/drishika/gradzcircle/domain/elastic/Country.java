@@ -13,6 +13,9 @@ import org.springframework.data.elasticsearch.core.completion.Completion;
  */
 @Document(indexName = "country")
 public class Country extends com.drishika.gradzcircle.domain.Country {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@CompletionField(maxInputLength = 100)
 	private Completion suggest;
 

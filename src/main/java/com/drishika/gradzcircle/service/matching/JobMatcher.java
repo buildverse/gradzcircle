@@ -158,7 +158,7 @@ public class JobMatcher implements Matcher<Job> {
 		if (jobfilterObject == null || candidateEducation == null)
 			return candidateJob;
 		log.debug("Candidate Id from educaiton is {}",candidateEducation.getCandidate());
-		Candidate candidate = candidateRepository.findById(candidateEducation.getCandidate().getId()).get();
+		Candidate candidate = candidateRepository.getOne(candidateEducation.getCandidate().getId());
 		log.debug("Candidate from reprositry while begin matching on education {} and {}", candidateEducation,candidate);
 		candidate.addEducation(candidateEducation);
 		candidateJob = matchUtils.matchCandidateAndJob(jobfilterObject, candidate, job, true, true, true,true);

@@ -102,32 +102,6 @@ public class UserService {
             });
     }
 
-    public User registerUser(UserDTO userDTO, String password) {
-
-        User newUser = new User();
-        String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin());
-        // new user gets initially a generated password
-        newUser.setPassword(encryptedPassword);
-        newUser.setFirstName(userDTO.getFirstName());
-        newUser.setLastName(userDTO.getLastName());
-        newUser.setEmail(userDTO.getEmail());
-        newUser.setImageUrl(userDTO.getImageUrl());
-        newUser.setLangKey(userDTO.getLangKey());
-        // new user is not active
-        newUser.setActivated(false);
-        // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
-        newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
-        userSearchRepository.save(newUser);
-        this.clearUserCaches(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
-
     public User registerUser(String login, String password, String firstName, String lastName, String email,
 			String imageUrl, String langKey, Set<String> incomingAuthorities, String corporateName, String country,
 			String phoneNumber) {
@@ -148,14 +122,14 @@ public class UserService {
 		newUser.setActivated(false);
 		// new user gets registration key
 		newUser.setActivationKey(RandomUtil.generateActivationKey());
-		if(authority != null)
+		if(authority.isPresent())
 			authorities.add(authority.get());
 		newUser.setAuthorities(authorities);
 		userRepository.save(newUser);
 		userSearchRepository.save(newUser);
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(newUser.getLogin());
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(newUser.getEmail());
-        if(authority!=null)
+        if(authority.isPresent())
         		userExtensionCreator(corporateName, phoneNumber, country, authority.get().getName(), newUser);
         else 
         		userExtensionCreator(corporateName, phoneNumber, country, AuthoritiesConstants.USER, newUser);

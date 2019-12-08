@@ -42,7 +42,7 @@ public class CandidateSkills implements Serializable {
     
     @Transient
     @JsonProperty
-    List<Skills> skillsList = new ArrayList<>();
+    private List<Skills> skillsList = new ArrayList<>();
  
 	@Transient
 	@JsonProperty

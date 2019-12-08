@@ -108,7 +108,8 @@ public class JobResource {
 			log.error("Error creating job {} , {}", e.getMessage(), e.getCause());
 
 		}
-		// JobsUtil.trimJobFromFilter(result);
+		if(result==null)
+			throw new BadRequestAlertException("Cannot create Job as no underlying corporate", ENTITY_NAME, "idexists");
 		return ResponseEntity.created(new URI("/api/jobs/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -138,7 +139,8 @@ public class JobResource {
 
 		try {
 			result = jobService.updateJob(job);
-			// BeanUtils.copyProperties(updatedJob, result);
+			if(result == null) 
+				throw new BadRequestAlertException("No prev job version to update", ENTITY_NAME, "idexists");
 			log.info("Updated job is {},{}", result, result.getJobFilters());
 		} catch (BeanCopyException e) {
 		
@@ -159,7 +161,7 @@ public class JobResource {
 			throw new CustomParameterizedException(ex.getMessage());
 		}
 
-		// JobsUtil.trimJobFromFilter(updatedJob);
+		
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
 				.body(result);
 	}
@@ -182,7 +184,7 @@ public class JobResource {
 			updatedJob = job;
 			updatedJob.setJobDescription(e.getMessage());
 			log.error("Error updating job {} , {}", e.getMessage(), e);
-		} catch (Exception ex) {
+		}  catch (Exception ex) {
 		
 			updatedJob = job;
 			updatedJob.setJobDescription(ex.getMessage());
@@ -194,7 +196,7 @@ public class JobResource {
 				.body(updatedJob);
 	}
 	
-	@RequestMapping(value = "/matchAllJobsToCandidates", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	/*@RequestMapping(value = "/matchAllJobsToCandidates", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	@Timed
 	@PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
 	public ResponseEntity<Void> matchAllJobsAndCandidates() throws URISyntaxException {
@@ -203,7 +205,7 @@ public class JobResource {
 		return ResponseEntity.accepted().headers(HeaderUtil.createAlert("elasticsearch.reindex.accepted", null))
 				.build();				
 	}
-
+*/
 	/**
 	 * GET /jobs : get all the jobs.
 	 *

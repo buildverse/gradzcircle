@@ -65,7 +65,12 @@ public class CandidateLanguageService {
 	public CandidateLanguageProficiency createCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
 		injestLanguageInformation(candidateLanguageProficiency);
-		Candidate candidate = candidateRepository.findById(candidateLanguageProficiency.getCandidate().getId()).get();
+		Candidate candidate = null;
+		Optional<Candidate> optional = candidateRepository.findById(candidateLanguageProficiency.getCandidate().getId());
+		if(optional.isPresent())
+			candidate = optional.get();
+		else 
+			return null;
 		if(candidate.getCandidateLanguageProficiencies().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, false);
 		}
@@ -86,14 +91,13 @@ public class CandidateLanguageService {
 	public CandidateLanguageProficiency updateCandidateLanguageProficiency(
 			CandidateLanguageProficiency candidateLanguageProficiency) {
 		injestLanguageInformation(candidateLanguageProficiency);
-		CandidateLanguageProficiency fromRepo = candidateLanguageProficiencyRepository.findById(candidateLanguageProficiency.getId()).get();
+		CandidateLanguageProficiency fromRepo = null;
+		Optional<CandidateLanguageProficiency> optionalFromRepo = candidateLanguageProficiencyRepository.findById(candidateLanguageProficiency.getId());
+		if(optionalFromRepo.isPresent())
+			fromRepo = optionalFromRepo.get();
+		else 
+			return null;
 		CandidateLanguageProficiency result = candidateLanguageProficiencyRepository.save(candidateLanguageProficiency.candidate(fromRepo.getCandidate()));
-		
-		// Candidate candidate =
-		// candidateRepository.findOne(result.getCandidate().getId());
-		// //candidate.addCandidateLanguageProficiency(result);
-		// matcher.match(candidate);
-		// log.debug("The result post update language proficicency{}", result);
 		return result;
 
 	}
@@ -107,7 +111,7 @@ public class CandidateLanguageService {
 	public CandidateLanguageProficiencyDTO getCandidateLanguageProficiency(Long id) {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
 		Optional<CandidateLanguageProficiency> candidateLanguageProficiency = candidateLanguageProficiencyRepository.findById(id);
-		if(candidateLanguageProficiency != null)
+		if(candidateLanguageProficiency.isPresent())
 			return converter.convertCandidateLanguageProficiency(candidateLanguageProficiency.get());
 		else 
 			return null;
@@ -135,9 +139,11 @@ public class CandidateLanguageService {
 		log.debug("REST request to get CandidateLanguageProficiency : {}", id);
 		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = candidateLanguageProficiencyRepository
 				.findCandidateLanguageProficienciesByCandidateId(id);
-		Optional<Candidate> candidate = candidateRepository.findById(id);
-		//candidateLanguageProficiencies.forEach(proficiency->candidateLanguageProficienciesDTO.add(convertCandidateLanguageProficienciesToDTO(proficiency)));
-		return converter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, true, candidate.get());
+		Candidate candidate = null;
+		Optional<Candidate> candidateOptional = candidateRepository.findById(id);
+		if(candidateOptional.isPresent())
+			candidate = candidateOptional.get();
+		return converter.convertCandidateLanguageProficiencies(candidateLanguageProficiencies, true, candidate);
 		
 	}
 
@@ -148,7 +154,11 @@ public class CandidateLanguageService {
 	public void deleteCandidateLanguageProficiency(Long id) {
 		log.debug("REST request to delete CandidateLanguageProficiency : {}", id);
 		Optional<CandidateLanguageProficiency> candidateLanguageProficiency = candidateLanguageProficiencyRepository.findById(id);
-		Candidate candidate = candidateLanguageProficiency.get().getCandidate();
+		Candidate candidate = null;
+		if(candidateLanguageProficiency.isPresent())
+			candidate = candidateLanguageProficiency.get().getCandidate();
+		else 
+			return;
 		candidate.removeCandidateLanguageProficiency(candidateLanguageProficiency.get());
 		if(candidate.getCandidateLanguageProficiencies().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, true);

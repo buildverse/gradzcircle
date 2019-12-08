@@ -115,10 +115,16 @@ public class CandidateEducationService {
 		injestCollegeInformation(candidateEducation);
 		injestCourseInformation(candidateEducation);
 		injestQualificationInformation(candidateEducation);
+		Candidate candidate = null;
 		log.info("Creating education for candidate, course,qualification {},{},{}", candidateEducation.getCandidate(),
 				candidateEducation.getCourse(), candidateEducation.getQualification());
 		setHighestEducation(candidateEducation, false);
-		Candidate candidate = candidateRepository.findById(candidateEducation.getCandidate().getId()).get();
+		Optional<Candidate> optional = candidateRepository.findById(candidateEducation.getCandidate().getId());
+		if(optional.isPresent()) 
+			candidate = optional.get();
+		else 
+			return null;
+		//Candidate candidate = candidateRepository.findById(candidateEducation.getCandidate().getId());
 		candidateEducation = candidateEducationRepository.save(candidateEducation);
 		candidate = candidate.addEducation(candidateEducation);
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, false);
@@ -335,6 +341,7 @@ public class CandidateEducationService {
 
 		if ("gpa".equals(candidateEducation.getScoreType()))
 			setGrade(candidateEducation);
+		Candidate candidate = null;
 		candidateEducation.setProjects(null);
 		injestCollegeInformation(candidateEducation);
 		injestCourseInformation(candidateEducation);
@@ -343,7 +350,10 @@ public class CandidateEducationService {
 		CandidateEducation result = candidateEducationRepository.save(candidateEducation);
 		// candidateEducationSearchRepository.save(result);
 		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateEducation.getCandidate().getId());
-		Candidate candidate = optionalCandidate.get();
+		if(optionalCandidate.isPresent())
+			candidate = optionalCandidate.get();
+		else 
+			return null; 
 		candidate.addEducation(result);
 		// Replace with future
 		if (result.getHighestQualification())
@@ -360,7 +370,9 @@ public class CandidateEducationService {
 	public CandidateEducation getCandidateEducation(Long id) {
 		log.debug("Getting candidate Education for {}", id);
 		Optional<CandidateEducation> optionalCandidateEducation = candidateEducationRepository.findById(id);
-		CandidateEducation candidateEducation = optionalCandidateEducation.get();
+		CandidateEducation candidateEducation = null;
+		if(optionalCandidateEducation.isPresent())
+			candidateEducation = optionalCandidateEducation.get();
 		if (candidateEducation != null) {
 			Set<CandidateProject> candidateProjects = candidateProjectRepository.findByEducation(candidateEducation);
 			candidateEducation.setProjects(candidateProjects);
@@ -377,8 +389,11 @@ public class CandidateEducationService {
 			return new ArrayList<CandidateEducationDTO>();
 		else
 			sortEducationsByHighest(candidateEducations);
-		Optional<Candidate> candidate = candidateRepository.findById(id);
-		return converter.convertCandidateEducations(candidateEducations, true,candidate.get());
+		Candidate candidate = null;
+		Optional<Candidate> candidateOptional = candidateRepository.findById(id);
+		if(candidateOptional.isPresent())
+			candidate = candidateOptional.get();
+		return converter.convertCandidateEducations(candidateEducations, true,candidate);
 	}
 	
 	private void sortEducationsByHighest(List<CandidateEducation> candidateEducations) {
@@ -400,7 +415,10 @@ public class CandidateEducationService {
 
 	public void deleteCandidateEducation(Long id) {
 		Optional<CandidateEducation> optionalEducation = candidateEducationRepository.findById(id);
-		CandidateEducation education = optionalEducation.get();
+		CandidateEducation education = null;
+		if(optionalEducation.isPresent())
+			education = optionalEducation.get();
+		else return;
 		List<CandidateEducation> candidateEducations= setHighestEducation(education, true);
 		Candidate candidate = education.getCandidate();
 		candidate.getEducations().clear();

@@ -27,21 +27,21 @@ public class CandidatePublicProfileDTO implements Serializable {
 	
 	private Boolean reviewed;
 
-	List<CandidateEducationDTO> educations = new ArrayList<>();
+	private List<CandidateEducationDTO> educations = new ArrayList<>();
 
-	List<CandidateCertificationDTO> certifications = new ArrayList<>();
+	private List<CandidateCertificationDTO> certifications = new ArrayList<>();
 
-	List<CandidateEmploymentDTO> employments = new ArrayList<>();
+	private List<CandidateEmploymentDTO> employments = new ArrayList<>();
 
-	List<CandidateNonAcademicWorkDTO> nonAcademics = new ArrayList<>();
+	private List<CandidateNonAcademicWorkDTO> nonAcademics = new ArrayList<>();
 
-	List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<>();
+	private List<CandidateLanguageProficiencyDTO> candidateLanguageProficiencies = new ArrayList<>();
 	
-	List<CandidateSkillsDTO> candidateSkills = new ArrayList<>();
+	private List<CandidateSkillsDTO> candidateSkills = new ArrayList<>();
 
-	Set<AddressDTO> addresses = new HashSet<>();
+	private Set<AddressDTO> addresses = new HashSet<>();
 	
-	Boolean canBeShortListed;
+	private Boolean canBeShortListed;
 
 	
 
