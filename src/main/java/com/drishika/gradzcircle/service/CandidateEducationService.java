@@ -146,7 +146,8 @@ public class CandidateEducationService {
 			if (candidateEducations.size() > 0) {
 			Comparator<CandidateEducation> comparator = Comparator.comparing(CandidateEducation::getEducationToDate,Comparator.nullsLast(Comparator.naturalOrder()));
 				candidateEducations.sort(comparator);
-				candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
+				if(candidateEducations.stream().filter(education->education.getHighestQualification()!=null).filter(education->education.isHighestQualification()).count()<=0)
+					candidateEducations.get(candidateEducations.size() - 1).setHighestQualification(true);
 				log.debug("Soretd education by dates {}", candidateEducations);
 			}
 		} else {

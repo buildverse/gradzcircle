@@ -4879,6 +4879,7 @@ public class CandidateEducationResourceIntTest {
 		filterRepository.saveAndFlush(universityFilter);
 		filterRepository.saveAndFlush(scoreFilter);
 		filterRepository.saveAndFlush(languageFilter);
+		filterRepository.saveAndFlush(skillFilter);
 		profileCategoryRepository.saveAndFlush(basic);
 		profileCategoryRepository.saveAndFlush(personal);
 		profileCategoryRepository.saveAndFlush(cert);
@@ -5292,6 +5293,76 @@ public class CandidateEducationResourceIntTest {
 		List<CandidateEducation> testCandidateEducationsAgain = candidateEducationRepository.findAll();
 		assertThat(testCandidateEducationsAgain).hasSize(2);
 		assertThat(testCandidateEducationsAgain).extracting("course","highestQualification").contains(tuple(courseBUSINESS_ADM,true)).contains(tuple(courseISC,false));
+	}
+	
+	@Test
+	@Transactional 
+	public void whenHaveMultipleEducationsWithManuallyMarkedAsDeleteRemovingAnyMustMaintainManuallyMarkedEducation() throws Exception {
+		universityRepository.saveAndFlush(uniIIM);
+		universityRepository.saveAndFlush(uniDoon);
+		qualificationRepository.saveAndFlush(qualPG_DIPLOMA);
+		qualificationRepository.saveAndFlush(qualICSE);
+		qualificationRepository.saveAndFlush(qualISC);
+		qualificationRepository.saveAndFlush(qualMaster);
+		qualificationRepository.saveAndFlush(qualBachelor);
+		qualificationRepository.saveAndFlush(qualDIPLOMA);
+		courseRepository.saveAndFlush(courseBUSINESS_ADM);
+		courseRepository.saveAndFlush(courseICSE);
+		courseRepository.saveAndFlush(courseISC);
+		jobRepository.saveAndFlush(jobA);
+		jobRepository.saveAndFlush(jobB);
+		jobRepository.saveAndFlush(jobC);
+		jobRepository.saveAndFlush(jobF);
+		jobRepository.saveAndFlush(jobG);
+		filterRepository.saveAndFlush(qualificationFilter);
+		filterRepository.saveAndFlush(courseFilter);
+		filterRepository.saveAndFlush(gradDateFilter);
+		filterRepository.saveAndFlush(genderFilter);
+		filterRepository.saveAndFlush(collegeFilter);
+		filterRepository.saveAndFlush(universityFilter);
+		filterRepository.saveAndFlush(scoreFilter);
+		filterRepository.saveAndFlush(languageFilter);
+		profileCategoryRepository.saveAndFlush(basic);
+		profileCategoryRepository.saveAndFlush(personal);
+		profileCategoryRepository.saveAndFlush(cert);
+		profileCategoryRepository.saveAndFlush(exp);
+		profileCategoryRepository.saveAndFlush(edu);
+		profileCategoryRepository.saveAndFlush(nonAcad);
+		profileCategoryRepository.saveAndFlush(lang);
+		// 
+		Candidate candidateA = new Candidate().firstName(CANDIDATE_A);
+		candidateRepository.saveAndFlush(candidateA);
+		CandidateProfileScore profileScore1 = new CandidateProfileScore(candidateA,basic);
+		CandidateProfileScore profileScore2 = new CandidateProfileScore(candidateA,personal);
+		CandidateProfileScore profileScore3 = new CandidateProfileScore(candidateA,edu);
+		profileScore1.setScore(5d);profileScore2.setScore(15d);profileScore3.setScore(50d);
+		candidateA.addCandidateProfileScore(profileScore3).addCandidateProfileScore(profileScore2).addCandidateProfileScore(profileScore1);
+		candidateA.setProfileScore(70D);
+		CandidateEducation education = new CandidateEducation().qualification(qualISC).course(courseICSE).percentage(100d)
+				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
+				.educationToDate(null).candidate(candidateA).highestQualification(false).isPursuingEducation(false);
+		CandidateEducation education2 = new CandidateEducation().qualification(qualISC).course(courseBUSINESS_ADM).percentage(79d)
+				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25))
+				.educationToDate(LocalDate.of(2016, 02, 23)).candidate(candidateA).highestQualification(true).isPursuingEducation(true);
+		CandidateEducation education3 = new CandidateEducation().qualification(qualISC).course(courseISC).percentage(78d)
+				.college(uniDoon.getColleges().iterator().next()).educationFromDate(LocalDate.of(2010, 02, 25)).percentage(53d)
+				.educationToDate(LocalDate.of(2017, 02, 23)).candidate(candidateA).highestQualification(false);
+		candidateRepository.saveAndFlush(candidateA.addEducation(education));
+		candidateRepository.saveAndFlush(candidateA.addEducation(education2));
+		candidateRepository.saveAndFlush(candidateA.addEducation(education3));
+		Long id = candidateA.getEducations().stream().filter(educationFilter -> educationFilter.getPercentage().equals(53d)).findFirst().get().getId();
+		restCandidateEducationMockMvc
+				.perform(delete("/api/candidate-educations/{id}", id)
+						.accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
+
+		List<Candidate> testCandidates = candidateRepository.findAll();
+		assertThat(testCandidates).hasSize(1);
+		assertThat(testCandidates.get(0).getProfileScore()).isEqualTo(70d);
+		List<CandidateEducation> testCandidateEducationsAgain = candidateEducationRepository.findAll();
+		assertThat(testCandidateEducationsAgain).hasSize(2);
+		assertThat(testCandidateEducationsAgain).extracting("course","highestQualification")
+			.contains(tuple(courseBUSINESS_ADM,true)).contains(tuple(courseICSE,false));
 	}
 	
 	@Test
