@@ -130,7 +130,7 @@
 						    		 <br> {{job.city}}
 						    </div>
 					</div>
-					<div *ngIf="jobs && jobs.length" class="container" >
+					<div *ngIf="jobs && jobs.length; else noMatchedJobs" class="container" >
 						<div class="row ">
 							<div class="col font-weight-light d-flex justify-content-start">
 								<jhi-item-count [page]="page" [total]="queryCount"
@@ -145,6 +145,9 @@
 							</div>
 						</div>
 					</div>
+					<ng-template #noMatchedJobs>
+							<div class="col"> Matching Jobs Available For Your Profile</div>
+					</ng-template>
 				</div>
 			</div>
 		</div>
