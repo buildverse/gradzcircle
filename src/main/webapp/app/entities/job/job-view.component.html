@@ -84,9 +84,7 @@
 		<div class="col-md-6 d-flex font-weight-bold  "
 			jhiTranslate="gradzcircleApp.job.noOfApplicantsShotlisted">No.
 			Of candidate</div>
-		<div
-			class="col-md-6 d-flex font-weight-light justify-content-center"
-			jhiTranslate="gradzcircleApp.job.noCandidateShortlisted">{{job.noOfApplicantsBought}}</div>
+		<div class="col-md-6 d-flex font-weight-light justify-content-center">{{job.noOfApplicantsBought}}</div>
 	</div>
 	<div class="row mx-4 mt-4">
 		<div class="col-md-6 font-weight-bold "
@@ -225,27 +223,31 @@
 
 				</div>
 			</div>
+		<div *ngIf="businessPlanEnabled">	
 			<div class="row mx-4 mt-4 mb-4">
 				<div class="col-md-6 d-flex font-weight-bold  "
-					jhiTranslate="gradzcircleApp.job.amountPaid">No. Of candidate</div>
+					jhiTranslate="gradzcircleApp.job.amountPaid">No. Of candidate
+				</div>
 				<div *ngIf="job.amountPaid;else noPaid"
-					class="col-md-6 d-flex font-weight-bold  justify-content-center font-weight-light">{{job.amountPaid}}</div>
+					class="col-md-6 d-flex font-weight-bold  justify-content-center font-weight-light">{{job.amountPaid}}
+				</div>
+				<ng-template #noPaid>
+					<div class="col-md-6 d-flex font-weight-light justify-content-center"
+						jhiTranslate="gradzcircleApp.job.noAmountPaid">
+					</div>
+				</ng-template>
 			</div>
-			<ng-template #noPaid>
-			<div class="col-md-6 d-flex font-weight-light justify-content-center"
-				jhiTranslate="gradzcircleApp.job.noAmountPaid"></div>
-			</ng-template>
-		</div>
-		<div class="row mx-4 mt-4 mb-4">
-			<div class="col-md-6 d-flex font-weight-bold  "
-				jhiTranslate="gradzcircleApp.job.paymentPlan">No. Of candidate</div>
-			<div *ngIf="job.paymentType === 'UPFRONT';else asYouGo"
-				class="col-md-6 d-flex font-weight-light justify-content-center"
-				jhiTranslate="gradzcircleApp.job.payUpfront"></div>
-			<ng-template #asYouGo>
-			<div class="col-md-6 d-flex font-weight-light justify-content-center"
-				jhiTranslate="gradzcircleApp.job.payAsYouGo"></div>
-			</ng-template>
+			<div class="row mx-4 mt-4 mb-4">
+				<div class="col-md-6 d-flex font-weight-bold  "
+					jhiTranslate="gradzcircleApp.job.paymentPlan">No. Of candidate</div>
+				<div *ngIf="job.paymentType === 'UPFRONT';else asYouGo"
+					class="col-md-6 d-flex font-weight-light justify-content-center"
+					jhiTranslate="gradzcircleApp.job.payUpfront"></div>
+				<ng-template #asYouGo>
+				<div class="col-md-6 d-flex font-weight-light justify-content-center"
+					jhiTranslate="gradzcircleApp.job.payAsYouGo"></div>
+				</ng-template>
+			</div>
 		</div>
 	</div>
 </div>

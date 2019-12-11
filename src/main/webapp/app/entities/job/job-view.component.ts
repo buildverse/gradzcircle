@@ -5,7 +5,7 @@ import { UserService } from '../../core/user/user.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { JOB_ID, MATCH_SCORE } from '../../shared/constants/storage.constants';
+import { JOB_ID, MATCH_SCORE, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -30,6 +30,7 @@ export class JobViewComponent implements OnInit {
     modalRef: NgbModalRef;
     imageUrl: any;
     noImage: boolean;
+    businessPlanEnabled: boolean;
     defaultImage = require('../../../content/images/no-image.png');
 
     constructor(
@@ -44,8 +45,11 @@ export class JobViewComponent implements OnInit {
         private loginService: LoginService,
         private loginModalService: LoginModalService,
         private jobListEmitterService: JobListEmitterService,
-        private userService: UserService
-    ) {}
+        private userService: UserService,
+        private localDataStorageService: DataStorageService
+    ) {
+        this.businessPlanEnabled = false;
+    }
 
     clear() {
         this.activeModal.dismiss('cancel');
@@ -53,6 +57,7 @@ export class JobViewComponent implements OnInit {
 
     ngOnInit() {
         // console.log('The job is '+JSON.stringify(this.job));
+        this.businessPlanEnabled = JSON.parse(this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });
