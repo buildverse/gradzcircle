@@ -57,7 +57,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     }
 
     ngOnInit() {
-        this.businessPlanEnabled = this.dataService.getData(BUSINESS_PLAN_ENABLED) === 'true' ? true : false;
+        this.businessPlanEnabled = JSON.parse(this.dataService.getData(BUSINESS_PLAN_ENABLED));
         this.reloadUserImage();
         this.alertService.clear();
 

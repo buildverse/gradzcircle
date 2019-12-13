@@ -153,7 +153,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
         this.matchScoreFrom = -1;
         this.matchScoreTo = -1;
         this.matchScoreRange = undefined;
-        this.businessPlanEnabled = this.dataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true : false;
+        this.businessPlanEnabled = JSON.parse(this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.subscription = this.activatedRoute.params.subscribe(params => {
             if (params['id'] && params['corporateId']) {
                 this.jobId = params['id'];

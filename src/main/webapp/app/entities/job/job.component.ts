@@ -188,7 +188,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.job = new Job();
         this.corporate = new Corporate();
         this.DRAFT = JobConstants.DRAFT;
-        this.businessPlanEnabled = this.dataStorageService.getData(BUSINESS_PLAN_ENABLED) == 'true' ? true : false;
+        this.businessPlanEnabled = JSON.parse(this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.principal.identity().then(account => {
             if (account) {
                 if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
