@@ -13,22 +13,20 @@ import { MaritalStatusService } from './marital-status.service';
     templateUrl: './marital-status-delete-dialog.component.html'
 })
 export class MaritalStatusDeleteDialogComponent {
-
     maritalStatus: MaritalStatus;
 
     constructor(
         private maritalStatusService: MaritalStatusService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.maritalStatusService.delete(id).subscribe((response) => {
+        this.maritalStatusService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'maritalStatusListModification',
                 content: 'Deleted an maritalStatus'
@@ -43,18 +41,13 @@ export class MaritalStatusDeleteDialogComponent {
     template: ''
 })
 export class MaritalStatusDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private maritalStatusPopupService: MaritalStatusPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private maritalStatusPopupService: MaritalStatusPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.maritalStatusPopupService
-                .open(MaritalStatusDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.maritalStatusPopupService.open(MaritalStatusDeleteDialogComponent as Component, params['id']);
         });
     }
 

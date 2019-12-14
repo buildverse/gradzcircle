@@ -12,30 +12,23 @@ import { CaptureCourseService } from './capture-course.service';
     templateUrl: './capture-course-detail.component.html'
 })
 export class CaptureCourseDetailComponent implements OnInit, OnDestroy {
-
     captureCourse: CaptureCourse;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private captureCourseService: CaptureCourseService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private captureCourseService: CaptureCourseService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCaptureCourses();
     }
 
     load(id) {
-        this.captureCourseService.find(id)
-            .subscribe((captureCourseResponse: HttpResponse<CaptureCourse>) => {
-                this.captureCourse = captureCourseResponse.body;
-            });
+        this.captureCourseService.find(id).subscribe((captureCourseResponse: HttpResponse<CaptureCourse>) => {
+            this.captureCourse = captureCourseResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class CaptureCourseDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCaptureCourses() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'captureCourseListModification',
-            (response) => this.load(this.captureCourse.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('captureCourseListModification', response => this.load(this.captureCourse.id));
     }
 }

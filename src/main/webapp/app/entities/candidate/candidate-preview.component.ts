@@ -167,7 +167,7 @@ export class CandidatePreviewComponent implements OnInit, OnDestroy {
                         if (responseJson) {
                             candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
                         } else {
-                            //this.noImage = true;
+                            // this.noImage = true;
                         }
                     }
                 });

@@ -14,7 +14,7 @@ import {
     CandidateNonAcademicWorkDeleteDialogComponent,
     candidateNonAcademicWorkRoute,
     candidateNonAcademicWorkPopupRoute,
-    CandidateNonAcademicWorkPopupComponentNew,
+    CandidateNonAcademicWorkPopupNewComponent,
     CandidateNonAcademicWorkPopupServiceNew
 } from './';
 
@@ -29,7 +29,7 @@ const ENTITY_STATES = [...candidateNonAcademicWorkRoute, ...candidateNonAcademic
         CandidateNonAcademicWorkDeleteDialogComponent,
         CandidateNonAcademicWorkPopupComponent,
         CandidateNonAcademicWorkDeletePopupComponent,
-        CandidateNonAcademicWorkPopupComponentNew
+        CandidateNonAcademicWorkPopupNewComponent
     ],
     entryComponents: [
         CandidateNonAcademicWorkComponent,
@@ -37,7 +37,7 @@ const ENTITY_STATES = [...candidateNonAcademicWorkRoute, ...candidateNonAcademic
         CandidateNonAcademicWorkPopupComponent,
         CandidateNonAcademicWorkDeleteDialogComponent,
         CandidateNonAcademicWorkDeletePopupComponent,
-        CandidateNonAcademicWorkPopupComponentNew
+        CandidateNonAcademicWorkPopupNewComponent
     ],
     providers: [
         CandidateNonAcademicWorkService,

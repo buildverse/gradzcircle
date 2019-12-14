@@ -2,7 +2,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GradzcircleSharedModule } from '../../shared';
 
-
 import {
     CandidateProjectService,
     CandidateProjectPopupService,
@@ -18,20 +17,12 @@ import {
     CandidateEmploymentProjectPopupComponent,
     CandidateEducationProjectPopupService,
     CandidateEmploymentProjectPopupService
-
 } from './';
 
-const ENTITY_STATES = [
-    ...candidateProjectRoute,
-    ...candidateProjectPopupRoute,
-];
+const ENTITY_STATES = [...candidateProjectRoute, ...candidateProjectPopupRoute];
 
 @NgModule({
-    imports: [
-        GradzcircleSharedModule,
-       RouterModule.forChild(ENTITY_STATES)
-
-    ],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CandidateProjectComponent,
         CandidateProjectDetailComponent,
@@ -41,7 +32,6 @@ const ENTITY_STATES = [
         CandidateProjectDeletePopupComponent,
         CandidateEducationProjectPopupComponent,
         CandidateEmploymentProjectPopupComponent
-
     ],
     entryComponents: [
         CandidateProjectComponent,
@@ -51,14 +41,12 @@ const ENTITY_STATES = [
         CandidateProjectDeletePopupComponent,
         CandidateEducationProjectPopupComponent,
         CandidateEmploymentProjectPopupComponent
-
     ],
     providers: [
         CandidateProjectService,
         CandidateProjectPopupService,
         CandidateEmploymentProjectPopupService,
         CandidateEducationProjectPopupService
-
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

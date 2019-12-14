@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('CandidateProject e2e test', () => {
-
     let navBarPage: NavBarPage;
     let candidateProjectDialogPage: CandidateProjectDialogPage;
     let candidateProjectComponentsPage: CandidateProjectComponentsPage;
@@ -18,16 +17,13 @@ describe('CandidateProject e2e test', () => {
     it('should load CandidateProjects', () => {
         navBarPage.goToEntity('candidate-project');
         candidateProjectComponentsPage = new CandidateProjectComponentsPage();
-        expect(candidateProjectComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.candidateProject.home.title/);
-
+        expect(candidateProjectComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateProject.home.title/);
     });
 
     it('should load create CandidateProject dialog', () => {
         candidateProjectComponentsPage.clickOnCreateButton();
         candidateProjectDialogPage = new CandidateProjectDialogPage();
-        expect(candidateProjectDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.candidateProject.home.createOrEditLabel/);
+        expect(candidateProjectDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateProject.home.createOrEditLabel/);
         candidateProjectDialogPage.close();
     });
 
@@ -45,15 +41,18 @@ describe('CandidateProject e2e test', () => {
         expect(candidateProjectDialogPage.getProjectDurationInput()).toMatch('5');
         candidateProjectDialogPage.setContributionInProjectInput('contributionInProject');
         expect(candidateProjectDialogPage.getContributionInProjectInput()).toMatch('contributionInProject');
-        candidateProjectDialogPage.getIsCurrentProjectInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateProjectDialogPage.getIsCurrentProjectInput().click();
-                expect(candidateProjectDialogPage.getIsCurrentProjectInput().isSelected()).toBeFalsy();
-            } else {
-                candidateProjectDialogPage.getIsCurrentProjectInput().click();
-                expect(candidateProjectDialogPage.getIsCurrentProjectInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateProjectDialogPage
+            .getIsCurrentProjectInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateProjectDialogPage.getIsCurrentProjectInput().click();
+                    expect(candidateProjectDialogPage.getIsCurrentProjectInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateProjectDialogPage.getIsCurrentProjectInput().click();
+                    expect(candidateProjectDialogPage.getIsCurrentProjectInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateProjectDialogPage.projectTypeSelectLastOption();
         candidateProjectDialogPage.educationSelectLastOption();
         candidateProjectDialogPage.employmentSelectLastOption();
@@ -158,10 +157,16 @@ export class CandidateProjectDialogPage {
     };
 
     projectTypeSelectLastOption = function() {
-        this.projectTypeSelect.all(by.tagName('option')).last().click();
+        this.projectTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
     educationSelectLastOption = function() {
-        this.educationSelect.all(by.tagName('option')).last().click();
+        this.educationSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     educationSelectOption = function(option) {
@@ -177,7 +182,10 @@ export class CandidateProjectDialogPage {
     };
 
     employmentSelectLastOption = function() {
-        this.employmentSelect.all(by.tagName('option')).last().click();
+        this.employmentSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     employmentSelectOption = function(option) {

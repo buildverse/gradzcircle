@@ -15,7 +15,6 @@ import { ErrorMessagesService } from './error-messages.service';
     templateUrl: './error-messages-dialog.component.html'
 })
 export class ErrorMessagesDialogComponent implements OnInit {
-
     errorMessages: ErrorMessages;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class ErrorMessagesDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private errorMessagesService: ErrorMessagesService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class ErrorMessagesDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.errorMessages.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.errorMessagesService.update(this.errorMessages));
+            this.subscribeToSaveResponse(this.errorMessagesService.update(this.errorMessages));
         } else {
-            this.subscribeToSaveResponse(
-                this.errorMessagesService.create(this.errorMessages));
+            this.subscribeToSaveResponse(this.errorMessagesService.create(this.errorMessages));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<ErrorMessages>>) {
-        result.subscribe((res: HttpResponse<ErrorMessages>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<ErrorMessages>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: ErrorMessages) {
-        this.eventManager.broadcast({ name: 'errorMessagesListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'errorMessagesListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class ErrorMessagesDialogComponent implements OnInit {
     template: ''
 })
 export class ErrorMessagesPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private errorMessagesPopupService: ErrorMessagesPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private errorMessagesPopupService: ErrorMessagesPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.errorMessagesPopupService
-                    .open(ErrorMessagesDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.errorMessagesPopupService.open(ErrorMessagesDialogComponent as Component, params['id']);
             } else {
-                this.errorMessagesPopupService
-                    .open(ErrorMessagesDialogComponent as Component);
+                this.errorMessagesPopupService.open(ErrorMessagesDialogComponent as Component);
             }
         });
     }

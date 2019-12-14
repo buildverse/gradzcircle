@@ -12,30 +12,23 @@ import { JobService } from './job.service';
     templateUrl: './job-detail.component.html'
 })
 export class JobDetailComponent implements OnInit, OnDestroy {
-
     job: Job;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private jobService: JobService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private jobService: JobService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInJobs();
     }
 
     load(id) {
-        this.jobService.find(id)
-            .subscribe((jobResponse: HttpResponse<Job>) => {
-                this.job = jobResponse.body;
-            });
+        this.jobService.find(id).subscribe((jobResponse: HttpResponse<Job>) => {
+            this.job = jobResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class JobDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInJobs() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'jobListModification',
-            (response) => this.load(this.job.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('jobListModification', response => this.load(this.job.id));
     }
 }

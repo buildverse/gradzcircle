@@ -120,7 +120,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
             .queryAppliedCandidatesForJob(
                 {
                     page: this.page - 1,
-                    //query: this.currentSearch,
+                    // query: this.currentSearch,
                     size: this.itemsPerPage,
                     sort: this.sort(),
                     id: this.jobId,
@@ -175,7 +175,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
-        //console.log(error);
+        // console.log(error);
         this.spinnerService.hide();
         this.jhiAlertService.error(error.message, null, null);
     }
@@ -201,7 +201,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
                         if (responseJson) {
                             candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
                         } else {
-                            //this.noImage = true;
+                            // this.noImage = true;
                         }
                     }
                 });

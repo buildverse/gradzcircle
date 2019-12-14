@@ -13,22 +13,20 @@ import { QualificationService } from './qualification.service';
     templateUrl: './qualification-delete-dialog.component.html'
 })
 export class QualificationDeleteDialogComponent {
-
     qualification: Qualification;
 
     constructor(
         private qualificationService: QualificationService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.qualificationService.delete(id).subscribe((response) => {
+        this.qualificationService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'qualificationListModification',
                 content: 'Deleted an qualification'
@@ -43,18 +41,13 @@ export class QualificationDeleteDialogComponent {
     template: ''
 })
 export class QualificationDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private qualificationPopupService: QualificationPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private qualificationPopupService: QualificationPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.qualificationPopupService
-                .open(QualificationDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.qualificationPopupService.open(QualificationDeleteDialogComponent as Component, params['id']);
         });
     }
 

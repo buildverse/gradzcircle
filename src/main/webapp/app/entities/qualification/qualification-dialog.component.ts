@@ -15,7 +15,6 @@ import { QualificationService } from './qualification.service';
     templateUrl: './qualification-dialog.component.html'
 })
 export class QualificationDialogComponent implements OnInit {
-
     qualification: Qualification;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class QualificationDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private qualificationService: QualificationService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class QualificationDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.qualification.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.qualificationService.update(this.qualification));
+            this.subscribeToSaveResponse(this.qualificationService.update(this.qualification));
         } else {
-            this.subscribeToSaveResponse(
-                this.qualificationService.create(this.qualification));
+            this.subscribeToSaveResponse(this.qualificationService.create(this.qualification));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Qualification>>) {
-        result.subscribe((res: HttpResponse<Qualification>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<Qualification>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: Qualification) {
-        this.eventManager.broadcast({ name: 'qualificationListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'qualificationListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class QualificationDialogComponent implements OnInit {
     template: ''
 })
 export class QualificationPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private qualificationPopupService: QualificationPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private qualificationPopupService: QualificationPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.qualificationPopupService
-                    .open(QualificationDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.qualificationPopupService.open(QualificationDialogComponent as Component, params['id']);
             } else {
-                this.qualificationPopupService
-                    .open(QualificationDialogComponent as Component);
+                this.qualificationPopupService.open(QualificationDialogComponent as Component);
             }
         });
     }

@@ -15,7 +15,6 @@ import { FilterCategoryService } from './filter-category.service';
     templateUrl: './filter-category-dialog.component.html'
 })
 export class FilterCategoryDialogComponent implements OnInit {
-
     filterCategory: FilterCategory;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class FilterCategoryDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private filterCategoryService: FilterCategoryService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class FilterCategoryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.filterCategory.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.filterCategoryService.update(this.filterCategory));
+            this.subscribeToSaveResponse(this.filterCategoryService.update(this.filterCategory));
         } else {
-            this.subscribeToSaveResponse(
-                this.filterCategoryService.create(this.filterCategory));
+            this.subscribeToSaveResponse(this.filterCategoryService.create(this.filterCategory));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<FilterCategory>>) {
-        result.subscribe((res: HttpResponse<FilterCategory>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<FilterCategory>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: FilterCategory) {
-        this.eventManager.broadcast({ name: 'filterCategoryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'filterCategoryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class FilterCategoryDialogComponent implements OnInit {
     template: ''
 })
 export class FilterCategoryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private filterCategoryPopupService: FilterCategoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private filterCategoryPopupService: FilterCategoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.filterCategoryPopupService
-                    .open(FilterCategoryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.filterCategoryPopupService.open(FilterCategoryDialogComponent as Component, params['id']);
             } else {
-                this.filterCategoryPopupService
-                    .open(FilterCategoryDialogComponent as Component);
+                this.filterCategoryPopupService.open(FilterCategoryDialogComponent as Component);
             }
         });
     }

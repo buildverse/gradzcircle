@@ -16,7 +16,6 @@ export * from './register/register.service';
 export * from './register/register.route';
 export * from './corporate/corporate-account.component';
 export * from './corporate/corporate-register.component';
-export * from './corporate/corporate-register-error-message.resolver.service';
 export * from './corporate/corporate-register-resolver.service';
 export * from './corporate/corporate-account.route';
 export * from './settings/settings.component';

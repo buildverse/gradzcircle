@@ -12,30 +12,23 @@ import { QualificationService } from './qualification.service';
     templateUrl: './qualification-detail.component.html'
 })
 export class QualificationDetailComponent implements OnInit, OnDestroy {
-
     qualification: Qualification;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private qualificationService: QualificationService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private qualificationService: QualificationService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInQualifications();
     }
 
     load(id) {
-        this.qualificationService.find(id)
-            .subscribe((qualificationResponse: HttpResponse<Qualification>) => {
-                this.qualification = qualificationResponse.body;
-            });
+        this.qualificationService.find(id).subscribe((qualificationResponse: HttpResponse<Qualification>) => {
+            this.qualification = qualificationResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class QualificationDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInQualifications() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'qualificationListModification',
-            (response) => this.load(this.qualification.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('qualificationListModification', response => this.load(this.qualification.id));
     }
 }

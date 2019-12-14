@@ -16,7 +16,6 @@ import { Nationality, NationalityService } from '../nationality';
     templateUrl: './country-dialog.component.html'
 })
 export class CountryDialogComponent implements OnInit {
-
     country: Country;
     isSaving: boolean;
 
@@ -28,24 +27,25 @@ export class CountryDialogComponent implements OnInit {
         private countryService: CountryService,
         private nationalityService: NationalityService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.nationalityService
-            .query({filter: 'country-is-null'})
-            .subscribe((res: HttpResponse<Nationality[]>) => {
+        this.nationalityService.query({ filter: 'country-is-null' }).subscribe(
+            (res: HttpResponse<Nationality[]>) => {
                 if (!this.country.nationality || !this.country.nationality.id) {
                     this.nationalities = res.body;
                 } else {
-                    this.nationalityService
-                        .find(this.country.nationality.id)
-                        .subscribe((subRes: HttpResponse<Nationality>) => {
+                    this.nationalityService.find(this.country.nationality.id).subscribe(
+                        (subRes: HttpResponse<Nationality>) => {
                             this.nationalities = [subRes.body].concat(res.body);
-                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
                 }
-            }, (res: HttpErrorResponse) => this.onError(res.message));
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -55,21 +55,18 @@ export class CountryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.country.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.countryService.update(this.country));
+            this.subscribeToSaveResponse(this.countryService.update(this.country));
         } else {
-            this.subscribeToSaveResponse(
-                this.countryService.create(this.country));
+            this.subscribeToSaveResponse(this.countryService.create(this.country));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Country>>) {
-        result.subscribe((res: HttpResponse<Country>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Country>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Country) {
-        this.eventManager.broadcast({ name: 'countryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'countryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +89,16 @@ export class CountryDialogComponent implements OnInit {
     template: ''
 })
 export class CountryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private countryPopupService: CountryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private countryPopupService: CountryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.countryPopupService
-                    .open(CountryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.countryPopupService.open(CountryDialogComponent as Component, params['id']);
             } else {
-                this.countryPopupService
-                    .open(CountryDialogComponent as Component);
+                this.countryPopupService.open(CountryDialogComponent as Component);
             }
         });
     }

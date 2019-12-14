@@ -19,8 +19,7 @@ export class CandidateLanguageProficiencyPopupServiceNew {
         private router: Router,
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,
         private alertService: JhiAlertService
-
-    ) { }
+    ) {}
 
     // loadAlreadySavedProficienies (id:any){
     //     this.candidateLanguageProficiencyService.search( {query: id}).subscribe(
@@ -35,22 +34,28 @@ export class CandidateLanguageProficiencyPopupServiceNew {
             if (isOpen) {
                 resolve(this.ngbModalRef);
             }
-          //  console.log("ID in Lnguage proficeicny is " + JSON.stringify(id));
+            //  console.log("ID in Lnguage proficeicny is " + JSON.stringify(id));
             if (id) {
                 this.candidateLanguageProficiency = new CandidateLanguageProficiency();
                 this.candidate = new Candidate();
                 this.candidateLanguageProficiency.candidate = this.candidate;
                 this.candidateLanguageProficiency.candidate.id = id;
                 setTimeout(() => {
-                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, this.candidateLanguageProficiency, currentCandidateLanguageProficiencies);
+                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
+                        component,
+                        this.candidateLanguageProficiency,
+                        currentCandidateLanguageProficiencies
+                    );
                     resolve(this.ngbModalRef);
                 }, 0);
-
-
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
-                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, this.candidateLanguageProficiency, currentCandidateLanguageProficiencies);
+                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
+                        component,
+                        this.candidateLanguageProficiency,
+                        currentCandidateLanguageProficiencies
+                    );
                     resolve(this.ngbModalRef);
                 }, 0);
             }
@@ -71,17 +76,24 @@ export class CandidateLanguageProficiencyPopupServiceNew {
 
     // }
 
-    candidateLanguageProficiencyModalRef(component: Component, candidateLanguageProficiency: CandidateLanguageProficiency, currentCandidateLanguageProficiencies: CandidateLanguageProficiency[]): NgbModalRef {
+    candidateLanguageProficiencyModalRef(
+        component: Component,
+        candidateLanguageProficiency: CandidateLanguageProficiency,
+        currentCandidateLanguageProficiencies: CandidateLanguageProficiency[]
+    ): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateLanguageProficiency = candidateLanguageProficiency;
         modalRef.componentInstance.currentCandidateLanguageProficiencies = currentCandidateLanguageProficiencies;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.isOpen = false;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.isOpen = false;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            }
+        );
         return modalRef;
     }
 

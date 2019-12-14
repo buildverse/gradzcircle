@@ -15,7 +15,6 @@ import { EmploymentTypeService } from './employment-type.service';
     templateUrl: './employment-type-dialog.component.html'
 })
 export class EmploymentTypeDialogComponent implements OnInit {
-
     employmentType: EmploymentType;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class EmploymentTypeDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private employmentTypeService: EmploymentTypeService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class EmploymentTypeDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.employmentType.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.employmentTypeService.update(this.employmentType));
+            this.subscribeToSaveResponse(this.employmentTypeService.update(this.employmentType));
         } else {
-            this.subscribeToSaveResponse(
-                this.employmentTypeService.create(this.employmentType));
+            this.subscribeToSaveResponse(this.employmentTypeService.create(this.employmentType));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<EmploymentType>>) {
-        result.subscribe((res: HttpResponse<EmploymentType>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<EmploymentType>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: EmploymentType) {
-        this.eventManager.broadcast({ name: 'employmentTypeListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'employmentTypeListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class EmploymentTypeDialogComponent implements OnInit {
     template: ''
 })
 export class EmploymentTypePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private employmentTypePopupService: EmploymentTypePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private employmentTypePopupService: EmploymentTypePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.employmentTypePopupService
-                    .open(EmploymentTypeDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.employmentTypePopupService.open(EmploymentTypeDialogComponent as Component, params['id']);
             } else {
-                this.employmentTypePopupService
-                    .open(EmploymentTypeDialogComponent as Component);
+                this.employmentTypePopupService.open(EmploymentTypeDialogComponent as Component);
             }
         });
     }

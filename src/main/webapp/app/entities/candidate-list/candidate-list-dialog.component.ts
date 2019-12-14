@@ -13,15 +13,8 @@ import { JobService } from '../job/job.service';
     templateUrl: './candidate-list-dialog.html'
 })
 export class CandidateListDialogComponent {
-
     candidateJob: CandidateJob[];
-    
-    constructor(
-       // private jobService: JobService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
@@ -33,18 +26,13 @@ export class CandidateListDialogComponent {
     template: ''
 })
 export class CandidateListPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobPopupService: JobPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobPopupService: JobPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.jobPopupService
-                .open(CandidateListPopupComponent as Component);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.jobPopupService.open(CandidateListPopupComponent as Component);
         });
     }
 

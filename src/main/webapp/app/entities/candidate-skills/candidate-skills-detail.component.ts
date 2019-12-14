@@ -12,7 +12,6 @@ import { CandidateSkillsService } from './candidate-skills.service';
     templateUrl: './candidate-skills-detail.component.html'
 })
 export class CandidateSkillsDetailComponent implements OnInit, OnDestroy {
-
     candidateSkills: CandidateSkills;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class CandidateSkillsDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private candidateSkillsService: CandidateSkillsService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateSkills();
     }
 
     load(id) {
-        this.candidateSkillsService.find(id)
-            .subscribe((candidateSkillsResponse: HttpResponse<CandidateSkills>) => {
-                this.candidateSkills = candidateSkillsResponse.body;
-            });
+        this.candidateSkillsService.find(id).subscribe((candidateSkillsResponse: HttpResponse<CandidateSkills>) => {
+            this.candidateSkills = candidateSkillsResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,8 @@ export class CandidateSkillsDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCandidateSkills() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateSkillsListModification',
-            (response) => this.load(this.candidateSkills.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateSkillsListModification', response =>
+            this.load(this.candidateSkills.id)
         );
     }
 }

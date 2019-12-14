@@ -13,22 +13,16 @@ import { LanguageService } from './language.service';
     templateUrl: './language-delete-dialog.component.html'
 })
 export class LanguageDeleteDialogComponent {
-
     language: Language;
 
-    constructor(
-        private languageService: LanguageService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private languageService: LanguageService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.languageService.delete(id).subscribe((response) => {
+        this.languageService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'languageListModification',
                 content: 'Deleted an language'
@@ -43,18 +37,13 @@ export class LanguageDeleteDialogComponent {
     template: ''
 })
 export class LanguageDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private languagePopupService: LanguagePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private languagePopupService: LanguagePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.languagePopupService
-                .open(LanguageDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.languagePopupService.open(LanguageDeleteDialogComponent as Component, params['id']);
         });
     }
 

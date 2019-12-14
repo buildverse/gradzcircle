@@ -12,30 +12,23 @@ import { EmployabilityService } from './employability.service';
     templateUrl: './employability-detail.component.html'
 })
 export class EmployabilityDetailComponent implements OnInit, OnDestroy {
-
     employability: Employability;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private employabilityService: EmployabilityService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private employabilityService: EmployabilityService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInEmployabilities();
     }
 
     load(id) {
-        this.employabilityService.find(id)
-            .subscribe((employabilityResponse: HttpResponse<Employability>) => {
-                this.employability = employabilityResponse.body;
-            });
+        this.employabilityService.find(id).subscribe((employabilityResponse: HttpResponse<Employability>) => {
+            this.employability = employabilityResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class EmployabilityDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInEmployabilities() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'employabilityListModification',
-            (response) => this.load(this.employability.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('employabilityListModification', response => this.load(this.employability.id));
     }
 }

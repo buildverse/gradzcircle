@@ -95,7 +95,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
         this.corporateService
             .queryLinkedCandidates({
                 page: this.page - 1,
-                //query: this.currentSearch,
+                // query: this.currentSearch,
                 size: this.itemsPerPage,
                 //  sort: this.sort(),
                 id: this.corporateId
@@ -161,7 +161,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
                             if (responseJson) {
                                 candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
                             } else {
-                                //this.noImage = true;
+                                // this.noImage = true;
                             }
                         }
                         this.spinnerService.hide();

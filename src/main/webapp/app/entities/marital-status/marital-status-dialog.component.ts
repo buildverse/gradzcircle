@@ -15,7 +15,6 @@ import { MaritalStatusService } from './marital-status.service';
     templateUrl: './marital-status-dialog.component.html'
 })
 export class MaritalStatusDialogComponent implements OnInit {
-
     maritalStatus: MaritalStatus;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class MaritalStatusDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private maritalStatusService: MaritalStatusService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class MaritalStatusDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.maritalStatus.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.maritalStatusService.update(this.maritalStatus));
+            this.subscribeToSaveResponse(this.maritalStatusService.update(this.maritalStatus));
         } else {
-            this.subscribeToSaveResponse(
-                this.maritalStatusService.create(this.maritalStatus));
+            this.subscribeToSaveResponse(this.maritalStatusService.create(this.maritalStatus));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<MaritalStatus>>) {
-        result.subscribe((res: HttpResponse<MaritalStatus>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<MaritalStatus>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: MaritalStatus) {
-        this.eventManager.broadcast({ name: 'maritalStatusListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'maritalStatusListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class MaritalStatusDialogComponent implements OnInit {
     template: ''
 })
 export class MaritalStatusPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private maritalStatusPopupService: MaritalStatusPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private maritalStatusPopupService: MaritalStatusPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.maritalStatusPopupService
-                    .open(MaritalStatusDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.maritalStatusPopupService.open(MaritalStatusDialogComponent as Component, params['id']);
             } else {
-                this.maritalStatusPopupService
-                    .open(MaritalStatusDialogComponent as Component);
+                this.maritalStatusPopupService.open(MaritalStatusDialogComponent as Component);
             }
         });
     }

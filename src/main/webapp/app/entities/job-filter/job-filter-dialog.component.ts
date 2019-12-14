@@ -16,7 +16,6 @@ import { Job, JobService } from '../job';
     templateUrl: './job-filter-dialog.component.html'
 })
 export class JobFilterDialogComponent implements OnInit {
-
     jobFilter: JobFilter;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class JobFilterDialogComponent implements OnInit {
         private jobFilterService: JobFilterService,
         private jobService: JobService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.jobService.query()
-            .subscribe((res: HttpResponse<Job[]>) => { this.jobs = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.jobService.query().subscribe(
+            (res: HttpResponse<Job[]>) => {
+                this.jobs = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,18 @@ export class JobFilterDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.jobFilter.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.jobFilterService.update(this.jobFilter));
+            this.subscribeToSaveResponse(this.jobFilterService.update(this.jobFilter));
         } else {
-            this.subscribeToSaveResponse(
-                this.jobFilterService.create(this.jobFilter));
+            this.subscribeToSaveResponse(this.jobFilterService.create(this.jobFilter));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<JobFilter>>) {
-        result.subscribe((res: HttpResponse<JobFilter>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<JobFilter>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: JobFilter) {
-        this.eventManager.broadcast({ name: 'jobFilterListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'jobFilterListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -81,22 +80,16 @@ export class JobFilterDialogComponent implements OnInit {
     template: ''
 })
 export class JobFilterPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobFilterPopupService: JobFilterPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobFilterPopupService: JobFilterPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.jobFilterPopupService
-                    .open(JobFilterDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.jobFilterPopupService.open(JobFilterDialogComponent as Component, params['id']);
             } else {
-                this.jobFilterPopupService
-                    .open(JobFilterDialogComponent as Component);
+                this.jobFilterPopupService.open(JobFilterDialogComponent as Component);
             }
         });
     }

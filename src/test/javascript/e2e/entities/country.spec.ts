@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('Country e2e test', () => {
-
     let navBarPage: NavBarPage;
     let countryDialogPage: CountryDialogPage;
     let countryComponentsPage: CountryComponentsPage;
@@ -18,16 +17,13 @@ describe('Country e2e test', () => {
     it('should load Countries', () => {
         navBarPage.goToEntity('country');
         countryComponentsPage = new CountryComponentsPage();
-        expect(countryComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.country.home.title/);
-
+        expect(countryComponentsPage.getTitle()).toMatch(/gradzcircleApp.country.home.title/);
     });
 
     it('should load create Country dialog', () => {
         countryComponentsPage.clickOnCreateButton();
         countryDialogPage = new CountryDialogPage();
-        expect(countryDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.country.home.createOrEditLabel/);
+        expect(countryDialogPage.getModalTitle()).toMatch(/gradzcircleApp.country.home.createOrEditLabel/);
         countryDialogPage.close();
     });
 
@@ -45,15 +41,18 @@ describe('Country e2e test', () => {
         expect(countryDialogPage.getNumCodeInput()).toMatch('5');
         countryDialogPage.setPhoneCodeInput('5');
         expect(countryDialogPage.getPhoneCodeInput()).toMatch('5');
-        countryDialogPage.getEnabledInput().isSelected().then((selected) => {
-            if (selected) {
-                countryDialogPage.getEnabledInput().click();
-                expect(countryDialogPage.getEnabledInput().isSelected()).toBeFalsy();
-            } else {
-                countryDialogPage.getEnabledInput().click();
-                expect(countryDialogPage.getEnabledInput().isSelected()).toBeTruthy();
-            }
-        });
+        countryDialogPage
+            .getEnabledInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    countryDialogPage.getEnabledInput().click();
+                    expect(countryDialogPage.getEnabledInput().isSelected()).toBeFalsy();
+                } else {
+                    countryDialogPage.getEnabledInput().click();
+                    expect(countryDialogPage.getEnabledInput().isSelected()).toBeTruthy();
+                }
+            });
         countryDialogPage.nationalitySelectLastOption();
         countryDialogPage.save();
         expect(countryDialogPage.getSaveButton().isPresent()).toBeFalsy();
@@ -146,7 +145,10 @@ export class CountryDialogPage {
         return this.enabledInput;
     };
     nationalitySelectLastOption = function() {
-        this.nationalitySelect.all(by.tagName('option')).last().click();
+        this.nationalitySelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     nationalitySelectOption = function(option) {

@@ -17,7 +17,7 @@ import {
     // CollegeResolverService,
     // CourseResolverService,
     // QualificationResolverService,
-    CandidateEducationPopupComponentNew,
+    CandidateEducationPopupNewComponent,
     CandidateEducationPopupServiceNew
 } from './';
 
@@ -32,7 +32,7 @@ const ENTITY_STATES = [...candidateEducationRoute, ...candidateEducationPopupRou
         CandidateEducationDeleteDialogComponent,
         CandidateEducationPopupComponent,
         CandidateEducationDeletePopupComponent,
-        CandidateEducationPopupComponentNew
+        CandidateEducationPopupNewComponent
     ],
     entryComponents: [
         CandidateEducationComponent,
@@ -40,7 +40,7 @@ const ENTITY_STATES = [...candidateEducationRoute, ...candidateEducationPopupRou
         CandidateEducationPopupComponent,
         CandidateEducationDeleteDialogComponent,
         CandidateEducationDeletePopupComponent,
-        CandidateEducationPopupComponentNew
+        CandidateEducationPopupNewComponent
     ],
     providers: [
         CandidateEducationService,

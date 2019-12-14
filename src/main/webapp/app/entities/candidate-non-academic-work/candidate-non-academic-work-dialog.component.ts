@@ -175,7 +175,7 @@ export class CandidateNonAcademicWorkPopupComponent implements OnInit, OnDestroy
     selector: 'jhi-candidate-non-academic-work-popup',
     template: ''
 })
-export class CandidateNonAcademicWorkPopupComponentNew implements OnInit, OnDestroy {
+export class CandidateNonAcademicWorkPopupNewComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(

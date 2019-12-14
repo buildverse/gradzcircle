@@ -24,7 +24,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 })
 export class JobViewComponent implements OnInit {
     job: Job;
-    //hasCandidateApplied: boolean;
+    // hasCandidateApplied: boolean;
     currentAccount: any;
     isSaving: boolean;
     modalRef: NgbModalRef;
@@ -105,7 +105,7 @@ export class JobViewComponent implements OnInit {
     }
 
     private onSaveError(error: any) {
-        //console.log('in error' + JSON.stringify(error));
+        // console.log('in error' + JSON.stringify(error));
         //  this.isSaving = false;
         this.onError(error);
     }

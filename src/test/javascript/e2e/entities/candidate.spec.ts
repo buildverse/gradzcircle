@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('Candidate e2e test', () => {
-
     let navBarPage: NavBarPage;
     let candidateDialogPage: CandidateDialogPage;
     let candidateComponentsPage: CandidateComponentsPage;
@@ -18,16 +17,13 @@ describe('Candidate e2e test', () => {
     it('should load Candidates', () => {
         navBarPage.goToEntity('candidate');
         candidateComponentsPage = new CandidateComponentsPage();
-        expect(candidateComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.candidate.home.title/);
-
+        expect(candidateComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidate.home.title/);
     });
 
     it('should load create Candidate dialog', () => {
         candidateComponentsPage.clickOnCreateButton();
         candidateDialogPage = new CandidateDialogPage();
-        expect(candidateDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.candidate.home.createOrEditLabel/);
+        expect(candidateDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidate.home.createOrEditLabel/);
         candidateDialogPage.close();
     });
 
@@ -53,42 +49,54 @@ describe('Candidate e2e test', () => {
         expect(candidateDialogPage.getPhoneCodeInput()).toMatch('phoneCode');
         candidateDialogPage.setPhoneNumberInput('phoneNumber');
         expect(candidateDialogPage.getPhoneNumberInput()).toMatch('phoneNumber');
-        candidateDialogPage.getDifferentlyAbledInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateDialogPage.getDifferentlyAbledInput().click();
-                expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeFalsy();
-            } else {
-                candidateDialogPage.getDifferentlyAbledInput().click();
-                expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeTruthy();
-            }
-        });
-        candidateDialogPage.getAvailableForHiringInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateDialogPage.getAvailableForHiringInput().click();
-                expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeFalsy();
-            } else {
-                candidateDialogPage.getAvailableForHiringInput().click();
-                expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeTruthy();
-            }
-        });
-        candidateDialogPage.getOpenToRelocateInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateDialogPage.getOpenToRelocateInput().click();
-                expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeFalsy();
-            } else {
-                candidateDialogPage.getOpenToRelocateInput().click();
-                expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeTruthy();
-            }
-        });
-        candidateDialogPage.getMatchEligibleInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateDialogPage.getMatchEligibleInput().click();
-                expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeFalsy();
-            } else {
-                candidateDialogPage.getMatchEligibleInput().click();
-                expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateDialogPage
+            .getDifferentlyAbledInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateDialogPage.getDifferentlyAbledInput().click();
+                    expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateDialogPage.getDifferentlyAbledInput().click();
+                    expect(candidateDialogPage.getDifferentlyAbledInput().isSelected()).toBeTruthy();
+                }
+            });
+        candidateDialogPage
+            .getAvailableForHiringInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateDialogPage.getAvailableForHiringInput().click();
+                    expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateDialogPage.getAvailableForHiringInput().click();
+                    expect(candidateDialogPage.getAvailableForHiringInput().isSelected()).toBeTruthy();
+                }
+            });
+        candidateDialogPage
+            .getOpenToRelocateInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateDialogPage.getOpenToRelocateInput().click();
+                    expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateDialogPage.getOpenToRelocateInput().click();
+                    expect(candidateDialogPage.getOpenToRelocateInput().isSelected()).toBeTruthy();
+                }
+            });
+        candidateDialogPage
+            .getMatchEligibleInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateDialogPage.getMatchEligibleInput().click();
+                    expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateDialogPage.getMatchEligibleInput().click();
+                    expect(candidateDialogPage.getMatchEligibleInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateDialogPage.setProfileScoreInput('5');
         expect(candidateDialogPage.getProfileScoreInput()).toMatch('5');
         candidateDialogPage.loginSelectLastOption();
@@ -254,7 +262,10 @@ export class CandidateDialogPage {
     };
 
     loginSelectLastOption = function() {
-        this.loginSelect.all(by.tagName('option')).last().click();
+        this.loginSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     loginSelectOption = function(option) {
@@ -270,7 +281,10 @@ export class CandidateDialogPage {
     };
 
     nationalitySelectLastOption = function() {
-        this.nationalitySelect.all(by.tagName('option')).last().click();
+        this.nationalitySelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     nationalitySelectOption = function(option) {
@@ -286,7 +300,10 @@ export class CandidateDialogPage {
     };
 
     genderSelectLastOption = function() {
-        this.genderSelect.all(by.tagName('option')).last().click();
+        this.genderSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     genderSelectOption = function(option) {
@@ -302,7 +319,10 @@ export class CandidateDialogPage {
     };
 
     maritalStatusSelectLastOption = function() {
-        this.maritalStatusSelect.all(by.tagName('option')).last().click();
+        this.maritalStatusSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     maritalStatusSelectOption = function(option) {
@@ -318,7 +338,10 @@ export class CandidateDialogPage {
     };
 
     jobCategorySelectLastOption = function() {
-        this.jobCategorySelect.all(by.tagName('option')).last().click();
+        this.jobCategorySelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     jobCategorySelectOption = function(option) {
@@ -334,7 +357,10 @@ export class CandidateDialogPage {
     };
 
     jobSelectLastOption = function() {
-        this.jobSelect.all(by.tagName('option')).last().click();
+        this.jobSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     jobSelectOption = function(option) {
@@ -350,7 +376,10 @@ export class CandidateDialogPage {
     };
 
     profileCategorySelectLastOption = function() {
-        this.profileCategorySelect.all(by.tagName('option')).last().click();
+        this.profileCategorySelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     profileCategorySelectOption = function(option) {
@@ -366,7 +395,10 @@ export class CandidateDialogPage {
     };
 
     visaTypeSelectLastOption = function() {
-        this.visaTypeSelect.all(by.tagName('option')).last().click();
+        this.visaTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     visaTypeSelectOption = function(option) {

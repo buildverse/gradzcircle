@@ -138,7 +138,7 @@ export class CandidateCertificationPopupComponent implements OnInit, OnDestroy {
     selector: 'jhi-candidate-certification-popup',
     template: ''
 })
-export class CandidateCertificationPopupComponentNew implements OnInit, OnDestroy {
+export class CandidateCertificationPopupNewComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(

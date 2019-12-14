@@ -16,7 +16,6 @@ import { CaptureCollege, CaptureCollegeService } from '../capture-college';
     templateUrl: './capture-university-dialog.component.html'
 })
 export class CaptureUniversityDialogComponent implements OnInit {
-
     captureUniversity: CaptureUniversity;
     isSaving: boolean;
 
@@ -28,24 +27,25 @@ export class CaptureUniversityDialogComponent implements OnInit {
         private captureUniversityService: CaptureUniversityService,
         private captureCollegeService: CaptureCollegeService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.captureCollegeService
-            .query({filter: 'captureuniversity-is-null'})
-            .subscribe((res: HttpResponse<CaptureCollege[]>) => {
+        this.captureCollegeService.query({ filter: 'captureuniversity-is-null' }).subscribe(
+            (res: HttpResponse<CaptureCollege[]>) => {
                 if (!this.captureUniversity.capturecollege || !this.captureUniversity.capturecollege.id) {
                     this.capturecolleges = res.body;
                 } else {
-                    this.captureCollegeService
-                        .find(this.captureUniversity.capturecollege.id)
-                        .subscribe((subRes: HttpResponse<CaptureCollege>) => {
+                    this.captureCollegeService.find(this.captureUniversity.capturecollege.id).subscribe(
+                        (subRes: HttpResponse<CaptureCollege>) => {
                             this.capturecolleges = [subRes.body].concat(res.body);
-                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
                 }
-            }, (res: HttpErrorResponse) => this.onError(res.message));
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -55,21 +55,21 @@ export class CaptureUniversityDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.captureUniversity.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.captureUniversityService.update(this.captureUniversity));
+            this.subscribeToSaveResponse(this.captureUniversityService.update(this.captureUniversity));
         } else {
-            this.subscribeToSaveResponse(
-                this.captureUniversityService.create(this.captureUniversity));
+            this.subscribeToSaveResponse(this.captureUniversityService.create(this.captureUniversity));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<CaptureUniversity>>) {
-        result.subscribe((res: HttpResponse<CaptureUniversity>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<CaptureUniversity>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: CaptureUniversity) {
-        this.eventManager.broadcast({ name: 'captureUniversityListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'captureUniversityListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +92,16 @@ export class CaptureUniversityDialogComponent implements OnInit {
     template: ''
 })
 export class CaptureUniversityPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private captureUniversityPopupService: CaptureUniversityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private captureUniversityPopupService: CaptureUniversityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.captureUniversityPopupService
-                    .open(CaptureUniversityDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.captureUniversityPopupService.open(CaptureUniversityDialogComponent as Component, params['id']);
             } else {
-                this.captureUniversityPopupService
-                    .open(CaptureUniversityDialogComponent as Component);
+                this.captureUniversityPopupService.open(CaptureUniversityDialogComponent as Component);
             }
         });
     }

@@ -12,30 +12,23 @@ import { LanguageService } from './language.service';
     templateUrl: './language-detail.component.html'
 })
 export class LanguageDetailComponent implements OnInit, OnDestroy {
-
     language: Language;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private languageService: LanguageService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private languageService: LanguageService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInLanguages();
     }
 
     load(id) {
-        this.languageService.find(id)
-            .subscribe((languageResponse: HttpResponse<Language>) => {
-                this.language = languageResponse.body;
-            });
+        this.languageService.find(id).subscribe((languageResponse: HttpResponse<Language>) => {
+            this.language = languageResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class LanguageDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInLanguages() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'languageListModification',
-            (response) => this.load(this.language.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('languageListModification', response => this.load(this.language.id));
     }
 }

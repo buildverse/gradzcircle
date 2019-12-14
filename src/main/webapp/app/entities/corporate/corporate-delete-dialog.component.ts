@@ -13,22 +13,16 @@ import { CorporateService } from './corporate.service';
     templateUrl: './corporate-delete-dialog.component.html'
 })
 export class CorporateDeleteDialogComponent {
-
     corporate: Corporate;
 
-    constructor(
-        private corporateService: CorporateService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private corporateService: CorporateService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.corporateService.delete(id).subscribe((response) => {
+        this.corporateService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'corporateListModification',
                 content: 'Deleted an corporate'
@@ -43,18 +37,13 @@ export class CorporateDeleteDialogComponent {
     template: ''
 })
 export class CorporateDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private corporatePopupService: CorporatePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private corporatePopupService: CorporatePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.corporatePopupService
-                .open(CorporateDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.corporatePopupService.open(CorporateDeleteDialogComponent as Component, params['id']);
         });
     }
 

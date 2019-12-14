@@ -13,22 +13,16 @@ import { StatesService } from './states.service';
     templateUrl: './states-delete-dialog.component.html'
 })
 export class StatesDeleteDialogComponent {
-
     states: States;
 
-    constructor(
-        private statesService: StatesService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private statesService: StatesService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.statesService.delete(id).subscribe((response) => {
+        this.statesService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'statesListModification',
                 content: 'Deleted an states'
@@ -43,18 +37,13 @@ export class StatesDeleteDialogComponent {
     template: ''
 })
 export class StatesDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private statesPopupService: StatesPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private statesPopupService: StatesPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.statesPopupService
-                .open(StatesDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.statesPopupService.open(StatesDeleteDialogComponent as Component, params['id']);
         });
     }
 

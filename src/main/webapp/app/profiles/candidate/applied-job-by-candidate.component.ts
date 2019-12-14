@@ -86,7 +86,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
         this.jobService
             .queryAppliedJobsByCandidate({
                 page: this.page - 1,
-                //query: this.currentSearch,
+                // query: this.currentSearch,
                 size: this.itemsPerPage,
                 sort: this.sort(),
                 id: this.candidateId
@@ -161,7 +161,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
                             if (responseJson) {
                                 job.corporateUrl = responseJson[0].href + '?t=' + Math.random().toString();
                             } else {
-                                //this.noImage = true;
+                                // this.noImage = true;
                             }
                         }
                     });

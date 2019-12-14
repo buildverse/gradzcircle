@@ -12,7 +12,6 @@ import { CandidateProjectService } from './candidate-project.service';
     templateUrl: './candidate-project-detail.component.html'
 })
 export class CandidateProjectDetailComponent implements OnInit, OnDestroy {
-
     candidateProject: CandidateProject;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class CandidateProjectDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private candidateProjectService: CandidateProjectService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateProjects();
     }
 
     load(id) {
-        this.candidateProjectService.find(id)
-            .subscribe((candidateProjectResponse: HttpResponse<CandidateProject>) => {
-                this.candidateProject = candidateProjectResponse.body;
-            });
+        this.candidateProjectService.find(id).subscribe((candidateProjectResponse: HttpResponse<CandidateProject>) => {
+            this.candidateProject = candidateProjectResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,8 @@ export class CandidateProjectDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCandidateProjects() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateProjectListModification',
-            (response) => this.load(this.candidateProject.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateProjectListModification', response =>
+            this.load(this.candidateProject.id)
         );
     }
 }

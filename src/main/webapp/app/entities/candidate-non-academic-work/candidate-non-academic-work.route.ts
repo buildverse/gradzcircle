@@ -4,7 +4,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActiva
 import { JhiPaginationUtil } from 'ng-jhipster';
 import {
     CandidateNonAcademicWorkPopupComponent,
-    CandidateNonAcademicWorkPopupComponentNew
+    CandidateNonAcademicWorkPopupNewComponent
 } from './candidate-non-academic-work-dialog.component';
 
 import { CandidateNonAcademicWorkComponent } from './candidate-non-academic-work.component';
@@ -46,7 +46,7 @@ export const candidateNonAcademicWorkPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-non-academic-work',
-        component: CandidateNonAcademicWorkPopupComponentNew,
+        component: CandidateNonAcademicWorkPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateNonAcademicWork.home.title'

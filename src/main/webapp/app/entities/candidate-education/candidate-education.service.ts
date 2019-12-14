@@ -42,7 +42,7 @@ export class CandidateEducationService {
     }
 
     findEducationByCandidateId(id?: number): Observable<HttpResponse<CandidateEducation[]>> {
-        //const options = this.createRequestOption(req);
+        // const options = this.createRequestOption(req);
         return this.http
             .get<CandidateEducation[]>(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response' })
             .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
@@ -121,7 +121,7 @@ export class CandidateEducationService {
             .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
     }
 
-    //CONVERT SERVER RESPONSE TO ARAY BASED FOR NGX DISPLAY
+    // CONVERT SERVER RESPONSE TO ARAY BASED FOR NGX DISPLAY
 
     private convertEducationMetaForDisplay(candidateEducation: CandidateEducation) {
         const collegeArray = new Array();
@@ -133,7 +133,7 @@ export class CandidateEducationService {
         const courseArray = new Array();
         courseArray.push(candidateEducation.course);
         candidateEducation.course = courseArray;
-        //Manually setting these for ngb collapse on display
+        // Manually setting these for ngb collapse on display
         candidateEducation.collapsed = true;
         if (candidateEducation.projects) {
             candidateEducation.projects.forEach(project => {
@@ -142,7 +142,7 @@ export class CandidateEducationService {
         }
     }
 
-    //CONVERT FROM VALUE: DISPLAY: TO COLLEGE OBJECT- This is required to process data at server
+    // CONVERT FROM VALUE: DISPLAY: TO COLLEGE OBJECT- This is required to process data at server
     private convertEducationMetaForServer(candidateEducation: CandidateEducation) {
         const college = new College();
         const university = new University();

@@ -6,7 +6,7 @@ import { JhiPaginationUtil } from 'ng-jhipster';
 
 import { CandidateEmploymentComponent } from './candidate-employment.component';
 import { CandidateEmploymentDetailComponent } from './candidate-employment-detail.component';
-import { CandidateEmploymentPopupComponent, CandidateEmploymentPopupComponentNew } from './candidate-employment-dialog.component';
+import { CandidateEmploymentPopupComponent, CandidateEmploymentPopupNewComponent } from './candidate-employment-dialog.component';
 import { CandidateEmploymentDeletePopupComponent } from './candidate-employment-delete-dialog.component';
 
 export const candidateEmploymentRoute: Routes = [
@@ -43,7 +43,7 @@ export const candidateEmploymentPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-employment',
-        component: CandidateEmploymentPopupComponentNew,
+        component: CandidateEmploymentPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateEmployment.home.title'

@@ -12,30 +12,23 @@ import { SkillsService } from './skills.service';
     templateUrl: './skills-detail.component.html'
 })
 export class SkillsDetailComponent implements OnInit, OnDestroy {
-
     skills: Skills;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private skillsService: SkillsService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private skillsService: SkillsService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInSkills();
     }
 
     load(id) {
-        this.skillsService.find(id)
-            .subscribe((skillsResponse: HttpResponse<Skills>) => {
-                this.skills = skillsResponse.body;
-            });
+        this.skillsService.find(id).subscribe((skillsResponse: HttpResponse<Skills>) => {
+            this.skills = skillsResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class SkillsDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInSkills() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'skillsListModification',
-            (response) => this.load(this.skills.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('skillsListModification', response => this.load(this.skills.id));
     }
 }

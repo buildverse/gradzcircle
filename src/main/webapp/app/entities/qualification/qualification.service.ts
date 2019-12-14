@@ -10,54 +10,58 @@ export type EntityResponseType = HttpResponse<Qualification>;
 
 @Injectable()
 export class QualificationService {
-
-    private resourceUrl =  SERVER_API_URL + 'api/qualifications';
+    private resourceUrl = SERVER_API_URL + 'api/qualifications';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/qualifications';
     private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/qualificationsBySuggest';
-  
-    constructor(private http: HttpClient) { }
+
+    constructor(private http: HttpClient) {}
 
     create(qualification: Qualification): Observable<EntityResponseType> {
         const copy = this.convert(qualification);
-        return this.http.post<Qualification>(this.resourceUrl, copy, { observe: 'response' })
+        return this.http
+            .post<Qualification>(this.resourceUrl, copy, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     update(qualification: Qualification): Observable<EntityResponseType> {
         const copy = this.convert(qualification);
-        return this.http.put<Qualification>(this.resourceUrl, copy, { observe: 'response' })
+        return this.http
+            .put<Qualification>(this.resourceUrl, copy, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     find(id: number): Observable<EntityResponseType> {
-        return this.http.get<Qualification>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+        return this.http
+            .get<Qualification>(`${this.resourceUrl}/${id}`, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     query(req?: any): Observable<HttpResponse<Qualification[]>> {
         const options = createRequestOption(req);
-        return this.http.get<Qualification[]>(this.resourceUrl, { params: options, observe: 'response' })
+        return this.http
+            .get<Qualification[]>(this.resourceUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res));
     }
-    
+
     searchRemote(req?: any): Observable<HttpResponse<any>> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
-  }
+    }
 
     delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
     search(req?: any): Observable<HttpResponse<Qualification[]>> {
         const options = createRequestOption(req);
-        return this.http.get<Qualification[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+        return this.http
+            .get<Qualification[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {
         const body: Qualification = this.convertItemFromServer(res.body);
-        return res.clone({body});
+        return res.clone({ body });
     }
 
     private convertArrayResponse(res: HttpResponse<Qualification[]>): HttpResponse<Qualification[]> {
@@ -66,7 +70,7 @@ export class QualificationService {
         for (let i = 0; i < jsonResponse.length; i++) {
             body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return res.clone({body});
+        return res.clone({ body });
     }
 
     /**

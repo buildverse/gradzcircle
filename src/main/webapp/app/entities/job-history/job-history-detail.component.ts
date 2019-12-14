@@ -12,30 +12,23 @@ import { JobHistoryService } from './job-history.service';
     templateUrl: './job-history-detail.component.html'
 })
 export class JobHistoryDetailComponent implements OnInit, OnDestroy {
-
     jobHistory: JobHistory;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private jobHistoryService: JobHistoryService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private jobHistoryService: JobHistoryService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInJobHistories();
     }
 
     load(id) {
-        this.jobHistoryService.find(id)
-            .subscribe((jobHistoryResponse: HttpResponse<JobHistory>) => {
-                this.jobHistory = jobHistoryResponse.body;
-            });
+        this.jobHistoryService.find(id).subscribe((jobHistoryResponse: HttpResponse<JobHistory>) => {
+            this.jobHistory = jobHistoryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class JobHistoryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInJobHistories() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'jobHistoryListModification',
-            (response) => this.load(this.jobHistory.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('jobHistoryListModification', response => this.load(this.jobHistory.id));
     }
 }

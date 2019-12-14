@@ -13,22 +13,20 @@ import { EmployabilityService } from './employability.service';
     templateUrl: './employability-delete-dialog.component.html'
 })
 export class EmployabilityDeleteDialogComponent {
-
     employability: Employability;
 
     constructor(
         private employabilityService: EmployabilityService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.employabilityService.delete(id).subscribe((response) => {
+        this.employabilityService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'employabilityListModification',
                 content: 'Deleted an employability'
@@ -43,18 +41,13 @@ export class EmployabilityDeleteDialogComponent {
     template: ''
 })
 export class EmployabilityDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private employabilityPopupService: EmployabilityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private employabilityPopupService: EmployabilityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.employabilityPopupService
-                .open(EmployabilityDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.employabilityPopupService.open(EmployabilityDeleteDialogComponent as Component, params['id']);
         });
     }
 

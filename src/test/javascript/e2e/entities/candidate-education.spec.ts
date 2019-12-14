@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('CandidateEducation e2e test', () => {
-
     let navBarPage: NavBarPage;
     let candidateEducationDialogPage: CandidateEducationDialogPage;
     let candidateEducationComponentsPage: CandidateEducationComponentsPage;
@@ -18,16 +17,13 @@ describe('CandidateEducation e2e test', () => {
     it('should load CandidateEducations', () => {
         navBarPage.goToEntity('candidate-education');
         candidateEducationComponentsPage = new CandidateEducationComponentsPage();
-        expect(candidateEducationComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.candidateEducation.home.title/);
-
+        expect(candidateEducationComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateEducation.home.title/);
     });
 
     it('should load create CandidateEducation dialog', () => {
         candidateEducationComponentsPage.clickOnCreateButton();
         candidateEducationDialogPage = new CandidateEducationDialogPage();
-        expect(candidateEducationDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.candidateEducation.home.createOrEditLabel/);
+        expect(candidateEducationDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateEducation.home.createOrEditLabel/);
         candidateEducationDialogPage.close();
     });
 
@@ -39,26 +35,32 @@ describe('CandidateEducation e2e test', () => {
         expect(candidateEducationDialogPage.getEducationFromDateInput()).toMatch('2000-12-31');
         candidateEducationDialogPage.setEducationToDateInput('2000-12-31');
         expect(candidateEducationDialogPage.getEducationToDateInput()).toMatch('2000-12-31');
-        candidateEducationDialogPage.getIsPursuingEducationInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateEducationDialogPage.getIsPursuingEducationInput().click();
-                expect(candidateEducationDialogPage.getIsPursuingEducationInput().isSelected()).toBeFalsy();
-            } else {
-                candidateEducationDialogPage.getIsPursuingEducationInput().click();
-                expect(candidateEducationDialogPage.getIsPursuingEducationInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateEducationDialogPage
+            .getIsPursuingEducationInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateEducationDialogPage.getIsPursuingEducationInput().click();
+                    expect(candidateEducationDialogPage.getIsPursuingEducationInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateEducationDialogPage.getIsPursuingEducationInput().click();
+                    expect(candidateEducationDialogPage.getIsPursuingEducationInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateEducationDialogPage.setGradeScaleInput('5');
         expect(candidateEducationDialogPage.getGradeScaleInput()).toMatch('5');
-        candidateEducationDialogPage.getHighestQualificationInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateEducationDialogPage.getHighestQualificationInput().click();
-                expect(candidateEducationDialogPage.getHighestQualificationInput().isSelected()).toBeFalsy();
-            } else {
-                candidateEducationDialogPage.getHighestQualificationInput().click();
-                expect(candidateEducationDialogPage.getHighestQualificationInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateEducationDialogPage
+            .getHighestQualificationInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateEducationDialogPage.getHighestQualificationInput().click();
+                    expect(candidateEducationDialogPage.getHighestQualificationInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateEducationDialogPage.getHighestQualificationInput().click();
+                    expect(candidateEducationDialogPage.getHighestQualificationInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateEducationDialogPage.setRoundOfGradeInput('5');
         expect(candidateEducationDialogPage.getRoundOfGradeInput()).toMatch('5');
         candidateEducationDialogPage.setGradeDecimalInput('5');
@@ -242,7 +244,10 @@ export class CandidateEducationDialogPage {
     };
 
     candidateSelectLastOption = function() {
-        this.candidateSelect.all(by.tagName('option')).last().click();
+        this.candidateSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     candidateSelectOption = function(option) {
@@ -258,7 +263,10 @@ export class CandidateEducationDialogPage {
     };
 
     qualificationSelectLastOption = function() {
-        this.qualificationSelect.all(by.tagName('option')).last().click();
+        this.qualificationSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     qualificationSelectOption = function(option) {
@@ -274,7 +282,10 @@ export class CandidateEducationDialogPage {
     };
 
     courseSelectLastOption = function() {
-        this.courseSelect.all(by.tagName('option')).last().click();
+        this.courseSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     courseSelectOption = function(option) {
@@ -290,7 +301,10 @@ export class CandidateEducationDialogPage {
     };
 
     collegeSelectLastOption = function() {
-        this.collegeSelect.all(by.tagName('option')).last().click();
+        this.collegeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     collegeSelectOption = function(option) {

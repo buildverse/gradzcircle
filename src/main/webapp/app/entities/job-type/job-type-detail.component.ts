@@ -12,30 +12,23 @@ import { JobTypeService } from './job-type.service';
     templateUrl: './job-type-detail.component.html'
 })
 export class JobTypeDetailComponent implements OnInit, OnDestroy {
-
     jobType: JobType;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private jobTypeService: JobTypeService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private jobTypeService: JobTypeService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInJobTypes();
     }
 
     load(id) {
-        this.jobTypeService.find(id)
-            .subscribe((jobTypeResponse: HttpResponse<JobType>) => {
-                this.jobType = jobTypeResponse.body;
-            });
+        this.jobTypeService.find(id).subscribe((jobTypeResponse: HttpResponse<JobType>) => {
+            this.jobType = jobTypeResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class JobTypeDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInJobTypes() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'jobTypeListModification',
-            (response) => this.load(this.jobType.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('jobTypeListModification', response => this.load(this.jobType.id));
     }
 }

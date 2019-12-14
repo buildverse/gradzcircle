@@ -72,7 +72,7 @@ export const candidateProfileRoutes: Routes = [
                 },
                 canActivate: [UserRouteAccessService],
                 resolve: {
-                    //candidate: CandidateResolverService,
+                    // candidate: CandidateResolverService,
                     jobCategory: CandidateCareerInterestResolverService,
                     gender: CandidateGenderResolverService
                 },
@@ -97,7 +97,7 @@ export const candidateProfileRoutes: Routes = [
                 },
                 canActivate: [UserRouteAccessService],
                 resolve: {
-                    //candidate: CandidateResolverService
+                    // candidate: CandidateResolverService
                 },
                 outlet: 'contactSetting'
             }

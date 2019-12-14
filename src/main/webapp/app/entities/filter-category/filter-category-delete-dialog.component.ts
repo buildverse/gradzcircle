@@ -13,22 +13,20 @@ import { FilterCategoryService } from './filter-category.service';
     templateUrl: './filter-category-delete-dialog.component.html'
 })
 export class FilterCategoryDeleteDialogComponent {
-
     filterCategory: FilterCategory;
 
     constructor(
         private filterCategoryService: FilterCategoryService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.filterCategoryService.delete(id).subscribe((response) => {
+        this.filterCategoryService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'filterCategoryListModification',
                 content: 'Deleted an filterCategory'
@@ -43,18 +41,13 @@ export class FilterCategoryDeleteDialogComponent {
     template: ''
 })
 export class FilterCategoryDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private filterCategoryPopupService: FilterCategoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private filterCategoryPopupService: FilterCategoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.filterCategoryPopupService
-                .open(FilterCategoryDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.filterCategoryPopupService.open(FilterCategoryDeleteDialogComponent as Component, params['id']);
         });
     }
 

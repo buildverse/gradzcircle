@@ -200,7 +200,7 @@ export class JobDialogComponent implements OnInit {
     ) {
         this.isCourseRequired = true;
         this.isQualificationRequired = true;
-        //this.premium = false;
+        // this.premium = false;
         this.addOn = false;
         this.numberOfCandidateError = false;
         this.validPercentScore = true;
@@ -303,7 +303,7 @@ export class JobDialogComponent implements OnInit {
             this.prevTotalAmount = null;
         }
         this.escrowAmount = this.job.corporate.escrowAmount;
-        //console.log('Escrow on init is ' + this.escrowAmount);
+        // console.log('Escrow on init is ' + this.escrowAmount);
         this.principal.identity().then(account => (this.account = account));
     }
 
@@ -483,7 +483,7 @@ export class JobDialogComponent implements OnInit {
     }
 
     updateScoreCost() {
-        //console.log('score added ' + this.scoreAdded);
+        // console.log('score added ' + this.scoreAdded);
         if ((this.validPercentScore && this.percentage) || this.roundOfGrade) {
             if (!this.scoreAdded) {
                 this.scoreAdded = true;
@@ -546,7 +546,7 @@ export class JobDialogComponent implements OnInit {
             }
             this.clearScore();
         }
-        //console.log('Filter cost premium is ' + this.filterCost);
+        // console.log('Filter cost premium is ' + this.filterCost);
     }
 
     toggleAddOnFilter() {
@@ -563,7 +563,7 @@ export class JobDialogComponent implements OnInit {
                 this.updateGenderCost();
             }
         }
-        //console.log('Filter cost add on is ' + this.filterCost);
+        // console.log('Filter cost add on is ' + this.filterCost);
     }
 
     addQualificationCost() {
@@ -815,7 +815,7 @@ export class JobDialogComponent implements OnInit {
         this.setAmountPaid();
         // console.log('job cost chnaged' + this.jobDifferenceChanged);
         // console.log('job cost difference' + this.jobCostDifference);
-        //console.log('job costs'+this.job.jobCost);
+        // console.log('job costs'+this.job.jobCost);
     }
 
     clearDates() {
@@ -893,8 +893,8 @@ export class JobDialogComponent implements OnInit {
     }
 
     updateJobCost() {
-        //console.log('new filter cost is ' + this.filterCost);
-        //console.log('prev filter cost ' + this.prevFilterCost);
+        // console.log('new filter cost is ' + this.filterCost);
+        // console.log('prev filter cost ' + this.prevFilterCost);
         if (this.prevOriginalJobCost) {
             this.jobCostDifference = this.filterCost * this.job.noOfApplicants - this.prevNoOfApplicants * this.prevFilterCost;
             if (this.jobCostDifference < 0) {
@@ -918,7 +918,7 @@ export class JobDialogComponent implements OnInit {
                 this.filterCost = this.filterCost + value.employmentTypeCost;
             } else if (this.employmentTypeCost.length > 0) {
                 this.filterCost = this.filterCost - this.employmentTypeCost.pop();
-                //console.log('filter cost employment type ' + JSON.stringify(this.filterCost));
+                // console.log('filter cost employment type ' + JSON.stringify(this.filterCost));
                 this.employmentTypeCost.push(value.employmentTypeCost);
                 this.filterCost = this.filterCost + value.employmentTypeCost;
             }
@@ -1032,7 +1032,7 @@ export class JobDialogComponent implements OnInit {
             this.job.jobFilters.push(this.jobFilter);
         }
 
-        //console.log('job filter is ' + JSON.stringify(this.job.jobFilters));
+        // console.log('job filter is ' + JSON.stringify(this.job.jobFilters));
     }
 
     clearFilterDescription() {
@@ -1074,7 +1074,7 @@ export class JobDialogComponent implements OnInit {
     }
 
     revertDiscount() {
-        //console.log('the job cost in revert discount is ' + this.job.jobCost);
+        // console.log('the job cost in revert discount is ' + this.job.jobCost);
         this.job.upfrontDiscountAmount = null;
         this.job.upfrontDiscountRate = null;
         if (this.job.escrowAmountUsed) {
@@ -1093,7 +1093,7 @@ export class JobDialogComponent implements OnInit {
             this.job.originalJobCost = this.job.jobCost;
         }
         if (!this.job.hasBeenEdited && !this.jobCostDifference && this.job.everActive) {
-            //console.log('First if Amount payable is '+this.amountPayable);
+            // console.log('First if Amount payable is '+this.amountPayable);
             this.amountPayable = null;
         } else {
             if (this.jobCostDifference) {
@@ -1136,7 +1136,7 @@ export class JobDialogComponent implements OnInit {
     }
 
     calculateAdminCharge() {
-        //console.log('in cal admin charge');
+        // console.log('in cal admin charge');
         if (this.job.removedFilterAmount) {
             this.job.adminCharge = this.job.removedFilterAmount * this.filterMap.get(this.AMEND) / 100;
             this.job.adminChargeRate = this.filterMap.get(this.AMEND);
@@ -1186,7 +1186,7 @@ export class JobDialogComponent implements OnInit {
             }
         }
 
-        //console.log('Job ststaus is' + saveType);
+        // console.log('Job ststaus is' + saveType);
     }
 
     private jobFilterEquals(currentJob, previousJob) {
@@ -1199,7 +1199,7 @@ export class JobDialogComponent implements OnInit {
             equal(JSON.stringify(currentJob.jobType), JSON.stringify(previousJob.jobType)) &&
             equal(JSON.stringify(currentJob.noOfApplicants), JSON.stringify(previousJob.noOfApplicants))
         ) {
-            //console.log('filter equals');
+            // console.log('filter equals');
             this.isSaving = false;
             return true;
         } else {
@@ -1216,7 +1216,7 @@ export class JobDialogComponent implements OnInit {
             equal(JSON.stringify(currentJob.jobDescription), JSON.stringify(previousJob.jobDescription)) &&
             equal(JSON.stringify(currentJob.salary), JSON.stringify(previousJob.salary))
         ) {
-            //console.log('JOB equals');
+            // console.log('JOB equals');
             this.isSaving = false;
             return true;
         } else {
@@ -1241,9 +1241,9 @@ export class JobDialogComponent implements OnInit {
         }
         this.job = result;
         this.escrowAmount = this.job.corporate.escrowAmount;
-        // //console.log('result is ' + JSON.stringify(this.job));
+        // console.log('result is ' + JSON.stringify(this.job));
         this.prevJob = deepcopy(result);
-        //console.log('result is ' + JSON.stringify(this.job));
+        // console.log('result is ' + JSON.stringify(this.job));
         this.eventManager.broadcast({ name: 'jobListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
@@ -1253,7 +1253,7 @@ export class JobDialogComponent implements OnInit {
     }
 
     private onSaveError(error: any) {
-        //console.log('in error' + JSON.stringify(error));
+        // console.log('in error' + JSON.stringify(error));
         this.isSaving = false;
         this.spinnerService.hide();
         this.onError(error);
@@ -1355,7 +1355,7 @@ export class JobPopupComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.jobPopupService.open(JobDialogComponent as Component, params['id']);
             } else {
-                let id = this.dataStorageService.getData(JOB_ID);
+                const id = this.dataStorageService.getData(JOB_ID);
                 if (id) {
                     this.jobPopupService.open(JobDialogComponent as Component, id);
                 } else {
@@ -1374,7 +1374,7 @@ export class JobPopupComponent implements OnInit, OnDestroy {
     selector: 'jhi-job-popup',
     template: ''
 })
-export class JobPopupComponentNew implements OnInit, OnDestroy {
+export class JobPopupNewComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(
@@ -1388,7 +1388,7 @@ export class JobPopupComponentNew implements OnInit, OnDestroy {
             if (params['id']) {
                 this.jobPopupService.open(JobDialogComponent as Component, params['id']);
             } else {
-                let id = this.dataStorageService.getData(CORPORATE_ID);
+                const id = this.dataStorageService.getData(CORPORATE_ID);
                 /* if(!id) {
            id = this.dataStorageService.getData(USER_ID);
          }*/

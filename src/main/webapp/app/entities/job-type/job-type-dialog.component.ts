@@ -15,16 +15,10 @@ import { JobTypeService } from './job-type.service';
     templateUrl: './job-type-dialog.component.html'
 })
 export class JobTypeDialogComponent implements OnInit {
-
     jobType: JobType;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private jobTypeService: JobTypeService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private jobTypeService: JobTypeService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class JobTypeDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.jobType.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.jobTypeService.update(this.jobType));
+            this.subscribeToSaveResponse(this.jobTypeService.update(this.jobType));
         } else {
-            this.subscribeToSaveResponse(
-                this.jobTypeService.create(this.jobType));
+            this.subscribeToSaveResponse(this.jobTypeService.create(this.jobType));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<JobType>>) {
-        result.subscribe((res: HttpResponse<JobType>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<JobType>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: JobType) {
-        this.eventManager.broadcast({ name: 'jobTypeListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'jobTypeListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class JobTypeDialogComponent implements OnInit {
     template: ''
 })
 export class JobTypePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobTypePopupService: JobTypePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobTypePopupService: JobTypePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.jobTypePopupService
-                    .open(JobTypeDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.jobTypePopupService.open(JobTypeDialogComponent as Component, params['id']);
             } else {
-                this.jobTypePopupService
-                    .open(JobTypeDialogComponent as Component);
+                this.jobTypePopupService.open(JobTypeDialogComponent as Component);
             }
         });
     }

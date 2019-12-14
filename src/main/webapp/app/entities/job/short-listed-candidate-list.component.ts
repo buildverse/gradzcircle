@@ -85,7 +85,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
         this.jobService
             .queryShortListedCandidatesForJob({
                 page: this.page - 1,
-                //query: this.currentSearch,
+                // query: this.currentSearch,
                 size: this.itemsPerPage,
                 sort: this.sort(),
                 id: this.jobId
@@ -158,7 +158,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
                         if (responseJson) {
                             candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
                         } else {
-                            //this.noImage = true;
+                            // this.noImage = true;
                         }
                     }
                 });

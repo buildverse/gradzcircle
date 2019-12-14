@@ -24,7 +24,7 @@ export class CorporatePopupService {
                 this.corporateService.find(id).subscribe((corporateResponse: HttpResponse<Corporate>) => {
                     const corporate: Corporate = corporateResponse.body;
                     if (corporate.establishedSince) {
-                        //corporate.establishedSince = corporate.establishedSince.format(DATE_FORMAT);
+                        // corporate.establishedSince = corporate.establishedSince.format(DATE_FORMAT);
                         //  console.log('Date in pop up from server is '+corporate.establishedSince);
                         const d = new Date(corporate.establishedSince);
                         //    console.log('Date from server is now ' + d);

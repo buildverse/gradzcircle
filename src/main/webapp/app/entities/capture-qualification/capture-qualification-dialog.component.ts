@@ -16,7 +16,6 @@ import { CandidateEducation, CandidateEducationService } from '../candidate-educ
     templateUrl: './capture-qualification-dialog.component.html'
 })
 export class CaptureQualificationDialogComponent implements OnInit {
-
     captureQualification: CaptureQualification;
     isSaving: boolean;
 
@@ -28,24 +27,25 @@ export class CaptureQualificationDialogComponent implements OnInit {
         private captureQualificationService: CaptureQualificationService,
         private candidateEducationService: CandidateEducationService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.candidateEducationService
-            .query({filter: 'capturequalification-is-null'})
-            .subscribe((res: HttpResponse<CandidateEducation[]>) => {
+        this.candidateEducationService.query({ filter: 'capturequalification-is-null' }).subscribe(
+            (res: HttpResponse<CandidateEducation[]>) => {
                 if (!this.captureQualification.candidateEducation || !this.captureQualification.candidateEducation.id) {
                     this.candidateeducations = res.body;
                 } else {
-                    this.candidateEducationService
-                        .find(this.captureQualification.candidateEducation.id)
-                        .subscribe((subRes: HttpResponse<CandidateEducation>) => {
+                    this.candidateEducationService.find(this.captureQualification.candidateEducation.id).subscribe(
+                        (subRes: HttpResponse<CandidateEducation>) => {
                             this.candidateeducations = [subRes.body].concat(res.body);
-                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
                 }
-            }, (res: HttpErrorResponse) => this.onError(res.message));
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -55,21 +55,21 @@ export class CaptureQualificationDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.captureQualification.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.captureQualificationService.update(this.captureQualification));
+            this.subscribeToSaveResponse(this.captureQualificationService.update(this.captureQualification));
         } else {
-            this.subscribeToSaveResponse(
-                this.captureQualificationService.create(this.captureQualification));
+            this.subscribeToSaveResponse(this.captureQualificationService.create(this.captureQualification));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<CaptureQualification>>) {
-        result.subscribe((res: HttpResponse<CaptureQualification>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<CaptureQualification>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: CaptureQualification) {
-        this.eventManager.broadcast({ name: 'captureQualificationListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'captureQualificationListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +92,16 @@ export class CaptureQualificationDialogComponent implements OnInit {
     template: ''
 })
 export class CaptureQualificationPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private captureQualificationPopupService: CaptureQualificationPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private captureQualificationPopupService: CaptureQualificationPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.captureQualificationPopupService
-                    .open(CaptureQualificationDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.captureQualificationPopupService.open(CaptureQualificationDialogComponent as Component, params['id']);
             } else {
-                this.captureQualificationPopupService
-                    .open(CaptureQualificationDialogComponent as Component);
+                this.captureQualificationPopupService.open(CaptureQualificationDialogComponent as Component);
             }
         });
     }

@@ -15,7 +15,6 @@ export class JobHistoryPopupService {
         private modalService: NgbModal,
         private router: Router,
         private jobHistoryService: JobHistoryService
-
     ) {
         this.ngbModalRef = null;
     }
@@ -28,16 +27,13 @@ export class JobHistoryPopupService {
             }
 
             if (id) {
-                this.jobHistoryService.find(id)
-                    .subscribe((jobHistoryResponse: HttpResponse<JobHistory>) => {
-                        const jobHistory: JobHistory = jobHistoryResponse.body;
-                        jobHistory.createDate = this.datePipe
-                            .transform(jobHistory.createDate, 'yyyy-MM-ddTHH:mm:ss');
-                        jobHistory.updateDate = this.datePipe
-                            .transform(jobHistory.updateDate, 'yyyy-MM-ddTHH:mm:ss');
-                        this.ngbModalRef = this.jobHistoryModalRef(component, jobHistory);
-                        resolve(this.ngbModalRef);
-                    });
+                this.jobHistoryService.find(id).subscribe((jobHistoryResponse: HttpResponse<JobHistory>) => {
+                    const jobHistory: JobHistory = jobHistoryResponse.body;
+                    jobHistory.createDate = this.datePipe.transform(jobHistory.createDate, 'yyyy-MM-ddTHH:mm:ss');
+                    jobHistory.updateDate = this.datePipe.transform(jobHistory.updateDate, 'yyyy-MM-ddTHH:mm:ss');
+                    this.ngbModalRef = this.jobHistoryModalRef(component, jobHistory);
+                    resolve(this.ngbModalRef);
+                });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -49,15 +45,18 @@ export class JobHistoryPopupService {
     }
 
     jobHistoryModalRef(component: Component, jobHistory: JobHistory): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.jobHistory = jobHistory;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

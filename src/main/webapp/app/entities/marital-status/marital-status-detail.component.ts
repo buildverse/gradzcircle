@@ -12,30 +12,23 @@ import { MaritalStatusService } from './marital-status.service';
     templateUrl: './marital-status-detail.component.html'
 })
 export class MaritalStatusDetailComponent implements OnInit, OnDestroy {
-
     maritalStatus: MaritalStatus;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private maritalStatusService: MaritalStatusService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private maritalStatusService: MaritalStatusService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInMaritalStatuses();
     }
 
     load(id) {
-        this.maritalStatusService.find(id)
-            .subscribe((maritalStatusResponse: HttpResponse<MaritalStatus>) => {
-                this.maritalStatus = maritalStatusResponse.body;
-            });
+        this.maritalStatusService.find(id).subscribe((maritalStatusResponse: HttpResponse<MaritalStatus>) => {
+            this.maritalStatus = maritalStatusResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class MaritalStatusDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInMaritalStatuses() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'maritalStatusListModification',
-            (response) => this.load(this.maritalStatus.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('maritalStatusListModification', response => this.load(this.maritalStatus.id));
     }
 }

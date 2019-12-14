@@ -109,7 +109,7 @@ export class CollegeComponent implements OnInit, OnDestroy {
             .subscribe(
                 (res: HttpResponse<College[]>) => {
                     this.onSuccess(res.body, res.headers);
-                    //this.currentSearch = '';
+                    // this.currentSearch = '';
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );

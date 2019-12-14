@@ -15,16 +15,10 @@ import { StatesService } from './states.service';
     templateUrl: './states-dialog.component.html'
 })
 export class StatesDialogComponent implements OnInit {
-
     states: States;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private statesService: StatesService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private statesService: StatesService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class StatesDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.states.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.statesService.update(this.states));
+            this.subscribeToSaveResponse(this.statesService.update(this.states));
         } else {
-            this.subscribeToSaveResponse(
-                this.statesService.create(this.states));
+            this.subscribeToSaveResponse(this.statesService.create(this.states));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<States>>) {
-        result.subscribe((res: HttpResponse<States>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<States>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: States) {
-        this.eventManager.broadcast({ name: 'statesListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'statesListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class StatesDialogComponent implements OnInit {
     template: ''
 })
 export class StatesPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private statesPopupService: StatesPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private statesPopupService: StatesPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.statesPopupService
-                    .open(StatesDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.statesPopupService.open(StatesDialogComponent as Component, params['id']);
             } else {
-                this.statesPopupService
-                    .open(StatesDialogComponent as Component);
+                this.statesPopupService.open(StatesDialogComponent as Component);
             }
         });
     }

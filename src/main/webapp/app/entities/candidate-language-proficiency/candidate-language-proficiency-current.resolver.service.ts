@@ -17,20 +17,20 @@ export class CandidateLanguageResolverService implements Resolve<HttpResponse<Ca
     ) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<HttpResponse<CandidateLanguageProficiency[]>> {
-        //this.id = route.params.id;
+        // this.id = route.params.id;
         this.id = this.dataService.getData(CANDIDATE_ID);
         return this.candidateLanguageProficiencyService
             .findByCandidateId(this.id)
             .map(this.extractData)
             .catch((error: any) => {
-                //console.log(`${error}`);
+                // console.log(`${error}`);
                 this.router.navigate(['/error']);
                 return Observable.of(null);
             });
     }
 
     private extractData(response: HttpResponse<CandidateLanguageProficiency[]>) {
-        let body = response.body;
+        const body = response.body;
         return body || {};
     }
 }

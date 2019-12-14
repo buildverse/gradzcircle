@@ -12,7 +12,6 @@ import { FilterCategoryService } from './filter-category.service';
     templateUrl: './filter-category-detail.component.html'
 })
 export class FilterCategoryDetailComponent implements OnInit, OnDestroy {
-
     filterCategory: FilterCategory;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class FilterCategoryDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private filterCategoryService: FilterCategoryService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInFilterCategories();
     }
 
     load(id) {
-        this.filterCategoryService.find(id)
-            .subscribe((filterCategoryResponse: HttpResponse<FilterCategory>) => {
-                this.filterCategory = filterCategoryResponse.body;
-            });
+        this.filterCategoryService.find(id).subscribe((filterCategoryResponse: HttpResponse<FilterCategory>) => {
+            this.filterCategory = filterCategoryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,6 @@ export class FilterCategoryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInFilterCategories() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'filterCategoryListModification',
-            (response) => this.load(this.filterCategory.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('filterCategoryListModification', response => this.load(this.filterCategory.id));
     }
 }

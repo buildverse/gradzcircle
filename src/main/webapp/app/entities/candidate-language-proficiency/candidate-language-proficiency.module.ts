@@ -15,7 +15,7 @@ import {
     CandidateLanguageProficiencyDeleteDialogComponent,
     candidateLanguageProficiencyRoute,
     candidateLanguageProficiencyPopupRoute,
-    CandidateLanguageProficiencyPopupComponentNew,
+    CandidateLanguageProficiencyPopupNewComponent,
     CandidateLanguageResolverService
 } from './';
 
@@ -29,14 +29,14 @@ const ENTITY_STATES = [...candidateLanguageProficiencyRoute, ...candidateLanguag
         CandidateLanguageProficiencyDialogComponent,
         CandidateLanguageProficiencyDeleteDialogComponent,
         CandidateLanguageProficiencyPopupComponent,
-        CandidateLanguageProficiencyPopupComponentNew,
+        CandidateLanguageProficiencyPopupNewComponent,
         CandidateLanguageProficiencyDeletePopupComponent
     ],
     entryComponents: [
         CandidateLanguageProficiencyComponent,
         CandidateLanguageProficiencyDialogComponent,
         CandidateLanguageProficiencyPopupComponent,
-        CandidateLanguageProficiencyPopupComponentNew,
+        CandidateLanguageProficiencyPopupNewComponent,
         CandidateLanguageProficiencyDeleteDialogComponent,
         CandidateLanguageProficiencyDeletePopupComponent
     ],

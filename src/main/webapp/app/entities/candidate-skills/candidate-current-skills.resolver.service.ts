@@ -17,14 +17,14 @@ export class CandidateCurrentSkillsResolverService implements Resolve<HttpRespon
             .findSkillsByCandidateId(this.id)
             .map(this.extractData)
             .catch((error: any) => {
-                //console.log(`${error}`);
+                // console.log(`${error}`);
                 this.router.navigate(['/error']);
                 return Observable.of(null);
             });
     }
 
     private extractData(response: HttpResponse<CandidateSkills[]>) {
-        let body = response.body;
+        const body = response.body;
         return body || {};
     }
 }

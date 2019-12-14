@@ -172,7 +172,7 @@ export class CandidateSkillsPopupComponent implements OnInit, OnDestroy {
     selector: 'jhi-candidate-skills-popup',
     template: ''
 })
-export class CandidateSkillsPopupComponentNew implements OnInit, OnDestroy {
+export class CandidateSkillsPopupNewComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(

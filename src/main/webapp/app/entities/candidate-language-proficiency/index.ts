@@ -8,4 +8,3 @@ export * from './candidate-language-proficiency-detail.component';
 export * from './candidate-language-proficiency.component';
 export * from './candidate-language-proficiency.route';
 export * from './candidate-language-proficiency-current.resolver.service';
-

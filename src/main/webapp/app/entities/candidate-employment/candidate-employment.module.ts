@@ -13,7 +13,7 @@ import {
     CandidateEmploymentDeleteDialogComponent,
     candidateEmploymentRoute,
     candidateEmploymentPopupRoute,
-    CandidateEmploymentPopupComponentNew,
+    CandidateEmploymentPopupNewComponent,
     CandidateEmploymentPopupServiceNew
 } from './';
 
@@ -28,7 +28,7 @@ const ENTITY_STATES = [...candidateEmploymentRoute, ...candidateEmploymentPopupR
         CandidateEmploymentDeleteDialogComponent,
         CandidateEmploymentPopupComponent,
         CandidateEmploymentDeletePopupComponent,
-        CandidateEmploymentPopupComponentNew
+        CandidateEmploymentPopupNewComponent
     ],
     entryComponents: [
         CandidateEmploymentComponent,
@@ -36,7 +36,7 @@ const ENTITY_STATES = [...candidateEmploymentRoute, ...candidateEmploymentPopupR
         CandidateEmploymentPopupComponent,
         CandidateEmploymentDeleteDialogComponent,
         CandidateEmploymentDeletePopupComponent,
-        CandidateEmploymentPopupComponentNew
+        CandidateEmploymentPopupNewComponent
     ],
     providers: [CandidateEmploymentService, CandidateEmploymentPopupService, CandidateEmploymentPopupServiceNew, DataStorageService],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

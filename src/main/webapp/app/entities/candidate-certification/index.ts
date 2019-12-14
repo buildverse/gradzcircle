@@ -7,4 +7,3 @@ export * from './candidate-certification-detail.component';
 export * from './candidate-certification.component';
 export * from './candidate-certification.route';
 export * from './candidate-certification-popup-new.service';
-

@@ -2,7 +2,7 @@ import { UserRouteAccessService } from '../../core/auth/user-route-access-servic
 import { Routes } from '@angular/router';
 import { CandidateCertificationComponent } from './candidate-certification.component';
 import { CandidateCertificationDetailComponent } from './candidate-certification-detail.component';
-import { CandidateCertificationPopupComponent, CandidateCertificationPopupComponentNew } from './candidate-certification-dialog.component';
+import { CandidateCertificationPopupComponent, CandidateCertificationPopupNewComponent } from './candidate-certification-dialog.component';
 import { CandidateCertificationDeletePopupComponent } from './candidate-certification-delete-dialog.component';
 
 export const candidateCertificationRoute: Routes = [
@@ -39,7 +39,7 @@ export const candidateCertificationPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-certification',
-        component: CandidateCertificationPopupComponentNew,
+        component: CandidateCertificationPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateEmployment.home.title'

@@ -15,22 +15,20 @@ import { CandidateProjectService } from './candidate-project.service';
     templateUrl: './candidate-project-delete-dialog.component.html'
 })
 export class CandidateProjectDeleteDialogComponent {
-
     candidateProject: CandidateProject;
 
     constructor(
         private candidateProjectService: CandidateProjectService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.candidateProjectService.delete(id).subscribe((response) => {
+        this.candidateProjectService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'candidateProjectListModification',
                 content: 'Deleted an candidateProject'
@@ -45,7 +43,6 @@ export class CandidateProjectDeleteDialogComponent {
     template: ''
 })
 export class CandidateProjectDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
     constructor(
@@ -55,14 +52,15 @@ export class CandidateProjectDeletePopupComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-          if(params['id']) {
-            this.candidateProjectPopupService
-                .open(CandidateProjectDeleteDialogComponent as Component, params['id']);
-          } else if (this.dataStorageService.getData(CANDIDATE_PROJECT_ID)) {
-            this.candidateProjectPopupService
-                .open(CandidateProjectDeleteDialogComponent as Component, this.dataStorageService.getData(CANDIDATE_PROJECT_ID));
-          }
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.candidateProjectPopupService.open(CandidateProjectDeleteDialogComponent as Component, params['id']);
+            } else if (this.dataStorageService.getData(CANDIDATE_PROJECT_ID)) {
+                this.candidateProjectPopupService.open(
+                    CandidateProjectDeleteDialogComponent as Component,
+                    this.dataStorageService.getData(CANDIDATE_PROJECT_ID)
+                );
+            }
         });
     }
 

@@ -13,22 +13,16 @@ import { GenderService } from './gender.service';
     templateUrl: './gender-delete-dialog.component.html'
 })
 export class GenderDeleteDialogComponent {
-
     gender: Gender;
 
-    constructor(
-        private genderService: GenderService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private genderService: GenderService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.genderService.delete(id).subscribe((response) => {
+        this.genderService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'genderListModification',
                 content: 'Deleted an gender'
@@ -43,18 +37,13 @@ export class GenderDeleteDialogComponent {
     template: ''
 })
 export class GenderDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private genderPopupService: GenderPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private genderPopupService: GenderPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.genderPopupService
-                .open(GenderDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.genderPopupService.open(GenderDeleteDialogComponent as Component, params['id']);
         });
     }
 

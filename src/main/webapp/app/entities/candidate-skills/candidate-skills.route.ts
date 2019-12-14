@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { CandidateCurrentSkillsResolverService } from './candidate-current-skills.resolver.service';
 import { CandidateSkillsComponent } from './candidate-skills.component';
 import { CandidateSkillsDetailComponent } from './candidate-skills-detail.component';
-import { CandidateSkillsPopupComponent, CandidateSkillsPopupComponentNew } from './candidate-skills-dialog.component';
+import { CandidateSkillsPopupComponent, CandidateSkillsPopupNewComponent } from './candidate-skills-dialog.component';
 import { CandidateSkillsDeletePopupComponent } from './candidate-skills-delete-dialog.component';
 
 export const candidateSkillsRoute: Routes = [
@@ -40,7 +40,7 @@ export const candidateSkillsPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-skill',
-        component: CandidateSkillsPopupComponentNew,
+        component: CandidateSkillsPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'radzcircleApp.candidateSkills.home.title'

@@ -11,32 +11,23 @@ import { CorporateService } from './corporate.service';
     templateUrl: './corporate-detail.component.html'
 })
 export class CorporateDetailComponent implements OnInit, OnDestroy {
-
     corporate: Corporate;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private corporateService: CorporateService,
-        private route: ActivatedRoute
-       
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private corporateService: CorporateService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-      this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
-   
         this.registerChangeInCorporates();
     }
 
     load(id) {
-         this.corporateService.find(id)
-            .subscribe((corporateResponse: HttpResponse<Corporate>) => {
-                this.corporate = corporateResponse.body;
-            });
+        this.corporateService.find(id).subscribe((corporateResponse: HttpResponse<Corporate>) => {
+            this.corporate = corporateResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -48,9 +39,6 @@ export class CorporateDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCorporates() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'corporateListModification',
-            (response) => this.load(this.corporate.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('corporateListModification', response => this.load(this.corporate.id));
     }
 }

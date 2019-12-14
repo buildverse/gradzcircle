@@ -13,22 +13,20 @@ import { NationalityService } from './nationality.service';
     templateUrl: './nationality-delete-dialog.component.html'
 })
 export class NationalityDeleteDialogComponent {
-
     nationality: Nationality;
 
     constructor(
         private nationalityService: NationalityService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.nationalityService.delete(id).subscribe((response) => {
+        this.nationalityService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'nationalityListModification',
                 content: 'Deleted an nationality'
@@ -43,18 +41,13 @@ export class NationalityDeleteDialogComponent {
     template: ''
 })
 export class NationalityDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private nationalityPopupService: NationalityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private nationalityPopupService: NationalityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.nationalityPopupService
-                .open(NationalityDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.nationalityPopupService.open(NationalityDeleteDialogComponent as Component, params['id']);
         });
     }
 

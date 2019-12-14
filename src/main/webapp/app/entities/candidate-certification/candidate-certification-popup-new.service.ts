@@ -15,7 +15,6 @@ export class CandidateCertificationPopupServiceNew {
         private modalService: NgbModal,
         private router: Router,
         private candidateCertificationService: CandidateCertificationService
-
     ) {}
 
     open(component: Component, id?: number | any): Promise<NgbModalRef> {
@@ -24,29 +23,31 @@ export class CandidateCertificationPopupServiceNew {
             if (isOpen) {
                 resolve(this.ngbModalRef);
             }
-        this.isOpen = true;
-        this.candidateCertification = new CandidateCertification();
-        this.candidate = new Candidate();
-        this.candidate.id = id;
-        this.candidateCertification.candidate = this.candidate;
-        setTimeout(() => {
-                    this.ngbModalRef = this.candidateCertificationModalRef(component, this.candidateCertification);
-                    resolve(this.ngbModalRef);
-                }, 0);
-        
+            this.isOpen = true;
+            this.candidateCertification = new CandidateCertification();
+            this.candidate = new Candidate();
+            this.candidate.id = id;
+            this.candidateCertification.candidate = this.candidate;
+            setTimeout(() => {
+                this.ngbModalRef = this.candidateCertificationModalRef(component, this.candidateCertification);
+                resolve(this.ngbModalRef);
+            }, 0);
         });
     }
 
     candidateCertificationModalRef(component: Component, candidateCertification: CandidateCertification): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateCertification = candidateCertification;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.isOpen = false;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
-            this.isOpen = false;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            }
+        );
         return modalRef;
     }
 }

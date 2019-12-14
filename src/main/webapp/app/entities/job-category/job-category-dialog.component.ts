@@ -16,7 +16,6 @@ import { Candidate, CandidateService } from '../candidate';
     templateUrl: './job-category-dialog.component.html'
 })
 export class JobCategoryDialogComponent implements OnInit {
-
     jobCategory: JobCategory;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class JobCategoryDialogComponent implements OnInit {
         private jobCategoryService: JobCategoryService,
         private candidateService: CandidateService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.candidateService.query()
-            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.candidateService.query().subscribe(
+            (res: HttpResponse<Candidate[]>) => {
+                this.candidates = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,18 @@ export class JobCategoryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.jobCategory.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.jobCategoryService.update(this.jobCategory));
+            this.subscribeToSaveResponse(this.jobCategoryService.update(this.jobCategory));
         } else {
-            this.subscribeToSaveResponse(
-                this.jobCategoryService.create(this.jobCategory));
+            this.subscribeToSaveResponse(this.jobCategoryService.create(this.jobCategory));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<JobCategory>>) {
-        result.subscribe((res: HttpResponse<JobCategory>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<JobCategory>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: JobCategory) {
-        this.eventManager.broadcast({ name: 'jobCategoryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'jobCategoryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +91,16 @@ export class JobCategoryDialogComponent implements OnInit {
     template: ''
 })
 export class JobCategoryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobCategoryPopupService: JobCategoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobCategoryPopupService: JobCategoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.jobCategoryPopupService
-                    .open(JobCategoryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.jobCategoryPopupService.open(JobCategoryDialogComponent as Component, params['id']);
             } else {
-                this.jobCategoryPopupService
-                    .open(JobCategoryDialogComponent as Component);
+                this.jobCategoryPopupService.open(JobCategoryDialogComponent as Component);
             }
         });
     }

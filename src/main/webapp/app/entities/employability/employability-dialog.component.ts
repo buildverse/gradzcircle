@@ -15,7 +15,6 @@ import { EmployabilityService } from './employability.service';
     templateUrl: './employability-dialog.component.html'
 })
 export class EmployabilityDialogComponent implements OnInit {
-
     employability: Employability;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class EmployabilityDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private employabilityService: EmployabilityService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,21 @@ export class EmployabilityDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.employability.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.employabilityService.update(this.employability));
+            this.subscribeToSaveResponse(this.employabilityService.update(this.employability));
         } else {
-            this.subscribeToSaveResponse(
-                this.employabilityService.create(this.employability));
+            this.subscribeToSaveResponse(this.employabilityService.create(this.employability));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Employability>>) {
-        result.subscribe((res: HttpResponse<Employability>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<Employability>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: Employability) {
-        this.eventManager.broadcast({ name: 'employabilityListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'employabilityListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +64,16 @@ export class EmployabilityDialogComponent implements OnInit {
     template: ''
 })
 export class EmployabilityPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private employabilityPopupService: EmployabilityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private employabilityPopupService: EmployabilityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.employabilityPopupService
-                    .open(EmployabilityDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.employabilityPopupService.open(EmployabilityDialogComponent as Component, params['id']);
             } else {
-                this.employabilityPopupService
-                    .open(EmployabilityDialogComponent as Component);
+                this.employabilityPopupService.open(EmployabilityDialogComponent as Component);
             }
         });
     }

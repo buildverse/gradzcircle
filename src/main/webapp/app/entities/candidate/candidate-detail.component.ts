@@ -12,30 +12,23 @@ import { CandidateService } from './candidate.service';
     templateUrl: './candidate-detail.component.html'
 })
 export class CandidateDetailComponent implements OnInit, OnDestroy {
-
     candidate: Candidate;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private candidateService: CandidateService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private candidateService: CandidateService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidates();
     }
 
     load(id) {
-        this.candidateService.find(id)
-            .subscribe((candidateResponse: HttpResponse<Candidate>) => {
-                this.candidate = candidateResponse.body;
-            });
+        this.candidateService.find(id).subscribe((candidateResponse: HttpResponse<Candidate>) => {
+            this.candidate = candidateResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class CandidateDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCandidates() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateListModification',
-            (response) => this.load(this.candidate.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('candidateListModification', response => this.load(this.candidate.id));
     }
 }

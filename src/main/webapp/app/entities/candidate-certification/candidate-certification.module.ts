@@ -14,7 +14,7 @@ import {
     candidateCertificationRoute,
     candidateCertificationPopupRoute,
     CandidateCertification,
-    CandidateCertificationPopupComponentNew,
+    CandidateCertificationPopupNewComponent,
     CandidateCertificationPopupServiceNew
 } from './';
 
@@ -29,7 +29,7 @@ const ENTITY_STATES = [...candidateCertificationRoute, ...candidateCertification
         CandidateCertificationDeleteDialogComponent,
         CandidateCertificationPopupComponent,
         CandidateCertificationDeletePopupComponent,
-        CandidateCertificationPopupComponentNew
+        CandidateCertificationPopupNewComponent
     ],
     entryComponents: [
         CandidateCertificationComponent,
@@ -37,7 +37,7 @@ const ENTITY_STATES = [...candidateCertificationRoute, ...candidateCertification
         CandidateCertificationPopupComponent,
         CandidateCertificationDeleteDialogComponent,
         CandidateCertificationDeletePopupComponent,
-        CandidateCertificationPopupComponentNew
+        CandidateCertificationPopupNewComponent
     ],
     providers: [
         CandidateCertificationService,

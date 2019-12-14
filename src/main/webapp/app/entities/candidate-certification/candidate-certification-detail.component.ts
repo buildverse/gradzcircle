@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
+import { JhiEventManager } from 'ng-jhipster';
 import { HttpResponse } from '@angular/common/http';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
@@ -11,7 +11,6 @@ import { CandidateCertificationService } from './candidate-certification.service
     templateUrl: './candidate-certification-detail.component.html'
 })
 export class CandidateCertificationDetailComponent implements OnInit, OnDestroy {
-
     candidateCertification: CandidateCertification;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -20,22 +19,19 @@ export class CandidateCertificationDetailComponent implements OnInit, OnDestroy 
         private eventManager: JhiEventManager,
         private candidateCertificationService: CandidateCertificationService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateCertifications();
     }
 
     load(id) {
-         this.candidateCertificationService.find(id)
-            .subscribe((candidateCertificationResponse: HttpResponse<CandidateCertification>) => {
-                this.candidateCertification = candidateCertificationResponse.body;
-            });
-
+        this.candidateCertificationService.find(id).subscribe((candidateCertificationResponse: HttpResponse<CandidateCertification>) => {
+            this.candidateCertification = candidateCertificationResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +43,8 @@ export class CandidateCertificationDetailComponent implements OnInit, OnDestroy 
     }
 
     registerChangeInCandidateCertifications() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateCertificationListModification',
-            (response) => this.load(this.candidateCertification.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateCertificationListModification', response =>
+            this.load(this.candidateCertification.id)
         );
     }
 }

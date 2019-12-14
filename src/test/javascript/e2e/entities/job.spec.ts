@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('Job e2e test', () => {
-
     let navBarPage: NavBarPage;
     let jobDialogPage: JobDialogPage;
     let jobComponentsPage: JobComponentsPage;
@@ -18,16 +17,13 @@ describe('Job e2e test', () => {
     it('should load Jobs', () => {
         navBarPage.goToEntity('job');
         jobComponentsPage = new JobComponentsPage();
-        expect(jobComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.job.home.title/);
-
+        expect(jobComponentsPage.getTitle()).toMatch(/gradzcircleApp.job.home.title/);
     });
 
     it('should load create Job dialog', () => {
         jobComponentsPage.clickOnCreateButton();
         jobDialogPage = new JobDialogPage();
-        expect(jobDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.job.home.createOrEditLabel/);
+        expect(jobDialogPage.getModalTitle()).toMatch(/gradzcircleApp.job.home.createOrEditLabel/);
         jobDialogPage.close();
     });
 
@@ -72,33 +68,42 @@ describe('Job e2e test', () => {
         jobDialogPage.setEscrowAmountAddedInput('5');
         expect(jobDialogPage.getEscrowAmountAddedInput()).toMatch('5');
         jobDialogPage.paymentTypeSelectLastOption();
-        jobDialogPage.getHasBeenEditedInput().isSelected().then((selected) => {
-            if (selected) {
-                jobDialogPage.getHasBeenEditedInput().click();
-                expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeFalsy();
-            } else {
-                jobDialogPage.getHasBeenEditedInput().click();
-                expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeTruthy();
-            }
-        });
-        jobDialogPage.getEverActiveInput().isSelected().then((selected) => {
-            if (selected) {
-                jobDialogPage.getEverActiveInput().click();
-                expect(jobDialogPage.getEverActiveInput().isSelected()).toBeFalsy();
-            } else {
-                jobDialogPage.getEverActiveInput().click();
-                expect(jobDialogPage.getEverActiveInput().isSelected()).toBeTruthy();
-            }
-        });
-        jobDialogPage.getCanEditInput().isSelected().then((selected) => {
-            if (selected) {
-                jobDialogPage.getCanEditInput().click();
-                expect(jobDialogPage.getCanEditInput().isSelected()).toBeFalsy();
-            } else {
-                jobDialogPage.getCanEditInput().click();
-                expect(jobDialogPage.getCanEditInput().isSelected()).toBeTruthy();
-            }
-        });
+        jobDialogPage
+            .getHasBeenEditedInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    jobDialogPage.getHasBeenEditedInput().click();
+                    expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeFalsy();
+                } else {
+                    jobDialogPage.getHasBeenEditedInput().click();
+                    expect(jobDialogPage.getHasBeenEditedInput().isSelected()).toBeTruthy();
+                }
+            });
+        jobDialogPage
+            .getEverActiveInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    jobDialogPage.getEverActiveInput().click();
+                    expect(jobDialogPage.getEverActiveInput().isSelected()).toBeFalsy();
+                } else {
+                    jobDialogPage.getEverActiveInput().click();
+                    expect(jobDialogPage.getEverActiveInput().isSelected()).toBeTruthy();
+                }
+            });
+        jobDialogPage
+            .getCanEditInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    jobDialogPage.getCanEditInput().click();
+                    expect(jobDialogPage.getCanEditInput().isSelected()).toBeFalsy();
+                } else {
+                    jobDialogPage.getCanEditInput().click();
+                    expect(jobDialogPage.getCanEditInput().isSelected()).toBeTruthy();
+                }
+            });
         jobDialogPage.setUpdateDateInput(12310020012301);
         expect(jobDialogPage.getUpdateDateInput()).toMatch('2001-12-31T02:30');
         jobDialogPage.setCreatedByInput('5');
@@ -332,7 +337,10 @@ export class JobDialogPage {
     };
 
     paymentTypeSelectLastOption = function() {
-        this.paymentTypeSelect.all(by.tagName('option')).last().click();
+        this.paymentTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
     getHasBeenEditedInput = function() {
         return this.hasBeenEditedInput;
@@ -376,7 +384,10 @@ export class JobDialogPage {
     };
 
     jobTypeSelectLastOption = function() {
-        this.jobTypeSelect.all(by.tagName('option')).last().click();
+        this.jobTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     jobTypeSelectOption = function(option) {
@@ -392,7 +403,10 @@ export class JobDialogPage {
     };
 
     employmentTypeSelectLastOption = function() {
-        this.employmentTypeSelect.all(by.tagName('option')).last().click();
+        this.employmentTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     employmentTypeSelectOption = function(option) {
@@ -408,7 +422,10 @@ export class JobDialogPage {
     };
 
     corporateSelectLastOption = function() {
-        this.corporateSelect.all(by.tagName('option')).last().click();
+        this.corporateSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     corporateSelectOption = function(option) {

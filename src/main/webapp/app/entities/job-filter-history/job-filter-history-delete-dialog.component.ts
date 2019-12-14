@@ -13,22 +13,20 @@ import { JobFilterHistoryService } from './job-filter-history.service';
     templateUrl: './job-filter-history-delete-dialog.component.html'
 })
 export class JobFilterHistoryDeleteDialogComponent {
-
     jobFilterHistory: JobFilterHistory;
 
     constructor(
         private jobFilterHistoryService: JobFilterHistoryService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.jobFilterHistoryService.delete(id).subscribe((response) => {
+        this.jobFilterHistoryService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'jobFilterHistoryListModification',
                 content: 'Deleted an jobFilterHistory'
@@ -43,18 +41,13 @@ export class JobFilterHistoryDeleteDialogComponent {
     template: ''
 })
 export class JobFilterHistoryDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobFilterHistoryPopupService: JobFilterHistoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobFilterHistoryPopupService: JobFilterHistoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.jobFilterHistoryPopupService
-                .open(JobFilterHistoryDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.jobFilterHistoryPopupService.open(JobFilterHistoryDeleteDialogComponent as Component, params['id']);
         });
     }
 

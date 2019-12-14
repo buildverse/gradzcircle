@@ -15,16 +15,10 @@ import { LanguageService } from './language.service';
     templateUrl: './language-dialog.component.html'
 })
 export class LanguageDialogComponent implements OnInit {
-
     language: Language;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private languageService: LanguageService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private languageService: LanguageService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class LanguageDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.language.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.languageService.update(this.language));
+            this.subscribeToSaveResponse(this.languageService.update(this.language));
         } else {
-            this.subscribeToSaveResponse(
-                this.languageService.create(this.language));
+            this.subscribeToSaveResponse(this.languageService.create(this.language));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Language>>) {
-        result.subscribe((res: HttpResponse<Language>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Language>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Language) {
-        this.eventManager.broadcast({ name: 'languageListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'languageListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class LanguageDialogComponent implements OnInit {
     template: ''
 })
 export class LanguagePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private languagePopupService: LanguagePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private languagePopupService: LanguagePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.languagePopupService
-                    .open(LanguageDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.languagePopupService.open(LanguageDialogComponent as Component, params['id']);
             } else {
-                this.languagePopupService
-                    .open(LanguageDialogComponent as Component);
+                this.languagePopupService.open(LanguageDialogComponent as Component);
             }
         });
     }

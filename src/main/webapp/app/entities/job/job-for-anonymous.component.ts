@@ -23,7 +23,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
     templateUrl: './job-for-anonymous.component.html',
     styleUrls: ['job_new.css']
 })
-export class JobComponentAnonymous implements OnInit, OnDestroy {
+export class JobAnonymousComponent implements OnInit, OnDestroy {
     candidateId: number;
     currentAccount: any;
     DRAFT: number;
@@ -136,8 +136,8 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
     loadActiveJobsByUserFilter() {
         this.setMatchScoreRange();
         //  console.log('canidate id is for matchScoreFrom to macthScore' + this.candidateId + ' ' + this.matchScoreFrom + ' ' + this.matchScoreTo);
-        //console.log('Select employment Types as permananet is ' + this.permanent + ' and contract is ' + this.contract);
-        //console.log('Select Job Types as full time  is ' + this.fullTime + ' and part time  is ' + this.partTime + ' and summerjob  is ' + this.summerJob + ' and internship  is ' + this.internship);
+        // console.log('Select employment Types as permananet is ' + this.permanent + ' and contract is ' + this.contract);
+
         if (this.permanent || this.contract) {
             this.employmentType = true;
         } else {
@@ -149,132 +149,132 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             this.jobType = false;
         }
 
-        //console.log('employment ype is ' + this.employmentType + ' job type is ' + this.jobType);
+        // console.log('employment ype is ' + this.employmentType + ' job type is ' + this.jobType);
         if (this.contract && this.permanent && !this.jobType) {
-            //console.log('Load all Jobs by both emp type');
+            // console.log('Load all Jobs by both emp type');
             if (this.candidateId > 0) {
                 this.loadActiveJobsForCandidate();
             } else {
                 this.loadActiveJobs();
             }
         } else if (this.fullTime && this.partTime && this.internship && this.summerJob && !this.employmentType) {
-            //console.log('Load all Jobs by all job type');
+            // console.log('Load all Jobs by all job type');
             if (this.candidateId > 0) {
                 this.loadActiveJobsForCandidate();
             } else {
                 this.loadActiveJobs();
             }
         } else if (this.contract && !this.jobType) {
-            //console.log('Loading on contract');
+            // console.log('Loading on contract');
             this.loadActiveJobsByEmploymentType(JobConstants.EMPLOYMENT_TYPE_CONTRACT);
         } else if (this.permanent && !this.jobType) {
-            //console.log('Loading on Permanenet');
+            // console.log('Loading on Permanenet');
             this.loadActiveJobsByEmploymentType(JobConstants.EMPLOYMENT_TYPE_PERMANENT);
         } else if (this.contract && this.fullTime && !this.permanent && !this.partTime && !this.summerJob && !this.internship) {
-            //console.log('Calling for contract and full Time onlu');
+            // console.log('Calling for contract and full Time onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_CONTRACT, JobConstants.JOB_TYPE_FULL_TIME);
         } else if (this.contract && this.partTime && !this.permanent && !this.fullTime && !this.summerJob && !this.internship) {
-            //console.log('Calling for contract and part Time onlu');
+            // console.log('Calling for contract and part Time onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_CONTRACT, JobConstants.JOB_TYPE_PART_TIME);
         } else if (this.contract && this.internship && !this.permanent && !this.partTime && !this.fullTime && !this.summerJob) {
-            //console.log('Calling for contract and interm onlu');
+            // console.log('Calling for contract and interm onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_CONTRACT, JobConstants.JOB_TYPE_INTERNSHIP);
         } else if (this.contract && this.summerJob && !this.permanent && !this.fullTime && !this.partTime && !this.internship) {
-            //console.log('Calling for contract and summer onlu');
+            // console.log('Calling for contract and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_CONTRACT, JobConstants.JOB_TYPE_SUMMER_JOB);
         } else if (this.permanent && this.fullTime && !this.contract && !this.summerJob && !this.partTime && !this.internship) {
-            //console.log('Calling for permanent and full time onlu');
+            // console.log('Calling for permanent and full time onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_PERMANENT, JobConstants.JOB_TYPE_FULL_TIME);
         } else if (this.permanent && this.partTime && !this.contract && !this.fullTime && !this.internship && !this.summerJob) {
-            //console.log('Calling for permanent and part time onlu');
+            // console.log('Calling for permanent and part time onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_PERMANENT, JobConstants.JOB_TYPE_PART_TIME);
         } else if (this.permanent && this.internship && !this.contract && !this.fullTime && !this.partTime && !this.summerJob) {
-            //console.log('Calling for permanent and intern onlu');
+            // console.log('Calling for permanent and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_PERMANENT, JobConstants.JOB_TYPE_INTERNSHIP);
         } else if (this.permanent && this.summerJob && !this.contract && !this.fullTime && !this.partTime && !this.internship) {
-            //console.log('Calling for permanent and summer onlu');
+            // console.log('Calling for permanent and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndOneJobType(JobConstants.EMPLOYMENT_TYPE_PERMANENT, JobConstants.JOB_TYPE_SUMMER_JOB);
-            //NOW TWO JOBS WITH ONE EMPLOYEMNT YPE ( Contract )
+            // NOW TWO JOBS WITH ONE EMPLOYEMNT YPE ( Contract )
         } else if (this.contract && this.fullTime && this.partTime && !this.permanent && !this.internship && !this.summerJob) {
-            //console.log('Calling for contract and full time and aprt time onlu');
+            // console.log('Calling for contract and full time and aprt time onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_PART_TIME
             );
         } else if (this.contract && this.fullTime && this.internship && !this.permanent && !this.partTime && !this.summerJob) {
-            //console.log('Calling for contract and full time and internship onlu');
+            // console.log('Calling for contract and full time and internship onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.contract && this.fullTime && this.summerJob && !this.permanent && !this.partTime && !this.internship) {
-            //console.log('Calling for contract and full time and summer onlu');
+            // console.log('Calling for contract and full time and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.contract && this.partTime && this.internship && !this.permanent && !this.fullTime && !this.summerJob) {
-            //console.log('Calling for contract and part time and inter onlu');
+            // console.log('Calling for contract and part time and inter onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.contract && this.partTime && this.summerJob && !this.permanent && !this.fullTime && !this.internship) {
-            //console.log('Calling for contract and part time and summer onlu');
+            // console.log('Calling for contract and part time and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.contract && this.internship && this.summerJob && !this.permanent && !this.partTime && !this.fullTime) {
-            //console.log('Calling for contract and intern and summer onlu');
+            // console.log('Calling for contract and intern and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_INTERNSHIP,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
-            //Now Permanent and two Job Type
+            // Now Permanent and two Job Type
         } else if (this.permanent && this.fullTime && this.partTime && !this.contract && !this.summerJob && !this.internship) {
-            //console.log('Calling for perm and full time and part time onlu');
+            // console.log('Calling for perm and full time and part time onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_PART_TIME
             );
         } else if (this.permanent && this.fullTime && this.internship && !this.contract && !this.partTime && !this.summerJob) {
-            //console.log('Calling for perm and full time and inetrn onlu');
+            // console.log('Calling for perm and full time and inetrn onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.permanent && this.fullTime && this.summerJob && !this.contract && !this.partTime && !this.internship) {
-            //console.log('Calling for perm and full time and summer onlu');
+            // console.log('Calling for perm and full time and summer onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.permanent && this.partTime && this.internship && !this.contract && !this.summerJob && !this.fullTime) {
-            //console.log('Calling for perm and part time and intern onlu');
+            // console.log('Calling for perm and part time and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.permanent && this.partTime && this.summerJob && !this.contract && !this.fullTime && !this.internship) {
-            //console.log('Calling for perm and part time and summet onlu');
+            // console.log('Calling for perm and part time and summet onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.permanent && this.internship && this.summerJob && !this.contract && !this.fullTime && !this.partTime) {
-            //console.log('Calling for perm and intern and summet onlu');
+            // console.log('Calling for perm and intern and summet onlu');
             this.loadActiveJobsByEmploymentTypeAndTwoJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_INTERNSHIP,
@@ -282,7 +282,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             );
             // Now Contract and three job Type
         } else if (this.contract && this.fullTime && this.partTime && this.summerJob && !this.permanent && !this.internship) {
-            //console.log('Calling for contract and full time part time  nd summer onlu');
+            // console.log('Calling for contract and full time part time  nd summer onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_FULL_TIME,
@@ -290,7 +290,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.contract && this.fullTime && this.partTime && this.internship && !this.permanent && !this.summerJob) {
-            //console.log('Calling for contract and full time part time and intern onlu');
+            // console.log('Calling for contract and full time part time and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_FULL_TIME,
@@ -298,7 +298,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.contract && this.partTime && this.summerJob && this.internship && !this.permanent && !this.fullTime) {
-            //console.log('Calling for contract and part time summer and intern onlu');
+            // console.log('Calling for contract and part time summer and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_PART_TIME,
@@ -306,7 +306,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.contract && this.summerJob && this.internship && this.fullTime && !this.permanent && !this.partTime) {
-            //console.log('Calling for contract and  summer and intern onlu');
+            // console.log('Calling for contract and  summer and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_CONTRACT,
                 JobConstants.JOB_TYPE_SUMMER_JOB,
@@ -315,7 +315,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             );
             // Now Permnate and three job types
         } else if (this.permanent && this.fullTime && this.partTime && this.summerJob && !this.contract && !this.internship) {
-            //console.log('Calling for permanat and full time part time  nd summer onlu');
+            // console.log('Calling for permanat and full time part time  nd summer onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_FULL_TIME,
@@ -323,7 +323,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.permanent && this.fullTime && this.partTime && this.internship && !this.contract && !this.summerJob) {
-            //console.log('Calling for permanat and full time part time and intern onlu');
+            // console.log('Calling for permanat and full time part time and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_FULL_TIME,
@@ -331,7 +331,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.permanent && this.partTime && this.summerJob && this.internship && !this.contract && !this.fullTime) {
-            //console.log('Calling for permanent and part time summer and intern onlu');
+            // console.log('Calling for permanent and part time summer and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_PART_TIME,
@@ -339,7 +339,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.permanent && this.summerJob && this.internship && this.fullTime && !this.contract && !this.partTime) {
-            //console.log('Calling for permanent and  summer and intern onlu');
+            // console.log('Calling for permanent and  summer and intern onlu');
             this.loadActiveJobsByEmploymentTypeAndThreeJobType(
                 JobConstants.EMPLOYMENT_TYPE_PERMANENT,
                 JobConstants.JOB_TYPE_SUMMER_JOB,
@@ -348,60 +348,60 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             );
             // Now one job type
         } else if (this.fullTime && !this.partTime && !this.summerJob && !this.internship) {
-            //console.log('Calling for full time');
+            // console.log('Calling for full time');
             this.loadActiveJobsByJobType(JobConstants.JOB_TYPE_FULL_TIME);
         } else if (this.partTime && !this.fullTime && !this.summerJob && !this.internship) {
-            //console.log('Calling for part time');
+            // console.log('Calling for part time');
             this.loadActiveJobsByJobType(JobConstants.JOB_TYPE_PART_TIME);
         } else if (this.internship && !this.partTime && !this.summerJob && !this.fullTime) {
-            //console.log('Calling for intern');
+            // console.log('Calling for intern');
             this.loadActiveJobsByJobType(JobConstants.JOB_TYPE_INTERNSHIP);
         } else if (this.summerJob && !this.partTime && !this.fullTime && !this.internship) {
-            //console.log('Calling for summer');
+            // console.log('Calling for summer');
             this.loadActiveJobsByJobType(JobConstants.JOB_TYPE_SUMMER_JOB);
             // now two job types
         } else if (this.fullTime && this.partTime && !this.summerJob && !this.internship) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_FULL_TIME, JobConstants.JOB_TYPE_PART_TIME);
-            //console.log('Calling for full time and part time');
+            // console.log('Calling for full time and part time');
         } else if (this.fullTime && this.internship && !this.partTime && !this.summerJob) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_FULL_TIME, JobConstants.JOB_TYPE_INTERNSHIP);
-            //console.log('Calling for full time and intern');
+            // console.log('Calling for full time and intern');
         } else if (this.fullTime && this.summerJob && !this.partTime && !this.internship) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_FULL_TIME, JobConstants.JOB_TYPE_SUMMER_JOB);
-            //console.log('Calling for full time and summer');
+            // console.log('Calling for full time and summer');
         } else if (this.partTime && this.internship && !this.fullTime && !this.summerJob) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_PART_TIME, JobConstants.JOB_TYPE_INTERNSHIP);
-            //console.log('Calling for part time and intern');
+            // console.log('Calling for part time and intern');
         } else if (this.partTime && this.summerJob && !this.fullTime && !this.internship) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_PART_TIME, JobConstants.JOB_TYPE_SUMMER_JOB);
-            //console.log('Calling for part time and summer');
+            // console.log('Calling for part time and summer');
         } else if (this.internship && this.summerJob && !this.fullTime && !this.partTime) {
             this.loadActiveJobsByTwoJobType(JobConstants.JOB_TYPE_INTERNSHIP, JobConstants.JOB_TYPE_SUMMER_JOB);
-            //console.log('Calling for Intership and summer');
-            //Now on three Job types
+            // console.log('Calling for Intership and summer');
+            // Now on three Job types
         } else if (this.fullTime && this.partTime && this.summerJob && !this.internship) {
-            //console.log('Calling for fullTime partTime summerJob ');
+            // console.log('Calling for fullTime partTime summerJob ');
             this.loadActiveJobsByThreeJobType(
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB
             );
         } else if (this.fullTime && this.partTime && this.internship && !this.summerJob) {
-            //console.log('Calling for fullTime partTime internship ');
+            // console.log('Calling for fullTime partTime internship ');
             this.loadActiveJobsByThreeJobType(
                 JobConstants.JOB_TYPE_FULL_TIME,
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.partTime && this.summerJob && this.internship && !this.fullTime) {
-            //console.log('Calling for internship partTime summerJob ');
+            // console.log('Calling for internship partTime summerJob ');
             this.loadActiveJobsByThreeJobType(
                 JobConstants.JOB_TYPE_PART_TIME,
                 JobConstants.JOB_TYPE_SUMMER_JOB,
                 JobConstants.JOB_TYPE_INTERNSHIP
             );
         } else if (this.summerJob && this.internship && this.fullTime && !this.partTime) {
-            //console.log('Calling for fullTime internship summerJob ');
+            // console.log('Calling for fullTime internship summerJob ');
             this.loadActiveJobsByThreeJobType(
                 JobConstants.JOB_TYPE_SUMMER_JOB,
                 JobConstants.JOB_TYPE_INTERNSHIP,
@@ -409,12 +409,12 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             );
         } else if (this.fullTime && this.partTime && this.summerJob && this.internship && this.contract && !this.permanent) {
             this.loadActiveJobsByEmploymentType(JobConstants.EMPLOYMENT_TYPE_CONTRACT);
-            //console.log('Calling for all job type and Contract');
+            // console.log('Calling for all job type and Contract');
         } else if (this.fullTime && this.partTime && this.summerJob && this.internship && !this.contract && this.permanent) {
             this.loadActiveJobsByEmploymentType(JobConstants.EMPLOYMENT_TYPE_PERMANENT);
-            //console.log('Calling for  all job type and permenet');
+            // console.log('Calling for  all job type and permenet');
         } else {
-            //console.log('Calling for load all');
+            // console.log('Calling for load all');
             if (this.candidateId > 0) {
                 this.loadActiveJobsForCandidate();
             } else {
@@ -721,7 +721,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
             this.navigationSubscription.unsubscribe();
         }
         if (this.routeData) {
-            this.eventManager.destroy(this.routeData); //console.log('Closing routeData subsciber');
+            this.eventManager.destroy(this.routeData); // console.log('Closing routeData subsciber');
         }
         if (this.loginEventSubscriber) {
             this.eventManager.destroy(this.loginEventSubscriber);
@@ -773,7 +773,7 @@ export class JobComponentAnonymous implements OnInit, OnDestroy {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
-        //this.page = pagingParams.page;
+        // this.page = pagingParams.page;
         this.jobs = data;
         // this.totalNumberOfActiveJobs = this.jobs[0].totalNumberOfJobs;
         if (this.jobs && this.jobs.length > 0) {

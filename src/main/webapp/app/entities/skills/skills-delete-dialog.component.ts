@@ -13,22 +13,16 @@ import { SkillsService } from './skills.service';
     templateUrl: './skills-delete-dialog.component.html'
 })
 export class SkillsDeleteDialogComponent {
-
     skills: Skills;
 
-    constructor(
-        private skillsService: SkillsService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private skillsService: SkillsService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.skillsService.delete(id).subscribe((response) => {
+        this.skillsService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'skillsListModification',
                 content: 'Deleted an skills'
@@ -43,18 +37,13 @@ export class SkillsDeleteDialogComponent {
     template: ''
 })
 export class SkillsDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private skillsPopupService: SkillsPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private skillsPopupService: SkillsPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.skillsPopupService
-                .open(SkillsDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.skillsPopupService.open(SkillsDeleteDialogComponent as Component, params['id']);
         });
     }
 

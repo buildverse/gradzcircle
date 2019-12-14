@@ -13,15 +13,12 @@ import { JobService } from './job.service';
     templateUrl: './job-edit-message-dialog.html'
 })
 export class JobEditMessageDialogComponent {
-
     job: Job;
-    
     constructor(
-       // private jobService: JobService,
+        // private jobService: JobService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
@@ -33,18 +30,13 @@ export class JobEditMessageDialogComponent {
     template: ''
 })
 export class JobEditMessagePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobPopupService: JobPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobPopupService: JobPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.jobPopupService
-                .open(JobEditMessageDialogComponent as Component);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.jobPopupService.open(JobEditMessageDialogComponent as Component);
         });
     }
 

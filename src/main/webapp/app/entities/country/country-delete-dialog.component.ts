@@ -13,22 +13,16 @@ import { CountryService } from './country.service';
     templateUrl: './country-delete-dialog.component.html'
 })
 export class CountryDeleteDialogComponent {
-
     country: Country;
 
-    constructor(
-        private countryService: CountryService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private countryService: CountryService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.countryService.delete(id).subscribe((response) => {
+        this.countryService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'countryListModification',
                 content: 'Deleted an country'
@@ -43,18 +37,13 @@ export class CountryDeleteDialogComponent {
     template: ''
 })
 export class CountryDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private countryPopupService: CountryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private countryPopupService: CountryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.countryPopupService
-                .open(CountryDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.countryPopupService.open(CountryDeleteDialogComponent as Component, params['id']);
         });
     }
 

@@ -172,7 +172,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
                             name: 'userDataLoadedSuccess',
                             content: 'User Data Load Success'
                         });
-                        //console.log('Loaded Admin info');
+                        // console.log('Loaded Admin info');
                     }
                 }
             });

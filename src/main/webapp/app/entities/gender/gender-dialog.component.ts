@@ -15,16 +15,10 @@ import { GenderService } from './gender.service';
     templateUrl: './gender-dialog.component.html'
 })
 export class GenderDialogComponent implements OnInit {
-
     gender: Gender;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private genderService: GenderService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private genderService: GenderService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class GenderDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.gender.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.genderService.update(this.gender));
+            this.subscribeToSaveResponse(this.genderService.update(this.gender));
         } else {
-            this.subscribeToSaveResponse(
-                this.genderService.create(this.gender));
+            this.subscribeToSaveResponse(this.genderService.create(this.gender));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Gender>>) {
-        result.subscribe((res: HttpResponse<Gender>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Gender>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Gender) {
-        this.eventManager.broadcast({ name: 'genderListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'genderListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class GenderDialogComponent implements OnInit {
     template: ''
 })
 export class GenderPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private genderPopupService: GenderPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private genderPopupService: GenderPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.genderPopupService
-                    .open(GenderDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.genderPopupService.open(GenderDialogComponent as Component, params['id']);
             } else {
-                this.genderPopupService
-                    .open(GenderDialogComponent as Component);
+                this.genderPopupService.open(GenderDialogComponent as Component);
             }
         });
     }

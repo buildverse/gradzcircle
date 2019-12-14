@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('CandidateNonAcademicWork e2e test', () => {
-
     let navBarPage: NavBarPage;
     let candidateNonAcademicWorkDialogPage: CandidateNonAcademicWorkDialogPage;
     let candidateNonAcademicWorkComponentsPage: CandidateNonAcademicWorkComponentsPage;
@@ -18,16 +17,15 @@ describe('CandidateNonAcademicWork e2e test', () => {
     it('should load CandidateNonAcademicWorks', () => {
         navBarPage.goToEntity('candidate-non-academic-work');
         candidateNonAcademicWorkComponentsPage = new CandidateNonAcademicWorkComponentsPage();
-        expect(candidateNonAcademicWorkComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.candidateNonAcademicWork.home.title/);
-
+        expect(candidateNonAcademicWorkComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateNonAcademicWork.home.title/);
     });
 
     it('should load create CandidateNonAcademicWork dialog', () => {
         candidateNonAcademicWorkComponentsPage.clickOnCreateButton();
         candidateNonAcademicWorkDialogPage = new CandidateNonAcademicWorkDialogPage();
-        expect(candidateNonAcademicWorkDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.candidateNonAcademicWork.home.createOrEditLabel/);
+        expect(candidateNonAcademicWorkDialogPage.getModalTitle()).toMatch(
+            /gradzcircleApp.candidateNonAcademicWork.home.createOrEditLabel/
+        );
         candidateNonAcademicWorkDialogPage.close();
     });
 
@@ -39,15 +37,18 @@ describe('CandidateNonAcademicWork e2e test', () => {
         expect(candidateNonAcademicWorkDialogPage.getNonAcademicInitiativeDescriptionInput()).toMatch('nonAcademicInitiativeDescription');
         candidateNonAcademicWorkDialogPage.setDurationInput('5');
         expect(candidateNonAcademicWorkDialogPage.getDurationInput()).toMatch('5');
-        candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().click();
-                expect(candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().isSelected()).toBeFalsy();
-            } else {
-                candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().click();
-                expect(candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateNonAcademicWorkDialogPage
+            .getIsCurrentActivityInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().click();
+                    expect(candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().click();
+                    expect(candidateNonAcademicWorkDialogPage.getIsCurrentActivityInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateNonAcademicWorkDialogPage.setRoleInInitiativeInput('roleInInitiative');
         expect(candidateNonAcademicWorkDialogPage.getRoleInInitiativeInput()).toMatch('roleInInitiative');
         candidateNonAcademicWorkDialogPage.setNonAcademicWorkStartDateInput('2000-12-31');
@@ -146,7 +147,10 @@ export class CandidateNonAcademicWorkDialogPage {
     };
 
     candidateSelectLastOption = function() {
-        this.candidateSelect.all(by.tagName('option')).last().click();
+        this.candidateSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     candidateSelectOption = function(option) {

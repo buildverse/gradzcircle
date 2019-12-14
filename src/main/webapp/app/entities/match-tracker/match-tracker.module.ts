@@ -3,24 +3,17 @@ import { RouterModule } from '@angular/router';
 
 import { GradzcircleSharedModule } from '../../shared';
 import {
-   // MatchTrackerService,
+    // MatchTrackerService,
     MatchTrackerComponent,
     matchTrackerRoute
 } from './';
 
-
 @NgModule({
-    imports: [
-        GradzcircleSharedModule
-    ],
-    declarations: [
-       MatchTrackerComponent
-    ],
-    entryComponents: [
-        MatchTrackerComponent
-    ],
+    imports: [GradzcircleSharedModule],
+    declarations: [MatchTrackerComponent],
+    entryComponents: [MatchTrackerComponent],
     providers: [
-       // MatchTrackerService
+        // MatchTrackerService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

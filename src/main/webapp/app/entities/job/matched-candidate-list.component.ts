@@ -129,7 +129,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
             .queryMatchedCandidatesForJob(
                 {
                     page: this.page - 1,
-                    //query: this.currentSearch,
+                    // query: this.currentSearch,
                     size: this.itemsPerPage,
                     //  sort: this.sort(),
                     id: this.jobId
@@ -230,7 +230,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     private setImageUrl() {
-        if (this.candidateList.length == 0) {
+        if (this.candidateList.length === 0) {
             this.spinnerService.hide();
         } else {
             this.candidateList.forEach(candidate => {
@@ -241,7 +241,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
                             if (responseJson) {
                                 candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
                             } else {
-                                //this.noImage = true;
+                                // this.noImage = true;
                             }
                         }
                     });

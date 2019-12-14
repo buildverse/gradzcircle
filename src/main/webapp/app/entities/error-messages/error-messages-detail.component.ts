@@ -12,30 +12,23 @@ import { ErrorMessagesService } from './error-messages.service';
     templateUrl: './error-messages-detail.component.html'
 })
 export class ErrorMessagesDetailComponent implements OnInit, OnDestroy {
-
     errorMessages: ErrorMessages;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private errorMessagesService: ErrorMessagesService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private errorMessagesService: ErrorMessagesService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInErrorMessages();
     }
 
     load(id) {
-        this.errorMessagesService.find(id)
-            .subscribe((errorMessagesResponse: HttpResponse<ErrorMessages>) => {
-                this.errorMessages = errorMessagesResponse.body;
-            });
+        this.errorMessagesService.find(id).subscribe((errorMessagesResponse: HttpResponse<ErrorMessages>) => {
+            this.errorMessages = errorMessagesResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class ErrorMessagesDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInErrorMessages() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'errorMessagesListModification',
-            (response) => this.load(this.errorMessages.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('errorMessagesListModification', response => this.load(this.errorMessages.id));
     }
 }

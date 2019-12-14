@@ -12,7 +12,6 @@ import { CaptureCollegeService } from './capture-college.service';
     templateUrl: './capture-college-detail.component.html'
 })
 export class CaptureCollegeDetailComponent implements OnInit, OnDestroy {
-
     captureCollege: CaptureCollege;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class CaptureCollegeDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private captureCollegeService: CaptureCollegeService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCaptureColleges();
     }
 
     load(id) {
-        this.captureCollegeService.find(id)
-            .subscribe((captureCollegeResponse: HttpResponse<CaptureCollege>) => {
-                this.captureCollege = captureCollegeResponse.body;
-            });
+        this.captureCollegeService.find(id).subscribe((captureCollegeResponse: HttpResponse<CaptureCollege>) => {
+            this.captureCollege = captureCollegeResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,6 @@ export class CaptureCollegeDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCaptureColleges() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'captureCollegeListModification',
-            (response) => this.load(this.captureCollege.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('captureCollegeListModification', response => this.load(this.captureCollege.id));
     }
 }

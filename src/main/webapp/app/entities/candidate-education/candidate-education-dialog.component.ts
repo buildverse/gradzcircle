@@ -231,12 +231,6 @@ export class CandidateEducationDialogComponent implements OnInit {
                     (res: HttpResponse<Candidate[]>) => (this.candidates = res.body),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
-            /* this.qualificationService.query().subscribe(
-         (res: Response) => {this.qualifications = res.json();}, (res: Response) => this.onError(res.json()));
-       this.courseService.query().subscribe(
-         (res: Response) => {this.courses = res.json();}, (res: Response) => this.onError(res.json()));
-        this.collegeService.query().subscribe(
-          (res: Response) => {this.colleges = res.json();}, (res: Response) => this.onError(res.json()));*/
         } else if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
             // console.log("Courses preloaded " + JSON.stringify(this.courses));
             // console.log("Colleges preloaded " + JSON.stringify(this.colleges));
@@ -248,49 +242,6 @@ export class CandidateEducationDialogComponent implements OnInit {
         this.jhiAlertService.clear();
         this.activeModal.dismiss('cancel');
     }
-    /* searchQualification = (text$: Observable<string>) =>
-     text$
-       .debounceTime(100)
-       .distinctUntilChanged()
-       .map(term => term.length < 2 ? []
-         : this.qualifications.filter
-           (v => v.qualification ? v.qualification.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
- 
-   qualificationFormatter = (n: {qualification: string}) => n.qualification;
- 
-   searchCourse = (text$: Observable<string>) =>
-     text$
-       .debounceTime(200)
-       .distinctUntilChanged()
-       .map(term => term.length < 2 ? []
-         : this.courses.filter(v => v.course ?
-           v.course.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
-   courseFormatter = (c: {course: string}) => c.course;
- 
-   searchCollege = (text$: Observable<string>) =>
-     text$
-       .debounceTime(200)
-       .map(term => term.length < 2 ? []
-         : this.colleges.filter(v => v.collegeName ?
-           v.collegeName.toLowerCase().indexOf(term.toLowerCase()) > -1 : '').slice(0, 10));
-   collegeFormatter = (x: {collegeName: string}) => x.collegeName;
- */
-
-    // searchCollege = (text$: Observable<string>) =>
-    //     text$
-    //     .debounceTime(300)
-    //     .distinctUntilChanged()
-    //     .do(() => this.searching = true)
-    //     .switchMap(term =>
-    //       this.educationCollegeService.search(term)
-    //         .do(() => this.searchFailed = false)
-    //         .catch(() => {
-    //           this.searchFailed = true;
-    //           return Observable.of([]);
-    //         }))
-    //     .do(() => this.searching = false)
-    //     .merge(this.hideSearchingWhenUnsubscribed);
-    // //collegeFormatter = (x: { collegeName: string }) => x.collegeName;
 
     save() {
         this.isSaving = true;
@@ -338,7 +289,7 @@ export class CandidateEducationDialogComponent implements OnInit {
                 //   this.currentForm.form.setErrors({ 'valid': false });
             } else {
                 this.endDateLesser = false;
-                //this.currentForm.form.setErrors(null);
+                // this.currentForm.form.setErrors(null);
             }
         }
     }
@@ -351,7 +302,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: CandidateEducation) {
-        //console.log('on suucess');
+        // console.log('on suucess');
         this.eventManager.broadcast({ name: 'candidateEducationListModification', content: 'OK' });
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.reloadCandidate();
@@ -437,7 +388,7 @@ export class CandidateEducationPopupComponent implements OnInit, OnDestroy {
     selector: 'jhi-candidate-education-popup',
     template: ''
 })
-export class CandidateEducationPopupComponentNew implements OnInit, OnDestroy {
+export class CandidateEducationPopupNewComponent implements OnInit, OnDestroy {
     routeSub: any;
 
     constructor(

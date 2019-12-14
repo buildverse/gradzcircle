@@ -4,7 +4,7 @@ import { CandidateEducationComponent } from './candidate-education.component';
 import { CandidateEducationDetailComponent } from './candidate-education-detail.component';
 import { CandidateEducationPopupComponent } from './candidate-education-dialog.component';
 import { CandidateEducationDeletePopupComponent } from './candidate-education-delete-dialog.component';
-import { CandidateEducationPopupComponentNew } from './candidate-education-dialog.component';
+import { CandidateEducationPopupNewComponent } from './candidate-education-dialog.component';
 
 export const candidateEducationRoute: Routes = [
     {
@@ -40,7 +40,7 @@ export const candidateEducationPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-education',
-        component: CandidateEducationPopupComponentNew,
+        component: CandidateEducationPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateEducation.home.title'

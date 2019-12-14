@@ -14,20 +14,14 @@ import {
     candidateSkillsRoute,
     candidateSkillsPopupRoute,
     CandidateCurrentSkillsResolverService,
-    CandidateSkillsPopupComponentNew,
+    CandidateSkillsPopupNewComponent,
     CandidateSkillsPopupServiceNew
 } from './';
 
-const ENTITY_STATES = [
-    ...candidateSkillsRoute,
-    ...candidateSkillsPopupRoute,
-];
+const ENTITY_STATES = [...candidateSkillsRoute, ...candidateSkillsPopupRoute];
 
 @NgModule({
-    imports: [
-        GradzcircleSharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CandidateSkillsComponent,
         CandidateSkillsDetailComponent,
@@ -35,7 +29,7 @@ const ENTITY_STATES = [
         CandidateSkillsDeleteDialogComponent,
         CandidateSkillsPopupComponent,
         CandidateSkillsDeletePopupComponent,
-        CandidateSkillsPopupComponentNew
+        CandidateSkillsPopupNewComponent
     ],
     entryComponents: [
         CandidateSkillsComponent,
@@ -43,14 +37,9 @@ const ENTITY_STATES = [
         CandidateSkillsPopupComponent,
         CandidateSkillsDeleteDialogComponent,
         CandidateSkillsDeletePopupComponent,
-        CandidateSkillsPopupComponentNew
+        CandidateSkillsPopupNewComponent
     ],
-    providers: [
-        CandidateSkillsService,
-        CandidateSkillsPopupService,
-        CandidateCurrentSkillsResolverService,
-        CandidateSkillsPopupServiceNew
-    ],
+    providers: [CandidateSkillsService, CandidateSkillsPopupService, CandidateCurrentSkillsResolverService, CandidateSkillsPopupServiceNew],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleCandidateSkillsModule {}

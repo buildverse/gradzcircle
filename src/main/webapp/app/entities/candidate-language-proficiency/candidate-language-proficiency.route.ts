@@ -5,7 +5,7 @@ import { JhiPaginationUtil } from 'ng-jhipster';
 import { CandidateLanguageProficiencyComponent } from './candidate-language-proficiency.component';
 import { CandidateLanguageProficiencyDetailComponent } from './candidate-language-proficiency-detail.component';
 import { CandidateLanguageProficiencyPopupComponent } from './candidate-language-proficiency-dialog.component';
-import { CandidateLanguageProficiencyPopupComponentNew } from './candidate-language-proficiency-dialog.component';
+import { CandidateLanguageProficiencyPopupNewComponent } from './candidate-language-proficiency-dialog.component';
 import { CandidateLanguageProficiencyDeletePopupComponent } from './candidate-language-proficiency-delete-dialog.component';
 import { CandidateLanguageResolverService } from './candidate-language-proficiency-current.resolver.service';
 
@@ -43,7 +43,7 @@ export const candidateLanguageProficiencyPopupRoute: Routes = [
     },
     {
         path: 'new-candidate-language-proficiency',
-        component: CandidateLanguageProficiencyPopupComponentNew,
+        component: CandidateLanguageProficiencyPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidateLanguageProficiency.home.title'

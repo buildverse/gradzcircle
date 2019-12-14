@@ -83,7 +83,7 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
         // console.log('Fiansl poayment is ' + this.costDiff);
         //  console.log('Fiansl escrow amount  is ' + this.transientCorpEscrowAmount);
         //  console.log(' escrow amount used is ' + this.escrowAmountUsed);
-        //console.log('Job Id is ' + this.jobId);
+        // console.log('Job Id is ' + this.jobId);
         this.job.escrowAmountUsed = this.escrowAmountUsed;
         //  this.job.id = this.jobId;
         this.job.noOfApplicants = this.addtionalCandidates;
@@ -108,7 +108,7 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
     }
 
     private onSaveError(error: any) {
-        //console.log('in error' + JSON.stringify(error));
+        // console.log('in error' + JSON.stringify(error));
         this.isSaving = false;
         this.spinnerService.hide();
         this.onError(error);

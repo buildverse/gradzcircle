@@ -260,7 +260,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.jobService
             .queryActiveJobsForCandidates({
                 page: this.page - 1,
-                //query: this.currentSearch,
+                // query: this.currentSearch,
                 size: this.itemsPerPage,
                 sort: this.sort(),
                 id: this.candidateId
@@ -299,7 +299,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.jobs = data;
         this.spinnerService.hide();
         if (this.jobs.length === 0) {
-            //this.job = new Job();
+            // this.job = new Job();
             this.job.totalNumberOfJobs = 0;
             this.job.jobsLastMonth = 0;
             this.job.newApplicants = 0;

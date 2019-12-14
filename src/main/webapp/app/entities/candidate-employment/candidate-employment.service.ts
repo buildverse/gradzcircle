@@ -38,7 +38,7 @@ export class CandidateEmploymentService {
     }
 
     findEmploymentsByCandidateId(id?: number): Observable<HttpResponse<CandidateEmployment[]>> {
-        //const options = this.createRequestOption(req);
+        // const options = this.createRequestOption(req);
         return this.http
             .get(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response' })
             .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));

@@ -11,12 +11,7 @@ export class CandidateSkillsPopupServiceNew {
     private candidateSkills: CandidateSkills;
     private candidate: Candidate;
     private isOpen = false;
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private alertService: JhiAlertService
-
-    ) { }
+    constructor(private modalService: NgbModal, private router: Router, private alertService: JhiAlertService) {}
 
     open(component: Component, id?: number | any, currentCandidateSkills?: any): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
@@ -33,8 +28,6 @@ export class CandidateSkillsPopupServiceNew {
                     this.ngbModalRef = this.candidateSkillModalRef(component, this.candidateSkills, currentCandidateSkills);
                     resolve(this.ngbModalRef);
                 }, 0);
-
-
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -49,13 +42,16 @@ export class CandidateSkillsPopupServiceNew {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateSkills = candidateSkill;
         modalRef.componentInstance.currentCandidateSkills = currentCandidateSkills;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.isOpen = false;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
-            this.isOpen = false;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });
+                this.isOpen = false;
+            }
+        );
         return modalRef;
     }
 

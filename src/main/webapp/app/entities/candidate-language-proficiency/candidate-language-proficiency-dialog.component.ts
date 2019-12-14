@@ -245,7 +245,7 @@ export class CandidateLanguageProficiencyPopupComponent implements OnInit, OnDes
     selector: 'jhi-candidate-language-proficiency-popup',
     template: ''
 })
-export class CandidateLanguageProficiencyPopupComponentNew implements OnInit, OnDestroy {
+export class CandidateLanguageProficiencyPopupNewComponent implements OnInit, OnDestroy {
     currentCandidateLanguageProficiencies: CandidateLanguageProficiency[];
 
     routeSub: any;

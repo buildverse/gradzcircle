@@ -12,30 +12,23 @@ import { VisaTypeService } from './visa-type.service';
     templateUrl: './visa-type-detail.component.html'
 })
 export class VisaTypeDetailComponent implements OnInit, OnDestroy {
-
     visaType: VisaType;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private visaTypeService: VisaTypeService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private visaTypeService: VisaTypeService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInVisaTypes();
     }
 
     load(id) {
-        this.visaTypeService.find(id)
-            .subscribe((visaTypeResponse: HttpResponse<VisaType>) => {
-                this.visaType = visaTypeResponse.body;
-            });
+        this.visaTypeService.find(id).subscribe((visaTypeResponse: HttpResponse<VisaType>) => {
+            this.visaType = visaTypeResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class VisaTypeDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInVisaTypes() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'visaTypeListModification',
-            (response) => this.load(this.visaType.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('visaTypeListModification', response => this.load(this.visaType.id));
     }
 }

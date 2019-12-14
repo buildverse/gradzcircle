@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
+import { JhiEventManager } from 'ng-jhipster';
 import { HttpResponse } from '@angular/common/http';
 import { CandidateEmployment } from './candidate-employment.model';
 import { CandidateEmploymentService } from './candidate-employment.service';
@@ -11,7 +11,6 @@ import { CandidateEmploymentService } from './candidate-employment.service';
     templateUrl: './candidate-employment-detail.component.html'
 })
 export class CandidateEmploymentDetailComponent implements OnInit, OnDestroy {
-
     candidateEmployment: CandidateEmployment;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -20,19 +19,18 @@ export class CandidateEmploymentDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private candidateEmploymentService: CandidateEmploymentService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateEmployments();
     }
 
     load(id) {
-        this.candidateEmploymentService.find(id) .subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) => {
-                this.candidateEmployment = candidateEmploymentResponse.body;
+        this.candidateEmploymentService.find(id).subscribe((candidateEmploymentResponse: HttpResponse<CandidateEmployment>) => {
+            this.candidateEmployment = candidateEmploymentResponse.body;
         });
     }
     previousState() {
@@ -45,9 +43,8 @@ export class CandidateEmploymentDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCandidateEmployments() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateEmploymentListModification',
-            (response) => this.load(this.candidateEmployment.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateEmploymentListModification', response =>
+            this.load(this.candidateEmployment.id)
         );
     }
 }

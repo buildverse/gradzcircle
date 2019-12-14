@@ -12,30 +12,23 @@ import { CountryService } from './country.service';
     templateUrl: './country-detail.component.html'
 })
 export class CountryDetailComponent implements OnInit, OnDestroy {
-
     country: Country;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private countryService: CountryService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private countryService: CountryService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCountries();
     }
 
     load(id) {
-        this.countryService.find(id)
-            .subscribe((countryResponse: HttpResponse<Country>) => {
-                this.country = countryResponse.body;
-            });
+        this.countryService.find(id).subscribe((countryResponse: HttpResponse<Country>) => {
+            this.country = countryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class CountryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCountries() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'countryListModification',
-            (response) => this.load(this.country.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('countryListModification', response => this.load(this.country.id));
     }
 }

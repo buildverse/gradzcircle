@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
+import { JhiEventManager } from 'ng-jhipster';
 import { HttpResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
@@ -11,7 +11,6 @@ import { CandidateEducationService } from './candidate-education.service';
     templateUrl: './candidate-education-detail.component.html'
 })
 export class CandidateEducationDetailComponent implements OnInit, OnDestroy {
-
     candidateEducation: CandidateEducation;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -20,21 +19,19 @@ export class CandidateEducationDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private candidateEducationService: CandidateEducationService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateEducations();
     }
 
     load(id) {
-         this.candidateEducationService.find(id)
-            .subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>) => {
-                this.candidateEducation = candidateEducationResponse.body;
-            });
+        this.candidateEducationService.find(id).subscribe((candidateEducationResponse: HttpResponse<CandidateEducation>) => {
+            this.candidateEducation = candidateEducationResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -46,9 +43,8 @@ export class CandidateEducationDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCandidateEducations() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateEducationListModification',
-            (response) => this.load(this.candidateEducation.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateEducationListModification', response =>
+            this.load(this.candidateEducation.id)
         );
     }
 }

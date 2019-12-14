@@ -15,16 +15,10 @@ import { SkillsService } from './skills.service';
     templateUrl: './skills-dialog.component.html'
 })
 export class SkillsDialogComponent implements OnInit {
-
     skills: Skills;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private skillsService: SkillsService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private skillsService: SkillsService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class SkillsDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.skills.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.skillsService.update(this.skills));
+            this.subscribeToSaveResponse(this.skillsService.update(this.skills));
         } else {
-            this.subscribeToSaveResponse(
-                this.skillsService.create(this.skills));
+            this.subscribeToSaveResponse(this.skillsService.create(this.skills));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Skills>>) {
-        result.subscribe((res: HttpResponse<Skills>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Skills>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Skills) {
-        this.eventManager.broadcast({ name: 'skillsListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'skillsListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class SkillsDialogComponent implements OnInit {
     template: ''
 })
 export class SkillsPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private skillsPopupService: SkillsPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private skillsPopupService: SkillsPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.skillsPopupService
-                    .open(SkillsDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.skillsPopupService.open(SkillsDialogComponent as Component, params['id']);
             } else {
-                this.skillsPopupService
-                    .open(SkillsDialogComponent as Component);
+                this.skillsPopupService.open(SkillsDialogComponent as Component);
             }
         });
     }

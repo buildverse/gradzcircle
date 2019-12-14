@@ -13,22 +13,16 @@ import { UniversityService } from './university.service';
     templateUrl: './university-delete-dialog.component.html'
 })
 export class UniversityDeleteDialogComponent {
-
     university: University;
 
-    constructor(
-        private universityService: UniversityService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private universityService: UniversityService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.universityService.delete(id).subscribe((response) => {
+        this.universityService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'universityListModification',
                 content: 'Deleted an university'
@@ -43,18 +37,13 @@ export class UniversityDeleteDialogComponent {
     template: ''
 })
 export class UniversityDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private universityPopupService: UniversityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private universityPopupService: UniversityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.universityPopupService
-                .open(UniversityDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.universityPopupService.open(UniversityDeleteDialogComponent as Component, params['id']);
         });
     }
 

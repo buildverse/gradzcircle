@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 import { Country } from '../../entities/country';
 import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 
-
 /**
  * @TODO:
  *
@@ -29,7 +28,6 @@ import { CandidateProfileSettingService } from './candidate-profile-setting.serv
     selector: 'jhi-candidate-contact-settings-edit',
     templateUrl: 'candidate-profile-contact-settings-edit.component.html'
 })
-
 export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy {
     contactSettingForm: FormGroup;
     candidate: Candidate;
@@ -45,11 +43,12 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
         private eventManager: JhiEventManager,
         private countryService: CountryService,
         private candidateSettingService: CandidateProfileSettingService
-    ) { }
+    ) {}
 
     ngOnInit() {
-       this.profileSubscriber = this.candidateSettingService.getCandidateFromParentToChild().
-          subscribe((candidate) => this.candidate = candidate);
+        this.profileSubscriber = this.candidateSettingService
+            .getCandidateFromParentToChild()
+            .subscribe(candidate => (this.candidate = candidate));
         this.contactSettingForm = this.formBuilder.group({
             address: this.buildAddressGroup()
         });
@@ -67,7 +66,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
                 country: this.candidate.addresses[0] ? this.candidate.addresses[0].country : '',
                 // zip: this.candidate.addresses[0] ? this.candidate.addresses[0].zip : '',
                 phoneCode: this.candidate.phoneCode ? this.candidate.phoneCode : '+91',
-                phoneNumber: this.candidate.phoneNumber,
+                phoneNumber: this.candidate.phoneNumber
             }
         });
     }
@@ -81,17 +80,18 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
             // state: [null, [Validators.required]],
             country: [null, [Validators.required]],
             //   zip: [null],
-            phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(10), Validators.maxLength(10) ]],
+            phoneNumber: [null, [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(10), Validators.maxLength(10)]],
             phoneCode: ['+91', [Validators.required, Validators.pattern('[+.0-9]+')]]
         });
-
     }
 
     requestCountryData = (text: string): Observable<Response> => {
-        return this.countryService.searchRemote({
-            query: text
-        }).map((data) => data.body);
-    }
+        return this.countryService
+            .searchRemote({
+                query: text
+            })
+            .map(data => data.body);
+    };
 
     onCountrySelect(countrySelected) {
         if (!countrySelected) {
@@ -117,9 +117,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
                     this.router.navigate(['/error']);
                     return Observable.of(null);
                 }
-
             );
-
         } else {
             if (!this.contactSettingForm.dirty) {
                 this.onSaveComplete();
@@ -153,11 +151,11 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
     }
 
     ngOnDestroy() {
-      if (this.subscription) {
-        this.eventManager.destroy(this.subscription);
-      }
-      if (this.profileSubscriber) {
-        this.eventManager.destroy(this.profileSubscriber);
-      }
+        if (this.subscription) {
+            this.eventManager.destroy(this.subscription);
+        }
+        if (this.profileSubscriber) {
+            this.eventManager.destroy(this.profileSubscriber);
+        }
     }
 }

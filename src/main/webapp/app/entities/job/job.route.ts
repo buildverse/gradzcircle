@@ -5,7 +5,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@a
 import { JhiPaginationUtil } from 'ng-jhipster';
 import { JobComponent } from './job.component';
 import { JobDetailComponent } from './job-detail.component';
-import { JobPopupComponent, JobPopupComponentNew } from './job-dialog.component';
+import { JobPopupComponent, JobPopupNewComponent } from './job-dialog.component';
 import { JobViewPopupComponent } from './job-view.component';
 import { JobRemovePopupComponent } from './job-remove-dialog.component';
 import { JobDeletePopupComponent } from './job-delete-dialog.component';
@@ -15,7 +15,7 @@ import { AddMoreCandidatesToJobPopUpComponent } from './add-more-candidate-to-jo
 import { MatchedCandidateListComponent } from './matched-candidate-list.component';
 import { AppliedCandidateListComponent } from './applied-candidate-list.component';
 import { ShortListedCandidateListComponent } from './short-listed-candidate-list.component';
-import { JobComponentAnonymous } from './job-for-anonymous.component';
+import { JobAnonymousComponent } from './job-for-anonymous.component';
 import { JobListForLinkedCandidatePopUpComponent } from './job-list-for-linked-candidate.component';
 import { JobViewPopupForCandidateComponent } from './job-view-candidate.component';
 
@@ -37,7 +37,7 @@ export class JobResolvePagingParams implements Resolve<any> {
 export const jobRoute: Routes = [
     {
         path: 'viewjobs',
-        component: JobComponentAnonymous,
+        component: JobAnonymousComponent,
         runGuardsAndResolvers: 'always',
         resolve: {
             pagingParams: JobResolvePagingParams
@@ -119,7 +119,7 @@ export const jobPopupRoute: Routes = [
     },
     {
         path: 'new-job',
-        component: JobPopupComponentNew,
+        component: JobPopupNewComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.job.home.title'

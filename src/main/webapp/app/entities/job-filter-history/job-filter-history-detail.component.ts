@@ -12,7 +12,6 @@ import { JobFilterHistoryService } from './job-filter-history.service';
     templateUrl: './job-filter-history-detail.component.html'
 })
 export class JobFilterHistoryDetailComponent implements OnInit, OnDestroy {
-
     jobFilterHistory: JobFilterHistory;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class JobFilterHistoryDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private jobFilterHistoryService: JobFilterHistoryService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInJobFilterHistories();
     }
 
     load(id) {
-        this.jobFilterHistoryService.find(id)
-            .subscribe((jobFilterHistoryResponse: HttpResponse<JobFilterHistory>) => {
-                this.jobFilterHistory = jobFilterHistoryResponse.body;
-            });
+        this.jobFilterHistoryService.find(id).subscribe((jobFilterHistoryResponse: HttpResponse<JobFilterHistory>) => {
+            this.jobFilterHistory = jobFilterHistoryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,8 @@ export class JobFilterHistoryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInJobFilterHistories() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'jobFilterHistoryListModification',
-            (response) => this.load(this.jobFilterHistory.id)
+        this.eventSubscriber = this.eventManager.subscribe('jobFilterHistoryListModification', response =>
+            this.load(this.jobFilterHistory.id)
         );
     }
 }

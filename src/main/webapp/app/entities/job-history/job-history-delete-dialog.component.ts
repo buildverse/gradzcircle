@@ -13,22 +13,16 @@ import { JobHistoryService } from './job-history.service';
     templateUrl: './job-history-delete-dialog.component.html'
 })
 export class JobHistoryDeleteDialogComponent {
-
     jobHistory: JobHistory;
 
-    constructor(
-        private jobHistoryService: JobHistoryService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private jobHistoryService: JobHistoryService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.jobHistoryService.delete(id).subscribe((response) => {
+        this.jobHistoryService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'jobHistoryListModification',
                 content: 'Deleted an jobHistory'
@@ -43,18 +37,13 @@ export class JobHistoryDeleteDialogComponent {
     template: ''
 })
 export class JobHistoryDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobHistoryPopupService: JobHistoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobHistoryPopupService: JobHistoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.jobHistoryPopupService
-                .open(JobHistoryDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.jobHistoryPopupService.open(JobHistoryDeleteDialogComponent as Component, params['id']);
         });
     }
 

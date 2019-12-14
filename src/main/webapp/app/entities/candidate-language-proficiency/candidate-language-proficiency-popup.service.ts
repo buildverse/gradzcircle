@@ -13,12 +13,11 @@ export class CandidateLanguageProficiencyPopupService {
         private modalService: NgbModal,
         private router: Router,
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService
-
     ) {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any, languageLocked?:boolean): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any, languageLocked?: boolean): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -26,33 +25,49 @@ export class CandidateLanguageProficiencyPopupService {
             }
 
             if (id) {
-                this.candidateLanguageProficiencyService.find(id)
-                   .subscribe((candidateLanguageProficiencyResponse: HttpResponse<CandidateLanguageProficiency>) => {
-                       const candidateLanguageProficiency: CandidateLanguageProficiency = candidateLanguageProficiencyResponse.body;
-                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, candidateLanguageProficiency,languageLocked);
-                    resolve(this.ngbModalRef);
-                });
+                this.candidateLanguageProficiencyService
+                    .find(id)
+                    .subscribe((candidateLanguageProficiencyResponse: HttpResponse<CandidateLanguageProficiency>) => {
+                        const candidateLanguageProficiency: CandidateLanguageProficiency = candidateLanguageProficiencyResponse.body;
+                        this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
+                            component,
+                            candidateLanguageProficiency,
+                            languageLocked
+                        );
+                        resolve(this.ngbModalRef);
+                    });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
-                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(component, new CandidateLanguageProficiency(),languageLocked);
+                    this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
+                        component,
+                        new CandidateLanguageProficiency(),
+                        languageLocked
+                    );
                     resolve(this.ngbModalRef);
                 }, 0);
             }
         });
     }
 
-    candidateLanguageProficiencyModalRef(component: Component, candidateLanguageProficiency: CandidateLanguageProficiency,languageLocked:boolean): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+    candidateLanguageProficiencyModalRef(
+        component: Component,
+        candidateLanguageProficiency: CandidateLanguageProficiency,
+        languageLocked: boolean
+    ): NgbModalRef {
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateLanguageProficiency = candidateLanguageProficiency;
         modalRef.componentInstance.languageLocked = languageLocked;
-        modalRef.result.then((result) => {
-             this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

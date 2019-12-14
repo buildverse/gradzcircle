@@ -15,16 +15,10 @@ import { CourseService } from './course.service';
     templateUrl: './course-dialog.component.html'
 })
 export class CourseDialogComponent implements OnInit {
-
     course: Course;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private courseService: CourseService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private courseService: CourseService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class CourseDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.course.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.courseService.update(this.course));
+            this.subscribeToSaveResponse(this.courseService.update(this.course));
         } else {
-            this.subscribeToSaveResponse(
-                this.courseService.create(this.course));
+            this.subscribeToSaveResponse(this.courseService.create(this.course));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Course>>) {
-        result.subscribe((res: HttpResponse<Course>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Course>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Course) {
-        this.eventManager.broadcast({ name: 'courseListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'courseListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class CourseDialogComponent implements OnInit {
     template: ''
 })
 export class CoursePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private coursePopupService: CoursePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private coursePopupService: CoursePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.coursePopupService
-                    .open(CourseDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.coursePopupService.open(CourseDialogComponent as Component, params['id']);
             } else {
-                this.coursePopupService
-                    .open(CourseDialogComponent as Component);
+                this.coursePopupService.open(CourseDialogComponent as Component);
             }
         });
     }

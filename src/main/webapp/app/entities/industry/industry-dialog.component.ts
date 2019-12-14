@@ -15,16 +15,10 @@ import { IndustryService } from './industry.service';
     templateUrl: './industry-dialog.component.html'
 })
 export class IndustryDialogComponent implements OnInit {
-
     industry: Industry;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private industryService: IndustryService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private industryService: IndustryService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class IndustryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.industry.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.industryService.update(this.industry));
+            this.subscribeToSaveResponse(this.industryService.update(this.industry));
         } else {
-            this.subscribeToSaveResponse(
-                this.industryService.create(this.industry));
+            this.subscribeToSaveResponse(this.industryService.create(this.industry));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Industry>>) {
-        result.subscribe((res: HttpResponse<Industry>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Industry>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Industry) {
-        this.eventManager.broadcast({ name: 'industryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'industryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class IndustryDialogComponent implements OnInit {
     template: ''
 })
 export class IndustryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private industryPopupService: IndustryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private industryPopupService: IndustryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.industryPopupService
-                    .open(IndustryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.industryPopupService.open(IndustryDialogComponent as Component, params['id']);
             } else {
-                this.industryPopupService
-                    .open(IndustryDialogComponent as Component);
+                this.industryPopupService.open(IndustryDialogComponent as Component);
             }
         });
     }

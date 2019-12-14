@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('AppConfig e2e test', () => {
-
     let navBarPage: NavBarPage;
     let appConfigDialogPage: AppConfigDialogPage;
     let appConfigComponentsPage: AppConfigComponentsPage;
@@ -18,16 +17,13 @@ describe('AppConfig e2e test', () => {
     it('should load AppConfigs', () => {
         navBarPage.goToEntity('app-config');
         appConfigComponentsPage = new AppConfigComponentsPage();
-        expect(appConfigComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.appConfig.home.title/);
-
+        expect(appConfigComponentsPage.getTitle()).toMatch(/gradzcircleApp.appConfig.home.title/);
     });
 
     it('should load create AppConfig dialog', () => {
         appConfigComponentsPage.clickOnCreateButton();
         appConfigDialogPage = new AppConfigDialogPage();
-        expect(appConfigDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.appConfig.home.createOrEditLabel/);
+        expect(appConfigDialogPage.getModalTitle()).toMatch(/gradzcircleApp.appConfig.home.createOrEditLabel/);
         appConfigDialogPage.close();
     });
 
@@ -35,15 +31,18 @@ describe('AppConfig e2e test', () => {
         appConfigComponentsPage.clickOnCreateButton();
         appConfigDialogPage.setConfigNameInput('configName');
         expect(appConfigDialogPage.getConfigNameInput()).toMatch('configName');
-        appConfigDialogPage.getConfigValueInput().isSelected().then((selected) => {
-            if (selected) {
-                appConfigDialogPage.getConfigValueInput().click();
-                expect(appConfigDialogPage.getConfigValueInput().isSelected()).toBeFalsy();
-            } else {
-                appConfigDialogPage.getConfigValueInput().click();
-                expect(appConfigDialogPage.getConfigValueInput().isSelected()).toBeTruthy();
-            }
-        });
+        appConfigDialogPage
+            .getConfigValueInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    appConfigDialogPage.getConfigValueInput().click();
+                    expect(appConfigDialogPage.getConfigValueInput().isSelected()).toBeFalsy();
+                } else {
+                    appConfigDialogPage.getConfigValueInput().click();
+                    expect(appConfigDialogPage.getConfigValueInput().isSelected()).toBeTruthy();
+                }
+            });
         appConfigDialogPage.save();
         expect(appConfigDialogPage.getSaveButton().isPresent()).toBeFalsy();
     });

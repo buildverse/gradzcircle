@@ -84,7 +84,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
         this.jobService
             .queryShortListedJobsForCandidate({
                 page: this.page - 1,
-                //query: this.currentSearch,
+                // query: this.currentSearch,
                 size: this.itemsPerPage,
                 sort: this.sort(),
                 id: this.candidateId

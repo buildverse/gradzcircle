@@ -16,7 +16,6 @@ import { JobFilter, JobFilterService } from '../job-filter';
     templateUrl: './job-filter-history-dialog.component.html'
 })
 export class JobFilterHistoryDialogComponent implements OnInit {
-
     jobFilterHistory: JobFilterHistory;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class JobFilterHistoryDialogComponent implements OnInit {
         private jobFilterHistoryService: JobFilterHistoryService,
         private jobFilterService: JobFilterService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.jobFilterService.query()
-            .subscribe((res: HttpResponse<JobFilter[]>) => { this.jobfilters = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.jobFilterService.query().subscribe(
+            (res: HttpResponse<JobFilter[]>) => {
+                this.jobfilters = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,21 @@ export class JobFilterHistoryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.jobFilterHistory.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.jobFilterHistoryService.update(this.jobFilterHistory));
+            this.subscribeToSaveResponse(this.jobFilterHistoryService.update(this.jobFilterHistory));
         } else {
-            this.subscribeToSaveResponse(
-                this.jobFilterHistoryService.create(this.jobFilterHistory));
+            this.subscribeToSaveResponse(this.jobFilterHistoryService.create(this.jobFilterHistory));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<JobFilterHistory>>) {
-        result.subscribe((res: HttpResponse<JobFilterHistory>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<JobFilterHistory>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: JobFilterHistory) {
-        this.eventManager.broadcast({ name: 'jobFilterHistoryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'jobFilterHistoryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -81,22 +83,16 @@ export class JobFilterHistoryDialogComponent implements OnInit {
     template: ''
 })
 export class JobFilterHistoryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobFilterHistoryPopupService: JobFilterHistoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobFilterHistoryPopupService: JobFilterHistoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.jobFilterHistoryPopupService
-                    .open(JobFilterHistoryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.jobFilterHistoryPopupService.open(JobFilterHistoryDialogComponent as Component, params['id']);
             } else {
-                this.jobFilterHistoryPopupService
-                    .open(JobFilterHistoryDialogComponent as Component);
+                this.jobFilterHistoryPopupService.open(JobFilterHistoryDialogComponent as Component);
             }
         });
     }

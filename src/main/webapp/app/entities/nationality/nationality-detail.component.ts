@@ -12,30 +12,23 @@ import { NationalityService } from './nationality.service';
     templateUrl: './nationality-detail.component.html'
 })
 export class NationalityDetailComponent implements OnInit, OnDestroy {
-
     nationality: Nationality;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private nationalityService: NationalityService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private nationalityService: NationalityService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInNationalities();
     }
 
     load(id) {
-        this.nationalityService.find(id)
-            .subscribe((nationalityResponse: HttpResponse<Nationality>) => {
-                this.nationality = nationalityResponse.body;
-            });
+        this.nationalityService.find(id).subscribe((nationalityResponse: HttpResponse<Nationality>) => {
+            this.nationality = nationalityResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class NationalityDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInNationalities() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'nationalityListModification',
-            (response) => this.load(this.nationality.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('nationalityListModification', response => this.load(this.nationality.id));
     }
 }

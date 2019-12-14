@@ -2,7 +2,6 @@ import { browser, element, by } from 'protractor';
 import { NavBarPage } from './../page-objects/jhi-page-objects';
 
 describe('CandidateEmployment e2e test', () => {
-
     let navBarPage: NavBarPage;
     let candidateEmploymentDialogPage: CandidateEmploymentDialogPage;
     let candidateEmploymentComponentsPage: CandidateEmploymentComponentsPage;
@@ -18,16 +17,13 @@ describe('CandidateEmployment e2e test', () => {
     it('should load CandidateEmployments', () => {
         navBarPage.goToEntity('candidate-employment');
         candidateEmploymentComponentsPage = new CandidateEmploymentComponentsPage();
-        expect(candidateEmploymentComponentsPage.getTitle())
-            .toMatch(/gradzcircleApp.candidateEmployment.home.title/);
-
+        expect(candidateEmploymentComponentsPage.getTitle()).toMatch(/gradzcircleApp.candidateEmployment.home.title/);
     });
 
     it('should load create CandidateEmployment dialog', () => {
         candidateEmploymentComponentsPage.clickOnCreateButton();
         candidateEmploymentDialogPage = new CandidateEmploymentDialogPage();
-        expect(candidateEmploymentDialogPage.getModalTitle())
-            .toMatch(/gradzcircleApp.candidateEmployment.home.createOrEditLabel/);
+        expect(candidateEmploymentDialogPage.getModalTitle()).toMatch(/gradzcircleApp.candidateEmployment.home.createOrEditLabel/);
         candidateEmploymentDialogPage.close();
     });
 
@@ -45,15 +41,18 @@ describe('CandidateEmployment e2e test', () => {
         expect(candidateEmploymentDialogPage.getEmploymentEndDateInput()).toMatch('2000-12-31');
         candidateEmploymentDialogPage.setEmploymentDurationInput('5');
         expect(candidateEmploymentDialogPage.getEmploymentDurationInput()).toMatch('5');
-        candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected().then((selected) => {
-            if (selected) {
-                candidateEmploymentDialogPage.getIsCurrentEmploymentInput().click();
-                expect(candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected()).toBeFalsy();
-            } else {
-                candidateEmploymentDialogPage.getIsCurrentEmploymentInput().click();
-                expect(candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected()).toBeTruthy();
-            }
-        });
+        candidateEmploymentDialogPage
+            .getIsCurrentEmploymentInput()
+            .isSelected()
+            .then(selected => {
+                if (selected) {
+                    candidateEmploymentDialogPage.getIsCurrentEmploymentInput().click();
+                    expect(candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected()).toBeFalsy();
+                } else {
+                    candidateEmploymentDialogPage.getIsCurrentEmploymentInput().click();
+                    expect(candidateEmploymentDialogPage.getIsCurrentEmploymentInput().isSelected()).toBeTruthy();
+                }
+            });
         candidateEmploymentDialogPage.setJobDescriptionInput('jobDescription');
         expect(candidateEmploymentDialogPage.getJobDescriptionInput()).toMatch('jobDescription');
         candidateEmploymentDialogPage.candidateSelectLastOption();
@@ -163,7 +162,10 @@ export class CandidateEmploymentDialogPage {
     };
 
     candidateSelectLastOption = function() {
-        this.candidateSelect.all(by.tagName('option')).last().click();
+        this.candidateSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     candidateSelectOption = function(option) {
@@ -179,7 +181,10 @@ export class CandidateEmploymentDialogPage {
     };
 
     employmentTypeSelectLastOption = function() {
-        this.employmentTypeSelect.all(by.tagName('option')).last().click();
+        this.employmentTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     employmentTypeSelectOption = function(option) {
@@ -195,7 +200,10 @@ export class CandidateEmploymentDialogPage {
     };
 
     countrySelectLastOption = function() {
-        this.countrySelect.all(by.tagName('option')).last().click();
+        this.countrySelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     countrySelectOption = function(option) {
@@ -211,7 +219,10 @@ export class CandidateEmploymentDialogPage {
     };
 
     jobTypeSelectLastOption = function() {
-        this.jobTypeSelect.all(by.tagName('option')).last().click();
+        this.jobTypeSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     };
 
     jobTypeSelectOption = function(option) {

@@ -12,30 +12,23 @@ import { GenderService } from './gender.service';
     templateUrl: './gender-detail.component.html'
 })
 export class GenderDetailComponent implements OnInit, OnDestroy {
-
     gender: Gender;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private genderService: GenderService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private genderService: GenderService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInGenders();
     }
 
     load(id) {
-        this.genderService.find(id)
-            .subscribe((genderResponse: HttpResponse<Gender>) => {
-                this.gender = genderResponse.body;
-            });
+        this.genderService.find(id).subscribe((genderResponse: HttpResponse<Gender>) => {
+            this.gender = genderResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class GenderDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInGenders() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'genderListModification',
-            (response) => this.load(this.gender.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('genderListModification', response => this.load(this.gender.id));
     }
 }

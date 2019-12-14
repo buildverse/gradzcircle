@@ -12,30 +12,23 @@ import { JobCategoryService } from './job-category.service';
     templateUrl: './job-category-detail.component.html'
 })
 export class JobCategoryDetailComponent implements OnInit, OnDestroy {
-
     jobCategory: JobCategory;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private jobCategoryService: JobCategoryService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private jobCategoryService: JobCategoryService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInJobCategories();
     }
 
     load(id) {
-        this.jobCategoryService.find(id)
-            .subscribe((jobCategoryResponse: HttpResponse<JobCategory>) => {
-                this.jobCategory = jobCategoryResponse.body;
-            });
+        this.jobCategoryService.find(id).subscribe((jobCategoryResponse: HttpResponse<JobCategory>) => {
+            this.jobCategory = jobCategoryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class JobCategoryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInJobCategories() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'jobCategoryListModification',
-            (response) => this.load(this.jobCategory.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('jobCategoryListModification', response => this.load(this.jobCategory.id));
     }
 }

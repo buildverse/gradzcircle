@@ -10,54 +10,58 @@ export type EntityResponseType = HttpResponse<Nationality>;
 
 @Injectable()
 export class NationalityService {
-
-    private resourceUrl =  SERVER_API_URL + 'api/nationalities';
+    private resourceUrl = SERVER_API_URL + 'api/nationalities';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/nationalities';
-   private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/nationalityBySuggest';
+    private resourceSearchSuggestUrl = SERVER_API_URL + 'api/_search/nationalityBySuggest';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
     create(nationality: Nationality): Observable<EntityResponseType> {
         const copy = this.convert(nationality);
-        return this.http.post<Nationality>(this.resourceUrl, copy, { observe: 'response' })
+        return this.http
+            .post<Nationality>(this.resourceUrl, copy, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     update(nationality: Nationality): Observable<EntityResponseType> {
         const copy = this.convert(nationality);
-        return this.http.put<Nationality>(this.resourceUrl, copy, { observe: 'response' })
+        return this.http
+            .put<Nationality>(this.resourceUrl, copy, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     find(id: number): Observable<EntityResponseType> {
-        return this.http.get<Nationality>(`${this.resourceUrl}/${id}`, { observe: 'response'})
+        return this.http
+            .get<Nationality>(`${this.resourceUrl}/${id}`, { observe: 'response' })
             .map((res: EntityResponseType) => this.convertResponse(res));
     }
 
     query(req?: any): Observable<HttpResponse<Nationality[]>> {
         const options = createRequestOption(req);
-        return this.http.get<Nationality[]>(this.resourceUrl, { params: options, observe: 'response' })
+        return this.http
+            .get<Nationality[]>(this.resourceUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
     search(req?: any): Observable<HttpResponse<Nationality[]>> {
         const options = createRequestOption(req);
-        return this.http.get<Nationality[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+        return this.http
+            .get<Nationality[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res));
     }
 
-   searchRemote(req?: any): Observable<HttpResponse<any>> {
+    searchRemote(req?: any): Observable<HttpResponse<any>> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceSearchSuggestUrl, { params: options, observe: 'response' });
-  }
-  
+    }
+
     private convertResponse(res: EntityResponseType): EntityResponseType {
         const body: Nationality = this.convertItemFromServer(res.body);
-        return res.clone({body});
+        return res.clone({ body });
     }
 
     private convertArrayResponse(res: HttpResponse<Nationality[]>): HttpResponse<Nationality[]> {
@@ -66,7 +70,7 @@ export class NationalityService {
         for (let i = 0; i < jsonResponse.length; i++) {
             body.push(this.convertItemFromServer(jsonResponse[i]));
         }
-        return res.clone({body});
+        return res.clone({ body });
     }
 
     /**

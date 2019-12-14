@@ -15,16 +15,10 @@ import { FilterService } from './filter.service';
     templateUrl: './filter-dialog.component.html'
 })
 export class FilterDialogComponent implements OnInit {
-
     filter: Filter;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private filterService: FilterService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private filterService: FilterService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class FilterDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.filter.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.filterService.update(this.filter));
+            this.subscribeToSaveResponse(this.filterService.update(this.filter));
         } else {
-            this.subscribeToSaveResponse(
-                this.filterService.create(this.filter));
+            this.subscribeToSaveResponse(this.filterService.create(this.filter));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Filter>>) {
-        result.subscribe((res: HttpResponse<Filter>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Filter>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Filter) {
-        this.eventManager.broadcast({ name: 'filterListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'filterListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class FilterDialogComponent implements OnInit {
     template: ''
 })
 export class FilterPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private filterPopupService: FilterPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private filterPopupService: FilterPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.filterPopupService
-                    .open(FilterDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.filterPopupService.open(FilterDialogComponent as Component, params['id']);
             } else {
-                this.filterPopupService
-                    .open(FilterDialogComponent as Component);
+                this.filterPopupService.open(FilterDialogComponent as Component);
             }
         });
     }

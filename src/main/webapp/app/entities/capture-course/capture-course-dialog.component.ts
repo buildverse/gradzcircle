@@ -16,7 +16,6 @@ import { CandidateEducation, CandidateEducationService } from '../candidate-educ
     templateUrl: './capture-course-dialog.component.html'
 })
 export class CaptureCourseDialogComponent implements OnInit {
-
     captureCourse: CaptureCourse;
     isSaving: boolean;
 
@@ -28,24 +27,25 @@ export class CaptureCourseDialogComponent implements OnInit {
         private captureCourseService: CaptureCourseService,
         private candidateEducationService: CandidateEducationService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.candidateEducationService
-            .query({filter: 'capturecourse-is-null'})
-            .subscribe((res: HttpResponse<CandidateEducation[]>) => {
+        this.candidateEducationService.query({ filter: 'capturecourse-is-null' }).subscribe(
+            (res: HttpResponse<CandidateEducation[]>) => {
                 if (!this.captureCourse.candidateEducation || !this.captureCourse.candidateEducation.id) {
                     this.candidateeducations = res.body;
                 } else {
-                    this.candidateEducationService
-                        .find(this.captureCourse.candidateEducation.id)
-                        .subscribe((subRes: HttpResponse<CandidateEducation>) => {
+                    this.candidateEducationService.find(this.captureCourse.candidateEducation.id).subscribe(
+                        (subRes: HttpResponse<CandidateEducation>) => {
                             this.candidateeducations = [subRes.body].concat(res.body);
-                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
+                        },
+                        (subRes: HttpErrorResponse) => this.onError(subRes.message)
+                    );
                 }
-            }, (res: HttpErrorResponse) => this.onError(res.message));
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -55,21 +55,21 @@ export class CaptureCourseDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.captureCourse.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.captureCourseService.update(this.captureCourse));
+            this.subscribeToSaveResponse(this.captureCourseService.update(this.captureCourse));
         } else {
-            this.subscribeToSaveResponse(
-                this.captureCourseService.create(this.captureCourse));
+            this.subscribeToSaveResponse(this.captureCourseService.create(this.captureCourse));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<CaptureCourse>>) {
-        result.subscribe((res: HttpResponse<CaptureCourse>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<CaptureCourse>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: CaptureCourse) {
-        this.eventManager.broadcast({ name: 'captureCourseListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'captureCourseListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +92,16 @@ export class CaptureCourseDialogComponent implements OnInit {
     template: ''
 })
 export class CaptureCoursePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private captureCoursePopupService: CaptureCoursePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private captureCoursePopupService: CaptureCoursePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.captureCoursePopupService
-                    .open(CaptureCourseDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.captureCoursePopupService.open(CaptureCourseDialogComponent as Component, params['id']);
             } else {
-                this.captureCoursePopupService
-                    .open(CaptureCourseDialogComponent as Component);
+                this.captureCoursePopupService.open(CaptureCourseDialogComponent as Component);
             }
         });
     }

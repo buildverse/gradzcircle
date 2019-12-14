@@ -2,7 +2,7 @@ import { JhiTrackerService } from '../../core/tracker/tracker.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
-    selector: 'match-tracker',
+    selector: 'jhi-match-tracker',
     templateUrl: './match-tracker.component.html'
 })
 export class MatchTrackerComponent implements OnInit, OnDestroy {

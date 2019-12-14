@@ -12,7 +12,6 @@ import { CandidateLanguageProficiencyService } from './candidate-language-profic
     templateUrl: './candidate-language-proficiency-detail.component.html'
 })
 export class CandidateLanguageProficiencyDetailComponent implements OnInit, OnDestroy {
-
     candidateLanguageProficiency: CandidateLanguageProficiency;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,18 +20,18 @@ export class CandidateLanguageProficiencyDetailComponent implements OnInit, OnDe
         private eventManager: JhiEventManager,
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCandidateLanguageProficiencies();
     }
 
     load(id) {
-        this.candidateLanguageProficiencyService.find(id)
+        this.candidateLanguageProficiencyService
+            .find(id)
             .subscribe((candidateLanguageProficiencyResponse: HttpResponse<CandidateLanguageProficiency>) => {
                 this.candidateLanguageProficiency = candidateLanguageProficiencyResponse.body;
             });
@@ -47,9 +46,8 @@ export class CandidateLanguageProficiencyDetailComponent implements OnInit, OnDe
     }
 
     registerChangeInCandidateLanguageProficiencies() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'candidateLanguageProficiencyListModification',
-            (response) => this.load(this.candidateLanguageProficiency.id)
+        this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', response =>
+            this.load(this.candidateLanguageProficiency.id)
         );
     }
 }

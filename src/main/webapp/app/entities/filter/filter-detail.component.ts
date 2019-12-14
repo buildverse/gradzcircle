@@ -12,30 +12,23 @@ import { FilterService } from './filter.service';
     templateUrl: './filter-detail.component.html'
 })
 export class FilterDetailComponent implements OnInit, OnDestroy {
-
     filter: Filter;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private filterService: FilterService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private filterService: FilterService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInFilters();
     }
 
     load(id) {
-        this.filterService.find(id)
-            .subscribe((filterResponse: HttpResponse<Filter>) => {
-                this.filter = filterResponse.body;
-            });
+        this.filterService.find(id).subscribe((filterResponse: HttpResponse<Filter>) => {
+            this.filter = filterResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class FilterDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInFilters() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'filterListModification',
-            (response) => this.load(this.filter.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('filterListModification', response => this.load(this.filter.id));
     }
 }

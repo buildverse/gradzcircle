@@ -12,7 +12,6 @@ import { ProfileCategoryService } from './profile-category.service';
     templateUrl: './profile-category-detail.component.html'
 })
 export class ProfileCategoryDetailComponent implements OnInit, OnDestroy {
-
     profileCategory: ProfileCategory;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -21,21 +20,19 @@ export class ProfileCategoryDetailComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private profileCategoryService: ProfileCategoryService,
         private route: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInProfileCategories();
     }
 
     load(id) {
-        this.profileCategoryService.find(id)
-            .subscribe((profileCategoryResponse: HttpResponse<ProfileCategory>) => {
-                this.profileCategory = profileCategoryResponse.body;
-            });
+        this.profileCategoryService.find(id).subscribe((profileCategoryResponse: HttpResponse<ProfileCategory>) => {
+            this.profileCategory = profileCategoryResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +44,8 @@ export class ProfileCategoryDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInProfileCategories() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'profileCategoryListModification',
-            (response) => this.load(this.profileCategory.id)
+        this.eventSubscriber = this.eventManager.subscribe('profileCategoryListModification', response =>
+            this.load(this.profileCategory.id)
         );
     }
 }

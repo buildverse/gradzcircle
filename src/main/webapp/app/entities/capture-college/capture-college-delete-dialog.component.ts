@@ -13,22 +13,20 @@ import { CaptureCollegeService } from './capture-college.service';
     templateUrl: './capture-college-delete-dialog.component.html'
 })
 export class CaptureCollegeDeleteDialogComponent {
-
     captureCollege: CaptureCollege;
 
     constructor(
         private captureCollegeService: CaptureCollegeService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.captureCollegeService.delete(id).subscribe((response) => {
+        this.captureCollegeService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'captureCollegeListModification',
                 content: 'Deleted an captureCollege'
@@ -43,18 +41,13 @@ export class CaptureCollegeDeleteDialogComponent {
     template: ''
 })
 export class CaptureCollegeDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private captureCollegePopupService: CaptureCollegePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private captureCollegePopupService: CaptureCollegePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.captureCollegePopupService
-                .open(CaptureCollegeDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.captureCollegePopupService.open(CaptureCollegeDeleteDialogComponent as Component, params['id']);
         });
     }
 

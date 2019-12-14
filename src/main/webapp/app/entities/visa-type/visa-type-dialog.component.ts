@@ -16,7 +16,6 @@ import { Country, CountryService } from '../country';
     templateUrl: './visa-type-dialog.component.html'
 })
 export class VisaTypeDialogComponent implements OnInit {
-
     visaType: VisaType;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class VisaTypeDialogComponent implements OnInit {
         private visaTypeService: VisaTypeService,
         private countryService: CountryService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.countryService.query()
-            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.countryService.query().subscribe(
+            (res: HttpResponse<Country[]>) => {
+                this.countries = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,18 @@ export class VisaTypeDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.visaType.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.visaTypeService.update(this.visaType));
+            this.subscribeToSaveResponse(this.visaTypeService.update(this.visaType));
         } else {
-            this.subscribeToSaveResponse(
-                this.visaTypeService.create(this.visaType));
+            this.subscribeToSaveResponse(this.visaTypeService.create(this.visaType));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<VisaType>>) {
-        result.subscribe((res: HttpResponse<VisaType>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<VisaType>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: VisaType) {
-        this.eventManager.broadcast({ name: 'visaTypeListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'visaTypeListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -81,22 +80,16 @@ export class VisaTypeDialogComponent implements OnInit {
     template: ''
 })
 export class VisaTypePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private visaTypePopupService: VisaTypePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private visaTypePopupService: VisaTypePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.visaTypePopupService
-                    .open(VisaTypeDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.visaTypePopupService.open(VisaTypeDialogComponent as Component, params['id']);
             } else {
-                this.visaTypePopupService
-                    .open(VisaTypeDialogComponent as Component);
+                this.visaTypePopupService.open(VisaTypeDialogComponent as Component);
             }
         });
     }

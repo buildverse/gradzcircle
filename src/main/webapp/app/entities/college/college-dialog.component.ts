@@ -16,7 +16,6 @@ import { University, UniversityService } from '../university';
     templateUrl: './college-dialog.component.html'
 })
 export class CollegeDialogComponent implements OnInit {
-
     college: College;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class CollegeDialogComponent implements OnInit {
         private collegeService: CollegeService,
         private universityService: UniversityService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.universityService.query()
-            .subscribe((res: HttpResponse<University[]>) => { this.universities = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.universityService.query().subscribe(
+            (res: HttpResponse<University[]>) => {
+                this.universities = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,18 @@ export class CollegeDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.college.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.collegeService.update(this.college));
+            this.subscribeToSaveResponse(this.collegeService.update(this.college));
         } else {
-            this.subscribeToSaveResponse(
-                this.collegeService.create(this.college));
+            this.subscribeToSaveResponse(this.collegeService.create(this.college));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<College>>) {
-        result.subscribe((res: HttpResponse<College>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<College>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: College) {
-        this.eventManager.broadcast({ name: 'collegeListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'collegeListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -81,22 +80,16 @@ export class CollegeDialogComponent implements OnInit {
     template: ''
 })
 export class CollegePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private collegePopupService: CollegePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private collegePopupService: CollegePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.collegePopupService
-                    .open(CollegeDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.collegePopupService.open(CollegeDialogComponent as Component, params['id']);
             } else {
-                this.collegePopupService
-                    .open(CollegeDialogComponent as Component);
+                this.collegePopupService.open(CollegeDialogComponent as Component);
             }
         });
     }

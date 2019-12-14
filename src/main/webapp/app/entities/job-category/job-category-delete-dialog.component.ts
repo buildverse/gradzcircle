@@ -13,22 +13,20 @@ import { JobCategoryService } from './job-category.service';
     templateUrl: './job-category-delete-dialog.component.html'
 })
 export class JobCategoryDeleteDialogComponent {
-
     jobCategory: JobCategory;
 
     constructor(
         private jobCategoryService: JobCategoryService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.jobCategoryService.delete(id).subscribe((response) => {
+        this.jobCategoryService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'jobCategoryListModification',
                 content: 'Deleted an jobCategory'
@@ -43,18 +41,13 @@ export class JobCategoryDeleteDialogComponent {
     template: ''
 })
 export class JobCategoryDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobCategoryPopupService: JobCategoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private jobCategoryPopupService: JobCategoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.jobCategoryPopupService
-                .open(JobCategoryDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.jobCategoryPopupService.open(JobCategoryDeleteDialogComponent as Component, params['id']);
         });
     }
 

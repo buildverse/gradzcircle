@@ -13,22 +13,20 @@ import { ErrorMessagesService } from './error-messages.service';
     templateUrl: './error-messages-delete-dialog.component.html'
 })
 export class ErrorMessagesDeleteDialogComponent {
-
     errorMessages: ErrorMessages;
 
     constructor(
         private errorMessagesService: ErrorMessagesService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.errorMessagesService.delete(id).subscribe((response) => {
+        this.errorMessagesService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'errorMessagesListModification',
                 content: 'Deleted an errorMessages'
@@ -43,18 +41,13 @@ export class ErrorMessagesDeleteDialogComponent {
     template: ''
 })
 export class ErrorMessagesDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private errorMessagesPopupService: ErrorMessagesPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private errorMessagesPopupService: ErrorMessagesPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.errorMessagesPopupService
-                .open(ErrorMessagesDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.errorMessagesPopupService.open(ErrorMessagesDeleteDialogComponent as Component, params['id']);
         });
     }
 

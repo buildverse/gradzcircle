@@ -13,22 +13,16 @@ import { CandidateService } from './candidate.service';
     templateUrl: './candidate-delete-dialog.component.html'
 })
 export class CandidateDeleteDialogComponent {
-
     candidate: Candidate;
 
-    constructor(
-        private candidateService: CandidateService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private candidateService: CandidateService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.candidateService.delete(id).subscribe((response) => {
+        this.candidateService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'candidateListModification',
                 content: 'Deleted an candidate'
@@ -43,18 +37,13 @@ export class CandidateDeleteDialogComponent {
     template: ''
 })
 export class CandidateDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private candidatePopupService: CandidatePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private candidatePopupService: CandidatePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.candidatePopupService
-                .open(CandidateDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.candidatePopupService.open(CandidateDeleteDialogComponent as Component, params['id']);
         });
     }
 

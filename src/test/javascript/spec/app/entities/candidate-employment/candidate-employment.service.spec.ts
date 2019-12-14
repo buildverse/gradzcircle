@@ -7,7 +7,6 @@ import { CandidateEmploymentService } from '../../../../../../main/webapp/app/en
 import { SERVER_API_URL } from '../../../../../../main/webapp/app/app.constants';
 
 describe('Service Tests', () => {
-
     describe('CandidateEmployment Service', () => {
         let injector: TestBed;
         let service: CandidateEmploymentService;
@@ -15,13 +14,8 @@ describe('Service Tests', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [
-                    HttpClientTestingModule
-                ],
-                providers: [
-                    JhiDateUtils,
-                    CandidateEmploymentService
-                ]
+                imports: [HttpClientTestingModule],
+                providers: [JhiDateUtils, CandidateEmploymentService]
             });
             injector = getTestBed();
             service = injector.get(CandidateEmploymentService);
@@ -32,39 +26,35 @@ describe('Service Tests', () => {
             it('should call correct URL', () => {
                 service.find(123).subscribe(() => {});
 
-                const req  = httpMock.expectOne({ method: 'GET' });
+                const req = httpMock.expectOne({ method: 'GET' });
 
                 const resourceUrl = SERVER_API_URL + 'api/candidate-employments';
                 expect(req.request.url).toEqual(resourceUrl + '/' + 123);
             });
             it('should return CandidateEmployment', () => {
-
-                service.find(123).subscribe((received) => {
+                service.find(123).subscribe(received => {
                     expect(received.body.id).toEqual(123);
                 });
 
                 const req = httpMock.expectOne({ method: 'GET' });
-                req.flush({id: 123});
+                req.flush({ id: 123 });
             });
 
             it('should propagate not found response', () => {
-
                 service.find(123).subscribe(null, (_error: any) => {
                     expect(_error.status).toEqual(404);
                 });
 
-                const req  = httpMock.expectOne({ method: 'GET' });
+                const req = httpMock.expectOne({ method: 'GET' });
                 req.flush('Invalid request parameters', {
-                    status: 404, statusText: 'Bad Request'
+                    status: 404,
+                    statusText: 'Bad Request'
                 });
-
             });
         });
 
         afterEach(() => {
             httpMock.verify();
         });
-
     });
-
 });

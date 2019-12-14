@@ -3,14 +3,12 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class JobListEmitterService {
+    private messageSource = new Subject<boolean>();
+    currentMessage = this.messageSource.asObservable();
 
-  private messageSource = new Subject<boolean>();
-  currentMessage = this.messageSource.asObservable();
+    constructor() {}
 
-  constructor(  ) { }
-
-  jobChanges(message: boolean) {
-    this.messageSource.next(message);
-  }
-
+    jobChanges(message: boolean) {
+        this.messageSource.next(message);
+    }
 }

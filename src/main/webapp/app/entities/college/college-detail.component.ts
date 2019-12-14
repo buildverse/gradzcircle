@@ -12,30 +12,23 @@ import { CollegeService } from './college.service';
     templateUrl: './college-detail.component.html'
 })
 export class CollegeDetailComponent implements OnInit, OnDestroy {
-
     college: College;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private collegeService: CollegeService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private collegeService: CollegeService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInColleges();
     }
 
     load(id) {
-        this.collegeService.find(id)
-            .subscribe((collegeResponse: HttpResponse<College>) => {
-                this.college = collegeResponse.body;
-            });
+        this.collegeService.find(id).subscribe((collegeResponse: HttpResponse<College>) => {
+            this.college = collegeResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class CollegeDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInColleges() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'collegeListModification',
-            (response) => this.load(this.college.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('collegeListModification', response => this.load(this.college.id));
     }
 }

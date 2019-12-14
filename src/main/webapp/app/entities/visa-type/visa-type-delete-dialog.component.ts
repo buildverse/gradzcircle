@@ -13,22 +13,16 @@ import { VisaTypeService } from './visa-type.service';
     templateUrl: './visa-type-delete-dialog.component.html'
 })
 export class VisaTypeDeleteDialogComponent {
-
     visaType: VisaType;
 
-    constructor(
-        private visaTypeService: VisaTypeService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private visaTypeService: VisaTypeService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.visaTypeService.delete(id).subscribe((response) => {
+        this.visaTypeService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'visaTypeListModification',
                 content: 'Deleted an visaType'
@@ -43,18 +37,13 @@ export class VisaTypeDeleteDialogComponent {
     template: ''
 })
 export class VisaTypeDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private visaTypePopupService: VisaTypePopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private visaTypePopupService: VisaTypePopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.visaTypePopupService
-                .open(VisaTypeDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.visaTypePopupService.open(VisaTypeDeleteDialogComponent as Component, params['id']);
         });
     }
 

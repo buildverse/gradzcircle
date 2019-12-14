@@ -117,7 +117,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
                     });
                 });
             } else {
-                //this.currentSearch = this.corporate.id.toString();
+                // this.currentSearch = this.corporate.id.toString();
                 this.loadCorporate();
             }
         }

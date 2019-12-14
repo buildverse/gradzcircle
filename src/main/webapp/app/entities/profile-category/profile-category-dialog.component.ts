@@ -16,7 +16,6 @@ import { Candidate, CandidateService } from '../candidate';
     templateUrl: './profile-category-dialog.component.html'
 })
 export class ProfileCategoryDialogComponent implements OnInit {
-
     profileCategory: ProfileCategory;
     isSaving: boolean;
 
@@ -28,13 +27,16 @@ export class ProfileCategoryDialogComponent implements OnInit {
         private profileCategoryService: ProfileCategoryService,
         private candidateService: CandidateService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.candidateService.query()
-            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.candidateService.query().subscribe(
+            (res: HttpResponse<Candidate[]>) => {
+                this.candidates = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -44,21 +46,21 @@ export class ProfileCategoryDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.profileCategory.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.profileCategoryService.update(this.profileCategory));
+            this.subscribeToSaveResponse(this.profileCategoryService.update(this.profileCategory));
         } else {
-            this.subscribeToSaveResponse(
-                this.profileCategoryService.create(this.profileCategory));
+            this.subscribeToSaveResponse(this.profileCategoryService.create(this.profileCategory));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<ProfileCategory>>) {
-        result.subscribe((res: HttpResponse<ProfileCategory>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<ProfileCategory>) => this.onSaveSuccess(res.body),
+            (res: HttpErrorResponse) => this.onSaveError()
+        );
     }
 
     private onSaveSuccess(result: ProfileCategory) {
-        this.eventManager.broadcast({ name: 'profileCategoryListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'profileCategoryListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -92,22 +94,16 @@ export class ProfileCategoryDialogComponent implements OnInit {
     template: ''
 })
 export class ProfileCategoryPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private profileCategoryPopupService: ProfileCategoryPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private profileCategoryPopupService: ProfileCategoryPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.profileCategoryPopupService
-                    .open(ProfileCategoryDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.profileCategoryPopupService.open(ProfileCategoryDialogComponent as Component, params['id']);
             } else {
-                this.profileCategoryPopupService
-                    .open(ProfileCategoryDialogComponent as Component);
+                this.profileCategoryPopupService.open(ProfileCategoryDialogComponent as Component);
             }
         });
     }

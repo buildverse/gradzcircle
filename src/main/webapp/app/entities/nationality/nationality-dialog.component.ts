@@ -15,7 +15,6 @@ import { NationalityService } from './nationality.service';
     templateUrl: './nationality-dialog.component.html'
 })
 export class NationalityDialogComponent implements OnInit {
-
     nationality: Nationality;
     isSaving: boolean;
 
@@ -23,8 +22,7 @@ export class NationalityDialogComponent implements OnInit {
         public activeModal: NgbActiveModal,
         private nationalityService: NationalityService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +35,18 @@ export class NationalityDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.nationality.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.nationalityService.update(this.nationality));
+            this.subscribeToSaveResponse(this.nationalityService.update(this.nationality));
         } else {
-            this.subscribeToSaveResponse(
-                this.nationalityService.create(this.nationality));
+            this.subscribeToSaveResponse(this.nationalityService.create(this.nationality));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Nationality>>) {
-        result.subscribe((res: HttpResponse<Nationality>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Nationality>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Nationality) {
-        this.eventManager.broadcast({ name: 'nationalityListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'nationalityListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +61,16 @@ export class NationalityDialogComponent implements OnInit {
     template: ''
 })
 export class NationalityPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private nationalityPopupService: NationalityPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private nationalityPopupService: NationalityPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.nationalityPopupService
-                    .open(NationalityDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.nationalityPopupService.open(NationalityDialogComponent as Component, params['id']);
             } else {
-                this.nationalityPopupService
-                    .open(NationalityDialogComponent as Component);
+                this.nationalityPopupService.open(NationalityDialogComponent as Component);
             }
         });
     }

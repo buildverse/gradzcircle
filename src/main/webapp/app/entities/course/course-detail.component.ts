@@ -12,30 +12,23 @@ import { CourseService } from './course.service';
     templateUrl: './course-detail.component.html'
 })
 export class CourseDetailComponent implements OnInit, OnDestroy {
-
     course: Course;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private courseService: CourseService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private courseService: CourseService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInCourses();
     }
 
     load(id) {
-        this.courseService.find(id)
-            .subscribe((courseResponse: HttpResponse<Course>) => {
-                this.course = courseResponse.body;
-            });
+        this.courseService.find(id).subscribe((courseResponse: HttpResponse<Course>) => {
+            this.course = courseResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInCourses() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'courseListModification',
-            (response) => this.load(this.course.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('courseListModification', response => this.load(this.course.id));
     }
 }

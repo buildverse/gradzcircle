@@ -9,12 +9,7 @@ import { CandidateService } from './candidate.service';
 export class CandidatePopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private candidateService: CandidateService
-
-    ) {
+    constructor(private modalService: NgbModal, private router: Router, private candidateService: CandidateService) {
         this.ngbModalRef = null;
     }
 
@@ -26,19 +21,18 @@ export class CandidatePopupService {
             }
 
             if (id) {
-                this.candidateService.find(id)
-                    .subscribe((candidateResponse: HttpResponse<Candidate>) => {
-                        const candidate: Candidate = candidateResponse.body;
-                        if (candidate.dateOfBirth) {
-                            candidate.dateOfBirth = {
-                                year: candidate.dateOfBirth.getFullYear(),
-                                month: candidate.dateOfBirth.getMonth() + 1,
-                                day: candidate.dateOfBirth.getDate()
-                            };
-                        }
-                        this.ngbModalRef = this.candidateModalRef(component, candidate);
-                        resolve(this.ngbModalRef);
-                    });
+                this.candidateService.find(id).subscribe((candidateResponse: HttpResponse<Candidate>) => {
+                    const candidate: Candidate = candidateResponse.body;
+                    if (candidate.dateOfBirth) {
+                        candidate.dateOfBirth = {
+                            year: candidate.dateOfBirth.getFullYear(),
+                            month: candidate.dateOfBirth.getMonth() + 1,
+                            day: candidate.dateOfBirth.getDate()
+                        };
+                    }
+                    this.ngbModalRef = this.candidateModalRef(component, candidate);
+                    resolve(this.ngbModalRef);
+                });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -50,15 +44,18 @@ export class CandidatePopupService {
     }
 
     candidateModalRef(component: Component, candidate: Candidate): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidate = candidate;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

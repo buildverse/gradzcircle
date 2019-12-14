@@ -12,30 +12,23 @@ import { StatesService } from './states.service';
     templateUrl: './states-detail.component.html'
 })
 export class StatesDetailComponent implements OnInit, OnDestroy {
-
     states: States;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private statesService: StatesService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private statesService: StatesService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInStates();
     }
 
     load(id) {
-        this.statesService.find(id)
-            .subscribe((statesResponse: HttpResponse<States>) => {
-                this.states = statesResponse.body;
-            });
+        this.statesService.find(id).subscribe((statesResponse: HttpResponse<States>) => {
+            this.states = statesResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class StatesDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInStates() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'statesListModification',
-            (response) => this.load(this.states.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('statesListModification', response => this.load(this.states.id));
     }
 }
