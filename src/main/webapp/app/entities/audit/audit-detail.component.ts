@@ -12,30 +12,23 @@ import { AuditService } from './audit.service';
     templateUrl: './audit-detail.component.html'
 })
 export class AuditDetailComponent implements OnInit, OnDestroy {
-
     audit: Audit;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private auditService: AuditService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private auditService: AuditService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInAudits();
     }
 
     load(id) {
-        this.auditService.find(id)
-            .subscribe((auditResponse: HttpResponse<Audit>) => {
-                this.audit = auditResponse.body;
-            });
+        this.auditService.find(id).subscribe((auditResponse: HttpResponse<Audit>) => {
+            this.audit = auditResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class AuditDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInAudits() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'auditListModification',
-            (response) => this.load(this.audit.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('auditListModification', response => this.load(this.audit.id));
     }
 }

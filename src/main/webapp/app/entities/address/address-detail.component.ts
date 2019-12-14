@@ -12,30 +12,23 @@ import { AddressService } from './address.service';
     templateUrl: './address-detail.component.html'
 })
 export class AddressDetailComponent implements OnInit, OnDestroy {
-
     address: Address;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private addressService: AddressService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private addressService: AddressService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInAddresses();
     }
 
     load(id) {
-        this.addressService.find(id)
-            .subscribe((addressResponse: HttpResponse<Address>) => {
-                this.address = addressResponse.body;
-            });
+        this.addressService.find(id).subscribe((addressResponse: HttpResponse<Address>) => {
+            this.address = addressResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInAddresses() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'addressListModification',
-            (response) => this.load(this.address.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('addressListModification', response => this.load(this.address.id));
     }
 }

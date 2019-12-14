@@ -4,7 +4,6 @@ import { Routes } from '@angular/router';
 import { EmployerAccountComponent } from './corporate-account.component';
 import { CorporateRegisterComponent } from './corporate-register.component';
 import { CorporateRegisterResolver } from './corporate-register-resolver.service';
-import { CorporateRegisterErrorMessagesResolver } from './corporate-register-error-message.resolver.service';
 
 export const corporateAccountManageRoutes: Routes = [
     {
@@ -27,7 +26,6 @@ export const corporateAccountManageRoutes: Routes = [
                 canActivate: [UserRouteAccessService],
                 resolve: {
                     countries: CorporateRegisterResolver
-                    //  validationMessages : CorporateRegisterErrorMessagesResolver
                 }
             },
             {

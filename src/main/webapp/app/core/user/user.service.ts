@@ -44,11 +44,11 @@ export class UserService {
     }
 
     private handleError(error: Response) {
-        let msg = `Status code ${error.status} on url ${error.url}`;
+        const msg = `Status code ${error.status} on url ${error.url}`;
         return Observable.throw(msg);
     }
     private extractData(response: Response) {
-        let body = response;
+        const body = response;
         return body || {};
     }
 

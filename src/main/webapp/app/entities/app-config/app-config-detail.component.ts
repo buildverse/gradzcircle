@@ -12,30 +12,23 @@ import { AppConfigService } from './app-config.service';
     templateUrl: './app-config-detail.component.html'
 })
 export class AppConfigDetailComponent implements OnInit, OnDestroy {
-
     appConfig: AppConfig;
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
-    constructor(
-        private eventManager: JhiEventManager,
-        private appConfigService: AppConfigService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private eventManager: JhiEventManager, private appConfigService: AppConfigService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscription = this.route.params.subscribe(params => {
             this.load(params['id']);
         });
         this.registerChangeInAppConfigs();
     }
 
     load(id) {
-        this.appConfigService.find(id)
-            .subscribe((appConfigResponse: HttpResponse<AppConfig>) => {
-                this.appConfig = appConfigResponse.body;
-            });
+        this.appConfigService.find(id).subscribe((appConfigResponse: HttpResponse<AppConfig>) => {
+            this.appConfig = appConfigResponse.body;
+        });
     }
     previousState() {
         window.history.back();
@@ -47,9 +40,6 @@ export class AppConfigDetailComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInAppConfigs() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'appConfigListModification',
-            (response) => this.load(this.appConfig.id)
-        );
+        this.eventSubscriber = this.eventManager.subscribe('appConfigListModification', response => this.load(this.appConfig.id));
     }
 }

@@ -26,7 +26,7 @@ export class LoginService {
                         if (account !== null) {
                             this.languageService.changeLanguage(account.langKey);
                         }
-                        //this.trackerService.sendActivity();
+                        // this.trackerService.sendActivity();
                         resolve(data);
                     });
                     return cb();

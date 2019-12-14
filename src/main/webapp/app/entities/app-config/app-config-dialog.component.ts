@@ -15,16 +15,10 @@ import { AppConfigService } from './app-config.service';
     templateUrl: './app-config-dialog.component.html'
 })
 export class AppConfigDialogComponent implements OnInit {
-
     appConfig: AppConfig;
     isSaving: boolean;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private appConfigService: AppConfigService,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal, private appConfigService: AppConfigService, private eventManager: JhiEventManager) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -37,21 +31,18 @@ export class AppConfigDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.appConfig.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.appConfigService.update(this.appConfig));
+            this.subscribeToSaveResponse(this.appConfigService.update(this.appConfig));
         } else {
-            this.subscribeToSaveResponse(
-                this.appConfigService.create(this.appConfig));
+            this.subscribeToSaveResponse(this.appConfigService.create(this.appConfig));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<AppConfig>>) {
-        result.subscribe((res: HttpResponse<AppConfig>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<AppConfig>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: AppConfig) {
-        this.eventManager.broadcast({ name: 'appConfigListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'appConfigListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -66,22 +57,16 @@ export class AppConfigDialogComponent implements OnInit {
     template: ''
 })
 export class AppConfigPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private appConfigPopupService: AppConfigPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private appConfigPopupService: AppConfigPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.appConfigPopupService
-                    .open(AppConfigDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.appConfigPopupService.open(AppConfigDialogComponent as Component, params['id']);
             } else {
-                this.appConfigPopupService
-                    .open(AppConfigDialogComponent as Component);
+                this.appConfigPopupService.open(AppConfigDialogComponent as Component);
             }
         });
     }

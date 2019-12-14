@@ -10,13 +10,7 @@ import { AuditService } from './audit.service';
 export class AuditPopupService {
     private ngbModalRef: NgbModalRef;
 
-    constructor(
-        private datePipe: DatePipe,
-        private modalService: NgbModal,
-        private router: Router,
-        private auditService: AuditService
-
-    ) {
+    constructor(private datePipe: DatePipe, private modalService: NgbModal, private router: Router, private auditService: AuditService) {
         this.ngbModalRef = null;
     }
 
@@ -28,16 +22,13 @@ export class AuditPopupService {
             }
 
             if (id) {
-                this.auditService.find(id)
-                    .subscribe((auditResponse: HttpResponse<Audit>) => {
-                        const audit: Audit = auditResponse.body;
-                        audit.createdTime = this.datePipe
-                            .transform(audit.createdTime, 'yyyy-MM-ddTHH:mm:ss');
-                        audit.updatedTime = this.datePipe
-                            .transform(audit.updatedTime, 'yyyy-MM-ddTHH:mm:ss');
-                        this.ngbModalRef = this.auditModalRef(component, audit);
-                        resolve(this.ngbModalRef);
-                    });
+                this.auditService.find(id).subscribe((auditResponse: HttpResponse<Audit>) => {
+                    const audit: Audit = auditResponse.body;
+                    audit.createdTime = this.datePipe.transform(audit.createdTime, 'yyyy-MM-ddTHH:mm:ss');
+                    audit.updatedTime = this.datePipe.transform(audit.updatedTime, 'yyyy-MM-ddTHH:mm:ss');
+                    this.ngbModalRef = this.auditModalRef(component, audit);
+                    resolve(this.ngbModalRef);
+                });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -49,15 +40,18 @@ export class AuditPopupService {
     }
 
     auditModalRef(component: Component, audit: Audit): NgbModalRef {
-        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
+        const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.audit = audit;
-        modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
-            this.ngbModalRef = null;
-        });
+        modalRef.result.then(
+            result => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            },
+            reason => {
+                this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                this.ngbModalRef = null;
+            }
+        );
         return modalRef;
     }
 }

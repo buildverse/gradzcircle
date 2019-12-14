@@ -13,22 +13,16 @@ import { AuditService } from './audit.service';
     templateUrl: './audit-delete-dialog.component.html'
 })
 export class AuditDeleteDialogComponent {
-
     audit: Audit;
 
-    constructor(
-        private auditService: AuditService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private auditService: AuditService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.auditService.delete(id).subscribe((response) => {
+        this.auditService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'auditListModification',
                 content: 'Deleted an audit'
@@ -43,18 +37,13 @@ export class AuditDeleteDialogComponent {
     template: ''
 })
 export class AuditDeletePopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private auditPopupService: AuditPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private auditPopupService: AuditPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.auditPopupService
-                .open(AuditDeleteDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            this.auditPopupService.open(AuditDeleteDialogComponent as Component, params['id']);
         });
     }
 

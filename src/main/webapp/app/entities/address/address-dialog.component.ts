@@ -17,7 +17,6 @@ import { Country, CountryService } from '../country';
     templateUrl: './address-dialog.component.html'
 })
 export class AddressDialogComponent implements OnInit {
-
     address: Address;
     isSaving: boolean;
 
@@ -32,15 +31,22 @@ export class AddressDialogComponent implements OnInit {
         private candidateService: CandidateService,
         private countryService: CountryService,
         private eventManager: JhiEventManager
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.candidateService.query()
-            .subscribe((res: HttpResponse<Candidate[]>) => { this.candidates = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-        this.countryService.query()
-            .subscribe((res: HttpResponse<Country[]>) => { this.countries = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.candidateService.query().subscribe(
+            (res: HttpResponse<Candidate[]>) => {
+                this.candidates = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.countryService.query().subscribe(
+            (res: HttpResponse<Country[]>) => {
+                this.countries = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     clear() {
@@ -50,21 +56,18 @@ export class AddressDialogComponent implements OnInit {
     save() {
         this.isSaving = true;
         if (this.address.id !== undefined) {
-            this.subscribeToSaveResponse(
-                this.addressService.update(this.address));
+            this.subscribeToSaveResponse(this.addressService.update(this.address));
         } else {
-            this.subscribeToSaveResponse(
-                this.addressService.create(this.address));
+            this.subscribeToSaveResponse(this.addressService.create(this.address));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<Address>>) {
-        result.subscribe((res: HttpResponse<Address>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe((res: HttpResponse<Address>) => this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess(result: Address) {
-        this.eventManager.broadcast({ name: 'addressListModification', content: 'OK'});
+        this.eventManager.broadcast({ name: 'addressListModification', content: 'OK' });
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
@@ -91,22 +94,16 @@ export class AddressDialogComponent implements OnInit {
     template: ''
 })
 export class AddressPopupComponent implements OnInit, OnDestroy {
-
     routeSub: any;
 
-    constructor(
-        private route: ActivatedRoute,
-        private addressPopupService: AddressPopupService
-    ) {}
+    constructor(private route: ActivatedRoute, private addressPopupService: AddressPopupService) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            if ( params['id'] ) {
-                this.addressPopupService
-                    .open(AddressDialogComponent as Component, params['id']);
+        this.routeSub = this.route.params.subscribe(params => {
+            if (params['id']) {
+                this.addressPopupService.open(AddressDialogComponent as Component, params['id']);
             } else {
-                this.addressPopupService
-                    .open(AddressDialogComponent as Component);
+                this.addressPopupService.open(AddressDialogComponent as Component);
             }
         });
     }
