@@ -8,6 +8,7 @@ import { createRequestOption } from '../../shared';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 export type EntityResponseType = HttpResponse<CandidateEmployment>;
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CandidateEmploymentService {
@@ -21,34 +22,34 @@ export class CandidateEmploymentService {
         const copy = this.convert(candidateEmployment);
         return this.http
             .post<CandidateEmployment>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(candidateEmployment: CandidateEmployment): Observable<EntityResponseType> {
         const copy = this.convert(candidateEmployment);
         return this.http
             .put<CandidateEmployment>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<CandidateEmployment>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     findEmploymentsByCandidateId(id?: number): Observable<HttpResponse<CandidateEmployment[]>> {
         // const options = this.createRequestOption(req);
         return this.http
             .get(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response' })
-            .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<CandidateEmployment[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateEmployment[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -59,7 +60,7 @@ export class CandidateEmploymentService {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateEmployment[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEmployment[]>) => this.convertArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

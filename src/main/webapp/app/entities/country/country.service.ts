@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { map } from 'rxjs/operators';
 import { Country } from './country.model';
 import { createRequestOption } from '../../shared';
 
@@ -20,27 +20,27 @@ export class CountryService {
         const copy = this.convert(country);
         return this.http
             .post<Country>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(country: Country): Observable<EntityResponseType> {
         const copy = this.convert(country);
         return this.http
             .put<Country>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Country>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Country[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Country[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -51,7 +51,7 @@ export class CountryService {
         const options = createRequestOption(req);
         return this.http
             .get<Country[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {
@@ -72,7 +72,7 @@ export class CountryService {
         // console.log("Called getEnableCountires");
         return this.http
             .get<Country[]>(this.resourceUrl + '/enabled', { observe: 'response' })
-            .map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Country[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {

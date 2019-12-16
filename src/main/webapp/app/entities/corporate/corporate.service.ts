@@ -11,6 +11,7 @@ import { Country } from '../../entities/country/country.model';
 export type EntityResponseType = HttpResponse<Corporate>;
 export type EntityResponseTypeCandidateList = HttpResponse<CandidateList>;
 import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class CorporateService {
@@ -25,40 +26,40 @@ export class CorporateService {
         const copy = this.convert(corporate);
         return this.http
             .post<Corporate>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(corporate: Corporate): Observable<EntityResponseType> {
         const copy = this.convert(corporate);
         return this.http
             .put<Corporate>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Corporate>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     findCorporateByLoginId(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Corporate>(`${this.findByLoginIdresourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     queryLinkedCandidates(req?: any): Observable<HttpResponse<CandidateList[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateList[]>(`${this.resourceLinkedCandidatesForCorporateUrl}/${req.id}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateList[]>) => this.convertArrayResponseForCandidateList(res));
+            .pipe(map((res: HttpResponse<CandidateList[]>) => this.convertArrayResponseForCandidateList(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Corporate[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Corporate[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res));
+            .pipe(map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -69,7 +70,7 @@ export class CorporateService {
         const options = createRequestOption(req);
         return this.http
             .get<Corporate[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res));
+            .pipe(map((res: HttpResponse<Corporate[]>) => this.convertArrayResponseForCorporate(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

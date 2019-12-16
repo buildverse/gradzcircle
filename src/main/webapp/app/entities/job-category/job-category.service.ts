@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { map } from 'rxjs/operators';
 import { JobCategory } from './job-category.model';
 import { createRequestOption } from '../../shared';
 
@@ -19,27 +19,27 @@ export class JobCategoryService {
         const copy = this.convert(jobCategory);
         return this.http
             .post<JobCategory>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(jobCategory: JobCategory): Observable<EntityResponseType> {
         const copy = this.convert(jobCategory);
         return this.http
             .put<JobCategory>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<JobCategory>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<JobCategory[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<JobCategory[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<JobCategory[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<JobCategory[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -50,7 +50,7 @@ export class JobCategoryService {
         const options = createRequestOption(req);
         return this.http
             .get<JobCategory[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<JobCategory[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<JobCategory[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { map } from 'rxjs/operators';
 import { Nationality } from './nationality.model';
 import { createRequestOption } from '../../shared';
 
@@ -20,27 +20,27 @@ export class NationalityService {
         const copy = this.convert(nationality);
         return this.http
             .post<Nationality>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(nationality: Nationality): Observable<EntityResponseType> {
         const copy = this.convert(nationality);
         return this.http
             .put<Nationality>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Nationality>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Nationality[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Nationality[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -51,7 +51,7 @@ export class NationalityService {
         const options = createRequestOption(req);
         return this.http
             .get<Nationality[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Nationality[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {

@@ -10,7 +10,7 @@ import { Qualification } from '../qualification/qualification.model';
 import { Course } from '../course/course.model';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
-
+import { map } from 'rxjs/operators';
 export type EntityResponseType = HttpResponse<CandidateEducation>;
 
 @Injectable()
@@ -25,34 +25,34 @@ export class CandidateEducationService {
         const copy = this.convert(candidateEducation);
         return this.http
             .post<CandidateEducation>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(candidateEducation: CandidateEducation): Observable<EntityResponseType> {
         const copy = this.convert(candidateEducation);
         return this.http
             .put<CandidateEducation>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<CandidateEducation>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     findEducationByCandidateId(id?: number): Observable<HttpResponse<CandidateEducation[]>> {
         // const options = this.createRequestOption(req);
         return this.http
             .get<CandidateEducation[]>(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response' })
-            .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<CandidateEducation[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateEducation[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -63,7 +63,7 @@ export class CandidateEducationService {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateEducation[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateEducation[]>) => this.convertArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

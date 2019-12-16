@@ -5,6 +5,7 @@ import { SERVER_API_URL } from '../../app.constants';
 
 import { University } from './university.model';
 import { createRequestOption } from '../../shared';
+import { map } from 'rxjs/operators';
 
 export type EntityResponseType = HttpResponse<University>;
 
@@ -20,27 +21,27 @@ export class UniversityService {
         const copy = this.convert(university);
         return this.http
             .post<University>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(university: University): Observable<EntityResponseType> {
         const copy = this.convert(university);
         return this.http
             .put<University>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<University>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<University[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<University[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<University[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<University[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -51,7 +52,7 @@ export class UniversityService {
         const options = createRequestOption(req);
         return this.http
             .get<University[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<University[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<University[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {

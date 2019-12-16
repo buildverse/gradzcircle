@@ -6,6 +6,7 @@ import { createRequestOption } from '../../shared';
 import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 export type EntityResponseType = HttpResponse<CandidateCertification>;
 
@@ -22,33 +23,33 @@ export class CandidateCertificationService {
         const copy = this.convert(candidateCertification);
         return this.http
             .post<CandidateCertification>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(candidateCertification: CandidateCertification): Observable<EntityResponseType> {
         const copy = this.convert(candidateCertification);
         return this.http
             .put<CandidateCertification>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     findCertificationsByCandidateId(id: number): Observable<HttpResponse<CandidateCertification[]>> {
         return this.http
             .get<CandidateCertification[]>(`${this.resourceUrlCertificationByCandidate}/${id}`, { observe: 'response' })
-            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<CandidateCertification>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<CandidateCertification[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateCertification[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -59,14 +60,14 @@ export class CandidateCertificationService {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateCertification[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res)));
     }
 
     searchForAdmin(req?: any): Observable<HttpResponse<CandidateCertification[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateCertification[]>(this.resourceSearchUrlAdmin, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateCertification[]>) => this.convertArrayResponse(res)));
     }
 
     private convertArrayResponse(res: HttpResponse<CandidateCertification[]>): HttpResponse<CandidateCertification[]> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { map } from 'rxjs/operators';
 import { Course } from './course.model';
 import { createRequestOption } from '../../shared';
 
@@ -20,27 +20,27 @@ export class CourseService {
         const copy = this.convert(course);
         return this.http
             .post<Course>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(course: Course): Observable<EntityResponseType> {
         const copy = this.convert(course);
         return this.http
             .put<Course>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Course>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Course[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Course[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Course[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Course[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -51,7 +51,7 @@ export class CourseService {
         const options = createRequestOption(req);
         return this.http
             .get<Course[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Course[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Course[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {

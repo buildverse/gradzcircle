@@ -8,7 +8,7 @@ import { Job } from './job.model';
 import { CandidateList } from './candidate-list.model';
 import { createRequestOption } from '../../shared';
 import * as moment from 'moment';
-
+import { map } from 'rxjs/operators';
 export type EntityResponseType = HttpResponse<Job>;
 
 @Injectable()
@@ -44,66 +44,66 @@ export class JobService {
         const copy = this.convert(job);
         return this.http
             .post<Job>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(job: Job): Observable<EntityResponseType> {
         const copy = this.convert(job);
         return this.http
             .put<Job>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     addtionalCandidatesForJob(job: Job): Observable<EntityResponseType> {
         const copy = this.convert(job);
         return this.http
             .put<Job>(this.resourceAdditionalCandidatesToJob, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     applyforJob(jobId: number, loginId: number): Observable<EntityResponseType> {
         return this.http
             .get<Job>(`${this.resourceApplyForJobByCandidateUrl}/${jobId}/${loginId}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Job>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     getJobForCandidateView(jobId: number, candidateId: number): Observable<EntityResponseType> {
         return this.http
             .get<Job>(`${this.resourceViewJobForCandidate}/${jobId}/${candidateId}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     getJobEconomics(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Job>(`${this.resourceGetJobEconomics}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Job[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryForActiveJobCount(req?: any): Observable<HttpResponse<any>> {
         const options = createRequestOption(req);
         return this.http
             .get<any>(this.resourceGetActiveJobCount, { params: options, observe: 'response' })
-            .map((res: HttpResponse<any>) => res.body);
+            .pipe(map((res: HttpResponse<any>) => res.body));
     }
 
     queryActiveJobsByCorporate(req?: any): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Job[]>(`${this.resourceActiveJobsByCorporateUrl}/${req.id}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByEmploymentType(
@@ -119,7 +119,7 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByOneJobType(
@@ -135,7 +135,7 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByTwoJobTypes(
@@ -152,7 +152,7 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByThreeJobTypes(
@@ -171,7 +171,7 @@ export class JobService {
             /${id}/${matchScoreFrom}/${matchScoreTo}`,
                 { params: options, observe: 'response' }
             )
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByEmploymentTypeAndOneJobType(
@@ -189,7 +189,7 @@ export class JobService {
               /${id}/${matchScoreFrom}/${matchScoreTo}`,
                 { params: options, observe: 'response' }
             )
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByEmploymentTypeAndTwoJobTypes(
@@ -208,7 +208,7 @@ export class JobService {
                   ${jobType2}/${id}/${matchScoreFrom}/${matchScoreTo}`,
                 { params: options, observe: 'response' }
             )
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobsByEmploymentTypeAndThreeJobTypes(
@@ -228,14 +228,14 @@ export class JobService {
                     /${id}/${matchScoreFrom}/${matchScoreTo}`,
                 { params: options, observe: 'response' }
             )
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryActiveJobs(req?: any): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Job[]>(`${this.resourceActiveJobs}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryMatchedCandidatesForJob(
@@ -250,14 +250,14 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res)));
     }
 
     queryShortListedCandidatesForJob(req?: any): Observable<HttpResponse<CandidateList[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateList[]>(`${this.resourceShortListedCandidatedForJobUrl}/${req.id}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res)));
     }
 
     queryAppliedCandidatesForJob(req?: any, fromMatchScore?: number, toMatchScore?: number): Observable<HttpResponse<CandidateList[]>> {
@@ -267,7 +267,7 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateList[]>) => this.convertCandidateListArrayResponse(res)));
     }
 
     queryActiveJobsForCandidates(
@@ -282,7 +282,7 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryJobListForLinkedCandidates(req?: any, candidateId?: number, corporateId?: number): Observable<HttpResponse<Job[]>> {
@@ -293,21 +293,21 @@ export class JobService {
                 params: options,
                 observe: 'response'
             })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryAppliedJobsByCandidate(req?: any): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
         return this.http
             .get(`${this.resourceAppliedJobsByCandidateUrl}/${req.id}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     queryShortListedJobsForCandidate(req?: any): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
         return this.http
             .get(`${this.resourceShortListedJobsForCandidateUrl}/${req.id}`, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -322,7 +322,7 @@ export class JobService {
         const options = createRequestOption(req);
         return this.http
             .get<Job[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res));
+            .pipe(map((res: HttpResponse<Job[]>) => this.convertJobArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

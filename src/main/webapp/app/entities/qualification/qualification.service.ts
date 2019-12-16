@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-
+import { map } from 'rxjs/operators';
 import { Qualification } from './qualification.model';
 import { createRequestOption } from '../../shared';
 
@@ -20,27 +20,27 @@ export class QualificationService {
         const copy = this.convert(qualification);
         return this.http
             .post<Qualification>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(qualification: Qualification): Observable<EntityResponseType> {
         const copy = this.convert(qualification);
         return this.http
             .put<Qualification>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<Qualification>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<Qualification[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<Qualification[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res)));
     }
 
     searchRemote(req?: any): Observable<HttpResponse<any>> {
@@ -56,7 +56,7 @@ export class QualificationService {
         const options = createRequestOption(req);
         return this.http
             .get<Qualification[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<Qualification[]>) => this.convertArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

@@ -5,7 +5,7 @@ import { SERVER_API_URL } from '../../app.constants';
 import { CandidateLanguageProficiency } from './candidate-language-proficiency.model';
 import { createRequestOption } from '../../shared';
 import { Language } from '../language/language.model';
-
+import { map } from 'rxjs/operators';
 export type EntityResponseType = HttpResponse<CandidateLanguageProficiency>;
 
 @Injectable()
@@ -21,7 +21,7 @@ export class CandidateLanguageProficiencyService {
         const copy = this.convert(candidateLanguageProficiency);
         return this.http
             .post<CandidateLanguageProficiency>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     createMultiple(candidateLanguageProficiency: CandidateLanguageProficiency): Observable<EntityResponseType> {
@@ -29,33 +29,33 @@ export class CandidateLanguageProficiencyService {
         // console.log("Sending over wire ...create"+ JSON.stringify(candidateLanguageProficiency));
         return this.http
             .post<CandidateLanguageProficiency>(this.resourceUrlMultiple, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(candidateLanguageProficiency: CandidateLanguageProficiency): Observable<EntityResponseType> {
         const copy = this.convert(candidateLanguageProficiency);
         return this.http
             .put<CandidateLanguageProficiency>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<CandidateLanguageProficiency>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     findByCandidateId(id: number): Observable<HttpResponse<CandidateLanguageProficiency[]>> {
         return this.http
             .get<CandidateLanguageProficiency[]>(`${this.resourceUrlByCandidate}/${id}`, { observe: 'response' })
-            .map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<CandidateLanguageProficiency[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateLanguageProficiency[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -66,7 +66,7 @@ export class CandidateLanguageProficiencyService {
         const options = createRequestOption(req);
         return this.http
             .get<CandidateLanguageProficiency[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<CandidateLanguageProficiency[]>) => this.convertArrayResponse(res)));
     }
 
     private convertResponse(res: EntityResponseType): EntityResponseType {

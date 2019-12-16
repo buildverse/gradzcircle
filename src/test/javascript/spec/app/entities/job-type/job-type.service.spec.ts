@@ -4,7 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { JhiDateUtils } from 'ng-jhipster';
 
 import { JobTypeService } from 'app/entities/job-type/job-type.service';
-import { SERVER_API_URL } from '/app/app.constants';
+import { SERVER_API_URL } from 'app/app.constants';
 
 describe('Service Tests', () => {
     describe('JobType Service', () => {

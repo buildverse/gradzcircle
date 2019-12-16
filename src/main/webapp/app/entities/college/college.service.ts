@@ -5,7 +5,7 @@ import { SERVER_API_URL } from '../../app.constants';
 
 import { College } from './college.model';
 import { createRequestOption } from '../../shared';
-
+import { map } from 'rxjs/operators';
 export type EntityResponseType = HttpResponse<College>;
 
 @Injectable()
@@ -19,27 +19,27 @@ export class CollegeService {
         const copy = this.convert(college);
         return this.http
             .post<College>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     update(college: College): Observable<EntityResponseType> {
         const copy = this.convert(college);
         return this.http
             .put<College>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<College>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+            .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
     }
 
     query(req?: any): Observable<HttpResponse<College[]>> {
         const options = createRequestOption(req);
         return this.http
             .get<College[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<College[]>) => this.convertArrayResponse(res)));
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
@@ -50,7 +50,7 @@ export class CollegeService {
         const options = createRequestOption(req);
         return this.http
             .get<College[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<College[]>) => this.convertArrayResponse(res));
+            .pipe(map((res: HttpResponse<College[]>) => this.convertArrayResponse(res)));
     }
 
     /* searchRemote(req?: any): Observable<HttpResponse<College[]>> {
