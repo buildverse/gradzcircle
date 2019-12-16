@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { FilterCategoryDialogComponent } from '../../../../../../main/webapp/app/entities/filter-category/filter-category-dialog.component';
-import { FilterCategoryService } from '../../../../../../main/webapp/app/entities/filter-category/filter-category.service';
-import { FilterCategory } from '../../../../../../main/webapp/app/entities/filter-category/filter-category.model';
+import { FilterCategoryDialogComponent } from 'app/entities/filter-category/filter-category-dialog.component';
+import { FilterCategoryService } from 'app/entities/filter-category/filter-category.service';
+import { FilterCategory } from 'app/entities/filter-category/filter-category.model';
 
 describe('Component Tests', () => {
-
     describe('FilterCategory Management Dialog Component', () => {
         let comp: FilterCategoryDialogComponent;
         let fixture: ComponentFixture<FilterCategoryDialogComponent>;
@@ -19,17 +18,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [FilterCategoryDialogComponent],
-                providers: [
-                    FilterCategoryService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [FilterCategoryDialogComponent],
+                    providers: [FilterCategoryService]
+                })
+                    .overrideTemplate(FilterCategoryDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(FilterCategoryDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(FilterCategoryDialogComponent);
@@ -40,12 +39,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new FilterCategory(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.filterCategory = entity;
                         // WHEN
                         comp.save();
@@ -54,18 +55,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'filterCategoryListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'filterCategoryListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new FilterCategory();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.filterCategory = entity;
                         // WHEN
                         comp.save();
@@ -74,12 +80,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'filterCategoryListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'filterCategoryListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

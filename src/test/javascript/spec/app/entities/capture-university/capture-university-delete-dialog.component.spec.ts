@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CaptureUniversityDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/capture-university/capture-university-delete-dialog.component';
-import { CaptureUniversityService } from '../../../../../../main/webapp/app/entities/capture-university/capture-university.service';
+import { CaptureUniversityDeleteDialogComponent } from 'app/entities/capture-university/capture-university-delete-dialog.component';
+import { CaptureUniversityService } from 'app/entities/capture-university/capture-university.service';
 
 describe('Component Tests', () => {
-
     describe('CaptureUniversity Management Delete Component', () => {
         let comp: CaptureUniversityDeleteDialogComponent;
         let fixture: ComponentFixture<CaptureUniversityDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CaptureUniversityDeleteDialogComponent],
-                providers: [
-                    CaptureUniversityService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CaptureUniversityDeleteDialogComponent],
+                    providers: [CaptureUniversityService]
+                })
+                    .overrideTemplate(CaptureUniversityDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CaptureUniversityDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CaptureUniversityDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

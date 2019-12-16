@@ -3,8 +3,8 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { JhiDateUtils } from 'ng-jhipster';
 
-import { CandidateProjectService } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project.service';
-import { SERVER_API_URL } from '../../../../../../main/webapp/app/app.constants';
+import { CandidateProjectService } from 'app/entities/candidate-project/candidate-project.service';
+import { SERVER_API_URL } from 'app/app.constants';
 
 describe('Service Tests', () => {
     describe('CandidateProject Service', () => {

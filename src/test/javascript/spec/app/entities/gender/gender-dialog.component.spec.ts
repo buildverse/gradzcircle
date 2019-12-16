@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { GenderDialogComponent } from '../../../../../../main/webapp/app/entities/gender/gender-dialog.component';
-import { GenderService } from '../../../../../../main/webapp/app/entities/gender/gender.service';
-import { Gender } from '../../../../../../main/webapp/app/entities/gender/gender.model';
+import { GenderDialogComponent } from 'app/entities/gender/gender-dialog.component';
+import { GenderService } from 'app/entities/gender/gender.service';
+import { Gender } from 'app/entities/gender/gender.model';
 
 describe('Component Tests', () => {
-
     describe('Gender Management Dialog Component', () => {
         let comp: GenderDialogComponent;
         let fixture: ComponentFixture<GenderDialogComponent>;
@@ -19,17 +18,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [GenderDialogComponent],
-                providers: [
-                    GenderService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [GenderDialogComponent],
+                    providers: [GenderService]
+                })
+                    .overrideTemplate(GenderDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(GenderDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(GenderDialogComponent);
@@ -40,12 +39,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Gender(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.gender = entity;
                         // WHEN
                         comp.save();
@@ -54,18 +55,20 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'genderListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'genderListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Gender();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.gender = entity;
                         // WHEN
                         comp.save();
@@ -74,12 +77,11 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'genderListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'genderListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

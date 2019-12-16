@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CaptureQualificationDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/capture-qualification/capture-qualification-delete-dialog.component';
-import { CaptureQualificationService } from '../../../../../../main/webapp/app/entities/capture-qualification/capture-qualification.service';
+import { CaptureQualificationDeleteDialogComponent } from 'app/entities/capture-qualification/capture-qualification-delete-dialog.component';
+import { CaptureQualificationService } from 'app/entities/capture-qualification/capture-qualification.service';
 
 describe('Component Tests', () => {
-
     describe('CaptureQualification Management Delete Component', () => {
         let comp: CaptureQualificationDeleteDialogComponent;
         let fixture: ComponentFixture<CaptureQualificationDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CaptureQualificationDeleteDialogComponent],
-                providers: [
-                    CaptureQualificationService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CaptureQualificationDeleteDialogComponent],
+                    providers: [CaptureQualificationService]
+                })
+                    .overrideTemplate(CaptureQualificationDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CaptureQualificationDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CaptureQualificationDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

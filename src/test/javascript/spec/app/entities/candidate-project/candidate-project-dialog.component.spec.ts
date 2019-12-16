@@ -6,14 +6,13 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CandidateProjectDialogComponent } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project-dialog.component';
-import { CandidateProjectService } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project.service';
-import { CandidateProject } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project.model';
-import { CandidateEducationService } from '../../../../../../main/webapp/app/entities/candidate-education';
-import { CandidateEmploymentService } from '../../../../../../main/webapp/app/entities/candidate-employment';
+import { CandidateProjectDialogComponent } from 'app/entities/candidate-project/candidate-project-dialog.component';
+import { CandidateProjectService } from 'app/entities/candidate-project/candidate-project.service';
+import { CandidateProject } from 'app/entities/candidate-project/candidate-project.model';
+import { CandidateEducationService } from 'app/entities/candidate-education';
+import { CandidateEmploymentService } from 'app/entities/candidate-employment';
 
 describe('Component Tests', () => {
-
     describe('CandidateProject Management Dialog Component', () => {
         let comp: CandidateProjectDialogComponent;
         let fixture: ComponentFixture<CandidateProjectDialogComponent>;
@@ -21,19 +20,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CandidateProjectDialogComponent],
-                providers: [
-                    CandidateEducationService,
-                    CandidateEmploymentService,
-                    CandidateProjectService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CandidateProjectDialogComponent],
+                    providers: [CandidateEducationService, CandidateEmploymentService, CandidateProjectService]
+                })
+                    .overrideTemplate(CandidateProjectDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CandidateProjectDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CandidateProjectDialogComponent);
@@ -44,12 +41,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new CandidateProject(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.candidateProject = entity;
                         // WHEN
                         comp.save();
@@ -58,18 +57,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'candidateProjectListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'candidateProjectListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new CandidateProject();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.candidateProject = entity;
                         // WHEN
                         comp.save();
@@ -78,12 +82,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'candidateProjectListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'candidateProjectListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

@@ -3,8 +3,8 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { JhiDateUtils } from 'ng-jhipster';
 
-import { AppConfigService } from '../../../../../../main/webapp/app/entities/app-config/app-config.service';
-import { SERVER_API_URL } from '../../../../../../main/webapp/app/app.constants';
+import { AppConfigService } from 'app/entities/app-config/app-config.service';
+import { SERVER_API_URL } from 'app/app.constants';
 
 describe('Service Tests', () => {
     describe('AppConfig Service', () => {

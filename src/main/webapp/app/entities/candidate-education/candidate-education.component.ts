@@ -46,8 +46,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
         private principal: Principal,
         private router: Router,
         private dataService: DataStorageService,
-        private spinnerService: NgxSpinnerService,
-        private candidateProfileSetting: CandidateProfileSettingService
+        private spinnerService: NgxSpinnerService
     ) {
         this.currentSearch =
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
@@ -83,7 +82,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
             this.candidateEducationService.query().subscribe(
                 (res: HttpResponse<CandidateEducation[]>) => {
                     this.candidateEducations = res.body;
-
                     this.currentSearch = '';
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
@@ -115,7 +113,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     setPrimaryEducationOnLoad() {
         this.candidateEducationsForDisplay = [];
         this.primaryCandidateEducation = undefined;
-        // console.log('candiate Educaiton from server is'+JSON.stringify(this.candidateEducations));
+        // console.log('candiate Educaiton from server is' + JSON.stringify(this.candidateEducations));
         // console.log('candiate Educaiton locally'+JSON.stringify(this.candidateEducationsForDisplay));
         if (this.candidateEducations && this.candidateEducations.length > 0) {
             this.candidateEducations.forEach(education => {

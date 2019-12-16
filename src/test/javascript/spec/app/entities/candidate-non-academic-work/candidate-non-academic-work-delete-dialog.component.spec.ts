@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CandidateNonAcademicWorkDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/candidate-non-academic-work/candidate-non-academic-work-delete-dialog.component';
-import { CandidateNonAcademicWorkService } from '../../../../../../main/webapp/app/entities/candidate-non-academic-work/candidate-non-academic-work.service';
+import { CandidateNonAcademicWorkDeleteDialogComponent } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work-delete-dialog.component';
+import { CandidateNonAcademicWorkService } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.service';
 
 describe('Component Tests', () => {
-
     describe('CandidateNonAcademicWork Management Delete Component', () => {
         let comp: CandidateNonAcademicWorkDeleteDialogComponent;
         let fixture: ComponentFixture<CandidateNonAcademicWorkDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CandidateNonAcademicWorkDeleteDialogComponent],
-                providers: [
-                    CandidateNonAcademicWorkService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CandidateNonAcademicWorkDeleteDialogComponent],
+                    providers: [CandidateNonAcademicWorkService]
+                })
+                    .overrideTemplate(CandidateNonAcademicWorkDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CandidateNonAcademicWorkDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CandidateNonAcademicWorkDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

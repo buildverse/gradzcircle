@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { ProfileCategoryDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/profile-category/profile-category-delete-dialog.component';
-import { ProfileCategoryService } from '../../../../../../main/webapp/app/entities/profile-category/profile-category.service';
+import { ProfileCategoryDeleteDialogComponent } from 'app/entities/profile-category/profile-category-delete-dialog.component';
+import { ProfileCategoryService } from 'app/entities/profile-category/profile-category.service';
 
 describe('Component Tests', () => {
-
     describe('ProfileCategory Management Delete Component', () => {
         let comp: ProfileCategoryDeleteDialogComponent;
         let fixture: ComponentFixture<ProfileCategoryDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [ProfileCategoryDeleteDialogComponent],
-                providers: [
-                    ProfileCategoryService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [ProfileCategoryDeleteDialogComponent],
+                    providers: [ProfileCategoryService]
+                })
+                    .overrideTemplate(ProfileCategoryDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(ProfileCategoryDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(ProfileCategoryDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

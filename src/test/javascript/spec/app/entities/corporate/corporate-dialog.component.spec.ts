@@ -1,5 +1,5 @@
 /* tslint:disable max-line-length */
-import { UserService } from '../../../../../../main/webapp/app/core/user/user.service';
+import { UserService } from 'app/core/user/user.service';
 import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,11 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CorporateDialogComponent } from '../../../../../../main/webapp/app/entities/corporate/corporate-dialog.component';
-import { CorporateService } from '../../../../../../main/webapp/app/entities/corporate/corporate.service';
-import { Corporate } from '../../../../../../main/webapp/app/entities/corporate/corporate.model';
-import { CountryService } from '../../../../../../main/webapp/app/entities/country';
-import { IndustryService } from '../../../../../../main/webapp/app/entities/industry';
+import { CorporateDialogComponent } from 'app/entities/corporate/corporate-dialog.component';
+import { CorporateService } from 'app/entities/corporate/corporate.service';
+import { Corporate } from 'app/entities/corporate/corporate.model';
+import { CountryService } from 'app/entities/country';
+import { IndustryService } from 'app/entities/industry';
 
 describe('Component Tests', () => {
     describe('Corporate Management Dialog Component', () => {

@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { AuditDialogComponent } from '../../../../../../main/webapp/app/entities/audit/audit-dialog.component';
-import { AuditService } from '../../../../../../main/webapp/app/entities/audit/audit.service';
-import { Audit } from '../../../../../../main/webapp/app/entities/audit/audit.model';
+import { AuditDialogComponent } from 'app/entities/audit/audit-dialog.component';
+import { AuditService } from 'app/entities/audit/audit.service';
+import { Audit } from 'app/entities/audit/audit.model';
 
 describe('Component Tests', () => {
-
     describe('Audit Management Dialog Component', () => {
         let comp: AuditDialogComponent;
         let fixture: ComponentFixture<AuditDialogComponent>;
@@ -19,17 +18,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [AuditDialogComponent],
-                providers: [
-                    AuditService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [AuditDialogComponent],
+                    providers: [AuditService]
+                })
+                    .overrideTemplate(AuditDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(AuditDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(AuditDialogComponent);
@@ -40,12 +39,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Audit(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.audit = entity;
                         // WHEN
                         comp.save();
@@ -54,18 +55,20 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'auditListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'auditListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Audit();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.audit = entity;
                         // WHEN
                         comp.save();
@@ -74,12 +77,11 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'auditListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'auditListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

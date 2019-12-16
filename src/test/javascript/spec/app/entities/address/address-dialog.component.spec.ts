@@ -6,14 +6,13 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { AddressDialogComponent } from '../../../../../../main/webapp/app/entities/address/address-dialog.component';
-import { AddressService } from '../../../../../../main/webapp/app/entities/address/address.service';
-import { Address } from '../../../../../../main/webapp/app/entities/address/address.model';
-import { CandidateService } from '../../../../../../main/webapp/app/entities/candidate';
-import { CountryService } from '../../../../../../main/webapp/app/entities/country';
+import { AddressDialogComponent } from 'app/entities/address/address-dialog.component';
+import { AddressService } from 'app/entities/address/address.service';
+import { Address } from 'app/entities/address/address.model';
+import { CandidateService } from 'app/entities/candidate';
+import { CountryService } from 'app/entities/country';
 
 describe('Component Tests', () => {
-
     describe('Address Management Dialog Component', () => {
         let comp: AddressDialogComponent;
         let fixture: ComponentFixture<AddressDialogComponent>;
@@ -21,19 +20,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [AddressDialogComponent],
-                providers: [
-                    CandidateService,
-                    CountryService,
-                    AddressService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [AddressDialogComponent],
+                    providers: [CandidateService, CountryService, AddressService]
+                })
+                    .overrideTemplate(AddressDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(AddressDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(AddressDialogComponent);
@@ -44,12 +41,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Address(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.address = entity;
                         // WHEN
                         comp.save();
@@ -58,18 +57,20 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'addressListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'addressListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Address();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.address = entity;
                         // WHEN
                         comp.save();
@@ -78,12 +79,11 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'addressListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'addressListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CandidateLanguageProficiencyDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/candidate-language-proficiency/candidate-language-proficiency-delete-dialog.component';
-import { CandidateLanguageProficiencyService } from '../../../../../../main/webapp/app/entities/candidate-language-proficiency/candidate-language-proficiency.service';
+import { CandidateLanguageProficiencyDeleteDialogComponent } from 'app/entities/candidate-language-proficiency/candidate-language-proficiency-delete-dialog.component';
+import { CandidateLanguageProficiencyService } from 'app/entities/candidate-language-proficiency/candidate-language-proficiency.service';
 
 describe('Component Tests', () => {
-
     describe('CandidateLanguageProficiency Management Delete Component', () => {
         let comp: CandidateLanguageProficiencyDeleteDialogComponent;
         let fixture: ComponentFixture<CandidateLanguageProficiencyDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CandidateLanguageProficiencyDeleteDialogComponent],
-                providers: [
-                    CandidateLanguageProficiencyService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CandidateLanguageProficiencyDeleteDialogComponent],
+                    providers: [CandidateLanguageProficiencyService]
+                })
+                    .overrideTemplate(CandidateLanguageProficiencyDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CandidateLanguageProficiencyDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CandidateLanguageProficiencyDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

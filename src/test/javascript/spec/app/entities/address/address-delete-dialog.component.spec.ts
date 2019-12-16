@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { AddressDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/address/address-delete-dialog.component';
-import { AddressService } from '../../../../../../main/webapp/app/entities/address/address.service';
+import { AddressDeleteDialogComponent } from 'app/entities/address/address-delete-dialog.component';
+import { AddressService } from 'app/entities/address/address.service';
 
 describe('Component Tests', () => {
-
     describe('Address Management Delete Component', () => {
         let comp: AddressDeleteDialogComponent;
         let fixture: ComponentFixture<AddressDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [AddressDeleteDialogComponent],
-                providers: [
-                    AddressService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [AddressDeleteDialogComponent],
+                    providers: [AddressService]
+                })
+                    .overrideTemplate(AddressDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(AddressDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(AddressDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

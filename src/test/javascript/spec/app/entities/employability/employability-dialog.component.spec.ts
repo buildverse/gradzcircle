@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { EmployabilityDialogComponent } from '../../../../../../main/webapp/app/entities/employability/employability-dialog.component';
-import { EmployabilityService } from '../../../../../../main/webapp/app/entities/employability/employability.service';
-import { Employability } from '../../../../../../main/webapp/app/entities/employability/employability.model';
+import { EmployabilityDialogComponent } from 'app/entities/employability/employability-dialog.component';
+import { EmployabilityService } from 'app/entities/employability/employability.service';
+import { Employability } from 'app/entities/employability/employability.model';
 
 describe('Component Tests', () => {
-
     describe('Employability Management Dialog Component', () => {
         let comp: EmployabilityDialogComponent;
         let fixture: ComponentFixture<EmployabilityDialogComponent>;
@@ -19,17 +18,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [EmployabilityDialogComponent],
-                providers: [
-                    EmployabilityService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [EmployabilityDialogComponent],
+                    providers: [EmployabilityService]
+                })
+                    .overrideTemplate(EmployabilityDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(EmployabilityDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(EmployabilityDialogComponent);
@@ -40,12 +39,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Employability(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.employability = entity;
                         // WHEN
                         comp.save();
@@ -54,18 +55,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'employabilityListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'employabilityListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new Employability();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.employability = entity;
                         // WHEN
                         comp.save();
@@ -74,12 +80,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'employabilityListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'employabilityListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

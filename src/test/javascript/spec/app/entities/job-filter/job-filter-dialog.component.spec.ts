@@ -6,13 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { JobFilterDialogComponent } from '../../../../../../main/webapp/app/entities/job-filter/job-filter-dialog.component';
-import { JobFilterService } from '../../../../../../main/webapp/app/entities/job-filter/job-filter.service';
-import { JobFilter } from '../../../../../../main/webapp/app/entities/job-filter/job-filter.model';
-import { JobService } from '../../../../../../main/webapp/app/entities/job';
+import { JobFilterDialogComponent } from 'app/entities/job-filter/job-filter-dialog.component';
+import { JobFilterService } from 'app/entities/job-filter/job-filter.service';
+import { JobFilter } from 'app/entities/job-filter/job-filter.model';
+import { JobService } from 'app/entities/job';
 
 describe('Component Tests', () => {
-
     describe('JobFilter Management Dialog Component', () => {
         let comp: JobFilterDialogComponent;
         let fixture: ComponentFixture<JobFilterDialogComponent>;
@@ -20,18 +19,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [JobFilterDialogComponent],
-                providers: [
-                    JobService,
-                    JobFilterService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [JobFilterDialogComponent],
+                    providers: [JobService, JobFilterService]
+                })
+                    .overrideTemplate(JobFilterDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(JobFilterDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(JobFilterDialogComponent);
@@ -42,12 +40,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new JobFilter(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.jobFilter = entity;
                         // WHEN
                         comp.save();
@@ -56,18 +56,20 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'jobFilterListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'jobFilterListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new JobFilter();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.jobFilter = entity;
                         // WHEN
                         comp.save();
@@ -76,12 +78,11 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'jobFilterListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'jobFilterListModification', content: 'OK' });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

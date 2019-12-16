@@ -1,4 +1,4 @@
-
+/*
 const webpack = require('webpack');
 const path = require('path');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
@@ -63,3 +63,4 @@ module.exports = (WATCH) => ({
         })
     ]
 });
+*/

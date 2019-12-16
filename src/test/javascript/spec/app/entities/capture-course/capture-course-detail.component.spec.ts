@@ -4,28 +4,27 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CaptureCourseDetailComponent } from '../../../../../../main/webapp/app/entities/capture-course/capture-course-detail.component';
-import { CaptureCourseService } from '../../../../../../main/webapp/app/entities/capture-course/capture-course.service';
-import { CaptureCourse } from '../../../../../../main/webapp/app/entities/capture-course/capture-course.model';
+import { CaptureCourseDetailComponent } from 'app/entities/capture-course/capture-course-detail.component';
+import { CaptureCourseService } from 'app/entities/capture-course/capture-course.service';
+import { CaptureCourse } from 'app/entities/capture-course/capture-course.model';
 
 describe('Component Tests', () => {
-
     describe('CaptureCourse Management Detail Component', () => {
         let comp: CaptureCourseDetailComponent;
         let fixture: ComponentFixture<CaptureCourseDetailComponent>;
         let service: CaptureCourseService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CaptureCourseDetailComponent],
-                providers: [
-                    CaptureCourseService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CaptureCourseDetailComponent],
+                    providers: [CaptureCourseService]
+                })
+                    .overrideTemplate(CaptureCourseDetailComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CaptureCourseDetailComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CaptureCourseDetailComponent);
@@ -37,18 +36,21 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
 
-                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
-                    body: new CaptureCourse(123)
-                })));
+                spyOn(service, 'find').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: new CaptureCourse(123)
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.find).toHaveBeenCalledWith(123);
-                expect(comp.captureCourse).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.captureCourse).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

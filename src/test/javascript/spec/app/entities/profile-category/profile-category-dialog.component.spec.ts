@@ -6,13 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { ProfileCategoryDialogComponent } from '../../../../../../main/webapp/app/entities/profile-category/profile-category-dialog.component';
-import { ProfileCategoryService } from '../../../../../../main/webapp/app/entities/profile-category/profile-category.service';
-import { ProfileCategory } from '../../../../../../main/webapp/app/entities/profile-category/profile-category.model';
-import { CandidateService } from '../../../../../../main/webapp/app/entities/candidate';
+import { ProfileCategoryDialogComponent } from 'app/entities/profile-category/profile-category-dialog.component';
+import { ProfileCategoryService } from 'app/entities/profile-category/profile-category.service';
+import { ProfileCategory } from 'app/entities/profile-category/profile-category.model';
+import { CandidateService } from 'app/entities/candidate';
 
 describe('Component Tests', () => {
-
     describe('ProfileCategory Management Dialog Component', () => {
         let comp: ProfileCategoryDialogComponent;
         let fixture: ComponentFixture<ProfileCategoryDialogComponent>;
@@ -20,18 +19,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [ProfileCategoryDialogComponent],
-                providers: [
-                    CandidateService,
-                    ProfileCategoryService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [ProfileCategoryDialogComponent],
+                    providers: [CandidateService, ProfileCategoryService]
+                })
+                    .overrideTemplate(ProfileCategoryDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(ProfileCategoryDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(ProfileCategoryDialogComponent);
@@ -42,12 +40,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new ProfileCategory(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.profileCategory = entity;
                         // WHEN
                         comp.save();
@@ -56,18 +56,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'profileCategoryListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'profileCategoryListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new ProfileCategory();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.profileCategory = entity;
                         // WHEN
                         comp.save();
@@ -76,12 +81,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'profileCategoryListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'profileCategoryListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

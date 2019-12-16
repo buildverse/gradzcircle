@@ -4,28 +4,27 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { EmployabilityDetailComponent } from '../../../../../../main/webapp/app/entities/employability/employability-detail.component';
-import { EmployabilityService } from '../../../../../../main/webapp/app/entities/employability/employability.service';
-import { Employability } from '../../../../../../main/webapp/app/entities/employability/employability.model';
+import { EmployabilityDetailComponent } from 'app/entities/employability/employability-detail.component';
+import { EmployabilityService } from 'app/entities/employability/employability.service';
+import { Employability } from 'app/entities/employability/employability.model';
 
 describe('Component Tests', () => {
-
     describe('Employability Management Detail Component', () => {
         let comp: EmployabilityDetailComponent;
         let fixture: ComponentFixture<EmployabilityDetailComponent>;
         let service: EmployabilityService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [EmployabilityDetailComponent],
-                providers: [
-                    EmployabilityService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [EmployabilityDetailComponent],
+                    providers: [EmployabilityService]
+                })
+                    .overrideTemplate(EmployabilityDetailComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(EmployabilityDetailComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(EmployabilityDetailComponent);
@@ -37,18 +36,21 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
 
-                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
-                    body: new Employability(123)
-                })));
+                spyOn(service, 'find').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: new Employability(123)
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.find).toHaveBeenCalledWith(123);
-                expect(comp.employability).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.employability).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

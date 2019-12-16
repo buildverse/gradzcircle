@@ -1,5 +1,5 @@
 /* tslint:disable max-line-length */
-import { UserService } from '../../../../../../main/webapp/app/core/user/user.service';
+import { UserService } from 'app/core/user/user.service';
 import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,17 +7,17 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CandidateDialogComponent } from '../../../../../../main/webapp/app/entities/candidate/candidate-dialog.component';
-import { CandidateService } from '../../../../../../main/webapp/app/entities/candidate/candidate.service';
-import { Candidate } from '../../../../../../main/webapp/app/entities/candidate/candidate.model';
-import { NationalityService } from '../../../../../../main/webapp/app/entities/nationality';
-import { GenderService } from '../../../../../../main/webapp/app/entities/gender';
-import { MaritalStatusService } from '../../../../../../main/webapp/app/entities/marital-status';
-import { JobCategoryService } from '../../../../../../main/webapp/app/entities/job-category';
-import { JobService } from '../../../../../../main/webapp/app/entities/job';
-import { ProfileCategoryService } from '../../../../../../main/webapp/app/entities/profile-category';
-import { CorporateService } from '../../../../../../main/webapp/app/entities/corporate';
-import { VisaTypeService } from '../../../../../../main/webapp/app/entities/visa-type';
+import { CandidateDialogComponent } from 'app/entities/candidate/candidate-dialog.component';
+import { CandidateService } from 'app/entities/candidate/candidate.service';
+import { Candidate } from 'app/entities/candidate/candidate.model';
+import { NationalityService } from 'app/entities/nationality';
+import { GenderService } from 'app/entities/gender';
+import { MaritalStatusService } from 'app/entities/marital-status';
+import { JobCategoryService } from 'app/entities/job-category';
+import { JobService } from 'app/entities/job';
+import { ProfileCategoryService } from 'app/entities/profile-category';
+import { CorporateService } from 'app/entities/corporate';
+import { VisaTypeService } from 'app/entities/visa-type';
 
 describe('Component Tests', () => {
     describe('Candidate Management Dialog Component', () => {

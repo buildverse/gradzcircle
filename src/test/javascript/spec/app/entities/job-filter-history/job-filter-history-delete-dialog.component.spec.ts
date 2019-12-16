@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { JobFilterHistoryDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/job-filter-history/job-filter-history-delete-dialog.component';
-import { JobFilterHistoryService } from '../../../../../../main/webapp/app/entities/job-filter-history/job-filter-history.service';
+import { JobFilterHistoryDeleteDialogComponent } from 'app/entities/job-filter-history/job-filter-history-delete-dialog.component';
+import { JobFilterHistoryService } from 'app/entities/job-filter-history/job-filter-history.service';
 
 describe('Component Tests', () => {
-
     describe('JobFilterHistory Management Delete Component', () => {
         let comp: JobFilterHistoryDeleteDialogComponent;
         let fixture: ComponentFixture<JobFilterHistoryDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [JobFilterHistoryDeleteDialogComponent],
-                providers: [
-                    JobFilterHistoryService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [JobFilterHistoryDeleteDialogComponent],
+                    providers: [JobFilterHistoryService]
+                })
+                    .overrideTemplate(JobFilterHistoryDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(JobFilterHistoryDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(JobFilterHistoryDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

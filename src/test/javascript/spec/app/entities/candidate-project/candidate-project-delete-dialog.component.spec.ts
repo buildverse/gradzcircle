@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CandidateProjectDeleteDialogComponent } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project-delete-dialog.component';
-import { CandidateProjectService } from '../../../../../../main/webapp/app/entities/candidate-project/candidate-project.service';
+import { CandidateProjectDeleteDialogComponent } from 'app/entities/candidate-project/candidate-project-delete-dialog.component';
+import { CandidateProjectService } from 'app/entities/candidate-project/candidate-project.service';
 
 describe('Component Tests', () => {
-
     describe('CandidateProject Management Delete Component', () => {
         let comp: CandidateProjectDeleteDialogComponent;
         let fixture: ComponentFixture<CandidateProjectDeleteDialogComponent>;
@@ -17,17 +16,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CandidateProjectDeleteDialogComponent],
-                providers: [
-                    CandidateProjectService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CandidateProjectDeleteDialogComponent],
+                    providers: [CandidateProjectService]
+                })
+                    .overrideTemplate(CandidateProjectDeleteDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CandidateProjectDeleteDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CandidateProjectDeleteDialogComponent);
@@ -38,8 +37,10 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete',
-                inject([],
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         spyOn(service, 'delete').and.returnValue(Observable.of({}));
@@ -57,5 +58,4 @@ describe('Component Tests', () => {
             );
         });
     });
-
 });

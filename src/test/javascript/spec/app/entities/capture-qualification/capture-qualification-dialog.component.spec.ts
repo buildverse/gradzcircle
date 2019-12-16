@@ -6,13 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CaptureQualificationDialogComponent } from '../../../../../../main/webapp/app/entities/capture-qualification/capture-qualification-dialog.component';
-import { CaptureQualificationService } from '../../../../../../main/webapp/app/entities/capture-qualification/capture-qualification.service';
-import { CaptureQualification } from '../../../../../../main/webapp/app/entities/capture-qualification/capture-qualification.model';
-import { CandidateEducationService } from '../../../../../../main/webapp/app/entities/candidate-education';
+import { CaptureQualificationDialogComponent } from 'app/entities/capture-qualification/capture-qualification-dialog.component';
+import { CaptureQualificationService } from 'app/entities/capture-qualification/capture-qualification.service';
+import { CaptureQualification } from 'app/entities/capture-qualification/capture-qualification.model';
+import { CandidateEducationService } from 'app/entities/candidate-education';
 
 describe('Component Tests', () => {
-
     describe('CaptureQualification Management Dialog Component', () => {
         let comp: CaptureQualificationDialogComponent;
         let fixture: ComponentFixture<CaptureQualificationDialogComponent>;
@@ -20,18 +19,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CaptureQualificationDialogComponent],
-                providers: [
-                    CandidateEducationService,
-                    CaptureQualificationService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CaptureQualificationDialogComponent],
+                    providers: [CandidateEducationService, CaptureQualificationService]
+                })
+                    .overrideTemplate(CaptureQualificationDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CaptureQualificationDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CaptureQualificationDialogComponent);
@@ -42,12 +40,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new CaptureQualification(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.captureQualification = entity;
                         // WHEN
                         comp.save();
@@ -56,18 +56,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'captureQualificationListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'captureQualificationListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new CaptureQualification();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.captureQualification = entity;
                         // WHEN
                         comp.save();
@@ -76,12 +81,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'captureQualificationListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'captureQualificationListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });

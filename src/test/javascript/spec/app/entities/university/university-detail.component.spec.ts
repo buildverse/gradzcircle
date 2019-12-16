@@ -4,28 +4,27 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { UniversityDetailComponent } from '../../../../../../main/webapp/app/entities/university/university-detail.component';
-import { UniversityService } from '../../../../../../main/webapp/app/entities/university/university.service';
-import { University } from '../../../../../../main/webapp/app/entities/university/university.model';
+import { UniversityDetailComponent } from 'app/entities/university/university-detail.component';
+import { UniversityService } from 'app/entities/university/university.service';
+import { University } from 'app/entities/university/university.model';
 
 describe('Component Tests', () => {
-
     describe('University Management Detail Component', () => {
         let comp: UniversityDetailComponent;
         let fixture: ComponentFixture<UniversityDetailComponent>;
         let service: UniversityService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [UniversityDetailComponent],
-                providers: [
-                    UniversityService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [UniversityDetailComponent],
+                    providers: [UniversityService]
+                })
+                    .overrideTemplate(UniversityDetailComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(UniversityDetailComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(UniversityDetailComponent);
@@ -37,18 +36,21 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
 
-                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
-                    body: new University(123)
-                })));
+                spyOn(service, 'find').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: new University(123)
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.find).toHaveBeenCalledWith(123);
-                expect(comp.university).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.university).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

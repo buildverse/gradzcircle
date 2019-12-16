@@ -4,28 +4,27 @@ import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { AddressComponent } from '../../../../../../main/webapp/app/entities/address/address.component';
-import { AddressService } from '../../../../../../main/webapp/app/entities/address/address.service';
-import { Address } from '../../../../../../main/webapp/app/entities/address/address.model';
+import { AddressComponent } from 'app/entities/address/address.component';
+import { AddressService } from 'app/entities/address/address.service';
+import { Address } from 'app/entities/address/address.model';
 
 describe('Component Tests', () => {
-
     describe('Address Management Component', () => {
         let comp: AddressComponent;
         let fixture: ComponentFixture<AddressComponent>;
         let service: AddressService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [AddressComponent],
-                providers: [
-                    AddressService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [AddressComponent],
+                    providers: [AddressService]
+                })
+                    .overrideTemplate(AddressComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(AddressComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(AddressComponent);
@@ -37,19 +36,22 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
                 const headers = new HttpHeaders().append('link', 'link;link');
-                spyOn(service, 'query').and.returnValue(Observable.of(new HttpResponse({
-                    body: [new Address(123)],
-                    headers
-                })));
+                spyOn(service, 'query').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: [new Address(123)],
+                            headers
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.query).toHaveBeenCalled();
-                expect(comp.addresses[0]).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.addresses[0]).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

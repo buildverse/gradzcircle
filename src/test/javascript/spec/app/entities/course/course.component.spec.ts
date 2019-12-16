@@ -4,28 +4,27 @@ import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { CourseComponent } from '../../../../../../main/webapp/app/entities/course/course.component';
-import { CourseService } from '../../../../../../main/webapp/app/entities/course/course.service';
-import { Course } from '../../../../../../main/webapp/app/entities/course/course.model';
+import { CourseComponent } from 'app/entities/course/course.component';
+import { CourseService } from 'app/entities/course/course.service';
+import { Course } from 'app/entities/course/course.model';
 
 describe('Component Tests', () => {
-
     describe('Course Management Component', () => {
         let comp: CourseComponent;
         let fixture: ComponentFixture<CourseComponent>;
         let service: CourseService;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [CourseComponent],
-                providers: [
-                    CourseService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [CourseComponent],
+                    providers: [CourseService]
+                })
+                    .overrideTemplate(CourseComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(CourseComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(CourseComponent);
@@ -37,19 +36,22 @@ describe('Component Tests', () => {
             it('Should call load all on init', () => {
                 // GIVEN
                 const headers = new HttpHeaders().append('link', 'link;link');
-                spyOn(service, 'query').and.returnValue(Observable.of(new HttpResponse({
-                    body: [new Course(123)],
-                    headers
-                })));
+                spyOn(service, 'query').and.returnValue(
+                    Observable.of(
+                        new HttpResponse({
+                            body: [new Course(123)],
+                            headers
+                        })
+                    )
+                );
 
                 // WHEN
                 comp.ngOnInit();
 
                 // THEN
                 expect(service.query).toHaveBeenCalled();
-                expect(comp.courses[0]).toEqual(jasmine.objectContaining({id: 123}));
+                expect(comp.courses[0]).toEqual(jasmine.objectContaining({ id: 123 }));
             });
         });
     });
-
 });

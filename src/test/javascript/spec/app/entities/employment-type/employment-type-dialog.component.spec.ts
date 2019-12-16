@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { GradzcircleTestModule } from '../../../test.module';
-import { EmploymentTypeDialogComponent } from '../../../../../../main/webapp/app/entities/employment-type/employment-type-dialog.component';
-import { EmploymentTypeService } from '../../../../../../main/webapp/app/entities/employment-type/employment-type.service';
-import { EmploymentType } from '../../../../../../main/webapp/app/entities/employment-type/employment-type.model';
+import { EmploymentTypeDialogComponent } from 'app/entities/employment-type/employment-type-dialog.component';
+import { EmploymentTypeService } from 'app/entities/employment-type/employment-type.service';
+import { EmploymentType } from 'app/entities/employment-type/employment-type.model';
 
 describe('Component Tests', () => {
-
     describe('EmploymentType Management Dialog Component', () => {
         let comp: EmploymentTypeDialogComponent;
         let fixture: ComponentFixture<EmploymentTypeDialogComponent>;
@@ -19,17 +18,17 @@ describe('Component Tests', () => {
         let mockEventManager: any;
         let mockActiveModal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [GradzcircleTestModule],
-                declarations: [EmploymentTypeDialogComponent],
-                providers: [
-                    EmploymentTypeService
-                ]
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [GradzcircleTestModule],
+                    declarations: [EmploymentTypeDialogComponent],
+                    providers: [EmploymentTypeService]
+                })
+                    .overrideTemplate(EmploymentTypeDialogComponent, '')
+                    .compileComponents();
             })
-            .overrideTemplate(EmploymentTypeDialogComponent, '')
-            .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(EmploymentTypeDialogComponent);
@@ -40,12 +39,14 @@ describe('Component Tests', () => {
         });
 
         describe('save', () => {
-            it('Should call update service on save for existing entity',
-                inject([],
+            it(
+                'Should call update service on save for existing entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new EmploymentType(123);
-                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'update').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.employmentType = entity;
                         // WHEN
                         comp.save();
@@ -54,18 +55,23 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.update).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'employmentTypeListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'employmentTypeListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
 
-            it('Should call create service on save for new entity',
-                inject([],
+            it(
+                'Should call create service on save for new entity',
+                inject(
+                    [],
                     fakeAsync(() => {
                         // GIVEN
                         const entity = new EmploymentType();
-                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({body: entity})));
+                        spyOn(service, 'create').and.returnValue(Observable.of(new HttpResponse({ body: entity })));
                         comp.employmentType = entity;
                         // WHEN
                         comp.save();
@@ -74,12 +80,14 @@ describe('Component Tests', () => {
                         // THEN
                         expect(service.create).toHaveBeenCalledWith(entity);
                         expect(comp.isSaving).toEqual(false);
-                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({ name: 'employmentTypeListModification', content: 'OK'});
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalledWith({
+                            name: 'employmentTypeListModification',
+                            content: 'OK'
+                        });
                         expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
                     })
                 )
             );
         });
     });
-
 });
