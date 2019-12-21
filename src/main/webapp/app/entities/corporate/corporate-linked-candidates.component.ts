@@ -86,7 +86,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     setViewPublicProfileRouteParams(candidateId, corporateId, fromLinkedCandidate) {
         this.dataStorageService.setdata(CANDIDATE_ID, candidateId);
         this.dataStorageService.setdata(JOB_ID, 0);
-        this.dataStorageService.setdata(CORPORATE_ID, corporateId);
+        this.dataStorageService.setdata(CORPORATE_ID, this.corporateId);
         this.dataStorageService.setdata(FROM_LINKED_CANDIDATE, fromLinkedCandidate);
     }
 

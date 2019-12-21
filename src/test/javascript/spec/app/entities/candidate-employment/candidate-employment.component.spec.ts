@@ -7,6 +7,9 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateEmploymentComponent } from 'app/entities/candidate-employment/candidate-employment.component';
 import { CandidateEmploymentService } from 'app/entities/candidate-employment/candidate-employment.service';
 import { CandidateEmployment } from 'app/entities/candidate-employment/candidate-employment.model';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('CandidateEmployment Management Component', () => {
@@ -19,7 +22,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateEmploymentComponent],
-                    providers: [CandidateEmploymentService]
+                    providers: [CandidateEmploymentService, DataStorageService, LocalStorageService, NgxSpinnerService]
                 })
                     .overrideTemplate(CandidateEmploymentComponent, '')
                     .compileComponents();

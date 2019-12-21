@@ -7,6 +7,9 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateSkillsComponent } from 'app/entities/candidate-skills/candidate-skills.component';
 import { CandidateSkillsService } from 'app/entities/candidate-skills/candidate-skills.service';
 import { CandidateSkills } from 'app/entities/candidate-skills/candidate-skills.model';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('CandidateSkills Management Component', () => {
@@ -19,7 +22,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateSkillsComponent],
-                    providers: [CandidateSkillsService]
+                    providers: [CandidateSkillsService, DataStorageService, LocalStorageService, NgxSpinnerService]
                 })
                     .overrideTemplate(CandidateSkillsComponent, '')
                     .compileComponents();

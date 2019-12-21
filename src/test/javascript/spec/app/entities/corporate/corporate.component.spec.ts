@@ -7,19 +7,23 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { CorporateComponent } from 'app/entities/corporate/corporate.component';
 import { CorporateService } from 'app/entities/corporate/corporate.service';
 import { Corporate } from 'app/entities/corporate/corporate.model';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('Corporate Management Component', () => {
         let comp: CorporateComponent;
         let fixture: ComponentFixture<CorporateComponent>;
         let service: CorporateService;
+        let storageService: DataStorageService;
 
         beforeEach(
             async(() => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CorporateComponent],
-                    providers: [CorporateService]
+                    providers: [CorporateService, LocalStorageService, DataStorageService, NgxSpinnerService]
                 })
                     .overrideTemplate(CorporateComponent, '')
                     .compileComponents();
@@ -30,13 +34,15 @@ describe('Component Tests', () => {
             fixture = TestBed.createComponent(CorporateComponent);
             comp = fixture.componentInstance;
             service = fixture.debugElement.injector.get(CorporateService);
+            storageService = fixture.debugElement.injector.get(DataStorageService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
                 // GIVEN
                 const headers = new HttpHeaders().append('link', 'link;link');
-                spyOn(service, 'query').and.returnValue(
+                jasmine.createSpy('getData').and.returnValue('ROLE_ADMIN');
+                jasmine.createSpy('query').and.returnValue(
                     Observable.of(
                         new HttpResponse({
                             body: [new Corporate(123)],
@@ -44,6 +50,7 @@ describe('Component Tests', () => {
                         })
                     )
                 );
+                fixture.detectChanges();
 
                 // WHEN
                 comp.ngOnInit();

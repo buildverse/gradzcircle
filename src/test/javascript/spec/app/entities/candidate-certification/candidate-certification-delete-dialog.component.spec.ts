@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angu
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateCertificationDeleteDialogComponent } from 'app/entities/candidate-certification/candidate-certification-delete-dialog.component';
 import { CandidateCertificationService } from 'app/entities/candidate-certification/candidate-certification.service';
@@ -21,7 +21,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateCertificationDeleteDialogComponent],
-                    providers: [CandidateCertificationService]
+                    providers: [CandidateCertificationService, NgbDatepickerConfig]
                 })
                     .overrideTemplate(CandidateCertificationDeleteDialogComponent, '')
                     .compileComponents();

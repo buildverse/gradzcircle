@@ -7,6 +7,9 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateLanguageProficiencyComponent } from 'app/entities/candidate-language-proficiency/candidate-language-proficiency.component';
 import { CandidateLanguageProficiencyService } from 'app/entities/candidate-language-proficiency/candidate-language-proficiency.service';
 import { CandidateLanguageProficiency } from 'app/entities/candidate-language-proficiency/candidate-language-proficiency.model';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('CandidateLanguageProficiency Management Component', () => {
@@ -19,7 +22,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateLanguageProficiencyComponent],
-                    providers: [CandidateLanguageProficiencyService]
+                    providers: [CandidateLanguageProficiencyService, DataStorageService, NgxSpinnerService, LocalStorageService]
                 })
                     .overrideTemplate(CandidateLanguageProficiencyComponent, '')
                     .compileComponents();

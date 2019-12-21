@@ -1,4 +1,4 @@
-<form name="editForm" role="form" novalidate (ngSubmit)="save(-2)"
+<form name="editForm" role="form" novalidate
 	#editForm="ngForm">
 
 	<div class="modal-header modal-header-decorate">
@@ -1387,7 +1387,7 @@
 				<span class="fa fa-ban"></span>&nbsp;<span
 					jhiTranslate="entity.action.cancel">Cancel</span>
 			</button>
-			<button type="submit" [disabled]="editForm.form.invalid || isSaving"
+			<button type="submit" [disabled]="editForm.form.invalid || isSaving" (click)="save(-2)"
 				class="btn btn-primary">
 				<span class="fa fa-save"></span>&nbsp;<span
 					jhiTranslate="entity.action.save">Save</span>

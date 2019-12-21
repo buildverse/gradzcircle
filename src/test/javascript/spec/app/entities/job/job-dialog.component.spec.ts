@@ -13,6 +13,17 @@ import { JobTypeService } from 'app/entities/job-type';
 import { EmploymentTypeService } from 'app/entities/employment-type';
 import { CorporateService } from 'app/entities/corporate';
 import { CandidateService } from 'app/entities/candidate';
+import { QualificationService } from 'app/entities/qualification';
+import { CourseService } from 'app/entities/course';
+import { CollegeService } from 'app/entities/college';
+import { UniversityService } from 'app/entities/university';
+import { LanguageService } from 'app/entities/language';
+import { FilterService } from 'app/entities/filter';
+import { GenderService } from 'app/entities/gender';
+import { SkillsService } from 'app/entities/skills';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('Job Management Dialog Component', () => {
@@ -27,7 +38,24 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [JobDialogComponent],
-                    providers: [JobTypeService, EmploymentTypeService, CorporateService, CandidateService, JobService]
+                    providers: [
+                        JobTypeService,
+                        EmploymentTypeService,
+                        CorporateService,
+                        CandidateService,
+                        JobService,
+                        QualificationService,
+                        CourseService,
+                        CollegeService,
+                        UniversityService,
+                        LanguageService,
+                        FilterService,
+                        GenderService,
+                        SkillsService,
+                        DataStorageService,
+                        NgxSpinnerService,
+                        LocalStorageService
+                    ]
                 })
                     .overrideTemplate(JobDialogComponent, '')
                     .compileComponents();

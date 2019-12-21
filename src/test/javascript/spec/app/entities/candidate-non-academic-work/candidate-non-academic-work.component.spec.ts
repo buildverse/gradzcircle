@@ -7,6 +7,9 @@ import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateNonAcademicWorkComponent } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.component';
 import { CandidateNonAcademicWorkService } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.service';
 import { CandidateNonAcademicWork } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.model';
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 
 describe('Component Tests', () => {
     describe('CandidateNonAcademicWork Management Component', () => {
@@ -19,7 +22,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateNonAcademicWorkComponent],
-                    providers: [CandidateNonAcademicWorkService]
+                    providers: [CandidateNonAcademicWorkService, DataStorageService, NgxSpinnerService, LocalStorageService]
                 })
                     .overrideTemplate(CandidateNonAcademicWorkComponent, '')
                     .compileComponents();

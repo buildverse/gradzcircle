@@ -5,13 +5,15 @@ import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
 import { GradzcircleTestModule } from '../../../test.module';
 import { CorporateDialogComponent } from 'app/entities/corporate/corporate-dialog.component';
 import { CorporateService } from 'app/entities/corporate/corporate.service';
 import { Corporate } from 'app/entities/corporate/corporate.model';
 import { CountryService } from 'app/entities/country';
 import { IndustryService } from 'app/entities/industry';
+import { LocalStorageService } from 'ngx-webstorage';
+import { NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 describe('Component Tests', () => {
     describe('Corporate Management Dialog Component', () => {
@@ -26,7 +28,15 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CorporateDialogComponent],
-                    providers: [CountryService, IndustryService, UserService, CorporateService]
+                    providers: [
+                        CountryService,
+                        IndustryService,
+                        UserService,
+                        CorporateService,
+                        DataStorageService,
+                        LocalStorageService,
+                        NgbDatepickerConfig
+                    ]
                 })
                     .overrideTemplate(CorporateDialogComponent, '')
                     .compileComponents();

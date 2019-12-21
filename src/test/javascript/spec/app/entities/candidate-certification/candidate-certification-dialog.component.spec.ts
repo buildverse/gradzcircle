@@ -4,7 +4,7 @@ import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateCertificationDialogComponent } from 'app/entities/candidate-certification/candidate-certification-dialog.component';
 import { CandidateCertificationService } from 'app/entities/candidate-certification/candidate-certification.service';
@@ -24,7 +24,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateCertificationDialogComponent],
-                    providers: [CandidateService, CandidateCertificationService]
+                    providers: [CandidateService, CandidateCertificationService, NgbDatepickerConfig]
                 })
                     .overrideTemplate(CandidateCertificationDialogComponent, '')
                     .compileComponents();

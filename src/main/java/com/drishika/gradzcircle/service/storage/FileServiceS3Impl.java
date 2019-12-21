@@ -112,12 +112,12 @@ public class FileServiceS3Impl implements FileServiceS3 {
 							amazonS3Client.getBucketLocation(bucketName), s3Object.getBucketName(), s3Object.getKey()))
 									.withRel("url"));
 			logger.debug("Resource details are {}", file.getLinks());
-			return file;
+			
 		
 		} catch (Exception stex) {
-			logger.error("Error while retreiving file { }", stex);
-			throw new FileRetrieveException(stex.getMessage());
+			logger.error("Error while retreiving file Resource File From Amazon for Bucket {} and Key {}",bucketName,key);
+			//throw new FileRetrieveException("Unable to find resource file from Amazon for Buckte and Key",bucketName,key);
 		}
-		
+			return file;	
 	}
 }

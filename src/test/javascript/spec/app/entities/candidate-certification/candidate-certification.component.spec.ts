@@ -2,7 +2,9 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-
+import { DataStorageService } from 'app/shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LocalStorageService } from 'ngx-webstorage';
 import { GradzcircleTestModule } from '../../../test.module';
 import { CandidateCertificationComponent } from 'app/entities/candidate-certification/candidate-certification.component';
 import { CandidateCertificationService } from 'app/entities/candidate-certification/candidate-certification.service';
@@ -19,7 +21,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateCertificationComponent],
-                    providers: [CandidateCertificationService]
+                    providers: [CandidateCertificationService, DataStorageService, LocalStorageService, NgxSpinnerService]
                 })
                     .overrideTemplate(CandidateCertificationComponent, '')
                     .compileComponents();

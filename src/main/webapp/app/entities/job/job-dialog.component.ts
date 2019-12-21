@@ -78,8 +78,8 @@ export class JobDialogComponent implements OnInit {
     businessPlanEnabled: boolean;
     scoreType;
     graduationDateType: string;
-    graduationDate;
-    graduationToDate;
+    graduationDate: any;
+    graduationToDate: any;
     graduationFromDate: any;
     gradDate;
     gradToDate;
@@ -414,6 +414,43 @@ export class JobDialogComponent implements OnInit {
                         this.graduationDate = jobFilter.filterDescription.graduationDate;
                         this.graduationFromDate = jobFilter.filterDescription.graduationFromDate;
                         this.graduationToDate = jobFilter.filterDescription.graduationToDate;
+                        if (jobFilter.filterDescription.graduationDate) {
+                            const gradDate = new Date(
+                                jobFilter.filterDescription.graduationDate.year,
+                                jobFilter.filterDescription.graduationDate.month - 1,
+                                jobFilter.filterDescription.graduationDate.day
+                            );
+                            this.graduationDate = moment({
+                                year: gradDate.getFullYear(),
+                                month: gradDate.getMonth(),
+                                day: gradDate.getDate()
+                            });
+                        }
+
+                        if (jobFilter.filterDescription.graduationFromDate) {
+                            const gradDate = new Date(
+                                jobFilter.filterDescription.graduationFromDate.year,
+                                jobFilter.filterDescription.graduationFromDate.month - 1,
+                                jobFilter.filterDescription.graduationFromDate.day
+                            );
+                            this.graduationFromDate = moment({
+                                year: gradDate.getFullYear(),
+                                month: gradDate.getMonth(),
+                                day: gradDate.getDate()
+                            });
+                        }
+                        if (jobFilter.filterDescription.graduationToDate) {
+                            const gradDate = new Date(
+                                jobFilter.filterDescription.graduationToDate.year,
+                                jobFilter.filterDescription.graduationToDate.month - 1,
+                                jobFilter.filterDescription.graduationToDate.day
+                            );
+                            this.graduationToDate = moment({
+                                year: gradDate.getFullYear(),
+                                month: gradDate.getMonth(),
+                                day: gradDate.getDate()
+                            });
+                        }
                         this.showDateControl();
 
                         this.languages = jobFilter.filterDescription.languages;
@@ -997,7 +1034,7 @@ export class JobDialogComponent implements OnInit {
                     const date = new Date(this.graduationDate.format(DATE_FORMAT));
                     this.jobFilter.filterDescription.graduationDate = {
                         year: date.getFullYear(),
-                        month: date.getMonth(),
+                        month: date.getMonth() + 1,
                         day: date.getDate()
                     };
                 } else if (this.graduationDateType === 'between') {
@@ -1005,12 +1042,12 @@ export class JobDialogComponent implements OnInit {
                     const toDate = new Date(this.graduationToDate.format(DATE_FORMAT));
                     this.jobFilter.filterDescription.graduationFromDate = {
                         year: fromDate.getFullYear(),
-                        month: fromDate.getMonth(),
+                        month: fromDate.getMonth() + 1,
                         day: fromDate.getDate()
                     };
                     this.jobFilter.filterDescription.graduationToDate = {
                         year: toDate.getFullYear(),
-                        month: toDate.getMonth(),
+                        month: toDate.getMonth() + 1,
                         day: toDate.getDate()
                     };
                 }

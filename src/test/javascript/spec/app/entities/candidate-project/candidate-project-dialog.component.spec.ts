@@ -11,6 +11,7 @@ import { CandidateProjectService } from 'app/entities/candidate-project/candidat
 import { CandidateProject } from 'app/entities/candidate-project/candidate-project.model';
 import { CandidateEducationService } from 'app/entities/candidate-education';
 import { CandidateEmploymentService } from 'app/entities/candidate-employment';
+import { NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 describe('Component Tests', () => {
     describe('CandidateProject Management Dialog Component', () => {
@@ -25,7 +26,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateProjectDialogComponent],
-                    providers: [CandidateEducationService, CandidateEmploymentService, CandidateProjectService]
+                    providers: [CandidateEducationService, CandidateEmploymentService, CandidateProjectService, NgbDatepickerConfig]
                 })
                     .overrideTemplate(CandidateProjectDialogComponent, '')
                     .compileComponents();

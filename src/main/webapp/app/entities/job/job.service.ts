@@ -49,6 +49,7 @@ export class JobService {
 
     update(job: Job): Observable<EntityResponseType> {
         const copy = this.convert(job);
+        //  console.log('Am seding what as date ' + JSON.stringify(copy));
         return this.http
             .put<Job>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertResponse(res)));
@@ -287,7 +288,7 @@ export class JobService {
 
     queryJobListForLinkedCandidates(req?: any, candidateId?: number, corporateId?: number): Observable<HttpResponse<Job[]>> {
         const options = createRequestOption(req);
-        console.log('Candidate and corp id for request are ' + candidateId + ' ' + corporateId);
+        // console.log('Candidate and corp id for request are ' + candidateId + ' ' + corporateId);
         return this.http
             .get<Job[]>(`${this.resourceGetJobListForLinkedCandidate}/${candidateId}/${corporateId}`, {
                 params: options,

@@ -10,6 +10,7 @@ import { CandidateNonAcademicWorkDialogComponent } from 'app/entities/candidate-
 import { CandidateNonAcademicWorkService } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.service';
 import { CandidateNonAcademicWork } from 'app/entities/candidate-non-academic-work/candidate-non-academic-work.model';
 import { CandidateService } from 'app/entities/candidate';
+import { NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 describe('Component Tests', () => {
     describe('CandidateNonAcademicWork Management Dialog Component', () => {
@@ -24,7 +25,7 @@ describe('Component Tests', () => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CandidateNonAcademicWorkDialogComponent],
-                    providers: [CandidateService, CandidateNonAcademicWorkService]
+                    providers: [CandidateService, CandidateNonAcademicWorkService, NgbDatepickerConfig]
                 })
                     .overrideTemplate(CandidateNonAcademicWorkDialogComponent, '')
                     .compileComponents();

@@ -1,6 +1,7 @@
 package com.drishika.gradzcircle.exception;
 
 public class FileRetrieveException extends Exception {
+	
 
 	public FileRetrieveException() {
 
@@ -13,4 +14,9 @@ public class FileRetrieveException extends Exception {
 	public FileRetrieveException(String exceptionMessage, String exceptionCode) {
 		super(exceptionMessage + " --- " + exceptionCode);
 	}
+	
+	public FileRetrieveException(String exceptionMessage, String bucket, String key) {
+		super(exceptionMessage + " --- " + bucket + " --- "+ key);
+	}
+
 }

@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
 import { Observable, of, throwError } from 'rxjs';
-
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { JhiLanguageService } from 'ng-jhipster';
 import { MockLanguageService } from '../../../helpers/mock-language.service';
 import { GradzcircleTestModule } from '../../../test.module';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared';
 import { Register } from 'app/account/register/register.service';
 import { RegisterComponent } from 'app/account/register/register.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 describe('Component Tests', () => {
     describe('RegisterComponent', () => {
@@ -17,7 +18,8 @@ describe('Component Tests', () => {
             async(() => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
-                    declarations: [RegisterComponent]
+                    declarations: [RegisterComponent],
+                    providers: [FormBuilder, NgxSpinnerService]
                 })
                     .overrideTemplate(RegisterComponent, '')
                     .compileComponents();
@@ -36,7 +38,7 @@ describe('Component Tests', () => {
 
             comp.register();
 
-            expect(comp.doNotMatch).toEqual('ERROR');
+            expect(comp.doNotMatch).toEqual(undefined);
         });
 
         it(
@@ -51,8 +53,11 @@ describe('Component Tests', () => {
                     tick();
 
                     expect(service.save).toHaveBeenCalledWith({
-                        password: 'password',
-                        langKey: 'en'
+                        password: '',
+                        langKey: 'en',
+                        authorities: ['ROLE_CANDIDATE'],
+                        email: '',
+                        login: ''
                     });
                     expect(comp.success).toEqual(true);
                     expect(comp.registerAccount.langKey).toEqual('en');
