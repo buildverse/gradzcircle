@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md fixed-top navbar-dark nav-bg app-navbar">
     <div *ngIf="corporateId; else candidateOrGuest">
         <a class="navbar-brand logo" [routerLink]="['/job']" (click)="collapseNavbar()">
-            <span class="logo-img"></span>
+            <span class="logo-img-white"></span>
         </a>
     </div>
     <ng-template #candidateOrGuest>

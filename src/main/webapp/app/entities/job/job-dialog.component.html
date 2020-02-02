@@ -8,7 +8,7 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" (click)="clear()">&times;</button>
 	</div>
-	  No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
+	 <!--   No of Applicants : {{job.noOfApplicants}} ; Original Job Cost :
 	{{job.originalJobCost}} ;Job Cost : {{job.jobCost}} Escrow Amount used
 	: {{job.escrowAmountUsed}} ;Escrow added: {{job.escrowAmountAdded}};
 	Amount Paid : {{job.amountPaid}} Admin charge : {{job.adminCharge}} ;
@@ -18,7 +18,7 @@
 	{{job.upfrontDiscountRate}}; Payment Type : {{job.paymentType}} No Of
 	candidates Bought : {{job.noOfApplicantsBought}}; Corp escrow balance :
 	{{job.corporate.escrowAmount}} filtercost is {{filterCost}}
-    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}
+    BUSINESS PLAN ENABLED IS {{businessPlanEnabled}}-->
 	<div *jhiHasAnyAuthority="['ROLE_CORPORATE']">
 		<div *ngIf="businessPlanEnabled">
 				<div *ngIf="job?.jobCost>0  && !preview && !job.everActive"
@@ -1396,7 +1396,7 @@
 	</form>
 </div>
    <!--   <br>
-Value: {{ editForm.value | json }}-->
+Value: {{ editForm.value | json }}
 <br>
 employment -- {{(editForm.form.get('employmentType')?.invalid)}}--Job type -{{ (editForm.form.get('jobType')?.invalid)}}
 <br>
@@ -1438,5 +1438,5 @@ Add on block is {{addOn && editForm.form.get('date')?.value==='less'?editForm.fo
 									&& editForm.form.get('date')?.value==='greater'?editForm.form.get('gradDate')?.invalid :false }}
 									
 <br>
-Percentag -> {{premium &&  editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid:false}}									
+Percentag -> {{premium &&  editForm.form.get('scoreType')?.value==='percent'?editForm.form.get('percentage')?.invalid:false}}		-->							
 									
