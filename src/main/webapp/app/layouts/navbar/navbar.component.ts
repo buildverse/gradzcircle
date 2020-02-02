@@ -119,6 +119,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     loadId() {
+        this.resetStorage(false);
         if (!this.localStorageService.getData(USER_TYPE)) {
             this.principal.identity(true).then(user => {
                 // console.log('Begin loading user info');
@@ -128,28 +129,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
                         this.localStorageService.setdata(USER_ID, response.body.id);
                         this.localStorageService.setdata(CORPORATE_ID, response.body.id);
                         this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
-                        this.corporateId = this.localStorageService.getData(USER_ID);
-                        this.appConfigService.query().subscribe(
-                            (res: HttpResponse<AppConfig[]>) => {
-                                this.appConfigs = res.body;
-                                this.appConfigs.forEach(appConfig => {
-                                    if (
-                                        'BusinessPlan'
-                                            .toUpperCase()
-                                            .indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1
-                                    ) {
-                                        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, appConfig.configValue);
-                                        //  console.log('biz plab enable is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
-                                    }
-                                });
-                            },
-                            (res: HttpErrorResponse) => this.onError(res.message)
-                        );
+                        this.corporateId = this.localStorageService.getData(CORPORATE_ID);
+                        //  console.log('biz plab in nav is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
                         this.eventManager.broadcast({
                             name: 'userDataLoadedSuccess',
                             content: 'User Data Load Success'
                         });
-                        //   console.log('Loaded Corporate info');
+                        // console.log('Loaded Corporate info');
                     });
                 } else {
                     if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
@@ -159,12 +145,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
                             this.localStorageService.setdata(CANDIDATE_ID, response.body.id);
                             this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
                             this.localStorageService.setdata(HAS_EDUCATION, JSON.stringify(response.body.hasEducation));
-                            this.candidateId = this.localStorageService.getData(USER_ID);
+                            this.candidateId = this.localStorageService.getData(CANDIDATE_ID);
                             this.eventManager.broadcast({
                                 name: 'userDataLoadedSuccess',
                                 content: 'User Data Load Success'
                             });
-                            //  console.log('Loaded Candidate info');
+                            // console.log('Loaded Candidate info');
                         });
                     } else if (user && user.authorities.indexOf('ROLE_ADMIN') > -1) {
                         this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.ADMIN);
@@ -179,29 +165,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
     }
 
-    /*loadId() {
-    this.principal.identity(true).then((user) => {
-      if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
-        this.corporateService.findCorporateByLoginId(user.id).subscribe((response) => {
-          this.corporateId = response.body.id;
-          this.localStorageService.setdata(USER_TYPE,AuthoritiesConstants.CORPORATE);
-          this.localStorageService.setdata(USER_ID,this.corporateId);
-          this.localStorageService.setdata(USER_DATA,response.body);
-        });
-      } else {
-        if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
-          this.candidateService.getCandidateByLoginId(user.id).subscribe((response) => {
-            this.candidate = response.body;
-            this.candidateId = this.candidate.id;
-            this.localStorageService.setdata(USER_TYPE,AuthoritiesConstants.CANDIDATE);
-            this.localStorageService.setdata(USER_ID,this.candidateId);
-            this.localStorageService.setdata(USER_DATA,response.body);
-          });
-        }
-      }
-    });
-  }
-  */
     changeLanguage(languageKey: string) {
         this.languageService.changeLanguage(languageKey);
     }
@@ -232,9 +195,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.modalRef = this.loginModalService.open();
     }
 
-    logout() {
-        this.collapseNavbar();
-        this.loginService.logout();
+    resetStorage(resetBizPlan: boolean) {
         this.candidateId = undefined;
         this.corporateId = undefined;
         this.localStorageService.removeData(USER_ID);
@@ -250,13 +211,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.localStorageService.removeData(CANDIDATE_EMPLOYMENT_ID);
         this.localStorageService.removeData(CANDIDATE_LANGUAGE_ID);
         this.localStorageService.removeData(CANDIDATE_PROJECT_ID);
-        this.localStorageService.removeData(BUSINESS_PLAN_ENABLED);
+        if (resetBizPlan) {
+            this.localStorageService.removeData(BUSINESS_PLAN_ENABLED);
+        }
         this.localStorageService.removeData(FROM_LINKED_CANDIDATE);
         this.localStorageService.removeData(MATCH_SCORE);
         this.localStorageService.removeData(HAS_EDUCATION);
         this.localStorageService.removeData(IS_EMPLOYMENT_PROJECT);
         this.localStorageService.removeData(LOGIN_ID);
         this.localStorageService.removeData(CANDIDATE_SKILL_ID);
+    }
+    logout() {
+        this.collapseNavbar();
+        this.loginService.logout();
+        this.resetStorage(true);
         this.router.navigate(['']);
     }
 

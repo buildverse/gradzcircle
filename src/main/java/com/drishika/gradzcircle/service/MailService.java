@@ -1,12 +1,12 @@
 package com.drishika.gradzcircle.service;
 
-import com.drishika.gradzcircle.domain.User;
-
-import io.github.jhipster.config.JHipsterProperties;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -16,7 +16,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.apache.commons.lang3.StringUtils;
+
+import com.drishika.gradzcircle.domain.User;
+
+import io.github.jhipster.config.JHipsterProperties;
 
 /**
  * Service for sending emails.
@@ -60,6 +63,7 @@ public class MailService {
          	MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());
             message.setTo(to);
             message.setFrom(jHipsterProperties.getMail().getFrom());
+          //  message.setFrom(new InternetAddress("Team@gradzcircle.com"));
             message.setSubject(subject);
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
@@ -117,7 +121,7 @@ public class MailService {
     }
     
     @Async
-    public void sendMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates) {
+    public void sendMatchedCandidateEmailToCorporate(User user, String jobTitle, Long numberOfNewCandidates,String corporateName) {
     		log.info("Sending new matched candidate email to corporate '{}'", user.getEmail());
     		 Locale locale = Locale.forLanguageTag(user.getLangKey());
     	        Context context = new Context(locale);
@@ -125,21 +129,23 @@ public class MailService {
     	        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
     	        context.setVariable("jobTitle", StringUtils.capitalize(jobTitle));
     	        context.setVariable("numberOfCandidates", numberOfNewCandidates);
-    	        String content = templateEngine.process("newMatchedCandidateForJobEmail", context);
+    	        context.setVariable("corporateName", corporateName);
+    	        String content = templateEngine.process("mail/newMatchedCandidateForJobEmail", context);
     	        String subject = messageSource.getMessage("email.new.matched.candidate.title", null, locale);
     	        sendEmail(user.getEmail(), subject, content, false, true);
     		
     }
     
     @Async
-    public void sendMatchedJobEmailToCandidate(User user, Long numberOfJobs) {
+    public void sendMatchedJobEmailToCandidate(User user, Long numberOfJobs,String firstName) {
 		log.info("Sending new matched Jobs {} email to candidate '{}'", numberOfJobs, user.getEmail());
 		 Locale locale = Locale.forLanguageTag(user.getLangKey());
 	        Context context = new Context(locale);
 	        context.setVariable(USER, user);
 	        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
 	        context.setVariable("numberOfJobs", numberOfJobs);
-	        String content = templateEngine.process("newMatchedJobsForCandidate", context);
+	        context.setVariable("firstName", firstName);
+	        String content = templateEngine.process("mail/newMatchedJobsForCandidate", context);
 	        String subject = messageSource.getMessage("email.new.matched.jobs.title", null, locale);
 	        sendEmail(user.getEmail(), subject, content, false, true);
 		

@@ -119,7 +119,9 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
 
     imageCropped(event: ImageCroppedEvent) {
         this.croppedImage = event.file;
-        console.log('Uploader has been there' + this.croppedImage);
+        // console.log('Image height = '+event.height);
+        // console.log('Image width = '+event.width);
+        // console.log('Uploader has been there' + this.croppedImage);
         this.uploader.queue[0]._file = this.croppedImage;
     }
     imageLoaded() {

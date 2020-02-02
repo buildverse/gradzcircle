@@ -16,7 +16,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'jhi-candidate',
-    templateUrl: './candidate-preview.component.html'
+    templateUrl: './candidate-preview.component.html',
+    styleUrls: ['candidate.css']
 })
 export class CandidatePreviewComponent implements OnInit, OnDestroy {
     candidateList: CandidateList[];

@@ -13,15 +13,15 @@
 			class="d-flex justify-content-center">
 			<image-cropper [imageChangedEvent]="imageChangedEvent"
 				[maintainAspectRatio]="false" [roundCropper]="false"
-				[aspectRatio]="1/1" [resizeToWidth]="100" format="png"
+				[aspectRatio]="1/1" format="jpeg" [imageQuality]="92"
 				(imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
 				(cropperReady)="cropperReady()"
 				(loadImageFailed)="loadImageFailed()"></image-cropper>
 		</div>
 		<ng-template #candidate class="d-flex justify-content-center">
 			<image-cropper [imageChangedEvent]="imageChangedEvent"
-				[maintainAspectRatio]="false" [roundCropper]="true"
-				[aspectRatio]="1/1" [resizeToWidth]="100" format="png"
+				[maintainAspectRatio]="false" [roundCropper]="true"  [imageQuality]="92"
+				[aspectRatio]="1/1"  format="jpeg"
 				(imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
 				(cropperReady)="cropperReady()"
 				(loadImageFailed)="loadImageFailed()"></image-cropper>

@@ -11,6 +11,7 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { ITEMS_PER_PAGE } from '../../shared/constants/pagination.constants';
 import { JOB_ID, CORPORATE_ID, MATCH_SCORE, USER_DATA, USER_TYPE, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { AppConfigService, AppConfig } from '../app-config';
 import { Corporate } from '../corporate/corporate.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -42,6 +43,7 @@ export class JobComponent implements OnInit, OnDestroy {
     job: Job;
     corporate: Corporate;
     businessPlanEnabled: boolean;
+    appConfigs: AppConfig[];
 
     constructor(
         private jobService: JobService,
@@ -52,7 +54,8 @@ export class JobComponent implements OnInit, OnDestroy {
         private parseLinks: JhiParseLinks,
         private router: Router,
         private dataStorageService: DataStorageService,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private appConfigService: AppConfigService
     ) {
         this.businessPlanEnabled = false;
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -188,7 +191,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.job = new Job();
         this.corporate = new Corporate();
         this.DRAFT = JobConstants.DRAFT;
-        this.businessPlanEnabled = JSON.parse(this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
+        // console.log('biz plan in job comp is ' + this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.principal.identity().then(account => {
             if (account) {
                 if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
@@ -197,6 +200,7 @@ export class JobComponent implements OnInit, OnDestroy {
                     this.corporate = JSON.parse(this.dataStorageService.getData(USER_DATA));
                     this.currentSearch = this.corporate.id.toString();
                     this.corporateId = this.corporate.id;
+                    this.businessPlanEnabled = JSON.parse(this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
                     //  console.log('Load active jobs');
                     this.loadActiveJobs();
                     this.registerChangeInJobs();

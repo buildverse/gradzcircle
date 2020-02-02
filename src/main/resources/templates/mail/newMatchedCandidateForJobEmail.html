@@ -6,7 +6,7 @@
         <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}" />
     </head>
     <body>
-        <p th:text="#{email.new.matched.candidate.greeting(${user.login})}">
+        <p th:text="#{email.new.matched.candidate.greeting(${corporateName})}">
             Dear
         </p>
         <p th:text="#{email.new.matched.candidate.text1(${numberOfCandidates},${jobTitle})}">

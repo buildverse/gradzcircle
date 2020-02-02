@@ -70,9 +70,9 @@ public class CandidateLanguageMatcher implements Matcher<Candidate> {
 			});
 			log.debug("Languages before save are {}", candidate.getCandidateLanguageProficiencies());
 			candidateRepository.save(candidate);
-			mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
+			mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()),candidate.getFirstName());
 		} else {
-			log.debug("Abort Matching as no Education saved");
+			log.info("Abort Matching as no Education saved");
 		}
 		
 

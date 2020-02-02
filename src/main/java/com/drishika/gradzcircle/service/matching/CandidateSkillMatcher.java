@@ -66,12 +66,13 @@ public class CandidateSkillMatcher implements Matcher<Candidate> {
 					candidate.getCandidateJobs().add(candidateJob);
 				}
 			});
+			log.debug("Skills before save are {}", candidate.getCandidateSkills());
+			candidateRepository.save(candidate);
+			mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()),candidate.getFirstName());
 		} else {
-			log.debug("Abort Matching as no Education saved");
+			log.info("Abort Matching as no Education saved");
 		}
-		log.debug("Skills before save are {}", candidate.getCandidateSkills());
-		candidateRepository.save(candidate);
-		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
+		
 	}
 
 	private CandidateJob beginMatching(Job job, Candidate candidate) {

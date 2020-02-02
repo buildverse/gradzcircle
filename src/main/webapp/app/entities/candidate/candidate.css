@@ -1,0 +1,13 @@
+.avatar {
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: auto;
+    border-radius: 100px;
+    margin-bottom: 10px;
+    border-width: 3px !important;
+}
+.avatar.border.border-secondary {
+    border-color: #e0e0e0 !important;
+}

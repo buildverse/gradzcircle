@@ -101,7 +101,10 @@ export class JobAnonymousComponent implements OnInit, OnDestroy {
                 ? this.activatedRoute.snapshot.params['search']
                 : '';
     }
-
+    resetForUserFilter() {
+        this.page = 0;
+        this.jobs = [];
+    }
     reset() {
         this.page = 0;
         this.jobs = [];
@@ -125,7 +128,7 @@ export class JobAnonymousComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.loadActiveJobsByUserFilter();
+        this.loadActiveJobsByUserFilter(true);
     }
 
     clearMatchScores() {
@@ -133,11 +136,13 @@ export class JobAnonymousComponent implements OnInit, OnDestroy {
         this.loadActiveJobsByUserFilter();
     }
 
-    loadActiveJobsByUserFilter() {
+    loadActiveJobsByUserFilter(transition?: boolean) {
+        if (!transition) {
+            this.resetForUserFilter();
+        }
         this.setMatchScoreRange();
         //  console.log('canidate id is for matchScoreFrom to macthScore' + this.candidateId + ' ' + this.matchScoreFrom + ' ' + this.matchScoreTo);
         // console.log('Select employment Types as permananet is ' + this.permanent + ' and contract is ' + this.contract);
-
         if (this.permanent || this.contract) {
             this.employmentType = true;
         } else {

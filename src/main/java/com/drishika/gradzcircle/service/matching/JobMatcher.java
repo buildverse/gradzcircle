@@ -108,7 +108,7 @@ public class JobMatcher implements Matcher<Job> {
 		jobRepository.save(job);
 		log.debug("Job filters post mathcing is {}",job.getJobFilters());
 		log.info("Job Matching completed in {} ms and number of new candidates matched are {}", (System.currentTimeMillis() - startTime),numberOfNewCandidates);
-		mailService.sendMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates);
+		mailService.sendMatchedCandidateEmailToCorporate(job.getCorporate().getLogin(), job.getJobTitle(), numberOfNewCandidates,job.getCorporate().getName());
 
 	}
 

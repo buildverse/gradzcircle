@@ -9,8 +9,8 @@
 				<div *ngIf="candidateList?.length>0;else noData" class="col-md-12">
 					<div class="row">
 					    <div *ngFor="let candidate of candidateList" class="col-md-6 col-lg-4">
-					        <div class="card border-0">
-					        		<img class="card-img-top scale-on-hover shadow" [src]=" !(candidate.login.imageUrl) ? defaultImage : candidate.login.imageUrl" />
+					        <div class="card shadow">
+					        		<div class="mt-3 avatar border border-secondary" [style.backgroundImage]="!(candidate.login.imageUrl) ? 'url('+defaultImage+')' : 'url('+candidate.login.imageUrl+')'"></div>
 					            <div class="card-body">
 					                <h4 class="mb-0">{{candidate.firstName}}&nbsp;{{candidate.lastName}}</h4>
 									<p class="text-muted card-text mb-0">{{candidate.qualificationWithHighestCourse}}</p>

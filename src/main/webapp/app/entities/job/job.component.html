@@ -233,12 +233,12 @@
 							   <div *ngIf="jobs && jobs.length">
 			               		<div class="row">
 									<div class="col d-flex justify-content-start  font-weight-light text-muted">
-										<jhi-item-count [page]="page" [total]="queryCount"
+										<jhi-item-count [page]="page" [total]="queryCount" 
 											[itemsPerPage]="itemsPerPage"></jhi-item-count>
 									</div>
 									<div class="col font-weight-light d-flex justify-content-end ">
 										<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
-											(pageChange)="loadPage(page)"></ngb-pagination>
+											(pageChange)="loadPage(page)" [pageSize]="itemsPerPage"  [boundaryLinks]="true"></ngb-pagination>
 									</div>
 								</div>
 							</div>

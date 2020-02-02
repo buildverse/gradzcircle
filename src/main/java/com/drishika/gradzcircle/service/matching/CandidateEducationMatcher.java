@@ -89,7 +89,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		jobRepository.saveAll(jobs);
 		candidateRepository.save(candidate);
 		
-		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()));
+		mailService.sendMatchedJobEmailToCandidate(candidate.getLogin(), new Long(candidate.getCandidateJobs().size()),candidate.getFirstName());
 	}
 
 	private CandidateJob beginMatching(Job job, Candidate candidate) {
