@@ -64,7 +64,7 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
 
         this.corporateRegisterForm = this.formBuilder.group({
             companyName: [null, [Validators.required, Validators.minLength(5)]],
-            phoneNumber: [null, [Validators.required, Validators.pattern('[+.0-9]+'), Validators.minLength(13), Validators.maxLength(13)]],
+            phoneNumber: [null, [Validators.required, Validators.pattern('[+.0-9]+'), Validators.minLength(10), Validators.maxLength(10)]],
             email: [null, [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]],
             passwordGroup: this.formBuilder.group(
                 {
@@ -76,7 +76,7 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
             country: [null],
             callingCode: null
         });
-        console.log(this.corporateRegisterForm.get('phoneNumber').errors);
+        // console.log(this.corporateRegisterForm.get('phoneNumber').errors);
         this.corporateRegisterForm.get('country').valueChanges.subscribe(value => this.onCountryChange(value));
         this.success = false;
         this.registerAccount = { authorities: ['ROLE_CORPORATE'] };
@@ -90,7 +90,8 @@ export class CorporateRegisterComponent implements OnInit, AfterViewInit {
         }
         for (const country of this.countries) {
             if (country.countryNiceName === countrySelected) {
-                this.corporateRegisterForm.get('phoneNumber').setValue('+' + country.phoneCode);
+                // this.corporateRegisterForm.get('phoneNumber').setValue('+' + country.phoneCode);
+                // Removing this as validation can coz problem
             }
         }
     }

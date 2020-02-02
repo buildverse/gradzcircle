@@ -68,7 +68,7 @@
 				<div class="input-group">
 					<input id="field_establishedSince" type="text" class="form-control"
 						required  name="establishedSince" #establishedDate="ngModel"
-						ngbDatepicker  #establishedSinceDp="ngbDatepicker"
+						ngbDatepicker  #establishedSinceDp="ngbDatepicker" jhiNotFutureDate
 						[(ngModel)]="corporate.establishedSince" /> <span
 						class="input-group-append ">
 						<button class="btn btn-outline-primary" (click)="establishedSinceDp.toggle()" type="button">
@@ -76,9 +76,12 @@
 						</button>
 					</span>
 				</div>
-				<span *ngIf="establishedDate.invalid && establishedDate.touched"
+				<span *ngIf="establishedDate.errors?.required && establishedDate.touched"
 					class="text-danger"> <small> Please add your
 						inception date</small>
+				</span>
+				<span *ngIf="establishedDate.touched && establishedDate.errors?.futureDate" class="text-danger">
+						<small>Established date cannot be in future.</small>
 				</span>
 			</div>
 		</div>

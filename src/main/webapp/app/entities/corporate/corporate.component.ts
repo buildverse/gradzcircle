@@ -98,8 +98,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
         if (this.localStorageService.getData(USER_TYPE) === AuthoritiesConstants.ADMIN) {
             this.loadAll();
         } else {
-            this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA));
-
+            this.corporate = JSON.parse(this.localStorageService.getData(USER_DATA) ? this.localStorageService.getData(USER_DATA) : null);
             if (!this.corporate) {
                 this.principal.identity(true).then(user => {
                     this.corporateService.findCorporateByLoginId(user.id).subscribe(response => {
