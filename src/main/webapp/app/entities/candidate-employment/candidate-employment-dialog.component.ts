@@ -1,6 +1,6 @@
 import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -49,7 +49,8 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         private jobTypeService: JobTypeService,
         private eventManager: JhiEventManager,
         private spinnerService: NgxSpinnerService,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private router: Router
     ) {}
 
     manageEndDateControl() {
@@ -154,6 +155,7 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
     }
 
     private onError(error: any) {

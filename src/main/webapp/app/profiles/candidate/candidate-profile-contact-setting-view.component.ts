@@ -7,7 +7,7 @@ import { USER_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'jhi-candidate-primary-settings-view',
@@ -29,7 +29,8 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
         private candidateService: CandidateService,
         private dataService: DataStorageService,
         private route: ActivatedRoute,
-        private candidateSettingService: CandidateProfileSettingService
+        private candidateSettingService: CandidateProfileSettingService,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -55,6 +56,7 @@ export class CandidateProfileContactViewComponent implements OnInit, OnDestroy {
         return;
     }
     private onError(error) {
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 

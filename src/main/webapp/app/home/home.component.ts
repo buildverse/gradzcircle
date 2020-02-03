@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
         this.principal.identity().then(account => {
             this.account = account;
         });
+        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, false);
         this.appConfigService.query().subscribe(
             (res: HttpResponse<AppConfig[]>) => {
                 this.appConfigs = res.body;

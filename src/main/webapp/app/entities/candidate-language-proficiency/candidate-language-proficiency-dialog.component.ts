@@ -1,6 +1,6 @@
 import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/Forms';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -50,7 +50,8 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         private eventManager: JhiEventManager,
         private route: ActivatedRoute,
         private principal: Principal,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private router: Router
     ) {}
 
     enableRadio() {
@@ -180,6 +181,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
     }
 
     private onError(error: any) {

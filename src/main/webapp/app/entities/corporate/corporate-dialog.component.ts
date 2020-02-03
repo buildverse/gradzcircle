@@ -41,7 +41,8 @@ export class CorporateDialogComponent implements OnInit {
         private userService: UserService,
         private dataService: DataStorageService,
         private spinnerService: NgxSpinnerService,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private router: Router
     ) {}
 
     configureDatePicker() {
@@ -119,6 +120,7 @@ export class CorporateDialogComponent implements OnInit {
     private onSaveError() {
         this.spinnerService.hide();
         this.isSaving = false;
+        this.router.navigate(['/error']);
     }
 
     private onError(error: any) {

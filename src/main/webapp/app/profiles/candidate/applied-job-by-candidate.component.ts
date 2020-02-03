@@ -134,6 +134,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
 
     private onError(error) {
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 

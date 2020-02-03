@@ -1,6 +1,6 @@
 import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Rx';
@@ -38,7 +38,8 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         private candidateService: CandidateService,
         private eventManager: JhiEventManager,
         private spinnerService: NgxSpinnerService,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private router: Router
     ) {}
 
     configureDatePicker() {
@@ -127,6 +128,7 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
     }
 
     private onError(error: any) {

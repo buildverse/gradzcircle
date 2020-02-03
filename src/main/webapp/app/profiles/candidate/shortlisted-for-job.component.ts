@@ -1,3 +1,4 @@
+import { UserService } from '../../core/user/user.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -39,7 +40,8 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
         private parseLinks: JhiParseLinks,
         private router: Router,
         private dataStorageService: DataStorageService,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private userService: UserService
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -102,10 +104,6 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
             } else {
                 this.candidateId = this.dataStorageService.getData(CANDIDATE_ID);
             }
-
-            /*if (!this.candidateId) {
-        this.candidateId = this.localDataStorageService.getData(USER_ID);
-      }*/
             this.loadShortListedJobs();
         });
     }
@@ -133,6 +131,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
 
     private onError(error) {
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 
@@ -144,6 +143,30 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
         this.queryCount = this.totalItems;
         // this.page = pagingParams.page;
         this.jobs = data;
+        this.setImageUrl();
         this.spinnerService.hide();
+    }
+
+    private setImageUrl() {
+        if (this.jobs.length === 0) {
+            this.spinnerService.hide();
+        } else {
+            this.jobs.forEach(job => {
+                if (job.corporateUrl !== undefined) {
+                    this.userService.getImageData(job.corporateLoginId).subscribe(response => {
+                        if (response !== undefined) {
+                            const responseJson = response.body;
+                            if (responseJson) {
+                                job.corporateUrl = responseJson[0].href + '?t=' + Math.random().toString();
+                            } else {
+                                // this.noImage = true;
+                            }
+                        }
+                    });
+                } else {
+                    job.corporateUrl = undefined;
+                }
+            });
+        }
     }
 }

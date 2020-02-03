@@ -119,7 +119,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     loadId() {
-        this.resetStorage(false);
+        // this.resetStorage(false);
+        //  console.log('USER TYPE IS '+this.localStorageService.getData(USER_TYPE));
         if (!this.localStorageService.getData(USER_TYPE)) {
             this.principal.identity(true).then(user => {
                 // console.log('Begin loading user info');
@@ -177,15 +178,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.isNavbarCollapsed = true;
     }
 
-    setCandidateRouterParamAndCollapse() {
+    /* setCandidateRouterParamAndCollapse() {
         this.collapseNavbar();
+        console.log('CANDIDATE ID is '+ this.candidateId);
         this.localStorageService.setdata(CANDIDATE_ID, this.candidateId);
     }
 
     setCorporateRouterParamAndCollapse() {
         this.collapseNavbar();
         this.localStorageService.setdata(CORPORATE_ID, this.corporateId);
-    }
+    }*/
 
     isAuthenticated() {
         return this.principal.isAuthenticated();
@@ -211,9 +213,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.localStorageService.removeData(CANDIDATE_EMPLOYMENT_ID);
         this.localStorageService.removeData(CANDIDATE_LANGUAGE_ID);
         this.localStorageService.removeData(CANDIDATE_PROJECT_ID);
-        if (resetBizPlan) {
-            this.localStorageService.removeData(BUSINESS_PLAN_ENABLED);
-        }
         this.localStorageService.removeData(FROM_LINKED_CANDIDATE);
         this.localStorageService.removeData(MATCH_SCORE);
         this.localStorageService.removeData(HAS_EDUCATION);

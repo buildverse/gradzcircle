@@ -145,6 +145,7 @@ export class JobComponent implements OnInit, OnDestroy {
     }
 
     loadActiveJobs() {
+        //  console.log('calling load active jobs for corporate by id '+this.corporateId);
         this.jobService
             .queryActiveJobsByCorporate({
                 page: this.page - 1,
@@ -191,7 +192,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.job = new Job();
         this.corporate = new Corporate();
         this.DRAFT = JobConstants.DRAFT;
-        // console.log('biz plan in job comp is ' + this.dataStorageService.getData(BUSINESS_PLAN_ENABLED));
+        //console.log('USER TYPE IS ' + this.dataStorageService.getData(USER_TYPE));
         this.principal.identity().then(account => {
             if (account) {
                 if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
@@ -290,6 +291,7 @@ export class JobComponent implements OnInit, OnDestroy {
 
     private onError(error) {
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 

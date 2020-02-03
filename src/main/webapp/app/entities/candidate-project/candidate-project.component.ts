@@ -1,7 +1,7 @@
 import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { CandidateProject } from './candidate-project.model';
@@ -22,7 +22,8 @@ export class CandidateProjectComponent implements OnInit, OnDestroy {
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private router: Router
     ) {
         this.currentSearch =
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
@@ -83,6 +84,7 @@ export class CandidateProjectComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 }

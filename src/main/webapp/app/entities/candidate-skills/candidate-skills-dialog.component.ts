@@ -2,7 +2,7 @@ import { Principal } from '../../core/auth/principal.service';
 import { CANDIDATE_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -36,7 +36,8 @@ export class CandidateSkillsDialogComponent implements OnInit {
         private skillsService: SkillsService,
         private eventManager: JhiEventManager,
         private principal: Principal,
-        private skillService: SkillsService
+        private skillService: SkillsService,
+        private router: Router
     ) {
         this.skillAlreadyPresent = false;
         this.showSkillsTextArea = false;
@@ -129,6 +130,7 @@ export class CandidateSkillsDialogComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
+        this.router.navigate(['/error']);
     }
 
     private onError(error: any) {

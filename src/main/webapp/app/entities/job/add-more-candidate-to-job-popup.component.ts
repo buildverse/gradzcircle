@@ -111,6 +111,7 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
         // console.log('in error' + JSON.stringify(error));
         this.isSaving = false;
         this.spinnerService.hide();
+        this.router.navigate(['/error']);
         this.onError(error);
     }
 

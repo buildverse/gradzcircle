@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CANDIDATE_EDUCATION_ID, USER_ID, USER_DATA, HAS_EDUCATION } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Candidate } from '../candidate';
@@ -27,7 +27,8 @@ export class CandidateEducationDeleteDialogComponent {
         private spinnerService: NgxSpinnerService,
         private candidateService: CandidateService,
         private dataService: DataStorageService,
-        private jhiAlertService: JhiAlertService
+        private jhiAlertService: JhiAlertService,
+        private router: Router
     ) {}
 
     clear() {
@@ -61,6 +62,7 @@ export class CandidateEducationDeleteDialogComponent {
     }
 
     private onError(error: any) {
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 }

@@ -32,7 +32,7 @@ public interface CandidateEducationRepository extends JpaRepository<CandidateEdu
 
 	List<CandidateEducation> findByOrderByEducationToDateDesc();
 
-	@Query("select cE from CandidateEducation cE where cE.candidate.matchEligible=true and cE.highestQualification=true and cE.educationToDate >= ?1")
+	@Query("select cE from CandidateEducation cE where cE.candidate.matchEligible=true and cE.highestQualification=true and cE.educationToDate >= ?1 or cE.educationToDate is null")
 	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
 	Stream<CandidateEducation> findByEducationToDateAfterAndHighestQualification(LocalDate date);
 

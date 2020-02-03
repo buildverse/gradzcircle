@@ -397,12 +397,12 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li>
-                        <a class="dropdown-item" [routerLink]="['/appliedJobs']" routerLinkActive="active" (click)="setCandidateRouterParamAndCollapse()"> 
+                        <a class="dropdown-item" [routerLink]="['/appliedJobs']" routerLinkActive="active" > 
                         <span jhiTranslate="global.menu.candidate.job.applied">Applied Jobs</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="['/shortListedForJob']" routerLinkActive="active" (click)="setCandidateRouterParamAndCollapse()"> 
+                        <a class="dropdown-item" [routerLink]="['/shortListedForJob']" routerLinkActive="active" > 
                         	<span jhiTranslate="global.menu.candidate.job.shortlisted">Shortlisted</span>
                         </a>
                     </li>
@@ -413,7 +413,7 @@
                 		<span jhiTranslate="global.menu.corporate.dashboard">Dashboard</span>
                 </a>
             </li>
-            <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item " (click)="setCorporateRouterParamAndCollapse()" [routerLink]="['/linkedCandidatesForCorporate']" routerLinkActive="active">
+            <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item " [routerLink]="['/linkedCandidatesForCorporate']" routerLinkActive="active">
                 <a class="nav-link"> 
                 		<span jhiTranslate="global.menu.corporate.linkedCandidates">Candidates</span>
                 </a>

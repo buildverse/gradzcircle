@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -30,7 +30,8 @@ export class CandidateCertificationDialogComponent implements OnInit {
         private candidateCertificationService: CandidateCertificationService,
         private candidateService: CandidateService,
         private eventManager: JhiEventManager,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private router: Router
     ) {}
 
     configureDatePicker() {
@@ -93,6 +94,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
     }
 
     private onError(error: any) {
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 

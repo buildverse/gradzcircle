@@ -123,6 +123,7 @@ export class CandidateSkillsComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
+        this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 }

@@ -1,6 +1,6 @@
 import { Principal } from '../../core/auth/principal.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
@@ -76,7 +76,8 @@ export class CandidateEducationDialogComponent implements OnInit {
         private principal: Principal,
         private dataService: DataStorageService,
         private spinnerService: NgxSpinnerService,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private router: Router
     ) {
         this.currentDate = new Date();
     }
@@ -326,6 +327,8 @@ export class CandidateEducationDialogComponent implements OnInit {
     private onSaveError(result: any) {
         this.spinnerService.hide();
         this.isSaving = false;
+        this.router.navigate(['/error']);
+        this.activeModal.dismiss();
     }
 
     private onError(error: any) {
