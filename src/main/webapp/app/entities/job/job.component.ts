@@ -192,7 +192,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.job = new Job();
         this.corporate = new Corporate();
         this.DRAFT = JobConstants.DRAFT;
-        //console.log('USER TYPE IS ' + this.dataStorageService.getData(USER_TYPE));
+        // console.log('USER TYPE IS ' + this.dataStorageService.getData(USER_TYPE));
         this.principal.identity().then(account => {
             if (account) {
                 if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
