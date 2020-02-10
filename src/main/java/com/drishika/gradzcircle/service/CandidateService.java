@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.service;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +27,7 @@ import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
+import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.Corporate;
@@ -40,6 +42,7 @@ import com.drishika.gradzcircle.repository.CandidateEducationRepository;
 import com.drishika.gradzcircle.repository.CandidateEmploymentRepository;
 import com.drishika.gradzcircle.repository.CandidateLanguageProficiencyRepository;
 import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
+import com.drishika.gradzcircle.repository.CandidateProfileScoreRepository;
 import com.drishika.gradzcircle.repository.CandidateProjectRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
@@ -120,6 +123,8 @@ public class CandidateService {
 	private DTOConverters dtoConverter;
 
 	private CorporateRepository corporateRepository;
+	
+	private CandidateProfileScoreRepository candidateProfileScoreRepository;
 
 	public CandidateService(CandidateRepository candidateRepository,
 			CandidateSearchRepository candidateSearchRepository,
@@ -137,7 +142,7 @@ public class CandidateService {
 			CandidateCertificationRepository candidateCertificationRepository,
 			CandidateEmploymentRepository candidateEmploymentRepository, JobRepository jobRepository,
 			CorporateRepository corporateRepository, NationalityRepository nationalityRepository,CountryRepository countryRepository,
-			ProfileScoreCalculator profileScoreCalculator, DTOConverters dtoConverter) {
+			ProfileScoreCalculator profileScoreCalculator, DTOConverters dtoConverter,CandidateProfileScoreRepository candidateProfileScoreRepository) {
 		this.candidateRepository = candidateRepository;
 		this.candidateSearchRepository = candidateSearchRepository;
 		this.addressRepository = addressRepository;
@@ -161,6 +166,7 @@ public class CandidateService {
 		this.nationalityRepository = nationalityRepository;
 		this.profileScoreCalculator = profileScoreCalculator;
 		this.dtoConverter = dtoConverter;
+		this.candidateProfileScoreRepository = candidateProfileScoreRepository;
 	}
 
 	public void createCandidate(User user) {
@@ -298,6 +304,7 @@ public class CandidateService {
 	public Candidate getCandidateByLoginId(Long id) {
 		logger.debug("REST request to get Candidate : {}", id);
 		Candidate candidate = candidateRepository.findByLoginId(id);
+		logger.debug("Candidate go is {}",candidate);
 		if (candidate != null) {
 			Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
 			candidate.setAddresses(addresses);
@@ -313,10 +320,23 @@ public class CandidateService {
 		return educaitonScore;
 	}
 
+	public Candidate saveCandidate(Candidate candidate) {
+		return candidateRepository.save(candidate);
+	}
 	public void deleteCandidate(Long id) {
 		logger.debug("REST request to delete Candidate : {}", id);
 		candidateRepository.deleteById(id);
 		// candidateSearchRepository.delete(id);
+	}
+	
+	public void deleteCandidate(Candidate candidate) {
+		if(candidate.getProfileScores()!=null && candidate.getProfileScores().size()>0) {
+			logger.debug("Removing user score record {}", candidate.getProfileScores());
+			candidate.getProfileScores().forEach( score -> {
+				candidateProfileScoreRepository.deleteByCandidateAndProfileId(score.getCandidate().getId(), score.getProfileCategory().getId());
+			});
+		}
+		deleteCandidate(candidate.getId());
 	}
 
 	public List<Candidate> searchCandidates(String query) {

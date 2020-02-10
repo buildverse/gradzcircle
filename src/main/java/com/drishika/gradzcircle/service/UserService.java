@@ -1,17 +1,15 @@
 package com.drishika.gradzcircle.service;
 
-import com.drishika.gradzcircle.domain.Authority;
-import com.drishika.gradzcircle.domain.User;
-import com.drishika.gradzcircle.repository.AuthorityRepository;
-import com.drishika.gradzcircle.config.Constants;
-import com.drishika.gradzcircle.repository.UserRepository;
-import com.drishika.gradzcircle.repository.search.UserSearchRepository;
-import com.drishika.gradzcircle.security.AuthoritiesConstants;
-import com.drishika.gradzcircle.security.SecurityUtils;
-import com.drishika.gradzcircle.service.util.RandomUtil;
-import com.drishika.gradzcircle.service.dto.UserDTO;
-import com.drishika.gradzcircle.domain.Candidate;
-import com.drishika.gradzcircle.domain.Corporate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -19,14 +17,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.drishika.gradzcircle.web.rest.errors.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.Authority;
+import com.drishika.gradzcircle.domain.Candidate;
+import com.drishika.gradzcircle.domain.Corporate;
+import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.repository.AuthorityRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.repository.search.UserSearchRepository;
+import com.drishika.gradzcircle.security.AuthoritiesConstants;
+import com.drishika.gradzcircle.security.SecurityUtils;
+import com.drishika.gradzcircle.service.dto.UserDTO;
+import com.drishika.gradzcircle.service.util.RandomUtil;
+import com.drishika.gradzcircle.web.rest.errors.InvalidPasswordException;
 
 /**
  * Service class for managing users.
@@ -244,10 +250,7 @@ public class UserService {
         		Candidate candidate = candidateService.getCandidateByLoginId(user.getId());
 			Corporate corporate = corporateService.getCorporateByLoginId(user.getId());
 			if (candidate != null) {
-				if(candidate.getProfileScores()!=null) {
-					candidate.getProfileScores().clear();
-				}
-				candidateService.deleteCandidate(candidate.getId());
+				candidateService.deleteCandidate(candidate);
 			} else if (corporate != null) {
 				corporateService.deleteCorporate(corporate.getId());
 			}
