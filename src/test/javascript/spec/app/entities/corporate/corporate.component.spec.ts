@@ -1,4 +1,6 @@
 /* tslint:disable max-line-length */
+import { MockPrincipal } from '../../../helpers/mock-principal.service';
+import { Principal } from 'app/core';
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -17,13 +19,21 @@ describe('Component Tests', () => {
         let fixture: ComponentFixture<CorporateComponent>;
         let service: CorporateService;
         let storageService: DataStorageService;
+        let mockPrincipal: any;
+        let ngxSpinnerService: NgxSpinnerService;
 
         beforeEach(
             async(() => {
                 TestBed.configureTestingModule({
                     imports: [GradzcircleTestModule],
                     declarations: [CorporateComponent],
-                    providers: [CorporateService, LocalStorageService, DataStorageService, NgxSpinnerService]
+                    providers: [
+                        CorporateService,
+                        LocalStorageService,
+                        DataStorageService,
+                        NgxSpinnerService,
+                        { provide: Principal, useClass: MockPrincipal }
+                    ]
                 })
                     .overrideTemplate(CorporateComponent, '')
                     .compileComponents();
@@ -35,14 +45,18 @@ describe('Component Tests', () => {
             comp = fixture.componentInstance;
             service = fixture.debugElement.injector.get(CorporateService);
             storageService = fixture.debugElement.injector.get(DataStorageService);
+            mockPrincipal = fixture.debugElement.injector.get(Principal);
+            ngxSpinnerService = fixture.debugElement.injector.get(NgxSpinnerService);
         });
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
                 // GIVEN
                 const headers = new HttpHeaders().append('link', 'link;link');
-                jasmine.createSpy('getData').and.returnValue('ROLE_ADMIN');
-                jasmine.createSpy('query').and.returnValue(
+                const account = { authorities: ['ROLE_ADMIN'] };
+                mockPrincipal.setResponse(account);
+                spyOn(storageService, 'getData').and.returnValue('ROLE_ADMIN');
+                spyOn(service, 'query').and.returnValue(
                     Observable.of(
                         new HttpResponse({
                             body: [new Corporate(123)],
@@ -56,8 +70,10 @@ describe('Component Tests', () => {
                 comp.ngOnInit();
 
                 // THEN
-                expect(service.query).toHaveBeenCalled();
-                expect(comp.corporates[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+                Promise.resolve().then(() => {
+                    expect(service.query).toHaveBeenCalled();
+                    expect(comp.corporates[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+                });
             });
         });
     });
