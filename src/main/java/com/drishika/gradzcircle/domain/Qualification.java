@@ -196,15 +196,16 @@ public class Qualification implements Serializable {
 		return Objects.hashCode(getId());
 	}
 
-	 @Override
-	    public String toString() {
-	        return "Qualification{" +
-	            "id=" + getId() +
-	            ", qualification='" + getQualification() + "'" +
-	            ", weightage=" + getWeightage() +
-	            ", category='" + getCategory() + "'" +
-	            "}";
-	    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Qualification [id=" + id + ", qualification=" + qualification + ", value=" + value + ", display="
+				+ display + ", weightage=" + weightage + ", category=" + category + "]";
+	}
+
+	 
 
 
 }

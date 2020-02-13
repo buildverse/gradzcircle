@@ -117,8 +117,8 @@ export class JobViewComponent implements OnInit {
     }
 
     loadCorporateImage() {
-        if (this.job.corporate.login.imageUrl) {
-            this.userService.getImageData(this.job.corporate.login.id).subscribe(response => {
+        if (this.job.corporateUrl) {
+            this.userService.getImageData(this.job.corporateLoginId).subscribe(response => {
                 const responseJson = response.body;
                 this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
             });
