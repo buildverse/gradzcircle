@@ -268,6 +268,8 @@ if (project.hasProperty('nodeInstall')) {
     }
 }
 
+bootWar.dependsOn test
+test.dependsOn compileJava
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
