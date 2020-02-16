@@ -177,7 +177,7 @@
        		<column name="employment_type_id"/>
        	</createIndex>
        	<createIndex catalogName="gradzcircle"
-            indexName="idx_job_typpe_id"
+            indexName="idx_job_type_id"
             schemaName="public"
             tableName="job">
        		<column name="job_type_id"/>
