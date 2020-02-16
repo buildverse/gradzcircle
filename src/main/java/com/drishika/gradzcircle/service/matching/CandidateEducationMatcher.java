@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +50,7 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		this.matchUtils = matchUtils;
 		this.candidateRepository = candidateRepository;
 		this.mailService = mailService;
+		//this.entityManager = entityManager;
 	}
 
 	/*
@@ -61,6 +63,8 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 	//REMOVED PARALLELE STREAM TO ENABLE TESTS
 	public void match(Candidate candidate) {
 		Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
+		//Stream<Job> activeJobs = findAllActiveJobsForMatchingAsStream().stream();
+	//	log.debug("Count on stream is {}",activeJobs.count());
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		//List<Job> jobs = new ArrayList<>();
 		matchUtils.populateJobFilterWeightMap();
@@ -274,5 +278,20 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 		}
 		return false;
 	}
-
+	
+/*	private List<Job> findAllActiveJobsForMatchingAsStream() {
+		
+		List<Job> executionPlanLines = 
+				
+				     entityManager
+				        .createQuery(
+				            "select j from Job j where j.jobStatus=1",Job.class)
+				        .setHint("org.hibernate.fetchSize", 1)
+				        .getResultList();
+			
+		log.debug( "Execution plan: {}",executionPlanLines.size());
+		return executionPlanLines;
+		
+	}
+*/
 }

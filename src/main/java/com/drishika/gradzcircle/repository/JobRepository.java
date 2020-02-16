@@ -1,7 +1,5 @@
 package com.drishika.gradzcircle.repository;
 
-import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,11 +15,14 @@ import org.springframework.stereotype.Repository;
 
 import com.drishika.gradzcircle.domain.CandidateAppliedJobs;
 import com.drishika.gradzcircle.domain.CandidateJob;
-import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.EmploymentType;
 import com.drishika.gradzcircle.domain.Job;
 import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
+import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
+import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
+import static org.hibernate.jpa.QueryHints.HINT_READONLY;	;
+
 
 /**
  * Spring Data JPA repository for the Job entity.
@@ -43,7 +44,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
 	
 	@Query(" select j from Job j where j.jobStatus=1")
-	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "1000"))
+	@QueryHints(value = { @QueryHint(name = HINT_FETCH_SIZE, value = "1"),
+						  @QueryHint(name = HINT_CACHEABLE, value = "false"), 
+						  @QueryHint(name = HINT_READONLY, value = "true") })
 	Stream<Job> findAllActiveJobsForMatchingAsStream();
 
 	@Query("select j from Job j, CandidateJob cJ where j.id=cJ.job.id and j.jobStatus=1 and cJ.candidate.id=?1 and j.id not in (select cJA.id.jobId from CandidateAppliedJobs cJA where cJA.id.candidateId =?1) and cJ.matchScore between ?2 and ?3 order by cJ.matchScore desc")
@@ -99,10 +102,11 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	//-------
 	
 	
-	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
+	//@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
+	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=cJ.job.id and cJ.job.id=appliedJob.id.jobId  and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId order by cJ.matchScore desc")
 	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId,Pageable pageable);
 	
-	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=appliedJob.id.jobId and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId and cJ.matchScore between ?2 and ?3")
+	@Query("select appliedJob from Job j, CandidateAppliedJobs appliedJob, CandidateJob cJ where j.id=cJ.job.id and cJ.job.id=appliedJob.id.jobId and j.id=?1 and cJ.candidate.id=appliedJob.id.candidateId and cJ.matchScore between ?2 and ?3")
 	Page<CandidateAppliedJobs> findByAppliedCandidates(Long jobId,Double fromScore, Double toScore, Pageable pageable);
 	
 	@Query("SELECT cJ FROM CandidateJob cJ join Job j on (j.id = cJ.job.id and  j.id=?1 and j.jobStatus=1) WHERE cJ.candidate.id not IN (SELECT cc.candidate.id  FROM CorporateCandidate cc where cJ.candidate.id = cc.candidate.id and cJ.job.id = cc.id.jobId) and cJ.reviewed=?2 order by cJ.matchScore desc")

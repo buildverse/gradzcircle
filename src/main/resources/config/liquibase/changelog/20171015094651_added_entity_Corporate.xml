@@ -134,4 +134,12 @@
 	            schemaName="public"
 	            tableName="corporate"/>
 	</changeSet>
+	<changeSet author="abhinav" id="20200216182351-3">
+		<createIndex catalogName="gradzcircle"
+	            indexName="idx_corp_login_id"
+	            schemaName="public"
+	            tableName="corporate">
+	       		 <column name="login_id"/>
+	    		</createIndex>
+	 </changeSet>
 </databaseChangeLog>

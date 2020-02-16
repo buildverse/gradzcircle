@@ -53,5 +53,13 @@
         </createTable>
         
     </changeSet>
+    <changeSet id="20200215112327-1" author="abhinav">
+    		 <createIndex catalogName="gradzcircle"
+            indexName="idx_addr_candidate_id"
+            schemaName="public"
+            tableName="address">
+        <column name="candidate_id"/>
+    </createIndex>
+    </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

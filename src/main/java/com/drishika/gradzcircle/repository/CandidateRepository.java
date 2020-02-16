@@ -18,14 +18,10 @@ import com.drishika.gradzcircle.domain.Job;
 @SuppressWarnings("unused")
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
-	// @Query("select distinct candidate from Candidate candidate left join fetch
-	// candidate.jobCategories left join fetch candidate.jobs")
+
 	@Query("select distinct candidate from Candidate candidate left join fetch candidate.jobCategories")
 	List<Candidate> findAllWithEagerRelationships();
 
-	// @Query("select candidate from Candidate candidate left join fetch
-	// candidate.jobCategories left join fetch candidate.jobs where candidate.id
-	// =:id")
 	@Query("select candidate from Candidate candidate left join fetch candidate.jobCategories where candidate.id =:id")
 	Candidate findOneWithEagerRelationships(@Param("id") Long id);
 
@@ -37,19 +33,5 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
 	@Query("Select c from Candidate c, CandidateEducation cE where c.id = cE.candidate.id and cE.highestQualification=true and cE.percentage is not null order by cE.percentage DESC, cE.educationToDate DESC")
 	Page<Candidate> findCandidatesForPreview(Pageable pageable);
-	/*
-	 * @Query("select c from Candidate c left outer join fetch c.appliedJobs where job.id=:id "
-	 * ) Page<Candidate> findAppliedCandidatesByJob (Long jobId,Pageable pageable);
-	 * 
-	 * @Query("select c from Candidate c left outer join fetch c.candidateJobs where job.id=:id "
-	 * ) Page<Candidate> findMatchedCandidatesForJobId ( Long jobId, Pageable
-	 * pageable);
-	 */
-	/*
-	 * @Query("select distinct candidate from Candidate candidate join candidate.jobs where candidate = :candidate"
-	 * ) List<Job> findAllMatchedJobsByCandidate(Candidate candidate);
-	 * 
-	 * @Query("select distinct candidate from Candidate candidate join candidate.jobs "
-	 * ) List<Job> findAllMatchedJobsByAllCandidate();
-	 */
+	
 }
