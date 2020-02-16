@@ -201,4 +201,37 @@
         		<column name="skill_match_score" type="double"/>
     		</addColumn>
       </changeSet>
+       <changeSet id="20200215132848-1" author="abhinav">
+      	 <createIndex catalogName="gradzcircle"
+            indexName="idx_cand_match_elgible"
+            schemaName="public"
+            tableName="candidate">
+       		 <column name="match_eligible"/>
+    		</createIndex>
+    		<createIndex catalogName="gradzcircle"
+            indexName="idx_login_id"
+            schemaName="public"
+            tableName="candidate">
+       		 <column name="login_id"/>
+    		</createIndex>
+      </changeSet>
+      <changeSet id="20200215135345-1" author ="abhinav">
+      	  <addPrimaryKey catalogName="gradzcircle"
+            columnNames="candidate_id, job_id"
+            constraintName="pk_applied_candidate_job"
+            schemaName="public"
+            tableName="candidate_applied_jobs"/>
+      	 <addNotNullConstraint catalogName="gradzcircle"
+	            columnDataType="bigint"
+	            columnName="job_id"
+	            constraintName="not_null_job_id"
+	            schemaName="public"
+	            tableName="candidate_applied_jobs"/>
+            <addNotNullConstraint catalogName="gradzcircle"
+	            columnDataType="bigint"
+	            columnName="candidate_id"
+	            constraintName="not_null_candidate_id"
+	            schemaName="public"
+	            tableName="candidate_applied_jobs"/>
+      </changeSet>
 </databaseChangeLog>

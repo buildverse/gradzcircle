@@ -151,4 +151,42 @@
     		</addColumn>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+     <changeSet id="20200216115127-1" author="abhinav">
+    		 <createIndex catalogName="gradzcircle"
+            indexName="idx_update_date"
+            schemaName="public"
+            tableName="job">
+       		<column name="update_date"/>
+    		</createIndex>
+    		<createIndex catalogName="gradzcircle"
+            indexName="idx_create_date"
+            schemaName="public"
+            tableName="job">
+       		<column name="create_date"/>
+       	</createIndex>
+       	<createIndex catalogName="gradzcircle"
+            indexName="idx_job_status"
+            schemaName="public"
+            tableName="job">
+       		<column name="job_status"/>
+       	</createIndex>
+       	<createIndex catalogName="gradzcircle"
+            indexName="idx_employment_type_id"
+            schemaName="public"
+            tableName="job">
+       		<column name="employment_type_id"/>
+       	</createIndex>
+       	<createIndex catalogName="gradzcircle"
+            indexName="idx_job_typpe_id"
+            schemaName="public"
+            tableName="job">
+       		<column name="job_type_id"/>
+       	</createIndex>
+       	<createIndex catalogName="gradzcircle"
+            indexName="idx_corp_id"
+            schemaName="public"
+            tableName="job">
+       		<column name="corporate_id"/>
+       	</createIndex>
+    	</changeSet>
 </databaseChangeLog>

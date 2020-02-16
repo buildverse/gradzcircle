@@ -21,14 +21,13 @@ public interface CorporateRepository extends JpaRepository<Corporate, Long> {
 	
 	//FIXME - Need to change this to join this will fuck itself
 	@Query("select candidate from Candidate candidate where candidate.id in (select distinct cc.id.candidateId from CorporateCandidate cc where cc.corporate.id=?1)")
-	//@Query("select distinct candidate from CorporateCandidate corporateCandidate, Candidate candidate where candidate.id = corporateCandidate.id.candidateId and corporateCandidate.corporate.id=?1")
 	Page<Candidate> findLinkedCandidates(Long corporateId, Pageable pageable);
 	
 	@Query("select  count (distinct candidate) from CorporateCandidate corporateCandidate, Candidate candidate where candidate.id = corporateCandidate.id.candidateId and corporateCandidate.corporate.id=?1")
 	Long findAllLinkedCandidates(Long corporateId);
 	
-	@Query("select count(corporateCandidate) from CorporateCandidate corporateCandidate where corporateCandidate.id.jobId=?1")
-	Long findCountOfCandidatesShortlistedByJob(Long jobId);
+	@Query("select count(corporateCandidate) from CorporateCandidate corporateCandidate where corporateCandidate.id.corporateId=?1 and corporateCandidate.id.jobId=?1")
+	Long findCountOfCandidatesShortlistedByJob(Long corporateId,Long jobId);
 	
 	@Query("select corporateCandidate from CorporateCandidate corporateCandidate where corporateCandidate.id.jobId=?1")
 	Page<CorporateCandidate> findLinkedCandidatesByJob(Long jobId, Pageable pageable);

@@ -382,7 +382,7 @@ public class JobService {
 		Long applicantsToJobs = getAppliedCandidatesForAllJobsByCorporate(corporateId);
 		Long totalLinkedCandidates = corporateService.getLinkedCandidatesCount(corporateId); 
 		final Page<CorporateJobDTO> page = jobPage.map(job -> converter.convertToJobListingForCorporate(job,
-				totalLinkedCandidates,totalNumberOfJobs,applicantsToJobs,jobsPostedLastMonth,getTotalCandidatedShorListedByCorporateForJob(job.getId())));
+				totalLinkedCandidates,totalNumberOfJobs,applicantsToJobs,jobsPostedLastMonth,getTotalCandidatedShorListedByCorporateForJob(corporateId,job.getId())));
 		return page;
 	}
 	
@@ -1051,8 +1051,8 @@ public class JobService {
 		return jobRepository.countByCorporate(corporateId);
 	}
 	
-	public Long getTotalCandidatedShorListedByCorporateForJob(Long jobId) {
-		return corporateRepository.findCountOfCandidatesShortlistedByJob(jobId);
+	public Long getTotalCandidatedShorListedByCorporateForJob(Long corporateId,Long jobId) {
+		return corporateRepository.findCountOfCandidatesShortlistedByJob(corporateId,jobId);
 	}
 	
 	public Long getTotalJobsPostedSinceLastMonth(Long corporateId) {
