@@ -80,8 +80,10 @@
 								[itemsPerPage]="itemsPerPage"></jhi-item-count>
 						</div>
 						<div class="col font-weight-light d-flex justify-content-end ">
-							<ngb-pagination [collectionSize]="totalItems" [(page)]="page"
+							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" 
+								[rotate]="true" [ellipses]="false" [maxSize]="5" [boundaryLinks]="true"
 								(pageChange)="loadPage(page)"></ngb-pagination>
+								
 						</div>
 					</div>
 				</div>

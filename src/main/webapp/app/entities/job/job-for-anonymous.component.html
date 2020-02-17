@@ -140,6 +140,7 @@
 						
 							<div class="col font-weight-light d-flex justify-content-end ">
 								<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" 
+									[boundaryLinks]="true" [rotate]="true" [ellipses]="false" [maxSize]="5"
 										(pageChange)="loadPage(page)">
 								</ngb-pagination>
 							</div>
