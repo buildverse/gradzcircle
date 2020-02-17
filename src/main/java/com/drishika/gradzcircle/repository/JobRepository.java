@@ -44,7 +44,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
 	
 	@Query(" select j from Job j where j.jobStatus=1")
-	@QueryHints(value = { @QueryHint(name = HINT_FETCH_SIZE, value = "1"),
+	@QueryHints(value = { @QueryHint(name = HINT_FETCH_SIZE, value = "1000"),
 						  @QueryHint(name = HINT_CACHEABLE, value = "false"), 
 						  @QueryHint(name = HINT_READONLY, value = "true") })
 	Stream<Job> findAllActiveJobsForMatchingAsStream();

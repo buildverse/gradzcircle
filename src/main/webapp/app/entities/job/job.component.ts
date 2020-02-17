@@ -146,6 +146,7 @@ export class JobComponent implements OnInit, OnDestroy {
 
     loadActiveJobs() {
         //  console.log('calling load active jobs for corporate by id '+this.corporateId);
+        this.spinnerService.show();
         this.jobService
             .queryActiveJobsByCorporate({
                 page: this.page - 1,
@@ -197,7 +198,6 @@ export class JobComponent implements OnInit, OnDestroy {
             if (account) {
                 if (this.dataStorageService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
                     this.currentAccount = account;
-                    this.spinnerService.show();
                     this.corporate = JSON.parse(this.dataStorageService.getData(USER_DATA));
                     this.currentSearch = this.corporate.id.toString();
                     this.corporateId = this.corporate.id;

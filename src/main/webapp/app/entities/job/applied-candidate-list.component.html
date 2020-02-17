@@ -93,7 +93,8 @@
 							<jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
 						</div>
 						<div class="col font-weight-light d-flex justify-content-end ">
-							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" (pageChange)="loadPage(page)"></ngb-pagination>
+							<ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" (pageChange)="loadPage(page)"
+							[rotate]="true" [ellipses]="false" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
 						</div>
 					</div>
 				</div>
