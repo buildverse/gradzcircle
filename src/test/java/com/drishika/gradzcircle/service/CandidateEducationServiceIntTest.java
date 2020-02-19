@@ -261,7 +261,7 @@ public class CandidateEducationServiceIntTest {
 	private  DTOConverters converter;
 
 	@Autowired @Qualifier("CandidateEducationMatcher")
-	private  Matcher<Candidate> matcher;
+	private  Matcher<Long> matcher;
 	
 	@Autowired 
 	CandidateProjectSearchRepository candidateProjectSearchRepository;

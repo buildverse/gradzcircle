@@ -111,28 +111,28 @@ public class Candidate implements Serializable {
 	// @JsonManagedReference
 	private Set<Address> addresses = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	// @JsonManagedReference
 	private Set<CandidateEducation> educations = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
 //	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateNonAcademicWork> nonAcademics = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateCertification> certifications = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateEmployment> employments = new HashSet<>();
 
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<CandidateLanguageProficiency> candidateLanguageProficiencies = new HashSet<>();
 	
-    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "candidate",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateSkills> candidateSkills = new HashSet<>();
 
@@ -166,7 +166,7 @@ public class Candidate implements Serializable {
 	 * private Set<Job> jobs = new HashSet<>();
 	 */
 
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JsonManagedReference
 	private Set<CandidateJob> candidateJobs = new HashSet<CandidateJob>();
 
@@ -174,7 +174,7 @@ public class Candidate implements Serializable {
 	@JsonBackReference
 	private Set<CorporateCandidate> shortlistedByCorporates = new HashSet<>();
 	
-	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JsonManagedReference
     private Set<CandidateProfileScore> profileScores = new HashSet<>();
 

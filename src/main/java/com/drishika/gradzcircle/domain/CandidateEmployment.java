@@ -59,7 +59,7 @@ public class CandidateEmployment implements Serializable {
 	@ManyToOne
 	private Candidate candidate;
 
-	@OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "employment", cascade = CascadeType.REMOVE,fetch=FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference
 	private Set<CandidateProject> projects = new HashSet<>();

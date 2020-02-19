@@ -82,7 +82,7 @@ public class JobService {
 	private FilterRepository filterRepository;
 
 	@Qualifier("JobMatcher")
-	private final Matcher<Job> matcher;
+	private final Matcher<Long> matcher;
 
 	private final JobHistoryRepository jobHistoryRepository;
 
@@ -123,7 +123,7 @@ public class JobService {
 			CorporateRepository corporateRepository, CacheManager cacheManager,
 			CorporateSearchRepository corporateSearchRepository, JobHistoryRepository jobHistoryRepository,
 			JobHistorySearchRepository jobHistorySearchRepository,
-			JobFilterHistoryRepository jobFilterHistoryRepository, Matcher<Job> matcher,
+			JobFilterHistoryRepository jobFilterHistoryRepository, @Qualifier("JobMatcher")Matcher<Long> matcher,
 			CandidateRepository candidateRepository, DTOConverters converter, CandidateAppliedJobsRepository candidateAppliedJobsRepository,
 			CorporateService corporateService, GradzcircleCacheManager <String,List<JobStatistics>> jobStatsCacheManager,
 			EmploymentTypeRepository employmentTypeRepository,JobTypeRepository jobTypeRepository,GradzcircleCacheManager <String,Long> jobCountCacheManager,
@@ -199,7 +199,7 @@ public class JobService {
 		Integer prevJobStatus = prevJob.getJobStatus();
 		log.info("Candidate Jobs before saving this job is {} and escrow is {}",job.getCandidateJobs(),job.getCorporate().getEscrowAmount());
 		Double escrowAmount = job.getCorporate().getEscrowAmount();
-		job = jobRepository.save(job);
+		job = jobRepository.saveAndFlush(job);
 		//FIXME make cache refresh aysnc post update
 		if(!job.getJobStatus().equals(prevJobStatus))
 			jobCountCacheManager.removeFromCache(ApplicationConstants.COUNT_OF_ACTIVE_JOBS);
@@ -217,7 +217,7 @@ public class JobService {
 		}
 		
 		if (job.getJobFilters() != null && job.getJobFilters().size() > 0)
-			matcher.match(job);
+			matcher.match(job.getId());
 		log.info("TRIGGER MATHCING ASYNCH");
 		return job;
 	}
@@ -234,7 +234,7 @@ public class JobService {
 		Set<CandidateJob> candidateJobs = new HashSet<>();
 		log.debug("No of matched candidates from prev job is {}",prevJob.getCandidateJobs().size());
 		log.debug("content of matched candidates from prev job is {}",prevJob.getCandidateJobs());
-		log.debug("No of matched candidates from job is {}",job.getCandidateJobs().size());
+		log.debug("No of matched candidates from job is {}",job.getCandidateJobs());
 		log.debug("content of matched candidates from job is {}",job.getCandidateJobs());
 		candidateJobs.addAll(prevJob.getCandidateJobs());
 		job.setCandidateJobs(candidateJobs);

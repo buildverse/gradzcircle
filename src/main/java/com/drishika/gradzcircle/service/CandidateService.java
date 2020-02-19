@@ -112,7 +112,7 @@ public class CandidateService {
 	
 	private final CountryRepository countryRepository;
 
-	private final Matcher<Candidate> matcher;
+	private final Matcher<Long> matcher;
 
 	// private final AddressSearchRepository addressSearchRepository;
 
@@ -134,7 +134,7 @@ public class CandidateService {
 			CandidateCertificationSearchRepository candidateCertificationSearchRepository,
 			CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository,
 			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository,
-			AddressRepository addressRepository, @Qualifier("CandidateGenderMatcher") Matcher<Candidate> matcher,
+			AddressRepository addressRepository, @Qualifier("CandidateGenderMatcher") Matcher<Long> matcher,
 			CandidateEducationRepository candidateEducationRepository,
 			CandidateProjectRepository candidateProjectRepository,
 			CandidateNonAcademicWorkRepository candidateNonAcademicWorkRepository,
@@ -187,7 +187,7 @@ public class CandidateService {
 		profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_BASIC_PROFILE,false);
 		candidate = candidateRepository.save(candidate);
 		// Replace with Future
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 		// candidateSearchRepository.save(result);
 		return candidate;
 	}
@@ -224,7 +224,7 @@ public class CandidateService {
 		result.getAddresses().forEach(candidateAddress -> candidateAddress.setCandidate(result));
 		// Replace with Future
 		if (enableMatch)
-			matcher.match(result);
+			matcher.match(result.getId());
 		// candidateSearchRepository.save(result);
 		
 		return result;
@@ -643,4 +643,10 @@ public class CandidateService {
 		}
 
 	}
+	
+	public CandidateDetailDTO getDetails(Long id) {
+		Candidate candidate = getCandidateByLoginId(id);
+		return setCandidateDetails(candidate);
+	}
+	
 }

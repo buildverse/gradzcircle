@@ -3,6 +3,7 @@
  */
 package com.drishika.gradzcircle.service.matching;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +31,7 @@ import com.drishika.gradzcircle.web.websocket.dto.MatchActivityDTO;
 @Component
 @Qualifier("CandidateGenderMatcher")
 @Transactional
-public class CandidateGenderMatcher implements Matcher<Candidate> {
+public class CandidateGenderMatcher implements Matcher<Long> {
 	private final Logger log = LoggerFactory.getLogger(CandidateGenderMatcher.class);
 	private final JobRepository jobRepository;
 	private final MatchUtils matchUtils;
@@ -55,7 +56,11 @@ public class CandidateGenderMatcher implements Matcher<Candidate> {
 	 */
 	@Override
 	//I REMOVED PARALLEL STREAM TO ENABLE TESTS
-	public void match(Candidate candidate) {
+	public void match(Long candidateId) {
+		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateId);
+		if(!candidateOptional.isPresent())
+			return;
+		final Candidate candidate = candidateOptional.get();
 		CandidateEducation candidateEducation = candidateEducationRepository
 				.findByCandidateAndHighestQualification(candidate, true);
 		if (candidateEducation != null) {

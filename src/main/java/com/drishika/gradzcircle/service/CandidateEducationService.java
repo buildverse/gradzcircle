@@ -71,7 +71,7 @@ public class CandidateEducationService {
 	private final ProfileScoreCalculator profileScoreCalculator;
 	private final DTOConverters converter;
 
-	private final Matcher<Candidate> matcher;
+	private final Matcher<Long> matcher;
 
 	public CandidateEducationService(CandidateEducationRepository candidateEducationRepository,
 			CandidateEducationSearchRepository candidateEducationSearchRepository,
@@ -79,7 +79,7 @@ public class CandidateEducationService {
 			CandidateProjectSearchRepository candidateProjectSearchRepository, CollegeRepository collegeRepository,
 			QualificationRepository qualififcationRepository, CourseRepository courseRepository,
 			UniversityRepository universityRepository,
-			@Qualifier("CandidateEducationMatcher") Matcher<Candidate> matcher,
+			@Qualifier("CandidateEducationMatcher") Matcher<Long> matcher,
 			ProfileScoreCalculator profileScoreCalculator,
 			UniversitySearchRepository universitySearchRepository, ElasticsearchTemplate elasticsearchTemplate,
 			CandidateRepository candidateRepository,DTOConverters converter) {
@@ -132,7 +132,7 @@ public class CandidateEducationService {
 		log.debug("CandidateEducation post save  is {}", candidate.getEducations());
 		//Candidate candidate = candidateRepository.findOne(candidateEducation.getCandidate().getId());
 		if (candidateEducation.getHighestQualification())
-			matcher.match(candidate);
+			matcher.match(candidate.getId());
 		// updateEducationDependentMetaForDisplay(result);
 		return candidateEducation;
 	}
@@ -358,7 +358,7 @@ public class CandidateEducationService {
 		candidate.addEducation(result);
 		// Replace with future
 		if (result.getHighestQualification())
-			matcher.match(candidate);
+			matcher.match(candidate.getId());
 		// updateEducationDependentMetaForDisplay(result);
 		return result;
 	}
@@ -428,7 +428,7 @@ public class CandidateEducationService {
 		log.debug("Educaiton set post removing education is {}", candidate.getEducations());
 		if(candidate.getEducations().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EDUCATION_PROFILE, true);
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 		// candidateEducationSearchRepository.delete(id);
 	}
 
