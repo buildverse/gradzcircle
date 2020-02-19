@@ -55,12 +55,12 @@ public class CandidateSkillsService {
 	private CandidateRepository candidateRepository;
 	private DTOConverters converter ;
 	private final ElasticsearchTemplate elasticsearchTemplate;
-	private final Matcher<Candidate> matcher;
+	private final Matcher<Long> matcher;
 
 	public CandidateSkillsService(CandidateSkillsRepository candidateSkillsRepository,
 			CandidateSkillsSearchRepository candidateSkillsSearchRepository, ProfileScoreCalculator profileScoreCalculator,
 			SkillsRepository skillsRepository,CandidateRepository candidateRepository, DTOConverters converter,ElasticsearchTemplate elasticsearchTemplate,
-			@Qualifier("CandidateSkillMatcher")Matcher<Candidate> matcher) {
+			@Qualifier("CandidateSkillMatcher")Matcher<Long> matcher) {
 		this.candidateSkillsRepository = candidateSkillsRepository;
 		this.candidateSkillsSearchRepository = candidateSkillsSearchRepository;
 		this.profileScoreCalculator = profileScoreCalculator;
@@ -86,7 +86,7 @@ public class CandidateSkillsService {
 		injestSkillsInformation(candidateSkillObject.candidate(candidate),candidate);
 		candidate = candidateRepository.save(candidate);
 		log.debug("The canddiate Skills post save in service is {}",candidate.getCandidateSkills());
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 		return candidate.getCandidateSkills();
 
 	}
@@ -120,7 +120,7 @@ public class CandidateSkillsService {
 		if(candidate.getCandidateSkills().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, true);
 		candidateRepository.save(candidate);
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 	}
 
 	public List<CandidateSkills> searchCandidateSkills(String query) {

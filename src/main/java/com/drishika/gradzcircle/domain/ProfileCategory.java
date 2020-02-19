@@ -37,7 +37,7 @@ public class ProfileCategory implements Serializable {
     private Integer weightage;
     
 
-    @OneToMany(mappedBy = "profileCategory",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "profileCategory",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "candidateProfile")
     //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<CandidateProfileScore> profileScores = new HashSet<>();

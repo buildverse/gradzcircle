@@ -791,7 +791,7 @@ public class JobMatcherIntTest {
 		candidateRepository.saveAndFlush(candidateA);
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
-		jobMatcher.match(jobA);
+		jobMatcher.match(jobA.getId());
 
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
@@ -846,7 +846,7 @@ public class JobMatcherIntTest {
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		assertThat(candidateRepository.findAll().size()).isEqualTo(8);
-		jobMatcher.match(jobZ);
+		jobMatcher.match(jobZ.getId());
 		// System.out.println("Returning from non wainting call");
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
@@ -901,7 +901,7 @@ public class JobMatcherIntTest {
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
-		jobMatcher.match(jobB);
+		jobMatcher.match(jobB.getId());
 
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
@@ -947,7 +947,7 @@ public class JobMatcherIntTest {
 		candidateH.login(userH);
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
-		jobMatcher.match(jobC);
+		jobMatcher.match(jobC.getId());
 
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
@@ -984,7 +984,7 @@ public class JobMatcherIntTest {
 
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
-		jobMatcher.match(jobF);
+		jobMatcher.match(jobF.getId());
 
 		List<Job> jobList = jobRepository.findAll();
 		List<Candidate> candidateList = candidateRepository.findAll();
@@ -1022,7 +1022,7 @@ public class JobMatcherIntTest {
 		int courseList = courseRepository.findAll().size();
 		assertThat(courseList).isEqualTo(8);
 		assertThat(candidateList).hasSize(8 );
-		jobMatcher.match(jobG);
+		jobMatcher.match(jobG.getId());
 
 		List<Job> jobList = jobRepository.findAll();
 		
