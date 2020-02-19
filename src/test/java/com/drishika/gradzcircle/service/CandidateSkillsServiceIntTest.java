@@ -135,7 +135,7 @@ public class CandidateSkillsServiceIntTest {
 	    @Autowired
 	    private ProfileScoreCalculator profileScoreCalculator;
 	  
-		@Autowired @Qualifier("CandidateSkillMatcher")Matcher<Candidate> matcher;
+		@Autowired @Qualifier("CandidateSkillMatcher")Matcher<Long> matcher;
 		
 		@Autowired
 		private DTOConverters converter;

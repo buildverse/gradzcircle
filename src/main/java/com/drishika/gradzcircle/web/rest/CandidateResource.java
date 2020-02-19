@@ -222,8 +222,7 @@ public class CandidateResource {
 	@Timed
 	public ResponseEntity<CandidateDetailDTO> getCandidateByLoginId(@PathVariable Long id) {
 		log.debug("REST request to get Candidate by Login id for : {}", id);
-		Candidate candidate = candidateService.getCandidateByLoginId(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.setCandidateDetails(candidate)));
+		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(candidateService.getDetails(id)));
 	}
 	
 	/**

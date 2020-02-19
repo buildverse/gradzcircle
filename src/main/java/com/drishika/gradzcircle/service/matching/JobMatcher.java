@@ -3,6 +3,7 @@ package com.drishika.gradzcircle.service.matching;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,7 +43,7 @@ import com.drishika.gradzcircle.service.MailService;
 @Service
 @Qualifier("JobMatcher")
 @Transactional
-public class JobMatcher implements Matcher<Job> {
+public class JobMatcher implements Matcher<Long> {
 
 	private final Logger log = LoggerFactory.getLogger(JobMatcher.class);
 
@@ -74,10 +75,15 @@ public class JobMatcher implements Matcher<Job> {
 
 	@Override
 	//I REMOVED PARALLEL STREAM TO ENABLE TESTS
-	public void match(Job job) {
+	public void match(Long jobId) {
 		long startTime = System.currentTimeMillis();
+		Optional<Job> jobOptional = jobRepository.findById(jobId);
+		if(!jobOptional.isPresent())
+			return;
+		final Job job = jobOptional.get();
 		matchUtils.populateJobFilterWeightMap();
 		Long numberOfNewCandidates=0L;
+		log.debug("Job Filters is {}",job.getJobFilters());
 		JobFilterObject jobfilterObject = matchUtils.retrieveJobFilterObjectFromJob(job);
 		Stream<CandidateEducation> candidateEducationStream = filterCandidatesByEducationToDate(jobfilterObject);
 		Set<CandidateJob> candidateJobs = new HashSet<>();

@@ -132,12 +132,12 @@ public class Job implements Serializable {
     @Column(name = "no_of_applicant_left")
     private Long noOfApplicantLeft;
 
-	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference
 	private Set<JobFilter> jobFilters = new HashSet<>();
 
-	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JsonIgnore
 //	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<JobHistory> histories = new HashSet<>();
@@ -151,12 +151,12 @@ public class Job implements Serializable {
 	@ManyToOne
 	private Corporate corporate;
 
-	@ManyToMany(mappedBy = "appliedJobs")
+	@ManyToMany(mappedBy = "appliedJobs",fetch = FetchType.LAZY)
 	@JsonIgnore
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Candidate> appliedCandidates = new HashSet<>();
 
-	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "job", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference(value = "jobToCandidate")
 	private Set<CandidateJob> candidateJobs = new HashSet<>();

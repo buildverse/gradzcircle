@@ -34,7 +34,7 @@ public class CandidateLanguageService {
 
 	private final Logger log = LoggerFactory.getLogger(CandidateLanguageService.class);
 
-	private final Matcher<Candidate> matcher;
+	private final Matcher<Long> matcher;
 
 	private final CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository;
 
@@ -51,7 +51,7 @@ public class CandidateLanguageService {
 
 	public CandidateLanguageService(CandidateLanguageProficiencyRepository candidateLanguageProficiencyRepository,
 			CandidateLanguageProficiencySearchRepository candidateLanguageProficiencySearchRepository, LanguageRepository languageRepository,
-			@Qualifier("CandidateLanguageMatcher") Matcher<Candidate> matcher,
+			@Qualifier("CandidateLanguageMatcher") Matcher<Long> matcher,
 			CandidateRepository candidateRepository,ProfileScoreCalculator profileScoreCalculator,DTOConverters converter) {
 		this.candidateLanguageProficiencyRepository = candidateLanguageProficiencyRepository;
 		this.candidateLanguageProficiencySearchRepository = candidateLanguageProficiencySearchRepository;
@@ -81,7 +81,7 @@ public class CandidateLanguageService {
 		//Candidate candidate = candidateRepository.findOne(result.getCandidate().getId());
 		log.debug("I have these pre in candidate {}", candidate.getCandidateLanguageProficiencies());
 	//	candidate.addCandidateLanguageProficiency(result);
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 		return candidate.getCandidateLanguageProficiencies().stream().
 	 	 filter(langProf->langProf.getLanguage().getLanguage()
 	 			.equals(candidateLanguageProficiency.getLanguage().getLanguage())).findFirst().orElse(candidateLanguageProficiency);
@@ -162,7 +162,7 @@ public class CandidateLanguageService {
 		candidate.removeCandidateLanguageProficiency(candidateLanguageProficiency.get());
 		if(candidate.getCandidateLanguageProficiencies().isEmpty())
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_LANGUAGE_PROFILE, true);
-		matcher.match(candidate);
+		matcher.match(candidate.getId());
 	}
 
 	public List<CandidateLanguageProficiency> searchCandidateLanguageProficiencies(String query) {

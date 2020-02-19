@@ -4,6 +4,7 @@
 package com.drishika.gradzcircle.service.matching;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +31,7 @@ import com.drishika.gradzcircle.service.MailService;
 @Service
 @Qualifier("CandidateSkillMatcher")
 @Transactional
-public class CandidateSkillMatcher implements Matcher<Candidate> {
+public class CandidateSkillMatcher implements Matcher<Long> {
 	
 	private final Logger log = LoggerFactory.getLogger(CandidateSkillMatcher.class);
 
@@ -49,7 +50,11 @@ public class CandidateSkillMatcher implements Matcher<Candidate> {
 		this.mailService = mailService;
 	}
 	
-	public void match(Candidate candidate) {
+	public void match(Long candidateId) {
+		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateId);
+		if(!candidateOptional.isPresent())
+			return;
+		final Candidate candidate = candidateOptional.get();
 		CandidateEducation candidateEducation = candidateEducationRepository
 				.findByCandidateAndHighestQualification(candidate, true);
 		if (candidateEducation != null) {

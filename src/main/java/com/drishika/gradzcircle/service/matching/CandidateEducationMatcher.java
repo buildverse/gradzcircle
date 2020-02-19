@@ -6,10 +6,10 @@ package com.drishika.gradzcircle.service.matching;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import com.drishika.gradzcircle.service.MailService;
 @Component
 @Qualifier("CandidateEducationMatcher")
 @Transactional
-public class CandidateEducationMatcher implements Matcher<Candidate> {
+public class CandidateEducationMatcher implements Matcher<Long> {
 
 	private final Logger log = LoggerFactory.getLogger(CandidateEducationMatcher.class);
 
@@ -61,7 +61,12 @@ public class CandidateEducationMatcher implements Matcher<Candidate> {
 	 */
 	@Override
 	//REMOVED PARALLELE STREAM TO ENABLE TESTS
-	public void match(Candidate candidate) {
+	public void match(Long candidateId) {
+		
+		Optional<Candidate> candidateOptional = candidateRepository.findById(candidateId);
+		if(!candidateOptional.isPresent())
+			return;
+		final Candidate candidate = candidateOptional.get();
 		Stream<Job> activeJobs = jobRepository.findAllActiveJobsForMatchingAsStream();
 		//Stream<Job> activeJobs = findAllActiveJobsForMatchingAsStream().stream();
 	//	log.debug("Count on stream is {}",activeJobs.count());
