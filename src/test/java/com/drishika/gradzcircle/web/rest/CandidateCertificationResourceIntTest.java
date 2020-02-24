@@ -42,6 +42,7 @@ import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
+import com.drishika.gradzcircle.service.CandidateCertificationService;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -103,12 +104,15 @@ public class CandidateCertificationResourceIntTest {
 	private CandidateCertification candidateCertification, candidateCertification2;
 	
 	private Candidate candidate;
+	
+	@Autowired
+	CandidateCertificationService candidateCertificationService;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final CandidateCertificationResource candidateCertificationResource = new CandidateCertificationResource(
-				candidateCertificationRepository, candidateCertificationSearchRepository, profileScoreCalculator, candidateRepository,converter);
+				candidateCertificationService);
 		this.restCandidateCertificationMockMvc = MockMvcBuilders.standaloneSetup(candidateCertificationResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();

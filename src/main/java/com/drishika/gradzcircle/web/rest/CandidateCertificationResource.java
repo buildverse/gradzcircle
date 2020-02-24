@@ -31,6 +31,7 @@ import com.drishika.gradzcircle.domain.CandidateCertification;
 import com.drishika.gradzcircle.repository.CandidateCertificationRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.search.CandidateCertificationSearchRepository;
+import com.drishika.gradzcircle.service.CandidateCertificationService;
 import com.drishika.gradzcircle.service.dto.CandidateCertificationDTO;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
@@ -49,25 +50,12 @@ public class CandidateCertificationResource {
 	private final Logger log = LoggerFactory.getLogger(CandidateCertificationResource.class);
 
 	private static final String ENTITY_NAME = "candidateCertification";
-
-	private final CandidateCertificationRepository candidateCertificationRepository;
-
-	private final CandidateCertificationSearchRepository candidateCertificationSearchRepository;
 	
-	private final ProfileScoreCalculator profileScoreCalculator;
+	private final CandidateCertificationService candidateCertificationService;
 	
-	private final CandidateRepository candidateRepository;
-	
-	private final DTOConverters converter;
 
-	public CandidateCertificationResource(CandidateCertificationRepository candidateCertificationRepository,
-			CandidateCertificationSearchRepository candidateCertificationSearchRepository, ProfileScoreCalculator profileScoreCalculator,
-			CandidateRepository candidateRepository,DTOConverters converter) {
-		this.candidateCertificationRepository = candidateCertificationRepository;
-		this.candidateCertificationSearchRepository = candidateCertificationSearchRepository;
-		this.profileScoreCalculator = profileScoreCalculator;
-		this.candidateRepository = candidateRepository;
-		this.converter = converter;
+	public CandidateCertificationResource(CandidateCertificationService candidateCertificationService) {
+		this.candidateCertificationService = candidateCertificationService;
 	}
 
 	/**
@@ -89,21 +77,7 @@ public class CandidateCertificationResource {
 		if (candidateCertification.getId() != null) {
             throw new BadRequestAlertException("A new candidateCertification cannot already have an ID", ENTITY_NAME, "idexists");
         }
-		Optional<Candidate> opstionCandidate = candidateRepository.findById(candidateCertification.getCandidate().getId());
-		if(!opstionCandidate.isPresent())
-			throw new BadRequestAlertException("No Candidate present to link Certification", ENTITY_NAME,"");
-		Candidate candidate = opstionCandidate.get();
-		if(candidate.getCertifications().size() < 1) {
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, false);
-		}
-		candidate = candidate.addCertification(candidateCertification);
-		candidate = candidateRepository.save(candidate);
-		log.debug("Candidate Certification post save are {}",candidate.getCertifications());
-		//CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
-		CandidateCertification result = candidate.getCertifications().stream().filter(cert->cert.getCertificationTitle().equals(candidateCertification.getCertificationTitle())).findFirst().orElse(candidateCertification);
-		
-		
-		//candidateCertificationSearchRepository.save(result);
+		CandidateCertification result = candidateCertificationService.createCandidateCertification(candidateCertification);
 		return ResponseEntity.created(new URI("/api/candidate-certifications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -128,8 +102,7 @@ public class CandidateCertificationResource {
 		if (candidateCertification.getId() == null) {
 			return createCandidateCertification(candidateCertification);
 		}
-		CandidateCertification result = candidateCertificationRepository.save(candidateCertification);
-		//candidateCertificationSearchRepository.save(result);
+		CandidateCertification result = candidateCertificationService.updateCandidateCertification(candidateCertification);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateCertification.getId().toString()))
 				.body(result);
@@ -145,9 +118,7 @@ public class CandidateCertificationResource {
 	@Timed
 	public List<CandidateCertification> getAllCandidateCertifications() {
 		log.debug("REST request to get all CandidateCertifications");
-		List<CandidateCertification> candidateCertifications = candidateCertificationRepository.findAll();
-		candidateCertifications.forEach(candidateCertification -> candidateCertification.setCandidate(null));
-		return candidateCertifications;
+		return candidateCertificationService.getAllCandidateCertifications();
 	}
 
 	/**
@@ -162,8 +133,7 @@ public class CandidateCertificationResource {
 	@Timed
 	public ResponseEntity<CandidateCertification> getCandidateCertification(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertification : {}", id);
-		Optional<CandidateCertification> candidateCertification = candidateCertificationRepository.findById(id);
-		return ResponseUtil.wrapOrNotFound(candidateCertification);
+		return ResponseUtil.wrapOrNotFound(candidateCertificationService.findById(id));
 	}
 
 	/**
@@ -178,12 +148,7 @@ public class CandidateCertificationResource {
 	@Timed
 	public List<CandidateCertificationDTO> getCertificationByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertifications by Candidate Id : {}", id);
-		List<CandidateCertificationDTO> certificationDTOs ;
-		List<CandidateCertification> candidateCertifications = candidateCertificationRepository
-				.findCertificationsByCandidateId(id);
-		Optional<Candidate> candidate = candidateRepository.findById(id);
-		certificationDTOs = converter.convertCandidateCertifications(candidateCertifications, true,candidate.get());
-		return certificationDTOs;
+		return candidateCertificationService.getCertificationByCandidate(id);
 	}
 
 	/**
@@ -198,17 +163,7 @@ public class CandidateCertificationResource {
 	@Timed
 	public ResponseEntity<Void> deleteCandidateCertification(@PathVariable Long id) {
 		log.debug("REST request to delete CandidateCertification  : {}", id);
-		Optional<CandidateCertification> candidateCertification = candidateCertificationRepository.findById(id);
-		Candidate candidate = candidateCertification.get().getCandidate();
-		log.debug("REST request to delete CandidateCertification for candidate   : {} , {}", id,candidate.getId());
-		log.debug("CANDIDATE CERTIFICATIONS ARE BEFORE REMOVE FROM LIST {}",candidate.getCertifications());
-		candidate = candidate.removeCertification(candidateCertification.get());
-		log.debug("Candidate post emoval of certs is {} {}",candidate,candidate.getCertifications());
-		if(candidate.getCertifications().isEmpty())
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_CERTIFICATION_PROFILE, true);
-		candidate = candidateRepository.save(candidate);
-		//candidateCertificationSearchRepository.delete(id);
-		log.debug("After saving Candidate {}",candidate.getCertifications());
+		candidateCertificationService.deleteCertification(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -224,13 +179,10 @@ public class CandidateCertificationResource {
 	@Timed
 	public List<CandidateCertification> searchCandidateCertifications(@RequestParam String query) {
 		log.debug("REST request to search CandidateCertifications for query {}", query);
-		List<CandidateCertification> candidateCertifications = StreamSupport
-				.stream(candidateCertificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
-		candidateCertifications.forEach(candidateCertification -> candidateCertification.setCandidate(null));
+		List<CandidateCertification> candidateCertifications = candidateCertificationService.searchCandidateCertifications(query);
 		return candidateCertifications;
 	}
-
+	 
 	/**
 	 * SEARCH /_search/candidate-certifications?query=:query : search for the
 	 * candidateCertification corresponding to the query.
@@ -243,8 +195,6 @@ public class CandidateCertificationResource {
 	@Timed
 	public List<CandidateCertification> searchCandidateCertificationsAdmin(@RequestParam String query) {
 		log.debug("REST request to search CandidateCertifications for query {}", query);
-		return StreamSupport
-				.stream(candidateCertificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		return candidateCertificationService.searchCandidateCertifications(query);
 	}
 }

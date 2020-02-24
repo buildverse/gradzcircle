@@ -49,6 +49,7 @@ import com.drishika.gradzcircle.repository.EmploymentTypeRepository;
 import com.drishika.gradzcircle.repository.JobTypeRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
+import com.drishika.gradzcircle.service.CandidateEmploymentService;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -130,6 +131,9 @@ public class CandidateEmploymentResourceIntTest {
 	private EntityManager em;
 	
 	@Autowired
+	private CandidateEmploymentService candidateEmploymentService;
+	
+	@Autowired
 	private DTOConverters converter;
 
 	private MockMvc restCandidateEmploymentMockMvc;
@@ -190,7 +194,7 @@ public class CandidateEmploymentResourceIntTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final CandidateEmploymentResource candidateEmploymentResource = new CandidateEmploymentResource(
-				candidateEmploymentRepository, candidateEmploymentSearchRepository, candidateProjectRepository,profileScoreCalculator,candidateRepository,converter);
+				candidateEmploymentService);
 		this.restCandidateEmploymentMockMvc = MockMvcBuilders.standaloneSetup(candidateEmploymentResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();
