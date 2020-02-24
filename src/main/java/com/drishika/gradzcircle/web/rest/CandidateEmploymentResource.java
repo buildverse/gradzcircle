@@ -4,8 +4,6 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,12 +27,9 @@ import com.drishika.gradzcircle.config.Constants;
 import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.repository.CandidateEmploymentRepository;
-import com.drishika.gradzcircle.repository.CandidateProjectRepository;
-import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.search.CandidateEmploymentSearchRepository;
+import com.drishika.gradzcircle.service.CandidateEmploymentService;
 import com.drishika.gradzcircle.service.dto.CandidateEmploymentDTO;
-import com.drishika.gradzcircle.service.util.DTOConverters;
-import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -51,29 +46,10 @@ public class CandidateEmploymentResource {
 
 	private static final String ENTITY_NAME = "candidateEmployment";
 
-	private final CandidateEmploymentRepository candidateEmploymentRepository;
+	private final CandidateEmploymentService candidateEmploymentService;
 
-	private final CandidateEmploymentSearchRepository candidateEmploymentSearchRepository;
-
-	private final CandidateProjectRepository candidateProjectRepository;
-	
-	private final ProfileScoreCalculator profileScoreCalculator;
-	
-	private final CandidateRepository candidateRepository;
-	
-	private final DTOConverters converter;
-
-	public CandidateEmploymentResource(CandidateEmploymentRepository candidateEmploymentRepository,
-			CandidateEmploymentSearchRepository candidateEmploymentSearchRepository,
-			CandidateProjectRepository candidateProjectRepository,ProfileScoreCalculator profileScoreCalculator,
-			CandidateRepository candidateRepository,DTOConverters converter) {
-
-		this.candidateEmploymentRepository = candidateEmploymentRepository;
-		this.candidateEmploymentSearchRepository = candidateEmploymentSearchRepository;
-		this.candidateProjectRepository = candidateProjectRepository;
-		this.candidateRepository = candidateRepository;
-		this.profileScoreCalculator = profileScoreCalculator;
-		this.converter = converter;
+	public CandidateEmploymentResource(CandidateEmploymentService candidateEmploymentService) {
+		this.candidateEmploymentService = candidateEmploymentService;
 
 	}
 
@@ -96,18 +72,7 @@ public class CandidateEmploymentResource {
 		if (candidateEmployment.getId() != null) {
             throw new BadRequestAlertException("A new candidateEmployment cannot already have an ID", ENTITY_NAME, "idexists");
         }
-		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateEmployment.getCandidate().getId());
-		if(!optionalCandidate.isPresent())
-			throw new BadRequestAlertException("A No candidate available to link employment", ENTITY_NAME, "");
-		Candidate candidate = optionalCandidate.get();
-		if(candidate.getEmployments().size() < 1) {
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EXPERIENCE_PROFILE, false);
-		}
-		candidate = candidateRepository.save(candidate.addEmployment(candidateEmployment));
-		log.debug("Candidate Employment is {}",candidate.getEmployments());
-		CandidateEmployment result = candidate.getEmployments().stream().filter(emp->emp.getId()!=null).filter(emp->emp.getJobTitle().equals(candidateEmployment.getJobTitle())).findFirst().orElse(candidateEmployment);
-		
-		//candidateEmploymentSearchRepository.save(result);
+		CandidateEmployment result = candidateEmploymentService.createCandidateEmployment(candidateEmployment);
 		return ResponseEntity.created(new URI("/api/candidate-employments/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -132,8 +97,8 @@ public class CandidateEmploymentResource {
 		if (candidateEmployment.getId() == null) {
 			return createCandidateEmployment(candidateEmployment);
 		}
-		CandidateEmployment result = candidateEmploymentRepository.save(candidateEmployment);
-		//candidateEmploymentSearchRepository.save(result);
+		CandidateEmployment result = candidateEmploymentService.updateCandidateEmployment(candidateEmployment); 
+				
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateEmployment.getId().toString()))
 				.body(result);
@@ -149,7 +114,7 @@ public class CandidateEmploymentResource {
 	@Timed
 	public List<CandidateEmployment> getAllCandidateEmployments() {
 		log.debug("REST request to get all CandidateEmployments");
-		return candidateEmploymentRepository.findAll();
+		return candidateEmploymentService.findAll();
 	}
 
 	/**
@@ -162,11 +127,8 @@ public class CandidateEmploymentResource {
 	@Timed
 	public List<CandidateEmploymentDTO> getEmploymentsForCandidate(@PathVariable Long id) {
 		log.debug("REST request to get employemnt for Candidate: {}", id);
-		List<CandidateEmploymentDTO> candidateEmploymentDTOs;
-		Optional<Candidate> candidate = candidateRepository.findById(id);
-		List<CandidateEmployment> candidateEmployments = candidateEmploymentRepository.findByCandidateId(id);
-		candidateEmploymentDTOs =  converter.convertCandidateEmployments(candidateEmployments, true,candidate.get());
-		return candidateEmploymentDTOs;
+		
+		return candidateEmploymentService.getEmploymentsForCandidate(id);
 	}
 
 	/**
@@ -181,8 +143,7 @@ public class CandidateEmploymentResource {
 	@Timed
 	public ResponseEntity<CandidateEmployment> getCandidateEmployment(@PathVariable Long id) {
 		log.debug("REST request to get CandidateEmployment : {}", id);
-		Optional<CandidateEmployment> candidateEmployment = candidateEmploymentRepository.findById(id);
-		return ResponseUtil.wrapOrNotFound(candidateEmployment);
+		return ResponseUtil.wrapOrNotFound(candidateEmploymentService.getCandidateEmployment(id));
 	}
 
 	/**
@@ -195,14 +156,7 @@ public class CandidateEmploymentResource {
 	@DeleteMapping("/candidate-employments/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteCandidateEmployment(@PathVariable Long id) {
-		Optional<CandidateEmployment> candidateEmployment = candidateEmploymentRepository.findById(id);
-		Candidate candidate = candidateEmployment.get().getCandidate();
-		log.debug("REST request to delete CandidateEmployment for candidate   : {} , {}", id,candidate.getId());
-		candidate.removeEmployment(candidateEmployment.get());
-		
-		if(candidate.getEmployments().isEmpty())
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_EXPERIENCE_PROFILE, true);
-		candidateRepository.save(candidate);
+		candidateEmploymentService.deleteCandidateEmployment(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -218,9 +172,7 @@ public class CandidateEmploymentResource {
 	@Timed
 	public List<CandidateEmployment> searchCandidateEmployments(@RequestParam String query) {
 		log.debug("REST request to search CandidateEmployments for query {}", query);
-		return StreamSupport
-				.stream(candidateEmploymentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		return candidateEmploymentService.searchCandidateEmployments(query);
 	}
 
 }

@@ -43,6 +43,7 @@ import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
+import com.drishika.gradzcircle.service.CandidateNonAcademicService;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -116,12 +117,14 @@ public class CandidateNonAcademicWorkResourceIntTest {
 
 	private CandidateNonAcademicWork candidateNonAcademicWork;
 	
+	@Autowired
+	private CandidateNonAcademicService candidateNonAcademicService;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final CandidateNonAcademicWorkResource candidateNonAcademicWorkResource = new CandidateNonAcademicWorkResource(
-				candidateNonAcademicWorkRepository, candidateNonAcademicWorkSearchRepository,profileScoreCalculator,candidateRepository,converter);
+				candidateNonAcademicService);
 		this.restCandidateNonAcademicWorkMockMvc = MockMvcBuilders.standaloneSetup(candidateNonAcademicWorkResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
 				.setMessageConverters(jacksonMessageConverter).build();
