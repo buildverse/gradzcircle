@@ -1,15 +1,10 @@
 package com.drishika.gradzcircle.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import com.drishika.gradzcircle.config.Constants;
-import com.drishika.gradzcircle.domain.Candidate;
+
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
-import com.drishika.gradzcircle.repository.CandidateNonAcademicWorkRepository;
-import com.drishika.gradzcircle.repository.CandidateRepository;
-import com.drishika.gradzcircle.repository.search.CandidateNonAcademicWorkSearchRepository;
+
+import com.drishika.gradzcircle.service.CandidateNonAcademicService;
 import com.drishika.gradzcircle.service.dto.CandidateNonAcademicWorkDTO;
-import com.drishika.gradzcircle.service.util.DTOConverters;
-import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
 import com.drishika.gradzcircle.web.rest.errors.BadRequestAlertException;
 import com.drishika.gradzcircle.web.rest.util.HeaderUtil;
 
@@ -49,24 +40,13 @@ public class CandidateNonAcademicWorkResource {
 	private final Logger log = LoggerFactory.getLogger(CandidateNonAcademicWorkResource.class);
 
 	private static final String ENTITY_NAME = "candidateNonAcademicWork";
-
-	private final CandidateNonAcademicWorkRepository candidateNonAcademicWorkRepository;
-
-	private final CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository;
 	
-	private final ProfileScoreCalculator profileScoreCalculator;
-	
-	private final CandidateRepository candidateRepository;
-	
-	private final DTOConverters converter;
+	private final CandidateNonAcademicService candidateNonAcademiceService;
 
-	public CandidateNonAcademicWorkResource(CandidateNonAcademicWorkRepository candidateNonAcademicWorkRepository,
-			CandidateNonAcademicWorkSearchRepository candidateNonAcademicWorkSearchRepository,ProfileScoreCalculator profileScoreCalculator,CandidateRepository candidateRepository,DTOConverters converter) {
-		this.candidateNonAcademicWorkRepository = candidateNonAcademicWorkRepository;
-		this.candidateNonAcademicWorkSearchRepository = candidateNonAcademicWorkSearchRepository;
-		this.profileScoreCalculator = profileScoreCalculator;
-		this.candidateRepository = candidateRepository;
-		this.converter = converter;
+	public CandidateNonAcademicWorkResource(CandidateNonAcademicService candidateNonAcademiceService) {
+
+		this.candidateNonAcademiceService = candidateNonAcademiceService;
+		
 	}
 
 	/**
@@ -89,20 +69,7 @@ public class CandidateNonAcademicWorkResource {
 			throw new BadRequestAlertException("A new candidateNonAcademicWork cannot already have an ID", ENTITY_NAME,
 					"idexists");
 		}
-		Optional<Candidate> optionalCandidate = candidateRepository.findById(candidateNonAcademicWork.getCandidate().getId());
-		if(!optionalCandidate.isPresent())
-			throw new BadRequestAlertException("No Candidate Fount to link Non Acad", ENTITY_NAME,
-					"");
-		Candidate candidate = optionalCandidate.get();
-		if (candidate.getNonAcademics().size() < 1) {
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_NON_ACADEMIC_PROFILE, false);
-		}
-		candidate.addNonAcademic(candidateNonAcademicWork);
-		candidate = candidateRepository.save(candidate);
-		//CandidateNonAcademicWork result = candidateNonAcademicWorkRepository.save(candidateNonAcademicWork);
-		
-		CandidateNonAcademicWork result = candidate.getNonAcademics().stream().filter(nonAcad->nonAcad.getNonAcademicInitiativeTitle().equals(candidateNonAcademicWork.getNonAcademicInitiativeTitle())).findFirst().orElse(candidateNonAcademicWork);
-		// candidateNonAcademicWorkSearchRepository.save(result);
+		CandidateNonAcademicWork result = candidateNonAcademiceService.createCandidateNonAcademicWork(candidateNonAcademicWork);
 		return ResponseEntity.created(new URI("/api/candidate-non-academic-works/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
 	}
@@ -128,8 +95,7 @@ public class CandidateNonAcademicWorkResource {
 		if (candidateNonAcademicWork.getId() == null) {
 			return createCandidateNonAcademicWork(candidateNonAcademicWork);
 		}
-		CandidateNonAcademicWork result = candidateNonAcademicWorkRepository.save(candidateNonAcademicWork);
-		//candidateNonAcademicWorkSearchRepository.save(result);
+		CandidateNonAcademicWork result = candidateNonAcademiceService.updateCandidateNonAcademicWork(candidateNonAcademicWork);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, candidateNonAcademicWork.getId().toString()))
 				.body(result);
@@ -145,7 +111,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public List<CandidateNonAcademicWork> getAllCandidateNonAcademicWorks() {
 		log.debug("REST request to get all CandidateNonAcademicWorks");
-		return candidateNonAcademicWorkRepository.findAll();
+		return candidateNonAcademiceService.getAllCandidateNonAcademicWorks();
 	}
 
 	/**
@@ -161,8 +127,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public ResponseEntity<CandidateNonAcademicWork> getCandidateNonAcademicWork(@PathVariable Long id) {
 		log.debug("REST request to get CandidateNonAcademicWork : {}", id);
-		Optional<CandidateNonAcademicWork> candidateNonAcademicWork = candidateNonAcademicWorkRepository.findById(id);
-		return ResponseUtil.wrapOrNotFound(candidateNonAcademicWork);
+		return ResponseUtil.wrapOrNotFound(candidateNonAcademiceService.getCandidateNonAcademicWork(id));
 	}
 
 	/**
@@ -177,18 +142,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public ResponseEntity<Void> deleteCandidateNonAcademicWork(@PathVariable Long id) {
 		log.debug("REST request to delete CandidateNonAcademicWork : {}", id);
-		CandidateNonAcademicWork candidateNonAcademicWork = candidateNonAcademicWorkRepository.findById(id).get();
-		Candidate candidate = candidateNonAcademicWork.getCandidate();
-		log.debug("REST request to delete CandidateNonAcademicWork for candidate   : {} , {}", id,candidate.getId());
-		candidate.getNonAcademics().remove(candidateNonAcademicWork);
-		candidateNonAcademicWork.candidate(null);
-		//candidate = candidate.removeNonAcademic(candidateNonAcademicWork);
-		log.debug("Candidate post emoval of certs is {} {}",candidate,candidate.getNonAcademics());
-		if(candidate.getNonAcademics().isEmpty())
-			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_NON_ACADEMIC_PROFILE, true);
-		candidateRepository.save(candidate);
-		//candidateNonAcademicWorkRepository.delete(id);
-		//candidateNonAcademicWorkSearchRepository.delete(id);
+		candidateNonAcademiceService.deleteCandidateNonAcademicWork(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
@@ -204,12 +158,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public List<CandidateNonAcademicWorkDTO> getNonAcadsByCandidate(@PathVariable Long id) {
 		log.debug("REST request to get CandidateCertifications by Candidate Id : {}", id);
-		//<CandidateNonAcademicWorkDTO> candiateNonAcademicDTO = new ArrayList<>();
-		List<CandidateNonAcademicWork> candidateNonAcademicWorks = candidateNonAcademicWorkRepository
-				.findNonAcademicWorkByCandidateId(id);
-		Candidate candidate = candidateRepository.findById(id).get();
-		log.debug("Canddiate Non Acad work is {}",candidateNonAcademicWorks);
-		return converter.convertCandidateNonAcademicWork(candidateNonAcademicWorks, true,candidate);
+		return candidateNonAcademiceService.getNonAcadsByCandidate(id);
 		
 	}
 
@@ -225,9 +174,7 @@ public class CandidateNonAcademicWorkResource {
 	@Timed
 	public List<CandidateNonAcademicWork> searchCandidateNonAcademicWorks(@RequestParam String query) {
 		log.debug("REST request to search CandidateNonAcademicWorks for query {}", query);
-		return StreamSupport
-				.stream(candidateNonAcademicWorkSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		return candidateNonAcademiceService.searchCandidateNonAcademicWorks(query);
 	}
-
+	
 }
