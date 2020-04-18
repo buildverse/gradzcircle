@@ -20,6 +20,10 @@ logging:
         io.github.jhipster: INFO
 
 spring:
+    application:
+        name: gradzcircle
+    profiles:
+        active: prod
     devtools:
         restart:
             enabled: false
@@ -27,9 +31,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/gradzcircle
-        username: gradzcircle
-        password:
+        url: jdbc:postgresql://ec2-23-21-201-12.compute-1.amazonaws.com:5432/dbdpcpev4mhtb5
+        username: nytfinyqqlfgdz
+        password: eb770ad706380c1d0a15c54f55fa82ae622d79f036e777178664d72e0fec2db0
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -42,15 +46,22 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-name: b2aa8bc4c757b5f248a4a0d22b758c76
+            cluster-nodes: b2aa8bc4c757b5f248a4a0d22b758c76.us-east-1.aws.found.io:9343
     liquibase:
         contexts: prod
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: hola@gradzcircle.com
+        password: $aqswDE@
+        protocol: smtp
+        tls: true
+        from: Gradzcircle Team
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     thymeleaf:
         cache: true
 
@@ -104,7 +115,7 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: gradzcircle@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        base-url: http://www.gradzcircle.com # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx:
             enabled: true
