@@ -52,7 +52,7 @@ dependencyManagement {
 defaultTasks 'bootRun'
 
 group = 'com.drishika.gradzcircle'
-version = '0.0.1-SNAPSHOT'
+version = '4.0.0'
 
 description = ''
 
@@ -268,8 +268,8 @@ if (project.hasProperty('nodeInstall')) {
     }
 }
 
-bootWar.dependsOn test
-test.dependsOn compileJava
+/*bootWar.dependsOn test
+test.dependsOn compileJava*/
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
