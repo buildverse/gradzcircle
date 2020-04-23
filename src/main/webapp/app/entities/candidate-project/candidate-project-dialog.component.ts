@@ -47,7 +47,8 @@ export class CandidateProjectDialogComponent implements OnInit {
         private router: Router,
         private eventManager: JhiEventManager,
         private dateUtils: JhiDateUtils,
-        private config: NgbDatepickerConfig
+        private config: NgbDatepickerConfig,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     configureDatePicker() {
@@ -99,7 +100,16 @@ export class CandidateProjectDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.isEmploymentProject) {
+            this.router.navigate(['/employment', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/education', { outlets: { popup: null } }]);
+        }
     }
 
     save() {
@@ -123,6 +133,7 @@ export class CandidateProjectDialogComponent implements OnInit {
         //  this.eventManager.broadcast({name: 'candidateEducationListModification', content: 'OK'});
         this.eventManager.broadcast({ name: 'candidateEmploymentListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 

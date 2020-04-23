@@ -1,7 +1,7 @@
 import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -20,13 +20,18 @@ export class CandidateNonAcademicWorkDeleteDialogComponent {
         private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
-
+    clearRoute() {
+        this.router.navigate(['/beyondAcademics', { outlets: { popup: null } }]);
+    }
     confirmDelete(id: number) {
         this.spinnerService.show();
         this.candidateNonAcademicWorkService.delete(id).subscribe(response => {
@@ -35,6 +40,7 @@ export class CandidateNonAcademicWorkDeleteDialogComponent {
                 content: 'Deleted an candidateNonAcademicWork'
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+            this.clearRoute();
             this.activeModal.dismiss(true);
             this.spinnerService.hide();
         });

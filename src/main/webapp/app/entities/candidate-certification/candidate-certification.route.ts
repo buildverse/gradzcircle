@@ -7,6 +7,15 @@ import { CandidateCertificationDeletePopupComponent } from './candidate-certific
 
 export const candidateCertificationRoute: Routes = [
     {
+        path: '',
+        component: CandidateCertificationComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-certification',
         component: CandidateCertificationComponent,
         data: {

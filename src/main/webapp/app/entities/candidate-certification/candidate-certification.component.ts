@@ -48,14 +48,10 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
         this.candidateCertificationService.findCertificationsByCandidateId(this.candidateId).subscribe(
             (res: HttpResponse<CandidateCertification[]>) => {
                 this.candidateCertifications = res.body;
-                // console.log('Certications are '+JSON.stringify(this.candidateCertifications));
                 if (this.candidateCertifications && this.candidateCertifications.length <= 0) {
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 }
                 this.candidateCertificationsOnLoad();
-                /* if (this.candidateCertifications && this.candidateCertifications.length > 0) {
-                    this.candidateProfileScoreService.changeScore(this.candidateCertifications[0].candidate.profileScore);
-                } */
                 this.spinnerService.hide();
             },
             (res: HttpErrorResponse) => this.onError(res.message)
@@ -94,12 +90,10 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
 
     setAddRouteParam() {
         this.dataservice.setdata(CANDIDATE_ID, this.candidateId);
-        // this.dataservice.setRouteData(this.candidateId);
     }
 
     setEditDeleteRouteParam(candidateCertificationId) {
         this.dataservice.setdata(CANDIDATE_CERTIFICATION_ID, candidateCertificationId);
-        // this.dataservice.setRouteData(candidateCertificationId);
     }
 
     loadAll() {
@@ -152,7 +146,6 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // console.log('Destroy the component certification');
         this.eventManager.destroy(this.eventSubscriber);
     }
 

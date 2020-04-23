@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -20,13 +20,18 @@ export class CandidateEmploymentDeleteDialogComponent {
         private candidateEmploymentService: CandidateEmploymentService,
         public activeModal: NgbActiveModal,
         private spinnerService: NgxSpinnerService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
-
+    clearRoute() {
+        this.router.navigate(['/employment', { outlets: { popup: null } }]);
+    }
     confirmDelete(id: number) {
         this.spinnerService.show();
         this.candidateEmploymentService.delete(id).subscribe(response => {
@@ -36,6 +41,7 @@ export class CandidateEmploymentDeleteDialogComponent {
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
             this.spinnerService.hide();
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }

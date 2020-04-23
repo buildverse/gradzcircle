@@ -11,6 +11,15 @@ import { CandidateEmploymentDeletePopupComponent } from './candidate-employment-
 
 export const candidateEmploymentRoute: Routes = [
     {
+        path: '',
+        component: CandidateEmploymentComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-employment',
         component: CandidateEmploymentComponent,
         data: {

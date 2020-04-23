@@ -38,8 +38,7 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     notSelectedLanguage: boolean;
     default: string;
     languageLocked: boolean;
-
-    // action :string;
+    fromProfile: boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -51,11 +50,11 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         private route: ActivatedRoute,
         private principal: Principal,
         private spinnerService: NgxSpinnerService,
-        private router: Router
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     enableRadio() {
-        // console.log('==================== '+this.notSelectedLanguage+'==============='+this.languageAlreadyPresentError );
         if (this.notSelectedLanguage || this.languageAlreadyPresentError) {
             return true;
         } else {
@@ -63,15 +62,12 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         }
     }
     validateLanguage() {
-        // console.log("Value passed is "+ JSON.stringify(value));
-        //  console.log('selected data is '+JSON.stringify(this.candidateLanguageProficiency.language));
         this.serverSideError = '';
         if (this.candidateLanguageProficiency.language.length <= 0) {
             this.hasNoLanguageSelectedError = true;
             this.languageAlreadyPresentError = false;
             this.notSelectedLanguage = true;
             this.candidateLanguageProficiency.proficiency = undefined;
-            // this.isLanguageAlreadyPresent();
         } else {
             this.notSelectedLanguage = false;
             this.hasNoLanguageSelectedError = false;
@@ -91,7 +87,6 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
     };
 
     isLanguageAlreadyPresent() {
-        // console.log('---------------'+JSON.stringify(this.currentCandidateLanguageProficiencies));
         this.languageAlreadyPresentError = false;
         if (this.currentCandidateLanguageProficiencies) {
             for (let i = 0; i < this.currentCandidateLanguageProficiencies.length; i++) {
@@ -128,16 +123,25 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
             );
         }
 
-        this.languageService.query().subscribe(
+        /*this.languageService.query().subscribe(
             (res: HttpResponse<Language[]>) => {
                 this.languages = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        );*/
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/languages', { outlets: { popup: null } }]);
+        }
     }
 
     checkSelectLanguageProficiency() {
@@ -175,12 +179,14 @@ export class CandidateLanguageProficiencyDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.router.navigate(['/error']);
     }
 
@@ -275,7 +281,8 @@ export class CandidateLanguageProficiencyPopupNewComponent implements OnInit, On
                 this.candidateLanguageProficiencyPopupService.open(
                     CandidateLanguageProficiencyDialogComponent as Component,
                     id,
-                    this.currentCandidateLanguageProficiencies
+                    this.currentCandidateLanguageProficiencies,
+                    params['fromProfile']
                 );
             }
         });

@@ -28,7 +28,12 @@ export class CandidateLanguageProficiencyPopupServiceNew {
     //     console.log("Why am is not egttingthis fucker "+ this.currentCandidateLanguageProficiencies);
     // }
 
-    open(component: Component, id?: number | any, currentCandidateLanguageProficiencies?: any): Promise<NgbModalRef> {
+    open(
+        component: Component,
+        id?: number | any,
+        currentCandidateLanguageProficiencies?: any,
+        fromProfile?: boolean
+    ): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -44,7 +49,8 @@ export class CandidateLanguageProficiencyPopupServiceNew {
                     this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
                         component,
                         this.candidateLanguageProficiency,
-                        currentCandidateLanguageProficiencies
+                        currentCandidateLanguageProficiencies,
+                        fromProfile
                     );
                     resolve(this.ngbModalRef);
                 }, 0);
@@ -54,36 +60,25 @@ export class CandidateLanguageProficiencyPopupServiceNew {
                     this.ngbModalRef = this.candidateLanguageProficiencyModalRef(
                         component,
                         this.candidateLanguageProficiency,
-                        currentCandidateLanguageProficiencies
+                        currentCandidateLanguageProficiencies,
+                        fromProfile
                     );
                     resolve(this.ngbModalRef);
                 }, 0);
             }
         });
     }
-    // open(component: Component, id?: number | any, currentCandidateLanguageProficiencies?:any):Promise<NgbModalRef> {
-    //     if (this.isOpen) {
-    //         return;
-    //     }
-    //     console.log ( "Candidate id in pop new service is "+id);
-    //    // this.loadAlreadySavedProficienies(id);
-    //     this.isOpen = true;
-    //     this.candidateLanguageProficiency = new CandidateLanguageProficiency();
-    //     this.candidate = new Candidate();
-    //     this.candidateLanguageProficiency.candidate = this.candidate;
-    //     this.candidateLanguageProficiency.candidate.id = id;
-    //     return this.candidateLanguageProficiencyModalRef(component, this.candidateLanguageProficiency,currentCandidateLanguageProficiencies);
-
-    // }
 
     candidateLanguageProficiencyModalRef(
         component: Component,
         candidateLanguageProficiency: CandidateLanguageProficiency,
-        currentCandidateLanguageProficiencies: CandidateLanguageProficiency[]
+        currentCandidateLanguageProficiencies: CandidateLanguageProficiency[],
+        fromProfile?: boolean
     ): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateLanguageProficiency = candidateLanguageProficiency;
         modalRef.componentInstance.currentCandidateLanguageProficiencies = currentCandidateLanguageProficiencies;
+        modalRef.componentInstance.fromProfile = fromProfile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });

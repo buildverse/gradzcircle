@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 import { CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
@@ -18,13 +18,19 @@ export class CandidateCertificationDeleteDialogComponent {
     constructor(
         private candidateCertificationService: CandidateCertificationService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
+    clearRoute() {
+        this.router.navigate(['/certification', { outlets: { popup: null } }]);
+    }
     confirmDelete(id: number) {
         this.candidateCertificationService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
@@ -32,6 +38,7 @@ export class CandidateCertificationDeleteDialogComponent {
                 content: 'Deleted an candidateCertification'
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }

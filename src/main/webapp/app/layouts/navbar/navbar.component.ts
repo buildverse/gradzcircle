@@ -15,7 +15,6 @@ import { AppConfig } from '../../entities/app-config/app-config.model';
 import { AppConfigService } from '../../entities/app-config/app-config.service';
 import { CorporateService } from '../../entities/corporate';
 import { Candidate, CandidateService } from '../../entities/candidate';
-import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import {
     USER_ID,
@@ -80,8 +79,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         private candidateService: CandidateService,
         private corporateService: CorporateService,
         private localStorageService: DataStorageService,
-        private appConfigService: AppConfigService,
-        private candidateProfileSettingService: CandidateProfileSettingService
+        private appConfigService: AppConfigService
     ) {
         this.version = VERSION ? 'v' + VERSION : '';
         this.isNavbarCollapsed = true;

@@ -37,7 +37,9 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
         private eventManager: JhiEventManager,
         private principal: Principal,
         private userService: UserService,
-        private dataService: DataStorageService
+        private dataService: DataStorageService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {
         this.corporateUser = false;
     }
@@ -91,10 +93,8 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
         this.uploader.onCompleteItem = (item, response, status, header) => {
             if (status === 200) {
                 this.eventManager.broadcast({ name: 'userImageModification', content: 'OK' });
-                this.clear();
-            } else {
-                // console.log('Status is ' + status + '   response is ' + JSON.stringify(response));
             }
+            this.clear();
         };
     }
     onAfterAddingFile(item) {
@@ -136,6 +136,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
 
     clear() {
         this.clearSelectedPicture();
+        this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
         this.activeModal.dismiss('cancel');
     }
 }

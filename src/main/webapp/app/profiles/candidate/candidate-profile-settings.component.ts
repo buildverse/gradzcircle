@@ -33,6 +33,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     // routerSub: Subscription;
     viewMode: boolean;
     candidateProfileSubscriber: Subscription;
+    profile: boolean;
 
     constructor(
         private route: ActivatedRoute,
@@ -52,6 +53,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
         this.progressBarConfig.max = 100;
         this.progressBarConfig.height = '10px';
         this.viewMode = true;
+        this.profile = true;
     }
 
     ngOnInit() {

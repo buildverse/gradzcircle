@@ -2,11 +2,17 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GradzcircleSharedModule } from '../../shared';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
+import { QualificationService } from '../../entities/qualification/qualification.service';
+import { CourseService } from '../../entities/course/course.service';
+import { CollegeService } from '../../entities/college/college.service';
+import { UniversityService } from '../../entities/university/university.service';
+import { GradzcircleCandidateProjectModule } from '../candidate-project/candidate-project.module';
 
 import {
     CandidateEducationService,
     CandidateEducationPopupService,
-    CandidateEducationComponent,
+    // CandidateEducationComponent,
     CandidateEducationDetailComponent,
     CandidateEducationDialogComponent,
     CandidateEducationPopupComponent,
@@ -14,42 +20,45 @@ import {
     CandidateEducationDeleteDialogComponent,
     candidateEducationRoute,
     candidateEducationPopupRoute,
-    // CollegeResolverService,
-    // CourseResolverService,
-    // QualificationResolverService,
-    CandidateEducationPopupNewComponent,
+    //   CandidateEducationPopupNewComponent,
     CandidateEducationPopupServiceNew
 } from './';
 
 const ENTITY_STATES = [...candidateEducationRoute, ...candidateEducationPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [
+        GradzcircleSharedModule,
+        GradzcircleCandidateProfileSharedModule,
+        GradzcircleCandidateProjectModule,
+        RouterModule.forChild(ENTITY_STATES)
+    ],
     declarations: [
-        CandidateEducationComponent,
+        // CandidateEducationComponent,
         CandidateEducationDetailComponent,
-        CandidateEducationDialogComponent,
+        //  CandidateEducationDialogComponent,
         CandidateEducationDeleteDialogComponent,
         CandidateEducationPopupComponent,
-        CandidateEducationDeletePopupComponent,
-        CandidateEducationPopupNewComponent
+        CandidateEducationDeletePopupComponent
+        //  CandidateEducationPopupNewComponent
     ],
     entryComponents: [
-        CandidateEducationComponent,
-        CandidateEducationDialogComponent,
+        //   CandidateEducationComponent,
+        //  CandidateEducationDialogComponent,
         CandidateEducationPopupComponent,
         CandidateEducationDeleteDialogComponent,
-        CandidateEducationDeletePopupComponent,
-        CandidateEducationPopupNewComponent
+        CandidateEducationDeletePopupComponent
+        //   CandidateEducationPopupNewComponent
     ],
     providers: [
         CandidateEducationService,
         CandidateEducationPopupService,
         CandidateEducationPopupServiceNew,
-        DataStorageService
-        // CollegeResolverService,
-        //  CourseResolverService,
-        //  QualificationResolverService
+        DataStorageService,
+        QualificationService,
+        CourseService,
+        CollegeService,
+        UniversityService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

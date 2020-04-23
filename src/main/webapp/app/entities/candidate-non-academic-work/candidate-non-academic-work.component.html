@@ -5,7 +5,7 @@
                 <div class="col">
                     <p jhiTranslate="gradzcircleApp.candidateNonAcademicWork.detail.title" class="float-left h3 font-weight-bold"></p>
                     <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button"
-                        jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.add" [routerLink]="['/', { outlets: { popup: 'new-candidate-non-academic-work' } }]">Button</button>
+                        jhiTranslate="gradzcircleApp.candidateNonAcademicWork.home.add" [routerLink]="['/beyondAcademics', { outlets: { popup: 'new-candidate-non-academic-work' } }]">Button</button>
                 </div>
             </div>
             <div class="container">
@@ -15,11 +15,11 @@
                         <h6>{{primaryCandidateNonAcademic.nonAcademicWorkStartDate | date:'mediumDate'}}&nbsp;<small style="font-size:1rem;">-</small>&nbsp;{{primaryCandidateNonAcademic.nonAcademicWorkEndDate?(primaryCandidateNonAcademic.nonAcademicWorkEndDate|date:'mediumDate'): 'Till Date'}}</h6>
                         <h6>
                             <span  ngbTooltip="Edit" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/edit'} }]">
+                                [routerLink]="['/beyondAcademics', { outlets: { popup: 'candidate-non-academic-work/edit'} }]">
                                 <fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
                             </span>
                             <span ngbTooltip="Remove" (click)="setEditDeleteRouteParam(primaryCandidateNonAcademic.id)"
-                                [routerLink]="['/', { outlets: { popup: 'candidate-non-academic-work/delete'} }]">
+                                [routerLink]="['/beyondAcademics', { outlets: { popup: 'candidate-non-academic-work/delete'} }]">
       							<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
                             </span>
                         </h6>

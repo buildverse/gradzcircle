@@ -1,3 +1,4 @@
+import { Principal } from '../../core/auth/principal.service';
 import { DATE_FORMAT } from '../../shared/constants/input.constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +35,7 @@ export class CandidateEmploymentDialogComponent implements OnInit {
     employmenttypes: EmploymentType[];
     editorConfig: any;
     countries: Country[];
-
+    fromProfile: boolean;
     jobtypes: JobType[];
     employmentStartDateDp: any;
     employmentEndDateDp: any;
@@ -50,7 +51,9 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         private eventManager: JhiEventManager,
         private spinnerService: NgxSpinnerService,
         private config: NgbDatepickerConfig,
-        private router: Router
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private principal: Principal
     ) {}
 
     manageEndDateControl() {
@@ -100,31 +103,44 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         this.candidateEmployment.isCurrentEmployment ? (this.endDateControl = true) : (this.endDateControl = false);
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;
-        this.candidateService
-            .query()
-            .subscribe(
-                (res: HttpResponse<Candidate[]>) => (this.candidates = res.body),
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
+        if (this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN'])) {
+            this.candidateService
+                .query()
+                .subscribe(
+                    (res: HttpResponse<Candidate[]>) => (this.candidates = res.body),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+            this.countryService
+                .query()
+                .subscribe(
+                    (res: HttpResponse<Country[]>) => (this.countries = res.body),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+        }
+
         this.employmentTypeService
             .query()
             .subscribe(
                 (res: HttpResponse<EmploymentType[]>) => (this.employmenttypes = res.body),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
-        this.countryService
-            .query()
-            .subscribe(
-                (res: HttpResponse<Country[]>) => (this.countries = res.body),
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
+
         this.jobTypeService
             .query()
             .subscribe((res: HttpResponse<JobType[]>) => (this.jobtypes = res.body), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/employment', { outlets: { popup: null } }]);
+        }
     }
 
     save() {
@@ -149,12 +165,14 @@ export class CandidateEmploymentDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.router.navigate(['/error']);
     }
 
@@ -228,10 +246,14 @@ export class CandidateEmploymentPopupNewComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.candidateEmploymentPopupService.open(CandidateEmploymentDialogComponent as Component, params['id']);
+                this.candidateEmploymentPopupService.open(
+                    CandidateEmploymentDialogComponent as Component,
+                    params['id'],
+                    params['fromProfile']
+                );
             } else {
                 const id = this.dataService.getData(CANDIDATE_ID);
-                this.candidateEmploymentPopupService.open(CandidateEmploymentDialogComponent as Component, id);
+                this.candidateEmploymentPopupService.open(CandidateEmploymentDialogComponent as Component, id, params['fromProfile']);
             }
         });
     }

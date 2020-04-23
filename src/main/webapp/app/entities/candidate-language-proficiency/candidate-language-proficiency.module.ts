@@ -1,42 +1,44 @@
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { GradzcircleSharedModule } from '../../shared';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { LanguageService } from '../language/language.service';
 import {
     CandidateLanguageProficiencyService,
     CandidateLanguageProficiencyPopupService,
     CandidateLanguageProficiencyPopupServiceNew,
-    CandidateLanguageProficiencyComponent,
+    //   CandidateLanguageProficiencyComponent,
     CandidateLanguageProficiencyDetailComponent,
-    CandidateLanguageProficiencyDialogComponent,
+    //   CandidateLanguageProficiencyDialogComponent,
     CandidateLanguageProficiencyPopupComponent,
     CandidateLanguageProficiencyDeletePopupComponent,
     CandidateLanguageProficiencyDeleteDialogComponent,
     candidateLanguageProficiencyRoute,
     candidateLanguageProficiencyPopupRoute,
-    CandidateLanguageProficiencyPopupNewComponent,
+    //  CandidateLanguageProficiencyPopupNewComponent,
     CandidateLanguageResolverService
 } from './';
 
 const ENTITY_STATES = [...candidateLanguageProficiencyRoute, ...candidateLanguageProficiencyPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES), GradzcircleCandidateProfileSharedModule],
     declarations: [
-        CandidateLanguageProficiencyComponent,
+        //     CandidateLanguageProficiencyComponent,
         CandidateLanguageProficiencyDetailComponent,
-        CandidateLanguageProficiencyDialogComponent,
+        //    CandidateLanguageProficiencyDialogComponent,
         CandidateLanguageProficiencyDeleteDialogComponent,
         CandidateLanguageProficiencyPopupComponent,
-        CandidateLanguageProficiencyPopupNewComponent,
+        //     CandidateLanguageProficiencyPopupNewComponent,
         CandidateLanguageProficiencyDeletePopupComponent
     ],
     entryComponents: [
-        CandidateLanguageProficiencyComponent,
-        CandidateLanguageProficiencyDialogComponent,
+        //    CandidateLanguageProficiencyComponent,
+        //    CandidateLanguageProficiencyDialogComponent,
         CandidateLanguageProficiencyPopupComponent,
-        CandidateLanguageProficiencyPopupNewComponent,
+        //     CandidateLanguageProficiencyPopupNewComponent,
         CandidateLanguageProficiencyDeleteDialogComponent,
         CandidateLanguageProficiencyDeletePopupComponent
     ],
@@ -45,7 +47,8 @@ const ENTITY_STATES = [...candidateLanguageProficiencyRoute, ...candidateLanguag
         CandidateLanguageProficiencyPopupService,
         CandidateLanguageProficiencyPopupServiceNew,
         CandidateLanguageResolverService,
-        DataStorageService
+        DataStorageService,
+        LanguageService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

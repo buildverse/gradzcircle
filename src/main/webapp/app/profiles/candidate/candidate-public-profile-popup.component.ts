@@ -1,6 +1,6 @@
 import { UserService } from '../../core/user/user.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 import { NgbActiveModal, NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
@@ -49,7 +49,9 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
         private userService: UserService,
         public ratingConfig: NgbRatingConfig,
         public alertService: JhiAlertService,
-        private dataService: DataStorageService
+        private dataService: DataStorageService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {
         this.ratingConfig.max = 5;
         this.ratingConfig.readonly = true;
@@ -166,6 +168,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
 
     clear() {
         this.dataService.removeData(FROM_LINKED_CANDIDATE);
+        this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
         this.activeModal.dismiss('cancel');
         this.alertService.clear();
     }

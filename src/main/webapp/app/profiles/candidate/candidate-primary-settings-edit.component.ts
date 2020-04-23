@@ -205,7 +205,7 @@ export class CandidatePrimarySettingsEditComponent implements OnInit, OnDestroy 
         this.primarySettingForm.reset();
         this.eventManager.broadcast({ name: 'candidatePrimarySettingModification', content: 'OK' });
         this.candidateSettingService.changeSetting('primarySetting');
-        this.router.navigate(['/', 'candidate-profile']);
+        this.router.navigate(['/candidate-profile/settings']);
     }
 
     characterCount() {

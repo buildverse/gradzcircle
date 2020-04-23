@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -21,11 +21,18 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,
         public activeModal: NgbActiveModal,
         private eventManager: JhiEventManager,
-        private spinnerService: NgxSpinnerService
+        private spinnerService: NgxSpinnerService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/languages', { outlets: { popup: null } }]);
     }
 
     confirmDelete(id: number) {
@@ -37,6 +44,7 @@ export class CandidateLanguageProficiencyDeleteDialogComponent {
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
             this.spinnerService.hide();
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }

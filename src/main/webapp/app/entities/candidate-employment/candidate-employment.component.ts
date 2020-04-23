@@ -32,6 +32,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     profileScore: number;
     candidateEmploymentsForDisplay: CandidateEmployment[];
     primaryCandidateEmployment: CandidateEmployment;
+    isEmployment: boolean;
 
     constructor(
         private candidateEmploymentService: CandidateEmploymentService,
@@ -47,6 +48,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
                 ? this.activatedRoute.snapshot.params['search']
                 : '';
+        this.isEmployment = true;
     }
 
     /*  setAddRouteParams() {
@@ -73,7 +75,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
                 this.candidateEmployments = res.body;
                 // console.log('Employment are '+JSON.stringify(this.candidateEmployments));
                 if (this.candidateEmployments && this.candidateEmployments.length <= 0) {
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 }
                 this.candidateEmploymentsOnLoad();
                 /* if (this.candidateEmployments && this.candidateEmployments.length > 0) {

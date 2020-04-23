@@ -1,7 +1,7 @@
 import { CANDIDATE_PROJECT_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -16,14 +16,18 @@ import { CandidateProjectService } from './candidate-project.service';
 })
 export class CandidateProjectDeleteDialogComponent {
     candidateProject: CandidateProject;
+    isEmploymentProject: boolean;
 
     constructor(
         private candidateProjectService: CandidateProjectService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -33,8 +37,17 @@ export class CandidateProjectDeleteDialogComponent {
                 name: 'candidateProjectListModification',
                 content: 'Deleted an candidateProject'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
+    }
+
+    clearRoute() {
+        if (this.isEmploymentProject) {
+            this.router.navigate(['/employment', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/education', { outlets: { popup: null } }]);
+        }
     }
 }
 
@@ -58,7 +71,8 @@ export class CandidateProjectDeletePopupComponent implements OnInit, OnDestroy {
             } else if (this.dataStorageService.getData(CANDIDATE_PROJECT_ID)) {
                 this.candidateProjectPopupService.open(
                     CandidateProjectDeleteDialogComponent as Component,
-                    this.dataStorageService.getData(CANDIDATE_PROJECT_ID)
+                    this.dataStorageService.getData(CANDIDATE_PROJECT_ID),
+                    params['isEmployment']
                 );
             }
         });

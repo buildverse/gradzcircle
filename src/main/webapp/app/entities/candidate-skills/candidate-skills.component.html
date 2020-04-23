@@ -6,7 +6,7 @@
                         <p jhiTranslate="gradzcircleApp.candidateSkills.detail.title" class="float-left h3 font-weight-bold"></p>
                         <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button"
                         jhiTranslate="gradzcircleApp.candidateSkills.capturedSkill" 
-							[routerLink]="['/', { outlets: { popup: 'new-candidate-skill'} }]">Button</button>
+							[routerLink]="['/skill', { outlets: { popup: 'new-candidate-skill'} }]">Button</button>
                 </div>
             </div>
             <div class="container">
@@ -16,7 +16,7 @@
 						<div class="col-md-4 col-sm-6 col-12 mb-3" *ngFor="let candidateSkill of candidateSkills">
 							{{candidateSkill.skillName}} <span  ngbTooltip="Remove"
 								(click)="setRemoveIdForSkill(candidateSkill.id)"
-								[routerLink]="['/', { outlets: { popup: 'candidate-skills/delete'} }]">
+								[routerLink]="['/skill', { outlets: { popup: 'candidate-skills/delete'} }]">
 								<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
 							</span> 
 							

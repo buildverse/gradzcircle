@@ -95,9 +95,8 @@ export class CandidateSkillsComponent implements OnInit, OnDestroy {
         this.candidateSkillsService.findSkillsByCandidateId(this.candidateId).subscribe(
             (res: HttpResponse<CandidateSkills[]>) => {
                 this.candidateSkills = res.body;
-                // console.log('Certications are '+JSON.stringify(this.candidateCertifications));
                 if (this.candidateSkills && this.candidateSkills.length <= 0) {
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 }
                 this.spinnerService.hide();
             },

@@ -11,6 +11,16 @@ import { CandidateLanguageResolverService } from './candidate-language-proficien
 
 export const candidateLanguageProficiencyRoute: Routes = [
     {
+        path: '',
+        component: CandidateLanguageProficiencyComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-language-proficiency',
         component: CandidateLanguageProficiencyComponent,
         data: {

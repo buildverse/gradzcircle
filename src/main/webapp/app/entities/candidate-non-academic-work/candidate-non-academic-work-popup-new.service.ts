@@ -19,7 +19,7 @@ export class CandidateNonAcademicWorkPopupServiceNew {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any, fromProfile?: boolean): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -30,15 +30,20 @@ export class CandidateNonAcademicWorkPopupServiceNew {
             this.candidate.id = id;
             this.candidateNonAcademicWork.candidate = this.candidate;
             setTimeout(() => {
-                this.ngbModalRef = this.candidateNonAcademicWorkModalRef(component, this.candidateNonAcademicWork);
+                this.ngbModalRef = this.candidateNonAcademicWorkModalRef(component, this.candidateNonAcademicWork, fromProfile);
                 resolve(this.ngbModalRef);
             }, 0);
         });
     }
 
-    candidateNonAcademicWorkModalRef(component: Component, candidateNonAcademicWork: CandidateNonAcademicWork): NgbModalRef {
+    candidateNonAcademicWorkModalRef(
+        component: Component,
+        candidateNonAcademicWork: CandidateNonAcademicWork,
+        fromProfile?: boolean
+    ): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateNonAcademicWork = candidateNonAcademicWork;
+        modalRef.componentInstance.fromProfile = fromProfile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });

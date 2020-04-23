@@ -31,9 +31,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://ec2-23-21-201-12.compute-1.amazonaws.com:5432/dbdpcpev4mhtb5
-        username: nytfinyqqlfgdz
-        password: eb770ad706380c1d0a15c54f55fa82ae622d79f036e777178664d72e0fec2db0
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

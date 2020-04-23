@@ -2,42 +2,40 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GradzcircleSharedModule } from '../../shared';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
 import {
     CandidateCertificationService,
     CandidateCertificationPopupService,
-    CandidateCertificationComponent,
     CandidateCertificationDetailComponent,
-    CandidateCertificationDialogComponent,
+    //  CandidateCertificationDialogComponent,
     CandidateCertificationPopupComponent,
     CandidateCertificationDeletePopupComponent,
     CandidateCertificationDeleteDialogComponent,
     candidateCertificationRoute,
     candidateCertificationPopupRoute,
     CandidateCertification,
-    CandidateCertificationPopupNewComponent,
+    //   CandidateCertificationPopupNewComponent,
     CandidateCertificationPopupServiceNew
 } from './';
 
 const ENTITY_STATES = [...candidateCertificationRoute, ...candidateCertificationPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [GradzcircleSharedModule, GradzcircleCandidateProfileSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
-        CandidateCertificationComponent,
         CandidateCertificationDetailComponent,
-        CandidateCertificationDialogComponent,
+        //   CandidateCertificationDialogComponent,
         CandidateCertificationDeleteDialogComponent,
         CandidateCertificationPopupComponent,
-        CandidateCertificationDeletePopupComponent,
-        CandidateCertificationPopupNewComponent
+        CandidateCertificationDeletePopupComponent
+        //    CandidateCertificationPopupNewComponent
     ],
     entryComponents: [
-        CandidateCertificationComponent,
-        CandidateCertificationDialogComponent,
+        //    CandidateCertificationDialogComponent,
         CandidateCertificationPopupComponent,
         CandidateCertificationDeleteDialogComponent,
-        CandidateCertificationDeletePopupComponent,
-        CandidateCertificationPopupNewComponent
+        CandidateCertificationDeletePopupComponent
+        //    CandidateCertificationPopupNewComponent
     ],
     providers: [
         CandidateCertificationService,

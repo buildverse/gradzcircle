@@ -1,8 +1,9 @@
+import { JhiLanguageHelper } from '../../core/language/language.helper';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { GradzcircleSharedModule } from '../../shared';
-import { GradzcircleAdminModule } from '../../admin/admin.module';
+// import { GradzcircleAdminModule } from '../../admin/admin.module';
 import {
     CandidateService,
     CandidatePopupService,
@@ -17,16 +18,14 @@ import {
     CandidatePagingParams,
     CandidatePreviewComponent
 } from './';
+import { JhiLanguageService } from 'ng-jhipster';
 
-const ENTITY_STATES = [
-    ...candidateRoute,
-    ...candidatePopupRoute,
-];
+const ENTITY_STATES = [...candidateRoute, ...candidatePopupRoute];
 
 @NgModule({
     imports: [
         GradzcircleSharedModule,
-        GradzcircleAdminModule,
+        // GradzcircleAdminModule,
         RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [
@@ -46,11 +45,7 @@ const ENTITY_STATES = [
         CandidateDeletePopupComponent,
         CandidatePreviewComponent
     ],
-    providers: [
-        CandidateService,
-        CandidatePopupService,
-        CandidatePagingParams
-    ],
+    providers: [CandidateService, CandidatePopupService, CandidatePagingParams],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleCandidateModule {}

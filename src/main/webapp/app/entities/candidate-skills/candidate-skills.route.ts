@@ -8,6 +8,16 @@ import { CandidateSkillsDeletePopupComponent } from './candidate-skills-delete-d
 
 export const candidateSkillsRoute: Routes = [
     {
+        path: '',
+        component: CandidateSkillsComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-skills',
         component: CandidateSkillsComponent,
         data: {

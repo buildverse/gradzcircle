@@ -6,13 +6,11 @@
                         <p jhiTranslate="gradzcircleApp.candidateLanguageProficiency.detail.title" class="float-left h3 font-weight-bold"></p>
                         <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button"
                         jhiTranslate="gradzcircleApp.candidateLanguageProficiency.home.add" 
-							[routerLink]="['/', { outlets: { popup: 'new-candidate-language-proficiency'} }]">Button</button>
+							[routerLink]="['/languages', { outlets: { popup: 'new-candidate-language-proficiency'} }]">Button</button>
                 </div>
             </div>
             <div class="container">
                 <div class="image languages-img"></div>
-                <!--<div class="card shadow">
-                    <div class="card-body">-->
                          <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                             <table class="table dataTable my-0" id="dataTable">
                                 <thead>
@@ -32,10 +30,10 @@
                                         <td class="text-center">{{candidateLanguageProficiency.proficiency}}</td>
                                         <td class="text-center">
                                             <span>
-                                                <a class="btn btn-sm btn-outline-success" (click)="setEditDeleteRouterParam(candidateLanguageProficiency.id)" [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/edit'} }]"
+                                                <a class="btn btn-sm btn-outline-success" (click)="setEditDeleteRouterParam(candidateLanguageProficiency.id)" [routerLink]="['/languages', { outlets: { popup: 'candidate-language-proficiency/edit'} }]"
                                                         replaceUrl="true"> <span jhiTranslate="entity.action.edit">Edit</span>
                                                 </a>
-                                                <a class="btn btn-sm btn-outline-danger"  (click)="setEditDeleteRouterParam(candidateLanguageProficiency.id)" [routerLink]="['/', { outlets: { popup: 'candidate-language-proficiency/delete'} }]"
+                                                <a class="btn btn-sm btn-outline-danger"  (click)="setEditDeleteRouterParam(candidateLanguageProficiency.id)" [routerLink]="['/languages', { outlets: { popup: 'candidate-language-proficiency/delete'} }]"
                                                     replaceUrl="true">
                                                     <span
                                                     jhiTranslate="entity.action.delete">Delete</span>
@@ -46,8 +44,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    <!--</div>
-                </div>-->
                 <div class="mb-5"></div>
             </div>
         </section>

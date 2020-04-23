@@ -1,6 +1,7 @@
 import './vendor.ts';
 
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, Injector } from '@angular/core';
+import { DefaultUrlSerializer, UrlSerializer, UrlTree } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -16,10 +17,21 @@ import { GradzcircleCoreModule } from 'app/core';
 import { GradzcircleAppRoutingModule } from './app-routing.module';
 import { GradzcircleHomeModule } from './home/home.module';
 import { GradzcircleAccountModule } from './account/account.module';
-import { CandidateProfileModule } from './profiles/candidate/candidate-profile.module';
-import { GradzcircleEntityModule } from './entities/entity.module';
+import { CorporateService } from './entities/corporate/corporate.service';
+import { CandidateService } from './entities/candidate/candidate.service';
+import { AppConfigService } from './entities/app-config/app-config.service';
+import { CountryService } from './entities/country/country.service';
+// import { CandidateProfileModule } from './profiles/candidate/candidate-profile.module';
+// import { GradzcircleEntityModule } from './entities/entity.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
+
+export class MyUrlSerializer extends DefaultUrlSerializer implements UrlSerializer {
+    /** Converts a `UrlTree` into a url */
+    serialize(tree: UrlTree): string {
+        return super.serialize(tree).replace(/\((((?!(\/\/)).)*)\)/g, '$1');
+    }
+}
 
 @NgModule({
     imports: [
@@ -30,8 +42,11 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         GradzcircleCoreModule,
         GradzcircleHomeModule,
         GradzcircleAccountModule,
-        GradzcircleEntityModule,
-        CandidateProfileModule,
+        // GradzcircleCorporateModule,
+        //  GradzcircleCandidateModule,
+        //  GradzcircleEntityModule,
+        //  CandidateProfileModule,
+        //  GradzcircleAppConfigModule,
         NgxSpinnerModule,
         BrowserAnimationsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
@@ -61,7 +76,12 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
             useClass: NotificationInterceptor,
             multi: true,
             deps: [Injector]
-        }
+        },
+        { provide: UrlSerializer, useClass: MyUrlSerializer },
+        AppConfigService,
+        CountryService,
+        CorporateService,
+        CandidateService
     ],
     bootstrap: [JhiMainComponent]
 })
