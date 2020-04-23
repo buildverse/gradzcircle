@@ -83,5 +83,15 @@ export const candidateProjectPopupRoute: Routes = [
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
+    },
+    {
+        path: 'candidate-project/delete/:isEmployment',
+        component: CandidateProjectDeletePopupComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidateProject.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
     }
 ];

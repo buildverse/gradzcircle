@@ -8,6 +8,15 @@ import { CandidateEducationPopupNewComponent } from './candidate-education-dialo
 
 export const candidateEducationRoute: Routes = [
     {
+        path: '',
+        component: CandidateEducationComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-education',
         component: CandidateEducationComponent,
         data: {

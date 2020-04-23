@@ -2,43 +2,57 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GradzcircleSharedModule } from '../../shared';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { GradzcircleCandidateProjectModule } from '../candidate-project/candidate-project.module';
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
+import { EmploymentTypeService } from '../employment-type/employment-type.service';
+import { JobTypeService } from '../job-type/job-type.service';
+
 import {
     CandidateEmploymentService,
     CandidateEmploymentPopupService,
-    CandidateEmploymentComponent,
     CandidateEmploymentDetailComponent,
-    CandidateEmploymentDialogComponent,
+    //    CandidateEmploymentDialogComponent,
     CandidateEmploymentPopupComponent,
     CandidateEmploymentDeletePopupComponent,
     CandidateEmploymentDeleteDialogComponent,
     candidateEmploymentRoute,
     candidateEmploymentPopupRoute,
-    CandidateEmploymentPopupNewComponent,
+    //   CandidateEmploymentPopupNewComponent,
     CandidateEmploymentPopupServiceNew
 } from './';
 
 const ENTITY_STATES = [...candidateEmploymentRoute, ...candidateEmploymentPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [
+        GradzcircleSharedModule,
+        GradzcircleCandidateProjectModule,
+        GradzcircleCandidateProfileSharedModule,
+        RouterModule.forChild(ENTITY_STATES)
+    ],
     declarations: [
-        CandidateEmploymentComponent,
         CandidateEmploymentDetailComponent,
-        CandidateEmploymentDialogComponent,
+        //    CandidateEmploymentDialogComponent,
         CandidateEmploymentDeleteDialogComponent,
         CandidateEmploymentPopupComponent,
-        CandidateEmploymentDeletePopupComponent,
-        CandidateEmploymentPopupNewComponent
+        CandidateEmploymentDeletePopupComponent
+        //       CandidateEmploymentPopupNewComponent
     ],
     entryComponents: [
-        CandidateEmploymentComponent,
-        CandidateEmploymentDialogComponent,
+        //      CandidateEmploymentDialogComponent,
         CandidateEmploymentPopupComponent,
         CandidateEmploymentDeleteDialogComponent,
-        CandidateEmploymentDeletePopupComponent,
-        CandidateEmploymentPopupNewComponent
+        CandidateEmploymentDeletePopupComponent
+        //       CandidateEmploymentPopupNewComponent
     ],
-    providers: [CandidateEmploymentService, CandidateEmploymentPopupService, CandidateEmploymentPopupServiceNew, DataStorageService],
+    providers: [
+        CandidateEmploymentService,
+        CandidateEmploymentPopupService,
+        CandidateEmploymentPopupServiceNew,
+        DataStorageService,
+        EmploymentTypeService,
+        JobTypeService
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleCandidateEmploymentModule {}

@@ -36,7 +36,7 @@ export class JobResolvePagingParams implements Resolve<any> {
 
 export const jobRoute: Routes = [
     {
-        path: 'viewjobs',
+        path: '',
         component: JobAnonymousComponent,
         runGuardsAndResolvers: 'always',
         resolve: {

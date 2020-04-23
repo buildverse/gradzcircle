@@ -60,6 +60,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     searching = false;
     searchFailed = false;
     hideSearchingWhenUnsubscribed = new Observable(() => () => (this.searching = false));
+    fromProfile: boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -71,7 +72,6 @@ export class CandidateEducationDialogComponent implements OnInit {
         private collegeService: CollegeService,
         private universityService: UniversityService,
         private eventManager: JhiEventManager,
-        // private educationCollegeService: EducationCollegeService,
         private activatedRoute: ActivatedRoute,
         private principal: Principal,
         private dataService: DataStorageService,
@@ -143,8 +143,6 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
     isCollegeOther() {
-        // console.log('Event is ' + this.candidateEducation.college);
-        // this.convertToCollege();
         this.showCollegeTextArea = false;
         if (this.candidateEducation.college) {
             const college = this.candidateEducation.college as any;
@@ -155,7 +153,6 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
     setScoreControl() {
-        // console.log("the control value is " + JSON.stringify(this.candidateEducation.scoreType));
         this.enableGpa = false;
         this.enablePercent = false;
         if (this.candidateEducation.scoreType === 'gpa') {
@@ -167,7 +164,6 @@ export class CandidateEducationDialogComponent implements OnInit {
 
     isPercentValid() {
         this.validPercentScore = true;
-        // console.log("Percent =" + JSON.stringify(this.candidateEducation.percentage));
         if (this.candidateEducation.percentage) {
             if (this.candidateEducation.percentage > 100) {
                 this.validPercentScore = false;
@@ -193,12 +189,9 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.showCollegeTextArea = false;
         this.configureDatePicker();
         this.validPercentScore = true;
         this.setAlert();
-        //  this.showQualificationTextArea = false;
-        // this.showCourseTextArea = false;
         this.isSaving = false;
         if (this.candidateEducation.scoreType === 'percent' || this.candidateEducation.scoreType == null) {
             this.enablePercent = true;
@@ -206,7 +199,6 @@ export class CandidateEducationDialogComponent implements OnInit {
         } else {
             this.enableGpa = true;
         }
-        // console.log("what is on init"+JSON.stringify(this.enablePercent));
         this.candidateEducation.isPursuingEducation ? (this.endDateControl = true) : (this.endDateControl = false);
         if (this.candidateEducation.college) {
             this.candidateEducation.college.length === 0 ? (this.showCollegeTextArea = true) : (this.showCollegeTextArea = false);
@@ -233,15 +225,21 @@ export class CandidateEducationDialogComponent implements OnInit {
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
         } else if (this.principal.hasAnyAuthorityDirect([AuthoritiesConstants.CANDIDATE])) {
-            // console.log("Courses preloaded " + JSON.stringify(this.courses));
-            // console.log("Colleges preloaded " + JSON.stringify(this.colleges));
-            // console.log("qualifcation preloaded " + JSON.stringify(this.qualifications));
         }
     }
 
     clear() {
         this.jhiAlertService.clear();
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/education', { outlets: { popup: null } }]);
+        }
     }
 
     save() {
@@ -287,10 +285,8 @@ export class CandidateEducationDialogComponent implements OnInit {
             const endDate = new Date(this.candidateEducation.educationToDate.format(DATE_FORMAT));
             if (startDate > endDate) {
                 this.endDateLesser = true;
-                //   this.currentForm.form.setErrors({ 'valid': false });
             } else {
                 this.endDateLesser = false;
-                // this.currentForm.form.setErrors(null);
             }
         }
     }
@@ -303,17 +299,16 @@ export class CandidateEducationDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: CandidateEducation) {
-        // console.log('on suucess');
         this.eventManager.broadcast({ name: 'candidateEducationListModification', content: 'OK' });
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.reloadCandidate();
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     reloadCandidate() {
-        // console.log('Reloading candidate??');
         this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
             (res: HttpResponse<Candidate>) => {
                 this.dataService.setdata(USER_DATA, JSON.stringify(res.body));
@@ -327,6 +322,7 @@ export class CandidateEducationDialogComponent implements OnInit {
     private onSaveError(result: any) {
         this.spinnerService.hide();
         this.isSaving = false;
+        this.clearRoute();
         this.router.navigate(['/error']);
         this.activeModal.dismiss();
     }
@@ -403,11 +399,15 @@ export class CandidateEducationPopupNewComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.candidateEducationPopupService.open(CandidateEducationDialogComponent as Component, params['id']);
+                this.candidateEducationPopupService.open(
+                    CandidateEducationDialogComponent as Component,
+                    params['id'],
+                    params['fromProfile']
+                );
             } else {
                 const id = this.dataService.getData(CANDIDATE_ID);
                 if (id) {
-                    this.candidateEducationPopupService.open(CandidateEducationDialogComponent as Component, id);
+                    this.candidateEducationPopupService.open(CandidateEducationDialogComponent as Component, id, params['fromProfile']);
                 }
             }
         });

@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { GradzcircleSharedModule } from '../../shared';
-import { GradzcircleAdminModule } from '../../admin/admin.module';
+//import { GradzcircleAdminModule } from '../../admin/admin.module';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import {
@@ -26,7 +26,7 @@ const ENTITY_STATES = [...corporateRoute, ...corporatePopupRoute];
 @NgModule({
     imports: [
         GradzcircleSharedModule,
-        GradzcircleAdminModule,
+        //  GradzcircleAdminModule,
         MultiselectDropdownModule,
         FileUploadModule,
         RouterModule.forChild(ENTITY_STATES)

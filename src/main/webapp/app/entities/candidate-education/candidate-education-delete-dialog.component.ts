@@ -28,10 +28,12 @@ export class CandidateEducationDeleteDialogComponent {
         private candidateService: CandidateService,
         private dataService: DataStorageService,
         private jhiAlertService: JhiAlertService,
+        private activatedRoute: ActivatedRoute,
         private router: Router
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -43,24 +45,15 @@ export class CandidateEducationDeleteDialogComponent {
                 content: 'Deleted an candidateEducation'
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
-            //  this.reloadCandidate();
             this.spinnerService.hide();
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }
 
-    reloadCandidate() {
-        // console.log('Reloading candidate??');
-        this.candidateService.getCandidateDetails(this.dataService.getData(USER_ID)).subscribe(
-            (res: HttpResponse<Candidate>) => {
-                this.dataService.setdata(USER_DATA, JSON.stringify(res.body));
-                this.dataService.setdata(HAS_EDUCATION, res.body.hasEducation);
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        return;
+    clearRoute() {
+        this.router.navigate(['/education', { outlets: { popup: null } }]);
     }
-
     private onError(error: any) {
         this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);

@@ -7,7 +7,7 @@
                     <p jhiTranslate="gradzcircleApp.candidateEmployment.detail.title" class="float-left h3 font-weight-bold"></p>
                     <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
     					jhiTranslate="gradzcircleApp.candidateEmployment.home.add" 
-						[routerLink]="['/', { outlets: { popup: 'new-candidate-employment' } }]">Button</button>
+						[routerLink]="['/employment', { outlets: { popup: 'new-candidate-employment' } }]">Button</button>
 			</div>
 		</div>
         <div class="container">
@@ -18,11 +18,11 @@
 		            		<h6>{{primaryCandidateEmployment.employmentStartDate | date:'mediumDate'}}&nbsp;<small style="font-size:1rem;">-</small>&nbsp;{{primaryCandidateEmployment.employmentEndDate?(primaryCandidateEmployment.employmentEndDate|date:'mediumDate'): 'Till Date'}}</h6>
 		                <h6>
 		                		<span  ngbTooltip="Edit" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
-														[routerLink]="['/', { outlets: { popup: 'candidate-employment/edit'} }]">
+														[routerLink]="['/employment', { outlets: { popup: 'candidate-employment/edit'} }]">
 											<fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
 							</span>
 		                		<span  ngbTooltip="Remove" (click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
-														[routerLink]="['/', { outlets: { popup: 'candidate-employment/delete'} }]">
+														[routerLink]="['/employment', { outlets: { popup: 'candidate-employment/delete'} }]">
 											<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>				
 							</span>
 		                </h6>
@@ -39,7 +39,7 @@
 						    <div class="col">
 						        <h2>Projects<button class="btn btn-outline-primary btn-sm border-primary float-right" 
 						        jhiTranslate="gradzcircleApp.candidateEducation.home.addProject" 
-						        [routerLink]="['/', { outlets: { popup: 'candidate-employment-project-new' }}]"
+						        [routerLink]="['/employment', { outlets: { popup: 'candidate-employment-project-new' }}]"
 														(click)="setEditDeleteRouteParams(primaryCandidateEmployment.id)"
 															type="button">Button</button></h2>
 						    </div>
@@ -54,12 +54,12 @@
 								<h4>
 									Project Name 
 									<span style="font-size: 1rem" ngbTooltip="Edit" 
-											[routerLink]="['/', { outlets: { popup: 'candidate-project/edit'} }]"
+											[routerLink]="['/employment', { outlets: { popup: 'candidate-project/edit'} }]"
 																				(click)="setProjectRouteParam(candidateProject.id)">
 											<fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>			
 									</span>
 									<span style="font-size: 1rem" ngbTooltip="Remove" 
-											[routerLink]="['/', { outlets: { popup: 'candidate-project/delete'} }]"
+											[routerLink]="['/employment', { outlets: { popup: ['candidate-project','delete',this.isEmployment]} }]"
 																				(click)="setProjectRouteParam(candidateProject.id)">
 										<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>	
 									</span>

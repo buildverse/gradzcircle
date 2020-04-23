@@ -15,8 +15,7 @@ export class CandidateEducationPopupServiceNew {
     private candidate: Candidate;
     private ngbModalRef: NgbModalRef;
     constructor(private modalService: NgbModal, private router: Router, private candidateEducationService: CandidateEducationService) {}
-    open(component: Component, id?: number | any): Promise<NgbModalRef> {
-        // colleges?: College[], courses?: Course[], qualifications?: Qualification[]
+    open(component: Component, id?: number | any, fromProfile?: boolean): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -28,20 +27,16 @@ export class CandidateEducationPopupServiceNew {
             this.candidateEducation.candidate = this.candidate;
             this.candidateEducation.candidate.id = id;
             setTimeout(() => {
-                this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation);
-                //  this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation, colleges, courses, qualifications);
+                this.ngbModalRef = this.candidateEducationModalRef(component, this.candidateEducation, fromProfile);
                 resolve(this.ngbModalRef);
             }, 0);
         });
     }
 
-    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation): NgbModalRef {
-        // colleges?: College[], courses?: Course[], qualifications?: Qualification[]
+    candidateEducationModalRef(component: Component, candidateEducation: CandidateEducation, fromProfile: boolean): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateEducation = candidateEducation;
-        //  modalRef.componentInstance.colleges = colleges;
-        // modalRef.componentInstance.qualifications = qualifications;
-        //  modalRef.componentInstance.courses = courses;
+        modalRef.componentInstance.fromProfile = fromProfile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });

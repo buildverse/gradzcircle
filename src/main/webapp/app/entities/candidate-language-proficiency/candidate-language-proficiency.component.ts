@@ -87,7 +87,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
             (res: HttpResponse<CandidateLanguageProficiency[]>) => {
                 this.candidateLanguageProficiencies = res.body;
                 if (this.candidateLanguageProficiencies && this.candidateLanguageProficiencies.length <= 0) {
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 }
                 this.spinnerService.hide();
             },
@@ -99,7 +99,6 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         this.principal.identity().then(account => {
             this.currentAccount = account;
             if (account.authorities.indexOf(AuthoritiesConstants.CANDIDATE) > -1) {
-                // this.candidateId = this.activatedRoute.snapshot.parent.data['candidate'].body.id;
                 this.candidateId = this.dataService.getData(CANDIDATE_ID);
                 this.loadCandidateLanguages();
             } else {
@@ -107,7 +106,6 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
             }
             this.registerChangeInCandidateLanguageProficiencies();
         });
-        // this.registerChangeInCandidateLanguageProficiencies();
     }
 
     ngOnDestroy() {
@@ -118,17 +116,13 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
         return item.id;
     }
     registerChangeInCandidateLanguageProficiencies() {
-        //  console.log('CANDIDATE ID IS '+JSON.stringify(this.candidateId));
         if (this.candidateId) {
             this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', response =>
                 this.loadCandidateLanguages()
             );
-            //  this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadCandidateLanguages());
         } else {
             this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', response => this.loadAll());
         }
-
-        //   this.eventSubscriber = this.eventManager.subscribe('candidateLanguageProficiencyListModification', (response) => this.loadAll());
     }
 
     private onError(error) {

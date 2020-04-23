@@ -7,12 +7,12 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 const path = require('path');
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
-const extractCSS = new ExtractTextPlugin(`content/[name].[hash].css`);
+// const extractCSS = new ExtractTextPlugin(`content/[name].[hash].css`);
 
 module.exports = webpackMerge(commonConfig({ env: ENV }), {
     // Enable source maps. Please note that this will slow down the build.
@@ -31,20 +31,29 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     module: {
         rules: [{
             test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-            use: [ '@ngtools/webpack' ]
+            loader: '@ngtools/webpack'
         },
         {
             test: /\.css$/,
-            loaders: ['to-string-loader', 'css-loader'],
+            use: ['to-string-loader', 'css-loader'],
             exclude: /(vendor\.css|global\.css)/
         },
         {
             test: /(vendor\.css|global\.css)/,
-            use: extractCSS.extract({
+           /* use: extractCSS.extract({
                 fallback: 'style-loader',
                 use: ['css-loader'],
                 publicPath: '../'
-            })
+            })*/
+            use: [
+            			{
+            				loader: MiniCssExtractPlugin.loader,
+		                options: {
+		                    publicPath: '../',
+		                  },
+            			},
+            			'css-loader'
+            ]
         }]
     },
     optimization: {
@@ -88,7 +97,14 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         ]
     },
     plugins: [
-        extractCSS,
+        //extractCSS,
+	    	new MiniCssExtractPlugin({
+	            // Options similar to the same options in webpackOptions.output
+	            // both options are optional
+	            filename: 'content/[name].[hash].css',
+	            chunkFilename: '[id].css'
+	        }),
+
         new MomentLocalesPlugin({
             localesToKeep: [
                     'en',

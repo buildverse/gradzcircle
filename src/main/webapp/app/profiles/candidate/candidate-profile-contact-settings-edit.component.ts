@@ -147,7 +147,7 @@ export class CandidateContactSettingsEditComponent implements OnInit, OnDestroy 
         this.contactSettingForm.reset();
         this.eventManager.broadcast({ name: 'candidatePrimarySettingModification', content: 'OK' });
         this.candidateSettingService.changeSetting('contactSetting');
-        this.router.navigate(['/', 'candidate-profile']);
+        this.router.navigate(['/candidate-profile/settings']);
     }
 
     ngOnDestroy() {

@@ -46,12 +46,9 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
             (res: HttpResponse<CandidateNonAcademicWork[]>) => {
                 this.candidateNonAcademicWorks = res.body;
                 if (this.candidateNonAcademicWorks && this.candidateNonAcademicWorks.length <= 0) {
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 }
                 this.candidateNonAcademicOnLoad();
-                /* if (this.candidateNonAcademicWorks && this.candidateNonAcademicWorks.length > 0) {
-                   this.candidateProfileScoreService.changeScore(this.candidateNonAcademicWorks[0].candidate.profileScore);
-                 }*/
                 this.spinnerService.hide();
             },
 

@@ -88,7 +88,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
             );
         }
     }
-    /*To be removed once undertsand Elastic */
+
     loadEducationForCandidate() {
         this.spinnerService.show();
         this.candidateEducationService.findEducationByCandidateId(this.candidateId).subscribe(
@@ -96,10 +96,8 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
                 this.candidateEducations = res.body;
                 if (this.candidateEducations && this.candidateEducations.length <= 0) {
                     this.dataService.setdata(HAS_EDUCATION, 'false');
-                    // console.log('===================no educaiton');
-                    this.router.navigate(['./candidate-profile']);
+                    this.router.navigate(['candidate-profile/settings']);
                 } else {
-                    //   console.log('>>>>>>>>>>>>>>>>>>>>Have educaiton');
                     this.dataService.setdata(HAS_EDUCATION, 'true');
                 }
                 this.setPrimaryEducationOnLoad();
@@ -113,8 +111,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
     setPrimaryEducationOnLoad() {
         this.candidateEducationsForDisplay = [];
         this.primaryCandidateEducation = undefined;
-        // console.log('candiate Educaiton from server is' + JSON.stringify(this.candidateEducations));
-        // console.log('candiate Educaiton locally'+JSON.stringify(this.candidateEducationsForDisplay));
         if (this.candidateEducations && this.candidateEducations.length > 0) {
             this.candidateEducations.forEach(education => {
                 if (education.highestQualification && !this.primaryCandidateEducation) {
@@ -124,8 +120,6 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        //   console.log('candiate Educaiton from server in end is'+JSON.stringify(this.candidateEducations));
-        // console.log('candiate Educaiton locally in end is '+JSON.stringify(this.candidateEducationsForDisplay));
     }
 
     setPrimaryByUserSelection(event) {

@@ -1,7 +1,7 @@
 import { CANDIDATE_SKILL_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -20,11 +20,17 @@ export class CandidateSkillsDeleteDialogComponent {
     constructor(
         private candidateSkillsService: CandidateSkillsService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+    clearRoute() {
+        this.router.navigate(['/skill', { outlets: { popup: null } }]);
     }
 
     confirmDelete(id: number) {
@@ -34,6 +40,7 @@ export class CandidateSkillsDeleteDialogComponent {
                 content: 'Deleted an candidateSkills'
             });
             this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }

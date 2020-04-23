@@ -1,3 +1,4 @@
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -6,38 +7,38 @@ import { DataStorageService } from '../../shared/helper/localstorage.service';
 import {
     CandidateNonAcademicWorkService,
     CandidateNonAcademicWorkPopupService,
-    CandidateNonAcademicWorkComponent,
+    //  CandidateNonAcademicWorkComponent,
     CandidateNonAcademicWorkDetailComponent,
-    CandidateNonAcademicWorkDialogComponent,
+    //   CandidateNonAcademicWorkDialogComponent,
     CandidateNonAcademicWorkPopupComponent,
     CandidateNonAcademicWorkDeletePopupComponent,
     CandidateNonAcademicWorkDeleteDialogComponent,
     candidateNonAcademicWorkRoute,
     candidateNonAcademicWorkPopupRoute,
-    CandidateNonAcademicWorkPopupNewComponent,
+    //  CandidateNonAcademicWorkPopupNewComponent,
     CandidateNonAcademicWorkPopupServiceNew
 } from './';
 
 const ENTITY_STATES = [...candidateNonAcademicWorkRoute, ...candidateNonAcademicWorkPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES), GradzcircleCandidateProfileSharedModule],
     declarations: [
-        CandidateNonAcademicWorkComponent,
+        //  CandidateNonAcademicWorkComponent,
         CandidateNonAcademicWorkDetailComponent,
-        CandidateNonAcademicWorkDialogComponent,
+        //    CandidateNonAcademicWorkDialogComponent,
         CandidateNonAcademicWorkDeleteDialogComponent,
         CandidateNonAcademicWorkPopupComponent,
-        CandidateNonAcademicWorkDeletePopupComponent,
-        CandidateNonAcademicWorkPopupNewComponent
+        CandidateNonAcademicWorkDeletePopupComponent
+        //   CandidateNonAcademicWorkPopupNewComponent
     ],
     entryComponents: [
-        CandidateNonAcademicWorkComponent,
-        CandidateNonAcademicWorkDialogComponent,
+        //   CandidateNonAcademicWorkComponent,
+        //    CandidateNonAcademicWorkDialogComponent,
         CandidateNonAcademicWorkPopupComponent,
         CandidateNonAcademicWorkDeleteDialogComponent,
-        CandidateNonAcademicWorkDeletePopupComponent,
-        CandidateNonAcademicWorkPopupNewComponent
+        CandidateNonAcademicWorkDeletePopupComponent
+        //   CandidateNonAcademicWorkPopupNewComponent
     ],
     providers: [
         CandidateNonAcademicWorkService,

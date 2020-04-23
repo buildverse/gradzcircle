@@ -17,7 +17,7 @@ export class CandidateCertificationPopupServiceNew {
         private candidateCertificationService: CandidateCertificationService
     ) {}
 
-    open(component: Component, id?: number | any): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any, fromProfile?: boolean): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -29,15 +29,20 @@ export class CandidateCertificationPopupServiceNew {
             this.candidate.id = id;
             this.candidateCertification.candidate = this.candidate;
             setTimeout(() => {
-                this.ngbModalRef = this.candidateCertificationModalRef(component, this.candidateCertification);
+                this.ngbModalRef = this.candidateCertificationModalRef(component, this.candidateCertification, fromProfile);
                 resolve(this.ngbModalRef);
             }, 0);
         });
     }
 
-    candidateCertificationModalRef(component: Component, candidateCertification: CandidateCertification): NgbModalRef {
+    candidateCertificationModalRef(
+        component: Component,
+        candidateCertification: CandidateCertification,
+        fromProfile?: boolean
+    ): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateCertification = candidateCertification;
+        modalRef.componentInstance.fromProfile = fromProfile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true });

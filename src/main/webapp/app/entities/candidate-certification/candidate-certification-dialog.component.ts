@@ -23,6 +23,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
     candidates: Candidate[];
     certificationDateDp: any;
     editorConfig: any;
+    fromProfile: boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -31,7 +32,8 @@ export class CandidateCertificationDialogComponent implements OnInit {
         private candidateService: CandidateService,
         private eventManager: JhiEventManager,
         private config: NgbDatepickerConfig,
-        private router: Router
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     configureDatePicker() {
@@ -50,22 +52,29 @@ export class CandidateCertificationDialogComponent implements OnInit {
                 { name: 'paragraph', groups: ['list', 'indent', 'align'] }
             ],
             removeButtons: 'Source,Save,Templates,Find,Replace,Scayt,SelectAll,forms'
-            /* 'stylesSet': {name: 'para', element: 'p', styles: { 'margin': '0px' } }*/
         };
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        this.candidateService.query().subscribe(
-            (res: HttpResponse<Candidate[]>) => {
-                this.candidates = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        /* this.candidateService.query().subscribe(
+      (res: HttpResponse<Candidate[]>) => {
+        this.candidates = res.body;
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );*/
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/certification', { outlets: { popup: null } }]);
+        }
+    }
     save() {
         this.isSaving = true;
         if (this.candidateCertification.id !== undefined) {
@@ -86,6 +95,7 @@ export class CandidateCertificationDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'candidateCertificationListModification', content: 'OK' });
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
@@ -155,7 +165,7 @@ export class CandidateCertificationPopupNewComponent implements OnInit, OnDestro
                 this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, params['id']);
             } else {
                 const id = this.dataService.getData(CANDIDATE_ID);
-                this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, id);
+                this.candidateCertificationPopupService.open(CandidateCertificationDialogComponent as Component, id, params['fromProfile']);
             }
         });
     }

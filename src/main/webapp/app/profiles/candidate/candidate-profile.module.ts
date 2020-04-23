@@ -6,16 +6,15 @@ import { candidateProfileRoutes, candidateProfilePopupRoute, JobResolvePagingPar
 import { CandidateProfileComponent } from './candidate-profile-settings.component';
 import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import { CandidateResolverService } from './candidate-profile-account-resolver.service';
+import { JobCategoryService } from '../../entities/job-category/job-category.service';
+import { GenderService } from '../../entities/gender/gender.service';
+import { NationalityService } from '../../entities/nationality/nationality.service';
 import { CandidateCareerInterestResolverService } from './candidate-profile-career-interest-resolver.service';
 import { ProfileHelperService } from '../profile-helper.service';
-// import {CandidateMaritalStatusResolverService} from './candidate-profile-marital-status-resolver.service';
 import { CandidateGenderResolverService } from './candidate-profile-gender-resolver.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-// import {CandidateAboutMeEditGuard} from './candidate-profile-about-me-edit-guard';
 import { CandidateDetailResolverService } from './candidate-detail-resolver.service';
-// import {CandidateLanguageProficiencyDetailsComponent} from './candidate-about-me-language-details.component';
-// import {SafeHtml} from './image.pipe';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import {
     CandidatePublicProfilePopupComponent,
@@ -31,12 +30,14 @@ import { CandidatePrimarySettingsEditComponent } from './candidate-primary-setti
 import { CandidateProfilePrimaryViewComponent } from './candidate-primary-settings-view.component';
 import { CandidateProfileContactViewComponent } from './candidate-profile-contact-setting-view.component';
 import { CandidateContactSettingsEditComponent } from './candidate-profile-contact-settings-edit.component';
+import { GradzcircleCandidateProfileSharedModule } from './candidate-profile-shared.module';
 
 const ENTITY_STATES = [...candidateProfileRoutes, ...candidateProfilePopupRoute];
 
 @NgModule({
     imports: [
         GradzcircleSharedModule,
+        GradzcircleCandidateProfileSharedModule,
         MultiselectDropdownModule,
         FileUploadModule,
         ImageCropperModule,
@@ -44,8 +45,6 @@ const ENTITY_STATES = [...candidateProfileRoutes, ...candidateProfilePopupRoute]
     ],
     declarations: [
         CandidateProfileComponent,
-        // CandidateLanguageProficiencyDetailsComponent,
-        // SafeHtml,
         CandidatePublicProfilePopupComponent,
         CandidatePublicProfilePopupDialogComponent,
         AppliedJobsComponent,
@@ -61,21 +60,16 @@ const ENTITY_STATES = [...candidateProfileRoutes, ...candidateProfilePopupRoute]
         ProfileHelperService,
         CandidateResolverService,
         CandidateCareerInterestResolverService,
-        // CandidateMaritalStatusResolverService,
-        // CountryResolverService,
         CandidateGenderResolverService,
-        //  CandidateVisaResolverService,
-        //  CandidateLanguageResolverService,
-        // CandidateAboutMeEditGuard,
-        //  CandidateNationalityResolverService,
         CandidateDetailResolverService,
-        // CandidateLanguageProficiencyResolverService,
         CandidatePublicProfilePopupService,
         JobResolvePagingParams,
         DataStorageService,
         NgbProgressbarConfig,
         CandidateProfileSettingService,
-        ProfileMgmtPopupService
+        ProfileMgmtPopupService,
+        JobCategoryService,
+        NationalityService
     ],
     entryComponents: [
         CandidatePublicProfilePopupComponent,

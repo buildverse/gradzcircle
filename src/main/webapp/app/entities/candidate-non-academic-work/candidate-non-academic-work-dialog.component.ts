@@ -30,6 +30,7 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     candidates: Candidate[];
     nonAcademicWorkStartDateDp: any;
     nonAcademicWorkEndDateDp: any;
+    fromProfile: any;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -39,7 +40,8 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         private eventManager: JhiEventManager,
         private spinnerService: NgxSpinnerService,
         private config: NgbDatepickerConfig,
-        private router: Router
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     configureDatePicker() {
@@ -64,12 +66,12 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.options = new EditorProperties().options;
         this.candidateNonAcademicWork.isCurrentActivity ? (this.endDateControl = true) : (this.endDateControl = false);
-        this.candidateService.query().subscribe(
-            (res: HttpResponse<Candidate[]>) => {
-                this.candidates = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
+        /* this.candidateService.query().subscribe(
+      (res: HttpResponse<Candidate[]>) => {
+        this.candidates = res.body;
+      },
+      (res: HttpErrorResponse) => this.onError(res.message)
+    );*/
     }
     validateDates() {
         this.endDateLesser = false;
@@ -96,7 +98,16 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/beyondAcademics', { outlets: { popup: null } }]);
+        }
     }
 
     save() {
@@ -122,12 +133,14 @@ export class CandidateNonAcademicWorkDialogComponent implements OnInit {
 
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError() {
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.router.navigate(['/error']);
     }
 
@@ -192,7 +205,11 @@ export class CandidateNonAcademicWorkPopupNewComponent implements OnInit, OnDest
                 this.candidateNonAcademicWorkPopupService.open(CandidateNonAcademicWorkDialogComponent as Component, params['id']);
             } else {
                 const id = this.dataService.getData(CANDIDATE_ID);
-                this.candidateNonAcademicWorkPopupService.open(CandidateNonAcademicWorkDialogComponent as Component, id);
+                this.candidateNonAcademicWorkPopupService.open(
+                    CandidateNonAcademicWorkDialogComponent as Component,
+                    id,
+                    params['fromProfile']
+                );
             }
         });
     }

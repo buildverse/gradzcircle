@@ -33,8 +33,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://ec2-23-21-201-12.compute-1.amazonaws.com:5432/dbdpcpev4mhtb5
-        username: nytfinyqqlfgdz
-        password: eb770ad706380c1d0a15c54f55fa82ae622d79f036e777178664d72e0fec2db0
+        username: abhinav
+        password: abhinav
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

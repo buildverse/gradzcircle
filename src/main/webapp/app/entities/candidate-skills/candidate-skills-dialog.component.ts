@@ -27,6 +27,7 @@ export class CandidateSkillsDialogComponent implements OnInit {
     candidates: Candidate[];
     showSkillsTextArea: boolean;
     skills: Skills[];
+    fromProfile: boolean;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -37,7 +38,8 @@ export class CandidateSkillsDialogComponent implements OnInit {
         private eventManager: JhiEventManager,
         private principal: Principal,
         private skillService: SkillsService,
-        private router: Router
+        private router: Router,
+        private activatedRoute: ActivatedRoute
     ) {
         this.skillAlreadyPresent = false;
         this.showSkillsTextArea = false;
@@ -102,7 +104,16 @@ export class CandidateSkillsDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.fromProfile) {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else {
+            this.router.navigate(['/skill', { outlets: { popup: null } }]);
+        }
     }
 
     save() {
@@ -125,11 +136,13 @@ export class CandidateSkillsDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'candidateSkillsListModification', content: 'OK' });
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError() {
         this.isSaving = false;
+        this.clearRoute();
         this.router.navigate(['/error']);
     }
 
@@ -189,7 +202,7 @@ export class CandidateSkillsPopupNewComponent implements OnInit, OnDestroy {
                 this.candidateSkillsPopupService.open(CandidateSkillsDialogComponent as Component, params['id']);
             } else {
                 const id = this.dataService.getData(CANDIDATE_ID);
-                this.candidateSkillsPopupService.open(CandidateSkillsDialogComponent as Component, id);
+                this.candidateSkillsPopupService.open(CandidateSkillsDialogComponent as Component, id, params['fromProfile']);
             }
         });
     }

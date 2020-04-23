@@ -1,45 +1,53 @@
+import { GradzcircleCandidateProfileSharedModule } from '../../profiles/candidate/candidate-profile-shared.module';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { GradzcircleSharedModule } from '../../shared';
+import { SkillsService } from '../skills/skills.service';
 import {
     CandidateSkillsService,
     CandidateSkillsPopupService,
-    CandidateSkillsComponent,
+    // CandidateSkillsComponent,
     CandidateSkillsDetailComponent,
-    CandidateSkillsDialogComponent,
+    //   CandidateSkillsDialogComponent,
     CandidateSkillsPopupComponent,
     CandidateSkillsDeletePopupComponent,
     CandidateSkillsDeleteDialogComponent,
     candidateSkillsRoute,
     candidateSkillsPopupRoute,
     CandidateCurrentSkillsResolverService,
-    CandidateSkillsPopupNewComponent,
+    //  CandidateSkillsPopupNewComponent,
     CandidateSkillsPopupServiceNew
 } from './';
 
 const ENTITY_STATES = [...candidateSkillsRoute, ...candidateSkillsPopupRoute];
 
 @NgModule({
-    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [GradzcircleSharedModule, RouterModule.forChild(ENTITY_STATES), GradzcircleCandidateProfileSharedModule],
     declarations: [
-        CandidateSkillsComponent,
+        // CandidateSkillsComponent,
         CandidateSkillsDetailComponent,
-        CandidateSkillsDialogComponent,
+        //  CandidateSkillsDialogComponent,
         CandidateSkillsDeleteDialogComponent,
         CandidateSkillsPopupComponent,
-        CandidateSkillsDeletePopupComponent,
-        CandidateSkillsPopupNewComponent
+        CandidateSkillsDeletePopupComponent
+        //     CandidateSkillsPopupNewComponent
     ],
     entryComponents: [
-        CandidateSkillsComponent,
-        CandidateSkillsDialogComponent,
+        //  CandidateSkillsComponent,
+        //    CandidateSkillsDialogComponent,
         CandidateSkillsPopupComponent,
         CandidateSkillsDeleteDialogComponent,
-        CandidateSkillsDeletePopupComponent,
-        CandidateSkillsPopupNewComponent
+        CandidateSkillsDeletePopupComponent
+        //   CandidateSkillsPopupNewComponent
     ],
-    providers: [CandidateSkillsService, CandidateSkillsPopupService, CandidateCurrentSkillsResolverService, CandidateSkillsPopupServiceNew],
+    providers: [
+        CandidateSkillsService,
+        CandidateSkillsPopupService,
+        CandidateCurrentSkillsResolverService,
+        CandidateSkillsPopupServiceNew,
+        SkillsService
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GradzcircleCandidateSkillsModule {}

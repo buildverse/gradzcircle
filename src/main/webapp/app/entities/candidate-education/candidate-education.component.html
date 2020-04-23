@@ -7,7 +7,7 @@
                     <p jhiTranslate="gradzcircleApp.candidateEducation.detail.title" class="float-left h3 font-weight-bold"></p>
                     <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
     					jhiTranslate="gradzcircleApp.candidateEducation.home.add" 
-						[routerLink]="['/', { outlets: { popup: 'new-candidate-education' } }]">Button</button></div>
+						[routerLink]="['/education', { outlets: { popup: 'new-candidate-education' } }]">Button</button></div>
 		</div>
         <div class="container">
         		<div *ngIf="primaryCandidateEducation">
@@ -21,9 +21,9 @@
 		                		<span *ngIf="primaryCandidateEducation.highestQualification; else notHighest">Highest Qualification</span>
 		                		<ng-template #notHighest>Not Highest Qualification</ng-template>
 		                		<span  ngbTooltip="Edit" (click)="setEducationRouteParam(primaryCandidateEducation.id)"
-														[routerLink]="['/', { outlets: { popup: 'candidate-education/edit'} }]"><fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon></span>
+														[routerLink]="['/education', { outlets: { popup: 'candidate-education/edit'} }]"><fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon></span>
 		                		<span ngbTooltip="Remove" (click)="setEducationRouteParam(primaryCandidateEducation.id)"
-														[routerLink]="['/', { outlets: { popup: 'candidate-education/delete'} }]">
+														[routerLink]="['/education', { outlets: { popup: 'candidate-education/delete'} }]">
 										<fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>					
 							</span>
 		                </h6>
@@ -35,7 +35,7 @@
 						    <div class="col">
 						        <h2>Projects<button class="btn btn-outline-primary btn-sm border-primary float-right" 
 						        jhiTranslate="gradzcircleApp.candidateEducation.home.addProject" 
-						        [routerLink]="['/', { outlets: { popup: 'candidate-education-project-new'} }]"
+						        [routerLink]="['/education', { outlets: { popup: 'candidate-education-project-new'} }]"
 															(click)="setEducationRouteParam(primaryCandidateEducation.id)"
 															type="button">Button</button></h2>
 						    </div>
@@ -50,12 +50,12 @@
 								<h4>
 									Project Name 
 									<span  style="font-size: 1rem" ngbTooltip="Edit" 
-											[routerLink]="['/', { outlets: { popup: 'candidate-project/edit'} }]"
+											[routerLink]="['/education', { outlets: { popup: 'candidate-project/edit'} }]"
 																				(click)="setProjectRouteParam(candidateProject.id)">
 													<fa-icon class="action-edit fa-xs" [icon]="'pencil-alt'"></fa-icon>
 									</span>
 									<span  style="font-size: 1rem" ngbTooltip="Remove" 
-											[routerLink]="['/', { outlets: { popup: 'candidate-project/delete'} }]"
+											[routerLink]="['/education', { outlets: { popup: 'candidate-project/delete'} }]"
 																				(click)="setProjectRouteParam(candidateProject.id)">
 													 <fa-icon class="action-delete fa-xs" [icon]="'times'"></fa-icon>
 									</span>

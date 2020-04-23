@@ -81,8 +81,8 @@
 		  </div>
 	    	  <div class="form-group">
 	    	  		<button class="btn btn-primary btn-sm float-right" type="submit" [disabled]="!contactSettingForm.valid"
-	        [routerLink]="['/','candidate-profile',{outlets:{ contactSetting: 'editUserContactSetting'}}]">Save Settings</button>
-	        <button class="btn btn-warning btn-sm float-left" type="button" [routerLink]="['/','candidate-profile']" >Discard Changes</button>
+	        [routerLink]="['/candidate-profile/settings',{outlets:{ contactSetting: 'editUserContactSetting'}}]">Save Settings</button>
+	        <button class="btn btn-warning btn-sm float-left" type="button" [routerLink]="['/candidate-profile/settings']" >Discard Changes</button>
 	       </div>
      </div> 
 </form>

@@ -14,6 +14,15 @@ import { CandidateNonAcademicWorkDeletePopupComponent } from './candidate-non-ac
 
 export const candidateNonAcademicWorkRoute: Routes = [
     {
+        path: '',
+        component: CandidateNonAcademicWorkComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'candidate-non-academic-work',
         component: CandidateNonAcademicWorkComponent,
         data: {

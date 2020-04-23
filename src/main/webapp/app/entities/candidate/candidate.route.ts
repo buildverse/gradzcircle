@@ -46,7 +46,7 @@ export const candidateRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'candidatePreview',
+        path: '',
         component: CandidatePreviewComponent,
         data: {
             pageTitle: 'gradzcircleApp.candidate.home.title'
