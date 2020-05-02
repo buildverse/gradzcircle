@@ -117,11 +117,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     loadId() {
-        // this.resetStorage(false);
-        //  console.log('USER TYPE IS '+this.localStorageService.getData(USER_TYPE));
         if (!this.localStorageService.getData(USER_TYPE)) {
             this.principal.identity(true).then(user => {
-                // console.log('Begin loading user info');
                 if (user && user.authorities.indexOf('ROLE_CORPORATE') > -1) {
                     this.corporateService.findCorporateByLoginId(user.id).subscribe(response => {
                         this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.CORPORATE);
@@ -129,12 +126,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
                         this.localStorageService.setdata(CORPORATE_ID, response.body.id);
                         this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
                         this.corporateId = this.localStorageService.getData(CORPORATE_ID);
-                        //  console.log('biz plab in nav is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
-                        this.eventManager.broadcast({
-                            name: 'userDataLoadedSuccess',
-                            content: 'User Data Load Success'
-                        });
-                        // console.log('Loaded Corporate info');
+                        this.appConfigService.query().subscribe(
+                            (res: HttpResponse<AppConfig[]>) => {
+                                this.appConfigs = res.body;
+                                this.appConfigs.forEach(appConfig => {
+                                    if (
+                                        'BusinessPlan'
+                                            .toUpperCase()
+                                            .indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1
+                                    ) {
+                                        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, appConfig.configValue);
+                                    }
+                                    this.eventManager.broadcast({
+                                        name: 'userDataLoadedSuccess',
+                                        content: 'User Data Load Success'
+                                    });
+                                });
+                            },
+                            (res: HttpErrorResponse) => this.onError(res.message)
+                        );
                     });
                 } else {
                     if (user && user.authorities.indexOf('ROLE_CANDIDATE') > -1) {
@@ -149,7 +159,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
                                 name: 'userDataLoadedSuccess',
                                 content: 'User Data Load Success'
                             });
-                            // console.log('Loaded Candidate info');
                         });
                     } else if (user && user.authorities.indexOf('ROLE_ADMIN') > -1) {
                         this.localStorageService.setdata(USER_TYPE, AuthoritiesConstants.ADMIN);
@@ -157,7 +166,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
                             name: 'userDataLoadedSuccess',
                             content: 'User Data Load Success'
                         });
-                        // console.log('Loaded Admin info');
                     }
                 }
             });
@@ -175,17 +183,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     collapseNavbar() {
         this.isNavbarCollapsed = true;
     }
-
-    /* setCandidateRouterParamAndCollapse() {
-        this.collapseNavbar();
-        console.log('CANDIDATE ID is '+ this.candidateId);
-        this.localStorageService.setdata(CANDIDATE_ID, this.candidateId);
-    }
-
-    setCorporateRouterParamAndCollapse() {
-        this.collapseNavbar();
-        this.localStorageService.setdata(CORPORATE_ID, this.corporateId);
-    }*/
 
     isAuthenticated() {
         return this.principal.isAuthenticated();
@@ -246,17 +243,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.noImage = false;
         this.principal.identity(true).then(user => {
             if (user) {
-                if (user.imageUrl !== undefined) {
-                    this.userService.getImageData(user.id).subscribe(response => {
-                        if (response !== undefined) {
-                            const responseJson = response.body;
-                            if (responseJson) {
-                                this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
-                            } else {
-                                this.noImage = true;
-                            }
-                        }
-                    });
+                if (user.imageUrl !== null) {
+                    this.userImage = 'https://s3-ap-south-1.amazonaws.com/gradzcircle-assets/' + user.id + '?t=' + Math.random().toString();
                 } else {
                     this.noImage = true;
                 }

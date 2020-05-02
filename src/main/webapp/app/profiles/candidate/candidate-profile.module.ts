@@ -12,20 +12,11 @@ import { NationalityService } from '../../entities/nationality/nationality.servi
 import { CandidateCareerInterestResolverService } from './candidate-profile-career-interest-resolver.service';
 import { ProfileHelperService } from '../profile-helper.service';
 import { CandidateGenderResolverService } from './candidate-profile-gender-resolver.service';
-import { FileUploadModule } from 'ng2-file-upload';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { CandidateDetailResolverService } from './candidate-detail-resolver.service';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
-import {
-    CandidatePublicProfilePopupComponent,
-    CandidatePublicProfilePopupDialogComponent
-} from './candidate-public-profile-popup.component';
-import { CandidatePublicProfilePopupService } from './candidate-public-profile-popup.service';
-import { ProfileMgmtPopupService } from './profile-pic-mgmt-popup.service';
-import { ProfilePicMgmtPopupDialogComponent, ProfilePicMgmtPopupComponent } from './profile-pic-mgmt-popup.component';
 import { AppliedJobsComponent } from './applied-job-by-candidate.component';
 import { ShortListedJobsForCandidateComponent } from './shortlisted-for-job.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
 import { CandidatePrimarySettingsEditComponent } from './candidate-primary-settings-edit.component';
 import { CandidateProfilePrimaryViewComponent } from './candidate-primary-settings-view.component';
 import { CandidateProfileContactViewComponent } from './candidate-profile-contact-setting-view.component';
@@ -39,18 +30,12 @@ const ENTITY_STATES = [...candidateProfileRoutes, ...candidateProfilePopupRoute]
         GradzcircleSharedModule,
         GradzcircleCandidateProfileSharedModule,
         MultiselectDropdownModule,
-        FileUploadModule,
-        ImageCropperModule,
         RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [
         CandidateProfileComponent,
-        CandidatePublicProfilePopupComponent,
-        CandidatePublicProfilePopupDialogComponent,
         AppliedJobsComponent,
         ShortListedJobsForCandidateComponent,
-        ProfilePicMgmtPopupComponent,
-        ProfilePicMgmtPopupDialogComponent,
         CandidatePrimarySettingsEditComponent,
         CandidateProfilePrimaryViewComponent,
         CandidateProfileContactViewComponent,
@@ -62,20 +47,14 @@ const ENTITY_STATES = [...candidateProfileRoutes, ...candidateProfilePopupRoute]
         CandidateCareerInterestResolverService,
         CandidateGenderResolverService,
         CandidateDetailResolverService,
-        CandidatePublicProfilePopupService,
         JobResolvePagingParams,
         DataStorageService,
         NgbProgressbarConfig,
         CandidateProfileSettingService,
-        ProfileMgmtPopupService,
         JobCategoryService,
         NationalityService
     ],
     entryComponents: [
-        CandidatePublicProfilePopupComponent,
-        CandidatePublicProfilePopupDialogComponent,
-        ProfilePicMgmtPopupComponent,
-        ProfilePicMgmtPopupDialogComponent,
         CandidatePrimarySettingsEditComponent,
         CandidateProfilePrimaryViewComponent,
         CandidateProfileContactViewComponent,

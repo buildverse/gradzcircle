@@ -4,9 +4,11 @@ import { SERVER_API_URL } from '../../app.constants';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { JhiDateUtils } from 'ng-jhipster';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
-import { Job } from './job.model';
+
 import { CandidateList } from './candidate-list.model';
 import { createRequestOption } from '../../shared';
+import { Job } from '../../shared/job-common/job.model';
+
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 export type EntityResponseType = HttpResponse<Job>;

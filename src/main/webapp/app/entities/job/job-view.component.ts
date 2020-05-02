@@ -10,7 +10,7 @@ import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { JhiDateUtils } from 'ng-jhipster';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
 
@@ -24,7 +24,6 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 })
 export class JobViewComponent implements OnInit {
     job: Job;
-    // hasCandidateApplied: boolean;
     currentAccount: any;
     isSaving: boolean;
     modalRef: NgbModalRef;
@@ -52,25 +51,25 @@ export class JobViewComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
+    clearRoute() {
+        this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
+    }
     ngOnInit() {
-        // console.log('The job is '+JSON.stringify(this.job));
         this.businessPlanEnabled = JSON.parse(this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED));
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });
-        //  console.log('Converting ?');
         if (this.job.jobFilters && this.job.jobFilters.length > 0) {
             if (this.job.jobFilters[0].filterDescription.graduationDate !== null) {
-                //   console.log('converting '+JSON.stringify(this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate)));
                 this.job.jobFilters[0].filterDescription.graduationDate = this.dateUtils.convertLocalDateToServer(
                     this.job.jobFilters[0].filterDescription.graduationDate
                 );
             }
             if (this.job.jobFilters[0].filterDescription.graduationToDate !== null) {
-                //   console.log('converting '+JSON.stringify(this.dateUtils.convertLocalDateToServer(this.job.jobFilters[0].filterDescription.graduationToDate)));
                 this.job.jobFilters[0].filterDescription.graduationToDate = this.dateUtils.convertLocalDateToServer(
                     this.job.jobFilters[0].filterDescription.graduationToDate
                 );
@@ -81,7 +80,6 @@ export class JobViewComponent implements OnInit {
                 );
             }
         }
-        this.loadCorporateImage();
     }
 
     login() {
@@ -105,7 +103,6 @@ export class JobViewComponent implements OnInit {
     }
 
     private onSaveError(error: any) {
-        // console.log('in error' + JSON.stringify(error));
         //  this.isSaving = false;
         this.onError(error);
     }
@@ -114,18 +111,6 @@ export class JobViewComponent implements OnInit {
         this.router.navigate(['/error']);
         this.activeModal.dismiss();
         this.jhiAlertService.error(error.message, null, null);
-    }
-
-    loadCorporateImage() {
-        if (this.job.corporateUrl) {
-            this.userService.getImageData(this.job.corporateLoginId).subscribe(response => {
-                const responseJson = response.body;
-                this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-            });
-            this.noImage = false;
-        } else {
-            this.noImage = true;
-        }
     }
 }
 

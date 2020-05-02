@@ -44,10 +44,10 @@ public class FileUploadResource {
 		this.fileServiceS3 = fileServiceS3;
 	}
 
-	@GetMapping("/fileList/{bucket}")
+	@GetMapping("/loadimageUrlCache/{bucket}")
 	@Timed
-	public List listObjects(@PathVariable String bucket) {
-		return fileServiceS3.listObjects(bucket);
+	public void listObjects(@PathVariable String bucket) {
+		 fileServiceS3.loadImageUrlCache(bucket);
 
 	}
 

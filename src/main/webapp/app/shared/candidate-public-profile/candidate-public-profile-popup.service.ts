@@ -17,7 +17,8 @@ export class CandidatePublicProfilePopupService {
         id?: number | any,
         jobId?: number,
         corporateId?: number,
-        fromLinkedCandidate?: boolean
+        fromLinkedCandidate?: boolean,
+        profile?: string
     ): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
@@ -30,7 +31,7 @@ export class CandidatePublicProfilePopupService {
                     .getCandidatePublicProfile(id, jobId, corporateId)
                     .subscribe((candidateResponse: HttpResponse<CandidatePublicProfile>) => {
                         const candidate: CandidatePublicProfile = candidateResponse.body;
-                        this.ngbModalRef = this.candidateModalRef(component, candidate, jobId, corporateId, fromLinkedCandidate);
+                        this.ngbModalRef = this.candidateModalRef(component, candidate, jobId, corporateId, fromLinkedCandidate, profile);
                         resolve(this.ngbModalRef);
                     });
             } else {
@@ -48,13 +49,15 @@ export class CandidatePublicProfilePopupService {
         candidate: CandidatePublicProfile,
         jobId?: number,
         corporateId?: number,
-        fromLinkedCandidate?: boolean
+        fromLinkedCandidate?: boolean,
+        profile?: string
     ): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidate = candidate;
         modalRef.componentInstance.jobId = jobId;
         modalRef.componentInstance.corporateId = corporateId;
         modalRef.componentInstance.fromLinkedCandidate = fromLinkedCandidate;
+        modalRef.componentInstance.profile = profile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });

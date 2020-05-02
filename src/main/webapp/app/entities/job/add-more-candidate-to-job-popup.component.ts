@@ -1,7 +1,7 @@
 import { JOB_ID, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { AddMoreCandidatesToPopupService } from './add-more-canddiate-to-job-popup.service';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -80,12 +80,7 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
     }
 
     updateJob() {
-        // console.log('Fiansl poayment is ' + this.costDiff);
-        //  console.log('Fiansl escrow amount  is ' + this.transientCorpEscrowAmount);
-        //  console.log(' escrow amount used is ' + this.escrowAmountUsed);
-        // console.log('Job Id is ' + this.jobId);
         this.job.escrowAmountUsed = this.escrowAmountUsed;
-        //  this.job.id = this.jobId;
         this.job.noOfApplicants = this.addtionalCandidates;
         this.job.amountPaid = this.costDiff;
         this.job.corporate = new Corporate();
@@ -104,25 +99,23 @@ export class AddMoreCandidatesToJobComponent implements OnInit {
         this.eventManager.broadcast({ name: 'jobListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError(error: any) {
-        // console.log('in error' + JSON.stringify(error));
         this.isSaving = false;
         this.spinnerService.hide();
-        this.router.navigate(['/error']);
-        this.onError(error);
-    }
-
-    private onError(error: any) {
-        this.router.navigate(['/error']);
-        this.activeModal.dismiss();
-        //  this.jhiAlertService.error(error.message, null, null);
+        this.router.navigate(['/', 'error', { outlets: { popup: null } }]);
+        this.clear();
     }
 
     clear() {
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
     }
 }
 

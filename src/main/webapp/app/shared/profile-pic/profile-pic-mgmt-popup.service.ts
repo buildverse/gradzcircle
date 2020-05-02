@@ -9,7 +9,7 @@ export class ProfileMgmtPopupService {
         this.ngbModalRef = null;
     }
 
-    open(component: Component, id?: number | any): Promise<NgbModalRef> {
+    open(component: Component, id?: number | any, profile?: string): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -17,7 +17,7 @@ export class ProfileMgmtPopupService {
             }
             if (id) {
                 setTimeout(() => {
-                    this.ngbModalRef = this.candidateModalRef(component, id);
+                    this.ngbModalRef = this.candidateModalRef(component, id, profile);
                     resolve(this.ngbModalRef);
                 }, 0);
             } else {
@@ -30,9 +30,10 @@ export class ProfileMgmtPopupService {
         });
     }
 
-    candidateModalRef(component: Component, candidateId?: number): NgbModalRef {
+    candidateModalRef(component: Component, candidateId?: number, profile?: string): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.candidateId = candidateId;
+        modalRef.componentInstance.profile = profile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });

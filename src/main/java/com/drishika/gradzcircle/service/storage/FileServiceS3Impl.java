@@ -1,24 +1,6 @@
 package com.drishika.gradzcircle.service.storage;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.drishika.gradzcircle.config.Constants;
-import com.drishika.gradzcircle.domain.User;
-import com.drishika.gradzcircle.exception.FileRemoveException;
-import com.drishika.gradzcircle.exception.FileRetrieveException;
-import com.drishika.gradzcircle.exception.FileUploadException;
-import com.drishika.gradzcircle.repository.UserRepository;
-import com.drishika.gradzcircle.service.UserService;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.ClientConfiguration;
-
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +9,26 @@ import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.drishika.gradzcircle.config.Constants;
+import com.drishika.gradzcircle.domain.User;
+import com.drishika.gradzcircle.exception.FileRemoveException;
+import com.drishika.gradzcircle.exception.FileRetrieveException;
+import com.drishika.gradzcircle.exception.FileUploadException;
+import com.drishika.gradzcircle.repository.UserRepository;
+import com.drishika.gradzcircle.service.UserService;
+import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 
 /**
  * Upload a file to an Amazon S3 bucket.
@@ -40,7 +42,9 @@ public class FileServiceS3Impl implements FileServiceS3 {
 	private UserRepository userRepository;
 	private UserService userService;
 	private AmazonS3 amazonS3Client;
-
+	private final GradzcircleCacheManager<Long, String> imageUrlCache;
+	//private String baseUrl = "https://gradzcircle-assets.s3.ap-south-1.amazonaws.com/";
+	private String baseUrl ="https://%s.s3.%s.amazonaws.com/%s";
 	private static final Logger logger = LoggerFactory.getLogger(FileServiceS3.class);
 
 	private void init() {
@@ -51,17 +55,35 @@ public class FileServiceS3Impl implements FileServiceS3 {
 				.withRegion(Constants.AWS_REGION).build();
 	}
 
-	public FileServiceS3Impl(UserRepository userRepository, UserService userService) {
+	public FileServiceS3Impl(UserRepository userRepository, UserService userService, GradzcircleCacheManager<Long, String> imageUrlCache) {
 		init();
 		this.userRepository = userRepository;
 		this.userService = userService;
+		this.imageUrlCache = imageUrlCache;
 	}
 
 	@Override
-	public List listObjects(String bucketName) {
-		List objectList = amazonS3Client.listObjects(bucketName).getObjectSummaries();
+	public void loadImageUrlCache(String bucketName) {
+		ObjectListing objectListing = amazonS3Client.listObjects(bucketName);
+		List<S3ObjectSummary> summaries = objectListing.getObjectSummaries();
+		logger.debug("SUMARRIES before truncation are {}",summaries);
+		createCache(summaries, bucketName);
+		summaries.clear();
+		if(objectListing.isTruncated() == Boolean.TRUE) {
+			while(objectListing.isTruncated() == Boolean.TRUE) {
+				summaries = amazonS3Client.listObjects(bucketName).getObjectSummaries();
+				logger.debug("SUMARRIES are {}",summaries);
+				createCache(summaries, bucketName);
+			}
+		}
 		logger.info("Listing objects {}", amazonS3Client.listObjects(bucketName));
-		return objectList;
+	}
+	
+	private void createCache(List <S3ObjectSummary> summaries, String bucketName) {
+		summaries.forEach(summary -> {
+			logger.debug("IMAGE Url is {}",String.format(baseUrl,bucketName,amazonS3Client.getBucketLocation(bucketName),summary.getKey()));
+			imageUrlCache.setValueIfAbsent(Long.parseLong(summary.getKey()), String.format(baseUrl,bucketName,amazonS3Client.getBucketLocation(bucketName),summary.getKey()));
+		});
 	}
 
 	@Override
@@ -76,6 +98,8 @@ public class FileServiceS3Impl implements FileServiceS3 {
 			user.setImageUrl(result.getETag());
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());
+			imageUrlCache.setValueIfAbsent(user.getId(), String.format("https://s3-%s.amazonaws.com/%s/%s",
+							amazonS3Client.getBucketLocation(bucketName), "gradzcircle-assets", user.getId()));
 			logger.info("Uploaded file .. All Good!!");
 		} catch (AmazonServiceException asex) {
 			logger.error("Error occuured during upload...{}", asex);
@@ -95,6 +119,7 @@ public class FileServiceS3Impl implements FileServiceS3 {
 			user.setImageUrl(null);
 			userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(),
 					user.getImageUrl());
+			imageUrlCache.removeFromCache(user.getId());
 			logger.info("Deleted file .. All Good!!");
 		} catch (AmazonServiceException asex) {
 			logger.error("Error occuured during delete...{ }", asex);

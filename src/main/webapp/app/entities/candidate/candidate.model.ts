@@ -11,7 +11,7 @@ import { CandidateLanguageProficiency } from '../candidate-language-proficiency/
 import { CandidateSkills } from '../candidate-skills';
 import { JobCategory } from '../job-category/job-category.model';
 import { VisaType } from '../visa-type/visa-type.model';
-import { Job } from '../job/job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { Corporate } from '../corporate/corporate.model';
 import { ProfileCategory } from '../profile-category/profile-category.model';
 

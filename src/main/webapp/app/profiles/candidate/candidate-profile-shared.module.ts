@@ -47,6 +47,7 @@ import { CollegeService } from '../../entities/college/college.service';
 import { CourseService } from '../../entities/course/course.service';
 import { EmploymentTypeService } from '../../entities/employment-type/employment-type.service';
 import { JobTypeService } from '../../entities/job-type/job-type.service';
+import { JobService } from '../../entities/job/job.service';
 import { LanguageService } from '../../entities/language/language.service';
 import { QualificationService } from '../../entities/qualification/qualification.service';
 import { SkillsService } from '../../entities/skills/skills.service';
@@ -127,7 +128,8 @@ import { UniversityService } from '../../entities/university/university.service'
         CandidateNonAcademicWorkService,
         CandidateLanguageProficiencyPopupServiceNew,
         CandidateLanguageProficiencyService,
-        LanguageService
+        LanguageService,
+        JobService
     ]
 })
 export class GradzcircleCandidateProfileSharedModule {}

@@ -1,7 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 import { HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
@@ -54,7 +54,7 @@ export class JobPopupService {
         });
     }
 
-    openForCandidateView(component: Component, jobId?: number | any, candidateId?: number | any): Promise<NgbModalRef> {
+    openForCandidateView(component: Component, jobId?: number | any, candidateId?: number | any, profile?: string): Promise<NgbModalRef> {
         return new Promise<NgbModalRef>((resolve, reject) => {
             const isOpen = this.ngbModalRef !== null;
             if (isOpen) {
@@ -80,23 +80,23 @@ export class JobPopupService {
                             day: d.getDate()
                         });
                     }
-                    this.ngbModalRef = this.jobModalRef(component, job);
+                    this.ngbModalRef = this.jobModalRef(component, job, profile);
                     resolve(this.ngbModalRef);
                 });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
-                    this.ngbModalRef = this.jobModalRef(component, new Job());
+                    this.ngbModalRef = this.jobModalRef(component, new Job(), profile);
                     resolve(this.ngbModalRef);
                 }, 0);
             }
         });
     }
 
-    jobModalRef(component: Component, job: Job, hasCandidateApplied?: boolean): NgbModalRef {
+    jobModalRef(component: Component, job: Job, profile?: string): NgbModalRef {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.job = job;
-        //  console.log('Job is '+JSON.stringify(job));
+        modalRef.componentInstance.profile = profile;
         modalRef.result.then(
             result => {
                 this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });

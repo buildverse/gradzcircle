@@ -124,7 +124,7 @@
 				<div class="row">
 					<div *ngFor="let job of jobs ;trackBy: trackId" class="project-card-no-image col-md-12">
 						    <h3>{{job.jobTitle}}<span class="float-right">{{job.corporateName}}</span></h3>
-						    <h4 [innerHtml]="job.jobDescription"></h4><a class="btn btn-outline-primary btn-sm" role="button" (click)="setJobViewParamForCandidate(job.id)" [routerLink]="['/', { outlets: { popup: 'job/viewJobForCandidate'} }]" >See More</a>
+						    <h4 [innerHtml]="job.jobDescription"></h4><a class="btn btn-outline-primary btn-sm" role="button" (click)="setJobViewParamForCandidate(job.id)" [routerLink]="['/viewjobs', { outlets: { popup: ['viewJob', this.profile]} }]" >See More</a>
 						    <div class="tags">{{job.employmentType.employmentType}}, {{job.jobType.jobType}} <br>
 						    		 {{job.updateDate | date : 'dd - MMM - yyyy'}}  <br> &#8377;&nbsp;{{job.salary?job.salary+' p.a.':'Not Available'}}
 						    		 <br> {{job.city}}

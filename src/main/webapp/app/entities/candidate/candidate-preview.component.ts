@@ -34,6 +34,7 @@ export class CandidatePreviewComponent implements OnInit, OnDestroy {
     reverse: any;
     routeData: any;
     defaultImage = require('../../../content/images/no-image.png');
+    profile: string;
 
     constructor(
         private candidateService: CandidateService,
@@ -58,6 +59,7 @@ export class CandidatePreviewComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
                 ? this.activatedRoute.snapshot.params['search']
                 : '';
+        this.profile = 'preview';
     }
 
     loadAll() {
@@ -149,30 +151,11 @@ export class CandidatePreviewComponent implements OnInit, OnDestroy {
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
         this.candidateList = data;
-        this.setImageUrl();
         this.spinnerService.hide();
     }
 
-    setViewPublicProfileRouteParams(candidateId, jobId, corporateId) {
+    setViewPublicProfileRouteParams(candidateId, jobId) {
         this.dataService.setdata(CANDIDATE_ID, candidateId);
-        this.dataService.setdata(JOB_ID, jobId);
-        this.dataService.setdata(CORPORATE_ID, corporateId);
-    }
-
-    private setImageUrl() {
-        this.candidateList.forEach(candidate => {
-            if (candidate.login.imageUrl !== undefined) {
-                this.userService.getImageData(candidate.login.id).subscribe(response => {
-                    if (response !== undefined) {
-                        const responseJson = response.body;
-                        if (responseJson) {
-                            candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                        } else {
-                            // this.noImage = true;
-                        }
-                    }
-                });
-            }
-        });
+        this.dataService.setdata(JOB_ID, -1);
     }
 }

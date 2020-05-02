@@ -278,6 +278,8 @@ public class JobResourceIntTest {
 	private Job jobA;
 
 	private Corporate corporate;
+	
+	private User user1, user2,user3, user4,user5, user6;
 
 	private Candidate candidateA, candidateB, candidateC, candidateD, candidateE;
 	
@@ -341,6 +343,68 @@ public class JobResourceIntTest {
 				.setMessageConverters(jacksonMessageConverter).build();
 	}
 
+	public static User createUser1(EntityManager em) {
+		
+		User user1 = new User();
+		user1.setActivated(true);
+		user1.setLogin("abhi1");
+		user1.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepasss");
+		user1.setEmail("johndoe@localhost1");
+		return user1;
+		
+	}
+	public static User createUser2(EntityManager em) {
+		
+	 User user2 = new User();
+		user2.setActivated(true);
+		user2.setLogin("abhi");
+		user2.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user2.setEmail("johndoe@localhost");
+		return user2;
+		
+	}
+	
+public static User createUser3(EntityManager em) {
+		
+	 User user3 = new User();
+		user3.setActivated(true);
+		user3.setLogin("abhi3");
+		user3.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepasss");
+		user3.setEmail("johndoe@localhost3");
+		return user3;
+		
+	}
+	public static User createUser4(EntityManager em) {
+		
+		User user4 = new User();
+		user4.setActivated(true);
+		user4.setLogin("abhi4");
+		user4.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user4.setEmail("johndo@localhost4");
+		return user4;
+		
+	}
+	
+public static User createUser5(EntityManager em) {
+		
+		User user5 = new User();
+		user5.setActivated(true);
+		user5.setLogin("abhi5");
+		user5.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepasss");
+		user5.setEmail("johndoe@localhost5");
+		return user5;
+		
+	}
+	public static User createUser6(EntityManager em) {
+		
+		User user6 = new User();
+		user6.setActivated(true);
+		user6.setLogin("abhi6");
+		user6.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user6.setEmail("johndoe@localhost6");
+		return user6;
+		
+	}
 	public static Candidate createCandidateA(EntityManager em) {
 		Candidate candidateA = new Candidate().firstName("Abhinav");
 		return candidateA;
@@ -985,7 +1049,12 @@ public class JobResourceIntTest {
 		languageRepository.saveAndFlush(tamil);
 		candidateLanguageProficiencyTamil = createLanguageProfTamil(em);
 		candidateLanguageProficiencyEnglish = createLanguageProfEnglish(em);
-		
+		user1 = createUser1(em);
+		user2 = createUser2(em);
+		user3 = createUser3(em);
+		user4 = createUser4(em);
+		user5 = createUser5(em);
+		user6 = createUser6(em);
 	}
 
 	@Test
@@ -1275,12 +1344,18 @@ public class JobResourceIntTest {
 		cJ2.setMatchScore(10d);
 		job.addCandidateJob(cJ2).addCandidateJob(cJ1);
 		job1.addCandidateJob(cJ4).addCandidateJob(cJ3);
+		candidate1.addAppliedJob(job);
+		CorporateCandidate cCJ1 = new CorporateCandidate(corporate,candidate1,job1.getId());
+		corporate.addCorporateCandidate(cCJ1);
+		
 		restJobMockMvc.perform(get("/api/activeJobsForCorporate/{id}", corporate.getId()))
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[*].corporateEscrowAmount").value(Matchers.containsInAnyOrder(20d,20d)))
 				.andExpect((jsonPath("$[*].totalNumberOfJobs").value(Matchers.containsInAnyOrder(2,2))))
-				.andExpect((jsonPath("$[*].noOfMatchedCandidates").value(Matchers.containsInAnyOrder(2,2))));
+				.andExpect((jsonPath("$[*].noOfCandidatesApplied").value(Matchers.containsInAnyOrder(1,0))))
+				.andExpect((jsonPath("$[*].noOfShortListedCandidate").value(Matchers.containsInAnyOrder(0,1))))
+				.andExpect((jsonPath("$[*].noOfMatchedCandidates").value(Matchers.containsInAnyOrder(2,1))));
 	}
 
 	@Test
@@ -3355,13 +3430,18 @@ public class JobResourceIntTest {
 		Corporate c = new Corporate();
 		corporateRepository.saveAndFlush(c);
 		job.corporate(c);
-		
-		Candidate c1 = new Candidate().firstName("Abhinav");
-		Candidate c2 = new Candidate().firstName("Aveer");
-		Candidate c3 = new Candidate().firstName("AAAA");
-		Candidate c4 = new Candidate().firstName("BBBB");
-		Candidate c5 = new Candidate().firstName("CCCC");
-		Candidate c6 = new Candidate().firstName("DDDD");
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		userRepository.saveAndFlush(user3);
+		userRepository.saveAndFlush(user4);
+		userRepository.saveAndFlush(user5);
+		userRepository.saveAndFlush(user6);
+		Candidate c1 = new Candidate().firstName("Abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Aveer").login(user2);
+		Candidate c3 = new Candidate().firstName("AAAA").login(user3);
+		Candidate c4 = new Candidate().firstName("BBBB").login(user4);
+		Candidate c5 = new Candidate().firstName("CCCC").login(user5);
+		Candidate c6 = new Candidate().firstName("DDDD").login(user6);
 		CandidateEducation ce1 = new CandidateEducation();
 		CandidateEducation ce2 = new CandidateEducation();
 		Course course = new Course();
@@ -3445,13 +3525,18 @@ public class JobResourceIntTest {
 		Corporate c = new Corporate();
 		corporateRepository.saveAndFlush(c);
 		job.corporate(c);
-		
-		Candidate c1 = new Candidate().firstName("Abhinav");
-		Candidate c2 = new Candidate().firstName("Aveer");
-		Candidate c3 = new Candidate().firstName("AAAA");
-		Candidate c4 = new Candidate().firstName("BBBB");
-		Candidate c5 = new Candidate().firstName("CCCC");
-		Candidate c6 = new Candidate().firstName("DDDD");
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		userRepository.saveAndFlush(user3);
+		userRepository.saveAndFlush(user4);
+		userRepository.saveAndFlush(user5);
+		userRepository.saveAndFlush(user6);
+		Candidate c1 = new Candidate().firstName("Abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Aveer").login(user2);
+		Candidate c3 = new Candidate().firstName("AAAA").login(user3);
+		Candidate c4 = new Candidate().firstName("BBBB").login(user4);
+		Candidate c5 = new Candidate().firstName("CCCC").login(user5);
+		Candidate c6 = new Candidate().firstName("DDDD").login(user6);
 		CandidateEducation ce1 = new CandidateEducation();
 		CandidateEducation ce2 = new CandidateEducation();
 		Course course = new Course();
@@ -3599,12 +3684,20 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void testGetMatchedCandidatesForJobWithoutReviwedCandidatesAndShowShortListedForOtherJobs() throws Exception {
-		Candidate c1 = new Candidate().firstName("Abhinav");
-		Candidate c2 = new Candidate().firstName("Aveer");
-		Candidate c3 = new Candidate().firstName("AAAA");
-		Candidate c4 = new Candidate().firstName("BBBB");
-		Candidate c5 = new Candidate().firstName("CCCC");
-		Candidate c6 = new Candidate().firstName("DDDD");
+		
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		userRepository.saveAndFlush(user3);
+		userRepository.saveAndFlush(user4);
+		userRepository.saveAndFlush(user5);
+		userRepository.saveAndFlush(user6);
+		Candidate c1 = new Candidate().firstName("Abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Aveer").login(user2);
+		Candidate c3 = new Candidate().firstName("AAAA").login(user3);
+		Candidate c4 = new Candidate().firstName("BBBB").login(user4);
+		Candidate c5 = new Candidate().firstName("CCCC").login(user5);
+		Candidate c6 = new Candidate().firstName("DDDD").login(user6);
+
 		candidateRepository.saveAndFlush(c1);
 		candidateRepository.saveAndFlush(c2);
 		candidateRepository.saveAndFlush(c3);
@@ -3719,12 +3812,18 @@ public class JobResourceIntTest {
 	@Test
 	@Transactional
 	public void testGetMatchedCandidatesForJobWithoutReviwedCandidatesAndShowShortListedForOtherJobsWithScoreFilter() throws Exception {
-		Candidate c1 = new Candidate().firstName("Abhinav");
-		Candidate c2 = new Candidate().firstName("Aveer");
-		Candidate c3 = new Candidate().firstName("AAAA");
-		Candidate c4 = new Candidate().firstName("BBBB");
-		Candidate c5 = new Candidate().firstName("CCCC");
-		Candidate c6 = new Candidate().firstName("DDDD");
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		userRepository.saveAndFlush(user3);
+		userRepository.saveAndFlush(user4);
+		userRepository.saveAndFlush(user5);
+		userRepository.saveAndFlush(user6);
+		Candidate c1 = new Candidate().firstName("Abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Aveer").login(user2);
+		Candidate c3 = new Candidate().firstName("AAAA").login(user3);
+		Candidate c4 = new Candidate().firstName("BBBB").login(user4);
+		Candidate c5 = new Candidate().firstName("CCCC").login(user5);
+		Candidate c6 = new Candidate().firstName("DDDD").login(user6);
 		candidateRepository.saveAndFlush(c1);
 		candidateRepository.saveAndFlush(c2);
 		candidateRepository.saveAndFlush(c3);
@@ -4349,8 +4448,11 @@ public class JobResourceIntTest {
 		corporateRepository.saveAndFlush(corp);
 		job.corporate(corp);
 		//job.jobStatus(1);
-		Candidate c1 = new Candidate().firstName("Abhinav");
-		Candidate c2 = new Candidate().firstName("Aveer");
+
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		Candidate c1 = new Candidate().firstName("Abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Aveer").login(user2);
 		CandidateEducation ce1 = new CandidateEducation();
 		CandidateEducation ce2 = new CandidateEducation();
 		Course course = new Course();

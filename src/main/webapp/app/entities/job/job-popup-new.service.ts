@@ -1,7 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 import { Corporate } from '../corporate/corporate.model';
 import { JobFilter } from '../job-filter/job-filter.model';

@@ -16,6 +16,7 @@ export class CandidateDetail {
         public availableForHiring?: boolean,
         public openToRelocate?: boolean,
         public qualificationWithHighestCourse?: string,
-        public login?: User
+        public login?: User,
+        public imageUrl?: string
     ) {}
 }

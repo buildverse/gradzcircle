@@ -3,7 +3,6 @@ package com.drishika.gradzcircle.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,6 +12,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,7 +59,7 @@ public class UserService {
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository,
-			CandidateService candidateService, CorporateService corporateService, CacheManager cacheManager) {
+			@Lazy CandidateService candidateService, @Lazy CorporateService corporateService, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;

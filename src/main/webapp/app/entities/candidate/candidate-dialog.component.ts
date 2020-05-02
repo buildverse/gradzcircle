@@ -1,5 +1,6 @@
 import { User } from '../../core/user/user.model';
 import { UserService } from '../../core/user/user.service';
+import { Job } from '../../shared/job-common/job.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -15,7 +16,7 @@ import { Nationality, NationalityService } from '../nationality';
 import { Gender, GenderService } from '../gender';
 import { MaritalStatus, MaritalStatusService } from '../marital-status';
 import { JobCategory, JobCategoryService } from '../job-category';
-import { Job, JobService } from '../job';
+import { JobService } from '../job';
 import { ProfileCategory, ProfileCategoryService } from '../profile-category';
 import { Corporate, CorporateService } from '../corporate';
 import { VisaType, VisaTypeService } from '../visa-type';

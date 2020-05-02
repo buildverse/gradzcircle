@@ -48,7 +48,7 @@
 				"appConfig": "App Config",
 				"states": "States",
 				"profileCategory": "Profile Category",
-"candidateSkills": "Candidate Skills",
+				"candidateSkills": "Candidate Skills",
 				"jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
 			},
 			"account": {
@@ -96,6 +96,8 @@
 			"corporate": {
 				"dashboard": "Dashboard",
 				"jobs": "Jobs",
+				"candidates": "Candidates",
+				"all": "All Candidates",
 				"linkedCandidates": "My Candidates",
 				"job": {
 					"post": "Post a Job",

@@ -31,7 +31,7 @@
                         <tbody *ngIf="(jobs && jobs.length>0) else noInterestingJobs">
                             <tr *ngFor="let job of jobs ;trackBy: trackId">
                                 <td *ngIf="job.corporateUrl;else noImage">
-                                		<img class="rounded-circle mr-2" width="30" height="30" [src]="job.corporateUrl"/>{{job.corporateName}}
+                                		<img class="rounded-circle mr-2" width="30" height="30" [src]="job.corporateImageUrl"/>{{job.corporateName}}
                                 	</td>
                                 	<ng-template #noImage>
                                 		<td><img class="rounded-circle mr-2" width="30" height="30"/>{{job.corporateName}}</td>
@@ -41,8 +41,10 @@
                                 <td><div *ngIf="job.employmentType">
 												{{job.employmentType?.employmentType}}</div></td>
                                 <td>{{job.matchScore}}%</td>
-                                <td *ngIf="job.jobStatus>0; else closedJob">
-			                         		<a class="btn btn-outline-primary btn-sm" [routerLink]="['/', { outlets: { popup: 'job/viewJobForCandidate'} }]" (click)="setJobViewParamForCandidate(job.id)"  >View</a>
+                                <td *ngIf="job.jobStatus>0; else closedJob">		
+			                         		<a class="btn btn-outline-primary btn-sm" 
+			                         			[routerLink]="['/candidate-profile', { outlets: { popup: ['viewJobForCandidate',this.userProfile] } }]" 
+			                         				(click)="setJobViewParamForCandidate(job.id)"  >View</a>
 			                    </td>
 	                         	<ng-template #closedJob>
 		                         	<td>

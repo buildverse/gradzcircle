@@ -26,7 +26,7 @@ public interface CorporateRepository extends JpaRepository<Corporate, Long> {
 	@Query("select  count (distinct candidate) from CorporateCandidate corporateCandidate, Candidate candidate where candidate.id = corporateCandidate.id.candidateId and corporateCandidate.corporate.id=?1")
 	Long findAllLinkedCandidates(Long corporateId);
 	
-	@Query("select count(corporateCandidate) from CorporateCandidate corporateCandidate where corporateCandidate.id.corporateId=?1 and corporateCandidate.id.jobId=?1")
+	@Query("select count(corporateCandidate) from CorporateCandidate corporateCandidate where corporateCandidate.id.corporateId=?1 and corporateCandidate.id.jobId=?2")
 	Long findCountOfCandidatesShortlistedByJob(Long corporateId,Long jobId);
 	
 	@Query("select corporateCandidate from CorporateCandidate corporateCandidate where corporateCandidate.id.jobId=?1")

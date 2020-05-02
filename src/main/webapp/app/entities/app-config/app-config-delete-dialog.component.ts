@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -15,9 +15,15 @@ import { AppConfigService } from './app-config.service';
 export class AppConfigDeleteDialogComponent {
     appConfig: AppConfig;
 
-    constructor(private appConfigService: AppConfigService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private appConfigService: AppConfigService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -28,7 +34,12 @@ export class AppConfigDeleteDialogComponent {
                 content: 'Deleted an appConfig'
             });
             this.activeModal.dismiss(true);
+            this.clearRoute();
         });
+    }
+
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 }
 

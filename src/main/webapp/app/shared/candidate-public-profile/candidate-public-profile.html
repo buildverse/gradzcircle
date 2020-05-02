@@ -31,8 +31,8 @@
             		<div *ngIf="!candidate.isShortListed && ! fromLinkedCandidate && candidate.canBeShortListed" class="row justify-content-center">
 					<form name="linkForm" role="form" novalidate (ngSubmit)="save()"
 						#linkForm="ngForm" >
-						<button type="submit" 
-							[disabled]="linkForm.form.invalid || isSaving"
+						<button type="submit" ngbTooltip="Can't view details of un-matched candidate"
+							[disabled]="linkForm.form.invalid || isSaving || previewMode"
 							class="btn btn-outline-primary">
 							Contact Information
 						</button>

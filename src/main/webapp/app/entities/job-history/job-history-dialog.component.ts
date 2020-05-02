@@ -1,3 +1,4 @@
+import { Job } from '../../shared/job-common/job.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -11,7 +12,7 @@ import { JobHistoryPopupService } from './job-history-popup.service';
 import { JobHistoryService } from './job-history.service';
 import { JobType, JobTypeService } from '../job-type';
 import { EmploymentType, EmploymentTypeService } from '../employment-type';
-import { Job, JobService } from '../job';
+import { JobService } from '../job';
 
 @Component({
     selector: 'jhi-job-history-dialog',

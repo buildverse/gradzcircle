@@ -28,12 +28,11 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     eventSubscriberCandidateImage: Subscription;
     currentSearch: string;
     defaultImage = require('../../../content/images/no-image.png');
-    //  activeTab: string;
     profileScore: number;
-    // routerSub: Subscription;
     viewMode: boolean;
     candidateProfileSubscriber: Subscription;
     profile: boolean;
+    userProfile: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -48,20 +47,18 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
         private router: Router,
         private candidateProfileService: CandidateProfileSettingService
     ) {
-        // this.activeTab = 'details';
         this.noImage = false;
         this.progressBarConfig.max = 100;
         this.progressBarConfig.height = '10px';
         this.viewMode = true;
         this.profile = true;
+        this.userProfile = 'candidate';
     }
 
     ngOnInit() {
         this.candidateProfileSubscriber = this.candidateProfileService.getCandidateFromChildToParent().subscribe(candidate => {
             this.candidate = candidate;
-            //  console.log('------What do I get from child'+ JSON.stringify(this.candidate));
             if (!this.candidate) {
-                //    console.log('---------- RELOAD-------');
                 this.loadCandidate();
             }
             this.candidateProfileService.setCandidateFromParentToChild(this.candidate);
@@ -136,17 +133,8 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
         this.noImage = false;
         this.principal.identity(true).then(user => {
             if (user) {
-                if (user.imageUrl !== undefined) {
-                    this.userService.getImageData(user.id).subscribe(response => {
-                        if (response !== undefined) {
-                            const responseJson = response.body;
-                            if (responseJson) {
-                                this.userImage = responseJson[0].href + '?t=' + Math.random().toString();
-                            } else {
-                                this.noImage = true;
-                            }
-                        }
-                    });
+                if (user.imageUrl !== null) {
+                    this.userImage = 'https://s3-ap-south-1.amazonaws.com/gradzcircle-assets/' + user.id + '?t=' + Math.random().toString();
                 } else {
                     this.noImage = true;
                 }

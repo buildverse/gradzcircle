@@ -4,7 +4,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 
 @Component({

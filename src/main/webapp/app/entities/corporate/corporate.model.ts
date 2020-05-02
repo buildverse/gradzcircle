@@ -1,6 +1,6 @@
 import { User } from '../../core/user/user.model';
 import { Country } from '../country';
-import { Job } from '../job';
+import { Job } from '../../shared/job-common/job.model';
 import { Industry } from '../industry';
 
 export class Corporate {

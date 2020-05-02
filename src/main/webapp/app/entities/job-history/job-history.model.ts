@@ -1,6 +1,6 @@
 import { EmploymentType } from '../employment-type/employment-type.model';
 import { JobType } from '../job-type/job-type.model';
-import { Job } from '../job/job.model';
+import { Job } from '../../shared/job-common/job.model';
 export const enum PaymentType {
     'UPFRONT',
     'AS_YOU_GO'

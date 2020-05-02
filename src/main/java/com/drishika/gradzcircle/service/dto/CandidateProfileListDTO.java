@@ -29,6 +29,7 @@ public class CandidateProfileListDTO implements Serializable {
 	private Boolean canBuy;
 	private String aboutMe;
 	private Double percent;
+	private String imageUrl;
 	
 
 	/**
@@ -241,6 +242,22 @@ public class CandidateProfileListDTO implements Serializable {
 	public void setPercent(Double percent) {
 		this.percent = percent;
 	}
+	
+	
+
+	/**
+	 * @return the imageUrl
+	 */
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	/**
+	 * @param imageUrl the imageUrl to set
+	 */
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -251,7 +268,7 @@ public class CandidateProfileListDTO implements Serializable {
 				+ ", qualificationWithHighestCourse=" + qualificationWithHighestCourse + ", login=" + login + ", id="
 				+ id + ", reviewed=" + reviewed + ", jobId=" + jobId + ", corporateId=" + corporateId + ", matchScore="
 				+ matchScore + ", shortListed=" + shortListed + ", canBuy=" + canBuy + ", aboutMe=" + aboutMe
-				+ ", percent=" + percent + "]";
+				+ ", percent=" + percent + ", imageUrl=" + imageUrl + "]";
 	}
 
 	

@@ -1,6 +1,16 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GradzcircleSharedModule } from '../../shared';
+import { CollegeService } from '../college/college.service';
+import { CourseService } from '../course/course.service';
+import { EmploymentTypeService } from '../employment-type/employment-type.service';
+import { FilterService } from '../filter/filter.service';
+import { GenderService } from '../gender/gender.service';
+import { JobTypeService } from '../job-type/job-type.service';
+import { LanguageService } from '../language/language.service';
+import { QualificationService } from '../qualification/qualification.service';
+import { SkillsService } from '../skills/skills.service';
+import { UniversityService } from '../university/university.service';
 
 import {
     JobService,
@@ -33,9 +43,7 @@ import {
     AddMoreCandidatesToJobPopUpComponent,
     AddMoreCandidatesToPopupService,
     AddMoreCandidatesToJobComponent,
-    MinDirective,
-    JobViewForCandidateComponent,
-    JobViewPopupForCandidateComponent
+    MinDirective
 } from './';
 import { JobListForLinkedCandidateComponent, JobListForLinkedCandidatePopUpComponent } from './job-list-for-linked-candidate.component';
 
@@ -67,9 +75,7 @@ const ENTITY_STATES = [...jobRoute, ...jobPopupRoute];
         JobListForLinkedCandidatePopUpComponent,
         AddMoreCandidatesToJobPopUpComponent,
         AddMoreCandidatesToJobComponent,
-        MinDirective,
-        JobViewForCandidateComponent,
-        JobViewPopupForCandidateComponent
+        MinDirective
     ],
     entryComponents: [
         JobComponent,
@@ -93,9 +99,7 @@ const ENTITY_STATES = [...jobRoute, ...jobPopupRoute];
         JobListForLinkedCandidateComponent,
         JobListForLinkedCandidatePopUpComponent,
         AddMoreCandidatesToJobPopUpComponent,
-        AddMoreCandidatesToJobComponent,
-        JobViewForCandidateComponent,
-        JobViewPopupForCandidateComponent
+        AddMoreCandidatesToJobComponent
     ],
     providers: [
         JobService,
@@ -105,7 +109,17 @@ const ENTITY_STATES = [...jobRoute, ...jobPopupRoute];
         JobResolvePagingParams,
         JobListEmitterService,
         JobListPopupService,
-        AddMoreCandidatesToPopupService
+        AddMoreCandidatesToPopupService,
+        JobTypeService,
+        EmploymentTypeService,
+        QualificationService,
+        CourseService,
+        CollegeService,
+        UniversityService,
+        SkillsService,
+        LanguageService,
+        FilterService,
+        GenderService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

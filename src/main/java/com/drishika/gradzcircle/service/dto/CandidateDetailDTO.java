@@ -72,6 +72,8 @@ public class CandidateDetailDTO implements Serializable {
 	private Boolean hasLanguages;
 
 	private Boolean hasSkills;
+	
+	private String imageUrl;
 	/**
 	 * @return the id
 	 */
@@ -463,6 +465,20 @@ public class CandidateDetailDTO implements Serializable {
 	 */
 	public void setHasSkills(Boolean hasSkills) {
 		this.hasSkills = hasSkills;
+	}
+
+	/**
+	 * @return the imageUrl
+	 */
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	/**
+	 * @param imageUrl the imageUrl to set
+	 */
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	
 	

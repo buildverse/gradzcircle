@@ -108,6 +108,7 @@
 			"topUpAlert": "You can't buy more candidates for this job as you have reached limit. Please top up your balance.",
 			"requestMoreCandidateAlert": "Please request additional candidates from your dashboard for this job",
 			"candidateLinkedAlert": "<b>This candidate is now in your data bank.</b>",
+			"cantShortListNonMatchedCandidate": "Can't view details for candidate not matched to your job",
 			"filters": {
 				"title": "Filters",
 				"employmentType": "Employment Type",

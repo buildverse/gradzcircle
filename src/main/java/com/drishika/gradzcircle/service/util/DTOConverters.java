@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Job;
+import com.drishika.gradzcircle.exception.FileRetrieveException;
 import com.drishika.gradzcircle.service.dto.AddressDTO;
 import com.drishika.gradzcircle.service.dto.CandidateCertificationDTO;
 import com.drishika.gradzcircle.service.dto.CandidateDTO;
@@ -51,6 +54,7 @@ import com.drishika.gradzcircle.service.dto.JobEconomicsDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.dto.LanguageDTO;
 import com.drishika.gradzcircle.service.dto.QualificationDTO;
+import com.drishika.gradzcircle.service.storage.FileServiceS3;
 
 
 /**
@@ -62,6 +66,15 @@ import com.drishika.gradzcircle.service.dto.QualificationDTO;
 public class DTOConverters {
 
 	private final Logger logger = LoggerFactory.getLogger(DTOConverters.class);
+	
+	private final FileServiceS3 fileService;
+	
+	private final GradzcircleCacheManager<Long, String > imageUrlCache;
+	
+	public DTOConverters(FileServiceS3 fileService, GradzcircleCacheManager<Long, String > imageUrlCache) {
+		this.fileService = fileService;
+		this.imageUrlCache = imageUrlCache;
+	}
 
 	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CandidateAppliedJobs candidateAppliedJob,
 			Candidate candidate, Job job) {
@@ -97,6 +110,9 @@ public class DTOConverters {
 		dto.setLastName(candidate.getLastName());
 		dto.setLogin(candidate.getLogin());
 		dto.setAboutMe(candidate.getAboutMe());
+		if(candidate.getLogin().getImageUrl()!=null) {
+			dto.setImageUrl(getImageUrl(candidate.getLogin().getId()));
+		}
 		highestCandidateEducation = candidate.getEducations().stream().filter(education -> education.isHighestQualification()).findFirst().orElse(null);
 		if (highestCandidateEducation!=null) {
 
@@ -148,10 +164,10 @@ public class DTOConverters {
 		return dto;
 	}
 
-	public CandidateProfileListDTO convertToCandidateProfileListingDTO(CorporateCandidate corporateCandidate) {
+	/*public CandidateProfileListDTO convertToCandidateProfileListingDTO(CorporateCandidate corporateCandidate) {
 		Candidate candidate = corporateCandidate.getCandidate();
 		return convertToCandidateProfileListingDTO(candidate);
-	}
+	}*/
 
 	public CorporateJobDTO convertToJobListingForCorporate(Job job, Long totalLinkedCandidates, Long totalNumberOfJobs,
 			Long newApplicants, Long jobsLastMonth, Long numberOfCandidatesShortListedByJob) {
@@ -332,6 +348,8 @@ public class DTOConverters {
 		jobListingData.setSalary(job.getSalary());
 		jobListingData.setUpdateDate(job.getUpdateDate());
 		jobListingData.setCorporateLoginId(job.getCorporate().getLogin().getId());
+		if(job.getCorporate().getLogin().getImageUrl()!=null)
+			jobListingData.setCorporateImageUrl(getImageUrl(job.getCorporate().getLogin().getId()));
 		if (job.getJobDescription().length() > 500)
 			jobListingData.setJobDescription(job.getJobDescription().substring(0, 499));
 		else
@@ -688,7 +706,24 @@ public class DTOConverters {
 		candidateDetailDTO.setPhoneCode(candidate.getPhoneCode());
 		candidateDetailDTO.setPhoneNumber(candidate.getPhoneNumber());
 		candidateDetailDTO.setTwitter(candidate.getTwitter());
+		if(candidate.getLogin().getImageUrl()!=null) {
+			candidateDetailDTO.setImageUrl(getImageUrl(candidate.getLogin().getId()));
+		}
 		return candidateDetailDTO;
+	}
+	
+	private String getImageUrl(Long userId) {
+		String imageUrl = null;
+		try {
+			imageUrl = imageUrlCache.getValue(userId, new Callable<String>() {
+				public String call() throws Exception {
+					return fileService.getObject("gradzcircle-assets", userId.toString()).getLinks().get(0).getHref();
+				}
+			});
+		} catch (Exception e) {
+			logger.error("Error fetching Asset from Amazon S3 {}", e.getCause());
+		}
+		return imageUrl;
 	}
 
 }

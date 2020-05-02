@@ -1,4 +1,4 @@
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 import { HttpResponse } from '@angular/common/http';
 import { Injectable, Component } from '@angular/core';
@@ -22,7 +22,11 @@ export class AddMoreCandidatesToPopupService {
 
             if (id) {
                 this.jobService.getJobEconomics(id).subscribe((jobResponse: HttpResponse<Job>) => {
-                    const job: Job = jobResponse.body;
+                    const job: Job = new Job();
+                    job.payAsYouGo = jobResponse.body.payAsYouGo;
+                    job.filterCost = jobResponse.body.filterCost;
+                    job.corporateEscrowAmount = jobResponse.body.corporateEscrowAmount;
+                    job.id = jobResponse.body.id;
                     this.ngbModalRef = this.jobModalRef(component, job);
                     resolve(this.ngbModalRef);
                 });

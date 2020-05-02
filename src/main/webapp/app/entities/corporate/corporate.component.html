@@ -13,7 +13,7 @@
                         		<img class="rounded img-fluid figure-img" [src]="noImage ? defaultImage : imageUrl "
                         			 alt="A generic square placeholder image with rounded corners in a figure." />
                             <div class="text-center">
-                            		<button class="btn btn-primary btn-block" type="button" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/', { outlets: { popup: 'update-picture' } }]">Logo</button>
+                            		<button class="btn btn-primary btn-block" type="button" (click)="setProfilePicmgmtRouteParams()" [routerLink]="['/corporate', { outlets: { popup: ['update-picture' ,this.userProfile] }}]">Logo</button>
 							</div>
                         </figure>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="row pb-5 pr-2">
                 		<div class="col-md-12 text-center">
 						<button type="submit" (click)="setRouterData()"
-								[routerLink]="['/', { outlets: { popup: 'corporate/edit'} }]"
+								[routerLink]="['/corporate', { outlets: { popup: 'corporate/edit'} }]"
 								replaceUrl="true" class="btn btn-primary btn-block"
 								jhiTranslate="gradzcircleApp.corporate.home.editDetails">Update Details
 						</button>

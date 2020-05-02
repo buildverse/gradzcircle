@@ -1,11 +1,11 @@
 import { JOB_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
 
@@ -16,9 +16,15 @@ import { JobService } from './job.service';
 export class JobRemoveDialogComponent {
     job: Job;
 
-    constructor(private jobService: JobService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private jobService: JobService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -28,8 +34,12 @@ export class JobRemoveDialogComponent {
                 name: 'jobListModification',
                 content: 'Deleted an job'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
+    }
+    clearRoute() {
+        this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
     }
 }
 

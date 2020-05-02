@@ -1,4 +1,6 @@
 import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
+import { CandidatePublicProfilePopupComponent } from '../../shared/candidate-public-profile/candidate-public-profile-popup.component';
+import { ProfilePicMgmtPopupComponent } from '../../shared/profile-pic/profile-pic-mgmt-popup.component';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
 import { JhiPaginationUtil } from 'ng-jhipster';
@@ -25,7 +27,7 @@ export class LinkedCandidatesResolvePagingParams implements Resolve<any> {
 
 export const corporateRoute: Routes = [
     {
-        path: 'corporate',
+        path: '',
         component: CorporateComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
@@ -83,6 +85,26 @@ export const corporatePopupRoute: Routes = [
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.corporate.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'update-picture/:userProfile',
+        component: ProfilePicMgmtPopupComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-public-profile/:userProfile',
+        component: CandidatePublicProfilePopupComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'

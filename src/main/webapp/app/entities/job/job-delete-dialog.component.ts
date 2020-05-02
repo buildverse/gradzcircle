@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
 

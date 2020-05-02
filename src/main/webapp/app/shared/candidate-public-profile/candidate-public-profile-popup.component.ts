@@ -41,6 +41,8 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
     imageSubscriber: Subscription;
     businessPlanEnabled?: boolean;
     canCorporateViewDetails?: boolean;
+    profile: string;
+    previewMode: boolean;
 
     constructor(
         private candidateService: CandidateService,
@@ -56,25 +58,37 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
         this.ratingConfig.max = 5;
         this.ratingConfig.readonly = true;
         this.canCorporateViewDetails = false;
+        this.previewMode = false;
     }
 
     ngOnInit() {
+        if (this.profile === 'preview') {
+            this.previewMode = true;
+        }
         this.businessPlanEnabled = JSON.parse(this.dataService.getData(BUSINESS_PLAN_ENABLED));
-        this.reloadUserImage();
+        //    this.reloadUserImage();
+        this.userImage = this.candidate.candidateDetails.imageUrl != null ? this.candidate.candidateDetails.imageUrl : this.defaultImage;
         this.alertService.clear();
 
         if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
             this.canCorporateViewDetails = this.candidate.isShortListed;
-            if (this.candidate.reviewed && !this.candidate.isShortListed) {
+            if (this.candidate.reviewed && !this.candidate.isShortListed && this.profile !== 'preview') {
                 this.alertService.addAlert({ type: 'info', msg: 'gradzcircleApp.candidate.profile.reviewAlert' }, []);
             }
-            if (!this.candidate.isShortListed) {
+            if (!this.candidate.isShortListed && this.profile !== 'preview') {
                 this.alertService.addAlert({ type: 'info', msg: 'gradzcircleApp.candidate.profile.notShortListedAlert' }, []);
             }
-            if (!this.candidate.canBeShortListed && this.businessPlanEnabled && !this.candidate.isShortListed) {
+            if (
+                !this.candidate.canBeShortListed &&
+                this.businessPlanEnabled &&
+                !this.candidate.isShortListed &&
+                this.profile !== 'preview'
+            ) {
                 this.alertService.addAlert({ type: 'danger', msg: 'gradzcircleApp.job.topUpAlert' }, []);
-            } else if (!this.candidate.canBeShortListed && !this.businessPlanEnabled) {
+            } else if (!this.candidate.canBeShortListed && !this.businessPlanEnabled && this.profile !== 'preview') {
                 this.alertService.addAlert({ type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert' }, []);
+            } else if (this.profile === 'preview' && !this.candidate.isShortListed) {
+                this.alertService.addAlert({ type: 'info', msg: 'gradzcircleApp.job.cantShortListNonMatchedCandidate' }, []);
             }
         } else if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CANDIDATE) {
             this.alertService.addAlert({ type: 'info', msg: 'gradzcircleApp.candidate.profile.publicProfileMessage', timeout: 5000 }, []);
@@ -168,9 +182,25 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
 
     clear() {
         this.dataService.removeData(FROM_LINKED_CANDIDATE);
-        this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
         this.alertService.clear();
+    }
+
+    clearRoute() {
+        if (this.profile) {
+            if (this.profile === 'corporate') {
+                this.router.navigate(['/', 'corporate', { outlets: { popup: null } }]);
+            } else if (this.profile === 'candidate') {
+                this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
+            } else if (this.profile === 'matched' || this.profile === 'shortlisted' || this.profile === 'applied') {
+                this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
+            } else if (this.profile === 'preview') {
+                this.router.navigate(['/candidatePreview', { outlets: { popup: null } }]);
+            }
+        } else {
+            this.router.navigate(['/candidatePreview', { outlets: { popup: null } }]);
+        }
     }
 }
 
@@ -194,7 +224,8 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
                     CandidatePublicProfilePopupDialogComponent as Component,
                     params['id'],
                     params['jobId'],
-                    params['corporateId']
+                    params['corporateId'],
+                    params['userProfile']
                 );
             } else {
                 this.candidatePublicProfilePopupService.open(
@@ -202,7 +233,8 @@ export class CandidatePublicProfilePopupComponent implements OnInit, OnDestroy {
                     this.dataService.getData(CANDIDATE_ID),
                     parseFloat(this.dataService.getData(JOB_ID)),
                     parseFloat(this.dataService.getData(CORPORATE_ID)),
-                    this.dataService.getData(FROM_LINKED_CANDIDATE)
+                    this.dataService.getData(FROM_LINKED_CANDIDATE),
+                    params['userProfile']
                 );
             }
         });
