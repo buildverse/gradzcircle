@@ -8,7 +8,7 @@ import { Principal } from 'app/core';
 import { GradzcircleTestModule } from '../../../test.module';
 import { JobComponent } from 'app/entities/job/job.component';
 import { JobService } from 'app/entities/job/job.service';
-import { Job } from 'app/entities/job/job.model';
+import { Job } from 'app/shared/job-common/job.model';
 import { DataStorageService } from 'app/shared/helper/localstorage.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalStorageService } from 'ngx-webstorage';

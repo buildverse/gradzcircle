@@ -16,11 +16,12 @@ import { CandidateNonAcademicWorkPopupNewComponent } from '../../entities/candid
 import { CandidateNonAcademicWorkComponent } from '../../entities/candidate-non-academic-work/candidate-non-academic-work.component';
 import { CandidateSkillsPopupNewComponent } from '../../entities/candidate-skills/candidate-skills-dialog.component';
 import { CandidateSkillsComponent } from '../../entities/candidate-skills/candidate-skills.component';
-import { CandidatePublicProfilePopupComponent } from './candidate-public-profile-popup.component';
+import { CandidatePublicProfilePopupComponent } from '../../shared/candidate-public-profile/candidate-public-profile-popup.component';
+import { JobViewPopupForCandidateComponent } from '../../shared/job-common/job-view-candidate.component';
+import { ProfilePicMgmtPopupComponent } from '../../shared/profile-pic/profile-pic-mgmt-popup.component';
 import { AppliedJobsComponent } from './applied-job-by-candidate.component';
 import { CandidatePrimarySettingsEditComponent } from './candidate-primary-settings-edit.component';
 import { ShortListedJobsForCandidateComponent } from './shortlisted-for-job.component';
-import { ProfilePicMgmtPopupComponent } from './profile-pic-mgmt-popup.component';
 import { CandidateProfilePrimaryViewComponent } from './candidate-primary-settings-view.component';
 import { CandidateProfileContactViewComponent } from './candidate-profile-contact-setting-view.component';
 import { CandidateCareerInterestResolverService } from './candidate-profile-career-interest-resolver.service';
@@ -191,23 +192,31 @@ export const candidateProfileRoutes: Routes = [
 
 export const candidateProfilePopupRoute: Routes = [
     {
-        path: 'candidate-public-profile',
+        path: 'candidate-public-profile/:userProfile',
         component: CandidatePublicProfilePopupComponent,
         data: {
-            authorities: ['ROLE_USER', 'ROLE_CANDIDATE', 'ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'
     },
     {
-        path: 'update-picture',
+        path: 'update-picture/:userProfile',
         component: ProfilePicMgmtPopupComponent,
         data: {
-            authorities: ['ROLE_USER', 'ROLE_CANDIDATE', 'ROLE_CORPORATE'],
+            authorities: ['ROLE_USER', 'ROLE_CANDIDATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'viewJobForCandidate/:userProfile',
+        component: JobViewPopupForCandidateComponent,
+        data: {
+            pageTitle: 'gradzcircleApp.job.home.title'
+        },
         outlet: 'popup'
     }
 ];

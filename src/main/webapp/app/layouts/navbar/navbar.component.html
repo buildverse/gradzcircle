@@ -397,26 +397,38 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li>
-                        <a class="dropdown-item" [routerLink]="['/appliedJobs']" routerLinkActive="active" > 
+                        <a class="dropdown-item" [routerLink]="['candidate-profile/appliedJobs']" routerLinkActive="active" > 
                         <span jhiTranslate="global.menu.candidate.job.applied">Applied Jobs</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="['/shortListedForJob']" routerLinkActive="active" > 
+                        <a class="dropdown-item" [routerLink]="['candidate-profile/shortListedForJob']" routerLinkActive="active" > 
                         	<span jhiTranslate="global.menu.candidate.job.shortlisted">Shortlisted</span>
                         </a>
                     </li>
                 </ul>
             </li>
-             <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item" (click)="collapseNavbar()" [routerLink]="['/job']" routerLinkActive="active">
+             <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item" (click)="collapseNavbar()" [routerLink]="['/corp/job']" routerLinkActive="active">
                 <a class="nav-link"> 
                 		<span jhiTranslate="global.menu.corporate.dashboard">Dashboard</span>
                 </a>
             </li>
-            <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item " [routerLink]="['/linkedCandidatesForCorporate']" routerLinkActive="active">
-                <a class="nav-link"> 
-                		<span jhiTranslate="global.menu.corporate.linkedCandidates">Candidates</span>
+            <li *jhiHasAnyAuthority="['ROLE_CORPORATE']" ngbDropdown class="nav-item dropdown pointer">
+            		<a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);"> 
+                		<span jhiTranslate="global.menu.corporate.candidates">Jobs</span>
                 </a>
+                 <ul class="dropdown-menu" ngbDropdownMenu>
+                    <li>
+                        <a class="dropdown-item" [routerLink]="['/candidatePreview']" routerLinkActive="active" > 
+                        <span jhiTranslate="global.menu.corporate.all">All Cand</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" [routerLink]="['/corporate/linkedCandidatesForCorporate']"  routerLinkActive="active" > 
+                        	<span jhiTranslate="global.menu.corporate.linkedCandidates">My Cand</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_CORPORATE']" class="nav-item" routerLinkActive="active" [routerLink]="['/corporate']" (click)="collapseNavbar()">
                 <a class="nav-link"> 

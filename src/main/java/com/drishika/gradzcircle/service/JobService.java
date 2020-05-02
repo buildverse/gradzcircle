@@ -37,6 +37,7 @@ import com.drishika.gradzcircle.domain.JobFilterHistory;
 import com.drishika.gradzcircle.domain.JobHistory;
 import com.drishika.gradzcircle.domain.JobType;
 import com.drishika.gradzcircle.exception.BeanCopyException;
+import com.drishika.gradzcircle.exception.FileRetrieveException;
 import com.drishika.gradzcircle.exception.JobEditException;
 import com.drishika.gradzcircle.exception.NoPreviousJobException;
 import com.drishika.gradzcircle.repository.CandidateAppliedJobsRepository;
@@ -62,6 +63,7 @@ import com.drishika.gradzcircle.service.dto.JobListDTO;
 import com.drishika.gradzcircle.service.dto.JobStatistics;
 import com.drishika.gradzcircle.service.matching.JobFilterObject;
 import com.drishika.gradzcircle.service.matching.Matcher;
+import com.drishika.gradzcircle.service.storage.FileServiceS3;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.GradzcircleCacheManager;
 import com.drishika.gradzcircle.service.util.JobsUtil;
@@ -80,7 +82,8 @@ public class JobService {
 	private final JobFilterRepository jobFilterRepository;
 	
 	private FilterRepository filterRepository;
-
+	
+	
 	@Qualifier("JobMatcher")
 	private final Matcher<Long> matcher;
 
@@ -617,15 +620,6 @@ public class JobService {
 		return jobTypeMap;
 	}
 	
-	private Map<String,EmploymentType> getEmploymentTypeMap() throws Exception {
-		Map<String,EmploymentType> employmentTypeMap = employmentTypeCacheManager.getValue(ApplicationConstants.EMPLOYMENT_TYPE, new Callable<Map<String,EmploymentType>>() {
-			public Map<String,EmploymentType> call() throws Exception {
-				return employmentTypeRepository.findAll().stream().collect(Collectors.toMap(EmploymentType::getEmploymentType, employmenType->employmenType));
-			}
-		} );
-		return employmentTypeMap;
-	}
-	
 	private JobType getJobType(String jobTypeName) throws Exception {
 		Map<String,JobType> jobTypeMap = jobTypeCacheManager.getValue(ApplicationConstants.JOB_TYPE, new Callable<Map<String,JobType>>() {
 			public Map<String,JobType> call() throws Exception {
@@ -1026,14 +1020,12 @@ public class JobService {
 			candidatePage = jobRepository.findMatchedCandidatesForJobWithMatchScoreFilter(jobId, fromScore, toScore,reviewed, pageable);
 		}
 		final Page<CandidateProfileListDTO> page = candidatePage.map(candidateJob -> converter
-				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob,candidateJob.getJob().getCorporate().getShortlistedCandidates()));
+				.convertToCandidateProfileListingDTO(candidateJob.getCandidate(), candidateJob,
+						candidateJob.getJob().getCorporate().getShortlistedCandidates()));
 		return page;
 	}
-
-	/*public Job addCandidatesToExisitingJob(Long jobId, Long numberOfCandidates, Double jobCost,Double amountPaid) {
-		Job job = jobRepository.findOne(jobId);
-		Corporate corporate = job.getCorporate();
-	}*/
+	
+	
 	
 	public Job applyJobForCandidate(Long jobId, Long loginId) {
 		Optional<Job> jobOptional = jobRepository.findById(jobId);
@@ -1057,9 +1049,6 @@ public class JobService {
 	
 	public Long getTotalJobsPostedSinceLastMonth(Long corporateId) {
 		ZoneId zoneId = ZoneId.of("Asia/Kolkata");
-		//ZonedDateTime toDateTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-		//ZonedDateTime toDateTime = LocalDate.now().atStartOfDay(zoneId);
-		//ZonedDateTime fromDateTime = ZonedDateTime.of(toDateTime.getYear(),toDateTime.getMonthValue()-1,toDateTime.getDayOfMonth()+1,00,00,00,00,zoneId);
 		ZonedDateTime toDateTime = LocalDate.now().atStartOfDay(zoneId);
 		ZonedDateTime fromDateTime = toDateTime.minusMonths(1).withDayOfMonth(1);
 		return jobRepository.numberOfJobsPostedAcrossDates(corporateId,fromDateTime,toDateTime);
@@ -1068,7 +1057,8 @@ public class JobService {
 	public Page<CandidateProfileListDTO> getShortListedCandidatesForJob(Pageable pageable,Long jobId) {
 		Page<CorporateCandidate> candidateCorporatePage = corporateRepository.findLinkedCandidatesByJob(jobId, pageable);
 		final Page<CandidateProfileListDTO> page = candidateCorporatePage.map(corporateCandidate -> converter
-				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate,jobId));
+				.convertToCandidateProfileListingDTO(corporateCandidate.getCandidate(), corporateCandidate,
+						jobId));
 		return page;
 	}
 

@@ -8,7 +8,7 @@
 	                <div class="col-lg-4">
 	                    <div class="card mb-3">
 	                        <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" [src]="noImage ? defaultImage : userImage " width="160" height="160" />
-	                            <div class="mb-3"><button class="btn btn-primary btn-sm" type="button" (click)="setPublicProfilePicmgmtRouteParams()" [routerLink]="['/candidate-profile',{ outlets: { popup: 'update-picture' } }]">Change Photo</button></div>
+	                            <div class="mb-3"><button class="btn btn-primary btn-sm" type="button" (click)="setPublicProfilePicmgmtRouteParams()" [routerLink]="['/candidate-profile',{ outlets: { popup: ['update-picture',this.userProfile] } }]">Change Photo</button></div>
 	                        </div>
 	                    </div>
 	                    <div class="card shadow mb-4">
@@ -94,7 +94,7 @@
 	                           	<hr/>
 	                           	<div *ngIf="candidate?.hasEducation" class="row  float-right mr-1">
 	                           		<span class="pb-0 pt-0  btn btn-outline-primary btn-sm" jhiTranslate="global.menu.user.profile" 
-	                           				[routerLink]="['/candidate-profile', { outlets: { popup: 'candidate-public-profile' } } ]" (click)="setPublicProfileRouteParams(candidate.id,-1,-1)">Profile</span>
+	                           				[routerLink]="['/candidate-profile', { outlets: { popup: ['candidate-public-profile', this.userProfile] } } ]" (click)="setPublicProfileRouteParams(candidate.id,-1,-1)">Profile</span>
 	                           	</div>
 	                        </div>
 	                    </div>

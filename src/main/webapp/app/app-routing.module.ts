@@ -27,6 +27,14 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     loadChildren: './entities/job/job.module#GradzcircleJobModule'
                 },
                 {
+                    path: 'corp',
+                    loadChildren: './entities/job/job.module#GradzcircleJobModule'
+                },
+                {
+                    path: 'corporate',
+                    loadChildren: './entities/corporate/corporate.module#GradzcircleCorporateModule'
+                },
+                {
                     path: 'education',
                     loadChildren: './entities/candidate-education/candidate-education.module#GradzcircleCandidateEducationModule'
                 },

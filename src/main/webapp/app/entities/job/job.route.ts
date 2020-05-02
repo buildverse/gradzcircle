@@ -1,4 +1,7 @@
 import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
+import { CandidatePublicProfilePopupComponent } from '../../shared/candidate-public-profile/candidate-public-profile-popup.component';
+import { JobViewPopupForCandidateComponent } from '../../shared/job-common/job-view-candidate.component';
+
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
 
@@ -17,7 +20,6 @@ import { AppliedCandidateListComponent } from './applied-candidate-list.componen
 import { ShortListedCandidateListComponent } from './short-listed-candidate-list.component';
 import { JobAnonymousComponent } from './job-for-anonymous.component';
 import { JobListForLinkedCandidatePopUpComponent } from './job-list-for-linked-candidate.component';
-import { JobViewPopupForCandidateComponent } from './job-view-candidate.component';
 
 @Injectable()
 export class JobResolvePagingParams implements Resolve<any> {
@@ -128,7 +130,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/edit',
+        path: 'edit',
         component: JobPopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
@@ -138,7 +140,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/view',
+        path: 'view',
         component: JobViewPopupComponent,
         data: {
             // authorities: ['ROLE_USER','ROLE_CORPORATE','ROLE_CANDIDATE'],
@@ -156,7 +158,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/viewJobForCandidate',
+        path: 'viewJob/:userProfile',
         component: JobViewPopupForCandidateComponent,
         data: {
             pageTitle: 'gradzcircleApp.job.home.title'
@@ -174,7 +176,7 @@ export const jobPopupRoute: Routes = [
         outlet: 'popup'
     },
     {
-        path: 'job/remove',
+        path: 'remove',
         component: JobRemovePopupComponent,
         data: {
             authorities: ['ROLE_CORPORATE'],
@@ -216,6 +218,16 @@ export const jobPopupRoute: Routes = [
     {
         path: 'addMoreCandidatesToJob',
         component: AddMoreCandidatesToJobPopUpComponent,
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-public-profile/:userProfile',
+        component: CandidatePublicProfilePopupComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'

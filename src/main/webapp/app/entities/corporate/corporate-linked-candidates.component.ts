@@ -33,6 +33,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     eventSubscriber: Subscription;
     subscription: Subscription;
     defaultImage = require('../../../content/images/no-image.png');
+    userProfile: string;
 
     constructor(
         private corporateService: CorporateService,
@@ -52,6 +53,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
             this.reverse = data['pagingParams'].ascending;
             this.predicate = data['pagingParams'].predicate;
         });
+        this.userProfile = 'corporate';
         // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
     }
 
@@ -71,12 +73,10 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     }
 
     transition() {
-        this.router.navigate(['/linkedCandidatesForCorporate'], {
+        this.router.navigate(['/corporate/linkedCandidatesForCorporate'], {
             queryParams: {
                 page: this.page,
                 size: this.itemsPerPage
-                // search: this.currentSearch,
-                //  sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         });
 
@@ -95,9 +95,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
         this.corporateService
             .queryLinkedCandidates({
                 page: this.page - 1,
-                // query: this.currentSearch,
                 size: this.itemsPerPage,
-                //  sort: this.sort(),
                 id: this.corporateId
             })
             .subscribe(
@@ -145,29 +143,6 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
         this.candidateList = data;
-        //  console.log('The candidate List is ' + JSON.stringify(this.candidateList));
-        this.setImageUrl();
-    }
-
-    private setImageUrl() {
-        if (this.candidateList.length === 0) {
-            this.spinnerService.hide();
-        } else {
-            this.candidateList.forEach(candidate => {
-                if (candidate.login.imageUrl !== undefined) {
-                    this.userService.getImageData(candidate.login.id).subscribe(response => {
-                        if (response !== undefined) {
-                            const responseJson = response.body;
-                            if (responseJson) {
-                                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                            } else {
-                                // this.noImage = true;
-                            }
-                        }
-                        this.spinnerService.hide();
-                    });
-                }
-            });
-        }
+        this.spinnerService.hide();
     }
 }

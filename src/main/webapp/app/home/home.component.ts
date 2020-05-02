@@ -29,24 +29,9 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        // this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, 'false');
         this.principal.identity().then(account => {
             this.account = account;
         });
-        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, false);
-        this.appConfigService.query().subscribe(
-            (res: HttpResponse<AppConfig[]>) => {
-                this.appConfigs = res.body;
-                this.appConfigs.forEach(appConfig => {
-                    if ('BusinessPlan'.toUpperCase().indexOf(appConfig.configName ? appConfig.configName.toUpperCase() : '') > -1) {
-                        this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, appConfig.configValue);
-                        //     console.log('biz plab enable is ' + this.localStorageService.getData(BUSINESS_PLAN_ENABLED));
-                        // console.log('biz plab enable in home is ' + JSON.parse(this.localStorageService.getData(BUSINESS_PLAN_ENABLED)));
-                    }
-                });
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
         this.registerAuthenticationSuccess();
     }
 

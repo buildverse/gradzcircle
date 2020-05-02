@@ -3,7 +3,6 @@ package com.drishika.gradzcircle.service;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +26,6 @@ import com.drishika.gradzcircle.domain.CandidateEmployment;
 import com.drishika.gradzcircle.domain.CandidateJob;
 import com.drishika.gradzcircle.domain.CandidateLanguageProficiency;
 import com.drishika.gradzcircle.domain.CandidateNonAcademicWork;
-import com.drishika.gradzcircle.domain.CandidateProfileScore;
 import com.drishika.gradzcircle.domain.CandidateProject;
 import com.drishika.gradzcircle.domain.CandidateSkills;
 import com.drishika.gradzcircle.domain.Corporate;
@@ -383,7 +381,7 @@ public class CandidateService {
 			canShortListMore = canShortListCandidate(corporateId,jobId);
 		}
 		// TODO - THIS IS A HACK. NEED TO FIX THIS SHIT. DONE TO GET CANDIDATE LIST FOR LINKED CANDIDATES
-		if(jobId==0 && corporateId >0) {
+		if(jobId<=0 && corporateId >0) {
 			isShortListed = isShortListed(candidate,corporateId);
 			canShortListMore = true;
 		}

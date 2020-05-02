@@ -1,4 +1,4 @@
-export * from './job.model';
+export * from '../../shared/job-common/job.model';
 export * from './job-popup.service';
 export * from './job-popup-new.service';
 export * from './job.service';
@@ -21,4 +21,3 @@ export * from './job-list-popup.service';
 export * from './add-more-candidate-to-job-popup.component';
 export * from './add-more-canddiate-to-job-popup.service';
 export * from './min.directive';
-export * from './job-view-candidate.component';

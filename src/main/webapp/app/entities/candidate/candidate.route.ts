@@ -1,4 +1,5 @@
 import { UserRouteAccessService } from '../../core/auth/user-route-access-service';
+import { CandidatePublicProfilePopupComponent } from '../../shared/candidate-public-profile/candidate-public-profile-popup.component';
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, CanActivate } from '@angular/router';
 import { JhiPaginationUtil } from 'ng-jhipster';
@@ -53,8 +54,8 @@ export const candidateRoute: Routes = [
         },
         resolve: {
             pagingParams: CandidatePagingParams
-        },
-        canActivate: [UserRouteAccessService]
+        }
+        //  canActivate: [UserRouteAccessService]
     }
 ];
 
@@ -84,6 +85,17 @@ export const candidatePopupRoute: Routes = [
         component: CandidateDeletePopupComponent,
         data: {
             authorities: ['ROLE_USER'],
+            pageTitle: 'gradzcircleApp.candidate.home.title'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: 'candidate-public-profile/:userProfile',
+        component: CandidatePublicProfilePopupComponent,
+        runGuardsAndResolvers: 'always',
+        data: {
+            authorities: ['ROLE_USER', 'ROLE_CORPORATE'],
             pageTitle: 'gradzcircleApp.candidate.home.title'
         },
         canActivate: [UserRouteAccessService],

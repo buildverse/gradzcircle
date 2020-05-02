@@ -1,4 +1,4 @@
-import { Job } from '../job/job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { Candidate } from '../candidate/candidate.model';
 
 export class CandidateJob {

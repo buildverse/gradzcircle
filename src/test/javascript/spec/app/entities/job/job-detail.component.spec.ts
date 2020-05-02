@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { GradzcircleTestModule } from '../../../test.module';
 import { JobDetailComponent } from 'app/entities/job/job-detail.component';
 import { JobService } from 'app/entities/job/job.service';
-import { Job } from 'app/entities/job/job.model';
+import { Job } from 'app/shared/job-common/job.model';
 
 describe('Component Tests', () => {
     describe('Job Management Detail Component', () => {

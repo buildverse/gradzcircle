@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
-import { Job, PaymentType } from './job.model';
+import { Job, PaymentType } from '../../shared/job-common/job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobPopupServiceNew } from './job-popup-new.service';
 import { JobService } from './job.service';
@@ -280,7 +280,6 @@ export class JobDialogComponent implements OnInit {
             this.noOfApplicants = this.job.noOfApplicants;
             this.prevNumberOfApplicants = this.job.noOfApplicants;
             this.prevTotalAmount = this.job.totalAmountPaid ? this.job.totalAmountPaid : null;
-            // console.log('amount paod prev is ' + this.prevTotalAmount);
             this.initializeFormFilterData();
             this.initializeJobEconomics();
 
@@ -303,7 +302,6 @@ export class JobDialogComponent implements OnInit {
             this.prevTotalAmount = null;
         }
         this.escrowAmount = this.job.corporate.escrowAmount;
-        // console.log('Escrow on init is ' + this.escrowAmount);
         this.principal.identity().then(account => (this.account = account));
     }
 
@@ -374,9 +372,7 @@ export class JobDialogComponent implements OnInit {
 
                 if (this.job.jobFilters) {
                     this.job.jobFilters.forEach(jobFilter => {
-                        //    console.log('filter cost in beginning ' + this.filterCost);
                         this.jobFilter.id = jobFilter.id;
-                        //    console.log('filter id is' + this.jobFilter.id);
                         this.basic = jobFilter.filterDescription.basic;
                         this.colleges = jobFilter.filterDescription.colleges;
                         this.universities = jobFilter.filterDescription.universities;
@@ -520,7 +516,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     updateScoreCost() {
-        // console.log('score added ' + this.scoreAdded);
         if ((this.validPercentScore && this.percentage) || this.roundOfGrade) {
             if (!this.scoreAdded) {
                 this.scoreAdded = true;
@@ -530,7 +525,6 @@ export class JobDialogComponent implements OnInit {
             }
         } else {
             if (this.scoreAdded) {
-                // console.log('am i here');
                 this.scoreAdded = false;
                 this.scoreCost -= this.filterMap.get(this.SCORE);
                 this.filterCost -= this.filterMap.get(this.SCORE);
@@ -551,16 +545,13 @@ export class JobDialogComponent implements OnInit {
         }
     }
     numOfCandidateValueChange(value) {
-        // console.log('values on num of candidates is ' + value + ' th job candidate is ' + this.job.noOfApplicants + ' no of cand is ' + this.noOfApplicants);
         if (value < 20 || this.job.noOfApplicants === 0) {
             this.numberOfCandidateError = true;
         } else {
             if (value < this.noOfApplicants) {
-                //   console.log('values less than');
                 this.noOfApplicantsDecreased = true;
                 this.noOfApplicantsIncreased = false;
             } else if (value > this.noOfApplicants) {
-                //   console.log('values gretare than');
                 this.noOfApplicantsDecreased = false;
                 this.noOfApplicantsIncreased = true;
             }
@@ -583,7 +574,6 @@ export class JobDialogComponent implements OnInit {
             }
             this.clearScore();
         }
-        // console.log('Filter cost premium is ' + this.filterCost);
     }
 
     toggleAddOnFilter() {
@@ -600,7 +590,6 @@ export class JobDialogComponent implements OnInit {
                 this.updateGenderCost();
             }
         }
-        // console.log('Filter cost add on is ' + this.filterCost);
     }
 
     addQualificationCost() {
@@ -677,12 +666,10 @@ export class JobDialogComponent implements OnInit {
 
     updateGenderCost() {
         if (this.gender && !this.genderAdded) {
-            // console.log('The gender cost added');
             this.genderCost += this.filterMap.get(this.GENDER);
             this.filterCost += this.filterMap.get(this.GENDER);
             this.genderAdded = true;
         } else if (!this.gender) {
-            // console.log('The gender cost removed');
             this.genderCost -= this.filterMap.get(this.GENDER);
             this.filterCost -= this.filterMap.get(this.GENDER);
             this.genderAdded = false;
@@ -796,9 +783,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     offsetEscrow() {
-        //  console.log('value local escrow fild ' + this.escrowAmount);
-        //  console.log('job cost is ' + this.job.jobCost);
-        //  console.log('job cost diff on entry is ' + this.jobCostDifference);
         if (!this.businessPlanEnabled) {
             return;
         }
@@ -850,9 +834,6 @@ export class JobDialogComponent implements OnInit {
             }
         }
         this.setAmountPaid();
-        // console.log('job cost chnaged' + this.jobDifferenceChanged);
-        // console.log('job cost difference' + this.jobCostDifference);
-        // console.log('job costs'+this.job.jobCost);
     }
 
     clearDates() {
@@ -872,8 +853,6 @@ export class JobDialogComponent implements OnInit {
 
     calculateDiscountedCost() {
         this.setPayment();
-        //  console.log('escrwo Amount is ' + this.escrowAmount);
-        //  console.log('discounted price is ' + this.discountedJobCost);
         this.discountedJobCost = this.job.jobCost * this.filterMap.get(this.DISCOUNT) / 100;
         this.applyDiscount();
         if (this.job.corporate.escrowAmount) {
@@ -882,7 +861,6 @@ export class JobDialogComponent implements OnInit {
         } else {
             this.useEscrow = null;
         }
-        // console.log('discounted cost job is ' + this.discountedJobCost);
         this.setAmountPaid();
     }
 
@@ -930,8 +908,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     updateJobCost() {
-        // console.log('new filter cost is ' + this.filterCost);
-        // console.log('prev filter cost ' + this.prevFilterCost);
         if (this.prevOriginalJobCost) {
             this.jobCostDifference = this.filterCost * this.job.noOfApplicants - this.prevNoOfApplicants * this.prevFilterCost;
             if (this.jobCostDifference < 0) {
@@ -940,7 +916,6 @@ export class JobDialogComponent implements OnInit {
         } else {
             this.job.jobCost = this.job.noOfApplicants * this.filterCost;
         }
-        // console.log('updated job cost is ' + this.job.jobCost);
     }
 
     absoluteValue(value) {
@@ -955,7 +930,6 @@ export class JobDialogComponent implements OnInit {
                 this.filterCost = this.filterCost + value.employmentTypeCost;
             } else if (this.employmentTypeCost.length > 0) {
                 this.filterCost = this.filterCost - this.employmentTypeCost.pop();
-                // console.log('filter cost employment type ' + JSON.stringify(this.filterCost));
                 this.employmentTypeCost.push(value.employmentTypeCost);
                 this.filterCost = this.filterCost + value.employmentTypeCost;
             }
@@ -987,7 +961,12 @@ export class JobDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
     }
 
     prepareJobFilter() {
@@ -1015,12 +994,10 @@ export class JobDialogComponent implements OnInit {
                 this.jobFilter.filterDescription.percentage = this.percentage;
             }
             if (this.roundOfGrade) {
-                // console.log('AM I HERE');
                 if (!this.gradeDecimal) {
                     this.gradeDecimal = 0;
                 }
                 this.jobFilter.filterDescription.gpa = this.roundOfGrade + '.' + this.gradeDecimal;
-                //  console.log('GPA is '+JSON.stringify(this.jobFilter.filterDescription.gpa));
             }
             if (this.skills && this.skills.length > 0) {
                 this.jobFilter.filterDescription.skills = this.skills;
@@ -1051,7 +1028,6 @@ export class JobDialogComponent implements OnInit {
                         day: toDate.getDate()
                     };
                 }
-                //  console.log('Filter desc is '+JSON.stringify(this.jobFilter.filterDescription));
             }
             if (this.languages && this.languages.length > 0) {
                 this.jobFilter.filterDescription.languages = this.languages;
@@ -1068,8 +1044,6 @@ export class JobDialogComponent implements OnInit {
             this.job.jobFilters = [];
             this.job.jobFilters.push(this.jobFilter);
         }
-
-        // console.log('job filter is ' + JSON.stringify(this.job.jobFilters));
     }
 
     clearFilterDescription() {
@@ -1091,12 +1065,7 @@ export class JobDialogComponent implements OnInit {
         } else {
             this.job.amountPaid = this.amountPayable;
         }
-        // console.log('prev amiunt is ' + this.prevTotalAmount);
-        // console.log('admin amount is ' + this.job.adminCharge);
-        // console.log('escrow used ' + this.job.escrowAmountUsed);
-        //  console.log('amount payable  ' + this.job.amountPaid);
         this.job.totalAmountPaid = this.prevTotalAmount + this.job.amountPaid + this.job.escrowAmountUsed + this.job.adminCharge;
-        //  console.log('total is   ' + this.job.totalAmountPaid);
     }
 
     prepareJobData() {
@@ -1111,7 +1080,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     revertDiscount() {
-        // console.log('the job cost in revert discount is ' + this.job.jobCost);
         this.job.upfrontDiscountAmount = null;
         this.job.upfrontDiscountRate = null;
         if (this.job.escrowAmountUsed) {
@@ -1123,14 +1091,11 @@ export class JobDialogComponent implements OnInit {
     }
 
     prepareJobEconomics() {
-        // console.log('job cost incoming prep eco is ' + this.job.jobCost);
         this.amountPayable = this.job.jobCost;
-        // console.log('Amount payable is '+this.amountPayable);
         if (!this.job.everActive && !this.job.originalJobCost) {
             this.job.originalJobCost = this.job.jobCost;
         }
         if (!this.job.hasBeenEdited && !this.jobCostDifference && this.job.everActive) {
-            // console.log('First if Amount payable is '+this.amountPayable);
             this.amountPayable = null;
         } else {
             if (this.jobCostDifference) {
@@ -1145,7 +1110,6 @@ export class JobDialogComponent implements OnInit {
                     this.useEscrow = null;
 
                     this.amountPayable = null;
-                    //  console.log('Job cost diff less than 0 '+this.amountPayable);
                 } else if (this.jobCostDifference > 0) {
                     this.job.additionalFilterAmount = this.jobCostDifference;
                     this.job.jobCost += this.job.additionalFilterAmount;
@@ -1156,12 +1120,7 @@ export class JobDialogComponent implements OnInit {
                         this.offsetEscrow();
                     }
                 }
-            } /*else {
-        console.log('In Else '+this.amountPayable);
-        console.log('Job Cost diff is '+this.jobCostDifference);
-        this.jobCostDifference = 0;
-        this.amountPayable = null;
-      }*/
+            }
         }
         if (this.job.hasBeenEdited && this.job.paymentType === PaymentType.UPFRONT) {
             this.calculateAdminCharge();
@@ -1173,7 +1132,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     calculateAdminCharge() {
-        // console.log('in cal admin charge');
         if (this.job.removedFilterAmount) {
             this.job.adminCharge = this.job.removedFilterAmount * this.filterMap.get(this.AMEND) / 100;
             this.job.adminChargeRate = this.filterMap.get(this.AMEND);
@@ -1219,11 +1177,10 @@ export class JobDialogComponent implements OnInit {
                 this.subscribeToSaveResponse(this.jobService.create(this.job), saveType);
             }
             if (saveType === 1) {
+                this.clearRoute();
                 this.activeModal.dismiss();
             }
         }
-
-        // console.log('Job ststaus is' + saveType);
     }
 
     private jobFilterEquals(currentJob, previousJob) {
@@ -1236,7 +1193,6 @@ export class JobDialogComponent implements OnInit {
             equal(JSON.stringify(currentJob.jobType), JSON.stringify(previousJob.jobType)) &&
             equal(JSON.stringify(currentJob.noOfApplicants), JSON.stringify(previousJob.noOfApplicants))
         ) {
-            // console.log('filter equals');
             this.isSaving = false;
             return true;
         } else {
@@ -1253,7 +1209,6 @@ export class JobDialogComponent implements OnInit {
             equal(JSON.stringify(currentJob.jobDescription), JSON.stringify(previousJob.jobDescription)) &&
             equal(JSON.stringify(currentJob.salary), JSON.stringify(previousJob.salary))
         ) {
-            // console.log('JOB equals');
             this.isSaving = false;
             return true;
         } else {
@@ -1278,9 +1233,7 @@ export class JobDialogComponent implements OnInit {
         }
         this.job = result;
         this.escrowAmount = this.job.corporate.escrowAmount;
-        // console.log('result is ' + JSON.stringify(this.job));
         this.prevJob = deepcopy(result);
-        // console.log('result is ' + JSON.stringify(this.job));
         this.eventManager.broadcast({ name: 'jobListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
@@ -1290,7 +1243,6 @@ export class JobDialogComponent implements OnInit {
     }
 
     private onSaveError(error: any) {
-        // console.log('in error' + JSON.stringify(error));
         this.isSaving = false;
         this.spinnerService.hide();
         this.onError(error);
@@ -1298,6 +1250,7 @@ export class JobDialogComponent implements OnInit {
 
     private onError(error: any) {
         this.router.navigate(['/error']);
+        this.clearRoute();
         this.activeModal.dismiss();
         this.jhiAlertService.error(error.message, null, null);
     }
@@ -1426,9 +1379,6 @@ export class JobPopupNewComponent implements OnInit, OnDestroy {
                 this.jobPopupService.open(JobDialogComponent as Component, params['id']);
             } else {
                 const id = this.dataStorageService.getData(CORPORATE_ID);
-                /* if(!id) {
-           id = this.dataStorageService.getData(USER_ID);
-         }*/
                 this.jobPopupService.open(JobDialogComponent as Component, id);
             }
         });

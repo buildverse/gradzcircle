@@ -29,6 +29,7 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
     candidateId: number;
     imageDataAvailable: boolean;
     corporateUser: boolean;
+    profile: string;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -84,7 +85,6 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
                 this.eventManager.broadcast({ name: 'userImageModification', content: 'OK' });
             }
             this.clear();
-            // this.router.navigate(['../details'], {relativeTo: this.route});
         });
     }
 
@@ -136,8 +136,17 @@ export class ProfilePicMgmtPopupDialogComponent implements OnInit {
 
     clear() {
         this.clearSelectedPicture();
-        this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+    clearRoute() {
+        if (this.profile) {
+            if (this.profile === 'corporate') {
+                this.router.navigate(['/', 'corporate', { outlets: { popup: null } }]);
+            } else if (this.profile === 'candidate') {
+                this.router.navigate(['/', 'candidate-profile', { outlets: { popup: null } }]);
+            }
+        }
     }
 }
 
@@ -157,11 +166,16 @@ export class ProfilePicMgmtPopupComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.candidateProfilePicMgmtPopupService.open(ProfilePicMgmtPopupDialogComponent as Component, params['id']);
+                this.candidateProfilePicMgmtPopupService.open(
+                    ProfilePicMgmtPopupDialogComponent as Component,
+                    params['id'],
+                    params['userProfile']
+                );
             } else {
                 this.candidateProfilePicMgmtPopupService.open(
                     ProfilePicMgmtPopupDialogComponent as Component,
-                    this.dataService.getData(LOGIN_ID)
+                    this.dataService.getData(LOGIN_ID),
+                    params['userProfile']
                 );
             }
         });

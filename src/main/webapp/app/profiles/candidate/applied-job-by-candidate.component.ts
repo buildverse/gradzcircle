@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 import { JobService } from '../../entities/job/job.service';
-import { Job } from '../../entities/job/job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { ITEMS_PER_PAGE } from '../../shared';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { JOB_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
@@ -32,6 +32,7 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     corporateId: number;
     eventSubscriber: Subscription;
     subscription: Subscription;
+    userProfile = 'applied';
 
     constructor(
         private jobService: JobService,
@@ -104,9 +105,6 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
             } else {
                 this.candidateId = this.localDataStorageService.getData(CANDIDATE_ID);
             }
-            /* if (!this.candidateId) {
-        this.candidateId = this.localDataStorageService.getData(USER_ID);
-      }*/
             this.loadAppliedJobs();
         });
     }
@@ -139,37 +137,10 @@ export class AppliedJobsComponent implements OnInit, OnDestroy {
     }
 
     private onSuccess(data, headers) {
-        // console.log('HEADER IS ----> ' + JSON.stringify(headers));
-        // console.log('DATA IS ----> ' + JSON.stringify(data));
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
-        // this.page = pagingParams.page;
         this.jobs = data;
-        this.setImageUrl();
         this.spinnerService.hide();
-    }
-
-    private setImageUrl() {
-        if (this.jobs.length === 0) {
-            this.spinnerService.hide();
-        } else {
-            this.jobs.forEach(job => {
-                if (job.corporateUrl !== undefined) {
-                    this.userService.getImageData(job.corporateLoginId).subscribe(response => {
-                        if (response !== undefined) {
-                            const responseJson = response.body;
-                            if (responseJson) {
-                                job.corporateUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                            } else {
-                                // this.noImage = true;
-                            }
-                        }
-                    });
-                } else {
-                    job.corporateUrl = undefined;
-                }
-            });
-        }
     }
 }

@@ -2,7 +2,7 @@ import { CANDIDATE_ID, CORPORATE_ID } from '../../shared/constants/storage.const
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { JobListPopupService } from './job-list-popup.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -13,10 +13,12 @@ export class JobListForLinkedCandidateComponent {
     jobList: JobListForLinkedCandidateComponent[];
     constructor(
         // private jobService: JobService,
-        public activeModal: NgbActiveModal
+        private activeModal: NgbActiveModal,
+        private router: Router
     ) {}
 
     clear() {
+        this.router.navigate(['/', 'corp', { outlets: { popup: null } }]);
         this.activeModal.dismiss('cancel');
     }
 }

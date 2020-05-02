@@ -12,7 +12,8 @@ export class CandidateList {
         public matchScore?: number,
         public canBuy?: boolean,
         public aboutMe?: string,
-        public percent?: number
+        public percent?: number,
+        public imageUrl?: string
     ) {
         this.shortListed = false;
         this.canBuy = false;

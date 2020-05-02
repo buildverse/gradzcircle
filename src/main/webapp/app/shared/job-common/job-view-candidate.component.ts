@@ -2,17 +2,17 @@ import { Principal } from '../../core/auth/principal.service';
 import { LoginModalService } from '../../core/login/login-modal.service';
 import { LoginService } from '../../core/login/login.service';
 import { UserService } from '../../core/user/user.service';
+import { JobListEmitterService } from '../../entities/job/job-list-change.service';
+import { JobPopupService } from '../../entities/job/job-popup.service';
+import { JobService } from '../../entities/job/job.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { JOB_ID, CANDIDATE_ID, BUSINESS_PLAN_ENABLED } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { Job } from '../../shared/job-common/job.model';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
-import { Job } from './job.model';
-import { JobPopupService } from './job-popup.service';
-import { JobService } from './job.service';
-import { JobListEmitterService } from './job-list-change.service';
 import { Observable } from 'rxjs/Rx';
 import { HttpResponse } from '@angular/common/http';
 
@@ -28,6 +28,7 @@ export class JobViewForCandidateComponent implements OnInit {
     currentAccount: any;
     isSaving: boolean;
     modalRef: NgbModalRef;
+    profile: string;
 
     constructor(
         private jobService: JobService,
@@ -41,7 +42,9 @@ export class JobViewForCandidateComponent implements OnInit {
         private loginService: LoginService,
         private loginModalService: LoginModalService,
         private localDataStorageService: DataStorageService
-    ) {}
+    ) {
+        this.profile = '';
+    }
 
     ngOnInit() {
         this.businessPlanEnabled = JSON.parse(this.localDataStorageService.getData(BUSINESS_PLAN_ENABLED));
@@ -52,7 +55,16 @@ export class JobViewForCandidateComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        if (this.profile === 'applied' || this.profile === 'shortlisted') {
+            this.router.navigate(['/candidate-profile', { outlets: { popup: null } }]);
+        } else if (this.profile === 'viewJobs') {
+            this.router.navigate(['/viewjobs', { outlets: { popup: null } }]);
+        }
     }
 
     login() {
@@ -70,9 +82,10 @@ export class JobViewForCandidateComponent implements OnInit {
     }
 
     private onSaveSuccess(result: Job) {
-        this.activeModal.dismiss();
         this.eventManager.broadcast({ name: 'jobListModification', content: 'OK' });
         this.jobListEmitterService.jobChanges(true);
+        this.clearRoute();
+        this.activeModal.dismiss();
     }
 
     private onSaveError(error: any) {
@@ -110,7 +123,12 @@ export class JobViewPopupForCandidateComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
-                this.jobPopupService.openForCandidateView(JobViewForCandidateComponent as Component, params['id'], params['candidateId']);
+                this.jobPopupService.openForCandidateView(
+                    JobViewForCandidateComponent as Component,
+                    params['id'],
+                    params['candidateId'],
+                    params['userProfile']
+                );
             } else {
                 let id = this.dataService.getData(JOB_ID);
 
@@ -121,7 +139,12 @@ export class JobViewPopupForCandidateComponent implements OnInit, OnDestroy {
                 if (!candidateID) {
                     candidateID = -1;
                 }
-                this.jobPopupService.openForCandidateView(JobViewForCandidateComponent as Component, id, candidateID);
+                this.jobPopupService.openForCandidateView(
+                    JobViewForCandidateComponent as Component,
+                    id,
+                    candidateID,
+                    params['userProfile']
+                );
             }
         });
     }

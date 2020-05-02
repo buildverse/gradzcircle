@@ -8,7 +8,7 @@ import { JhiEventManager } from 'ng-jhipster';
 import { GradzcircleTestModule } from '../../../test.module';
 import { JobDialogComponent } from 'app/entities/job/job-dialog.component';
 import { JobService } from 'app/entities/job/job.service';
-import { Job } from 'app/entities/job/job.model';
+import { Job } from 'app/shared/job-common/job.model';
 import { JobTypeService } from 'app/entities/job-type';
 import { EmploymentTypeService } from 'app/entities/employment-type';
 import { CorporateService } from 'app/entities/corporate';

@@ -41,9 +41,11 @@ import com.drishika.gradzcircle.domain.Candidate;
 import com.drishika.gradzcircle.domain.Corporate;
 import com.drishika.gradzcircle.domain.CorporateCandidate;
 import com.drishika.gradzcircle.domain.Country;
+import com.drishika.gradzcircle.domain.User;
 import com.drishika.gradzcircle.repository.CandidateRepository;
 import com.drishika.gradzcircle.repository.CorporateRepository;
 import com.drishika.gradzcircle.repository.CountryRepository;
+import com.drishika.gradzcircle.repository.UserRepository;
 import com.drishika.gradzcircle.repository.search.CorporateSearchRepository;
 import com.drishika.gradzcircle.service.CorporateService;
 import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
@@ -135,6 +137,9 @@ public class CorporateResourceIntTest {
 	@Autowired
 	private CorporateService corporateService;
 	
+	@Autowired
+	UserRepository userRepository;
+	
 
 	@Autowired
 	private CountryRepository countryRepository;
@@ -145,7 +150,40 @@ public class CorporateResourceIntTest {
 	private MockMvc restCorporateMockMvc;
 
 	private Corporate corporate;
-
+	private User user1, user2,user3;
+	
+	public static User createUser1(EntityManager em) {
+		
+		User user1 = new User();
+		user1.setActivated(true);
+		user1.setLogin("abhi1");
+		user1.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepasss");
+		user1.setEmail("johndoe@localhost1");
+		return user1;
+		
+	}
+	public static User createUser2(EntityManager em) {
+		
+	 User user2 = new User();
+		user2.setActivated(true);
+		user2.setLogin("abhi");
+		user2.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepassj");
+		user2.setEmail("johndoe@localhost");
+		return user2;
+		
+	}
+	
+public static User createUser3(EntityManager em) {
+		
+	 User user3 = new User();
+		user3.setActivated(true);
+		user3.setLogin("abhi3");
+		user3.setPassword("passjohndoepassjohndoepassjohndoepassjohndoepassjohndoepasss");
+		user3.setEmail("johndoe@localhost3");
+		return user3;
+		
+	}
+	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -177,7 +215,11 @@ public class CorporateResourceIntTest {
 	public void initTest() {
 		//corporateSearchRepository.deleteAll();
 		corporate = createEntity(em);
+		user1 = createUser1(em);
+		user2 = createUser2(em);
+		user3 = createUser3(em);
 	}
+	
 
 	@Test
 	@Transactional
@@ -471,9 +513,12 @@ public class CorporateResourceIntTest {
 	@Transactional
 	public void findLinkedCandidatesForCorporte() throws Exception{
 		Corporate corp = new Corporate();
-		Candidate c1 = new Candidate().firstName("abhinav");
-		Candidate c2 = new Candidate().firstName("Bunny");
-		Candidate c3 = new Candidate().firstName("Tom");
+		userRepository.saveAndFlush(user1);
+		userRepository.saveAndFlush(user2);
+		userRepository.saveAndFlush(user3);
+		Candidate c1 = new Candidate().firstName("abhinav").login(user1);
+		Candidate c2 = new Candidate().firstName("Bunny").login(user2);
+		Candidate c3 = new Candidate().firstName("Tom").login(user3);
 		candidateRepository.saveAndFlush(c1);
 		candidateRepository.saveAndFlush(c2);
 		candidateRepository.saveAndFlush(c3);

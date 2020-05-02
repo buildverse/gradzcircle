@@ -62,6 +62,8 @@ public class CandidateJobDTO implements Serializable {
 	
 	private Boolean candidateHasEducation;
 	
+	private String corporateImageUrl;
+	
 
 	/**
 	 * @return the id
@@ -376,6 +378,20 @@ public class CandidateJobDTO implements Serializable {
 	 */
 	public void setCandidateHasEducation(Boolean candidateHasEducation) {
 		this.candidateHasEducation = candidateHasEducation;
+	}
+
+	/**
+	 * @return the corporateImageUrl
+	 */
+	public String getCorporateImageUrl() {
+		return corporateImageUrl;
+	}
+
+	/**
+	 * @param corporateImageUrl the corporateImageUrl to set
+	 */
+	public void setCorporateImageUrl(String corporateImageUrl) {
+		this.corporateImageUrl = corporateImageUrl;
 	}
 
 	

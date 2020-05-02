@@ -9,6 +9,7 @@ import { CandidateList } from './candidate-list.model';
 import { HttpResponse } from '@angular/common/http';
 import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'jhi-short-listed-candidate-list',
@@ -32,6 +33,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     eventSubscriber: Subscription;
     subscription: Subscription;
     defaultImage = require('../../../content/images/no-image.png');
+    userProfile: string;
 
     constructor(
         private jobService: JobService,
@@ -41,7 +43,8 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
         private userService: UserService,
         private parseLinks: JhiParseLinks,
         private router: Router,
-        private dataStorageService: DataStorageService
+        private dataStorageService: DataStorageService,
+        private spinnerService: NgxSpinnerService
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -50,6 +53,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
             this.reverse = data['pagingParams'].ascending;
             this.predicate = data['pagingParams'].predicate;
         });
+        this.userProfile = 'shortlisted';
         // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
     }
 
@@ -69,7 +73,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     transition() {
-        this.router.navigate(['/shortListedCandidateList/'], {
+        this.router.navigate(['/corp/shortListedCandidateList'], {
             queryParams: {
                 page: this.page,
                 size: this.itemsPerPage,
@@ -82,6 +86,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     loadShortListedCandidates() {
+        this.spinnerService.show();
         this.jobService
             .queryShortListedCandidatesForJob({
                 page: this.page - 1,
@@ -134,36 +139,16 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
-        // console.log(error);
+        this.spinnerService.hide();
         this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 
     private onSuccess(data, headers) {
-        // console.log('HEADER IS ----> ' + JSON.stringify(headers));
-        // console.log('DATA IS ----> ' + JSON.stringify(data));
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
-        // this.page = pagingParams.page;
         this.candidateList = data;
-        this.setImageUrl();
-    }
-
-    private setImageUrl() {
-        this.candidateList.forEach(candidate => {
-            if (candidate.login.imageUrl !== undefined) {
-                this.userService.getImageData(candidate.login.id).subscribe(response => {
-                    if (response !== undefined) {
-                        const responseJson = response.body;
-                        if (responseJson) {
-                            candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                        } else {
-                            // this.noImage = true;
-                        }
-                    }
-                });
-            }
-        });
+        this.spinnerService.hide();
     }
 }

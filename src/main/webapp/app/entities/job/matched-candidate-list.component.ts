@@ -40,6 +40,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     matchScoreRange?: string;
     reviewed?: boolean;
     businessPlanEnabled?: boolean;
+    userProfile: string;
 
     constructor(
         private jobService: JobService,
@@ -62,6 +63,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
         // this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
         this.isMatchScoreCollapsed = true;
         this.reviewed = false;
+        this.userProfile = 'matched';
     }
 
     setMatchScoreRange() {
@@ -110,7 +112,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     transition() {
-        this.router.navigate(['/matchedCandidateList'], {
+        this.router.navigate(['corp/matchedCandidateList'], {
             queryParams: {
                 page: this.page,
                 size: this.itemsPerPage
@@ -206,19 +208,16 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
-        // console.log(error);
         this.spinnerService.hide();
         this.router.navigate(['/error']);
         this.jhiAlertService.error(error.message, null, null);
     }
 
     private onSuccess(data, headers) {
-        // console.log('HEADER IS ----> ' + JSON.stringify(headers));
-        // console.log('DATA IS ----> ' + JSON.stringify(data));
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
         this.queryCount = this.totalItems;
-        // this.page = pagingParams.page;
+
         this.candidateList = data;
         if (this.candidateList && this.candidateList.length > 0) {
             if (!this.candidateList[0].canBuy && this.businessPlanEnabled) {
@@ -227,28 +226,6 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
                 this.jhiAlertService.addAlert({ type: 'danger', msg: 'gradzcircleApp.job.requestMoreCandidateAlert' }, []);
             }
         }
-        this.setImageUrl();
-    }
-
-    private setImageUrl() {
-        if (this.candidateList.length === 0) {
-            this.spinnerService.hide();
-        } else {
-            this.candidateList.forEach(candidate => {
-                if (candidate.login.imageUrl !== undefined) {
-                    this.userService.getImageData(candidate.login.id).subscribe(response => {
-                        if (response !== undefined) {
-                            const responseJson = response.body;
-                            if (responseJson) {
-                                candidate.login.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                            } else {
-                                // this.noImage = true;
-                            }
-                        }
-                    });
-                }
-                this.spinnerService.hide();
-            });
-        }
+        this.spinnerService.hide();
     }
 }

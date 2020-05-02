@@ -1,12 +1,10 @@
-import { Corporate } from '../corporate/corporate.model';
-import { EmploymentType } from '../employment-type/employment-type.model';
-import { JobFilter } from '../job-filter/job-filter.model';
-import { JobHistory } from '../job-history/job-history.model';
-import { JobType } from '../job-type/job-type.model';
-
-import { CandidateJob } from '../candidate-job/candidate-job.model';
-import { Candidate } from '../candidate';
-
+import { CandidateJob } from '../../entities/candidate-job/candidate-job.model';
+import { Candidate } from '../../entities/candidate/candidate.model';
+import { Corporate } from '../../entities/corporate/corporate.model';
+import { EmploymentType } from '../../entities/employment-type/employment-type.model';
+import { JobFilter } from '../../entities/job-filter/job-filter.model';
+import { JobHistory } from '../../entities/job-history/job-history.model';
+import { JobType } from '../../entities/job-type/job-type.model';
 export const enum PaymentType {
     UPFRONT = 'UPFRONT',
     AS_YOU_GO = 'AS_YOU_GO'
@@ -72,7 +70,8 @@ export class Job {
         public corporateEscrowAmount?: number,
         public corporateUrl?: string,
         public corporateLoginId?: any,
-        public candidateHasEducation?: boolean
+        public candidateHasEducation?: boolean,
+        public corporateImageUrl?: string
     ) {
         this.hasBeenEdited = false;
         this.everActive = false;

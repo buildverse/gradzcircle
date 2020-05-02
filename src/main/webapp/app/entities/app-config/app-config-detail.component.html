@@ -21,7 +21,7 @@
     </button>
 
     <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'app-config/'+ appConfig.id + '/edit'} }]"
+            [routerLink]="['/admin', { outlets: { popup: 'app-config/'+ appConfig.id + '/edit'} }]"
             replaceUrl="true"
             queryParamsHandling="merge"
             class="btn btn-primary">

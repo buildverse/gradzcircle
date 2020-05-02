@@ -30,6 +30,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
     currentCorporate: string;
     imageUrl: any;
     noImage: boolean;
+    userProfile: string;
     defaultImage = require('../../../content/images/placeholder.png');
 
     constructor(
@@ -47,6 +48,7 @@ export class CorporateComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
                 ? this.activatedRoute.snapshot.params['search']
                 : '';
+        this.userProfile = 'corporate';
     }
 
     loadAll() {
@@ -166,11 +168,8 @@ export class CorporateComponent implements OnInit, OnDestroy {
     reloadCorporateImage() {
         this.principal.identity(true).then(user => {
             if (user) {
-                if (user.imageUrl) {
-                    this.userService.getImageData(user.id).subscribe(response => {
-                        const responseJson = response.body;
-                        this.imageUrl = responseJson[0].href + '?t=' + Math.random().toString();
-                    });
+                if (user.imageUrl !== null) {
+                    this.imageUrl = 'https://s3-ap-south-1.amazonaws.com/gradzcircle-assets/' + user.id + '?t=' + Math.random().toString();
                     this.noImage = false;
                 } else {
                     this.noImage = true;

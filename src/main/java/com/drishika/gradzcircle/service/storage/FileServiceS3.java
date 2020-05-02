@@ -5,11 +5,15 @@ import com.drishika.gradzcircle.exception.FileRetrieveException;
 import com.drishika.gradzcircle.exception.FileUploadException;
 import java.util.List;
 import org.springframework.hateoas.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Service
+@Transactional
 public interface FileServiceS3 {
 
-	public List listObjects(String bucketName);
+	public void loadImageUrlCache(String bucketName);
 
 	public void uploadObject(String bucketName, String key, MultipartFile file) throws FileUploadException;
 

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 import { JobService } from '../../entities/job/job.service';
-import { Job } from '../../entities/job/job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { ITEMS_PER_PAGE } from '../../shared';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CANDIDATE_ID, JOB_ID, MATCH_SCORE } from '../../shared/constants/storage.constants';
@@ -32,6 +32,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
     corporateId: number;
     eventSubscriber: Subscription;
     subscription: Subscription;
+    profile = 'shortlisted';
 
     constructor(
         private jobService: JobService,
@@ -143,7 +144,7 @@ export class ShortListedJobsForCandidateComponent implements OnInit, OnDestroy {
         this.queryCount = this.totalItems;
         // this.page = pagingParams.page;
         this.jobs = data;
-        this.setImageUrl();
+        //       this.setImageUrl();
         this.spinnerService.hide();
     }
 

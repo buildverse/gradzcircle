@@ -1,3 +1,4 @@
+import { Job } from '../../shared/job-common/job.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { JobFilter } from './job-filter.model';
 import { JobFilterPopupService } from './job-filter-popup.service';
 import { JobFilterService } from './job-filter.service';
-import { Job, JobService } from '../job';
+import { JobService } from '../job';
 
 @Component({
     selector: 'jhi-job-filter-dialog',

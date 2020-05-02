@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 import { JobConstants } from './job.constants';
-import { Job } from './job.model';
+import { Job } from '../../shared/job-common/job.model';
 import { JobService } from './job.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
@@ -132,7 +132,7 @@ export class JobComponent implements OnInit, OnDestroy {
     }
 
     transition() {
-        this.router.navigate(['/job'], {
+        this.router.navigate(['/corp/job'], {
             queryParams: {
                 page: this.page,
                 size: this.itemsPerPage,
@@ -325,7 +325,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.page = 0;
         this.currentSearch = '';
         this.router.navigate([
-            '/job',
+            '/corp/job',
             {
                 page: this.page,
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
@@ -341,7 +341,7 @@ export class JobComponent implements OnInit, OnDestroy {
         this.page = 0;
         this.currentSearch = query;
         this.router.navigate([
-            '/job',
+            '/corp/job',
             {
                 search: this.currentSearch,
                 page: this.page,

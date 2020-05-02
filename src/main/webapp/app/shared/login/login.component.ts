@@ -82,15 +82,7 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
                 // // previousState was set in the authExpiredInterceptor before being redirected to login modal.
                 // // since login is succesful, go to stored previousState and clear previousState
                 const redirect = this.stateStorageService.getUrl();
-                // console.log("Redirecting to "+ redirect);
-                if (!redirect) {
-                    this.redirectAfterLogin();
-                }
-                if (redirect) {
-                    this.stateStorageService.storeUrl(null);
-                    this.router.navigate([redirect]);
-                }
-
+                this.redirectAfterLogin(redirect);
                 this.activeModal.dismiss('to login success');
             })
             .catch(() => {
@@ -99,15 +91,24 @@ export class JhiLoginModalComponent implements OnInit, AfterViewInit {
             });
     }
 
-    redirectAfterLogin() {
+    redirectAfterLogin(redirect) {
         this.subscriber = this.eventManager.subscribe('userDataLoadedSuccess', response => {
             this.principal.identity().then(value => {
                 if (value.authorities.indexOf('ROLE_CANDIDATE') > -1) {
+                    this.stateStorageService.storeUrl(null);
                     this.router.navigate(['/viewjobs']);
                 } else if (value.authorities.indexOf('ROLE_CORPORATE') > -1) {
-                    this.router.navigate(['/job']);
+                    if (redirect) {
+                        if (redirect.includes('candidate-public-profile')) {
+                            this.router.navigate(['/candidatePreview']);
+                        }
+                    } else {
+                        this.router.navigate(['/corp/job']);
+                    }
+                    this.stateStorageService.storeUrl(null);
                 } else if (value.authorities.indexOf('ROLE_ADMIN') > -1) {
                     this.router.navigate(['']);
+                    this.stateStorageService.storeUrl(null);
                 }
                 this.spinnerService.hide();
             });

@@ -85,7 +85,12 @@ export class CorporateDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/corporate', { outlets: { popup: null } }]);
     }
 
     save() {
@@ -114,13 +119,14 @@ export class CorporateDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'corporateListModification', content: 'OK' });
         this.isSaving = false;
         this.spinnerService.hide();
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 
     private onSaveError() {
         this.spinnerService.hide();
         this.isSaving = false;
-        this.router.navigate(['/error']);
+        this.router.navigate(['/', 'error', { outlets: { popup: null } }]);
     }
 
     private onError(error: any) {
