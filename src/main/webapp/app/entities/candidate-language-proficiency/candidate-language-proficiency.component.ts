@@ -22,6 +22,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     eventSubscriber: Subscription;
     currentSearch: string;
     candidateId: any;
+    imgSrc = '../../content/images/languages.jpg';
 
     constructor(
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,

@@ -375,53 +375,6 @@ overflow-x:visible;
     -webkit-transition-delay: 0.2s;
     transition-delay: 0.2s;
 }
-
-.logo .logo-img-white {
-    height: 45px;
-    display: inline-block;
-    vertical-align: middle;
-    width: 100px;
-    margin-left: 40px;
-}
-
-.logo-img {
-    height: 100%;
-    background: url('../images/logo_blue.png') no-repeat center center;
-    background-size: contain;
-    width: 100%;
-}
-
-.education-img {
-    background-image: url('../images/education.jpg');
-}
-
-.employment-img {
-    background-image: url('../images/employment.jpg');
-}
-
-.certification-img {
-    background-image: url('../images/certification.jpg');
-}
-
-.skill-img {
-    background-image: url('../images/skill.jpg');
-}
-
-.nonAcademic-img {
-    background-image: url('../images/non-academic.jpg');
-}
-
-.languages-img {
-    background-image: url('../images/languages.jpg');
-}
-
-.logo-img-white {
-    height: 100%;
-    background: url('../images/logo-white.png') no-repeat center center;
-    background-size: contain;
-    width: 100%;
-}
-
 .img-jobs {
     background: url('../images/jobs.jpg');
 }
@@ -532,12 +485,14 @@ ng2-dropdown-menu .ng2-dropdown-menu ng2-menu-item {
 }
 
 .modal-header-decorate {
-    background: linear-gradient(120deg, #7f70f5, #0ea0ff);
+    /* background: linear-gradient(120deg, #7f70f5, #0ea0ff);*/
+    background-color: #0e8cff;
     color: white;
 }
 
 .modal-header-decorate-delete {
-    background: linear-gradient(120deg, #7f70f5, #0ea0ff);
+    /* background: linear-gradient(120deg, #7f70f5, #0ea0ff);*/
+    background-color: #0e8cff;
     color: white;
 }
 

@@ -37,6 +37,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
    will chnage dynamically for display susequently
    */
     primaryCandidateEducation: CandidateEducation;
+    imgSrc = '../../content/images/education.jpg';
 
     constructor(
         private candidateEducationService: CandidateEducationService,

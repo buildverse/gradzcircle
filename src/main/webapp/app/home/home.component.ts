@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
     appConfigs: AppConfig[];
+    logoImage = '../../content/images/logo_blue.jpg';
     constructor(
         private principal: Principal,
         private loginModalService: LoginModalService,

@@ -65,6 +65,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     noImage: boolean;
     authorities: string[];
     appConfigs: AppConfig[];
+    logoImage = '../../content/images/logo_white.png';
 
     constructor(
         private loginService: LoginService,
@@ -154,6 +155,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
                             this.localStorageService.setdata(CANDIDATE_ID, response.body.id);
                             this.localStorageService.setdata(USER_DATA, JSON.stringify(response.body));
                             this.localStorageService.setdata(HAS_EDUCATION, JSON.stringify(response.body.hasEducation));
+                            this.localStorageService.setdata(BUSINESS_PLAN_ENABLED, false);
                             this.candidateId = this.localStorageService.getData(CANDIDATE_ID);
                             this.eventManager.broadcast({
                                 name: 'userDataLoadedSuccess',

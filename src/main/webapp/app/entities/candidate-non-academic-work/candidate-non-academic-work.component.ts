@@ -23,7 +23,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
     candidateId: any;
     candidateNonAcademicForDisplay: CandidateNonAcademicWork[];
     primaryCandidateNonAcademic: CandidateNonAcademicWork;
-
+    imgSrc = '../../content/images/non-academic.jpg';
     constructor(
         private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
         private jhiAlertService: JhiAlertService,
