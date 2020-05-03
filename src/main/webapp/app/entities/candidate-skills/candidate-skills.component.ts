@@ -22,7 +22,7 @@ export class CandidateSkillsComponent implements OnInit, OnDestroy {
     eventSubscriber: Subscription;
     currentSearch: string;
     candidateId: any;
-
+    imgSrc = '../../content/images/skill.jpg';
     constructor(
         private candidateSkillsService: CandidateSkillsService,
         private jhiAlertService: JhiAlertService,

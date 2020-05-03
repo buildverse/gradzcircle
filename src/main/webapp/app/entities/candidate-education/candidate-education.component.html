@@ -4,7 +4,7 @@
     <section class="portfolio-block project">
     		<div class="row mr-5 ml-5">
     			<div class="col">
-                    <p jhiTranslate="gradzcircleApp.candidateEducation.detail.title" class="float-left h3 font-weight-bold"></p>
+                    <p jhiTranslate="gradzcircleApp.candidateEducation.detail.title" class="float-left h1 font-weight-bold"></p>
                     <button class="btn btn-outline-primary btn-sm border-primary float-right" type="button" 
     					jhiTranslate="gradzcircleApp.candidateEducation.home.add" 
 						[routerLink]="['/education', { outlets: { popup: 'new-candidate-education' } }]">Button</button></div>
@@ -30,8 +30,10 @@
 		                <div></div>
 		            </div>
 		           
-		            	<div class="image education-img" ></div>
-		            	<div class="row mr-5 ml-5">
+		            <div>
+		            		<img [src]="imgSrc" class="img-fluid"/>
+		            	</div>
+		            	<div class="row mr-5 mt-5">
 						    <div class="col">
 						        <h2>Projects<button class="btn btn-outline-primary btn-sm border-primary float-right" 
 						        jhiTranslate="gradzcircleApp.candidateEducation.home.addProject" 

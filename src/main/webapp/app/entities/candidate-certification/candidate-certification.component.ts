@@ -26,6 +26,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     candidateCertificationForDisplay: CandidateCertification[];
     primaryCandidateCertification: CandidateCertification;
+    imgSrc = '../../content/images/certification.jpg';
 
     constructor(
         private candidateCertificationService: CandidateCertificationService,

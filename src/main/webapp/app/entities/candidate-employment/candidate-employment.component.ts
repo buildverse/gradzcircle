@@ -33,6 +33,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     candidateEmploymentsForDisplay: CandidateEmployment[];
     primaryCandidateEmployment: CandidateEmployment;
     isEmployment: boolean;
+    imgSrc = '../../content/images/employment.jpg';
 
     constructor(
         private candidateEmploymentService: CandidateEmploymentService,

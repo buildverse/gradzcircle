@@ -1,18 +1,18 @@
 <nav class="navbar navbar-expand-md fixed-top navbar-dark nav-bg app-navbar">
     <div *ngIf="corporateId; else candidateOrGuest">
         <a class="navbar-brand logo" [routerLink]="['/job']" (click)="collapseNavbar()">
-            <span class="logo-img-white"></span>
+            <img [src]="logoImage" class="img-fluid"/>
         </a>
     </div>
     <ng-template #candidateOrGuest>
         <div *ngIf="candidateId; else guest">
             <a class="navbar-brand logo" [routerLink]="['/viewjobs']" (click)="collapseNavbar()">
-                <span class="logo-img-white"></span>
+                <img [src]="logoImage" class="img-fluid" />
             </a>
         </div>
         <ng-template #guest>
             <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-                <span class="logo-img-white"></span>
+                <img [src]="logoImage" class="img-fluid"/>
             </a>
         </ng-template>
     </ng-template>

@@ -4,157 +4,164 @@ Navbar
 
 /* navbar */
 .app-navbar {
-	font-weight: 400;
-	-webkit-font-smoothing: antialiased;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
 }
 
 .app-navbar .form-control {
-	box-shadow: none;
+    box-shadow: none;
 }
 
-.app-navbar .navbar-brand img {
-	width: 85px;
+.app-navbar .navbar-brand {
+    width: 150px;
 }
 
 .app-navbar .navbar-collapse {
-	max-height: inherit;
+    max-height: inherit;
 }
 
 .app-navbar .navbar-collapse:after {
-	height: 100vh;
+    height: 100vh;
 }
 
 .app-navbar .form-control {
-	border-color: #1C73A5;
+    border-color: #1c73a5;
 }
 
 .app-navbar .app-notifications {
-	margin-left: 1rem;
-	padding-bottom: 4px !important;
-	padding-top: 4px !important;
+    margin-left: 1rem;
+    padding-bottom: 4px !important;
+    padding-top: 4px !important;
 }
 
 .app-notifications .icon:before {
-	font-size: 20px;
+    font-size: 20px;
 }
 
-@media ( min-width : 768px) {
-	.app-navbar .navbar-collapse:after {
-		height: auto;
-	}
+@media (min-width: 768px) {
+    .app-navbar .navbar-collapse:after {
+        height: auto;
+    }
 }
 
-@media ( max-width : 768px) {
-	.app-search {
-		margin-top: -1px;
-	}
+@media (max-width: 768px) {
+    .app-search {
+        margin-top: -1px;
+    }
 }
 
 .navbar-version {
-	font-size: 10px;
-	color: #ccc
+    font-size: 10px;
+    color: #ccc;
 }
 
 .jh-navbar {
-	background-color: #353d47;
-	padding: .2em 1em;
+    background-color: #353d47;
+    padding: 0.2em 1em;
 }
 
 .nav-bg {
-	 background: linear-gradient(120deg,#7f70f5,#0ea0ff);
-color: #fff;
-	
+    background-color: #0e8cff;
+    color: #fff;
 }
 
 .jh-navbar .profile-image {
-	margin: -10px 0px;
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
+    margin: -10px 0px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
 }
 
-.jh-navbar .dropdown-item.active, .jh-navbar .dropdown-item.active:focus,
-	.jh-navbar .dropdown-item.active:hover {
-	background-color: #353d47;
+.jh-navbar .dropdown-item.active,
+.jh-navbar .dropdown-item.active:focus,
+.jh-navbar .dropdown-item.active:hover {
+    background-color: #353d47;
 }
 
 .jh-navbar .dropdown-toggle::after {
-	margin-left: 0.15em;
+    margin-left: 0.15em;
 }
 
 .jh-navbar ul.navbar-nav {
-	padding: 0.5em;
+    padding: 0.5em;
 }
 
 .jh-navbar .navbar-nav .nav-item {
-	margin-left: 1.5rem;
+    margin-left: 1.5rem;
 }
 
 .jh-navbar a.nav-link {
-	font-weight: 400;
+    font-weight: 400;
 }
 
 .jh-navbar .jh-navbar-toggler {
-	color: #ccc;
-	font-size: 1.5em;
-	padding: 10px;
+    color: #ccc;
+    font-size: 1.5em;
+    padding: 10px;
 }
 
 .jh-navbar .jh-navbar-toggler:hover {
-	color: #fff;
+    color: #fff;
 }
 
 @media screen and (min-width: 768px) {
-	.jh-navbar-toggler {
-		display: none;
-	}
+    .jh-navbar-toggler {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 992px) {
-	.jh-logo-container {
-		width: 100%;
-	}
+    .jh-logo-container {
+        width: 100%;
+    }
 }
 
 .navbar-title {
-	display: inline-block;
-	vertical-align: middle;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .top_header {
-	padding: 5.5px 0px;
-	overflow: hidden;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-	background-color: #3eaae6;
+    padding: 5.5px 0px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #3eaae6;
+}
+
+.nav-bg {
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 /* ==========================================================================
 Logo styles
 ========================================================================== */
 .navbar-brand.logo {
-	padding: 5px 15px;
+    padding: 0px 15px;
+    margin-left: 30px;
+    width: 100px;
 }
 
 .li .ul .dropdown-item .li {
-	border-bottom: 1px solid #e6e6e6;
-	margin: 0;
-	padding: 10px;
-	font-size: 14px;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0;
+    padding: 10px;
+    font-size: 14px;
 }
 
 .dropdown-menu {
-	right: 0;
-	left: auto !important;
-	width: 50px;
-	top: 50px !important;
-	transform: none !important;
-	padding: 0;
-	max-height: 350px;
-	overflow-y: auto;
-	overflow: visible !important;
-	border: 1px solid #e6e6e6;
+    right: 0;
+    left: auto !important;
+    width: 50px;
+    top: 50px !important;
+    transform: none !important;
+    padding: 0;
+    max-height: 350px;
+    overflow-y: auto;
+    overflow: visible !important;
+    border: 1px solid #e6e6e6;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: rgba(255,255,255,1);
+    color: rgba(255, 255, 255, 1);
 }
