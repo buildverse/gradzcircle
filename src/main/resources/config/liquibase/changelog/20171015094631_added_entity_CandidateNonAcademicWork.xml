@@ -66,4 +66,11 @@
         <column name="candidate_id"/>
     </createIndex>
     </changeSet>
+     <changeSet id="20200502151327-1" author="abhinav">
+    		<modifyDataType catalogName="gradzcircle"
+            columnName="role_in_initiative"
+            newDataType="varchar(10000)"
+            schemaName="public"
+            tableName="candidate_non_academic_work"/>
+    </changeSet>
 </databaseChangeLog>
