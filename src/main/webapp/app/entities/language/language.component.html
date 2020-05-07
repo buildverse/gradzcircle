@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.language.home.title">Languages</span>
-        <button class="btn btn-primary float-right jh-create-entity create-language" [routerLink]="['/', { outlets: { popup: ['language-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-language" [routerLink]="['/admin', { outlets: { popup: ['language-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.language.home.createLabel">
             Create new Language
@@ -47,7 +47,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'language/'+ language.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'language/'+ language.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -55,7 +55,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'language/'+ language.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'language/'+ language.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -255,7 +255,7 @@
 		<span jhiTranslate="gradzcircleApp.job.home.title">Jobs</span>
 		<button
 			class="btn btn-primary float-right jh-create-entity create-job"
-			[routerLink]="['/', { outlets: { popup: ['job-new'] } }]">
+			[routerLink]="['/admin', { outlets: { popup: ['job-new'] } }]">
 			<span class="fa fa-plus"></span> <span class="hidden-sm-down"
 				jhiTranslate="gradzcircleApp.job.home.createLabel"> Create
 				new Job </span>
@@ -427,7 +427,7 @@
 					</td>
 					<td>
 						<div *ngIf="job.corporate">
-							<a [routerLink]="['../corporate', job.corporate?.id ]">{{job.corporate?.id}}</a>
+							<a [routerLink]="['../corporateDetails', job.corporate?.id ]">{{job.corporate?.id}}</a>
 						</div>
 					</td>
 					<td class="text-right">
@@ -438,13 +438,13 @@
 									jhiTranslate="entity.action.view">View</span>
 							</button>
 							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
+								[routerLink]="['/admin', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
 								replaceUrl="true" class="btn btn-primary btn-sm">
 								<fa-icon  [icon]="'pencil-alt'"></fa-icon> <span
 									class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
 							</button>
 							<button type="submit"
-								[routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
+								[routerLink]="['/admin', { outlets: { popup: 'job/'+ job.id + '/delete'} }]"
 								replaceUrl="true" class="btn btn-danger btn-sm">
 								<fa-icon  [icon]="'trash-alt'"></fa-icon> <span
 									class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>

@@ -1,7 +1,8 @@
+
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.maritalStatus.home.title">Marital Statuses</span>
-        <button class="btn btn-primary float-right jh-create-entity create-marital-status" [routerLink]="['/', { outlets: { popup: ['marital-status-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-marital-status" [routerLink]="['/admin', { outlets: { popup: ['marital-status-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.maritalStatus.home.createLabel">
             Create new Marital Status
@@ -47,7 +48,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'marital-status/'+ maritalStatus.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'marital-status/'+ maritalStatus.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -55,7 +56,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'marital-status/'+ maritalStatus.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'marital-status/'+ maritalStatus.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

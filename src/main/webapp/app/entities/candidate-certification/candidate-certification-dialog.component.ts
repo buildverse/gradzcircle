@@ -55,12 +55,6 @@ export class CandidateCertificationDialogComponent implements OnInit {
         };
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        /* this.candidateService.query().subscribe(
-      (res: HttpResponse<Candidate[]>) => {
-        this.candidates = res.body;
-      },
-      (res: HttpErrorResponse) => this.onError(res.message)
-    );*/
     }
 
     clear() {

@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.jobCategory.home.title">Job Categories</span>
-        <button class="btn btn-primary float-right jh-create-entity create-job-category" [routerLink]="['/', { outlets: { popup: ['job-category-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-job-category" [routerLink]="['/admin', { outlets: { popup: ['job-category-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.jobCategory.home.createLabel">
             Create new Job Category
@@ -47,7 +47,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'job-category/'+ jobCategory.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'job-category/'+ jobCategory.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -55,7 +55,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'job-category/'+ jobCategory.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'job-category/'+ jobCategory.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

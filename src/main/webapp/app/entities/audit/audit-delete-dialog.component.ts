@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -15,10 +15,19 @@ import { AuditService } from './audit.service';
 export class AuditDeleteDialogComponent {
     audit: Audit;
 
-    constructor(private auditService: AuditService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private auditService: AuditService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 
     confirmDelete(id: number) {
@@ -27,6 +36,7 @@ export class AuditDeleteDialogComponent {
                 name: 'auditListModification',
                 content: 'Deleted an audit'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }

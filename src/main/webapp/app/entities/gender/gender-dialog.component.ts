@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -18,14 +18,24 @@ export class GenderDialogComponent implements OnInit {
     gender: Gender;
     isSaving: boolean;
 
-    constructor(public activeModal: NgbActiveModal, private genderService: GenderService, private eventManager: JhiEventManager) {}
+    constructor(
+        public activeModal: NgbActiveModal,
+        private genderService: GenderService,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 
     save() {
@@ -44,6 +54,7 @@ export class GenderDialogComponent implements OnInit {
     private onSaveSuccess(result: Gender) {
         this.eventManager.broadcast({ name: 'genderListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 

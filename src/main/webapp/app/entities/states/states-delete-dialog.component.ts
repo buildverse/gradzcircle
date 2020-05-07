@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -15,9 +15,15 @@ import { StatesService } from './states.service';
 export class StatesDeleteDialogComponent {
     states: States;
 
-    constructor(private statesService: StatesService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private statesService: StatesService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -27,8 +33,12 @@ export class StatesDeleteDialogComponent {
                 name: 'statesListModification',
                 content: 'Deleted an states'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
+    }
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 }
 

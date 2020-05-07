@@ -115,19 +115,19 @@
         <dt><span jhiTranslate="gradzcircleApp.job.jobType">Job Type</span></dt>
         <dd>
             <div *ngIf="job.jobType">
-                <a [routerLink]="['/job-type', job.jobType?.id]">{{job.jobType?.id}}</a>
+                <a [routerLink]="['../../job-type', job.jobType?.id]">{{job.jobType?.id}}</a>
             </div>
         </dd>
         <dt><span jhiTranslate="gradzcircleApp.job.employmentType">Employment Type</span></dt>
         <dd>
             <div *ngIf="job.employmentType">
-                <a [routerLink]="['/employment-type', job.employmentType?.id]">{{job.employmentType?.id}}</a>
+                <a [routerLink]="['../../employment-type', job.employmentType?.id]">{{job.employmentType?.id}}</a>
             </div>
         </dd>
         <dt><span jhiTranslate="gradzcircleApp.job.corporate">Corporate</span></dt>
         <dd>
             <div *ngIf="job.corporate">
-                <a [routerLink]="['/corporate', job.corporate?.id]">{{job.corporate?.id}}</a>
+                <a [routerLink]="['../../corporateDetails', job.corporate?.id]">{{job.corporate?.id}}</a>
             </div>
         </dd>
     </dl>
@@ -138,11 +138,11 @@
         <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
     </button>
 
-    <button type="button"
+   <!--   <button type="button"
             [routerLink]="['/', { outlets: { popup: 'job/'+ job.id + '/edit'} }]"
             replaceUrl="true"
             queryParamsHandling="merge"
             class="btn btn-primary">
         <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+    </button>-->
 </div>

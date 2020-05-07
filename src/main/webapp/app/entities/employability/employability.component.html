@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.employability.home.title">Employabilities</span>
-        <button class="btn btn-primary float-right jh-create-entity create-employability" [routerLink]="['/', { outlets: { popup: ['employability-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-employability" [routerLink]="['/admin', { outlets: { popup: ['employability-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.employability.home.createLabel">
             Create new Employability
@@ -51,7 +51,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'employability/'+ employability.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'employability/'+ employability.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -59,7 +59,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'employability/'+ employability.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'employability/'+ employability.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

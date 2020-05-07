@@ -5,6 +5,7 @@ Navbar
 /* navbar */
 .app-navbar {
     font-weight: 400;
+    font-size: 18px;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -129,8 +130,6 @@ Navbar
 }
 
 .nav-bg {
-    padding-top: 0px;
-    padding-bottom: 0px;
 }
 
 /* ==========================================================================
@@ -164,4 +163,12 @@ Logo styles
 
 .navbar-dark .navbar-nav .nav-link {
     color: rgba(255, 255, 255, 1);
+}
+.multi-column-dropdown {
+    list-style: none;
+    padding: 0px;
+}
+
+.dropdown-menu.columns-multiple {
+    min-width: 600px;
 }

@@ -79,7 +79,7 @@ public class CountryService {
 	
 	public Country updateCountry(Country country) {
 		Country result = countryRepository.save(country);
-		if(result.isEnabled()) {
+		if(result.isEnabled() != null && result.isEnabled()) {
 			enabledCountryCache.removeFromCache(ApplicationConstants.ENABLED_COUNTRIES);
 		}
 		elasticSearchTemplate.index(new CountryEntityBuilder(result.getId()).name(result.getCountryNiceName())

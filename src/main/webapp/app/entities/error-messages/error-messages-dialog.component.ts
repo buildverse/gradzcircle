@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -21,14 +21,20 @@ export class ErrorMessagesDialogComponent implements OnInit {
     constructor(
         public activeModal: NgbActiveModal,
         private errorMessagesService: ErrorMessagesService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router
     ) {}
 
     ngOnInit() {
         this.isSaving = false;
     }
 
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
+    }
+
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -51,6 +57,7 @@ export class ErrorMessagesDialogComponent implements OnInit {
     private onSaveSuccess(result: ErrorMessages) {
         this.eventManager.broadcast({ name: 'errorMessagesListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 

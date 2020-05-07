@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.errorMessages.home.title">Error Messages</span>
-        <button class="btn btn-primary float-right jh-create-entity create-error-messages" [routerLink]="['/', { outlets: { popup: ['error-messages-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-error-messages" [routerLink]="['/admin', { outlets: { popup: ['error-messages-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.errorMessages.home.createLabel">
             Create new Error Messages
@@ -51,7 +51,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -59,7 +59,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'error-messages/'+ errorMessages.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
