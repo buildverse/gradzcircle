@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.jobType.home.title">Job Types</span>
-        <button class="btn btn-primary float-right jh-create-entity create-job-type" [routerLink]="['/', { outlets: { popup: ['job-type-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-job-type" [routerLink]="['/admin', { outlets: { popup: ['job-type-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.jobType.home.createLabel">
             Create new Job Type
@@ -49,7 +49,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'job-type/'+ jobType.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'job-type/'+ jobType.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -57,7 +57,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'job-type/'+ jobType.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'job-type/'+ jobType.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

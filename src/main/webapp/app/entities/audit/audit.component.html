@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.audit.home.title">Audits</span>
-        <button class="btn btn-primary float-right jh-create-entity create-audit" [routerLink]="['/', { outlets: { popup: ['audit-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-audit" [routerLink]="['/admin', { outlets: { popup: ['audit-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.audit.home.createLabel">
             Create new Audit
@@ -53,7 +53,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'audit/'+ audit.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'audit/'+ audit.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -61,7 +61,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'audit/'+ audit.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'audit/'+ audit.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

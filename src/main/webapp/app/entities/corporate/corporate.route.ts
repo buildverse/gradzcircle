@@ -36,7 +36,7 @@ export const corporateRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'corporateDetails',
+        path: 'corporateDetails/:id',
         component: CorporateDetailComponent,
         data: {
             authorities: ['ROLE_USER', 'ROLE_CORPORATE'],

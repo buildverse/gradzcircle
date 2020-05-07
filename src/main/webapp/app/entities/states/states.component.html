@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="gradzcircleApp.states.home.title">States</span>
-        <button class="btn btn-primary float-right jh-create-entity create-states" [routerLink]="['/', { outlets: { popup: ['states-new'] } }]">
+        <button class="btn btn-primary float-right jh-create-entity create-states" [routerLink]="['/admin', { outlets: { popup: ['states-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="gradzcircleApp.states.home.createLabel">
             Create new States
@@ -47,7 +47,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'states/'+ states.id + '/edit'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'states/'+ states.id + '/edit'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-primary btn-sm">
@@ -55,7 +55,7 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'states/'+ states.id + '/delete'} }]"
+                                [routerLink]="['/admin', { outlets: { popup: 'states/'+ states.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

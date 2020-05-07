@@ -30,8 +30,9 @@
                         </span>
                     </span>
                 </a>
-                 <ul class="dropdown-menu" ngbDropdownMenu>
-                    <li>
+                 <ul class="dropdown-menu columns-multiple" ngbDropdownMenu>
+                 	<!--  REMOVE LINKS AS ADMIN MUST NOT CHNAGE ANYTHING RELATED TO CANDIDATE -->
+                   <!--   <li>
                         <a class="dropdown-item" routerLink="admin/candidate" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                         		<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
                         		<span jhiTranslate="global.menu.entities.candidate">Candidate</span>
@@ -61,256 +62,10 @@
 	                        	<span jhiTranslate="global.menu.entities.candidateNonAcademicWork">Candidate Non Academic Work</span>
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/candidate-project" (click)="collapseNavbar()"> 
-                        		<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        <span jhiTranslate="global.menu.entities.candidateProject">Candidate Project</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/visa-type" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.visaType">Visa Type</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="qualification" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.qualification">Qualification</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/course" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.course">Course</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/country" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.country">Country</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="industry" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.industry">Industry</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/skills" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.skills">Skills</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-type" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.jobType">Job Type</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/college" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.college">College</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/university" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.university">University</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-category" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.jobCategory">Job Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/language" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.language">Language</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/audit" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.audit">Audit</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/employability" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.employability">Employability</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/corporate" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.corporate">Corporate</span>
-                        </a>
-                    </li>
-                    <li>
+                     <li>
                         <a class="dropdown-item" routerLink="admin/candidate-language-proficiency" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
+	                        
 	                        	<span jhiTranslate="global.menu.entities.candidateLanguageProficiency">Candidate Language Proficiency</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/error-messages" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.errorMessages">Error Messages</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/address" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.address">Address</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/marital-status" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.maritalStatus">Marital Status</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/gender" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.gender">Gender</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/nationality" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.nationality">Nationality</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/capture-course"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.captureCourse">Capture Course</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/capture-university"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.captureUniversity">Capture University</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/capture-college" (click)="collapseNavbar()"> 
-                        		<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        <span jhiTranslate="global.menu.entities.captureCollege">Capture College</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/capture-qualification" (click)="collapseNavbar()"> 
-	                        <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-    	                    		<span jhiTranslate="global.menu.entities.captureQualification">Capture Qualification</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/employment-type" (click)="collapseNavbar()"> 
-	                        <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-    	                    		<span jhiTranslate="global.menu.entities.employmentType">Employment Type</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-type" (click)="collapseNavbar()"> 
-	                        <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-    	                    		<span jhiTranslate="global.menu.entities.jobType">Job Type</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/corporate"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.corporate">Corporate</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.job">Job</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="filter" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.filter">Filter</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-filter" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.jobFilter">Job Filter</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-history" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.jobHistory">Job History</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/job-filter-history" (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.jobFilterHistory">Job Filter History</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/app-config"  (click)="collapseNavbar()"> 
-                       		 <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-                        		<span jhiTranslate="global.menu.entities.appConfig">App Config</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/candidate"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.candidate">Candidate</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/college"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.college">College</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/university"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.university">University</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/qualification"  (click)="collapseNavbar()"> 
-	                        	<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
-	                        	<span jhiTranslate="global.menu.entities.qualification">Qualification</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/states"  (click)="collapseNavbar()">
-                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon> 
-                            <span jhiTranslate="global.menu.entities.states">States</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/profile-category"  (click)="collapseNavbar()">
-                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon> 
-                            <span jhiTranslate="global.menu.entities.profileCategory">Profile Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/candidate"  (click)="collapseNavbar()">
-                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon> 
-                            <span jhiTranslate="global.menu.entities.candidate">Candidate</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="admin/skills"  (click)="collapseNavbar()">
-                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon> 
-                            <span jhiTranslate="global.menu.entities.skills">Skills</span>
                         </a>
                     </li>
                     <li>
@@ -319,6 +74,197 @@
                             <span jhiTranslate="global.menu.entities.candidateSkills">Candidate Skills</span>
                         </a>
                     </li>
+                     <li>
+			                        <a class="dropdown-item" routerLink="admin/address" (click)="collapseNavbar()"> 	                        
+				                        	<span jhiTranslate="global.menu.entities.address">Address</span>
+			                        </a>
+			                    </li>
+                     <li>
+			                        <a class="dropdown-item" routerLink="corporate" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.corporate">Corporate</span>
+			                        </a>
+			                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/candidate-project" (click)="collapseNavbar()"> 
+                        		<fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>  
+	                        <span jhiTranslate="global.menu.entities.candidateProject">Candidate Project</span>
+                        </a>
+                    </li>-->
+                    <div class="row">
+			            <div class="col-md-3">
+	                    		<ul class="multi-column-dropdown">
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/visa-type" (click)="collapseNavbar()"> 
+				                        	<span jhiTranslate="global.menu.entities.visaType">Visa Type</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/qualification" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.qualification">Qualification</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/course" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.course">Course</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/country" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.country">Country</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/industry" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.industry">Industry</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/skills" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.skills">Skills</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-type" (click)="collapseNavbar()"> 				                       
+				                        	<span jhiTranslate="global.menu.entities.jobType">Job Type</span>
+			                        </a>
+			                    </li>
+			                     <li>
+			                        <a class="dropdown-item" routerLink="admin/college" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.college">College</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/university" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.university">University</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-category" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.jobCategory">Job Category</span>
+			                        </a>
+			                    </li>
+			                  </ul>
+	                    </div>
+		                <div class="col-md-3">
+		                		<ul class="multi-column-dropdown">  
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/language" (click)="collapseNavbar()"> 
+				                        	<span jhiTranslate="global.menu.entities.language">Language</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/audit" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.audit">Audit</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/employability" (click)="collapseNavbar()"> 
+				                        	<span jhiTranslate="global.menu.entities.employability">Employability</span>
+			                        </a>
+			                    </li>
+			                   
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/error-messages" (click)="collapseNavbar()"> 				                        
+				                        	<span jhiTranslate="global.menu.entities.errorMessages">Error Messages</span>
+			                        </a>
+			                    </li>
+			                     <li>
+			                        <a class="dropdown-item" routerLink="admin/app-config"  (click)="collapseNavbar()"> 
+			                        		<span jhiTranslate="global.menu.entities.appConfig">App Config</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/states"  (click)="collapseNavbar()">
+			                            <span jhiTranslate="global.menu.entities.states">States</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/marital-status" (click)="collapseNavbar()"> 	                        
+				                        	<span jhiTranslate="global.menu.entities.maritalStatus">Marital Status</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/gender" (click)="collapseNavbar()"> 	                        
+				                        	<span jhiTranslate="global.menu.entities.gender">Gender</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/nationality" (click)="collapseNavbar()"> 
+				                        	<span jhiTranslate="global.menu.entities.nationality">Nationality</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/capture-course"  (click)="collapseNavbar()"> 	                        
+				                        	<span jhiTranslate="global.menu.entities.captureCourse">Capture Course</span>
+			                        </a>
+			                    </li>
+			                 </ul>
+			            </div>
+			             <div class="col-md-3">     
+	                   		<ul class="multi-column-dropdown">
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/capture-university"  (click)="collapseNavbar()"> 	                        
+				                        	<span jhiTranslate="global.menu.entities.captureUniversity">Capture University</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/capture-college" (click)="collapseNavbar()"> 
+				                        <span jhiTranslate="global.menu.entities.captureCollege">Capture College</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/capture-qualification" (click)="collapseNavbar()"> 
+			    	                    		<span jhiTranslate="global.menu.entities.captureQualification">Capture Qualification</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/employment-type" (click)="collapseNavbar()"> 
+			    	                    		<span jhiTranslate="global.menu.entities.employmentType">Employment Type</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-type" (click)="collapseNavbar()">  
+			    	                    		<span jhiTranslate="global.menu.entities.jobType">Job Type</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job"  (click)="collapseNavbar()">     
+				                        	<span jhiTranslate="global.menu.entities.job">Job</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/filter" (click)="collapseNavbar()">             
+				                        	<span jhiTranslate="global.menu.entities.filter">Filter</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-filter" (click)="collapseNavbar()">     
+				                        	<span jhiTranslate="global.menu.entities.jobFilter">Job Filter</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-history" (click)="collapseNavbar()">  
+				                        	<span jhiTranslate="global.menu.entities.jobHistory">Job History</span>
+			                        </a>
+			                    </li>
+			                    <li>
+			                        <a class="dropdown-item" routerLink="admin/job-filter-history" (click)="collapseNavbar()">    
+				                        	<span jhiTranslate="global.menu.entities.jobFilterHistory">Job Filter History</span>
+			                        </a>
+			                    </li>
+		                 </ul>
+		               </div>
+		               <div class="col-md-3">
+		               	<ul class="multi-column-dropdown">
+		                   
+		                    <li>
+		                        <a class="dropdown-item" routerLink="admin/profile-category"  (click)="collapseNavbar()">
+		                            <span jhiTranslate="global.menu.entities.profileCategory">Profile Category</span>
+		                        </a>
+		                    </li>
+		                  </ul>
+		                </div>
+		             </div>
 				 </ul>
                  	
             </li>

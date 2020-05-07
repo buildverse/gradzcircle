@@ -23,7 +23,7 @@
         <dt><span jhiTranslate="gradzcircleApp.college.university">University</span></dt>
         <dd>
             <div *ngIf="college.university">
-                <a [routerLink]="['/university', college.university?.id]">{{college.university?.id}}</a>
+                <a [routerLink]="['../../university', college.university?.id]">{{college.university?.id}}</a>
             </div>
         </dd>
     </dl>
@@ -34,11 +34,11 @@
         <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
     </button>
 
-    <button type="button"
+    <!--  <button type="button"
             [routerLink]="['/', { outlets: { popup: 'college/'+ college.id + '/edit'} }]"
             replaceUrl="true"
             queryParamsHandling="merge"
             class="btn btn-primary">
         <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+    </button>-->
 </div>

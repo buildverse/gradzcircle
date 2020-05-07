@@ -2,7 +2,7 @@ import { User } from '../../core/user/user.model';
 import { UserService } from '../../core/user/user.service';
 import { Job } from '../../shared/job-common/job.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -61,7 +61,8 @@ export class CandidateDialogComponent implements OnInit {
         private profileCategoryService: ProfileCategoryService,
         private corporateService: CorporateService,
         private visaTypeService: VisaTypeService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -123,7 +124,12 @@ export class CandidateDialogComponent implements OnInit {
     }
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 
     save() {
@@ -142,6 +148,7 @@ export class CandidateDialogComponent implements OnInit {
     private onSaveSuccess(result: Candidate) {
         this.eventManager.broadcast({ name: 'candidateListModification', content: 'OK' });
         this.isSaving = false;
+        this.clearRoute();
         this.activeModal.dismiss(result);
     }
 

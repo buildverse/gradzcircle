@@ -33,8 +33,8 @@ export class AppConfigDeleteDialogComponent {
                 name: 'appConfigListModification',
                 content: 'Deleted an appConfig'
             });
-            this.activeModal.dismiss(true);
             this.clearRoute();
+            this.activeModal.dismiss(true);
         });
     }
 

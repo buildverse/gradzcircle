@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -15,9 +15,15 @@ import { CandidateService } from './candidate.service';
 export class CandidateDeleteDialogComponent {
     candidate: Candidate;
 
-    constructor(private candidateService: CandidateService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private candidateService: CandidateService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
     }
 
@@ -27,8 +33,13 @@ export class CandidateDeleteDialogComponent {
                 name: 'candidateListModification',
                 content: 'Deleted an candidate'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
+    }
+
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 }
 

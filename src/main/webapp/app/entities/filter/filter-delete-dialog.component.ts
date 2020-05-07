@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
@@ -15,10 +15,20 @@ import { FilterService } from './filter.service';
 export class FilterDeleteDialogComponent {
     filter: Filter;
 
-    constructor(private filterService: FilterService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(
+        private filterService: FilterService,
+        public activeModal: NgbActiveModal,
+        private eventManager: JhiEventManager,
+        private router: Router
+    ) {}
 
     clear() {
+        this.clearRoute();
         this.activeModal.dismiss('cancel');
+    }
+
+    clearRoute() {
+        this.router.navigate(['/admin', { outlets: { popup: null } }]);
     }
 
     confirmDelete(id: number) {
@@ -27,6 +37,7 @@ export class FilterDeleteDialogComponent {
                 name: 'filterListModification',
                 content: 'Deleted an filter'
             });
+            this.clearRoute();
             this.activeModal.dismiss(true);
         });
     }
