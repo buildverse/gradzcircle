@@ -184,6 +184,10 @@ public class CandidateSkillsServiceIntTest {
 	    	return new Skills().skill("YoYo");
 	    }
 	    
+	    public static Skills createYoYoMeriJaanSkill(EntityManager em) {
+	    	return new Skills().skill("YoYo Meri Jaan");
+	    }
+	    
 	    
 		public static Gender createMaleGender(EntityManager em) {
 			return new Gender().gender(MALE);
@@ -605,6 +609,25 @@ public class CandidateSkillsServiceIntTest {
 	    		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_SKILL_PROFILE)).findFirst().get().getScore()).isEqualTo(20d);
 	    }
 	    
-	    
+	    @Test
+	    @Transactional
+	    public void whenTryToReCreateASkillUsingOtherThatIsAlreadyPresentInSkillDBSystemMustNotBreak() throws Exception {
+	    		Candidate candidate = new Candidate().firstName("Abhinav");
+	    		candidateRepository.saveAndFlush(candidate);
+	    		List<Skills> cSkills = new ArrayList<>();
+	    		cSkills.add(otherSkill);
+	    		candidateSkills.candidate(candidate);
+	    		candidateSkills.setSkillsList(cSkills);
+	    		candidateSkillsService.createCandidateSkills(candidateSkills.capturedSkills("YoYo meri Jaan,YoYo meri Jaan"));
+	    		List<CandidateSkills> candidateSkillList = candidateSkillsRepository
+	    				.findAll();
+	    		List<Skills> testSkills = skillsRepository.findAll();
+	    		assertThat(candidateSkillList).hasSize(1);
+	    		assertThat(testSkills).hasSize(6);
+	    		assertThat(testSkills).extracting("skill").contains("Yoyo Meri Jaan");
+	    		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
+	    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo Meri Jaan");
+	    		assertThat(testCandidate).isEqualTo(candidate);
+	    }
 
 }
