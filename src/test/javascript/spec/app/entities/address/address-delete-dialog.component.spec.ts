@@ -56,6 +56,23 @@ describe('Component Tests', () => {
                     })
                 )
             );
+            it(
+                'Should call clear when moal dismissed by user ',
+                inject(
+                    [],
+                    fakeAsync(() => {
+                        // GIVEN
+                        spyOn(service, 'delete').and.returnValue(Observable.of({}));
+
+                        // WHEN
+                        comp.clear();
+                        tick();
+
+                        // THEN
+                        expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
+                    })
+                )
+            );
         });
     });
 });

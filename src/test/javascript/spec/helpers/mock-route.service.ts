@@ -19,6 +19,13 @@ export class MockActivatedRoute extends ActivatedRoute {
     }
 }
 
+export class MockActivatedRouteWithRouteParamsOnly extends ActivatedRoute {
+    constructor(parameters?: any) {
+        super();
+        this.params = of(parameters);
+    }
+}
+
 export class MockRouter extends SpyObject {
     navigateSpy: Spy;
 

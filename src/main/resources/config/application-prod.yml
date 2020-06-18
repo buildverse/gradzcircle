@@ -55,7 +55,7 @@ spring:
         host: smtp.gmail.com
         port: 587
         username: hola@gradzcircle.com
-        password: $aqswDE@
+        password: $qawsED1RF709@
         protocol: smtp
         tls: true
         from: Gradzcircle Team
