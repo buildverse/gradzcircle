@@ -184,7 +184,7 @@ public class JobService {
 			prevJob = prevJobOptional.get();
 		else 
 			return null;
-		if (!job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()) && prevJob.getEverActive())
+		if (job.getNoOfApplicants()!=null && !job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()) && prevJob.getEverActive())
 			throw new JobEditException("Cannot Change number of candidates once Jobs is active");
 		log.info("Previous job object is {}",prevJob);
 		if (! (job.getJobDescription().equals(prevJob.getJobDescription())
@@ -206,8 +206,9 @@ public class JobService {
 		//FIXME make cache refresh aysnc post update
 		if(!job.getJobStatus().equals(prevJobStatus))
 			jobCountCacheManager.removeFromCache(ApplicationConstants.COUNT_OF_ACTIVE_JOBS);
-		if(!(job.getEmploymentType().equals(prevJob.getEmploymentType())) || ! (job.getJobType().equals(prevJob.getJobType())) || !job.getJobStatus().equals(prevJobStatus))
-			jobStatsCacheManager.clearCache();
+		if(job.getEmploymentType() !=null && job.getJobType()!=null)
+			if(!(job.getEmploymentType().equals(prevJob.getEmploymentType())) || ! (job.getJobType().equals(prevJob.getJobType())) || !job.getJobStatus().equals(prevJobStatus))
+				jobStatsCacheManager.clearCache();
 		
 		
 		log.info("Job updated {} ,{}", job, job.getJobFilters());
@@ -261,21 +262,27 @@ public class JobService {
 	private Boolean jobFiltersSame(Job job, Job prevJob) {
 		log.info(" Current filter is {}", job.getJobFilters());
 		log.info(" Prev filter is {}", prevJob.getJobFilters());
-		if(!job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()))
+		Iterator<JobFilter> jobFilterIterator = null;
+		Iterator<JobFilter> prevJobFilterIterator = null;
+		if(job.getNoOfApplicants() != null && !job.getNoOfApplicants().equals(prevJob.getNoOfApplicants()))
 			return false;
 		Boolean filtersSame = false;
 		Set<JobFilter> jobFilters = job.getJobFilters();
 		Set<JobFilter> prevJobFilters = prevJob.getJobFilters();
-		Iterator<JobFilter> jobFilterIterator = jobFilters.iterator();
-		Iterator<JobFilter> prevJobFilterIterator = prevJobFilters.iterator();
-		while(jobFilterIterator.hasNext()) {
-			JobFilter filter = jobFilterIterator.next();
-			while(prevJobFilterIterator.hasNext()) {
-				if(filter!=null && filter.getFilterDescription() != null &&
-						filter.getFilterDescription().equals(prevJobFilterIterator.next().getFilterDescription()))
-					filtersSame = true;
+		if(jobFilters != null)
+			jobFilterIterator = jobFilters.iterator();
+		if(prevJobFilters != null)
+			prevJobFilterIterator = prevJobFilters.iterator();
+		if(jobFilterIterator != null)
+			while(jobFilterIterator.hasNext()) {
+				JobFilter filter = jobFilterIterator.next();
+				if(prevJobFilterIterator!=null)
+					while(prevJobFilterIterator.hasNext()) {
+						if(filter!=null && filter.getFilterDescription() != null &&
+								filter.getFilterDescription().equals(prevJobFilterIterator.next().getFilterDescription()))
+							filtersSame = true;
+					}
 			}
-		}
 		return filtersSame;
 	}
 
