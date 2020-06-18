@@ -1218,40 +1218,6 @@ public class CandidateResourceIntTest {
 	@Transactional
 	public void getCandidatePublicProfileWhenShortlistedForJobsMustShowIndicatorShorListedOrNot() throws Exception {
 		candidateRepository.saveAndFlush(candidate.login(user));
-	/*	University university = new University().universityName("Delhi").value("Delhi").display("Delhi");
-		College college = new College().collegeName("Miranda").display("Miranda").value("Miranda")
-				.university(university);
-		Course course = new Course().course("Computer").value("Computer").display("Computer");
-		Qualification qualification = new Qualification().value("Master").qualification("Master").display("Master");
-		CandidateEducation candidateEducation = new CandidateEducation ();
-		candidateEducation = candidateEducation.college(college).course(course).qualification(qualification)
-				.candidate(candidate);
-		CandidateProject project = new CandidateProject();
-		project.contributionInProject("Hello");
-		project.education(candidateEducation);
-		CandidateEmployment candidateEmployment = new CandidateEmployment();
-		candidateEmployment.employerName("AAAA").candidate(candidate);
-		project.employment(candidateEmployment);
-		Country country = new Country();
-		country.countryName("Hello");
-		Address address = new Address();
-		address.addressLineOne("Hello");
-		address.candidate(candidate);
-		address.country(country);
-		Nationality nationality = new Nationality();
-		nationality.nationality("Hello");
-		candidate.nationality(nationality);
-		Set<CandidateEducation> educations = new HashSet<>();
-		educations.add(candidateEducation);
-		candidate.educations(educations);
-		Set<CandidateEmployment> employments = new HashSet<>();
-		employments.add(candidateEmployment);
-		candidate.employments(employments);
-		CandidateCertification cert = new CandidateCertification();
-		cert.certificationTitle("Hello");
-		Set<CandidateCertification> candidateCertifications = new HashSet<>();
-		candidateCertifications.add(cert);
-		candidate.certifications(candidateCertifications);*/
 		corporate.addJob(jobA).addJob(jobB).addJob(jobC).addJob(jobF).addJob(jobG);
 		CorporateCandidate cc1 = new CorporateCandidate(corporate,candidate,jobA.getId());
 		CorporateCandidate cc2 = new CorporateCandidate(corporate,candidate,jobB.getId());

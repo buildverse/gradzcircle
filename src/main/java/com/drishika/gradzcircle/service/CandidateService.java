@@ -559,71 +559,7 @@ public class CandidateService {
 		job.setNoOfApplicantLeft(new Long(job.getNoOfApplicants()-(job.getNoOfApplicantsBought()!=null?job.getNoOfApplicantsBought():0)));
 		return candidateRepository.save(candidateFromRepo);
 	}
-/*
-	@Deprecated
-	public Candidate retrieveCandidatePublicProfile(String query) {
-		logger.debug("REST request to get Candidate public profile for query {}", query);
-		Candidate candidate = candidateSearchRepository.findOne(Long.parseLong(query));
-		if (candidate == null)
-			return candidate;
-		Set<Address> addresses = addressRepository.findAddressByCandidate(candidate);
-		Set<CandidateEducation> candidateEducations = StreamSupport
-				.stream(candidateEducationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toSet());
-		Set<CandidateEmployment> candidateEmployments = StreamSupport
-				.stream(candidateEmploymentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toSet());
 
-		if (candidateEducations != null & candidateEducations.size() > 0) {
-			candidateEducations.forEach(candidateEducation -> {
-				Set<CandidateProject> candidateEducationProjects = StreamSupport
-						.stream(candidateProjectSearchRepository
-								.search(queryStringQuery(candidateEducation.getId().toString())).spliterator(), false)
-						.collect(Collectors.toSet());
-				candidateEducation.setProjects(candidateEducationProjects);
-			});
-		}
-		if (candidateEmployments != null & candidateEmployments.size() > 0) {
-			candidateEmployments.forEach(candidateEmployment -> {
-				Set<CandidateProject> candidateEmploymentProjects = StreamSupport
-						.stream(candidateProjectSearchRepository
-								.search(queryStringQuery(candidateEmployment.getId().toString())).spliterator(), false)
-						.collect(Collectors.toSet());
-				candidateEmployment.setProjects(candidateEmploymentProjects);
-			});
-		}
-
-		Set<CandidateCertification> candidateCertifications = StreamSupport
-				.stream(candidateCertificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toSet());
-		Set<CandidateNonAcademicWork> candidateNonAcademicWorks = StreamSupport
-				.stream(candidateNonAcademicWorkSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toSet());
-		Set<CandidateLanguageProficiency> candidateLanguageProficiencies = StreamSupport
-				.stream(candidateLanguageProficiencySearchRepository.search(queryStringQuery(query)).spliterator(),
-						false)
-				.collect(Collectors.toSet());
-		// log.debug("Education, employments, Projects, certs and extra are
-		// {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
-		trimCandidateAddressData(addresses);
-		trimCandidateEducationData(candidateEducations);
-		trimCandidateEmploymentData(candidateEmployments);
-		trimCandidateCertifications(candidateCertifications);
-		trimCandidateLanguageProficienies(candidateLanguageProficiencies);
-		trimCandidateNonAcademics(candidateNonAcademicWorks);
-		candidate.setAddresses(addresses);
-		candidate.setEducations(candidateEducations);
-		candidate.setEmployments(candidateEmployments);
-		candidate.setCertifications(candidateCertifications);
-		candidate.setNonAcademics(candidateNonAcademicWorks);
-		candidate.setCandidateLanguageProficiencies(candidateLanguageProficiencies);
-		// log.debug("Education, employments, Projects, certs and extra are
-		// {},{},{},{},{}",candidateEducations,candidateEmployments,candidateCertifications,candidateNonAcademicWorks);
-		// log.debug("Candidate details are {}",candidate);
-		return candidate;
-
-	}
-*/
 	public void updateCountryAndNationalityDataForDisplay(Candidate candidate) {
 		if (candidate == null)
 			return;

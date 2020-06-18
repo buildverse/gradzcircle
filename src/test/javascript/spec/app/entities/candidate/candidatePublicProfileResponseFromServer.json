@@ -1,0 +1,241 @@
+{
+	"candidateDetails": {
+		"id": 1202,
+		"firstName": "abhinav",
+		"lastName": "Prakash",
+		"middleName": "g",
+		"facebook": null,
+		"linkedIn": null,
+		"twitter": null,
+		"aboutMe": "Yo Yo honey Singhaak\nTeri Maaa Ka chutxcxc",
+		"dateOfBirth": null,
+		"phoneCode": "+91",
+		"phoneNumber": "5555555555",
+		"differentlyAbled": true,
+		"availableForHiring": null,
+		"openToRelocate": null,
+		"nationality": null,
+		"login": {
+			"id": 1154,
+			"login": "abhinav@abhinav.com",
+			"firstName": null,
+			"lastName": null,
+			"email": "abhinav@abhinav.com",
+			"activated": true,
+			"langKey": "en",
+			"imageUrl": "bdae6ef4cc65aaad0d59f5f6d10ead9e",
+			"resetDate": "2020-02-01T13:21:23.831Z"
+		},
+		"jobCategories": [],
+		"addresses": [],
+		"gender": null,
+		"maritalStatus": null,
+		"profileScore": null,
+		"hasEducation": null,
+		"hasCertification": null,
+		"hasEmployment": null,
+		"hasNonAcademic": null,
+		"hasLanguages": null,
+		"hasSkills": null,
+		"imageUrl": "https://s3-ap-south-1.amazonaws.com/gradzcircle-assets/1154"
+	},
+	"isShortListed": false,
+	"matchScore": null,
+	"reviewed": null,
+	"educations": [
+		{
+			"grade": null,
+			"educationFromDate": "2020-05-07",
+			"educationToDate": null,
+			"isPursuingEducation": true,
+			"gradeScale": null,
+			"highestQualification": true,
+			"roundOfGrade": null,
+			"gradeDecimal": null,
+			"percentage": 67,
+			"scoreType": "percent",
+			"educationDuration": null,
+			"collegeName": null,
+			"universityName": null,
+			"score": null,
+			"id": 41351,
+			"college": {
+				"id": null,
+				"collegeName": "test",
+				"value": null,
+				"display": null,
+				"university": {
+					"id": null,
+					"universityName": "Mental University",
+					"country": null,
+					"value": null,
+					"display": null
+				}
+			},
+			"university": null,
+			"course": {
+				"id": null,
+				"course": "test",
+				"value": null,
+				"display": null
+			},
+			"qualification": {
+				"id": null,
+				"qualification": "Test",
+				"value": null,
+				"display": null
+			},
+			"projects": [],
+			"candidate": null
+		},
+		{
+			"grade": null,
+			"educationFromDate": "2020-05-01",
+			"educationToDate": null,
+			"isPursuingEducation": true,
+			"gradeScale": null,
+			"highestQualification": false,
+			"roundOfGrade": null,
+			"gradeDecimal": null,
+			"percentage": 89,
+			"scoreType": "percent",
+			"educationDuration": null,
+			"collegeName": null,
+			"universityName": null,
+			"score": null,
+			"id": 40001,
+			"college": {
+				"id": null,
+				"collegeName": "MGM",
+				"value": null,
+				"display": null,
+				"university": {
+					"id": null,
+					"universityName": "Mumbai University",
+					"country": null,
+					"value": null,
+					"display": null
+				}
+			},
+			"university": null,
+			"course": {
+				"id": null,
+				"course": "Commerce",
+				"value": null,
+				"display": null
+			},
+			"qualification": {
+				"id": null,
+				"qualification": "M.Arch",
+				"value": null,
+				"display": null
+			},
+			"projects": [
+				{
+					"projectTitle": "Undersatnd Mobile IP",
+					"id": 40201,
+					"projectStartDate": "2020-05-01",
+					"projectEndDate": null,
+					"projectDescription": "desc",
+					"projectDuration": null,
+					"contributionInProject": "contribution",
+					"isCurrentProject": true,
+					"projectType": "SELF_INTEREST",
+					"educationId": 40001,
+					"employmentId": null
+				}
+			],
+			"candidate": null
+		}
+	],
+	"certifications": [
+		{
+			"certificationTitle": "dsdsdd",
+			"id": 40101,
+			"certificationDate": "2020-05-01",
+			"certificationDetails": "cert details",
+			"candidate": null
+		}
+	],
+	"employments": [
+		{
+			"location": null,
+			"id": 38351,
+			"jobTitle": "sdsdsd",
+			"employerName": "dsdsd",
+			"employmentStartDate": "2020-04-03",
+			"employmentEndDate": "2020-04-16",
+			"employmentDuration": null,
+			"isCurrentEmployment": null,
+			"jobDescription": "job desc",
+			"employmentType": "Contract",
+			"jobType": "Full Time",
+			"candidate": null,
+			"projects": [
+				{
+					"projectTitle": "rgfdsffd",
+					"id": 40202,
+					"projectStartDate": "2020-05-01",
+					"projectEndDate": null,
+					"projectDescription": "project desc",
+					"projectDuration": null,
+					"contributionInProject": "contrbution",
+					"isCurrentProject": true,
+					"projectType": null,
+					"educationId": null,
+					"employmentId": 38351
+				}
+			]
+		}
+	],
+	"nonAcademics": [
+		{
+			"nonAcademicInitiativeTitle": "sdsdd",
+			"id": 40151,
+			"nonAcademicInitiativeDescription": "<p>sdd</p>\n",
+			"duration": null,
+			"isCurrentActivity": true,
+			"roleInInitiative": "<p>dsds</p>\n",
+			"nonAcademicWorkStartDate": "2020-05-01",
+			"nonAcademicWorkEndDate": null,
+			"candidate": null
+		}
+	],
+	"candidateLanguageProficiencies": [
+		{
+			"id": 41601,
+			"proficiency": "Beginner",
+			"language": {
+				"id": 1,
+				"language": "English",
+				"value": "English",
+				"display": "English"
+			},
+			"candidate": null
+		}
+	],
+	"candidateSkills": [
+		{
+			"id": 40051,
+			"skillName": "Java",
+			"candidate": null
+		}
+	],
+	"addresses": [
+		{
+			"id": null,
+			"addressLineOne": "26 Inder Road, dalanwaluass",
+			"addressLineTwo": null,
+			"city": "Dehradun",
+			"state": null,
+			"zip": null,
+			"country": {
+				"id": null,
+				"countryNiceName": "India",
+				"value": null,
+				"display": null
+			}
+		}
+	],
+	"canBeShortListed": false
+}
