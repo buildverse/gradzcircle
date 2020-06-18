@@ -118,7 +118,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 	@Query("select j from Job j, CandidateAppliedJobs cJA where cJA.id.jobId = j.id and cJA.id.candidateId=?1")
 	Page<Job> findAppliedJobByCandidate(Long candidateId, Pageable pageable);
 	
-	@Query("select count(j) from Job j where j.corporate.id=?1")
+	@Query("select count(j) from Job j where j.corporate.id=?1 and j.jobStatus > -1")
 	Long countByCorporate(Long corporateId);
 	
 	@Query("select count(j) from Job j where j.corporate.id=?1 and j.createDate between ?2 and ?3")
