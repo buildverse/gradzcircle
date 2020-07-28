@@ -52,7 +52,7 @@ dependencyManagement {
 defaultTasks 'bootRun'
 
 group = 'com.drishika.gradzcircle'
-version = '4.2.1-PROD'
+version = '4.3.1-PROD'
 
 description = ''
 
