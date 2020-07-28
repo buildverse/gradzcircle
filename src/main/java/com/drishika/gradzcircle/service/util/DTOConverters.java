@@ -357,8 +357,9 @@ public class DTOConverters {
 	}
 
 	public String convertToCamelCase(String string) {
-		if (string == null)
+		if (string == null || string.isEmpty())
 			return "";
+		logger.debug("Incoming string is {}",string.isEmpty());
 		String[] splitString = string.split("\\s+");
 		StringBuilder builder = new StringBuilder();
 		for(int index=0;index<splitString.length;index++) {

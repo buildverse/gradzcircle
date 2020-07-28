@@ -4556,6 +4556,8 @@ public static User createUser5(EntityManager em) {
 	@Test
 	@Transactional
 	public void testGetTotalJobsByCorporate() throws Exception {
+		//jobRepository.deleteAll();
+		//jobRepository.flush();
 		Corporate corp = new Corporate();
 		corp.name("Drishika");
 		Job job1 = new Job();
@@ -4563,10 +4565,12 @@ public static User createUser5(EntityManager em) {
 		Job job2 = new Job();
 		job2.jobTitle("Test Job 2");
 		corporateRepository.saveAndFlush(corp);
-		
-		job1.corporate(corp);job2.corporate(corp);
 		jobRepository.saveAndFlush(job1);
 		jobRepository.saveAndFlush(job2);
+		job1.corporate(corp);job2.corporate(corp);
+		corp.addJob(job1.jobStatus(1));
+		corp.addJob(job2.jobStatus(0));
+		
 		
 		// Get all the jobList
 		// ResultActions resultActions =

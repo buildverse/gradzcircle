@@ -7,7 +7,9 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,10 +17,14 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +41,6 @@ import com.drishika.gradzcircle.service.dto.CandidateSkillsDTO;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
-
-import io.jsonwebtoken.lang.Arrays;
 
 /**
  * @author abhinav
@@ -83,7 +87,9 @@ public class CandidateSkillsService {
 		if(candidate.getCandidateSkills().size() < 1) {
 			profileScoreCalculator.updateProfileScore(candidate, Constants.CANDIDATE_SKILL_PROFILE, false);
 		}
-		injestSkillsInformation(candidateSkillObject.candidate(candidate),candidate);
+		injestAndUpdateCandidateSkillsInformation(candidateSkillObject.candidate(candidate),candidate);
+		//injestSkillsInformation2(candidateSkillObject.candidate(candidate),candidate);
+	
 		candidate = candidateRepository.save(candidate);
 		log.debug("The canddiate Skills post save in service is {}",candidate.getCandidateSkills());
 		matcher.match(candidate.getId());
@@ -134,17 +140,129 @@ public class CandidateSkillsService {
  		List<CandidateSkills> skills = candidateSkillsRepository.findSkillsForCandidate(id);
  		return converter.convertToCandidateSkillsDTO(skills,false);
 	 }
-	
-	 private List<String> convertToCamelCaseAndEliminateDuplicates(String [] skills) {
-		 List<String> skillList = new ArrayList<>();
-		 for( int i =0 ; i < skills.length; i ++) {
-			 skillList.add(skills[i].trim());
+	 
+	 
+	private void injestAndUpdateCandidateSkillsInformation(CandidateSkills candidateSkillObject,Candidate candidate) {
+		if (candidateSkillObject.getCapturedSkills() != null
+				&& !candidateSkillObject.getCapturedSkills().isEmpty()) {
+			Set<String> uniqueCapturedSkills = createUniqueCapturedSkills(candidateSkillObject.getCapturedSkills());
+			createListToAddToDBandElastic(uniqueCapturedSkills, candidate);
+		
+			
+		}
+		
+		//Add already available in system
+		if(candidateSkillObject.getSkillsList() != null)
+			candidateSkillObject.getSkillsList().forEach(cSkill -> {
+				 if(!cSkill.getSkill().equals(Constants.OTHER)) {
+					 log.debug("Saving for non 'Other' Skill {}",cSkill.getSkill());
+					 if(candidateSkillsRepository.findCandidateSkillPresent(candidateSkillObject.getCandidate().getId(), cSkill.getSkill())==null) {
+						 CandidateSkills candidateSkill = new CandidateSkills();
+						 Skills skill = skillsRepository
+									.findBySkillIgnoreCase(cSkill.getSkill());
+						 candidateSkill.skills(skill);
+						 candidateSkill.candidate(candidate);
+						 candidate.addCandidateSkill(candidateSkill);
+						 
+					 }
+				
+				 }
+				 
+			 });
+
+	}
+ 
+	 private Set<String> createUniqueCapturedSkills(String capturedSkills) {
+		 Set<String> uniqueSkillSet = new HashSet<>();
+		 String[] capturedSkillsSplit = capturedSkills.split(",");
+		 for(int i = 0 ;i < capturedSkillsSplit.length; i ++) {
+			 if(!capturedSkillsSplit[i].trim().isEmpty())
+			 uniqueSkillSet.add(capturedSkillsSplit[i].trim());
 		 }
-		 
-		 return skillList.stream().map(skill->converter.convertToCamelCase(skill)).distinct().collect(Collectors.toList());
+		 log.debug("Unique skill set is {}",uniqueSkillSet);
+		 return uniqueSkillSet;
 	 }
 	 
-	private void injestSkillsInformation(CandidateSkills candidateSkillObject, Candidate candidate) {
+	 private void createListToAddToDBandElastic(Set<String> uniqueSkillSet, Candidate candidate) {
+		
+		
+		
+		 Iterator<String> uniqueSkillSetIterator = uniqueSkillSet.iterator();
+		
+		while (uniqueSkillSetIterator.hasNext()) {
+			 String collapsedStringfromUser= null;
+			 String collapsedStringFromSystem = null;
+			 String lowercasedStringFromUser = null;
+			 String lowerCasedStringFromSystem = null;
+			String skillFromUser = uniqueSkillSetIterator.next();
+			log.debug("Processing {},",skillFromUser);
+			List<Skills> skills = skillsRepository.getAllMatchingSkills(skillFromUser.substring(0, 3) + "%");
+			if(!skills.isEmpty()) {
+				for (int i = 0; i < skills.size(); i++) {
+	
+					log.debug("Skills from DB is {}", skills.get(i));
+					Skills skill = skills.get(i);
+					String[] splitableFromSystem = skill.getSkill().split("\\s+");	 
+					 if(splitableFromSystem.length>1) {
+						 collapsedStringFromSystem = createCollapsedStringLowerCase(splitableFromSystem);
+					 } else {
+						 lowerCasedStringFromSystem = skill.getSkill().toLowerCase();
+					 }
+					String[] splitableFromUser = skillFromUser.split("\\s+");
+					if (splitableFromUser.length > 1) {
+						collapsedStringfromUser = createCollapsedStringLowerCase(splitableFromUser);
+						log.debug("Collapsed String is {}", collapsedStringfromUser);
+					} else {
+						lowercasedStringFromUser = skillFromUser.toLowerCase();
+					}
+					 Boolean collapsedStringCase = collapsedStringFromSystem != null && collapsedStringfromUser!=null && !collapsedStringFromSystem.equals(collapsedStringfromUser);
+					 Boolean singleStringCase = lowercasedStringFromUser != null && lowerCasedStringFromSystem!=null && !lowercasedStringFromUser.equals(lowerCasedStringFromSystem);
+					 //log.debug("{},{},{},{}",lowerCasedStringFromSystem,collapsedStringfromUser,collapsedStringFromSystem,lowercasedStringFromUser);
+					 Boolean crossMatchCase = !StringUtils.equals(lowerCasedStringFromSystem, collapsedStringfromUser) && StringUtils.equals(collapsedStringFromSystem, lowercasedStringFromUser);
+					 log.debug("collapsedStringCase is {}, singleStringCase is {}, crossMatchCase {}",collapsedStringCase,singleStringCase,crossMatchCase);
+					if ((collapsedStringCase || singleStringCase ||crossMatchCase)) {
+						Skills newSkill = new Skills();
+						newSkill.setSkill(converter.convertToCamelCase(skillFromUser));
+						updateSkillIndex(skillsRepository.save(newSkill));
+						updateCandidateSkillFromCapturedList(candidate, newSkill);
+					} else
+						updateCandidateSkillFromCapturedList(candidate, skill);
+	
+				}
+			} else {
+				Skills newSkill = new Skills();
+				newSkill.setSkill(converter.convertToCamelCase(skillFromUser));
+				updateSkillIndex(skillsRepository.save(newSkill));
+				updateCandidateSkillFromCapturedList(candidate, newSkill);
+			}
+			
+
+		}
+		 
+	 }
+	 
+	private void updateCandidateSkillFromCapturedList(Candidate candidate, Skills skill) {
+		if (candidate.getCandidateSkills() != null && !candidate.getCandidateSkills().stream().anyMatch(
+				cS -> cS.getSkills() != null ? cS.getSkills().getSkill().equalsIgnoreCase(skill.getSkill()) : false)) {
+			
+			CandidateSkills cSkills = new CandidateSkills();
+			cSkills.setSkills(skill);
+			cSkills.candidate(candidate);
+			candidate.addCandidateSkill(cSkills);
+
+		}
+	}
+	 
+	 private String createCollapsedStringLowerCase(String[] splitable) {
+		 StringBuilder sb = new StringBuilder();
+		 for(int i =0; i < splitable.length; i++) {
+			 sb.append(splitable[i]);
+		 }
+		 return sb.toString().toLowerCase();
+	 }
+	 
+	 
+	private void injestSkillsInformation2(CandidateSkills candidateSkillObject, Candidate candidate) {
 		List<CandidateSkills> candidateSkills=  new ArrayList<>();
 		Set<CandidateSkills> previousSkills = candidate.getCandidateSkills();
 		Set<String> uniqueSkillSet = new HashSet<>();
@@ -160,8 +278,10 @@ public class CandidateSkillsService {
 				String[] capturedSkills = candidateSkillObject.getCapturedSkills().split(",");
 				List<String> skills = new ArrayList<>();
 				for(int i=0; i < capturedSkills.length; i++) {
-					if(uniqueSkillSet.contains(capturedSkills[i].replaceAll("\\s+", "").toLowerCase()))
+					if(uniqueSkillSet.contains(capturedSkills[i].replaceAll("\\s+", "").toLowerCase())) {
+						log.debug("Chekcing on skill {}",capturedSkills[i].replaceAll("\\s+", "").toLowerCase());
 						continue;
+					}
 					else {
 						uniqueSkillSet.add(capturedSkills[i].replaceAll("\\s+", "").toLowerCase());
 						skills.add(capturedSkills[i]);
@@ -177,10 +297,13 @@ public class CandidateSkillsService {
 					log.debug("DO i have {} in repo ",skill);
 					if(skill == null) {
 						Skills newSkill = new Skills();
-						newSkill.setSkill(converter.convertToCamelCase(skills.get(i).trim()));
-						skillToAdd.add(newSkill);
-						cSkill.skills(newSkill);
-						candidateSkills.add(cSkill);
+						String convertedSkill = converter.convertToCamelCase(skills.get(i).trim());
+						if(!convertedSkill.isEmpty()) {
+							newSkill.setSkill(convertedSkill);
+							skillToAdd.add(newSkill);
+							cSkill.skills(newSkill);
+							candidateSkills.add(cSkill);
+						}
 					} else {
 						if(!candidateSkills.stream().anyMatch(cS-> cS.getSkills().getSkill().equalsIgnoreCase(skill.getSkill()))) {
 							cSkill.skills(skill);
@@ -222,7 +345,7 @@ public class CandidateSkillsService {
 				candidateSkillObject.getCandidate().getCandidateSkills());
 	}
 	
-	
+
 	private void updateSkillIndex(Skills skill) {
 		log.debug("Indexing Skill -> {}",skill);
 		com.drishika.gradzcircle.domain.elastic.Skills skillElasticInstance = new com.drishika.gradzcircle.domain.elastic.Skills();

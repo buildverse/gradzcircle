@@ -5,8 +5,11 @@ package com.drishika.gradzcircle.service;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +18,9 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import org.elasticsearch.common.lucene.search.Queries;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drishika.gradzcircle.GradzcircleApp;
@@ -51,11 +56,10 @@ import com.drishika.gradzcircle.repository.LanguageRepository;
 import com.drishika.gradzcircle.repository.ProfileCategoryRepository;
 import com.drishika.gradzcircle.repository.SkillsRepository;
 import com.drishika.gradzcircle.repository.search.CandidateSkillsSearchRepository;
+import com.drishika.gradzcircle.repository.search.SkillsSearchRepository;
 import com.drishika.gradzcircle.service.matching.Matcher;
 import com.drishika.gradzcircle.service.util.DTOConverters;
 import com.drishika.gradzcircle.service.util.ProfileScoreCalculator;
-import com.drishika.gradzcircle.web.rest.TestUtil;
-import com.drishika.gradzcircle.web.rest.errors.ExceptionTranslator;
 
 /**
  * @author abhinav
@@ -100,6 +104,7 @@ public class CandidateSkillsServiceIntTest {
 
 		@Autowired
 		private JobRepository jobRepository;
+
 		
 		@Mock
 		ElasticsearchTemplate elasticSearchTemplate;
@@ -436,7 +441,9 @@ public class CandidateSkillsServiceIntTest {
 	    		scoreSkill.setScore(20d);
 	    		candidate.addCandidateProfileScore(scoreBasic).addCandidateProfileScore(scoreEmployment).addCandidateProfileScore(scorePersonal).addCandidateProfileScore(scoreSkill);
 	    		candidate.setProfileScore(55d);
+	    		candidateRepository.saveAndFlush(candidate);
 	    		candidateSkills.candidate(candidate);
+	    		
 	    		candidateSkills.setSkillsList(cSkills);
 	    		candidateSkillsService.createCandidateSkills(candidateSkills.capturedSkills("Yoyo,honey,  diljit"));
 	    		
@@ -453,6 +460,8 @@ public class CandidateSkillsServiceIntTest {
 	    		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
 	    		assertThat(testCandidate.getProfileScores().size()).isEqualTo(4);
 	    		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_SKILL_PROFILE)).findFirst().get().getScore()).isEqualTo(20d);
+	    		verify(elasticSearchTemplate, times(2)).index(any(IndexQuery.class));
+	    		verify(elasticSearchTemplate, times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 	    }
 	    
 	    @Test
@@ -499,6 +508,8 @@ public class CandidateSkillsServiceIntTest {
 	    		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
 	    		assertThat(testCandidate.getProfileScores().size()).isEqualTo(4);
 	    		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_SKILL_PROFILE)).findFirst().get().getScore()).isEqualTo(20d);
+	    		verify(elasticSearchTemplate, times(2)).index(any(IndexQuery.class));
+	    		verify(elasticSearchTemplate, times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 	    }
 	    
 	    @Test
@@ -538,6 +549,8 @@ public class CandidateSkillsServiceIntTest {
 	    		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
 	    		assertThat(testCandidate.getProfileScores().size()).isEqualTo(4);
 	    		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_SKILL_PROFILE)).findFirst().get().getScore()).isEqualTo(20d);
+	    		verify(elasticSearchTemplate, times(2)).index(any(IndexQuery.class));
+	    		verify(elasticSearchTemplate, times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 	    }
 	    
 	    
@@ -557,7 +570,7 @@ public class CandidateSkillsServiceIntTest {
 	        assertThat(candidateSkillsList).hasSize(databaseSizeBeforeCreate + 1);
 	        CandidateSkills testCandidateSkills = candidateSkillsList.get(candidateSkillsList.size() - 1);
 	        assertThat(testCandidateSkills.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
-	        
+	        System.out.println("All skills in repo are "+skillsRepository.findAll());
 	        List<Skills> cSkills = new ArrayList<>();
 			cSkills.add(otherSkill);
 			CandidateSkills candidateSkills1 = new CandidateSkills();
@@ -569,8 +582,82 @@ public class CandidateSkillsServiceIntTest {
 	        assertThat(candidateSkillsListAgain).hasSize(2);
 	        CandidateSkills testCandidateSkillsAgain = candidateSkillsListAgain.get(candidateSkillsListAgain.size() - 1);
 	      //  assertThat(testCandidateSkillsAgain.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+	        assertThat(skillsRepository.findAll()).hasSize(5);
+	        System.out.println("-----------"+skillsRepository.findAll());
+	        verify(elasticSearchTemplate, times(0)).index(any(IndexQuery.class));
+    		verify(elasticSearchTemplate, times(0)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
+	    }
+	    
+	    @Test
+	    @Transactional
+	    public void createCandidateSkillsAndReCreateSameSkillDifferentDataCombinationViaOtherRoute() throws Exception {
+	        int databaseSizeBeforeCreate = candidateSkillsRepository.findAll().size();
+	        List<Skills> candidateSkill = new ArrayList<>();
+	        candidateSkill.add(msExcel);
+	        candidateSkills.setSkillsList(candidateSkill);
+	        
+	        Skills skill = new Skills();
+	        skill.setSkill("Machine Learning");
+	        skillsRepository.saveAndFlush(skill);
+	        
+	        // Create the CandidateSkills
+	        
+	        candidateSkillsService.createCandidateSkills(candidateSkills.candidate(candidate));
+	        // Validate the CandidateSkills in the database
+	        List<CandidateSkills> candidateSkillsList = candidateSkillsRepository.findAll();
+	        assertThat(candidateSkillsList).hasSize(databaseSizeBeforeCreate + 1);
+	        CandidateSkills testCandidateSkills = candidateSkillsList.get(candidateSkillsList.size() - 1);
+	        assertThat(testCandidateSkills.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+	        System.out.println("All skills in repo are "+skillsRepository.findAll());
+	        List<Skills> cSkills = new ArrayList<>();
+			cSkills.add(otherSkill);
+			CandidateSkills candidateSkills1 = new CandidateSkills();
+			candidateSkills1.candidate(candidate);
+			candidateSkills1.setSkillsList(cSkills);
+			candidateSkillsService.createCandidateSkills(candidateSkills1.capturedSkills("MachineLearning, machinelearning, machine learning"));
+	      
+	        List<CandidateSkills> candidateSkillsListAgain = candidateSkillsRepository.findAll();
+	        assertThat(candidateSkillsListAgain).hasSize(2);
+	        CandidateSkills testCandidateSkillsAgain = candidateSkillsListAgain.get(candidateSkillsListAgain.size() - 1);
+	      //  assertThat(testCandidateSkillsAgain.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+	        assertThat(candidateSkillsListAgain).extracting("skills.skill").contains("Machine Learning", "MSEXCEL");
 	        assertThat(skillsRepository.findAll()).hasSize(6);
-	       
+	        System.out.println("-----------"+skillsRepository.findAll());
+	        verify(elasticSearchTemplate, times(0)).index(any(IndexQuery.class));
+    		verify(elasticSearchTemplate, times(0)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
+	    }
+	    
+	    @Test
+	    @Transactional
+	    public void createCandidateSkillsBullhorAndWORDSkillViaOtherRoute() throws Exception {
+	        int databaseSizeBeforeCreate = candidateSkillsRepository.findAll().size();
+	        List<Skills> candidateSkill = new ArrayList<>();
+	        candidateSkill.add(msExcel);
+	        candidateSkills.setSkillsList(candidateSkill);
+	        
+	        // Create the CandidateSkills
+	        
+	        candidateSkillsService.createCandidateSkills(candidateSkills.candidate(candidate));
+	        // Validate the CandidateSkills in the database
+	        List<CandidateSkills> candidateSkillsList = candidateSkillsRepository.findAll();
+	        assertThat(candidateSkillsList).hasSize(databaseSizeBeforeCreate + 1);
+	        CandidateSkills testCandidateSkills = candidateSkillsList.get(candidateSkillsList.size() - 1);
+	        assertThat(testCandidateSkills.getSkills().getSkill()).isEqualTo(msExcel.getSkill());
+	        
+	        List<Skills> cSkills = new ArrayList<>();
+			cSkills.add(otherSkill);
+			CandidateSkills candidateSkills1 = new CandidateSkills();
+			candidateSkills1.candidate(candidate);
+			candidateSkills1.setSkillsList(cSkills);
+			candidateSkillsService.createCandidateSkills(candidateSkills1.capturedSkills("something,something,something,something, somethingnew, "));
+	        List<CandidateSkills> candidateSkillsListAgain = candidateSkillsRepository.findAll();
+	        assertThat(candidateSkillsListAgain).hasSize(3);
+	        List<Skills> skillList = skillsRepository.findAll();
+	        CandidateSkills testCandidateSkillsAgain = candidateSkillsListAgain.get(candidateSkillsListAgain.size() - 1);
+	        assertThat(skillsRepository.findAll()).hasSize(7);
+	        verify(elasticSearchTemplate, times(2)).index(any(IndexQuery.class));
+    		verify(elasticSearchTemplate, times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
+
 	    }
 
 	    
@@ -607,11 +694,13 @@ public class CandidateSkillsServiceIntTest {
 	    		assertThat(testCandidate.getProfileScore()).isEqualTo(55d);
 	    		assertThat(testCandidate.getProfileScores().size()).isEqualTo(4);
 	    		assertThat(testCandidate.getProfileScores().stream().filter(profile->profile.getProfileCategory().getCategoryName().equals(Constants.CANDIDATE_SKILL_PROFILE)).findFirst().get().getScore()).isEqualTo(20d);
+	    		verify(elasticSearchTemplate, times(2)).index(any(IndexQuery.class));
+	    		verify(elasticSearchTemplate, times(2)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 	    }
 	    
 	    @Test
 	    @Transactional
-	    public void whenTryToReCreateASkillUsingOtherThatIsAlreadyPresentInSkillDBSystemMustNotBreak() throws Exception {
+	    public void whenTryToReCreateASkillUsingOtherThatIsAlreadyPresentInSkillDBSystemMustNotReAdd() throws Exception {
 	    		Candidate candidate = new Candidate().firstName("Abhinav");
 	    		candidateRepository.saveAndFlush(candidate);
 	    		List<Skills> cSkills = new ArrayList<>();
@@ -628,6 +717,8 @@ public class CandidateSkillsServiceIntTest {
 	    		Candidate testCandidate = candidateSkillList.get(0).getCandidate();
 	    		assertThat(candidateSkillList).extracting("skills.skill").contains("Yoyo Meri Jaan");
 	    		assertThat(testCandidate).isEqualTo(candidate);
+	    		verify(elasticSearchTemplate, times(1)).index(any(IndexQuery.class));
+	    		verify(elasticSearchTemplate, times(1)).refresh(com.drishika.gradzcircle.domain.elastic.Skills.class);
 	    }
 
 }
