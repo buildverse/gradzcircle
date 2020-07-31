@@ -41,6 +41,8 @@
     margin: auto;
     border-radius: 100px;
     margin-bottom: 30px;
+    border-color: #e0e0e0 !important;
+    border-width: 3px !important;
 }
 
 .portfolio-block.block-intro .about-me {

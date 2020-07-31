@@ -13,10 +13,10 @@ import { JhiDateUtils } from 'ng-jhipster';
 import { Job } from '../../shared/job-common/job.model';
 import { JobPopupService } from './job-popup.service';
 import { JobService } from './job.service';
-
+import { AmazonConstants } from '../../shared/amazon.constants';
 import { JobListEmitterService } from './job-list-change.service';
 import { Observable } from 'rxjs/Rx';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-job-view',
@@ -30,7 +30,7 @@ export class JobViewComponent implements OnInit {
     imageUrl: any;
     noImage: boolean;
     businessPlanEnabled: boolean;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
 
     constructor(
         private jobService: JobService,

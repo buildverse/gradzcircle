@@ -16,6 +16,7 @@ import { AppConfigService } from '../../entities/app-config/app-config.service';
 import { CorporateService } from '../../entities/corporate';
 import { Candidate, CandidateService } from '../../entities/candidate';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { AmazonConstants } from '../../shared/amazon.constants';
 import {
     USER_ID,
     USER_TYPE,
@@ -58,14 +59,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     eventSubscriberUserImage: Subscription;
     version: string;
     userImage: string;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     corporateId: number;
     candidateId: number;
     candidate: Candidate;
     noImage: boolean;
     authorities: string[];
     appConfigs: AppConfig[];
-    logoImage = '../../content/images/logo_white.png';
+    logoImage = AmazonConstants.S3_URL + 'logo_white.png';
 
     constructor(
         private loginService: LoginService,

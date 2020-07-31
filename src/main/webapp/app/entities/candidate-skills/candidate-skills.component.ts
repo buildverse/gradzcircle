@@ -11,7 +11,7 @@ import { CANDIDATE_ID, CANDIDATE_SKILL_ID } from '../../shared/constants/storage
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { AmazonConstants } from '../../shared/amazon.constants';
 @Component({
     selector: 'jhi-candidate-skills',
     templateUrl: './candidate-skills.component.html'
@@ -22,7 +22,7 @@ export class CandidateSkillsComponent implements OnInit, OnDestroy {
     eventSubscriber: Subscription;
     currentSearch: string;
     candidateId: any;
-    imgSrc = '../../content/images/skill.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'skill.jpg';
     constructor(
         private candidateSkillsService: CandidateSkillsService,
         private jhiAlertService: JhiAlertService,

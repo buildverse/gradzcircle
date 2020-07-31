@@ -9,6 +9,7 @@ import { CandidateService } from '../../entities/candidate/candidate.service';
 import { CandidatePublicProfilePopupService } from './candidate-public-profile-popup.service';
 import { Candidate } from '../../entities/candidate/candidate.model';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { AmazonConstants } from '../../shared/amazon.constants';
 import {
     CANDIDATE_ID,
     JOB_ID,
@@ -28,7 +29,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDestroy {
     candidate: CandidatePublicProfile;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     userImage: any;
     noImage: boolean;
     jobId: number;

@@ -375,13 +375,6 @@ overflow-x:visible;
     -webkit-transition-delay: 0.2s;
     transition-delay: 0.2s;
 }
-.img-jobs {
-    background: url('../images/jobs.jpg');
-}
-
-.img-corporate {
-    background: url('../images/corporate.jpg');
-}
 
 .action-edit {
     color: #1cc88a;
@@ -389,10 +382,6 @@ overflow-x:visible;
 
 .action-delete {
     color: #e74a3b;
-}
-
-.img-talent {
-    background: url('../images/talent.jpg');
 }
 
 ng2-dropdown-menu {

@@ -10,7 +10,7 @@ import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CANDIDATE_ID, CANDIDATE_LANGUAGE_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-
+import { AmazonConstants } from '../../shared/amazon.constants';
 @Component({
     selector: 'jhi-candidate-language-proficiency',
     templateUrl: './candidate-language-proficiency.component.html',
@@ -22,7 +22,7 @@ export class CandidateLanguageProficiencyComponent implements OnInit, OnDestroy 
     eventSubscriber: Subscription;
     currentSearch: string;
     candidateId: any;
-    imgSrc = '../../content/images/languages.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'languages.jpg';
 
     constructor(
         private candidateLanguageProficiencyService: CandidateLanguageProficiencyService,

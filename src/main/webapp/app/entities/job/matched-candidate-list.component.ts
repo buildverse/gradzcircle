@@ -11,6 +11,7 @@ import { CandidateList } from './candidate-list.model';
 import { JobConstants } from './job.constants';
 import { HttpResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-matched-candidate-list',
@@ -33,7 +34,7 @@ export class MatchedCandidateListComponent implements OnInit, OnDestroy {
     corporateId: number;
     eventSubscriber: Subscription;
     subscription: Subscription;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     isMatchScoreCollapsed: boolean;
     matchScoreFrom?: number;
     matchScoreTo?: number;

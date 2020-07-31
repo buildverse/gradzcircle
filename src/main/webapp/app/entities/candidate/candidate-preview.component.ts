@@ -13,6 +13,7 @@ import { CandidateService } from './candidate.service';
 import { CandidateList } from '../job/candidate-list.model';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-candidate',
@@ -33,7 +34,7 @@ export class CandidatePreviewComponent implements OnInit, OnDestroy {
     previousPage: any;
     reverse: any;
     routeData: any;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     profile: string;
 
     constructor(

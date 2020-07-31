@@ -10,6 +10,7 @@ import { CandidateNonAcademicWorkService } from './candidate-non-academic-work.s
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CANDIDATE_ID, CANDIDATE_NON_ACADEMIC_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
+import { AmazonConstants } from '../../shared/amazon.constants';
 @Component({
     selector: 'jhi-candidate-non-academic-work',
     templateUrl: './candidate-non-academic-work.component.html',
@@ -23,7 +24,7 @@ export class CandidateNonAcademicWorkComponent implements OnInit, OnDestroy {
     candidateId: any;
     candidateNonAcademicForDisplay: CandidateNonAcademicWork[];
     primaryCandidateNonAcademic: CandidateNonAcademicWork;
-    imgSrc = '../../content/images/non-academic.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'non-academic.jpg';
     constructor(
         private candidateNonAcademicWorkService: CandidateNonAcademicWorkService,
         private jhiAlertService: JhiAlertService,

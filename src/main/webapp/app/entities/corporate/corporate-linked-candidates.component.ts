@@ -10,6 +10,7 @@ import { CandidateList } from '../job/candidate-list.model';
 import { CorporateService } from './corporate.service';
 import { HttpResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-linked-candidate-list',
@@ -32,7 +33,7 @@ export class LinkedCandidatesComponent implements OnInit, OnDestroy {
     corporateId: number;
     eventSubscriber: Subscription;
     subscription: Subscription;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     userProfile: string;
 
     constructor(

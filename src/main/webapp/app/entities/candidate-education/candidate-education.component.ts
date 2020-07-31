@@ -1,5 +1,4 @@
 import { Principal } from '../../core/auth/principal.service';
-import { CandidateProfileSettingService } from '../../profiles/candidate/candidate-profile-setting.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -8,6 +7,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { CandidateEducation } from './candidate-education.model';
 import { CandidateEducationService } from './candidate-education.service';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
+import { AmazonConstants } from '../../shared/amazon.constants';
 import {
     CANDIDATE_ID,
     CANDIDATE_EDUCATION_ID,
@@ -37,7 +37,7 @@ export class CandidateEducationComponent implements OnInit, OnDestroy {
    will chnage dynamically for display susequently
    */
     primaryCandidateEducation: CandidateEducation;
-    imgSrc = '../../content/images/education.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'education.jpg';
 
     constructor(
         private candidateEducationService: CandidateEducationService,

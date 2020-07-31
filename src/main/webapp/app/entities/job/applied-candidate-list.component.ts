@@ -11,6 +11,7 @@ import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/stora
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { JobConstants } from './job.constants';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-applied-candidate-list',
@@ -37,7 +38,7 @@ export class AppliedCandidateListComponent implements OnInit, OnDestroy {
     matchScoreFrom?: number;
     matchScoreTo?: number;
     matchScoreRange?: string;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     userProfile: string;
 
     constructor(

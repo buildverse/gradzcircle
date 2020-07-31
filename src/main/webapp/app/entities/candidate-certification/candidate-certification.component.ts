@@ -6,7 +6,7 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { AuthoritiesConstants } from '../../shared/authorities.constant';
 import { CandidateCertification } from './candidate-certification.model';
 import { CandidateCertificationService } from './candidate-certification.service';
-
+import { AmazonConstants } from '../../shared/amazon.constants';
 import { CANDIDATE_ID, CANDIDATE_CERTIFICATION_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -26,7 +26,7 @@ export class CandidateCertificationComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     candidateCertificationForDisplay: CandidateCertification[];
     primaryCandidateCertification: CandidateCertification;
-    imgSrc = '../../content/images/certification.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'certification.jpg';
 
     constructor(
         private candidateCertificationService: CandidateCertificationService,

@@ -12,6 +12,7 @@ import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { CandidateProfileSettingService } from './candidate-profile-setting.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-candidate-profile',
@@ -27,7 +28,7 @@ export class CandidateProfileComponent implements OnInit, AfterViewInit, OnDestr
     eventSubscriberCandidate: Subscription;
     eventSubscriberCandidateImage: Subscription;
     currentSearch: string;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     profileScore: number;
     viewMode: boolean;
     candidateProfileSubscriber: Subscription;

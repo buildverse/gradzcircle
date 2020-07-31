@@ -15,6 +15,7 @@ import {
 } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-candidate-employment',
@@ -33,7 +34,7 @@ export class CandidateEmploymentComponent implements OnInit, OnDestroy {
     candidateEmploymentsForDisplay: CandidateEmployment[];
     primaryCandidateEmployment: CandidateEmployment;
     isEmployment: boolean;
-    imgSrc = '../../content/images/employment.jpg';
+    imgSrc = AmazonConstants.S3_URL + 'employment.jpg';
 
     constructor(
         private candidateEmploymentService: CandidateEmploymentService,

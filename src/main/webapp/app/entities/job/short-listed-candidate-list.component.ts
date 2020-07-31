@@ -10,6 +10,7 @@ import { HttpResponse } from '@angular/common/http';
 import { JOB_ID, CORPORATE_ID, CANDIDATE_ID } from '../../shared/constants/storage.constants';
 import { DataStorageService } from '../../shared/helper/localstorage.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AmazonConstants } from '../../shared/amazon.constants';
 
 @Component({
     selector: 'jhi-short-listed-candidate-list',
@@ -32,7 +33,7 @@ export class ShortListedCandidateListComponent implements OnInit, OnDestroy {
     corporateId: number;
     eventSubscriber: Subscription;
     subscription: Subscription;
-    defaultImage = require('../../../content/images/no-image.png');
+    defaultImage = AmazonConstants.S3_URL + 'no-image.png';
     userProfile: string;
 
     constructor(
