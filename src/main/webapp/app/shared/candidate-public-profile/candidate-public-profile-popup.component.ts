@@ -68,7 +68,10 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
         }
         this.businessPlanEnabled = JSON.parse(this.dataService.getData(BUSINESS_PLAN_ENABLED));
         //    this.reloadUserImage();
-        this.userImage = this.candidate.candidateDetails.imageUrl != null ? this.candidate.candidateDetails.imageUrl : this.defaultImage;
+        this.userImage =
+            this.candidate.candidateDetails.imageUrl != null
+                ? this.candidate.candidateDetails.imageUrl + '?' + Math.random()
+                : this.defaultImage;
         this.alertService.clear();
 
         if (this.dataService.getData(USER_TYPE) === AuthoritiesConstants.CORPORATE) {
@@ -108,7 +111,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
         }
     }
 
-    reloadUserImage() {
+    /*  reloadUserImage() {
         this.noImage = false;
         if (this.candidate.candidateDetails.login) {
             if (this.candidate.candidateDetails.login.imageUrl !== undefined) {
@@ -127,7 +130,7 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
                 this.noImage = true;
             }
         }
-    }
+    }*/
 
     getWidth(candidateLanguageProficiency) {
         if (candidateLanguageProficiency === 'Beginner') {
@@ -177,7 +180,6 @@ export class CandidatePublicProfilePopupDialogComponent implements OnInit, OnDes
         if (this.imageSubscriber) {
             this.eventManager.destroy(this.imageSubscriber);
         }
-
         this.alertService.clear();
     }
 
