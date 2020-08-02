@@ -4,7 +4,7 @@ import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.completion.Completion;
 
-@Document(indexName = "qualification")
+@Document(indexName = "qualifications")
 public class Qualification extends com.drishika.gradzcircle.domain.Qualification {
 	
 	private static final long serialVersionUID = 1L;

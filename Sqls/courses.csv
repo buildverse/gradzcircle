@@ -1,221 +1,90 @@
 id,course
-1,Aeronautical/Avionics/Aerospace Engg.
-2,Agricultural/Irrigation Engg.
-3,Applied Electronics
-4,Architectecture Engg.
-5,Automobile Engg.
-6,Bio-Medical/Biio-Technology Engg.
-7,Ceramics Engg.
-8,Chemical Engg.
-9,Civil Engg.
-10,Computer Science & Engg.
-11,Electrical & Electronics Engg.
-12,Electrical Engg.
-13,Electronics & Communication Engg.
-14,Electronics & Instrumentation Engg.
-15,Environmental Engg.
-16,Fashion & Design Tech
-17,Fire Tech & Safety Engg.
-18,Food technology
-19,Industrial Engg.
-20,Information Science/Technology
-21,Intrumentation & Control Engg.
-22,Manufacturing/Automation Engg.
-23,Marine Engg.
-24,Mechanical Engg.
-25,Metallurgical/Materials Engg.
-26,Mineral/Mining Engg.
-27,Petroleum/Petrochemical Engg.
-28,Printing/paper/Pulp Technology
-29,Production/Plant Engg.
-30,Rubber/Plastic/Polymer Engg.
-31,Textile/ Leather Technology
-32,Administration
-33,Advertising/Mass Communication
-34,Banking & Finance
-35,"Banking, Insurance & Finance"
-36,Entrepreneurship
-37,Executive
-38,General Management
-39,Healthcare/Hospital Management
-40,Human Resource & Marketing
-41,Human Resources
-42,Industrial Management
-43,Information Systems
-44,Information Technology
-45,International Business
-46,International Marketing
-47,Marketing
-48,Operations Management
-49,Personnel Management
-50,Project Management
-51,Technology Management
-52,Computer Science
-53,Advanced Communication system
-54,Advanced Computing
-55,Advanced Manufacturing Technology
-61,Bio-Informatics/ Bio - Chemistry Engg.
-63,CAD/CAM
-67,Communication & Networking
-72,Embedded systems Technologies
-73,Energy Engineering
-74,Engineering Design
-78,Heat Power Engineering
-79,High Voltage Engineering
-80,Industrial Engineering
-83,Infrastructure Engineering
-84,Instrumentation & Electronics
-88,Mechatronics
-89,Medical Electronics
-90,Metallurguical/ Materials Engineering
-91,Micro-Electronics
-93,Multimedia Tech
-94,Network Engg.
-95,Optical Communication
-97,Power Systems Engg.
-99,Product Design & Development
-100,Qulaity Engineering & Management
-101,Refrigeration & Air Conditioning
-102,Remote Sensing
-103,Rubber/Plastic/Polymer Engineering
-104,Software Engineering
-105,Structural Engineering
-106,Systems Engineering & operations Research
-107,Textile/leather Technology
-108,Thermal Engineering
-109,VLSI Design
-110,Wireless Technologies
-111,Bio-Chemistry
-112,Bio-Physics
-113,Bio-Technology
-114,Bioinformatics
-115,Biology
-116,Agriculture
-117,Catering Technology
-118,Chemistry/Applied Chemistry
-119,Child Care
-121,Electronics/Applied Electronics
-122,Food Science/Technology
-123,Geology
-124,Home Science
-126,Library & Information Science
-127,Mathematics/Applied mathematics
-128,Microbiology
-129,Nursing
-130,Physics/Applied Physics
-131,Physiology/Crop Physiology
-132,Plant Science
-133,Psychology
-134,Statistics/ Applied Statistics
-135,Zoology/ Applied Zoology
-136,Architecture
-137,Commerce
-138,Pharmacy
-139,Accountancy
-140,Arabic
-141,Bank Management
-142,Bengali
-143,Book Keeping & Accountancy
-144,Business Economics
-145,Business Management
-147,Economics
-148,English
-149,Folklore Studies
-150,Geography
-151,Hindi
-152,History
-153,Humanities
-154,Kannada
-155,Malayalam
-156,Philosophy
-157,Politics
-158,Tamil
-159,Telugu
-160,Business
-162,Dental
-163,Education
-164,Hotel Management
-176,Engineering
-189,Accounts
-190,Law
-191,Medicine
-192,Accessory Design
-193,Fashion Communication
-194,Fashion Design
-195,Knitwear design
-196,Textile Design
-197,Apparel Production
-198,Fine Arts
-199,Ayurveda
-200,Homeopathy
-201,Physical Education
-202,Fisheries
-203,Social Work
-205,Biotechnology
-206,Botany
-207,Chemistry
-214,Management
-215,Mathematics
-216,Philiosphy
-217,Physics
-219,Statistics
-220,Zoology
-244,Computers
-249,Embedded Systems
-250,Information technology
-253,Aeronautical/Avionics/Aerospace
-254,Agriculture/Irrigation
-255,Anesthesia
-256,Applied Electronics & Instrumentation Engg.
-257,Architecture & Town Planning
-258,Automobile
-259,Bio-Informatics
-260,Bio-Medical
-262,Ceramic
-263,Chemical
-264,Child Health
-265,Civil
-266,Clinical Pathology
-267,Commercial Art/Fine Art/Graphics
-268,Computer Science & Engineering
-269,Electrical & Electronics
-270,Electrical Engineering
-271,Electronics & Communications
-272,Electronic Media
-273,Electronics & Instrumentation
-274,Environemental Engineering &Technology
-276,Food/Bakery/Food & Beverage
-277,Front Office
-278,Geo Informatics
-279,Housekeeping
-280,Industrial Biotechnology
-283,Intrumentation/Control system
-284,Leather technology
-285,Manufacturing Engg.
-287,Material Science & Engg.
-289,Metallurgical Engg.
-290,Mineral/Mining
-291,Obstetrics & Gynaecology
-292,Ophthalmology
-293,Orthopaedics
-294,Oterenolaryngology
-295,Paper & Pulp technology
-296,Petroleum/Petrochemical
-297,Pharmacuetical technology
-298,Ploymer Science & Engg.
-299,Printing Technology
-300,Production cum Plant Engineering
-301,Production Engineering
-302,Radiology
-303,Rubber/Plastic
-304,Structural
-305,Sugar technology
-306,Textile Technology
-307,Veterniary
-310,Mater of Chirurgiae
-419,Vocational Training
-420,12th Pass
-421,10th Pass
-422,Upto 9th Std
-423,1st to 9th Std
-424,No Education/Schooling
+1,Other
+2,Interior Design
+3,Architecture
+4,Aeronautical Engg.
+5,Petroleum Engg. and Offshore Engg.
+7,Automobile Engg.
+8,Biomedical Engg.
+9,Biotechnology
+11,Civil Engg.
+12,Computer Engg.
+13,Electrical & Electronics
+14,Electrical Engg.
+15,Electronics & Instrumentation
+16,Electronics and Telecommunication
+17,Electronics Engg.
+18,Harbour & Ocean Engg.
+19,Humanities and Applied Science
+20,Industrial Engg.
+21,Information Technology
+22,Instrumentation & Control Engg.
+23,Instrumentation Engg.
+24,Marine Engg.
+25,Mechanical Engg.
+26,Naval Architecture and Offshore Engg.
+27,Production Engg.
+28,Food Science
+29,Agriculture Engg.
+30,Chemical Engg.
+32,Computer Science Engg.
+33,Electrical and Electronics Engg.
+34,Foreign Trade
+35,Hospitality Management
+36,Information Systems Management
+37,Shipping
+38,Insurance & Banking
+39,General
+40,Human Resource Development
+41,Information Management
+42,Marketing Management
+43,Energy Management
+44,Ancient Indian Culture
+45,Bengali (Honors)
+46,Arabic (Honors)
+47,Economics (Honors)
+48,English
+49,English (Honors)
+50,Folklore
+51,Geography
+52,Geography (Honors)
+53,Gujarati
+54,Hindi
+55,Hindi (Honors)
+56,History
+57,History (Honors)
+58,Home Science (Honors)
+59,Journalism
+60,Marathi
+61,Mathematics (Honors)
+62,Music (Honors)
+63,Persian (Honors)
+64,Philosophy
+65,Philosophy (Honors)
+66,Political Science (Honors)
+67,Politics
+68,Prayojan Mulak Hindi
+69,Psychology
+70,Psychology (Honors)
+71,Public Service
+72,Punjabi (Honors)
+73,Sanskrit
+74,Sanskrit (Honors)
+75,Social Work (Honors)
+76,Sociology
+77,Sociology (Honors)
+78,Tamil
+79,Urdu (Honors)
+80,Vocational Studies
+81,Applied Art
+82,Art History
+83,Painting
+84,Sculpture
+85,Print Making
+86,Visual Communication
+87,Dance
+88,Music
+89,Social Work
+90,Psychological Science
+92,Business Economics (Honors)
+93,Economics

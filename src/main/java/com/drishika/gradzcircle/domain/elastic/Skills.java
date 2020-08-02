@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.core.completion.Completion;
  * @author abhinav
  *
  */
-@Document(indexName = "skill")
+@Document(indexName = "skills")
 public class Skills extends com.drishika.gradzcircle.domain.Skills {
 	
 	private static final long serialVersionUID = 1L;
